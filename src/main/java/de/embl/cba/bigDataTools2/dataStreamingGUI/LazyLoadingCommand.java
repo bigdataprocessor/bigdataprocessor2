@@ -22,7 +22,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Plugin(type = Command.class, menuPath = "Plugins>BigDataTools>Lazy Loading", initializer = "init")
-public class LazyLoadingCommand<T extends RealType<T> & NativeType< T > > extends DynamicCommand implements Interactive
+public class LazyLoadingCommand<T extends RealType<T> & NativeType< T > > implements Command
 {
 	@Parameter
 	public static UIService uiService;
@@ -40,7 +40,7 @@ public class LazyLoadingCommand<T extends RealType<T> & NativeType< T > > extend
 	public StatusService statusService;
 
 	@Parameter( label = "Image data directory", style = "directory" )
-	File directory = new File( "" );
+	File directory;
 
 	@Parameter ( label = "Subset files using regular expression",
 			choices = {
@@ -90,21 +90,14 @@ public class LazyLoadingCommand<T extends RealType<T> & NativeType< T > > extend
 			})
 	String imageViewerChoice = ViewerUtils.BIG_DATA_VIEWER;
 
-
-	@Parameter(label = "Lazy load", callback = "lazyLoad")
-	private Button lazyLoadButton;
-
-
 	private static final DataStreamingTools dataStreamingTools = new DataStreamingTools();
 	private ExecutorService uiActionThreadPool;
 
-
-	public void init()
-	{
+	public void init() {
 		this.uiActionThreadPool = Executors.newFixedThreadPool(4); //TODO --ashis
 	}
 
-	private void lazyLoad()
+	public void run()
 	{
 		uiActionThreadPool.submit(() -> dataStreamingTools.openFromDirectory(
 				directory.toString(),
