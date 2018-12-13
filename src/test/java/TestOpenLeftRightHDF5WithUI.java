@@ -2,9 +2,9 @@ import bdv.util.AxisOrder;
 import bdv.util.BdvFunctions;
 import bdv.util.BdvOptions;
 import bdv.util.BdvStackSource;
-import de.embl.cba.bigDataToolViewerIL2.CachedCellImageCreator;
-import de.embl.cba.bigDataToolViewerIL2.fileInfoSource.FileInfoSource;
-import de.embl.cba.bigDataToolViewerIL2.viewers.BdvTransformEventHandler;
+import de.embl.cba.bigDataTools2.CachedCellImageCreator;
+import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoSource;
+import de.embl.cba.bigDataTools2.viewers.BdvTransformEventHandler;
 import net.imglib2.img.Img;
 
 public class TestOpenLeftRightHDF5WithUI {

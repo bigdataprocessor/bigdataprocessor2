@@ -1,4 +1,4 @@
-import de.embl.cba.bigDataToolViewerIL2.dataStreamingGUI.DataStreamingUI;
+import de.embl.cba.bigDataTools2.dataStreamingGUI.DataStreamingUI;
 
 public class TestOpenUI {
 

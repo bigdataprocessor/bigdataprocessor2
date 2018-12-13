@@ -1,8 +1,8 @@
 import bdv.util.*;
-import de.embl.cba.bigDataToolViewerIL2.CachedCellImageCreator;
-import de.embl.cba.bigDataToolViewerIL2.fileInfoSource.FileInfoConstants;
-import de.embl.cba.bigDataToolViewerIL2.fileInfoSource.FileInfoSource;
-import de.embl.cba.bigDataToolViewerIL2.viewers.BdvTransformEventHandler;
+import de.embl.cba.bigDataTools2.CachedCellImageCreator;
+import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
+import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoSource;
+import de.embl.cba.bigDataTools2.viewers.BdvTransformEventHandler;
 import net.imglib2.cache.img.CachedCellImg;
 
 public class TestOpenTwoChannelTiffSeriesWithUI

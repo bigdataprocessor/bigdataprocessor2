@@ -8,10 +8,10 @@
 		<version>23.2.0</version>
 	</parent>
 
-	<artifactId>fiji-plugin-BigDataToolViewerIL2</artifactId>
+	<artifactId>fiji-plugin-BigDataTools2</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 
-	<name>Fiji Plugin BigDataToolViewerIL2</name>
+	<name>Fiji Plugin BigDataTools2</name>
 	<description>TODO</description>
 	<inceptionYear>2018</inceptionYear>
 	<organization>
@@ -38,6 +38,17 @@
 				<role>maintainer</role>
 			</roles>
 		</developer>
+		<developer>
+			<id>ashisr</id>
+			<name>Ashis Ravindran</name>
+			<roles>
+				<role>developer</role>
+				<role>debugger</role>
+				<role>reviewer</role>
+				<role>support</role>
+				<role>maintainer</role>
+			</roles>
+		</developer>
 	</developers>
 	<contributors>
 		<contributor>
@@ -54,21 +65,21 @@
 
 
 	<scm>
-		<connection>scm:git:git://github.com/tischi/imglib2-drosophila-registration</connection>
-		<developerConnection>scm:git:git@github.com/tischi/imglib2-drosophila-registration</developerConnection>
+		<connection>scm:git:git://github.com/tischi/fiji-plugin-bigDataTools2</connection>
+		<developerConnection>scm:git:git@github.com/tischi/fiji-plugin-bigDataTools2</developerConnection>
 		<tag>HEAD</tag>
-		<url>https://github.com/tischi/imglib2-drosophila-registration</url>
+		<url>https://github.com/tischi/fiji-plugin-bigDataTools2</url>
 	</scm>
 	<issueManagement>
 		<system>GitHub</system>
-		<url>https://github.com/imglib/imglib2-drosophila-registration/issues</url>
+		<url>https://github.com/tischi/fiji-plugin-bigDataTools2/issues</url>
 	</issueManagement>
 	<ciManagement>
 		<system>None</system>
 	</ciManagement>
 
 	<properties>
-		<package-name>de.embl.cba.bigDataToolViewerIL2</package-name>
+		<package-name>de.embl.cba.bigDataTools2</package-name>
 		<license.licenseName>bsd_2</license.licenseName>
 		<license.copyrightOwners>EMBL</license.copyrightOwners>
 		<imagej.app.directory>/Applications/Fiji.app/</imagej.app.directory>

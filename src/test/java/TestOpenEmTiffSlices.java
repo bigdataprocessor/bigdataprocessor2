@@ -1,9 +1,9 @@
 import bdv.util.AxisOrder;
 import bdv.util.BdvFunctions;
 import bdv.util.BdvOptions;
-import de.embl.cba.bigDataToolViewerIL2.CachedCellImageCreator;
-import de.embl.cba.bigDataToolViewerIL2.fileInfoSource.FileInfoConstants;
-import de.embl.cba.bigDataToolViewerIL2.fileInfoSource.FileInfoSource;
+import de.embl.cba.bigDataTools2.CachedCellImageCreator;
+import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
+import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoSource;
 import net.imglib2.img.Img;
 
 public class TestOpenEmTiffSlices {
