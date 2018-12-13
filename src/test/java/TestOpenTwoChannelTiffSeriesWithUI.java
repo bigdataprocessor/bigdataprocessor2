@@ -15,7 +15,7 @@ public class TestOpenTwoChannelTiffSeriesWithUI
         final FileInfoSource fileInfoSource = new FileInfoSource(directory, FileInfoConstants.LOAD_CHANNELS_FROM_FOLDERS,".*","");
         CachedCellImg myImg = new CachedCellImageCreator().create(fileInfoSource,null);
         final BdvStackSource bdvStackSource = BdvFunctions.show(myImg,"stream", BdvOptions.options().axisOrder(AxisOrder.XYCZT)
-                .transformEventHandlerFactory(new BdvTransformEventHandler.BehaviourTransformEventHandler3DFactory()));
+                .transformEventHandlerFactory(new BdvTransformEventHandler.BehaviourTransformEventHandler3DFactory( voxelSize )));
 
     }
 

@@ -32,7 +32,7 @@ public class TestOpenLeicaDLS
                 .doubleBuffered( false )
                 .numRenderingThreads(10)
                 //.sourceTransform( affineTransform3D )
-                .transformEventHandlerFactory( new BdvTransformEventHandler.BehaviourTransformEventHandler3DFactory()));// TODO: Play with it later
+                .transformEventHandlerFactory( new BdvTransformEventHandler.BehaviourTransformEventHandler3DFactory( voxelSize )));// TODO: Play with it later
 
 
     }

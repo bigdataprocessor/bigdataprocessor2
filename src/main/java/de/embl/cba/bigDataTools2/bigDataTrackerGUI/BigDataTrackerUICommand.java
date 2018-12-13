@@ -151,7 +151,7 @@ public class BigDataTrackerUICommand extends DynamicCommand implements Interacti
         // Test using Dummy ImageViewer
         final ImageJ ij = new ImageJ();
         ij.launch(args);
-        ImageViewer img = new BdvImageViewer(null, "dummy");
+        ImageViewer img = new BdvImageViewer(null, "dummy", voxelSize );
         ij.command().run(BigDataTrackerUICommand.class, true, "imageViewer", img);
     }
 }

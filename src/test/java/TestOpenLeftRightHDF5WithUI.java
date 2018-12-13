@@ -26,14 +26,14 @@ public class TestOpenLeftRightHDF5WithUI {
 
         final BdvStackSource bdvss0 = BdvFunctions.show(myImgLeft, "left", BdvOptions.options().axisOrder(AxisOrder.XYCZT)
                 .doubleBuffered(false)
-                .transformEventHandlerFactory(new BdvTransformEventHandler.BehaviourTransformEventHandler3DFactory()));
+                .transformEventHandlerFactory(new BdvTransformEventHandler.BehaviourTransformEventHandler3DFactory( voxelSize )));
 
 
 
         final BdvStackSource bdvss1 = BdvFunctions.show(myImgRight, "right", BdvOptions.options().axisOrder(AxisOrder.XYCZT)
                 .doubleBuffered(false)
                 .addTo(bdvss0)
-                .transformEventHandlerFactory(new BdvTransformEventHandler.BehaviourTransformEventHandler3DFactory()));
+                .transformEventHandlerFactory(new BdvTransformEventHandler.BehaviourTransformEventHandler3DFactory( voxelSize )));
 
 
 

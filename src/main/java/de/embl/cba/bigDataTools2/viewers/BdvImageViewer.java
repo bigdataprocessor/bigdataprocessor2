@@ -21,22 +21,21 @@ import javax.swing.*;
 public class BdvImageViewer < T extends RealType< T > & NativeType< T > > implements ImageViewer {
 
     private RandomAccessibleInterval< T > rai;
-    private BdvStackSource bdvSS;
+    private double[] voxelSize;
     private String streamName;
 
-    public BdvImageViewer(){
-
-    }
-
-    public BdvImageViewer(RandomAccessibleInterval< T > rai,String streamName ) { // TODO: may be not needed. Check --ashis
+    private BdvStackSource bdvSS;
+    
+    public BdvImageViewer( RandomAccessibleInterval< T > rai, String streamName, double[] voxelSize ) { // TODO: may be not needed. Check --ashis
         this.streamName = streamName;
         this.rai = rai;
+        this.voxelSize = voxelSize;
     }
 
     @Override
     public void show() {
-        this.bdvSS = BdvFunctions.show(rai,this.streamName, BdvOptions.options().axisOrder(AxisOrder.XYCZT)
-                                        .transformEventHandlerFactory(new BdvTransformEventHandler.BehaviourTransformEventHandler3DFactory()));
+        this.bdvSS = BdvFunctions.show( rai, this.streamName, BdvOptions.options().axisOrder(AxisOrder.XYCZT)
+                                        .transformEventHandlerFactory(new BdvTransformEventHandler.BehaviourTransformEventHandler3DFactory( voxelSize )));
     }
     @Override
     public void repaint(AffineTransform3D viewerTransform) {
@@ -72,7 +71,7 @@ public class BdvImageViewer < T extends RealType< T > & NativeType< T > > implem
         if(null == streamName|| streamName.isEmpty()){
             streamName = this.streamName;
         }
-        return new BdvImageViewer<T>(rai,streamName);
+        return new BdvImageViewer<T>(rai,streamName, voxelSize );
     }
     @Override
     public RandomAccessibleInterval<T> getRai() {

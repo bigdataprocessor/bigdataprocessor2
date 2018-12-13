@@ -9,7 +9,7 @@
 	</parent>
 
 	<artifactId>fiji-plugin-BigDataTools2</artifactId>
-	<version>0.1.00</version>
+	<version>0.1.01</version>
 
 	<name>Fiji Plugin BigDataTools2</name>
 	<description>TODO</description>
@@ -163,17 +163,20 @@
 			<artifactId>imglib-algorithms</artifactId>
 			<version>2.0.0-beta6</version>
 		</dependency>
+
 		<dependency>
 			<groupId>net.preibisch</groupId>
 			<artifactId>multiview-reconstruction</artifactId>
 			<version>${multiview-reconstruction.version}</version>
 		</dependency>
+
 		<dependency>
 			<groupId>mpicbg</groupId>
 			<artifactId>imglib-ij</artifactId>
 			<version>2.0.0-beta6</version>
 		</dependency>
-        <dependency>
+
+		<dependency>
             <groupId>net.imagej</groupId>
             <artifactId>imagej-plugins-commands</artifactId>
             <version>0.8.0</version>
