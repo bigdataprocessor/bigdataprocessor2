@@ -23,7 +23,7 @@ public class TestOpenLeftRightHDF5WithUI {
 
         Img myImgLeft = new CachedCellImageCreator().create(fileInfoSourceLeft,null);
         Img myImgRight = new CachedCellImageCreator().create(fileInfoSourceRight,null);
-
+        double [] voxelSize = new double[]{0,0};
         final BdvStackSource bdvss0 = BdvFunctions.show(myImgLeft, "left", BdvOptions.options().axisOrder(AxisOrder.XYCZT)
                 .doubleBuffered(false)
                 .transformEventHandlerFactory(new BdvTransformEventHandler.BehaviourTransformEventHandler3DFactory( voxelSize )));

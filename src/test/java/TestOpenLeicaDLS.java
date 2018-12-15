@@ -26,7 +26,7 @@ public class TestOpenLeicaDLS
 //        affineTransform3D.set( 1.0, 0, 0);
 //        affineTransform3D.set( 1.0, 1, 1);
 //        affineTransform3D.set( 1.0, 2, 2);
-
+        double [] voxelSize = new double[]{0,0};
 
         BdvFunctions.show(myImg,"LeicaDLS", BdvOptions.options().axisOrder( AxisOrder.XYCZT)
                 .doubleBuffered( false )
