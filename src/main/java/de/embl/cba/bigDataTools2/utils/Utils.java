@@ -47,6 +47,8 @@ import ij.plugin.Duplicator;
 import ij.process.ImageProcessor;
 import javafx.geometry.Point3D;
 import net.imglib2.Cursor;
+import net.imglib2.FinalInterval;
+import net.imglib2.FinalRealInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgView;
@@ -142,6 +144,19 @@ public class Utils {
         }
     }
 
+    public static FinalInterval asIntegerInterval(FinalRealInterval realInterval ) {
+        double[] realMin = new double[ 3 ];
+        double[] realMax = new double[ 3 ];
+        realInterval.realMin( realMin );
+        realInterval.realMax( realMax );
+        long[] min = new long[ 3 ];
+        long[] max = new long[ 3 ];
+        for ( int d = 0; d < 3; ++d ) {
+            min[ d ] = (long) realMin[ d ];
+            max[ d ] = (long) realMax[ d ];
+        }
+        return new FinalInterval( min, max );
+    }
 
     public static String[] getNames(Class<? extends Enum<?>> e) {
         return Arrays.stream(e.getEnumConstants()).map(Enum::name).toArray(String[]::new);
