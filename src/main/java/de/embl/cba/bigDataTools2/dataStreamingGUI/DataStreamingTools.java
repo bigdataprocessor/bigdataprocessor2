@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class DataStreamingTools{
+public class DataStreamingTools {
 
     public static FileInfoSource fileInfoSource;
     public static ExecutorService executorService;  //General thread pool
@@ -39,25 +39,25 @@ public class DataStreamingTools{
         //TODO: have separate shutdown for the executorService. It will not shutdown when ui exeService is shut. --ashis (DONE but needs testing)
         //Ref: https://stackoverflow.com/questions/23684189/java-how-to-make-an-executorservice-running-inside-another-executorservice-not
         System.out.println("Datastreaming constructor");
-        kickOffThreadPack(Runtime.getRuntime().availableProcessors()*2);
+        kickOffThreadPack(Runtime.getRuntime().availableProcessors() * 2);
     }
 
-    public void kickOffThreadPack(int nIOthreads){
-        this.numThreads=nIOthreads;
-        if(executorService !=null){
+    public void kickOffThreadPack(int nIOthreads) {
+        this.numThreads = nIOthreads;
+        if (executorService != null) {
             return;
         }
         executorService = Executors.newFixedThreadPool(nIOthreads);
     }
 
-    public void shutdownThreadPack(){
-        Utils.shutdownThreadPack(executorService,10);
+    public void shutdownThreadPack() {
+        Utils.shutdownThreadPack(executorService, 10);
     }
 
-    public void openFromDirectory(String directory, String namingScheme, String filterPattern, String h5DataSetName,ImageViewer imageViewer) {
+    public void openFromDirectory(String directory, String namingScheme, String filterPattern, String h5DataSetName, ImageViewer imageViewer) {
         directory = Utils.fixDirectoryFormat(directory);
         this.fileInfoSource = new FileInfoSource(directory, namingScheme, filterPattern, h5DataSetName);
-        CachedCellImg cachedCellImg = CachedCellImageCreator.create(this.fileInfoSource,this.executorService);
+        CachedCellImg cachedCellImg = CachedCellImageCreator.create(this.fileInfoSource, this.executorService);
         imageViewer.setRai(cachedCellImg);
         imageViewer.setStreamName(FileInfoConstants.STREAM_NAME);
         imageViewer.show();
@@ -82,33 +82,33 @@ public class DataStreamingTools{
 
 
     /*Alternate Logic for shear*/
-    public static < T extends RealType< T > & NativeType< T >> void shearImage1(ShearingSettings shearingSettings) {
+    public static <T extends RealType<T> & NativeType<T>> void shearImage1(ShearingSettings shearingSettings) {
         System.out.println("Shear Factor X " + shearingSettings.shearingFactorX);
         System.out.println("Shear Factor Y " + shearingSettings.shearingFactorY);
         AffineTransform3D affine = new AffineTransform3D();
-        affine.set(shearingSettings.shearingFactorX,0,2);
-        affine.set(shearingSettings.shearingFactorY,1,2);
+        affine.set(shearingSettings.shearingFactorX, 0, 2);
+        affine.set(shearingSettings.shearingFactorY, 1, 2);
         selectedImageViewer.repaint(affine);
     }
 
-    public static < T extends RealType< T > & NativeType< T >> void shearImage(ShearingSettings shearingSettings){
+    public static <T extends RealType<T> & NativeType<T>> void shearImage(ShearingSettings shearingSettings) {
         RandomAccessibleInterval rai = selectedImageViewer.getRai();
         List<RandomAccessibleInterval<T>> timeTracks = new ArrayList<>();
         List<RandomAccessibleInterval<T>> channelTracks = new ArrayList<>();
-        int nTimeFrames =(int) rai.dimension(FileInfoConstants.T_AXIS_POSITION);
-        int nChannels =(int) rai.dimension(FileInfoConstants.C_AXIS_POSITION);
-        System.out.println("Shear Factor X "+shearingSettings.shearingFactorX);
-        System.out.println("Shear Factor Y "+shearingSettings.shearingFactorY);
+        int nTimeFrames = (int) rai.dimension(FileInfoConstants.T_AXIS_POSITION);
+        int nChannels = (int) rai.dimension(FileInfoConstants.C_AXIS_POSITION);
+        System.out.println("Shear Factor X " + shearingSettings.shearingFactorX);
+        System.out.println("Shear Factor Y " + shearingSettings.shearingFactorY);
         AffineTransform3D affine = new AffineTransform3D();
-        affine.set(shearingSettings.shearingFactorX,0,2);
-        affine.set(shearingSettings.shearingFactorY,1,2);
+        affine.set(shearingSettings.shearingFactorX, 0, 2);
+        affine.set(shearingSettings.shearingFactorY, 1, 2);
         long startTime = System.currentTimeMillis();
-        for (int t =0;t< nTimeFrames;++t){
-            RandomAccessibleInterval tStep = Views.hyperSlice(rai,FileInfoConstants.T_AXIS_POSITION,t);
-            for (int channel=0; channel<nChannels;++channel){
-                RandomAccessibleInterval cStep = Views.hyperSlice(tStep,FileInfoConstants.C_AXIS_POSITION,channel);
+        for (int t = 0; t < nTimeFrames; ++t) {
+            RandomAccessibleInterval tStep = Views.hyperSlice(rai, FileInfoConstants.T_AXIS_POSITION, t);
+            for (int channel = 0; channel < nChannels; ++channel) {
+                RandomAccessibleInterval cStep = Views.hyperSlice(tStep, FileInfoConstants.C_AXIS_POSITION, channel);
                 RealRandomAccessible real = Views.interpolate(Views.extendZero(cStep), new ClampingNLinearInterpolatorFactory<T>());
-                AffineRandomAccessible af = RealViews.affine(real,affine);
+                AffineRandomAccessible af = RealViews.affine(real, affine);
 /*
                 long[] min= new long[3];
                 long[] max= new long[3];
@@ -120,12 +120,11 @@ public class DataStreamingTools{
 //                        max[0]+(long)offsetX2,max[1],max[2]};
                 /*long[] range = {min[0]+(long)(shearingSettings.shearingFactorX*max[2]/2) ,min[1],min[2],
                         max[0]+(long)(shearingSettings.shearingFactorX*max[2]/2),max[1],max[2]};*/
-
-                FinalRealInterval transformedRealInterval =  affine.estimateBounds( cStep );
-               FinalInterval transformedInterval = asIntegerInterval( transformedRealInterval );
-                RandomAccessibleInterval intervalView = Views.interval(af, transformedInterval);
-
                 //RandomAccessibleInterval intervalView = Views.interval(af, Intervals.createMinMax(range));
+
+                FinalRealInterval transformedRealInterval = affine.estimateBounds(cStep);
+                FinalInterval transformedInterval = Utils.asIntegerInterval(transformedRealInterval);
+                RandomAccessibleInterval intervalView = Views.interval(af, transformedInterval);
                 channelTracks.add(intervalView);
             }
             RandomAccessibleInterval cStackedRAI = Views.stack(channelTracks);
@@ -133,30 +132,14 @@ public class DataStreamingTools{
             channelTracks.clear();
         }
         RandomAccessibleInterval sheared = Views.stack(timeTracks);
-        sheared = Views.permute(sheared,FileInfoConstants.C_AXIS_POSITION,FileInfoConstants.Z_AXIS_POSITION);
-        System.out.println("Time elapsed(ms) " +(System.currentTimeMillis() - startTime));
-        ImageViewer newViewer = selectedImageViewer.newImageViewer(sheared,"sheared");
-        newViewer.show();
-        selectedImageViewer.replicateViewerContrast(newViewer);
-        newViewer.addMenus(new BdvMenus());
-    }
-
-    public static FinalInterval asIntegerInterval(FinalRealInterval realInterval )
-    {
-        double[] realMin = new double[ 3 ];
-        double[] realMax = new double[ 3 ];
-        realInterval.realMin( realMin );
-        realInterval.realMax( realMax );
-
-        long[] min = new long[ 3 ];
-        long[] max = new long[ 3 ];
-
-        for ( int d = 0; d < 3; ++d )
-        {
-            min[ d ] = (long) realMin[ d ];
-            max[ d ] = (long) realMax[ d ];
-        }
-
-        return new FinalInterval( min, max );
+        sheared = Views.permute(sheared, FileInfoConstants.C_AXIS_POSITION, FileInfoConstants.Z_AXIS_POSITION);
+        System.out.println("Time elapsed(ms) " + (System.currentTimeMillis() - startTime));
+        selectedImageViewer.repaint(sheared, "sheared");
+        double[] centerCoordinates = {sheared.min(FileInfoConstants.X_AXIS_POSITION) / 2.0,
+                sheared.max(FileInfoConstants.Y_AXIS_POSITION) / 2.0,
+                (sheared.max(FileInfoConstants.Z_AXIS_POSITION) - sheared.min(FileInfoConstants.Z_AXIS_POSITION)) / 2
+                        + sheared.min(FileInfoConstants.Z_AXIS_POSITION)};
+        selectedImageViewer.shiftImageToCenter(centerCoordinates);
+        Utils.doAutoContrastPerChannel(selectedImageViewer);
     }
 }
