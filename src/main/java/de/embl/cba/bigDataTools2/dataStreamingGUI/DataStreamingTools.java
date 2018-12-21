@@ -19,11 +19,11 @@ import net.imglib2.realtransform.RealViews;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.view.Views;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.RecursiveTask;
 
 public class DataStreamingTools {
 
@@ -94,7 +94,6 @@ public class DataStreamingTools {
     public static <T extends RealType<T> & NativeType<T>> void shearImage(ShearingSettings shearingSettings) {
         RandomAccessibleInterval rai = selectedImageViewer.getRai();
         List<RandomAccessibleInterval<T>> timeTracks = new ArrayList<>();
-        List<RandomAccessibleInterval<T>> channelTracks = new ArrayList<>();
         int nTimeFrames = (int) rai.dimension(FileInfoConstants.T_AXIS_POSITION);
         int nChannels = (int) rai.dimension(FileInfoConstants.C_AXIS_POSITION);
         System.out.println("Shear Factor X " + shearingSettings.shearingFactorX);
@@ -102,34 +101,15 @@ public class DataStreamingTools {
         AffineTransform3D affine = new AffineTransform3D();
         affine.set(shearingSettings.shearingFactorX, 0, 2);
         affine.set(shearingSettings.shearingFactorY, 1, 2);
+        List<ApplyShearToRAI> tasks = new ArrayList<>();
         long startTime = System.currentTimeMillis();
         for (int t = 0; t < nTimeFrames; ++t) {
-            RandomAccessibleInterval tStep = Views.hyperSlice(rai, FileInfoConstants.T_AXIS_POSITION, t);
-            for (int channel = 0; channel < nChannels; ++channel) {
-                RandomAccessibleInterval cStep = Views.hyperSlice(tStep, FileInfoConstants.C_AXIS_POSITION, channel);
-                RealRandomAccessible real = Views.interpolate(Views.extendZero(cStep), new ClampingNLinearInterpolatorFactory<T>());
-                AffineRandomAccessible af = RealViews.affine(real, affine);
-/*
-                long[] min= new long[3];
-                long[] max= new long[3];
-                cStep.min(min);
-                cStep.max(max);*/
-//                double offsetX2 = -shearingSettings.shearingFactorX*max[2]+shearingSettings.shearingFactorX*(max[2]);
-//                double offsetX1 = shearingSettings.shearingFactorX*(max[2]);
-//                long[] range = {min[0]+(long)offsetX1 ,min[1],min[2],
-//                        max[0]+(long)offsetX2,max[1],max[2]};
-                /*long[] range = {min[0]+(long)(shearingSettings.shearingFactorX*max[2]/2) ,min[1],min[2],
-                        max[0]+(long)(shearingSettings.shearingFactorX*max[2]/2),max[1],max[2]};*/
-                //RandomAccessibleInterval intervalView = Views.interval(af, Intervals.createMinMax(range));
-
-                FinalRealInterval transformedRealInterval = affine.estimateBounds(cStep);
-                FinalInterval transformedInterval = Utils.asIntegerInterval(transformedRealInterval);
-                RandomAccessibleInterval intervalView = Views.interval(af, transformedInterval);
-                channelTracks.add(intervalView);
-            }
-            RandomAccessibleInterval cStackedRAI = Views.stack(channelTracks);
-            timeTracks.add(cStackedRAI);
-            channelTracks.clear();
+            ApplyShearToRAI task = new ApplyShearToRAI(rai, t, nChannels, affine);
+            task.fork();
+            tasks.add(task);
+        }
+        for (ApplyShearToRAI task : tasks) {
+            timeTracks.add((RandomAccessibleInterval) task.join());
         }
         RandomAccessibleInterval sheared = Views.stack(timeTracks);
         sheared = Views.permute(sheared, FileInfoConstants.C_AXIS_POSITION, FileInfoConstants.Z_AXIS_POSITION);
@@ -141,5 +121,38 @@ public class DataStreamingTools {
                         + sheared.min(FileInfoConstants.Z_AXIS_POSITION)};
         selectedImageViewer.shiftImageToCenter(centerCoordinates);
         Utils.doAutoContrastPerChannel(selectedImageViewer);
+    }
+
+
+    private static class ApplyShearToRAI<T extends RealType<T> & NativeType<T>> extends RecursiveTask<RandomAccessibleInterval> {
+
+        private RandomAccessibleInterval rai;
+        private int t;
+        private final int nChannels;
+        private final AffineTransform3D affine;
+
+        public ApplyShearToRAI(RandomAccessibleInterval rai, int time, int nChannels, AffineTransform3D affine) {
+            this.rai = rai;
+            this.t = time;
+            this.nChannels = nChannels;
+            this.affine = affine;
+        }
+
+        @Override
+        protected RandomAccessibleInterval<T> compute() {
+            List<RandomAccessibleInterval<T>> channelTracks = new ArrayList<>();
+            RandomAccessibleInterval tStep = Views.hyperSlice(rai, FileInfoConstants.T_AXIS_POSITION, t);
+            for (int channel = 0; channel < nChannels; ++channel) {
+                RandomAccessibleInterval cStep = Views.hyperSlice(tStep, FileInfoConstants.C_AXIS_POSITION, channel);
+                RealRandomAccessible real = Views.interpolate(Views.extendZero(cStep), new ClampingNLinearInterpolatorFactory<T>());
+                AffineRandomAccessible af = RealViews.affine(real, affine);
+                FinalRealInterval transformedRealInterval = affine.estimateBounds(cStep);
+                FinalInterval transformedInterval = Utils.asIntegerInterval(transformedRealInterval);
+                RandomAccessibleInterval intervalView = Views.interval(af, transformedInterval);
+                channelTracks.add(intervalView);
+            }
+            RandomAccessibleInterval cStackedRAI = Views.stack(channelTracks);
+            return cStackedRAI;
+        }
     }
 }
