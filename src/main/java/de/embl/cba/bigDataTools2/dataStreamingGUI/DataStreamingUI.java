@@ -6,7 +6,7 @@ import de.embl.cba.bigDataTools2.logging.IJLazySwingLogger;
 import de.embl.cba.bigDataTools2.logging.Logger;
 import de.embl.cba.bigDataTools2.utils.Utils;
 import de.embl.cba.bigDataTools2.viewers.BdvImageViewer;
-import de.embl.cba.bigDataTools2.viewers.ImageJ1Viewer;
+import de.embl.cba.bigDataTools2.viewers.IJ1ImageViewer;
 import de.embl.cba.bigDataTools2.viewers.ImageViewer;
 import ij.IJ;
 
@@ -108,7 +108,7 @@ public class DataStreamingUI extends JFrame implements ActionListener, FocusList
             imageViewer = new BdvImageViewer();
             cbBDV.setSelected(true);
         }else{
-            imageViewer = new ImageJ1Viewer();
+            imageViewer = new IJ1ImageViewer();
             cbBDV.setSelected(false);
         }
         cbBDV.setEnabled(false);

@@ -27,6 +27,11 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
 
     private BdvStackSource bdvSS;
 
+    public BdvImageViewer( )
+    {
+
+    }
+
     public BdvImageViewer( RandomAccessibleInterval<T> rai, String streamName, double[] voxelSize ) {
         this.streamName = streamName;
         this.rai = rai;
@@ -106,7 +111,7 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
     }
 
     @Override
-    public void setStreamName(String streamName) {
+    public void setImageName( String streamName) {
         this.streamName = streamName;
     }
 

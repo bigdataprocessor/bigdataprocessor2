@@ -86,7 +86,7 @@ public class LazyLoadingCommand<T extends RealType<T> & NativeType< T > > implem
 	@Parameter ( label = "Image viewer",
 			choices = {
 			ViewerUtils.BIG_DATA_VIEWER
-			//ViewerUtils.IMAGE_HYPERSTACK_VIEWER
+			//ViewerUtils.IJ1_VIEWER
 			})
 	String imageViewerChoice = ViewerUtils.BIG_DATA_VIEWER;
 

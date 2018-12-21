@@ -31,7 +31,7 @@ public class FileInfoConstants {
     public static final AxisType[] AXES_ORDER = {Axes.X, Axes.Y, Axes.CHANNEL, Axes.Z, Axes.TIME};
     public static final String CROPPED_STREAM_NAME = "cropped";
     public static final String TRACKED_STREAM_NAME = "tracked";
-    public static final String STREAM_NAME = "stream";
+    public static final String IMAGE_NAME = "stream";
     public static final String BB_CROP_BUTTON_LABEL= "Crop";
     public static final String BB_TRACK_BUTTON_LABEL= "Select";
     public static final int CELL_DIM_Y = 15;

@@ -2,14 +2,26 @@ package de.embl.cba.bigDataTools2.viewers;
 
 import de.embl.cba.bigDataTools2.dataStreamingGUI.BdvMenus;
 import de.embl.cba.bigDataTools2.dataStreamingGUI.DisplaySettings;
+import ij.ImagePlus;
 import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.realtransform.AffineTransform3D;
+import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.RealType;
 
-public class ImageJ1Viewer implements ImageViewer {
+public class IJ1ImageViewer<T extends RealType<T> & NativeType<T> > implements ImageViewer {
+
+    private ImagePlus imp;
+    private RandomAccessibleInterval rai;
+
+    public IJ1ImageViewer()
+    {
+    }
+
     @Override
     public void show() {
-
+        imp.show();
     }
 
     @Override
@@ -28,13 +40,14 @@ public class ImageJ1Viewer implements ImageViewer {
     }
 
     @Override
-    public void setRai(RandomAccessibleInterval rai) {
-
+    public void setRai( RandomAccessibleInterval rai ) {
+        this.rai = rai;
+        imp = ImageJFunctions.wrap( rai, "" );
     }
 
     @Override
-    public void setStreamName(String streamName) {
-
+    public void setImageName( String streamName) {
+        imp.setTitle( streamName );
     }
 
     @Override
@@ -49,6 +62,8 @@ public class ImageJ1Viewer implements ImageViewer {
 
     @Override
     public void setDisplayRange(double min, double max, int channel) {
+
+        imp.setDisplayRange( min, max, channel );
 
     }
 

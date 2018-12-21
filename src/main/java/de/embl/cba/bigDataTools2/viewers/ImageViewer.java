@@ -18,7 +18,7 @@ public interface ImageViewer {
 
     void setRai(RandomAccessibleInterval rai);
 
-    void setStreamName(String streamName);
+    void setImageName( String streamName);
 
     ImageViewer newImageViewer(RandomAccessibleInterval rai, String streamName);
 

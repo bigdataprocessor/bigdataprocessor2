@@ -19,9 +19,14 @@ public class TestOpenOneChannelTiffSeriesWithUI
 
 
         final String directory = "src\\test\\resources\\tiff-nc1-nt2-16bit\\";
+
         final FileInfoSource fileInfoSource = new FileInfoSource(directory,"None",".*","",true);
+
         System.out.println("BitDepth is "+fileInfoSource.bitDepth);
+
         Img myImg = new CachedCellImageCreator().create(fileInfoSource,null);
+
+
         BdvSource bdvSource = BdvFunctions.show(myImg,"stream", BdvOptions.options().axisOrder( AxisOrder.XYCZT)
                         .doubleBuffered( false )
                         .transformEventHandlerFactory( new BehaviourTransformEventHandler3D.BehaviourTransformEventHandler3DFactory()) );

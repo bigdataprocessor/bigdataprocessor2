@@ -59,7 +59,7 @@ public class DataStreamingTools {
         this.fileInfoSource = new FileInfoSource(directory, namingScheme, filterPattern, h5DataSetName);
         CachedCellImg cachedCellImg = CachedCellImageCreator.create(this.fileInfoSource, this.executorService);
         imageViewer.setRai(cachedCellImg);
-        imageViewer.setStreamName(FileInfoConstants.STREAM_NAME);
+        imageViewer.setImageName(FileInfoConstants.IMAGE_NAME);
         imageViewer.show();
         imageViewer.addMenus(new BdvMenus());
         Utils.doAutoContrastPerChannel(imageViewer);
