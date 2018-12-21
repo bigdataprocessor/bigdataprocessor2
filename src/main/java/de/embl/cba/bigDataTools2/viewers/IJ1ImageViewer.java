@@ -10,6 +10,8 @@ import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
+import javax.swing.*;
+
 public class IJ1ImageViewer<T extends RealType<T> & NativeType<T> > implements ImageViewer {
 
     private ImagePlus imp;
@@ -58,6 +60,17 @@ public class IJ1ImageViewer<T extends RealType<T> & NativeType<T> > implements I
     @Override
     public void addMenus(BdvMenus menus) {
 
+        final JFrame jFrame = new JFrame( "BigConverter" );
+        final JMenuBar jMenuBar = new JMenuBar();
+
+        for ( JMenu menu : menus.getMenus() )
+        {
+            jMenuBar.add( menu );
+        }
+
+        jFrame.setSize(450, 40);
+        jFrame.setJMenuBar( jMenuBar );
+        jFrame.setVisible(true);
     }
 
     @Override
