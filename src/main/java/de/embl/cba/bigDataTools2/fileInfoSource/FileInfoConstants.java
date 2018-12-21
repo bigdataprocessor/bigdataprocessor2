@@ -48,20 +48,4 @@ public class FileInfoConstants {
             ImarisUtils.RESOLUTION_LEVEL +"3/Data",
             "ITKImage/0/VoxelData", "Data222", "Data444"};
 
-    public enum FileType {
-        TIFF_as_PLANES("Tiff Planes"),
-        HDF5("HDF5"),
-        HDF5_IMARIS_BDV("IMARIS HDF5"),
-        TIFF_as_STACKS("Tiff Stacks");
-        //SINGLE_PLANE_TIFF("Single Plane Tiff"); //SERIALIZED_HEADERS("Serialized headers");
-        private final String text;
-        private FileType(String s)
-        {
-            text = s;
-        }
-        @Override
-        public String toString() {
-            return text;
-        }
-    }
 }

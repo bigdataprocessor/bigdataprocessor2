@@ -1,6 +1,5 @@
 package de.embl.cba.bigDataTools2.dataStreamingGUI;
 
-import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
 import de.embl.cba.bigDataTools2.saving.SavingSettings;
 
 import javax.swing.*;
@@ -24,11 +23,11 @@ public class SaveMenuDialog extends JDialog implements ActionListener {
     JTextField tfGateMin = new JTextField("0", 5);
     JTextField tfGateMax = new JTextField("255", 5);
 
-    JComboBox comboFileTypeForSaving = new JComboBox(new FileInfoConstants.FileType[]{
-            FileInfoConstants.FileType.TIFF_as_PLANES,
-            FileInfoConstants.FileType.TIFF_as_STACKS,
-            FileInfoConstants.FileType.HDF5,
-            FileInfoConstants.FileType.HDF5_IMARIS_BDV});
+    JComboBox comboFileTypeForSaving = new JComboBox(new SavingSettings.FileType[]{
+            SavingSettings.FileType.TIFF_as_PLANES,
+            SavingSettings.FileType.TIFF_as_STACKS,
+            SavingSettings.FileType.HDF5,
+            SavingSettings.FileType.HDF5_IMARIS_BDV});
 
     final String SAVE = "Save";
     JButton save = new JButton(SAVE);
@@ -108,15 +107,15 @@ public class SaveMenuDialog extends JDialog implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         System.out.println(Thread.currentThread().getId());
         if (e.getActionCommand().equals(SAVE)) {
-            FileInfoConstants.FileType fileType = (FileInfoConstants.FileType) comboFileTypeForSaving.getSelectedItem();
+            SavingSettings.FileType fileType = (SavingSettings.FileType ) comboFileTypeForSaving.getSelectedItem();
             fc = new JFileChooser(System.getProperty("user.dir"));
             int returnVal = fc.showSaveDialog(SaveMenuDialog.this);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 final File file = fc.getSelectedFile();
                 SavingSettings savingSettings = new SavingSettings();
-                String compression = "";
+                String compression = SavingSettings.NONE;
                 if (cbLZW.isSelected()) {
-                    compression = "LZW";
+                    compression = SavingSettings.LZW;
                 }
                 savingSettings.compression = compression;
                 savingSettings.bin = tfBinning.getText();
@@ -126,7 +125,7 @@ public class SaveMenuDialog extends JDialog implements ActionListener {
                 savingSettings.mapTo0 = Integer.parseInt(tfMapTo0.getText());
                 savingSettings.mapTo255 = Integer.parseInt(tfMapTo255.getText());
 
-                if (!(fileType.equals(FileInfoConstants.FileType.TIFF_as_PLANES))) {
+                if (!(fileType.equals( SavingSettings.FileType.TIFF_as_PLANES))) {
                     // TODO: implement below for planes
                     savingSettings.convertTo16Bit = cbConvertTo16Bit.isSelected();
                     savingSettings.gate = cbGating.isSelected();
@@ -141,7 +140,7 @@ public class SaveMenuDialog extends JDialog implements ActionListener {
                 //savingSettings.nThreads = ioThreads;
                 savingSettings.filePath = file.getAbsolutePath();
                 savingSettings.fileType = fileType;
-                if (fileType.equals(FileInfoConstants.FileType.HDF5_IMARIS_BDV)) {
+                if (fileType.equals( SavingSettings.FileType.HDF5_IMARIS_BDV)) {
                     savingSettings.fileBaseNameIMARIS = file.getName();
                     savingSettings.parentDirectory = file.getParent();
                 }

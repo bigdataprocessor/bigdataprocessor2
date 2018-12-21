@@ -28,13 +28,13 @@ public class SaveCentral {
     public static boolean interruptSavingThreads;
 
     public static void goSave(SavingSettings savingSettings, ExecutorService es) {
-        if (savingSettings.fileType.equals(FileInfoConstants.FileType.TIFF_as_PLANES)) {
+        if (savingSettings.fileType.equals( SavingSettings.FileType.TIFF_as_PLANES)) {
             saveTIFFAsPlanes(savingSettings, es);
-        } else if (savingSettings.fileType.equals(FileInfoConstants.FileType.TIFF_as_STACKS)) {
+        } else if (savingSettings.fileType.equals( SavingSettings.FileType.TIFF_as_STACKS)) {
             saveTIFFAsStacks(savingSettings, es);
-        } else if (savingSettings.fileType.equals(FileInfoConstants.FileType.HDF5)) {
+        } else if (savingSettings.fileType.equals( SavingSettings.FileType.HDF5)) {
             saveHDFStacks(savingSettings, es);
-        } else if (savingSettings.fileType.equals(FileInfoConstants.FileType.HDF5_IMARIS_BDV)) {
+        } else if (savingSettings.fileType.equals( SavingSettings.FileType.HDF5_IMARIS_BDV)) {
             saveIMARIStacks(savingSettings, es);
         }
     }

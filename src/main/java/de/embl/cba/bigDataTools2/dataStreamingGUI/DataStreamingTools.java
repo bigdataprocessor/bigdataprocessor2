@@ -63,6 +63,7 @@ public class DataStreamingTools {
         imageViewer.show();
         imageViewer.addMenus(new BdvMenus());
         Utils.doAutoContrastPerChannel(imageViewer);
+        selectedImageViewer = imageViewer;
     }
 
     public void saveImage(SavingSettings savingSettings) {
