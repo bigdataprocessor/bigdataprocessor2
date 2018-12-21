@@ -8,7 +8,7 @@ public class TestIJ1ImageViewer
 	{
 		DataStreamingTools dataStreamingTools = new DataStreamingTools();
 
-		String imageDirectory = TestBdvViewer.class.getResource( ""  ).toString();
+		String imageDirectory = TestBdvViewer.class.getResource( "tiff-nc1-nt2"  ).getFile().toString();
 
 		dataStreamingTools.openFromDirectory(
 				imageDirectory.toString(),
