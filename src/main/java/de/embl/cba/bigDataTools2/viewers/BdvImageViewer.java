@@ -25,7 +25,7 @@ public class BdvImageViewer < T extends RealType< T > & NativeType< T > > implem
     private String streamName;
 
     private BdvStackSource bdvSS;
-    
+
     public BdvImageViewer( RandomAccessibleInterval< T > rai, String streamName, double[] voxelSize ) { // TODO: may be not needed. Check --ashis
         this.streamName = streamName;
         this.rai = rai;
