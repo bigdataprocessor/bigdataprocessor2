@@ -9,17 +9,33 @@ import net.imglib2.realtransform.AffineTransform3D;
 public interface ImageViewer {
 
     void show();
+
     RandomAccessibleInterval getRai();
+
     String getStreamName();
+
     FinalInterval get5DIntervalFromUser();
+
     void setRai(RandomAccessibleInterval rai);
+
     void setStreamName(String streamName);
+
     ImageViewer newImageViewer(RandomAccessibleInterval rai, String streamName);
-    void addMenus( BdvMenus menus );
+
+    void addMenus(BdvMenus menus);
+
     void setDisplayRange(double min, double max, int channel);
+
     DisplaySettings getDisplaySettings(int channel);
+
     void replicateViewerContrast(ImageViewer newImageView);
+
     int getCurrentTimePoint();
+
     void repaint(AffineTransform3D viewerTransform);
+
+    void repaint(RandomAccessibleInterval rai, String newStreamName);
+
+    void shiftImageToCenter(double[] centerCoordinates);
 
 }

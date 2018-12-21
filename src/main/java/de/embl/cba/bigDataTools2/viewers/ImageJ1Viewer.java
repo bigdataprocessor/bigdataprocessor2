@@ -72,4 +72,14 @@ public class ImageJ1Viewer implements ImageViewer {
 
     }
 
+    @Override
+    public void repaint(RandomAccessibleInterval rai, String newStreamName) {
+
+    }
+
+    @Override
+    public void shiftImageToCenter(double[] centerCoordinates) {
+
+    }
+
 }

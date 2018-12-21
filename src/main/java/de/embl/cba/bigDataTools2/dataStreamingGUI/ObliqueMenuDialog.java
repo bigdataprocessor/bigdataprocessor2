@@ -82,10 +82,10 @@ public class ObliqueMenuDialog extends JDialog implements ActionListener {
         //tfobjectiveAngle.addActionListener(this);
         mainPanels.get(k).add(panels.get(j++));
 
-        panels.add(new JPanel());
-        useObliqueButton.setActionCommand(USEObliqueButton);
-        useObliqueButton.addActionListener(this);
-        panels.get(j).add(useObliqueButton);
+//        panels.add(new JPanel());
+//        useObliqueButton.setActionCommand(USEObliqueButton);
+//        useObliqueButton.addActionListener(this);
+//        panels.get(j).add(useObliqueButton);
 
         panels.add(new JPanel());
         obliqueUpdate.setActionCommand(ObliqueUpdate);
