@@ -71,7 +71,7 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
     }
 
     @Override
-    public String getStreamName() {
+    public String getImageName() {
         return streamName;
     }
 

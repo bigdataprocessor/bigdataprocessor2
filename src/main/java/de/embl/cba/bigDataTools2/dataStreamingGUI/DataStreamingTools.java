@@ -66,7 +66,7 @@ public class DataStreamingTools {
     }
 
     public void saveImage(SavingSettings savingSettings) {
-        String streamName = selectedImageViewer.getStreamName();
+        String streamName = selectedImageViewer.getImageName();
         RandomAccessibleInterval rai = selectedImageViewer.getRai();
         if (streamName.equalsIgnoreCase(FileInfoConstants.CROPPED_STREAM_NAME)) {
             rai = Views.zeroMin(rai);

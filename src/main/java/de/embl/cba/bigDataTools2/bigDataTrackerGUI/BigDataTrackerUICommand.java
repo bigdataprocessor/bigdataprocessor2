@@ -77,7 +77,7 @@ public class BigDataTrackerUICommand extends DynamicCommand implements Interacti
 
     @Override
     public void run() {
-        System.out.println(imageViewer.getStreamName());
+        System.out.println(imageViewer.getImageName());
         this.image = imageViewer.getRai();
         String[] imageFilters = new String[Utils.ImageFilterTypes.values().length];
         for (int i = 0; i < imageFilters.length; i++) {

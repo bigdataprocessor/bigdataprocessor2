@@ -12,7 +12,7 @@ public interface ImageViewer {
 
     RandomAccessibleInterval getRai();
 
-    String getStreamName();
+    String getImageName();
 
     FinalInterval get5DIntervalFromUser();
 

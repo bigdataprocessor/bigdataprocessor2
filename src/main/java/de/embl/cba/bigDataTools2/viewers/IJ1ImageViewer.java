@@ -2,6 +2,7 @@ package de.embl.cba.bigDataTools2.viewers;
 
 import de.embl.cba.bigDataTools2.dataStreamingGUI.BdvMenus;
 import de.embl.cba.bigDataTools2.dataStreamingGUI.DisplaySettings;
+import ij.CompositeImage;
 import ij.ImagePlus;
 import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccessibleInterval;
@@ -27,16 +28,6 @@ public class IJ1ImageViewer<T extends RealType<T> & NativeType<T> > implements I
     }
 
     @Override
-    public RandomAccessibleInterval getRai() {
-        return null;
-    }
-
-    @Override
-    public String getStreamName() {
-        return null;
-    }
-
-    @Override
     public FinalInterval get5DIntervalFromUser() {
         return null;
     }
@@ -48,8 +39,16 @@ public class IJ1ImageViewer<T extends RealType<T> & NativeType<T> > implements I
     }
 
     @Override
-    public void setImageName( String streamName) {
-        imp.setTitle( streamName );
+    public RandomAccessibleInterval getRai() {
+        return rai;
+    }
+
+    @Override
+    public void setImageName( String streamName) { imp.setTitle( streamName ); }
+
+    @Override
+    public String getImageName() {
+        return imp.getTitle();
     }
 
     @Override
@@ -68,21 +67,20 @@ public class IJ1ImageViewer<T extends RealType<T> & NativeType<T> > implements I
             jMenuBar.add( menu );
         }
 
-        jFrame.setSize(450, 40);
+        jFrame.setSize(450, 80);
         jFrame.setJMenuBar( jMenuBar );
         jFrame.setVisible(true);
     }
 
     @Override
     public void setDisplayRange(double min, double max, int channel) {
-
         imp.setDisplayRange( min, max, channel );
-
     }
 
     @Override
     public DisplaySettings getDisplaySettings(int channel) {
-        return null;
+        imp.setC( channel + 1 );
+        return new DisplaySettings( imp.getDisplayRangeMin(), imp.getDisplayRangeMax() ) ;
     }
 
     @Override
