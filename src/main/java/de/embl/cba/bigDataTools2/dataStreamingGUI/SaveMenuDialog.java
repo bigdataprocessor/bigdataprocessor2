@@ -1,6 +1,7 @@
 package de.embl.cba.bigDataTools2.dataStreamingGUI;
 
 import de.embl.cba.bigDataTools2.saving.SavingSettings;
+import de.embl.cba.bigDataTools2.viewers.ImageViewer;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -37,8 +38,10 @@ public class SaveMenuDialog extends JFrame implements ActionListener {
     private final JButton stopSaving = new JButton(STOP_SAVING);
     private JFileChooser fc;
     protected final JProgressBar progressBar;
+    private final ImageViewer imageViewer;
 
-    public SaveMenuDialog() {
+    public SaveMenuDialog(ImageViewer imageViewer) {
+        this.imageViewer = imageViewer;
         JTabbedPane menu = new JTabbedPane();
         ArrayList<JPanel> mainPanels = new ArrayList<>();
         ArrayList<JPanel> panels = new ArrayList<>();
@@ -154,7 +157,7 @@ public class SaveMenuDialog extends JFrame implements ActionListener {
                 save.setEnabled(false);
                 DataStreamingTools.executorService.submit(() -> {
                     new ProgressBar(this).createGUIandRunMonitor();
-                    DataStreamingUI.dataStreamingTools.saveImage(savingSettings);
+                    DataStreamingTools.saveImage(savingSettings,imageViewer);
                 });
 
             }

@@ -1,5 +1,7 @@
 package de.embl.cba.bigDataTools2.dataStreamingGUI;
 
+import de.embl.cba.bigDataTools2.viewers.ImageViewer;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,8 +23,10 @@ public class ObliqueMenuDialog extends JDialog implements ActionListener {
     JButton obliqueUpdate =  new JButton(ObliqueUpdate);
     public int NumberOfTimesCalled=1;
     public ShearingSettings shearingSettings = new ShearingSettings();
+    private final ImageViewer imageViewer;
 
-    public ObliqueMenuDialog() {
+    public ObliqueMenuDialog(ImageViewer imageViewer) {
+        this.imageViewer = imageViewer;
         JTabbedPane menu = new JTabbedPane();
         ArrayList<JPanel> mainPanels = new ArrayList();
         ArrayList<JPanel> panels = new ArrayList();
@@ -105,7 +109,7 @@ public class ObliqueMenuDialog extends JDialog implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         getShearingSettings(shearingSettings);
         shearingSettings.useObliqueAngle = true;
-        DataStreamingTools.shearImage(shearingSettings);
+        DataStreamingTools.shearImage(shearingSettings,imageViewer);
     }
 
     public void getShearingSettings(ShearingSettings shearingSettings) {

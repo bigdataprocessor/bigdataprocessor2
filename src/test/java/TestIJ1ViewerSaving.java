@@ -34,6 +34,6 @@ public class TestIJ1ViewerSaving
 		savingSettings.filePath = "/Users/tischer/Desktop/bc-saving/im";
 		savingSettings.fileType = SavingSettings.FileType.TIFF_as_STACKS;
 
-		dataStreamingTools.saveImage( savingSettings );
+		dataStreamingTools.saveImage( savingSettings,ViewerUtils.getImageViewer( ViewerUtils.IJ1_VIEWER ) );
 	}
 }

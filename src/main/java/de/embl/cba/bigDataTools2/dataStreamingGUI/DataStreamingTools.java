@@ -27,11 +27,10 @@ import java.util.concurrent.RecursiveTask;
 
 public class DataStreamingTools {
 
-    public static FileInfoSource fileInfoSource;
+    public FileInfoSource fileInfoSource;
     public static ExecutorService executorService;  //General thread pool
     public static ExecutorService trackerThreadPool; // Thread pool for tracking
-    public static ImageViewer selectedImageViewer;
-    public static int numThreads;
+    public int numThreads;
 
 
     public DataStreamingTools() {
@@ -63,12 +62,11 @@ public class DataStreamingTools {
         imageViewer.show();
         imageViewer.addMenus(new BdvMenus());
         Utils.doAutoContrastPerChannel(imageViewer);
-        selectedImageViewer = imageViewer;
     }
 
-    public void saveImage(SavingSettings savingSettings) {
-        String streamName = selectedImageViewer.getImageName();
-        RandomAccessibleInterval rai = selectedImageViewer.getRai();
+    public static void saveImage(SavingSettings savingSettings,ImageViewer viewer) {
+        String streamName = viewer.getImageName();
+        RandomAccessibleInterval rai = viewer.getRai();
         if (streamName.equalsIgnoreCase(FileInfoConstants.CROPPED_STREAM_NAME)) {
             rai = Views.zeroMin(rai);
         }
@@ -81,19 +79,8 @@ public class DataStreamingTools {
         SaveCentral.interruptSavingThreads = true;
     }
 
-
-    /*Alternate Logic for shear*/
-    public static <T extends RealType<T> & NativeType<T>> void shearImage1(ShearingSettings shearingSettings) {
-        System.out.println("Shear Factor X " + shearingSettings.shearingFactorX);
-        System.out.println("Shear Factor Y " + shearingSettings.shearingFactorY);
-        AffineTransform3D affine = new AffineTransform3D();
-        affine.set(shearingSettings.shearingFactorX, 0, 2);
-        affine.set(shearingSettings.shearingFactorY, 1, 2);
-        selectedImageViewer.repaint(affine);
-    }
-
-    public static <T extends RealType<T> & NativeType<T>> void shearImage(ShearingSettings shearingSettings) {
-        RandomAccessibleInterval rai = selectedImageViewer.getRai();
+    public static <T extends RealType<T> & NativeType<T>> void shearImage(ShearingSettings shearingSettings,ImageViewer viewer) {
+        RandomAccessibleInterval rai = viewer.getRai();
         List<RandomAccessibleInterval<T>> timeTracks = new ArrayList<>();
         int nTimeFrames = (int) rai.dimension(FileInfoConstants.T_AXIS_POSITION);
         int nChannels = (int) rai.dimension(FileInfoConstants.C_AXIS_POSITION);
@@ -115,13 +102,13 @@ public class DataStreamingTools {
         RandomAccessibleInterval sheared = Views.stack(timeTracks);
         sheared = Views.permute(sheared, FileInfoConstants.C_AXIS_POSITION, FileInfoConstants.Z_AXIS_POSITION);
         System.out.println("Time elapsed(ms) " + (System.currentTimeMillis() - startTime));
-        selectedImageViewer.repaint(sheared, "sheared");
+        viewer.repaint(sheared, "sheared");
         double[] centerCoordinates = {sheared.min(FileInfoConstants.X_AXIS_POSITION) / 2.0,
                 sheared.max(FileInfoConstants.Y_AXIS_POSITION) / 2.0,
                 (sheared.max(FileInfoConstants.Z_AXIS_POSITION) - sheared.min(FileInfoConstants.Z_AXIS_POSITION)) / 2
                         + sheared.min(FileInfoConstants.Z_AXIS_POSITION)};
-        selectedImageViewer.shiftImageToCenter(centerCoordinates);
-        Utils.doAutoContrastPerChannel(selectedImageViewer);
+        viewer.shiftImageToCenter(centerCoordinates);
+        Utils.doAutoContrastPerChannel(viewer);
     }
 
 
@@ -152,8 +139,7 @@ public class DataStreamingTools {
                 RandomAccessibleInterval intervalView = Views.interval(af, transformedInterval);
                 channelTracks.add(intervalView);
             }
-            RandomAccessibleInterval cStackedRAI = Views.stack(channelTracks);
-            return cStackedRAI;
+            return Views.stack(channelTracks);
         }
     }
 }
