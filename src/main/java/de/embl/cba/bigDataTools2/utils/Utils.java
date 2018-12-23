@@ -270,6 +270,7 @@ public class Utils {
 //    }
 
     public static String fixDirectoryFormat(String directory){
+        directory = directory.trim();
 	    char last = directory.charAt(directory.length()-1);
 	    if(last != File.separatorChar){
             directory= directory + File.separator;
