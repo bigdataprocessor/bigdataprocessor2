@@ -26,12 +26,12 @@ import ome.xml.model.primitives.PositiveInteger;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class SaveImgAsTIFFStacks implements Runnable {
-    int t;
-    AtomicInteger counter;
-    SavingSettings savingSettings;
-    final long startTime;
+    private final int t;
+    private final AtomicInteger counter;
+    private final SavingSettings savingSettings;
+    private final long startTime;
 
-    Logger logger = new IJLazySwingLogger();
+    private final Logger logger = new IJLazySwingLogger();
 
 
     public SaveImgAsTIFFStacks(int t,
@@ -47,15 +47,15 @@ public class SaveImgAsTIFFStacks implements Runnable {
     @Override
     public void run() {
 
-            // TODO:
-            // - check whether enough RAM is available to execute current thread
-            // - if not, run GC and wait until there is enough
-            // - estimate 3x more RAM then actually necessary
-            // - if waiting takes to long somehoe terminate in a nice way
+        // TODO:
+        // - check whether enough RAM is available to execute current thread
+        // - if not, run GC and wait until there is enough
+        // - estimate 3x more RAM then actually necessary
+        // - if waiting takes to long somehoe terminate in a nice way
 
-            //long freeMemoryInBytes = IJ.maxMemory() - IJ.currentMemory();
-            RandomAccessibleInterval image = savingSettings.image;
-            final long totalSlices = image.dimension(FileInfoConstants.T_AXIS_POSITION) * image.dimension(FileInfoConstants.C_AXIS_POSITION);
+        //long freeMemoryInBytes = IJ.maxMemory() - IJ.currentMemory();
+        RandomAccessibleInterval image = savingSettings.image;
+        final long totalSlices = image.dimension(FileInfoConstants.T_AXIS_POSITION) * image.dimension(FileInfoConstants.C_AXIS_POSITION);
 //            long numBytesOfImage = image.dimension(FileInfoConstants.X_AXIS_POSITION) *
 //                    image.dimension(FileInfoConstants.Y_AXIS_POSITION) *
 //                    image.dimension(FileInfoConstants.Z_AXIS_POSITION) *
@@ -66,86 +66,85 @@ public class SaveImgAsTIFFStacks implements Runnable {
 //            if (numBytesOfImage > 1.5 * freeMemoryInBytes) {
 //                // TODO: do something...
 //            }
-            int totalChannels = Math.toIntExact(savingSettings.image.dimension(FileInfoConstants.C_AXIS_POSITION));
-            for (int c = 0; c < totalChannels; c++) {
+        int totalChannels = Math.toIntExact(savingSettings.image.dimension(FileInfoConstants.C_AXIS_POSITION));
+        for (int c = 0; c < totalChannels; c++) {
+            if (SaveCentral.interruptSavingThreads) {
+                logger.progress("Stopped saving thread: ", "" + t);
+                return;
+            }
+            // Load
+            //   ImagePlus impChannelTime = getDataCube( c );  May be faster???
+            long[] minInterval = new long[]{0, 0, c, 0, this.t}; //XYCZT order
+            long[] maxInterval = new long[]{image.dimension(FileInfoConstants.X_AXIS_POSITION) - 1, image.dimension(FileInfoConstants.Y_AXIS_POSITION) - 1, c,
+                    image.dimension(FileInfoConstants.Z_AXIS_POSITION) - 1,
+                    this.t};
+            RandomAccessibleInterval newRai = Views.interval(image, minInterval, maxInterval);
+            ImagePlus impChannelTime = ImageJFunctions.wrap(newRai, "slice");
+            // Gate
+            //
+            if (savingSettings.gate) {
+                gate(impChannelTime, savingSettings.gateMin, savingSettings.gateMax);
+            }
+
+            // Convert
+            //
+            if (savingSettings.convertTo8Bit) {
+                IJ.setMinAndMax(impChannelTime, savingSettings.mapTo0, savingSettings.mapTo255);
+                IJ.run(impChannelTime, "8-bit", "");
+            }
+
+            if (savingSettings.convertTo16Bit) {
+                IJ.run(impChannelTime, "16-bit", "");
+            }
+
+            // Bin, project and save
+            //
+            String[] binnings = savingSettings.bin.split(";");
+            for (String binning : binnings) {
+
                 if (SaveCentral.interruptSavingThreads) {
                     logger.progress("Stopped saving thread: ", "" + t);
                     return;
                 }
-                // Load
-                //   ImagePlus impChannelTime = getDataCube( c );  May be faster???
-                long[] minInterval = new long[]{0, 0, c, 0, 0}; //XYCZT order
-                long[] maxInterval = new long[]{image.dimension(FileInfoConstants.X_AXIS_POSITION)-1, image.dimension(FileInfoConstants.Y_AXIS_POSITION)-1, c,
-                        image.dimension(FileInfoConstants.Z_AXIS_POSITION)-1, image.dimension(FileInfoConstants.T_AXIS_POSITION)-1};
-                RandomAccessibleInterval newRai = Views.interval(image, minInterval, maxInterval);
-                ImagePlus impChannelTime = ImageJFunctions.wrap(newRai, "slice", null); // TODO : check if threads can be given for this operation in place of null --ashis
-                // Gate
+
+                String newPath = savingSettings.filePath;
+
+                ImagePlus impBinned = impChannelTime;
+                int[] binningA = Utils.delimitedStringToIntegerArray(binning, ",");
+                if (binningA[0] > 1 || binningA[1] > 1 || binningA[2] > 1) {
+                    Binner binner = new Binner();
+                    impBinned = binner.shrink(impChannelTime, binningA[0], binningA[1], binningA[2], Binner.AVERAGE);
+                    newPath = savingSettings.filePath + "--bin-" + binningA[0] + "-" + binningA[1] + "-" + binningA[2];
+                }
+
+
+                // Save volume
                 //
-                if (savingSettings.gate) {
-                    gate(impChannelTime, savingSettings.gateMin, savingSettings.gateMax);
-                }
-
-                // Convert
-                //
-                if (savingSettings.convertTo8Bit) {
-                    IJ.setMinAndMax(impChannelTime, savingSettings.mapTo0, savingSettings.mapTo255);
-                    IJ.run(impChannelTime, "8-bit", "");
-                }
-
-                if (savingSettings.convertTo16Bit) {
-                    IJ.run(impChannelTime, "16-bit", "");
-                }
-
-                // Bin, project and save
-                //
-                String[] binnings = savingSettings.bin.split(";");
-                for (String binning : binnings) {
-
-                    if (SaveCentral.interruptSavingThreads) {
-                        logger.progress("Stopped saving thread: ", "" + t);
-                        return;
-                    }
-
-                    String newPath = savingSettings.filePath;
-
-                    ImagePlus impBinned = impChannelTime;
-                    int[] binningA = Utils.delimitedStringToIntegerArray(binning, ",");
-                    if (binningA[0] > 1 || binningA[1] > 1 || binningA[2] > 1) {
-                        Binner binner = new Binner();
-                        impBinned = binner.shrink(impChannelTime, binningA[0], binningA[1], binningA[2], binner.AVERAGE);
-                        newPath = savingSettings.filePath + "--bin-" + binningA[0] + "-" + binningA[1] + "-" + binningA[2];
-                    }
-
-
-                    // Save volume
-                    //
-                    if (savingSettings.saveVolume) {
-                        saveAsTiff(impBinned, c, t, savingSettings.compression, savingSettings.rowsPerStrip, newPath);
-
-                    }
-                    // Save projections
-                    // TODO: save into one single file
-                    if (savingSettings.saveProjection) {
-                        saveAsTiffXYZMaxProjection(impBinned, c, t, newPath);
-                    }
+                if (savingSettings.saveVolume) {
+                    saveAsTiff(impBinned, c, t, savingSettings.compression, savingSettings.rowsPerStrip, newPath);
 
                 }
-                SaveImgAsHDF5Helper.documentProgress( totalSlices,counter,logger,startTime);
+                // Save projections
+                // TODO: save into one single file
+                if (savingSettings.saveProjection) {
+                    saveAsTiffXYZMaxProjection(impBinned, c, t, newPath);
+                }
+
             }
+            SaveImgAsHDF5Helper.documentProgress(totalSlices, counter, logger, startTime);
+        }
     }
 
-    public void saveAsTiff(ImagePlus imp, int c, int t, String compression, int rowsPerStrip, String path)
-    {
+    private void saveAsTiff(ImagePlus imp, int c, int t, String compression, int rowsPerStrip, String path) {
 
-        if( compression.equals("LZW") ) // Use BioFormats
+        if (compression.equals("LZW")) // Use BioFormats
         {
 
             String sC = String.format("%1$02d", c);
             String sT = String.format("%1$05d", t);
             String pathCT = path + "--C" + sC + "--T" + sT + ".ome.tif";
 
-            try
-            {
+            try {
                 ServiceFactory factory = new ServiceFactory();
                 OMEXMLService service = factory.getInstance(OMEXMLService.class);
                 IMetadata omexml = service.createOMEXMLMetadata();
@@ -153,12 +152,9 @@ public class SaveImgAsTIFFStacks implements Runnable {
                 omexml.setPixelsID("Pixels:0", 0);
                 omexml.setPixelsBinDataBigEndian(Boolean.TRUE, 0, 0);
                 omexml.setPixelsDimensionOrder(DimensionOrder.XYZCT, 0);
-                if ( imp.getBytesPerPixel() == 2)
-                {
+                if (imp.getBytesPerPixel() == 2) {
                     omexml.setPixelsType(PixelType.UINT16, 0);
-                }
-                else if ( imp.getBytesPerPixel() == 1 )
-                {
+                } else if (imp.getBytesPerPixel() == 1) {
                     omexml.setPixelsType(PixelType.UINT8, 0);
                 }
                 omexml.setPixelsSizeX(new PositiveInteger(imp.getWidth()), 0);
@@ -173,7 +169,7 @@ public class SaveImgAsTIFFStacks implements Runnable {
 
                 ImageWriter writer = new ImageWriter();
                 writer.setCompression(TiffWriter.COMPRESSION_LZW);
-                writer.setValidBitsPerPixel(imp.getBytesPerPixel()*8);
+                writer.setValidBitsPerPixel(imp.getBytesPerPixel() * 8);
                 writer.setMetadataRetrieve(omexml);
                 writer.setId(pathCT);
                 writer.setWriteSequentially(true); // ? is this necessary
@@ -185,25 +181,19 @@ public class SaveImgAsTIFFStacks implements Runnable {
                     IFD ifd = new IFD();
                     ifd.put(IFD.ROWS_PER_STRIP, rowsPerStripArray);
                     //tiffWriter.saveBytes(z, Bytes.fromShorts((short[])image.getStack().getProcessor(z+1).getPixels(), false), ifd);
-                    if ( imp.getBytesPerPixel() == 2 )
-                    {
+                    if (imp.getBytesPerPixel() == 2) {
                         tiffWriter.saveBytes(z, ShortToByteBigEndian((short[]) imp.getStack().getProcessor(z + 1).getPixels()), ifd);
-                    }
-                    else if ( imp.getBytesPerPixel() == 1 )
-                    {
-                        tiffWriter.saveBytes(z, (byte[])(imp.getStack().getProcessor(z + 1).getPixels()), ifd);
+                    } else if (imp.getBytesPerPixel() == 1) {
+                        tiffWriter.saveBytes(z, (byte[]) (imp.getStack().getProcessor(z + 1).getPixels()), ifd);
 
                     }
                 }
                 writer.close();
 
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 logger.error(e.toString());
             }
-        }
-        else  // no compression: use ImageJ's FileSaver, as it is faster than BioFormats
+        } else  // no compression: use ImageJ's FileSaver, as it is faster than BioFormats
         {
             FileSaver fileSaver = new FileSaver(imp);
             String sC = String.format("%1$02d", c);
@@ -214,46 +204,42 @@ public class SaveImgAsTIFFStacks implements Runnable {
         }
     }
 
-    public static byte [] ShortToByteBigEndian(short [] input) { //TODO: May be this can goto a new SaveHelper class
+    private static byte[] ShortToByteBigEndian(short[] input) { //TODO: May be this can goto a new SaveHelper class
         int short_index, byte_index;
         int iterations = input.length;
 
-        byte [] buffer = new byte[input.length * 2];
+        byte[] buffer = new byte[input.length * 2];
 
         short_index = byte_index = 0;
 
-        for(/*NOP*/; short_index != iterations; /*NOP*/) {
+        for (/*NOP*/; short_index != iterations; /*NOP*/) {
             // Big Endian: store higher byte first
             buffer[byte_index] = (byte) ((input[short_index] & 0xFF00) >> 8);
-            buffer[byte_index + 1]     = (byte) (input[short_index] & 0x00FF);
+            buffer[byte_index + 1] = (byte) (input[short_index] & 0x00FF);
 
-            ++short_index; byte_index += 2;
+            ++short_index;
+            byte_index += 2;
         }
         return buffer;
     }
 
-    public static void gate( ImagePlus imp, int min, int max ) //TODO: May be this can goto a new SaveHelper class
+    private static void gate(ImagePlus imp, int min, int max) //TODO: May be this can goto a new SaveHelper class
     {
         ImageStack stack = imp.getStack();
 
-        for ( int i = 1; i < stack.size(); ++i )
-        {
-            if ( imp.getBitDepth() == 8 )
-            {
-                byte[] pixels = (byte[]) stack.getPixels( i );
-                for ( int j = 0; j < pixels.length; j++ )
-                {
+        for (int i = 1; i < stack.size(); ++i) {
+            if (imp.getBitDepth() == 8) {
+                byte[] pixels = (byte[]) stack.getPixels(i);
+                for (int j = 0; j < pixels.length; j++) {
                     int v = pixels[j] & 0xff;
-                    pixels[j] = ( (v < min) || (v > max) ) ? 0 : pixels[j];
+                    pixels[j] = ((v < min) || (v > max)) ? 0 : pixels[j];
                 }
             }
-            if ( imp.getBitDepth() == 16 )
-            {
-                short[] pixels = (short[]) stack.getPixels( i );
-                for ( int j = 0; j < pixels.length; j++ )
-                {
+            if (imp.getBitDepth() == 16) {
+                short[] pixels = (short[]) stack.getPixels(i);
+                for (int j = 0; j < pixels.length; j++) {
                     int v = pixels[j] & 0xffff;
-                    pixels[j] = ( (v < min) || (v > max) ) ? 0 : pixels[j];
+                    pixels[j] = ((v < min) || (v > max)) ? 0 : pixels[j];
                 }
             }
 
@@ -261,13 +247,12 @@ public class SaveImgAsTIFFStacks implements Runnable {
 
     }
 
-    public static void saveAsTiffXYZMaxProjection(ImagePlus imp, int c, int t, String path)
-    {
-        ProjectionXYZ projectionXYZ = new ProjectionXYZ( imp );
-        projectionXYZ.setDoscale( false );
+    public static void saveAsTiffXYZMaxProjection(ImagePlus imp, int c, int t, String path) {
+        ProjectionXYZ projectionXYZ = new ProjectionXYZ(imp);
+        projectionXYZ.setDoscale(false);
         ImagePlus projection = projectionXYZ.createProjection();
 
-        FileSaver fileSaver = new FileSaver( projection );
+        FileSaver fileSaver = new FileSaver(projection);
         String sC = String.format("%1$02d", c);
         String sT = String.format("%1$05d", t);
         String pathCT = path + "--xyz-max-projection" + "--C" + sC + "--T" + sT + ".tif";
