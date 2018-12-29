@@ -31,9 +31,9 @@ import static ch.systemsx.cisd.hdf5.hdf5lib.HDF5Constants.*;
 import static java.lang.Long.min;
 
 
-public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implements Runnable{
+public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implements Runnable {
     private final ImgPlus<T> image;
-    private static final int RANK = 5;
+    private static final int RANK = 3;
     private final int nFrames;
     private final int nChannels;
     private final int nZ;
@@ -48,8 +48,6 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
     private final long[] maxDims = {
             HDF5Constants.H5S_UNLIMITED,
             HDF5Constants.H5S_UNLIMITED,
-            HDF5Constants.H5S_UNLIMITED,
-            HDF5Constants.H5S_UNLIMITED,
             HDF5Constants.H5S_UNLIMITED
     };
     private final int current_t;
@@ -61,12 +59,11 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
     private AtomicInteger counter;
     private final long startTime;
     private final T nativeType;
+    private final Logger logger = new IJLazySwingLogger();
 
-    Logger logger = new IJLazySwingLogger();
-
-    public SaveImgAsHDF5Stacks(String dataset,SavingSettings savingSettings, int t,AtomicInteger counter, long startTime) {
-        this.nativeType = (T)Util.getTypeFromInterval(savingSettings.image);
-        Img imgTemp = ImgView.wrap(savingSettings.image,new CellImgFactory<>(nativeType));
+    public SaveImgAsHDF5Stacks(String dataset, SavingSettings savingSettings, int t, AtomicInteger counter, long startTime) {
+        this.nativeType = (T) Util.getTypeFromInterval(savingSettings.image);
+        Img imgTemp = ImgView.wrap(savingSettings.image, new CellImgFactory<>(nativeType));
         this.image = new ImgPlus<>(imgTemp, "", FileInfoConstants.AXES_ORDER);
 
         if (this.image.dimensionIndex(Axes.TIME) >= 0) {
@@ -96,7 +93,7 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
         this.savingSettings = savingSettings;
         this.gateMax = savingSettings.gateMax;
         this.gateMin = savingSettings.gateMin;
-        this.counter =  counter;
+        this.counter = counter;
         this.startTime = startTime;
     }
 
@@ -120,9 +117,9 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
 //        if (numBytesOfImage > 1.5 * freeMemoryInBytes) {
 //            // TODO: do something...
 //        }
-        final long totalSlices = nFrames*nChannels;
+        final long totalSlices = nFrames * nChannels;
         RandomAccessibleInterval image = savingSettings.image;
-        for (int c = 0; c < this.nChannels ; c++) {
+        for (int c = 0; c < this.nChannels; c++) {
             if (SaveCentral.interruptSavingThreads) {
                 System.out.println("STOP hdf5");
                 logger.progress("Stopped saving thread: ", "" + this.current_t);
@@ -130,14 +127,13 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
             }
             // Load
             //   ImagePlus impChannelTime = getDataCube( c );  May be faster???
-            long[] minInterval = new long[]{0, 0, c, 0, 0}; //XYCZT order
-            long[] maxInterval = new long[]{image.dimension(FileInfoConstants.X_AXIS_POSITION)-1, image.dimension(FileInfoConstants.Y_AXIS_POSITION)-1, c,
-                    image.dimension(FileInfoConstants.Z_AXIS_POSITION)-1, image.dimension(FileInfoConstants.T_AXIS_POSITION)-1};
+            long[] minInterval = new long[]{0, 0, c, 0, this.current_t}; //XYCZT order
+            long[] maxInterval = new long[]{image.dimension(FileInfoConstants.X_AXIS_POSITION) - 1, image.dimension(FileInfoConstants.Y_AXIS_POSITION) - 1, c,
+                    image.dimension(FileInfoConstants.Z_AXIS_POSITION) - 1, this.current_t};
             RandomAccessibleInterval newRai = Views.interval(image, minInterval, maxInterval);
-
             // Convert
-            newRai = SaveImgAsHDF5Helper.convertor(newRai,this.savingSettings);
-            Img<T> imgChannelTime = null;
+            newRai = SaveImgAsHDF5Helper.convertor(newRai, this.savingSettings);
+            Img<T> imgChannelTime;
             imgChannelTime = ImgView.wrap(newRai, new CellImgFactory(this.nativeType));
 
             // Bin, project and save
@@ -155,43 +151,39 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
                 // - not for imarisH5 saving format as there will be a resolution pyramid anyway
                 //
                 Img<T> imgBinned = imgChannelTime;
-                ImgPlus<T> impBinned = new ImgPlus<>(imgBinned,"",FileInfoConstants.AXES_ORDER);
+                ImgPlus<T> impBinned = new ImgPlus<>(imgBinned, "", FileInfoConstants.AXES_ORDER);
                 int[] binningA = Utils.delimitedStringToIntegerArray(binning, ",");
                 if (binningA[0] > 1 || binningA[1] > 1 || binningA[2] > 1) {
-                    newPath = SaveImgAsHDF5Helper.doBinning(impBinned,binningA,newPath,null);
+                    newPath = SaveImgAsHDF5Helper.doBinning(impBinned, binningA, newPath, null);
                 }
                 String sC = String.format("%1$02d", c);
                 String sT = String.format("%1$05d", current_t);
                 newPath = newPath + "--C" + sC + "--T" + sT + ".h5";
 
                 if (savingSettings.saveVolume) {
-                        this.current_c = c;
-                        writeHDF5(impBinned, newPath);
+                    this.current_c = c;
+                    writeHDF5(impBinned, newPath);
                 }
                 // Save projections
                 // TODO: save into one single file
                 if (savingSettings.saveProjection) {
-                    ImagePlus imagePlusImage = ImageJFunctions.wrap(newRai,"",null);
+                    ImagePlus imagePlusImage = ImageJFunctions.wrap(newRai, "", null);
                     SaveImgAsTIFFStacks.saveAsTiffXYZMaxProjection(imagePlusImage, c, this.current_t, newPath);
                 }
 
             }
-            SaveImgAsHDF5Helper.documentProgress( totalSlices,counter,logger,startTime);
+            SaveImgAsHDF5Helper.documentProgress(totalSlices, counter, logger, startTime);
         }
     }
 
 
-
-
-    public void writeHDF5(ImgPlus<T> imgBinned,String filename) {
-        long[] chunk_dims = {min(nCols, 256),
+    private void writeHDF5(ImgPlus<T> imgBinned, String filename) {
+        long[] chunk_dims = {min(nZ, 256),
                 min(nRows, 256),
-                1,
-                min(nZ, 256),
-                1
+                min(nCols, 256)
         };
-        logger.info("Export Dimensions in xyczt: " +String.valueOf(nCols) + "x" +String.valueOf(nRows) + "x" + String.valueOf(nChannels)+  "x"+
-                                                    String.valueOf(nFrames) + "x" + String.valueOf(nZ));
+        logger.info("Export Dimensions in xyczt: " + String.valueOf(nCols) + "x" + String.valueOf(nRows) + "x" + String.valueOf(nChannels) + "x" +
+                String.valueOf(nFrames) + "x" + String.valueOf(nZ));
 
         try {
             fileId = H5.H5Fcreate(filename, H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
@@ -202,16 +194,16 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
             T val = imgBinned.firstElement();
             if (val instanceof UnsignedByteType) {
                 logger.info("Writing uint 8.");
-                writeIndividualChannels( imgBinned,H5T_NATIVE_UINT8);
+                writeIndividualChannels(imgBinned, H5T_NATIVE_UINT8);
             } else if (val instanceof UnsignedShortType) {
                 logger.info("Writing uint 16.");
-                writeIndividualChannels( imgBinned,H5T_NATIVE_UINT16);
+                writeIndividualChannels(imgBinned, H5T_NATIVE_UINT16);
             } else if (val instanceof UnsignedIntType) {
                 logger.info("Writing uint 32.");
-                writeIndividualChannels( imgBinned,H5T_NATIVE_UINT32);
+                writeIndividualChannels(imgBinned, H5T_NATIVE_UINT32);
             } else if (val instanceof FloatType) {
                 logger.info("Writing float 32.");
-                writeIndividualChannels( imgBinned,H5T_NATIVE_FLOAT);
+                writeIndividualChannels(imgBinned, H5T_NATIVE_FLOAT);
             } else {
                 logger.error("Type Not handled yet!" + val.getClass());
                 throw new IllegalArgumentException("Unsupported Type: " + val.getClass());
@@ -233,21 +225,17 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
         }
     }
 
-    private void writeIndividualChannels(ImgPlus<T> imgBinned,int hdf5DataType) {
+    private void writeIndividualChannels(ImgPlus<T> imgBinned, int hdf5DataType) {
 
         long[] channelDims = new long[RANK];
-
-        channelDims[0] = nCols; // x
+        channelDims[0] = nZ; //z
         channelDims[1] = nRows; // y
-        channelDims[2] = 1; //c
-        channelDims[3] = nZ; //z
-        channelDims[4] = 1; // t
+        channelDims[2] = nCols; // x
+
         long[] iniDims = new long[RANK];
-        iniDims[0] = nCols;
+        iniDims[0] = 1;
         iniDims[1] = nRows;
-        iniDims[2] = 1;
-        iniDims[3] = 1;
-        iniDims[4] = 1;
+        iniDims[2] = nCols;
 
         try {
             dataspaceId = H5.H5Screate_simple(RANK, iniDims, maxDims);
@@ -269,26 +257,26 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
         if (image.dimensionIndex(Axes.CHANNEL) >= 0)
             rai.setPosition(this.current_c, image.dimensionIndex(Axes.CHANNEL));
 
-            for (int z = 0; z < nZ; z++) {
-                if (image.dimensionIndex(Axes.Z) >= 0) {
-                    rai.setPosition(z, image.dimensionIndex(Axes.Z));
-                }
-                // Construct 2D array of appropriate data type.
-                if (hdf5DataType == H5T_NATIVE_UINT8) {
-                    pixelSlice = new Byte[nRows][nCols];
-                } else if (hdf5DataType == H5T_NATIVE_UINT16) {
-                    pixelSlice = new Short[nRows][nCols];
-                } else if (hdf5DataType == H5T_NATIVE_UINT32) {
-                    pixelSlice = new Integer[nRows][nCols];
-                } else if (hdf5DataType == H5T_NATIVE_FLOAT) {
-                    pixelSlice = new Float[nRows][nCols];
-                } else {
-                    throw new IllegalArgumentException("Trying to save dataset of unknown datatype.");
-                }
-                fillStackSlice(rai, pixelSlice);
-                long[] start = {0, 0, 0,z,0};
-                writeHyperslabs(hdf5DataType, pixelSlice, start, iniDims);
+        for (int z = 0; z < nZ; z++) {
+            if (image.dimensionIndex(Axes.Z) >= 0) {
+                rai.setPosition(z, image.dimensionIndex(Axes.Z));
             }
+            // Construct 2D array of appropriate data type.
+            if (hdf5DataType == H5T_NATIVE_UINT8) {
+                pixelSlice = new Byte[nRows][nCols];
+            } else if (hdf5DataType == H5T_NATIVE_UINT16) {
+                pixelSlice = new Short[nRows][nCols];
+            } else if (hdf5DataType == H5T_NATIVE_UINT32) {
+                pixelSlice = new Integer[nRows][nCols];
+            } else if (hdf5DataType == H5T_NATIVE_FLOAT) {
+                pixelSlice = new Float[nRows][nCols];
+            } else {
+                throw new IllegalArgumentException("Trying to save dataset of unknown datatype.");
+            }
+            fillStackSlice(rai, pixelSlice);
+            long[] start = {z, 0, 0};
+            writeHyperslabs(hdf5DataType, pixelSlice, start, iniDims);
+        }
         logger.info("compressionLevel: " + String.valueOf(compressionLevel));
         logger.info("Finished writing the HDF5.");
     }
@@ -317,17 +305,17 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
                 rai.setPosition(y, image.dimensionIndex(Axes.Y));
                 T value = rai.get();
                 if (value instanceof UnsignedByteType) {
-                    if(this.gate){
+                    if (this.gate) {
                         int v = (Integer.valueOf(((UnsignedByteType) value).get()).byteValue()) & 0xff;
-                        pixelArray[y][x] = ( (v < this.gateMin) || (v > this.gateMax) ) ? (E)(Byte)(Integer.valueOf(0).byteValue()) :(E) (Byte) (Integer.valueOf(((UnsignedByteType) value).get()).byteValue());
-                    }else {
+                        pixelArray[y][x] = ((v < this.gateMin) || (v > this.gateMax)) ? (E) (Byte) (Integer.valueOf(0).byteValue()) : (E) (Byte) (Integer.valueOf(((UnsignedByteType) value).get()).byteValue());
+                    } else {
                         pixelArray[y][x] = (E) (Byte) (Integer.valueOf(((UnsignedByteType) value).get()).byteValue());
                     }
                 } else if (value instanceof UnsignedShortType) {
-                    if(this.gate){
+                    if (this.gate) {
                         int v = (Integer.valueOf((((UnsignedShortType) value).get())).shortValue()) & 0xffff;
-                        pixelArray[y][x] = ( (v < this.gateMin) || (v > this.gateMax) ) ? (E)(Short)(Integer.valueOf(0).shortValue()) :(E)(Short)(Integer.valueOf((((UnsignedShortType) value).get())).shortValue());
-                    }else {
+                        pixelArray[y][x] = ((v < this.gateMin) || (v > this.gateMax)) ? (E) (Short) (Integer.valueOf(0).shortValue()) : (E) (Short) (Integer.valueOf((((UnsignedShortType) value).get())).shortValue());
+                    } else {
                         pixelArray[y][x] = (E) (Short) (Integer.valueOf((((UnsignedShortType) value).get())).shortValue());
                     }
                 } else if (value instanceof FloatType) {
