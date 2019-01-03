@@ -54,13 +54,16 @@ public class ShowBoundingBoxDialog {
         final AtomicBoolean lock = new AtomicBoolean(false);
         final int boxSetupId = 8888; // some non-existing setup id TODO: make it static and increment for multiple use--ashis
         final String[] axesToCrop;
+        String cropDialogTitleMessage;
         if (includeTimeAxis){
+            cropDialogTitleMessage = "Select 4D section to crop";
             initialInterval = Intervals.createMinMax(minBB[BB_X_POS], minBB[BB_Y_POS], minBB[BB_Z_POS],min[BB_T_POS],
                         maxBB[BB_X_POS], maxBB[BB_Y_POS], maxBB[BB_Z_POS],max[BB_T_POS]); // the initially selected bounding box
             rangeInterval = Intervals.createMinMax(min[BB_X_POS], min[BB_Y_POS], min[BB_Z_POS],min[BB_T_POS],
                     max[BB_X_POS], max[BB_Y_POS], max[BB_Z_POS],max[BB_T_POS]);// the range (bounding box of possible bounding boxes)
             axesToCrop = FileInfoConstants.BOUNDING_BOX_AXES_4D;
         }else {
+            cropDialogTitleMessage = "Select 3D section to crop";
             initialInterval = Intervals.createMinMax(minBB[BB_X_POS], minBB[BB_Y_POS], minBB[BB_Z_POS],
                     maxBB[BB_X_POS], maxBB[BB_Y_POS], maxBB[BB_Z_POS]); // the initially selected bounding box
             rangeInterval = Intervals.createMinMax(min[BB_X_POS], min[BB_Y_POS], min[BB_Z_POS],
@@ -70,7 +73,7 @@ public class ShowBoundingBoxDialog {
 
 
         final CustomBoundingBoxDialog boundingBoxDialog =
-                new CustomBoundingBoxDialog(((BdvHandleFrame) bdv).getBigDataViewer().getViewerFrame(), "Select 3D section to crop ",
+                new CustomBoundingBoxDialog(((BdvHandleFrame) bdv).getBigDataViewer().getViewerFrame(),cropDialogTitleMessage,
                         ((BdvHandleFrame) bdv).getBigDataViewer().getViewer(),
                         ((BdvHandleFrame) bdv).getBigDataViewer().getSetupAssignments(), boxSetupId,
                         initialInterval, rangeInterval,axesToCrop) {
