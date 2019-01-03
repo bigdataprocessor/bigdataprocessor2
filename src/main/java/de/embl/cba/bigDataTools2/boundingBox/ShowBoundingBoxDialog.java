@@ -111,7 +111,7 @@ public class ShowBoundingBoxDialog {
                     private static final long serialVersionUID = 1L;
 
                 };
-        boundingBoxDialog.setModalityType(Dialog.ModalityType.MODELESS);
+        //boundingBoxDialog.setModalityType(Dialog.ModalityType.MODELESS);
         boundingBoxDialog.setVisible(true);
         do {
             try {

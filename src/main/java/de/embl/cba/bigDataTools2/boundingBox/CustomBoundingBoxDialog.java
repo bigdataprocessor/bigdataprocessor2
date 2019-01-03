@@ -36,7 +36,7 @@ import java.awt.event.KeyEvent;
 
 // dialog to change bounding box
 // while dialog is visible, bounding box is added as a source to the viewer
-public class CustomBoundingBoxDialog extends JDialog {
+public class CustomBoundingBoxDialog extends JFrame {
     private static final long serialVersionUID = 1L;
     protected final ModifiableInterval interval;
     protected final BoxRealRandomAccessible<UnsignedShortType> boxRealRandomAccessible;
@@ -70,7 +70,8 @@ public class CustomBoundingBoxDialog extends JDialog {
             final boolean showBoxSource,
             final boolean showBoxOverlay,
             final String[] axesToCrop) {
-        super(owner, title, false);
+        //super(owner, title, false);
+        super( title);
 
         // create a procedural RealRandomAccessible that will render the bounding box
         final UnsignedShortType insideValue = new UnsignedShortType(1000); // inside the box pixel value is 1000
