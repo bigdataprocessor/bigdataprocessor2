@@ -52,7 +52,6 @@ public class BdvMenus extends JMenu implements ActionListener { //TODO: change n
             DataStreamingTools.executorService.submit(() -> {
                 ObliqueMenuDialog obliqueMenuDialog = new ObliqueMenuDialog(imageViewer);
                 obliqueMenuDialog.setVisible(true);
-                obliqueMenuDialog.pack();
             });
         }else if(e.getActionCommand().equalsIgnoreCase("Begin Crop")){
             final RandomAccessibleInterval rai = imageViewer.getRai();
