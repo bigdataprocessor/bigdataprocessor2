@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RecursiveTask;
+import net.imglib2.interpolation.InterpolatorFactory;
 
 public class DataStreamingTools {
 
@@ -92,7 +93,7 @@ public class DataStreamingTools {
         List<ApplyShearToRAI> tasks = new ArrayList<>();
         long startTime = System.currentTimeMillis();
         for (int t = 0; t < nTimeFrames; ++t) {
-            ApplyShearToRAI task = new ApplyShearToRAI(rai, t, nChannels, affine);
+            ApplyShearToRAI task = new ApplyShearToRAI(rai, t, nChannels, affine,shearingSettings.interpolationFactory);
             task.fork();
             tasks.add(task);
         }
@@ -118,12 +119,14 @@ public class DataStreamingTools {
         private int t;
         private final int nChannels;
         private final AffineTransform3D affine;
+        private InterpolatorFactory interpolatorFactory;
 
-        public ApplyShearToRAI(RandomAccessibleInterval rai, int time, int nChannels, AffineTransform3D affine) {
+        public ApplyShearToRAI(RandomAccessibleInterval rai, int time, int nChannels, AffineTransform3D affine,InterpolatorFactory interpolatorFactory) {
             this.rai = rai;
             this.t = time;
             this.nChannels = nChannels;
             this.affine = affine;
+            this.interpolatorFactory = interpolatorFactory;
         }
 
         @Override
@@ -132,7 +135,7 @@ public class DataStreamingTools {
             RandomAccessibleInterval tStep = Views.hyperSlice(rai, FileInfoConstants.T_AXIS_POSITION, t);
             for (int channel = 0; channel < nChannels; ++channel) {
                 RandomAccessibleInterval cStep = Views.hyperSlice(tStep, FileInfoConstants.C_AXIS_POSITION, channel);
-                RealRandomAccessible real = Views.interpolate(Views.extendZero(cStep), new ClampingNLinearInterpolatorFactory<T>());
+                RealRandomAccessible real = Views.interpolate(Views.extendZero(cStep),this.interpolatorFactory);
                 AffineRandomAccessible af = RealViews.affine(real, affine);
                 FinalRealInterval transformedRealInterval = affine.estimateBounds(cStep);
                 FinalInterval transformedInterval = Utils.asIntegerInterval(transformedRealInterval);

@@ -1,6 +1,7 @@
 package de.embl.cba.bigDataTools2.dataStreamingGUI;
 
 import javafx.geometry.Point3D;
+import net.imglib2.interpolation.InterpolatorFactory;
 
 public class ShearingSettings {
 
@@ -16,5 +17,6 @@ public class ShearingSettings {
     public int currentZ=1;
     public int nZ=1;
     public Point3D offset= new Point3D(0,0,0);
+    public InterpolatorFactory interpolationFactory;
 
 }
