@@ -61,7 +61,7 @@ public class BdvMenus extends JMenu implements ActionListener { //TODO: change n
             DataStreamingTools.executorService.submit(() -> {
                 FinalInterval interval = imageViewer.get5DIntervalFromUser();
                 RandomAccessibleInterval croppedRAI = Views.interval(rai, interval);
-                ImageViewer newImageView =  imageViewer.newImageViewer( croppedRAI,FileInfoConstants.CROPPED_STREAM_NAME);
+                ImageViewer newImageView = imageViewer.newImageViewer( croppedRAI,FileInfoConstants.CROPPED_STREAM_NAME);
                 newImageView.show();
                 BdvMenus menus = new BdvMenus();
                 menus.cropSelectMenu.cropSection = interval;
