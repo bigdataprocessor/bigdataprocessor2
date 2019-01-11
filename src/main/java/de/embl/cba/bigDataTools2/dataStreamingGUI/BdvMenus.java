@@ -44,17 +44,14 @@ public class BdvMenus extends JMenu implements ActionListener { //TODO: change n
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equalsIgnoreCase("Save As")) {
             DataStreamingTools.executorService.submit(() -> {
-                DataStreamingTools.selectedImageViewer = imageViewer;
-                SaveMenuDialog saveMenuDialog = new SaveMenuDialog();
+                SaveMenuDialog saveMenuDialog = new SaveMenuDialog(imageViewer);
                 saveMenuDialog.setVisible(true);
                 saveMenuDialog.pack();
             });
         }else if (e.getActionCommand().equalsIgnoreCase("Oblique View")) {
             DataStreamingTools.executorService.submit(() -> {
-                DataStreamingTools.selectedImageViewer = imageViewer;
-                ObliqueMenuDialog obliqueMenuDialog = new ObliqueMenuDialog();
+                ObliqueMenuDialog obliqueMenuDialog = new ObliqueMenuDialog(imageViewer);
                 obliqueMenuDialog.setVisible(true);
-                obliqueMenuDialog.pack();
             });
         }else if(e.getActionCommand().equalsIgnoreCase("Begin Crop")){
             final RandomAccessibleInterval rai = imageViewer.getRai();

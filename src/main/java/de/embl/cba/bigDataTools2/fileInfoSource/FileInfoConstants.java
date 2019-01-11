@@ -29,6 +29,7 @@ public class FileInfoConstants {
     public static final int T_AXIS_POSITION=4;
     public static final int TOTAL_AXES = 5;
     public static final AxisType[] AXES_ORDER = {Axes.X, Axes.Y, Axes.CHANNEL, Axes.Z, Axes.TIME};
+    public static final int MAX_ALLOWED_IMAGE_DIMS = AXES_ORDER.length;
     public static final String CROPPED_STREAM_NAME = "cropped";
     public static final String TRACKED_STREAM_NAME = "tracked";
     public static final String IMAGE_NAME = "stream";
@@ -37,7 +38,8 @@ public class FileInfoConstants {
     public static final int CELL_DIM_Y = 15;
     public static final String CENTER_OF_MASS = "Center of Mass";
     public static final String CROSS_CORRELATION = "Cross Correlation";
-
+    public static final String[] BOUNDING_BOX_AXES_3D ={"x","y","z"};
+    public static final String[] BOUNDING_BOX_AXES_4D ={"x","y","z","t"};
 
 
     public static final String[] POSSIBLE_HDF5_DATASETNAMES = new String[] {"None",

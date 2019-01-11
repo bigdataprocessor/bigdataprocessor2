@@ -21,7 +21,7 @@ import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Plugin(type = Command.class, menuPath = "Plugins>BigDataTools>BigImporter (Beta)", initializer = "init")
+@Plugin(type = Command.class, menuPath = "Plugins>BigDataTools>BigDataConverter (Beta)", initializer = "init")
 public class LazyLoadingCommand<T extends RealType<T> & NativeType<T>> implements Command {
     @Parameter
     public static UIService uiService;

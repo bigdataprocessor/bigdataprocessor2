@@ -1,6 +1,7 @@
 import de.embl.cba.bigDataTools2.dataStreamingGUI.DataStreamingTools;
 import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
 import de.embl.cba.bigDataTools2.saving.SavingSettings;
+import de.embl.cba.bigDataTools2.viewers.ImageViewer;
 import de.embl.cba.bigDataTools2.viewers.ViewerUtils;
 import ij.ImageJ;
 
@@ -33,10 +34,7 @@ public class TestIJ1ViewerSaving
 		savingSettings.gate = false;
 		savingSettings.filePath = "/Users/tischer/Desktop/bc-saving/im";
 		savingSettings.fileType = SavingSettings.FileType.TIFF_as_STACKS;
-
-
-		DataStreamingTools.saveImage( savingSettings );
-
+		DataStreamingTools.saveImage( savingSettings, dataStreamingTools.getImageViewer() );
 
 	}
 }

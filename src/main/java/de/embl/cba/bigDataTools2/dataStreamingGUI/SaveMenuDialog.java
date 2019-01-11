@@ -1,6 +1,7 @@
 package de.embl.cba.bigDataTools2.dataStreamingGUI;
 
 import de.embl.cba.bigDataTools2.saving.SavingSettings;
+import de.embl.cba.bigDataTools2.viewers.ImageViewer;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -8,39 +9,42 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 
-public class SaveMenuDialog extends JDialog implements ActionListener {
-    JCheckBox cbLZW = new JCheckBox("LZW Compression (Tiff)");
-    JCheckBox cbSaveVolume = new JCheckBox("Save Volume data");
-    JCheckBox cbSaveProjection = new JCheckBox("Save Projections");
-    JCheckBox cbConvertTo8Bit = new JCheckBox("8-bit Conversion");
-    JCheckBox cbConvertTo16Bit = new JCheckBox("16-bit Conversion");
-    JCheckBox cbGating = new JCheckBox("Gate");
+public class SaveMenuDialog extends JFrame implements ActionListener {
+    private final JCheckBox cbLZW = new JCheckBox("LZW Compression (Tiff)");
+    private final JCheckBox cbSaveVolume = new JCheckBox("Save Volume data");
+    private final JCheckBox cbSaveProjection = new JCheckBox("Save Projections");
+    private final JCheckBox cbConvertTo8Bit = new JCheckBox("8-bit Conversion");
+    private final JCheckBox cbConvertTo16Bit = new JCheckBox("16-bit Conversion");
+    private final JCheckBox cbGating = new JCheckBox("Gate");
 
-    JTextField tfBinning = new JTextField("1,1,1", 10);
-    JTextField tfRowsPerStrip = new JTextField("10", 3);
-    JTextField tfMapTo255 = new JTextField("65535", 5);
-    JTextField tfMapTo0 = new JTextField("0", 5);
-    JTextField tfGateMin = new JTextField("0", 5);
-    JTextField tfGateMax = new JTextField("255", 5);
+    private final JTextField tfBinning = new JTextField("1,1,1", 10);
+    private final JTextField tfRowsPerStrip = new JTextField("10", 3);
+    private final JTextField tfMapTo255 = new JTextField("65535", 5);
+    private final JTextField tfMapTo0 = new JTextField("0", 5);
+    private final JTextField tfGateMin = new JTextField("0", 5);
+    private final JTextField tfGateMax = new JTextField("255", 5);
 
+    @SuppressWarnings("unchecked")
+    private final
     JComboBox comboFileTypeForSaving = new JComboBox(new SavingSettings.FileType[]{
             SavingSettings.FileType.TIFF_as_PLANES,
             SavingSettings.FileType.TIFF_as_STACKS,
             SavingSettings.FileType.HDF5,
             SavingSettings.FileType.HDF5_IMARIS_BDV});
 
-    final String SAVE = "Save";
-    JButton save = new JButton(SAVE);
+    private final String SAVE = "Save";
+    protected final JButton save = new JButton(SAVE);
+    private final String STOP_SAVING = "Stop Saving";
+    private final JButton stopSaving = new JButton(STOP_SAVING);
+    private JFileChooser fc;
+    protected final JProgressBar progressBar;
+    private final ImageViewer imageViewer;
 
-    final String STOP_SAVING = "Stop Saving";
-    JButton stopSaving = new JButton(STOP_SAVING);
-    JFileChooser fc;
-
-    public SaveMenuDialog() {
-
+    public SaveMenuDialog(ImageViewer imageViewer) {
+        this.imageViewer = imageViewer;
         JTabbedPane menu = new JTabbedPane();
-        ArrayList<JPanel> mainPanels = new ArrayList();
-        ArrayList<JPanel> panels = new ArrayList();
+        ArrayList<JPanel> mainPanels = new ArrayList<>();
+        ArrayList<JPanel> panels = new ArrayList<>();
         int j = 0, k = 0;
         mainPanels.add(new JPanel());
         mainPanels.get(k).setLayout(new BoxLayout(mainPanels.get(k), BoxLayout.PAGE_AXIS));
@@ -51,7 +55,7 @@ public class SaveMenuDialog extends JDialog implements ActionListener {
         mainPanels.get(k).add(panels.get(j++));
 
         panels.add(new JPanel());
-        panels.get(j).add(new JLabel("Binnings [pixels]: x1,y1,z1; x2,y2,z2; ... "));
+        panels.get(j).add(new JLabel("Binning [pixels]: x1,y1,z1; x2,y2,z2; ... "));
         panels.get(j).add(tfBinning);
         mainPanels.get(k).add(panels.get(j++));
 
@@ -94,20 +98,23 @@ public class SaveMenuDialog extends JDialog implements ActionListener {
         stopSaving.addActionListener(this);
         panels.get(j).add(stopSaving);
         mainPanels.get(k).add(panels.get(j++));
+
+        panels.add(new JPanel());
+        progressBar = new JProgressBar(0, 100);
+        progressBar.setValue(0);
+        progressBar.setStringPainted(true);
+        progressBar.setVisible(false);
+        panels.get(j).add(progressBar);
+        mainPanels.get(k).add(panels.get(j++));
         menu.add("Saving", mainPanels.get(k++));
 
         add(menu);
-        //setAlwaysOnTop (true);
-        setModal(true);
-        setSize(345, 500);
-        setModalityType(ModalityType.APPLICATION_MODAL);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.out.println(Thread.currentThread().getId());
         if (e.getActionCommand().equals(SAVE)) {
-            SavingSettings.FileType fileType = (SavingSettings.FileType ) comboFileTypeForSaving.getSelectedItem();
+            SavingSettings.FileType fileType = (SavingSettings.FileType) comboFileTypeForSaving.getSelectedItem();
             fc = new JFileChooser(System.getProperty("user.dir"));
             int returnVal = fc.showSaveDialog(SaveMenuDialog.this);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -125,7 +132,7 @@ public class SaveMenuDialog extends JDialog implements ActionListener {
                 savingSettings.mapTo0 = Integer.parseInt(tfMapTo0.getText());
                 savingSettings.mapTo255 = Integer.parseInt(tfMapTo255.getText());
 
-                if (!(fileType.equals( SavingSettings.FileType.TIFF_as_PLANES))) {
+                if (!(fileType.equals(SavingSettings.FileType.TIFF_as_PLANES))) {
                     // TODO: implement below for planes
                     savingSettings.convertTo16Bit = cbConvertTo16Bit.isSelected();
                     savingSettings.gate = cbGating.isSelected();
@@ -140,18 +147,27 @@ public class SaveMenuDialog extends JDialog implements ActionListener {
                 //savingSettings.nThreads = ioThreads;
                 savingSettings.filePath = file.getAbsolutePath();
                 savingSettings.fileType = fileType;
-                if (fileType.equals( SavingSettings.FileType.HDF5_IMARIS_BDV)) {
+                if (fileType.equals(SavingSettings.FileType.HDF5_IMARIS_BDV)) {
                     savingSettings.fileBaseNameIMARIS = file.getName();
                     savingSettings.parentDirectory = file.getParent();
                 }
+
+                progressBar.setVisible(true);
+                pack();
+                save.setEnabled(false);
                 DataStreamingTools.executorService.submit(() -> {
-                    DataStreamingUI.dataStreamingTools.saveImage(savingSettings);
+                    new ProgressBar(this).createGUIandRunMonitor();
+                    DataStreamingTools.saveImage(savingSettings, imageViewer);
                 });
 
             }
         } else if (e.getActionCommand().equals(STOP_SAVING)) {
             DataStreamingTools.stopSave(); // Don't submit to thread pool. Let the main thread handle it.
+            save.setEnabled(true);
+            progressBar.setVisible(false);
+            pack();
         }
     }
+
 }
 

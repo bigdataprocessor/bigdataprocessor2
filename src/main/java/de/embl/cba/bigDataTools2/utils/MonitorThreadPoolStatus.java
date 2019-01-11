@@ -1,5 +1,6 @@
 package de.embl.cba.bigDataTools2.utils;
 
+import de.embl.cba.bigDataTools2.dataStreamingGUI.ProgressBar;
 import de.embl.cba.bigDataTools2.logging.IJLazySwingLogger;
 import de.embl.cba.bigDataTools2.logging.Logger;
 
@@ -29,7 +30,7 @@ public class MonitorThreadPoolStatus {
             }
 
             logger.progress( message, null, start, i, futures.size() );
-
+            ProgressBar.progress = i*100/futures.size(); //Updating UI progress bar.
             try {
                 Thread.sleep(updateFrequencyMilliseconds);
             } catch(InterruptedException ex) {
