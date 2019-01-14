@@ -23,7 +23,7 @@ public class TestIJ1ViewerSaving
 				ViewerUtils.getImageViewer( ViewerUtils.IJ1_VIEWER ) );
 
 
-		final SavingSettings savingSettings = new SavingSettings();
+		/*final SavingSettings savingSettings = new SavingSettings();
 
 		savingSettings.compression = SavingSettings.NONE;
 		savingSettings.bin = "1,1,1"; // TODO: is this correct?
@@ -34,6 +34,9 @@ public class TestIJ1ViewerSaving
 		savingSettings.gate = false;
 		savingSettings.filePath = "/Users/tischer/Desktop/bc-saving/im";
 		savingSettings.fileType = SavingSettings.FileType.TIFF_as_STACKS;
+		*/
+        final SavingSettings savingSettings = SavingSettings.getDefaults();
+
 		DataStreamingTools.saveImage( savingSettings, dataStreamingTools.getImageViewer() );
 
 	}
