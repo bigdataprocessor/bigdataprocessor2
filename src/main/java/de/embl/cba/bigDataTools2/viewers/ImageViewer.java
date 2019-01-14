@@ -34,7 +34,7 @@ public interface ImageViewer {
 
     void repaint(AffineTransform3D viewerTransform);
 
-    void repaint(RandomAccessibleInterval rai, String newStreamName);
+    void replace(RandomAccessibleInterval rai, String newStreamName);
 
     void shiftImageToCenter(double[] centerCoordinates);
 

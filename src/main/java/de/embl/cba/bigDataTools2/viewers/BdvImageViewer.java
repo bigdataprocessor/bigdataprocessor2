@@ -98,7 +98,7 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
     }
 
     @Override
-    public void repaint(RandomAccessibleInterval newRai, String newStreamName) {
+    public void replace(RandomAccessibleInterval newRai, String newStreamName) {
         if (this.bdvSS != null) {
             addNewSource(newRai, newStreamName);
             SourceAndConverter scnv = this.bdvSS.getBdvHandle().getViewerPanel().getState().getSources().get(0);

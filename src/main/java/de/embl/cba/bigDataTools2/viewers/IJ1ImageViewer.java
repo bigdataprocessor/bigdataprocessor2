@@ -99,7 +99,7 @@ public class IJ1ImageViewer<T extends RealType<T> & NativeType<T> > implements I
     }
 
     @Override
-    public void repaint(RandomAccessibleInterval rai, String newStreamName) {
+    public void replace(RandomAccessibleInterval rai, String newStreamName) {
 
     }
 
