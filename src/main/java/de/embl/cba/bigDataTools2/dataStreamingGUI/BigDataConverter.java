@@ -28,15 +28,15 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.RecursiveTask;
 import net.imglib2.interpolation.InterpolatorFactory;
 
-public class DataStreamingTools {
+public class BigDataConverter {
 
     public FileInfoSource fileInfoSource;
     public static ExecutorService executorService;  //General thread pool
     public static ExecutorService trackerThreadPool; // Thread pool for tracking
     public int numThreads;
-    private ImageViewer imageViewer;
+    private ImageViewer imageViewer;// remove it
 
-    public DataStreamingTools() {
+    public BigDataConverter() {
         //TODO: Determine Voxel Size to display in the Bdv --ashis
         //TODO: have separate shutdown for the executorService. It will not shutdown when ui exeService is shut. --ashis (DONE but needs testing)
         //Ref: https://stackoverflow.com/questions/23684189/java-how-to-make-an-executorservice-running-inside-another-executorservice-not

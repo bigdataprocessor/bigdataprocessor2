@@ -2,7 +2,7 @@ package de.embl.cba.bigDataTools2.bigDataTrackerGUI;
 
 import bdv.util.*;
 import de.embl.cba.bigDataTools2.dataStreamingGUI.BdvMenus;
-import de.embl.cba.bigDataTools2.dataStreamingGUI.DataStreamingTools;
+import de.embl.cba.bigDataTools2.dataStreamingGUI.BigDataConverter;
 import de.embl.cba.bigDataTools2.dataStreamingGUI.DisplaySettings;
 import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
 import de.embl.cba.bigDataTools2.logging.IJLazySwingLogger;
@@ -38,13 +38,13 @@ public class BigDataTracker {
     }
 
     public void kickOffThreadPack(int nIOthreads){
-        if(null == DataStreamingTools.trackerThreadPool ||  DataStreamingTools.trackerThreadPool.isTerminated()){
-            DataStreamingTools.trackerThreadPool = Executors.newFixedThreadPool(nIOthreads);
+        if(null == BigDataConverter.trackerThreadPool ||  BigDataConverter.trackerThreadPool.isTerminated()){
+            BigDataConverter.trackerThreadPool = Executors.newFixedThreadPool(nIOthreads);
         }
     }
 
     public void shutdownThreadPack(){
-        Utils.shutdownThreadPack(DataStreamingTools.trackerThreadPool,5);
+        Utils.shutdownThreadPack(BigDataConverter.trackerThreadPool,5);
     }
 
     public void trackObject(TrackingSettings trackingSettings, ImageViewer imageViewer)

@@ -41,21 +41,21 @@ public class BdvMenus extends JMenu implements ActionListener { //TODO: change n
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equalsIgnoreCase("Save As")) {
-            DataStreamingTools.executorService.submit(() -> {
+            BigDataConverter.executorService.submit(() -> {
                 SaveMenuDialog saveMenuDialog = new SaveMenuDialog(imageViewer);
                 saveMenuDialog.setVisible(true);
                 saveMenuDialog.pack();
             });
         }else if (e.getActionCommand().equalsIgnoreCase("Oblique View")) {
-            DataStreamingTools.executorService.submit(() -> {
+            BigDataConverter.executorService.submit(() -> {
                 ObliqueMenuDialog obliqueMenuDialog = new ObliqueMenuDialog(imageViewer);
                 obliqueMenuDialog.setVisible(true);
             });
         }else if(e.getActionCommand().equalsIgnoreCase("Begin Crop")){
             final RandomAccessibleInterval rai = imageViewer.getRai();
-            DataStreamingTools.executorService.submit(() -> {
+            BigDataConverter.executorService.submit(() -> {
                 FinalInterval interval = imageViewer.get5DIntervalFromUser();
-                RandomAccessibleInterval croppedRAI = DataStreamingTools.crop(rai,interval);
+                RandomAccessibleInterval croppedRAI = BigDataConverter.crop(rai,interval);
                 ImageViewer newImageView = imageViewer.newImageViewer( croppedRAI,FileInfoConstants.CROPPED_STREAM_NAME);
                 newImageView.show();
                 BdvMenus menus = new BdvMenus();
@@ -64,9 +64,9 @@ public class BdvMenus extends JMenu implements ActionListener { //TODO: change n
                 imageViewer.replicateViewerContrast(newImageView);
             });
         }else if(e.getActionCommand().equalsIgnoreCase("Show in ImageJ Viewer")){
-            ImageJFunctions.show(imageViewer.getRai(), DataStreamingTools.executorService);
+            ImageJFunctions.show(imageViewer.getRai(), BigDataConverter.executorService);
         }else if(e.getActionCommand().equalsIgnoreCase("Big Data Tracker")){
-           DataStreamingTools.executorService.submit(() -> {
+           BigDataConverter.executorService.submit(() -> {
                 BigDataTrackerGUI bigDataTrackerGUI = new BigDataTrackerGUI(imageViewer);
                 bigDataTrackerGUI.showDialog();
 //            CommandService commandService = LazyLoadingCommand.uiService.getContext().service(CommandService.class);

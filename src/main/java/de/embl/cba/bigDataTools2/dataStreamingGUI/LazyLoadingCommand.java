@@ -9,17 +9,12 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.app.StatusService;
 import org.scijava.command.Command;
-import org.scijava.command.DynamicCommand;
-import org.scijava.command.Interactive;
 import org.scijava.log.LogService;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 import org.scijava.ui.UIService;
-import org.scijava.widget.Button;
 
 import java.io.File;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 @Plugin(type = Command.class, menuPath = "Plugins>BigDataTools>BigDataConverter (Beta)", initializer = "init")
 public class LazyLoadingCommand<T extends RealType<T> & NativeType<T>> implements Command {
@@ -89,10 +84,10 @@ public class LazyLoadingCommand<T extends RealType<T> & NativeType<T>> implement
             })
     String imageViewerChoice = ViewerUtils.BIG_DATA_VIEWER;
 
-    private static final DataStreamingTools dataStreamingTools = new DataStreamingTools();
+    private static final BigDataConverter BIG_DATA_CONVERTER = new BigDataConverter();
 
     public void run() {
-        dataStreamingTools.openFromDirectory(
+        BIG_DATA_CONVERTER.openFromDirectory(
                 directory.toString(),
                 namingScheme,
                 filterPattern,

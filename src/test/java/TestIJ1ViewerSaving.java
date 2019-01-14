@@ -1,7 +1,6 @@
-import de.embl.cba.bigDataTools2.dataStreamingGUI.DataStreamingTools;
+import de.embl.cba.bigDataTools2.dataStreamingGUI.BigDataConverter;
 import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
 import de.embl.cba.bigDataTools2.saving.SavingSettings;
-import de.embl.cba.bigDataTools2.viewers.ImageViewer;
 import de.embl.cba.bigDataTools2.viewers.ViewerUtils;
 import ij.ImageJ;
 
@@ -11,11 +10,11 @@ public class TestIJ1ViewerSaving
 	{
 		new ImageJ();
 
-		DataStreamingTools dataStreamingTools = new DataStreamingTools();
+		BigDataConverter bigDataConverter = new BigDataConverter();
 
 		String imageDirectory = TestBdvViewer.class.getResource( "tiff-nc1-nt2"  ).getFile().toString();
 
-		dataStreamingTools.openFromDirectory(
+		bigDataConverter.openFromDirectory(
 				imageDirectory.toString(),
 				FileInfoConstants.SINGLE_CHANNEL_TIMELAPSE,
 				".*",
@@ -37,7 +36,7 @@ public class TestIJ1ViewerSaving
 		*/
         final SavingSettings savingSettings = SavingSettings.getDefaults();
 
-		DataStreamingTools.saveImage( savingSettings, dataStreamingTools.getImageViewer() );
+		BigDataConverter.saveImage( savingSettings, bigDataConverter.getImageViewer() );
 
 	}
 }

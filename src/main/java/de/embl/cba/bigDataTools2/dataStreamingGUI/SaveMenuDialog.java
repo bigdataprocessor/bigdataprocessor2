@@ -156,14 +156,14 @@ public class SaveMenuDialog extends JFrame implements ActionListener {
                 progressBar.setVisible(true);
                 pack();
                 save.setEnabled(false);
-                DataStreamingTools.executorService.submit(() -> {
+                BigDataConverter.executorService.submit(() -> {
                     new ProgressBar(this).createGUIandRunMonitor();
-                    DataStreamingTools.saveImage(savingSettings, imageViewer);
+                    BigDataConverter.saveImage(savingSettings, imageViewer);
                 });
 
             }
         } else if (e.getActionCommand().equals(STOP_SAVING)) {
-            DataStreamingTools.stopSave(); // Don't submit to thread pool. Let the main thread handle it.
+            BigDataConverter.stopSave(); // Don't submit to thread pool. Let the main thread handle it.
             save.setEnabled(true);
             progressBar.setVisible(false);
             pack();
