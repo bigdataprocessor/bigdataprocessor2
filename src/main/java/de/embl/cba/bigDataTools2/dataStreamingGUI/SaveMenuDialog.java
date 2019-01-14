@@ -125,6 +125,7 @@ public class SaveMenuDialog extends JFrame implements ActionListener {
                     compression = SavingSettings.LZW;
                 }
                 savingSettings.compression = compression;
+                savingSettings.rowsPerStrip = Integer.parseInt(tfRowsPerStrip.getText());
                 savingSettings.bin = tfBinning.getText();
                 savingSettings.saveVolume = cbSaveVolume.isSelected();
                 savingSettings.saveProjection = cbSaveProjection.isSelected();
