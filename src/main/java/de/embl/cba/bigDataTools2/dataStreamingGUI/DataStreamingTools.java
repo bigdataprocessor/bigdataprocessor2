@@ -83,8 +83,7 @@ public class DataStreamingTools {
         SaveCentral.interruptSavingThreads = true;
     }
 
-    public static <T extends RealType<T> & NativeType<T>> void shearImage(ShearingSettings shearingSettings,ImageViewer viewer) {
-        RandomAccessibleInterval rai = viewer.getRai();
+    public static <T extends RealType<T> & NativeType<T>> RandomAccessibleInterval shearImage(RandomAccessibleInterval rai,ShearingSettings shearingSettings){
         List<RandomAccessibleInterval<T>> timeTracks = new ArrayList<>();
         int nTimeFrames = (int) rai.dimension(FileInfoConstants.T_AXIS_POSITION);
         int nChannels = (int) rai.dimension(FileInfoConstants.C_AXIS_POSITION);
@@ -106,13 +105,7 @@ public class DataStreamingTools {
         RandomAccessibleInterval sheared = Views.stack(timeTracks);
         sheared = Views.permute(sheared, FileInfoConstants.C_AXIS_POSITION, FileInfoConstants.Z_AXIS_POSITION);
         System.out.println("Time elapsed(ms) " + (System.currentTimeMillis() - startTime));
-        viewer.repaint(sheared, "sheared");
-        double[] centerCoordinates = {sheared.min(FileInfoConstants.X_AXIS_POSITION) / 2.0,
-                sheared.max(FileInfoConstants.Y_AXIS_POSITION) / 2.0,
-                (sheared.max(FileInfoConstants.Z_AXIS_POSITION) - sheared.min(FileInfoConstants.Z_AXIS_POSITION)) / 2
-                        + sheared.min(FileInfoConstants.Z_AXIS_POSITION)};
-        viewer.shiftImageToCenter(centerCoordinates);
-        Utils.doAutoContrastPerChannel(viewer);
+        return sheared;
     }
 
 
