@@ -12,6 +12,7 @@ public class SavingSettings {
 
 
     public RandomAccessibleInterval image;
+    public String streamName; // TODO: SET IN saveMenuDialog
     // public Img image; //TODO: change to RAI --ashis
     public String bin;
     public boolean saveVolume;
