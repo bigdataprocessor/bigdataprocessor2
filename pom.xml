@@ -177,6 +177,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.scijava</groupId>
+			<artifactId>bdv-utils</artifactId>
+			<version>0.1.26</version>
+		</dependency>
+
+		<dependency>
             <groupId>net.imagej</groupId>
             <artifactId>imagej-plugins-commands</artifactId>
             <version>0.8.0</version>
