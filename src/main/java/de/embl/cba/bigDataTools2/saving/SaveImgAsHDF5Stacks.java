@@ -127,9 +127,11 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
             }
             // Load
             //   ImagePlus impChannelTime = getDataCube( c );  May be faster???
-            long[] minInterval = new long[]{0, 0, c, 0, this.current_t}; //XYCZT order
-            long[] maxInterval = new long[]{image.dimension(FileInfoConstants.X_AXIS_POSITION) - 1, image.dimension(FileInfoConstants.Y_AXIS_POSITION) - 1, c,
-                    image.dimension(FileInfoConstants.Z_AXIS_POSITION) - 1, this.current_t};
+            long[] minInterval = new long[]{image.min(FileInfoConstants.X_AXIS_POSITION), image.min(FileInfoConstants.Y_AXIS_POSITION),
+                    c, image.min(FileInfoConstants.Z_AXIS_POSITION), this.current_t}; //XYCZT order
+            long[] maxInterval = new long[]{image.max(FileInfoConstants.X_AXIS_POSITION),
+                    image.max(FileInfoConstants.Y_AXIS_POSITION),
+                    c, image.max(FileInfoConstants.Z_AXIS_POSITION), this.current_t};//XYCZT order
             RandomAccessibleInterval newRai = Views.interval(image, minInterval, maxInterval);
             // Convert
             newRai = SaveImgAsHDF5Helper.convertor(newRai, this.savingSettings);
