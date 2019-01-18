@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.scijava</groupId>
 		<artifactId>pom-scijava</artifactId>
-		<version>24.0.0</version>
+		<version>24.2.0</version>
 	</parent>
 
 	<artifactId>fiji-plugin-BigDataTools2</artifactId>
@@ -82,7 +82,7 @@
 		<package-name>de.embl.cba.bigDataTools2</package-name>
 		<license.licenseName>bsd_2</license.licenseName>
 		<license.copyrightOwners>EMBL</license.copyrightOwners>
-		<imagej.app.directory>/Applications/Fiji.app/</imagej.app.directory>
+		<imagej.app.directory>C:/programs/fiji-win64/Fiji.app/</imagej.app.directory>
 		<enforcer.skip>true</enforcer.skip>
 	</properties>
 
@@ -159,21 +159,8 @@
 		</dependency>
 
 		<dependency>
-			<groupId>mpicbg</groupId>
-			<artifactId>imglib-algorithms</artifactId>
-			<version>2.0.0-beta6</version>
-		</dependency>
-
-		<dependency>
 			<groupId>net.preibisch</groupId>
 			<artifactId>multiview-reconstruction</artifactId>
-			<version>${multiview-reconstruction.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>mpicbg</groupId>
-			<artifactId>imglib-ij</artifactId>
-			<version>2.0.0-beta6</version>
 		</dependency>
 
 		<dependency>
@@ -185,12 +172,10 @@
 		<dependency>
             <groupId>net.imagej</groupId>
             <artifactId>imagej-plugins-commands</artifactId>
-            <version>0.8.0</version>
         </dependency>
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
-			<version>24.1.1-jre</version>
 		</dependency>
     </dependencies>
 
