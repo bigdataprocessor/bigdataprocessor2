@@ -251,7 +251,7 @@ A:		while ( c.hasNext() )
 //
 //		for ( int i = maxN - 1; i >= 0; --i )
 //		{
-//			if ( type < list.get( i ) )
+//			if ( type < list.getDownsampledView( i ) )
 //			{
 //				if ( i == maxN - 1 )
 //				{

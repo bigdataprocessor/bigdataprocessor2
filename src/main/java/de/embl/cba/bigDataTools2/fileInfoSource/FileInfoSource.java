@@ -169,7 +169,7 @@ public class FileInfoSource {
                     infoCT[z2].directory = channelFolders[c] + "/";
                     infoCT[z2].width = nX;
                     infoCT[z2].height = nY;
-                    infoCT[z2].bytesPerPixel = bytesPerPixel; // todo: how to get the bit-depth from the info?
+                    infoCT[z2].bytesPerPixel = bytesPerPixel; // todo: how to getDownsampledView the bit-depth from the info?
                     infoCT[z2].h5DataSet = h5DataSetName;
                     infoCT[z2].fileTypeString = fileType;
                 }

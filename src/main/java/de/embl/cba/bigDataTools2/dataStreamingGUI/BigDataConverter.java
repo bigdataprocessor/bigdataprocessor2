@@ -72,7 +72,7 @@ public class BigDataConverter {
         return Views.interval(rai, interval);
     }
 
-    public static void saveImage( SavingSettings savingSettings, ImageViewer imageViewer ) { //TODO: No need to get imageVieweer.Use only SavinfgSetting
+    public static void saveImage( SavingSettings savingSettings, ImageViewer imageViewer ) { //TODO: No need to getDownsampledView imageVieweer.Use only SavinfgSetting
         String streamName = imageViewer.getImageName();
         RandomAccessibleInterval rai = imageViewer.getRai();
         if (streamName.equalsIgnoreCase(FileInfoConstants.CROPPED_STREAM_NAME)) {

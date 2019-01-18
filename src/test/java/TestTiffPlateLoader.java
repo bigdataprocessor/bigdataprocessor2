@@ -15,7 +15,7 @@ public class TestTiffPlateLoader {
 
         Img myImg = new CachedCellImageCreator().create(fileInfoSource,null);
         //ImgOpener imgOpener = new ImgOpener();
-        //Img vsa = ( Img) imgOpener.openImgs( directory+fileName ).get( 0 );
+        //Img vsa = ( Img) imgOpener.openImgs( directory+fileName ).getDownsampledView( 0 );
 
         BdvFunctions.show(myImg,"stream", BdvOptions.options().axisOrder( AxisOrder.XYCZT));
     }

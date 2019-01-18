@@ -351,7 +351,7 @@ public class PhaseCorrelation2Util {
 	}
 	
 	/*
-	 * get intervals corresponding to overlapping area in two images (relative to image origins)
+	 * getDownsampledView intervals corresponding to overlapping area in two images (relative to image origins)
 	 * will return null if there is no overlap
 	 * @param img1
 	 * @param img2
@@ -712,7 +712,7 @@ public class PhaseCorrelation2Util {
 	}
 	
 	/*
-	 * get the mean pixel intensity of an img
+	 * getDownsampledView the mean pixel intensity of an img
 	 * @param img
 	 * @return
 	 */
@@ -730,7 +730,7 @@ public class PhaseCorrelation2Util {
 	}
 	
 	/*
-	 * get pixel-value correlation of two RandomAccessibleIntervals
+	 * getDownsampledView pixel-value correlation of two RandomAccessibleIntervals
 	 * @param img1
 	 * @param img2
 	 * @return

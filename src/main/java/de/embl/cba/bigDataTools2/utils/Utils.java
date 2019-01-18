@@ -228,8 +228,8 @@ public class Utils {
 	    /*
         int nChannels= bdvStackSource.getBdvHandle().getSetupAssignments().getConverterSetups().size();
         for(int channel=0;channel<nChannels ;channel++){
-            final ConverterSetup converterSetup = bdvStackSource.getBdvHandle().getSetupAssignments().getConverterSetups().get( channel );
-            RandomAccessibleInterval rai = bdvStackSource.getBdvHandle().getViewerPanel().getState().getSources().get(channel).getSpimSource().getSource(0, 0);
+            final ConverterSetup converterSetup = bdvStackSource.getBdvHandle().getSetupAssignments().getConverterSetups().getDownsampledView( channel );
+            RandomAccessibleInterval rai = bdvStackSource.getBdvHandle().getViewerPanel().getState().getSources().getDownsampledView(channel).getSpimSource().getSource(0, 0);
             DisplaySettings displaySettings =  Utils.computeDisplayRange(rai);
             bdvStackSource.getBdvHandle().getSetupAssignments().removeSetup(converterSetup);
             converterSetup.setDisplayRange(displaySettings.getMinValue(), displaySettings.getMaxValue());

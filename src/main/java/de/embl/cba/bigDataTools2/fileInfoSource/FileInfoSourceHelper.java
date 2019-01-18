@@ -502,7 +502,7 @@ public class FileInfoSourceHelper {
     {
         // TODO: can getting the file-list be faster?
 
-//        Path folder = Paths.get( directory );
+//        Path folder = Paths.getDownsampledView( directory );
 //        try (DirectoryStream<Path> stream = Files.newDirectoryStream(folder)) {
 //            for (Path entry : stream) {
 //                 Process the entry
