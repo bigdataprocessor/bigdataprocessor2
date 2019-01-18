@@ -54,14 +54,14 @@ public class LazyDownsampler < R extends RealType< R > & NativeType< R > >
 		return averageView;
 	}
 
-	private void setNeighborhoodAverage( Neighborhood< R > n, R o )
+	private void setNeighborhoodAverage( Neighborhood< R > neighborhood, R output )
 	{
 		double sum = 0;
 
-		for ( R i : n )
-			sum += i.getRealDouble();
+		for ( R value : neighborhood )
+			sum += value.getRealDouble();
 
-		o.setReal( sum / n.size() );
+		output.setReal( sum / neighborhood.size() );
 	}
 
 	private static RandomAccessibleInterval< IntType > getRandomImage()
