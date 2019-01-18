@@ -26,7 +26,7 @@ The new plugin uses Big Data Viewer for flexible and efficient rendering however
 - 4D Cropping
  
 ## Installation
-Within ImageJ/Fiji you can install the plugin via the `Help -> Update` menu and select the `tischi` site.
+Within ImageJ/Fiji you can install the plugin using the `Help > Update > Manage Update Sites` and select the `EMBL-CBA` site.
 
 Note: The plugins need Java 1.8 if you see error messages popping up that might be caused by an older Java version.
 
