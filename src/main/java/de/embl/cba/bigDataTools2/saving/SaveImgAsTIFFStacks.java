@@ -74,10 +74,12 @@ public class SaveImgAsTIFFStacks implements Runnable {
             }
             // Load
             //   ImagePlus impChannelTime = getDataCube( c );  May be faster???
-            long[] minInterval = new long[]{0, 0, c, 0, this.t}; //XYCZT order
-            long[] maxInterval = new long[]{image.dimension(FileInfoConstants.X_AXIS_POSITION) - 1, image.dimension(FileInfoConstants.Y_AXIS_POSITION) - 1, c,
-                    image.dimension(FileInfoConstants.Z_AXIS_POSITION) - 1,
-                    this.t};
+            long[] minInterval = new long[]{image.min(FileInfoConstants.X_AXIS_POSITION), image.min(FileInfoConstants.Y_AXIS_POSITION),
+                    c, image.min(FileInfoConstants.Z_AXIS_POSITION), this.t}; //XYCZT order
+            long[] maxInterval = new long[]{image.max(FileInfoConstants.X_AXIS_POSITION),
+                    image.max(FileInfoConstants.Y_AXIS_POSITION),
+                    c, image.max(FileInfoConstants.Z_AXIS_POSITION), this.t};
+
             RandomAccessibleInterval newRai = Views.interval(image, minInterval, maxInterval);
             ImagePlus impChannelTime = ImageJFunctions.wrap(newRai, "slice");
             // Gate

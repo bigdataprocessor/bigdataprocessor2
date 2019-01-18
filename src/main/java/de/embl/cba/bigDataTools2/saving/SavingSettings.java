@@ -12,7 +12,6 @@ public class SavingSettings {
 
 
     public RandomAccessibleInterval image;
-    // public Img image; //TODO: change to RAI --ashis
     public String bin;
     public boolean saveVolume;
     public boolean saveProjection;
@@ -28,7 +27,6 @@ public class SavingSettings {
     public String compression;
     public int compressionLevel;
     public int rowsPerStrip;
-    public int nThreads;
 
     public enum FileType {
         TIFF_as_PLANES("Tiff Planes"),
@@ -37,13 +35,29 @@ public class SavingSettings {
         TIFF_as_STACKS("Tiff Stacks");
         //SINGLE_PLANE_TIFF("Single Plane Tiff"); //SERIALIZED_HEADERS("Serialized headers");
         private final String text;
-        private FileType(String s)
-        {
+
+        FileType(String s) {
             text = s;
         }
+
         @Override
         public String toString() {
             return text;
         }
+    }
+
+    /**
+     * Loads minimum settings for saving TIFF as Planes.
+     * Useful for testing purposes.
+     * @return SavingSettings
+     */
+    public static SavingSettings getDefaults() {
+        SavingSettings savingSettings = new SavingSettings();
+        savingSettings.bin = "1,1,1";
+        savingSettings.saveVolume = true;
+        savingSettings.fileType = FileType.TIFF_as_PLANES;
+        savingSettings.filePath = "src/test/resources/file";
+        savingSettings.compression = SavingSettings.NONE;
+        return savingSettings;
     }
 }

@@ -28,15 +28,15 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.RecursiveTask;
 import net.imglib2.interpolation.InterpolatorFactory;
 
-public class DataStreamingTools {
+public class BigDataConverter {
 
     public FileInfoSource fileInfoSource;
     public static ExecutorService executorService;  //General thread pool
     public static ExecutorService trackerThreadPool; // Thread pool for tracking
     public int numThreads;
-    private ImageViewer imageViewer;
+    private ImageViewer imageViewer;// remove it
 
-    public DataStreamingTools() {
+    public BigDataConverter() {
         //TODO: Determine Voxel Size to display in the Bdv --ashis
         //TODO: have separate shutdown for the executorService. It will not shutdown when ui exeService is shut. --ashis (DONE but needs testing)
         //Ref: https://stackoverflow.com/questions/23684189/java-how-to-make-an-executorservice-running-inside-another-executorservice-not
@@ -68,7 +68,11 @@ public class DataStreamingTools {
         Utils.doAutoContrastPerChannel( imageViewer );
     }
 
-    public static void saveImage( SavingSettings savingSettings, ImageViewer imageViewer ) {
+    public static RandomAccessibleInterval crop(RandomAccessibleInterval rai,FinalInterval interval){
+        return Views.interval(rai, interval);
+    }
+
+    public static void saveImage( SavingSettings savingSettings, ImageViewer imageViewer ) { //TODO: No need to get imageVieweer.Use only SavinfgSetting
         String streamName = imageViewer.getImageName();
         RandomAccessibleInterval rai = imageViewer.getRai();
         if (streamName.equalsIgnoreCase(FileInfoConstants.CROPPED_STREAM_NAME)) {
@@ -83,8 +87,7 @@ public class DataStreamingTools {
         SaveCentral.interruptSavingThreads = true;
     }
 
-    public static <T extends RealType<T> & NativeType<T>> void shearImage(ShearingSettings shearingSettings,ImageViewer viewer) {
-        RandomAccessibleInterval rai = viewer.getRai();
+    public static <T extends RealType<T> & NativeType<T>> RandomAccessibleInterval shearImage(RandomAccessibleInterval rai,ShearingSettings shearingSettings){
         List<RandomAccessibleInterval<T>> timeTracks = new ArrayList<>();
         int nTimeFrames = (int) rai.dimension(FileInfoConstants.T_AXIS_POSITION);
         int nChannels = (int) rai.dimension(FileInfoConstants.C_AXIS_POSITION);
@@ -106,13 +109,7 @@ public class DataStreamingTools {
         RandomAccessibleInterval sheared = Views.stack(timeTracks);
         sheared = Views.permute(sheared, FileInfoConstants.C_AXIS_POSITION, FileInfoConstants.Z_AXIS_POSITION);
         System.out.println("Time elapsed(ms) " + (System.currentTimeMillis() - startTime));
-        viewer.repaint(sheared, "sheared");
-        double[] centerCoordinates = {sheared.min(FileInfoConstants.X_AXIS_POSITION) / 2.0,
-                sheared.max(FileInfoConstants.Y_AXIS_POSITION) / 2.0,
-                (sheared.max(FileInfoConstants.Z_AXIS_POSITION) - sheared.min(FileInfoConstants.Z_AXIS_POSITION)) / 2
-                        + sheared.min(FileInfoConstants.Z_AXIS_POSITION)};
-        viewer.shiftImageToCenter(centerCoordinates);
-        Utils.doAutoContrastPerChannel(viewer);
+        return sheared;
     }
 
 

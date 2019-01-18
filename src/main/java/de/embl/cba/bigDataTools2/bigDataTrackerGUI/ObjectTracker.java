@@ -1,6 +1,6 @@
 package de.embl.cba.bigDataTools2.bigDataTrackerGUI;
 
-import de.embl.cba.bigDataTools2.dataStreamingGUI.DataStreamingTools;
+import de.embl.cba.bigDataTools2.dataStreamingGUI.BigDataConverter;
 import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
 import de.embl.cba.bigDataTools2.logging.IJLazySwingLogger;
 import de.embl.cba.bigDataTools2.logging.Logger;
@@ -132,8 +132,8 @@ public class ObjectTracker<T extends RealType<T>> {
             RandomAccessibleInterval<T> nextFrame = Views.hyperSlice(RoI,4,t+1);
             //Intensity gating
             if(gateIntensity) {
-                Future future1 = DataStreamingTools.trackerThreadPool.submit(() -> doIntensityGatingForImg(Utils.getCellImgFromInterval(currentFrame)));
-                Future future2 = DataStreamingTools.trackerThreadPool.submit(() -> doIntensityGatingForImg(Utils.getCellImgFromInterval(nextFrame)));
+                Future future1 = BigDataConverter.trackerThreadPool.submit(() -> doIntensityGatingForImg(Utils.getCellImgFromInterval(currentFrame)));
+                Future future2 = BigDataConverter.trackerThreadPool.submit(() -> doIntensityGatingForImg(Utils.getCellImgFromInterval(nextFrame)));
                 try {
                     future1.get();
                     future2.get();
@@ -144,12 +144,12 @@ public class ObjectTracker<T extends RealType<T>> {
                 }
             }
             RandomAccessibleInterval<FloatType> pcm = phaseCorrelation.calculatePCM(Views.zeroMin(currentFrame), Views.zeroMin(nextFrame), new CellImgFactory(new FloatType()), new FloatType(),
-                    new CellImgFactory(new ComplexFloatType()), new ComplexFloatType(), DataStreamingTools.trackerThreadPool);
+                    new CellImgFactory(new ComplexFloatType()), new ComplexFloatType(), BigDataConverter.trackerThreadPool);
             if (this.interruptTrackingThreads) {
                 break;
             }
             PhaseCorrelationPeak shiftPeak = phaseCorrelation.getShift(pcm, Views.zeroMin(currentFrame), Views.zeroMin(nextFrame),
-                    2, 0, true, false, DataStreamingTools.trackerThreadPool);
+                    2, 0, true, false, BigDataConverter.trackerThreadPool);
             double[] found = new double[currentFrame.numDimensions()];
             shiftPeak.getSubpixelShift().localize(found);
             //System.out.println(Util.printCoordinates(found));
@@ -193,7 +193,7 @@ public class ObjectTracker<T extends RealType<T>> {
             }
             for (int c = 0; c < nChannels; c++) {
                 randomAccess.setPosition(c, FileInfoConstants.C_AXIS_POSITION);
-                Future<double[]> future = DataStreamingTools.trackerThreadPool.submit(new ComputeCenterOfMassPerSliceParallel(randomAccess, z,
+                Future<double[]> future = BigDataConverter.trackerThreadPool.submit(new ComputeCenterOfMassPerSliceParallel(randomAccess, z,
                         xmin, xmax, ymin, ymax, gateIntensity));
                 futures.add(future);
             }

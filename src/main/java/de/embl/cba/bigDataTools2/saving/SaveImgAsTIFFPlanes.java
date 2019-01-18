@@ -1,8 +1,6 @@
 package de.embl.cba.bigDataTools2.saving;
 
 import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
-import de.embl.cba.bigDataTools2.logging.IJLazySwingLogger;
-import de.embl.cba.bigDataTools2.logging.Logger;
 import de.embl.cba.bigDataTools2.utils.Utils;
 import ij.IJ;
 import ij.ImagePlus;
@@ -14,9 +12,10 @@ import net.imglib2.view.Views;
 
 public class SaveImgAsTIFFPlanes implements Runnable {
 
-    int c, t, z;
-    SavingSettings savingSettings;
-    Logger logger = new IJLazySwingLogger();
+    private final int c;
+    private final int t;
+    private final int z;
+    private final SavingSettings savingSettings;
 
     public SaveImgAsTIFFPlanes(int c,
                                int t,
@@ -31,16 +30,17 @@ public class SaveImgAsTIFFPlanes implements Runnable {
     @Override
     public void run() {
 
-        if ( SaveCentral.interruptSavingThreads ) {
+        if (SaveCentral.interruptSavingThreads) {
             savingSettings.saveVolume = true;
             return;
         }
         RandomAccessibleInterval imgStack = savingSettings.image;
-        long[] minInterval = new long[]{0, 0, c, z, t};
-        long[] maxInterval = new long[]{imgStack.dimension(FileInfoConstants.X_AXIS_POSITION)-1, imgStack.dimension(FileInfoConstants.Y_AXIS_POSITION)-1, c, z, t};
+        long[] minInterval = new long[]{imgStack.min(FileInfoConstants.X_AXIS_POSITION), imgStack.min(FileInfoConstants.Y_AXIS_POSITION), c, z, t};
+        long[] maxInterval = new long[]{imgStack.max(FileInfoConstants.X_AXIS_POSITION), imgStack.max(FileInfoConstants.Y_AXIS_POSITION), c, z, t};
 
         RandomAccessibleInterval newRai = Views.interval(imgStack, minInterval, maxInterval);
 
+        @SuppressWarnings("unchecked")
         ImagePlus impCTZ = ImageJFunctions.wrap(newRai, "slice", null); // TODO : check if threads can be given for this operation in place of null --ashis
         impCTZ.setTitle("slice");
         impCTZ.setDimensions(1, 1, 1);
@@ -61,7 +61,7 @@ public class SaveImgAsTIFFPlanes implements Runnable {
 
         for (String binning : binnings) {
 
-            if ( SaveCentral.interruptSavingThreads ){
+            if (SaveCentral.interruptSavingThreads) {
                 return;
             }
 
@@ -74,7 +74,7 @@ public class SaveImgAsTIFFPlanes implements Runnable {
 
             if (binningA[0] > 1 || binningA[1] > 1 || binningA[2] > 1) {
                 Binner binner = new Binner();
-                impBinned = binner.shrink(impCTZ, binningA[0], binningA[1], binningA[2], binner.AVERAGE);
+                impBinned = binner.shrink(impCTZ, binningA[0], binningA[1], binningA[2], Binner.AVERAGE);
                 newPath = savingSettings.filePath + "--bin-" + binningA[0] + "-" + binningA[1] + "-" + binningA[2];
             }
 
@@ -83,7 +83,7 @@ public class SaveImgAsTIFFPlanes implements Runnable {
             String sC = String.format("%1$02d", c);
             String sT = String.format("%1$05d", t);
             String sZ = String.format("%1$05d", z);
-            String pathCTZ = null;
+            String pathCTZ;
 
             if (imgStack.dimension(FileInfoConstants.C_AXIS_POSITION) > 1 || imgStack.dimension(FileInfoConstants.T_AXIS_POSITION) > 1) {
                 pathCTZ = newPath + "--C" + sC + "--T" + sT + "--Z" + sZ + ".tif";

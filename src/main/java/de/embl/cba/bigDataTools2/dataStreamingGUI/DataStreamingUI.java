@@ -92,7 +92,7 @@ public class DataStreamingUI extends JFrame implements ActionListener, FocusList
     Logger logger = new IJLazySwingLogger();
 
     JFileChooser fc;
-    static final DataStreamingTools dataStreamingTools = new DataStreamingTools();
+    static final BigDataConverter BIG_DATA_CONVERTER = new BigDataConverter();
     public DataStreamingUI() {
         ImageIcon icon = new ImageIcon("src/main/resources/logo.png");
         setIconImage(icon.getImage());
@@ -215,7 +215,7 @@ public class DataStreamingUI extends JFrame implements ActionListener, FocusList
             @Override
             public void windowClosing(WindowEvent e) {
                 Utils.shutdownThreadPack(uiActionThreadPool,2);
-                dataStreamingTools.shutdownThreadPack();
+                BIG_DATA_CONVERTER.shutdownThreadPack();
             }
         });
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -267,7 +267,7 @@ public class DataStreamingUI extends JFrame implements ActionListener, FocusList
                 return;
             }
 
-            uiActionThreadPool.submit(() -> dataStreamingTools.openFromDirectory(
+            uiActionThreadPool.submit(() -> BIG_DATA_CONVERTER.openFromDirectory(
                     directory,
                     namingScheme,
                     filterPattern,
@@ -315,12 +315,12 @@ public class DataStreamingUI extends JFrame implements ActionListener, FocusList
 //                }
 //                savingSettings.rowsPerStrip = rowsPerStrip;
 //                uiActionThreadPool.submit(() -> {
-//                    dataStreamingTools.saveImage(savingSettings);
+//                    BIG_DATA_CONVERTER.saveImage(savingSettings);
 //                });
 //            }
 //        } else if (e.getActionCommand().equals(STOP_SAVING)) {
 //            uiActionThreadPool.submit(() -> {
-//                dataStreamingTools.stopSave();
+//                BIG_DATA_CONVERTER.stopSave();
 //            });
         }  else if (e.getActionCommand().equals(REPORT_ISSUE)) {
             String url = "https://github.com/tischi/imagej-open-stacks-as-virtualstack/issues"; //TODO: change --ashis

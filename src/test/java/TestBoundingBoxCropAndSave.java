@@ -158,7 +158,6 @@ public class TestBoundingBoxCropAndSave {
         savingSettings.fileType = SavingSettings.FileType.HDF5_IMARIS_BDV;
         savingSettings.compression = SavingSettings.NONE;
         savingSettings.rowsPerStrip = 10;
-        savingSettings.nThreads = 5;
         savingSettings.fileBaseNameIMARIS = "Data";
         //SaveCentral.goSave(savingSettings,fileInfoSource);
         //savingSettings.filePath = "src\\test\\resources\\stacks";

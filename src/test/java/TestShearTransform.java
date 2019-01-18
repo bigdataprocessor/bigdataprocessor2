@@ -1,11 +1,12 @@
 import de.embl.cba.bigDataTools2.CachedCellImageCreator;
-import de.embl.cba.bigDataTools2.dataStreamingGUI.DataStreamingTools;
+import de.embl.cba.bigDataTools2.dataStreamingGUI.BigDataConverter;
 import de.embl.cba.bigDataTools2.dataStreamingGUI.ObliqueMenuDialog;
 import de.embl.cba.bigDataTools2.dataStreamingGUI.ShearingSettings;
 import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
 import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoSource;
 import de.embl.cba.bigDataTools2.viewers.BdvImageViewer;
 import de.embl.cba.bigDataTools2.viewers.ImageViewer;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.cache.img.CachedCellImg;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 
@@ -17,10 +18,9 @@ public class TestShearTransform {
                 ".*", "", true);
         CachedCellImg cachedCellImg = CachedCellImageCreator.create(fileInfoSource, null);
         ImageViewer imageViewer = new BdvImageViewer<UnsignedShortType>(cachedCellImg, "stream", new double[]{0, 0, 0});
-        imageViewer.show();
         ShearingSettings shearingSettings = new ShearingSettings();
         ObliqueMenuDialog dialog = new ObliqueMenuDialog(imageViewer);
         dialog.getShearingSettings(shearingSettings); // sets default values.
-        DataStreamingTools.shearImage(shearingSettings, imageViewer);
+        RandomAccessibleInterval sheared = BigDataConverter.shearImage(cachedCellImg,shearingSettings);
     }
 }

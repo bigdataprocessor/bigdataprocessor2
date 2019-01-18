@@ -1,6 +1,9 @@
 package de.embl.cba.bigDataTools2.dataStreamingGUI;
 
+import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
+import de.embl.cba.bigDataTools2.utils.Utils;
 import de.embl.cba.bigDataTools2.viewers.ImageViewer;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.interpolation.InterpolatorFactory;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -85,9 +88,14 @@ public class ObliqueMenuDialog extends JDialog implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         getShearingSettings(shearingSettings);
         shearingSettings.useObliqueAngle = true;
-        //imageViewer.setRai(imageViewerOriginal.getRai());
-        DataStreamingTools.shearImage(shearingSettings,imageViewer);
-
+        RandomAccessibleInterval sheared = BigDataConverter.shearImage(imageViewer.getRai(),shearingSettings);
+        imageViewer.replace(sheared, "sheared");
+        double[] centerCoordinates = {sheared.min(FileInfoConstants.X_AXIS_POSITION) / 2.0,
+                sheared.max(FileInfoConstants.Y_AXIS_POSITION) / 2.0,
+                (sheared.max(FileInfoConstants.Z_AXIS_POSITION) - sheared.min(FileInfoConstants.Z_AXIS_POSITION)) / 2
+                        + sheared.min(FileInfoConstants.Z_AXIS_POSITION)};
+        imageViewer.shiftImageToCenter(centerCoordinates);
+        Utils.doAutoContrastPerChannel(imageViewer);
     }
 
     public void getShearingSettings(ShearingSettings shearingSettings) {

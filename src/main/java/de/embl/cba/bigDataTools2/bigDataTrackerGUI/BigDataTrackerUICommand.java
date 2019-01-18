@@ -1,6 +1,6 @@
 package de.embl.cba.bigDataTools2.bigDataTrackerGUI;
 
-import de.embl.cba.bigDataTools2.dataStreamingGUI.DataStreamingTools;
+import de.embl.cba.bigDataTools2.dataStreamingGUI.BigDataConverter;
 import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
 import de.embl.cba.bigDataTools2.utils.Utils;
 import de.embl.cba.bigDataTools2.viewers.BdvImageViewer;
@@ -94,7 +94,7 @@ public class BigDataTrackerUICommand extends DynamicCommand implements Interacti
 
     private void selectROI() {
         System.out.println("select");
-        DataStreamingTools.trackerThreadPool.submit(() -> {
+        BigDataConverter.trackerThreadPool.submit(() -> {
             FinalInterval interval = imageViewer.get5DIntervalFromUser();
             trackingSettings.pMin = new Point3D((int) interval.min(FileInfoConstants.X_AXIS_POSITION),
                     (int) interval.min(FileInfoConstants.Y_AXIS_POSITION),
@@ -120,7 +120,7 @@ public class BigDataTrackerUICommand extends DynamicCommand implements Interacti
         trackingSettings.trackingFactor = 1.0 + 2.0 * maxDisplacement.getX() / trackingSettings.objectSize.getX();
         trackingSettings.iterationsCenterOfMass =
                 (int) Math.ceil(Math.pow(trackingSettings.trackingFactor, 2));
-        DataStreamingTools.trackerThreadPool.submit(() -> {
+        BigDataConverter.trackerThreadPool.submit(() -> {
             bigDataTracker.trackObject(trackingSettings, imageViewer);
         });
     }

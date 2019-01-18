@@ -16,12 +16,12 @@ public class TestOpenHDF5WithUI {
     public static void main(String[] args) {
 
 
-        final String directory = "Y:\\ashis\\2018-07-19_17.34.07\\";
-        //final String directory = "C:\\Users\\user\\Documents\\UNI_HEIDELBERG\\EMBL_internship\\";
+        //final String directory = "Y:\\ashis\\2018-07-19_17.34.07\\";
+        final String directory = "C:\\Users\\user\\Documents\\UNI_HEIDELBERG\\EMBL_HiwiJob\\fiji-plugin-bigDataTools2\\New Folder\\";
         FileInfoSource fileInfoSource = new FileInfoSource(directory,
-                FileInfoConstants.LOAD_CHANNELS_FROM_FOLDERS,
+                FileInfoConstants.SINGLE_CHANNEL_TIMELAPSE,
                 ".*.h5",
-                "Datawrong",
+                "Data",
                 true);
         //FileInfoSource fileInfoSource = new FileInfoSource(directory,"None",".*.h5","Datawrong",true,10);
         Img myImg = new CachedCellImageCreator().create(fileInfoSource,null);
