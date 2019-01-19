@@ -192,20 +192,20 @@ public class BigDataTrackerGUI extends JDialog implements ActionListener, FocusL
         panels.add(new JPanel(new FlowLayout(FlowLayout.LEFT)));
         buttons[0].setFont(buttons[0].getFont().deriveFont(Font.BOLD));
         panels.get(iPanel).add(buttons[i++]);
-        //panels.getDownsampledView(iPanel).add(buttons[i++]);
-        //panels.getDownsampledView(iPanel).add(labels[k]);
-        //panels.getDownsampledView(iPanel).add(textFields[k++]);
+        //panels.get(iPanel).add(buttons[i++]);
+        //panels.get(iPanel).add(labels[k]);
+        //panels.get(iPanel).add(textFields[k++]);
         c.add(panels.get(iPanel++));
         // Window size
 //        panels.add(new JPanel(new FlowLayout(FlowLayout.RIGHT)));
-//        panels.getDownsampledView(iPanel).add(labels[k]);
-//        panels.getDownsampledView(iPanel).add(textFields[k++]);
-//        c.add(panels.getDownsampledView(iPanel++));
+//        panels.get(iPanel).add(labels[k]);
+//        panels.get(iPanel).add(textFields[k++]);
+//        c.add(panels.get(iPanel++));
         // Subsampling
 //        panels.add(new JPanel(new FlowLayout(FlowLayout.RIGHT)));
-//        panels.getDownsampledView(iPanel).add(labels[k]);
-//        panels.getDownsampledView(iPanel).add(textFields[k++]);
-//        c.add(panels.getDownsampledView(iPanel++));
+//        panels.get(iPanel).add(labels[k]);
+//        panels.get(iPanel).add(textFields[k++]);
+//        c.add(panels.get(iPanel++));
         // Length
         panels.add(new JPanel(new FlowLayout(FlowLayout.RIGHT)));
         panels.get(iPanel).add(labels[k]);
@@ -218,14 +218,14 @@ public class BigDataTrackerGUI extends JDialog implements ActionListener, FocusL
         c.add(panels.get(iPanel++));
         // Enhance features
 //        panels.add(new JPanel(new FlowLayout(FlowLayout.RIGHT)));
-//        panels.getDownsampledView(iPanel).add(comboLabels[iComboBox]);
-//        panels.getDownsampledView(iPanel).add(comboBoxes[iComboBox++]);
-//        c.add(panels.getDownsampledView(iPanel++));
+//        panels.get(iPanel).add(comboLabels[iComboBox]);
+//        panels.get(iPanel).add(comboBoxes[iComboBox++]);
+//        c.add(panels.get(iPanel++));
         // View processed tracked region
 //        panels.add(new JPanel(new FlowLayout(FlowLayout.RIGHT)));
-//        panels.getDownsampledView(iPanel).add(labels[k]);
-//        panels.getDownsampledView(iPanel).add(textFields[k++]);
-//        c.add(panels.getDownsampledView(iPanel++));
+//        panels.get(iPanel).add(labels[k]);
+//        panels.get(iPanel).add(textFields[k++]);
+//        c.add(panels.get(iPanel++));
         // Tracking Method
         panels.add(new JPanel(new FlowLayout(FlowLayout.RIGHT)));
         panels.get(iPanel).add(comboLabels[iComboBox]);
@@ -246,14 +246,14 @@ public class BigDataTrackerGUI extends JDialog implements ActionListener, FocusL
         //
 //        c.add(new JSeparator(SwingConstants.HORIZONTAL));
 //        panels.add(new JPanel(new FlowLayout(FlowLayout.LEFT)));
-//        panels.getDownsampledView(iPanel).add(new JLabel("RESULTS TABLE"));
-//        c.add(panels.getDownsampledView(iPanel++));
+//        panels.get(iPanel).add(new JLabel("RESULTS TABLE"));
+//        c.add(panels.get(iPanel++));
 //        // Table buttons
 //        panels.add(new JPanel(new FlowLayout(FlowLayout.CENTER)));
-//        panels.getDownsampledView(iPanel).add(buttons[i++]);
-//        panels.getDownsampledView(iPanel).add(buttons[i++]);
-//        panels.getDownsampledView(iPanel).add(buttons[i++]);
-//        c.add(panels.getDownsampledView(iPanel++));
+//        panels.get(iPanel).add(buttons[i++]);
+//        panels.get(iPanel).add(buttons[i++]);
+//        panels.get(iPanel).add(buttons[i++]);
+//        c.add(panels.get(iPanel++));
 
         //
         // CROPPING

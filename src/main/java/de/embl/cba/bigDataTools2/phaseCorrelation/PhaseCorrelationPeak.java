@@ -260,9 +260,9 @@ public class PhaseCorrelationPeak {
 		try
 		{
 			Spot.fitCandidates( spots );
-			System.out.println( "rs: " + Util.printCoordinates( spots.getDownsampledView( 0 ) ) );
+			System.out.println( "rs: " + Util.printCoordinates( spots.get( 0 ) ) );
 			//Spot.ransac( spots, 1000, 0.1, 1.0/100.0 );
-			//System.out.println( "rsransac: " + Util.printCoordinates( spots.getDownsampledView( 0 ) ) );
+			//System.out.println( "rsransac: " + Util.printCoordinates( spots.get( 0 ) ) );
 
 		} catch ( Exception e )
 		{
@@ -321,7 +321,7 @@ public class PhaseCorrelationPeak {
 				pos[ d ] += pcmLocation.getLongPosition( d );
 			}
 			r.setPosition( pos );
-			c.getDownsampledView().set( r.getDownsampledView().getRealFloat() );
+			c.get().set( r.get().getRealFloat() );
 		}
 
 		Collection<Localizable> peaksG = new ArrayList<Localizable>();
@@ -345,7 +345,7 @@ public class PhaseCorrelationPeak {
 		System.out.println( "qf: " + Util.printCoordinates( subpixelPcmLocation ) );
 		System.out.println();
 
-		//this.subpixelPcmLocation = new RealPoint( spots.getDownsampledView( 0 ) );
+		//this.subpixelPcmLocation = new RealPoint( spots.get( 0 ) );
 		*/
 
 		double maxDist = 0.0;

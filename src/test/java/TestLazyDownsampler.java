@@ -15,7 +15,7 @@ public class TestLazyDownsampler
 		final RandomAccessibleInterval< IntType > randomImage = createRandomImage();
 		BdvFunctions.show( randomImage, "downsampled" );
 
-		final RandomAccessibleInterval downsampledView = new LazyDownsampler( randomImage, 3 ).getDownsampledView();
+		final RandomAccessibleInterval downsampledView = new LazyDownsampler( randomImage, 3 ).get();
 		BdvFunctions.show( downsampledView, "downsampled" );
 	}
 

@@ -701,7 +701,7 @@ public class OpenerExtension extends Opener {
                         int stripLength = (int)fi.stripLengths[s];
                         byte[] strip = new byte[stripLength];
 
-                        // getDownsampledView strip from read data
+                        // get strip from read data
                         try {
                             System.arraycopy(buffer[(z - zs)/dz], pos, strip, 0, stripLength);
                         } catch (Exception e) {

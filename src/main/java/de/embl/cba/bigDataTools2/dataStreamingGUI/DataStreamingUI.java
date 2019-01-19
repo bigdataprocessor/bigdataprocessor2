@@ -174,9 +174,9 @@ public class DataStreamingUI extends JFrame implements ActionListener, FocusList
         mainPanels.get(k).setLayout(new BoxLayout(mainPanels.get(k), BoxLayout.PAGE_AXIS));
         /*
         panels.add(new JPanel());
-        panels.getDownsampledView(j).add(new JLabel("I/O threads"));
-        panels.getDownsampledView(j).add(tfIOThreads);
-        mainPanels.getDownsampledView(k).add(panels.getDownsampledView(j++));
+        panels.get(j).add(new JLabel("I/O threads"));
+        panels.get(j).add(tfIOThreads);
+        mainPanels.get(k).add(panels.get(j++));
         */
         panels.add(new JPanel());
         panels.get(j).add(cbLog);

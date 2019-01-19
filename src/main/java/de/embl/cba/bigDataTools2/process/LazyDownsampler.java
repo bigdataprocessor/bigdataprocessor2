@@ -28,7 +28,7 @@ public class LazyDownsampler < R extends RealType< R > & NativeType< R > >
 		this.span = span;
 	}
 
-	public  RandomAccessibleInterval< R > getDownsampledView()
+	public  RandomAccessibleInterval< R > get()
 	{
 		return Views.subsample( averageView( rai, span ), span );
 	}
@@ -64,17 +64,4 @@ public class LazyDownsampler < R extends RealType< R > & NativeType< R > >
 		output.setReal( sum / neighborhood.size() );
 	}
 
-	private static RandomAccessibleInterval< IntType > getRandomImage()
-	{
-		final RandomAccessibleInterval< IntType > input =
-				ArrayImgs.ints( 300, 300, 300 );
-
-		final Random random = new Random( 10 );
-		final Cursor< IntType > cursor = Views.iterable( input ).cursor();
-		while ( cursor.hasNext() )
-		{
-			cursor.next().set( random.nextInt( 65535 )  );
-		}
-		return input;
-	}
 }

@@ -215,7 +215,7 @@ public class BlendedExtendedMirroredRandomAccesible2<T extends RealType<T>>imple
 		for (FloatType e : Views.iterable(Views.interval(ext, ext.getExtInterval())))
 		{
 			c.fwd();
-			c.getDownsampledView().set(e);
+			c.get().set(e);
 		}
 		
 		long end = System.currentTimeMillis();		

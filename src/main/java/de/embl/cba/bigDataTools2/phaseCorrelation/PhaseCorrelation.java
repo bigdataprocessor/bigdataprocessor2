@@ -234,7 +234,7 @@ public class PhaseCorrelation {
 	}
 
 	/**
-	 * getDownsampledView shift, do not interpolate subpixel offset for cross correlation
+	 * get shift, do not interpolate subpixel offset for cross correlation
 	 * @param pcm the phase correlation matrix of img1 and img2
 	 * @param img1 source image 1
 	 * @param img2 source image 2
