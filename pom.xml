@@ -93,10 +93,14 @@
 			<id>imagej.public</id>
 			<url>https://maven.imagej.net/content/groups/public</url>
 		</repository>
+		<repository>
+			<id>bintray-tischi-snapshots</id>
+			<name>bintray</name>
+			<url>https://dl.bintray.com/tischi/snapshots</url>
+		</repository>
 	</repositories>
 
 	<dependencies>
-
 
 		<dependency>
 			<groupId>sc.fiji</groupId>
@@ -177,7 +181,7 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.scijava</groupId>
+			<groupId>de.embl.cba</groupId>
 			<artifactId>bdv-utils</artifactId>
 			<version>0.1.26</version>
 		</dependency>
@@ -187,6 +191,7 @@
             <artifactId>imagej-plugins-commands</artifactId>
             <version>0.8.0</version>
         </dependency>
+
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
