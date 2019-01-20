@@ -20,6 +20,7 @@ public class ProgressBar implements PropertyChangeListener {
         @Override
         public Void doInBackground() {
             setProgress(0);
+            progress = 0;
             do {
                 setProgress(Math.min(progress, 100));
             } while (progress < 100);
