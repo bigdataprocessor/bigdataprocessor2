@@ -31,6 +31,7 @@ public class FileInfoConstants {
     public static final AxisType[] AXES_ORDER = {Axes.X, Axes.Y, Axes.CHANNEL, Axes.Z, Axes.TIME};
     public static final int MAX_ALLOWED_IMAGE_DIMS = AXES_ORDER.length;
     public static final String CROPPED_STREAM_NAME = "cropped";
+    public static final String UNSIGNEDBYTE_STREAM_NAME = "8 bit converted";
     public static final String TRACKED_STREAM_NAME = "tracked";
     public static final String IMAGE_NAME = "stream";
     public static final String BB_CROP_BUTTON_LABEL= "Crop";

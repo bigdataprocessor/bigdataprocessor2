@@ -5,20 +5,17 @@ import javax.swing.JMenuItem;
 
 public class OthersMenu extends JMenu {
 
-    public JMenuItem imageJViewerItem;
-    private JMenuItem bigDataTrackerItem;
-    private JMenuItem obliqueView;
+    private final JMenuItem imageJViewerItem;
+    private final JMenuItem bigDataTrackerItem;
+
 
     public OthersMenu(BdvMenus actionListener) {
-        setText("Others");
-        imageJViewerItem = new JMenuItem("Show in ImageJ Viewer");
+        setText(UIDisplayConstants.OTHERS_MENU_DISPLAY_TEXT);
+        imageJViewerItem = new JMenuItem(UIDisplayConstants.IMAGEJ_VIEW_MENU_DISPLAY_TEXT);
         add(imageJViewerItem);
-        bigDataTrackerItem = new JMenuItem("Big Data Tracker");
+        bigDataTrackerItem = new JMenuItem(UIDisplayConstants.BIG_DATA_TRACKER_MENU_DISPLAY_TEXT);
         add(bigDataTrackerItem);
-        obliqueView = new JMenuItem("Oblique View");
-        add(obliqueView);
         bigDataTrackerItem.addActionListener(actionListener);
         imageJViewerItem.addActionListener(actionListener);
-        obliqueView.addActionListener(actionListener);
     }
 }

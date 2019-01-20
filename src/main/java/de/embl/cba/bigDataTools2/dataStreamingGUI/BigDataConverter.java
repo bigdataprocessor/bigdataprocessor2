@@ -12,12 +12,19 @@ import net.imglib2.FinalRealInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealRandomAccessible;
 import net.imglib2.cache.img.CachedCellImg;
+import net.imglib2.converter.Converters;
+import net.imglib2.converter.RealUnsignedByteConverter;
+import net.imglib2.converter.RealUnsignedShortConverter;
 import net.imglib2.interpolation.randomaccess.ClampingNLinearInterpolatorFactory;
 import net.imglib2.realtransform.AffineRandomAccessible;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.realtransform.RealViews;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.integer.UnsignedByteType;
+import net.imglib2.type.numeric.integer.UnsignedShortType;
+import net.imglib2.util.Util;
+import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
 
 import java.awt.*;
@@ -151,4 +158,13 @@ public class BigDataConverter {
         return imageViewer;
     }
 
+    public static <T extends RealType<T>> RandomAccessibleInterval unsignedByteTypeConverter(RandomAccessibleInterval rai,DisplaySettings displaySettings){
+        RandomAccessibleInterval<UnsignedByteType> newRai;
+        if (!(((CachedCellImg) rai).firstElement() instanceof UnsignedByteType)){
+            newRai = Converters.convert(rai, new RealUnsignedByteConverter<T>(displaySettings.getMinValue(),displaySettings.getMaxValue()), new UnsignedByteType());
+        }else{
+            newRai = rai;
+        }
+        return newRai;
+    }
 }

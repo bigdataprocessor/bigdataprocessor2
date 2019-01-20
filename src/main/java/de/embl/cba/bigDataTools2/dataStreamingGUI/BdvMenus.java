@@ -2,6 +2,7 @@ package de.embl.cba.bigDataTools2.dataStreamingGUI;
 
 import de.embl.cba.bigDataTools2.bigDataTrackerGUI.BigDataTrackerGUI;
 import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
+import de.embl.cba.bigDataTools2.utils.Utils;
 import de.embl.cba.bigDataTools2.viewers.ImageViewer;
 import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccessibleInterval;
@@ -15,14 +16,14 @@ import java.util.List;
 public class BdvMenus extends JMenu implements ActionListener { //TODO: change name as Menus --ashis
 
     private final SaveSelectMenu saveSelectMenu;
-    private final CropSelectMenu cropSelectMenu;
     private final OthersMenu othersMenu;
+    private final ProcessMenu processMenu;
     private ImageViewer imageViewer;
 
     public BdvMenus(){
         saveSelectMenu = new SaveSelectMenu(this);
-        cropSelectMenu = new CropSelectMenu(this);
         othersMenu = new OthersMenu(this);
+        processMenu = new ProcessMenu(this);
     }
 
     public void setImageViewer(ImageViewer viewer){
@@ -32,7 +33,7 @@ public class BdvMenus extends JMenu implements ActionListener { //TODO: change n
     public List< JMenu > getMenus(){ //Add new menu items here.
         List<JMenu> jMenuList = new ArrayList<>();
         jMenuList.add(saveSelectMenu);
-        jMenuList.add(cropSelectMenu);
+        jMenuList.add(processMenu);
         jMenuList.add(othersMenu);
         return jMenuList;
     }
@@ -46,12 +47,12 @@ public class BdvMenus extends JMenu implements ActionListener { //TODO: change n
                 saveMenuDialog.setVisible(true);
                 saveMenuDialog.pack();
             });
-        }else if (e.getActionCommand().equalsIgnoreCase("Oblique View")) {
+        }else if (e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.OBLIQUE_MENU_DISPLAY_TEXT)) {
             BigDataConverter.executorService.submit(() -> {
                 ObliqueMenuDialog obliqueMenuDialog = new ObliqueMenuDialog(imageViewer);
                 obliqueMenuDialog.setVisible(true);
             });
-        }else if(e.getActionCommand().equalsIgnoreCase("Begin Crop")){
+        }else if(e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.CROP_MENU_DISPLAY_TEXT)){
             final RandomAccessibleInterval rai = imageViewer.getRai();
             BigDataConverter.executorService.submit(() -> {
                 FinalInterval interval = imageViewer.get5DIntervalFromUser();
@@ -59,19 +60,28 @@ public class BdvMenus extends JMenu implements ActionListener { //TODO: change n
                 ImageViewer newImageView = imageViewer.newImageViewer( croppedRAI,FileInfoConstants.CROPPED_STREAM_NAME);
                 newImageView.show();
                 BdvMenus menus = new BdvMenus();
-                menus.cropSelectMenu.cropSection = interval;
                 newImageView.addMenus(menus);
                 imageViewer.replicateViewerContrast(newImageView);
             });
-        }else if(e.getActionCommand().equalsIgnoreCase("Show in ImageJ Viewer")){
+        }else if(e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.IMAGEJ_VIEW_MENU_DISPLAY_TEXT)){
             ImageJFunctions.show(imageViewer.getRai(), BigDataConverter.executorService);
-        }else if(e.getActionCommand().equalsIgnoreCase("Big Data Tracker")){
+        }else if(e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.BIG_DATA_TRACKER_MENU_DISPLAY_TEXT)){
            BigDataConverter.executorService.submit(() -> {
                 BigDataTrackerGUI bigDataTrackerGUI = new BigDataTrackerGUI(imageViewer);
                 bigDataTrackerGUI.showDialog();
 //            CommandService commandService = LazyLoadingCommand.uiService.getContext().service(CommandService.class);
 //            commandService.run( BigDataTrackerUICommand.class, true, "imageViewer", imageViewer );
 
+            });
+        }else if(e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.EIGHT_BIT_MENU_DISPLAY_TEXT)){
+            final RandomAccessibleInterval rai = imageViewer.getRai();
+            BigDataConverter.executorService.submit(() -> {
+                RandomAccessibleInterval newRai = BigDataConverter.unsignedByteTypeConverter(rai,imageViewer.getDisplaySettings(0));
+                ImageViewer newImageView = imageViewer.newImageViewer( newRai,FileInfoConstants.UNSIGNEDBYTE_STREAM_NAME);
+                newImageView.show();
+                BdvMenus menus = new BdvMenus();
+                newImageView.addMenus(menus);
+                Utils.doAutoContrastPerChannel(newImageView);
             });
         }
     }
