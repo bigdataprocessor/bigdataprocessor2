@@ -16,7 +16,7 @@ import org.scijava.ui.UIService;
 
 import java.io.File;
 
-@Plugin(type = Command.class, menuPath = "Plugins>BigDataTools>BigDataConverter (Beta)", initializer = "init")
+@Plugin(type = Command.class, menuPath = "Plugins>BigDataTools>BigDataConverter", initializer = "init")
 public class LazyLoadingCommand<T extends RealType<T> & NativeType<T>> implements Command {
     @Parameter
     public static UIService uiService;
