@@ -41,7 +41,7 @@ public class BdvMenus extends JMenu implements ActionListener { //TODO: change n
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getActionCommand().equalsIgnoreCase("Save As")) {
+        if (e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.SAVE_AS_MENU_DISPLAY_TEXT)) {
             BigDataConverter.executorService.submit(() -> {
                 SaveMenuDialog saveMenuDialog = new SaveMenuDialog(imageViewer);
                 saveMenuDialog.setVisible(true);
