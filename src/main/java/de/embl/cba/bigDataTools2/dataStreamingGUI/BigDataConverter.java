@@ -20,6 +20,7 @@ import net.imglib2.realtransform.RealViews;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
+import net.imglib2.util.Util;
 import net.imglib2.view.Views;
 
 import java.util.ArrayList;
@@ -164,7 +165,7 @@ public class BigDataConverter {
 
     public static <T extends RealType<T>> RandomAccessibleInterval unsignedByteTypeConverter(RandomAccessibleInterval rai,DisplaySettings displaySettings){
         RandomAccessibleInterval<UnsignedByteType> newRai;
-        if (!(((CachedCellImg) rai).firstElement() instanceof UnsignedByteType)){
+        if (!(Util.getTypeFromInterval(rai) instanceof UnsignedByteType)){
             newRai = Converters.convert(rai, new RealUnsignedByteConverter<T>(displaySettings.getMinValue(),displaySettings.getMaxValue()), new UnsignedByteType());
         }else{
             newRai = rai;
