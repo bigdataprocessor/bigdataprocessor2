@@ -54,9 +54,11 @@ public class BigDataTracker {
         this.objectTracker = new ObjectTracker(trackingSettings);
         this.trackResults = objectTracker.getTrackingPoints();
         if(!this.objectTracker.interruptTrackingThreads) {
-            ImageViewer newTrackedView =  imageViewer.newImageViewer(trackingSettings.imageRAI,FileInfoConstants.TRACKED_STREAM_NAME);
-            newTrackedView.show(); //No need to add Menus.
+
+            ImageViewer newTrackedView =  imageViewer.newImageViewer();
+            newTrackedView.show( trackingSettings.imageRAI, imageViewer.getVoxelSize(), FileInfoConstants.TRACKED_STREAM_NAME);//No need to add Menus.
             imageViewer.replicateViewerContrast(newTrackedView);
+
             if(newTrackedView instanceof BdvImageViewer) {
                 TrackedAreaBoxOverlay tabo = new TrackedAreaBoxOverlay(this.trackResults,
                         ((BdvHandleFrame) ((BdvImageViewer) newTrackedView).getBdvSS().getBdvHandle()).getBigDataViewer().getViewer(),
@@ -88,8 +90,8 @@ public class BigDataTracker {
                 tracks.add(timeRemovedRAI);
             }
             RandomAccessibleInterval stackedRAI = Views.stack(tracks);
-            ImageViewer newTrackedView = imageViewer.newImageViewer(stackedRAI,FileInfoConstants.TRACKED_STREAM_NAME);
-            newTrackedView.show();
+            ImageViewer newTrackedView = imageViewer.newImageViewer();
+            newTrackedView.show( stackedRAI, trackingSettings.voxelSize, FileInfoConstants.TRACKED_STREAM_NAME);
             newTrackedView.addMenus(new BdvMenus());
             for (int channel=0; channel<nChannels; ++channel){
                 DisplaySettings setting = imageViewer.getDisplaySettings(channel);

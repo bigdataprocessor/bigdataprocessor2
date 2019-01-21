@@ -72,7 +72,7 @@ public class BigDataTrackerGUI extends JDialog implements ActionListener, FocusL
     int previouslySelectedZ = -1;
     private RandomAccessibleInterval image;
     public final ImageViewer imageViewer;
-    public BigDataTrackerGUI(ImageViewer handle)
+    public BigDataTrackerGUI( ImageViewer handle )
     {
         this.imageViewer= handle;
         this.image = imageViewer.getRai();
@@ -94,6 +94,7 @@ public class BigDataTrackerGUI extends JDialog implements ActionListener, FocusL
         trackingSettings.viewFirstNProcessedRegions = 0;
         trackingSettings.imageFeatureEnhancement = Utils.ImageFilterTypes.NONE.toString();
         trackingSettings.nt = -1;
+        trackingSettings.voxelSize = imageViewer.getVoxelSize();
         setDefaults();
     }
 

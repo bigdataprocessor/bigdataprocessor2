@@ -10,14 +10,14 @@ import ij.io.TiffDecoder;
 import java.io.File;
 import java.io.IOException;
 
-public class ImageCalibrationTest
+public class ImageCalibrationTiffReaderTest
 {
 	public static void main( String[] args ) throws IOException
 	{
 		new ImageJ();
 
 		final File file = new File(
-				TestBdvViewer.class.getResource( "nc1-nt1-calibrated-ij" ).getFile() );
+				TestBdvViewer.class.getResource( "nc1-nt1-calibrated-tiff" ).getFile() );
 
 		IJ.openImage( file.toString() + "/mri-stack.tif" ).show();
 

@@ -17,32 +17,27 @@ import net.imglib2.util.Intervals;
 import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
 
-import javax.swing.JMenu;
+import javax.swing.*;
 
 public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements ImageViewer {
 
     private RandomAccessibleInterval<T> rai;
     private double[] voxelSize;
-    private String streamName;
+    private String imageName;
 
-    private BdvStackSource bdvSS;
+    private BdvStackSource< T > bdvSS;
 
-    public BdvImageViewer( )
+    public BdvImageViewer()
     {
 
     }
 
-    public BdvImageViewer( RandomAccessibleInterval<T> rai, String streamName, double[] voxelSize ) {
-        this.streamName = streamName;
+    public BdvImageViewer( RandomAccessibleInterval<T> rai, String imageName, double[] voxelSize ) {
+        this.imageName = imageName;
         this.rai = rai;
         this.voxelSize = voxelSize;
     }
 
-    @Override
-    public void show() {
-        this.bdvSS = BdvFunctions.show(rai, this.streamName, BdvOptions.options().axisOrder(AxisOrder.XYCZT)
-                .transformEventHandlerFactory(new BdvTransformEventHandler.BehaviourTransformEventHandler3DFactory(voxelSize)));
-    }
 
     @Override
     public FinalInterval get5DIntervalFromUser() {
@@ -57,11 +52,8 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
     }
 
     @Override
-    public ImageViewer newImageViewer(RandomAccessibleInterval rai, String streamName) {
-        if (null == streamName || streamName.isEmpty()) {
-            streamName = this.streamName;
-        }
-        return new BdvImageViewer<T>(rai, streamName, voxelSize);
+    public ImageViewer newImageViewer( ) {
+        return new BdvImageViewer<T>( );
     }
 
     @Override
@@ -69,53 +61,53 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
         return rai;
     }
 
-    public BdvStackSource getBdvSS() {
-        return bdvSS;
+    @Override
+    public double[] getVoxelSize()
+    {
+        return new double[ 0 ];
     }
 
     @Override
     public String getImageName() {
-        return streamName;
+        return imageName;
+    }
+
+
+    @Override
+    public void repaint( AffineTransform3D viewerTransform )
+    {
+        this.bdvSS.getBdvHandle().getViewerPanel().setCurrentViewerTransform( viewerTransform );
     }
 
     @Override
-    public void setRai(RandomAccessibleInterval rai) {
-        this.rai = rai;
+    public void show( )
+    {
+        showImageInViewer( rai, voxelSize, imageName );
     }
 
-    public void addNewSource(RandomAccessibleInterval rai, String newStreamName) {
-        if (this.bdvSS != null) {
-            BdvFunctions.show(rai, newStreamName, BdvOptions.options().axisOrder(AxisOrder.XYCZT)
-                    .addTo(this.bdvSS)
-                    .doubleBuffered(true)
-                    .transformEventHandlerFactory(new BdvTransformEventHandler.BehaviourTransformEventHandler3DFactory(voxelSize)));
+    @Override
+    public void show( RandomAccessibleInterval rai, double[] voxelSize, String imageName )
+    {
+        if ( this.bdvSS != null )
+        {
+            replaceImageInViewer( rai, voxelSize, imageName  );
+        }
+        else
+        {
+            showImageInViewer( rai, voxelSize ,imageName  );
         }
     }
 
-    @Override
-    public void repaint(AffineTransform3D viewerTransform) {
-        this.bdvSS.getBdvHandle().getViewerPanel().setCurrentViewerTransform(viewerTransform);
-    }
-
-    @Override
-    public void replace(RandomAccessibleInterval newRai, String newStreamName) {
-        if (this.bdvSS != null) {
-            addNewSource(newRai, newStreamName);
-            SourceAndConverter scnv = this.bdvSS.getBdvHandle().getViewerPanel().getState().getSources().get(0);
-            this.bdvSS.getBdvHandle().getViewerPanel().removeSource(scnv.getSpimSource());
-            int nChannels = (int) this.getRai().dimension(FileInfoConstants.C_AXIS_POSITION);
-            for (int channel = 0; channel < nChannels; ++channel) {
-                ConverterSetup converterSetup = this.getBdvSS().getBdvHandle().getSetupAssignments().getConverterSetups().get(channel);
-                this.bdvSS.getBdvHandle().getSetupAssignments().removeSetup(converterSetup);
-            }
-            this.rai = newRai;
-            this.streamName = newStreamName;
-        }
-    }
-
-    @Override
-    public void setImageName( String streamName) {
-        this.streamName = streamName;
+    private void replaceImageInViewer( RandomAccessibleInterval rai, double[] voxelSize, String name )
+    {
+        showImageInViewer( rai, voxelSize ,name );
+        SourceAndConverter scnv = this.bdvSS.getBdvHandle().getViewerPanel().getState().getSources().get(0);
+        this.bdvSS.getBdvHandle().getViewerPanel().removeSource( scnv.getSpimSource() );
+        int nChannels = (int) this.getRai().dimension( FileInfoConstants.C_AXIS_POSITION);
+        for (int channel = 0; channel < nChannels; ++channel) {
+			ConverterSetup converterSetup = this.getBdvSS().getBdvHandle().getSetupAssignments().getConverterSetups().get(channel);
+			this.bdvSS.getBdvHandle().getSetupAssignments().removeSetup(converterSetup);
+		}
     }
 
     public void addMenus(BdvMenus menus) {
@@ -178,4 +170,29 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
         sourceTransform.translate(centerCoordinates);
         repaint(sourceTransform);
     }
+
+    public BdvStackSource getBdvSS() {
+        return bdvSS;
+    }
+
+    private void showImageInViewer( RandomAccessibleInterval rai, double[] voxelSize, String imageName )
+    {
+        final AffineTransform3D scaling = new AffineTransform3D();
+
+        for ( int d = 0; d < 3; d++ )
+        {
+            scaling.set( voxelSize[ d ], d, d );
+        }
+
+        bdvSS = BdvFunctions.show(
+                rai,
+                imageName,
+                BdvOptions.options().axisOrder( AxisOrder.XYCZT )
+                        .addTo( bdvSS ).sourceTransform( scaling ) );
+
+        this.imageName = imageName;
+        this.rai = rai;
+        this.voxelSize = voxelSize;
+    }
+
 }

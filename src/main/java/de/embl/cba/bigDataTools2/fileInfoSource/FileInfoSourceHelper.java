@@ -157,11 +157,10 @@ public class FileInfoSourceHelper {
         infoSource.nY = info[0].height;
         infoSource.bitDepth = info[0].bytesPerPixel * 8;
 
-        infoSource.spacingX = info[0].pixelWidth;
-        infoSource.spacingY = info[0].pixelHeight;
-        infoSource.spacingZ = info[0].pixelDepth;
-
-        int a = 1;
+        infoSource.voxelSize = new double[]{
+                info[0].pixelWidth,
+                info[0].pixelHeight,
+                info[0].pixelDepth };
 
     }
     public static boolean setFileSourceInfos(FileInfoSource infoSource,String directory,String namingScheme,String filterPattern) { //previously, setAllInfosByParsingFilesAndFolders

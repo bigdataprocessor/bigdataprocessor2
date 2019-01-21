@@ -63,15 +63,25 @@ public class BigDataConverter {
         Utils.shutdownThreadPack(executorService, 10);
     }
 
-    public void openFromDirectory(String directory, String namingScheme, String filterPattern, String h5DataSetName, ImageViewer imageViewer) {
+    public void openFromDirectory(
+            String directory,
+            String namingScheme,
+            String filterPattern,
+            String h5DataSetName,
+            ImageViewer imageViewer ) {
+
         directory = Utils.fixDirectoryFormat(directory);
+
         this.fileInfoSource = new FileInfoSource(directory, namingScheme, filterPattern, h5DataSetName);
+
         CachedCellImg cachedCellImg = CachedCellImageCreator.create(this.fileInfoSource, this.executorService);
+
         this.imageViewer = imageViewer;
-        imageViewer.setRai(cachedCellImg);
-        imageViewer.setImageName(FileInfoConstants.IMAGE_NAME);
-        imageViewer.show();
+
+        imageViewer.show( cachedCellImg, fileInfoSource.voxelSize,  FileInfoConstants.IMAGE_NAME );
+
         imageViewer.addMenus(new BdvMenus());
+
         Utils.doAutoContrastPerChannel( imageViewer );
     }
 

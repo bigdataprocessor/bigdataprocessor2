@@ -17,7 +17,7 @@ import org.scijava.ui.UIService;
 import java.io.File;
 
 @Plugin(type = Command.class, menuPath = "Plugins>BigDataTools>BigDataConverter", initializer = "init")
-public class LazyLoadingCommand<T extends RealType<T> & NativeType<T>> implements Command {
+public class BigDataConverterCommand<T extends RealType<T> & NativeType<T>> implements Command {
     @Parameter
     public static UIService uiService;
 
@@ -92,7 +92,7 @@ public class LazyLoadingCommand<T extends RealType<T> & NativeType<T>> implement
                 namingScheme,
                 filterPattern,
                 hdf5DataSet,
-                ViewerUtils.getImageViewer(imageViewerChoice));
+                ViewerUtils.getImageViewer( imageViewerChoice ));
     }
 
 }

@@ -1,4 +1,4 @@
-import de.embl.cba.bigDataTools2.dataStreamingGUI.LazyLoadingCommand;
+import de.embl.cba.bigDataTools2.dataStreamingGUI.BigDataConverterCommand;
 import net.imagej.ImageJ;
 
 public class TestLazyLoadingCommand
@@ -9,6 +9,6 @@ public class TestLazyLoadingCommand
 		ij.ui().showUI();
 
 		// invoke the plugin
-		ij.command().run( LazyLoadingCommand.class, true );
+		ij.command().run( BigDataConverterCommand.class, true );
 	}
 }

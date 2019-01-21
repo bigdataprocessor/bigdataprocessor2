@@ -12,15 +12,15 @@ public interface ImageViewer {
 
     RandomAccessibleInterval getRai();
 
+    double[] getVoxelSize();
+
     String getImageName();
+
+    ImageViewer newImageViewer();
 
     FinalInterval get5DIntervalFromUser();
 
-    void setRai(RandomAccessibleInterval rai);
-
-    void setImageName( String streamName);
-
-    ImageViewer newImageViewer(RandomAccessibleInterval rai, String streamName);
+    void show( RandomAccessibleInterval rai, double[] voxelSize, String name );
 
     void addMenus(BdvMenus menus);
 
@@ -33,8 +33,6 @@ public interface ImageViewer {
     int getCurrentTimePoint();
 
     void repaint(AffineTransform3D viewerTransform);
-
-    void replace(RandomAccessibleInterval rai, String newStreamName);
 
     void shiftImageToCenter(double[] centerCoordinates);
 

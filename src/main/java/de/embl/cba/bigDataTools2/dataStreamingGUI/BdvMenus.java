@@ -57,11 +57,11 @@ public class BdvMenus extends JMenu implements ActionListener { //TODO: change n
             BigDataConverter.executorService.submit(() -> {
                 FinalInterval interval = imageViewer.get5DIntervalFromUser();
                 RandomAccessibleInterval croppedRAI = BigDataConverter.crop(rai,interval);
-                ImageViewer newImageView = imageViewer.newImageViewer( croppedRAI,FileInfoConstants.CROPPED_STREAM_NAME);
-                newImageView.show();
+                ImageViewer newImageViewer = imageViewer.newImageViewer();
+                newImageViewer.show( croppedRAI, imageViewer.getVoxelSize(), FileInfoConstants.CROPPED_STREAM_NAME );
                 BdvMenus menus = new BdvMenus();
-                newImageView.addMenus(menus);
-                imageViewer.replicateViewerContrast(newImageView);
+                newImageViewer.addMenus( menus );
+                imageViewer.replicateViewerContrast( newImageViewer );
             });
         }else if(e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.IMAGEJ_VIEW_MENU_DISPLAY_TEXT)){
             ImageJFunctions.show(imageViewer.getRai(), BigDataConverter.executorService);
@@ -76,12 +76,16 @@ public class BdvMenus extends JMenu implements ActionListener { //TODO: change n
         }else if(e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.EIGHT_BIT_MENU_DISPLAY_TEXT)){
             final RandomAccessibleInterval rai = imageViewer.getRai();
             BigDataConverter.executorService.submit(() -> {
+
                 RandomAccessibleInterval newRai = BigDataConverter.unsignedByteTypeConverter(rai,imageViewer.getDisplaySettings(0));
-                ImageViewer newImageView = imageViewer.newImageViewer( newRai,FileInfoConstants.UNSIGNEDBYTE_STREAM_NAME);
-                newImageView.show();
+
+                ImageViewer newImageViewer = imageViewer.newImageViewer();
+                newImageViewer.show( newRai, imageViewer.getVoxelSize(), FileInfoConstants.UNSIGNEDBYTE_STREAM_NAME);
+
                 BdvMenus menus = new BdvMenus();
-                newImageView.addMenus(menus);
-                Utils.doAutoContrastPerChannel(newImageView);
+                newImageViewer.addMenus(menus);
+
+                Utils.doAutoContrastPerChannel(newImageViewer);
             });
         }
     }

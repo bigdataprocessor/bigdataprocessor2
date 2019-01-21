@@ -24,6 +24,7 @@ public class TrackingSettings {
     public int[] intensityGate =new int[2];
     public int viewFirstNProcessedRegions;
     public String imageFeatureEnhancement;
+    double[] voxelSize;
 
 
 
