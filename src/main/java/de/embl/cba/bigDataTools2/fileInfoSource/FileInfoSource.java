@@ -21,10 +21,13 @@ public class FileInfoSource {
     public long dimensions[];
     public int bitDepth;
     public int nC;
-    public int nZ;
     public int nT;
     public int nX;
     public int nY;
+    public int nZ;
+    public Double spacingX;
+    public Double spacingY;
+    public Double spacingZ;
     public String fileType;
     public String h5DataSetName;
     public String[] channelFolders;
@@ -37,11 +40,22 @@ public class FileInfoSource {
     private boolean isAutoContrast;
 
 
-    public FileInfoSource(String directory, String namingScheme,String filterPattern,String h5DataSetName) {
-        this(directory,  namingScheme, filterPattern, h5DataSetName,true);
+    public FileInfoSource(
+            String directory,
+            String namingScheme,
+            String filterPattern,
+            String h5DataSetName)
+    {
+        this( directory,  namingScheme, filterPattern, h5DataSetName,true );
     }
 
-    public FileInfoSource(String directory, String namingScheme,String filterPattern,String h5DataSetName,boolean isAutoContrast) {
+    public FileInfoSource(
+            String directory,
+            String namingScheme,
+            String filterPattern,
+            String h5DataSetName,
+            boolean isAutoContrast)
+    {
         this.directory = directory;
         this.namingPattern = namingScheme;
         this.isAutoContrast = isAutoContrast;

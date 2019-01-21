@@ -32,18 +32,19 @@
 package de.embl.cba.bigDataTools2;
 
 
+import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
 import de.embl.cba.bigDataTools2.fileInfoSource.SerializableFileInfo;
 import de.embl.cba.bigDataTools2.logging.IJLazySwingLogger;
 import de.embl.cba.bigDataTools2.logging.Logger;
 import ij.IJ;
 import ij.io.FileInfo;
+import ij.io.FileOpener;
 import ij.io.RandomAccessStream;
 import ij.util.Tools;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.Properties;
 
 /**
  Decodes single and multi-image TIFF files. The LZW decompression
@@ -84,7 +85,7 @@ public class FastTiffDecoder {
     public static final int METAMORPH1 = 33628;
     public static final int METAMORPH2 = 33629;
     public static final int IPLAB = 34122;
-    public static final int NIH_IMAGE_HDR = 43314;
+    public static final int NIH_IMAGE_HDR = 43314; // IMAGEJ HEADER
     public static final int META_DATA_BYTE_COUNTS = 50838; // private tag registered with Adobe
     public static final int META_DATA = 50839; // private tag registered with Adobe
 
@@ -131,7 +132,7 @@ public class FastTiffDecoder {
     long totalTime = 0;
 
 
-    public FastTiffDecoder(String directory, String name) {
+    public FastTiffDecoder( String directory, String name ) {
         this.directory = directory;
         this.name = name;
     }
@@ -301,30 +302,35 @@ public class FastTiffDecoder {
         return offset;
     }
 
-    long getValue(int fieldType, long count) throws IOException {
+    long getValue( int fieldType, long count ) throws IOException {
         long value = 0;
-        int unused;
-        if ( count==1 )
+
+        if ( count == 1 )
         {
-            if (fieldType == SHORT || fieldType == RATIONALE )
+            if ( fieldType == SHORT  )
             {
                 value = getShort(); // 2
-                unused = getShort(); // 2
-                if (isBigTiff) unused = getInt(); // 4
+                int skip = getShort(); // 2
+                if (isBigTiff) skip = getInt(); // 4
             }
             else if ( fieldType == LONG )
             {
                 value = isBigTiff ? getLong() : getInt(); // 8 : 4
             }
+            else if ( fieldType == RATIONALE )
+            {
+                value = getInt();
+            }
             else
             {
-                IJ.showMessage("Undefined TIFF field Type: " + fieldType);
+                int a = 1;
             }
         }
         else  // if count > 1 do not return the actual value but just a pointer to the values
         {
             value = isBigTiff ? getLong() : getInt() & 0xffffffffL;
         }
+
         return value;
     }
 
@@ -697,7 +703,7 @@ public class FastTiffDecoder {
         debugMode = true;
     }
 
-    SerializableFileInfo fullyReadIFD(long[] relativeStripInfoLocations) throws IOException {
+    SerializableFileInfo fullyReadIFD( long[] relativeStripInfoLocations ) throws IOException {
 
         long ifdLoc = in.getFilePointer();
 
@@ -715,6 +721,7 @@ public class FastTiffDecoder {
 
         if ((ifdCount%50)==0 && ifdCount>0)
             ij.IJ.showStatus("Opening IFDs: "+ifdCount);
+
         SerializableFileInfo fi = new SerializableFileInfo();
         fi.fileType = FileInfo.BITMAP;  //BitsPerSample defaults to 1
 
@@ -733,7 +740,7 @@ public class FastTiffDecoder {
 
             fieldType = getShort();
             count = isBigTiff ? getLong() : getInt();
-            value = getValue(fieldType, count)&0xffffffffL;
+            value = getValue( fieldType, count ) & 0xffffffffL;
 
             if (debugMode && ifdCount<10) dumpTag(tag, (int)count, (int)value, fi);
             //ij.IJ.writeHeaderFile(i+"/"+nEntries+" "+tag + ", count=" + count + ", value=" + value);
@@ -1189,6 +1196,7 @@ public class FastTiffDecoder {
             if( listIFDs.size() < 3 ) // somehow the first ones are sometimes different...
             {
                 fi = fullyReadIFD( relativeStripInfoLocations );
+				decodeDescriptionString( fi );
             }
             else
             {
@@ -1273,5 +1281,73 @@ public class FastTiffDecoder {
         else
             return "varies ("+minGap+" to "+maxGap+")";
     }
+
+	public Properties decodeDescriptionString( SerializableFileInfo fi ) {
+		if (fi.description==null || fi.description.length()<7)
+			return null;
+		if (IJ.debugMode)
+			IJ.log("Image Description: " + new String(fi.description).replace('\n',' '));
+		if (!fi.description.startsWith("ImageJ"))
+			return null;
+		Properties props = new Properties();
+		InputStream is = new ByteArrayInputStream(fi.description.getBytes());
+		try {props.load(is); is.close();}
+		catch (IOException e) {return null;}
+		String dsUnit = props.getProperty("unit","");
+		if ("cm".equals(fi.unit) && "um".equals(dsUnit)) {
+			fi.pixelWidth *= 10000;
+			fi.pixelHeight *= 10000;
+		}
+		fi.unit = dsUnit;
+		Double n = getNumber(props,"cf");
+		if (n!=null) fi.calibrationFunction = n.intValue();
+		double c[] = new double[5];
+		int count = 0;
+		for (int i=0; i<5; i++) {
+			n = getNumber(props,"c"+i);
+			if (n==null) break;
+			c[i] = n.doubleValue();
+			count++;
+		}
+		if (count>=2) {
+			fi.coefficients = new double[count];
+			for (int i=0; i<count; i++)
+				fi.coefficients[i] = c[i];
+		}
+		fi.valueUnit = props.getProperty("vunit");
+		n = getNumber(props,"images");
+		if (n!=null && n.doubleValue()>1.0)
+			fi.nImages = (int)n.doubleValue();
+		n = getNumber(props, "spacing");
+		if (n!=null) {
+			double spacing = n.doubleValue();
+			if (spacing<0) spacing = -spacing;
+			fi.pixelDepth = spacing;
+		}
+		String name = props.getProperty("name");
+		if (name!=null)
+			fi.fileName = name;
+		return props;
+	}
+
+	private Double getNumber(Properties props, String key) {
+		String s = props.getProperty(key);
+		if (s!=null) {
+			try {
+				return Double.valueOf(s);
+			} catch (NumberFormatException e) {}
+		}
+		return null;
+	}
+
+	private double getDouble(Properties props, String key) {
+		Double n = getNumber(props, key);
+		return n!=null?n.doubleValue():0.0;
+	}
+
+	private boolean getBoolean(Properties props, String key) {
+		String s = props.getProperty(key);
+		return s!=null&&s.equals("true")?true:false;
+	}
 
 }

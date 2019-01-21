@@ -15,7 +15,11 @@ public class FileInfoSourceHelper {
     
     private static Logger logger = new IJLazySwingLogger();
 
-    public static boolean setFileSourceInfos(FileInfoSource infoSource, String directory, String namingPattern) { // previously, setMissingInfos
+    public static boolean setFileSourceInfos(
+            FileInfoSource infoSource,
+            String directory,
+            String namingPattern)
+    { // previously, setMissingInfos
         int[] ctzMin = new int[3];
         int[] ctzMax = new int[3];
         int[] ctzPad = new int[3];
@@ -152,6 +156,12 @@ public class FileInfoSourceHelper {
         infoSource.nX = info[0].width;
         infoSource.nY = info[0].height;
         infoSource.bitDepth = info[0].bytesPerPixel * 8;
+
+        infoSource.spacingX = info[0].pixelWidth;
+        infoSource.spacingY = info[0].pixelHeight;
+        infoSource.spacingZ = info[0].pixelDepth;
+
+        int a = 1;
 
     }
     public static boolean setFileSourceInfos(FileInfoSource infoSource,String directory,String namingScheme,String filterPattern) { //previously, setAllInfosByParsingFilesAndFolders
