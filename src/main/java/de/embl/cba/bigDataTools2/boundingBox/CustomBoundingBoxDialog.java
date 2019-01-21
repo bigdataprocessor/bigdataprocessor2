@@ -92,7 +92,7 @@ public class CustomBoundingBoxDialog extends JFrame {
                         new UnsignedShortType(), "selection") {
             @Override
             public Interval getInterval(final int t, final int level) {
-                return toInterval( realInterval );
+                return toInterval3D( realInterval );
             }
         };
 
@@ -117,25 +117,15 @@ public class CustomBoundingBoxDialog extends JFrame {
 
             @Override
             public Interval getInterval() {
-                return toInterval( realInterval );
+                return toInterval3D( realInterval );
             }
         });
 
         // create a JPanel with sliders to modify the bounding box realInterval (boxRealRandomAccessible.getInterval())
         boxSelectionPanel = new CustomBoxSelectionPanel(
-                new CustomBoxSelectionPanel.Box() {
-                    @Override
-                    public void setInterval( final RealInterval i ) {
-                        realInterval.set( i );
-                        viewer.requestRepaint();
-                    }
-
-                    @Override
-                    public RealInterval getInterval() {
-                        return realInterval;
-                    }
-                },
-                rangeInterval, axesToCrop);
+                selectionBox( viewer ),
+                rangeInterval,
+                axesToCrop);
 
         // when dialog is made visible, add bbox source
         // when dialog is hidden, remove bbox source
@@ -143,7 +133,7 @@ public class CustomBoundingBoxDialog extends JFrame {
             @Override
             public void componentShown(final ComponentEvent e) {
                 if (showBoxSource) {
-                    viewer.addSource(boxSourceAndConverter);
+                    viewer.addSource( boxSourceAndConverter );
                     setupAssignments.addSetup(boxConverterSetup);
                     boxConverterSetup.setViewer(viewer);
 
@@ -196,6 +186,22 @@ public class CustomBoundingBoxDialog extends JFrame {
 //		createContent();
     }
 
+    private CustomBoxSelectionPanel.Box selectionBox( ViewerPanel viewer )
+    {
+        return new CustomBoxSelectionPanel.Box() {
+			@Override
+			public void setInterval( final RealInterval i ) {
+				realInterval.set( i );
+				viewer.requestRepaint();
+			}
+
+			@Override
+			public RealInterval getInterval() {
+				return realInterval;
+			}
+		};
+    }
+
     @Override
     public void setVisible(final boolean b) {
         if (b && !contentCreated) {
@@ -211,10 +217,11 @@ public class CustomBoundingBoxDialog extends JFrame {
         pack();
     }
 
-    public static FinalInterval toInterval( RealInterval realInterval )
+    public static FinalInterval toInterval3D( RealInterval realInterval )
     {
-        double[] realMin = new double[ 3 ];
-        double[] realMax = new double[ 3 ];
+        final int n = realInterval.numDimensions();
+        double[] realMin = new double[ n ];
+        double[] realMax = new double[ n ];
         realInterval.realMin( realMin );
         realInterval.realMax( realMax );
 

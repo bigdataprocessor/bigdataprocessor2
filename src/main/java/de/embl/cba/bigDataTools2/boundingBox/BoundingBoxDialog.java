@@ -50,6 +50,7 @@ public class BoundingBoxDialog
         for ( int d = 0; d < 3; d++ )
         {
             min[ d ] = (int) ( rai.min( d ) * voxelSize[ d ] );
+            max[ d ] = (int) ( rai.max( d ) * voxelSize[ d ] );
         }
 
         long[] size = new long[ MAX_ALLOWED_IMAGE_DIMS ];
@@ -82,19 +83,26 @@ public class BoundingBoxDialog
         else
         {
             cropDialogTitleMessage = "Select 3D section to crop";
-            initialInterval = Intervals.createMinMax(minBB[ X ], minBB[ Y ], minBB[ Z ],
+            initialInterval = Intervals.createMinMax(
+                    minBB[ X ], minBB[ Y ], minBB[ Z ],
                     maxBB[ X ], maxBB[ Y ], maxBB[ Z ]); // the initially selected bounding box
-            rangeInterval = Intervals.createMinMax(min[ X ], min[ Y ], min[ Z ],
+            rangeInterval = Intervals.createMinMax(
+                    min[ X ], min[ Y ], min[ Z ],
                     max[ X ], max[ Y ], max[ Z ]);// the range (bounding box of possible bounding boxes)
             axesToCrop = BOUNDING_BOX_AXES_3D;
         }
 
 
         final CustomBoundingBoxDialog boundingBoxDialog =
-                new CustomBoundingBoxDialog(((BdvHandleFrame) bdv).getBigDataViewer().getViewerFrame(), cropDialogTitleMessage,
+                new CustomBoundingBoxDialog(
+                        ((BdvHandleFrame) bdv).getBigDataViewer().getViewerFrame(),
+                        cropDialogTitleMessage,
                         ((BdvHandleFrame) bdv).getBigDataViewer().getViewer(),
-                        ((BdvHandleFrame) bdv).getBigDataViewer().getSetupAssignments(), boxSetupId,
-                        initialInterval, rangeInterval, axesToCrop) {
+                        ((BdvHandleFrame) bdv).getBigDataViewer().getSetupAssignments(),
+                        boxSetupId,
+                        initialInterval,
+                        rangeInterval,
+                        axesToCrop) {
 
                     @Override
                     public void createContent() {
