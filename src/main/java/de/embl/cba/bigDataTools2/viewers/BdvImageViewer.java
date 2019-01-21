@@ -44,17 +44,19 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
     public FinalInterval get5DIntervalFromUser() {
 
         BoundingBoxDialog showBB = new BoundingBoxDialog(this.bdvSS.getBdvHandle());
+
         showBB.show( rai, voxelSize, BB_TRACK_BUTTON_LABEL,true);
+
         long[] minMax = {
-                showBB.selectedMin[ BoundingBoxDialog.X ],
-                showBB.selectedMin[ BoundingBoxDialog.Y ],
+                (long) ( showBB.selectedMin[ BoundingBoxDialog.X ] / voxelSize[ X ] ),
+                (long) ( showBB.selectedMin[ BoundingBoxDialog.Y ] / voxelSize[ Y ] ),
+                (long) ( showBB.selectedMin[ BoundingBoxDialog.Z ] / voxelSize[ Z ] ),
                 rai.min( C ),
-                showBB.selectedMin[ BoundingBoxDialog.Z ],
                 showBB.selectedMin[ BoundingBoxDialog.T ],
-                showBB.selectedMax[ BoundingBoxDialog.X ],
-                showBB.selectedMax[ BoundingBoxDialog.Y ],
+                (long) ( showBB.selectedMax[ BoundingBoxDialog.X ] / voxelSize[ X ] ),
+                (long) ( showBB.selectedMax[ BoundingBoxDialog.Y ] / voxelSize[ Y ] ),
+                (long) ( showBB.selectedMax[ BoundingBoxDialog.Z ] / voxelSize[ Z ] ),
                 rai.max( C ),
-                showBB.selectedMax[ BoundingBoxDialog.Z ],
                 showBB.selectedMax[ BoundingBoxDialog.T ]};
 
         return Intervals.createMinMax( minMax );
@@ -73,7 +75,7 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
     @Override
     public double[] getVoxelSize()
     {
-        return new double[ 0 ];
+        return voxelSize;
     }
 
     @Override
