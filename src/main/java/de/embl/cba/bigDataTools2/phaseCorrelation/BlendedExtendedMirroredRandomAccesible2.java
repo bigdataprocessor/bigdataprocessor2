@@ -212,7 +212,7 @@ public class BlendedExtendedMirroredRandomAccesible2<T extends RealType<T>>imple
 		long start = System.currentTimeMillis();
 		
 		Cursor<FloatType> c = img2.cursor();
-		for (FloatType e : Views.iterable(Views.interval(ext, ext.getExtInterval())))
+		for (FloatType e : Views.iterable(Views.realInterval(ext, ext.getExtInterval())))
 		{
 			c.fwd();
 			c.get().set(e);
@@ -223,7 +223,7 @@ public class BlendedExtendedMirroredRandomAccesible2<T extends RealType<T>>imple
 		
 		ImageJFunctions.show(img2);
 		
-		//RandomAccessibleInterval<FloatType> img3 = Views.interval(ext, ext.getExtInterval());		
+		//RandomAccessibleInterval<FloatType> img3 = Views.realInterval(ext, ext.getExtInterval());
 		//ImageJFunctions.show(img3);
 		
 

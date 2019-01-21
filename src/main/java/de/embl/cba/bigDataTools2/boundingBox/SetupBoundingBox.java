@@ -19,24 +19,26 @@ public class SetupBoundingBox {
         }
 
         computeMaxBoundingBoxDimensions(myImg, minBB, maxBB);
-        final BoundingBox maxsized = new BoundingBox(approximateLowerBound(minBB), approximateUpperBound(maxBB));
+        final BoundingBox maxsized = new BoundingBox(
+                minBB,
+                maxBB);
         return maxsized;
     }
 
-    public static int[] approximateLowerBound(final double[] min) {
-        final int[] lowerBound = new int[min.length];
-        for (int d = 0; d < min.length; ++d)
-            lowerBound[d] = (int) Math.round(Math.floor(min[d]));
-        return lowerBound;
-    }
-
-    public static int[] approximateUpperBound(final double[] max) {
-        final int[] upperBound = new int[max.length];
-        for (int d = 0; d < max.length; ++d) {
-            upperBound[d] = (int) Math.round(Math.ceil(max[d]));
-        }
-        return upperBound;
-    }
+//    public static int[] approximateLowerBound(final double[] min) {
+//        final int[] lowerBound = new int[min.length];
+//        for (int d = 0; d < min.length; ++d)
+//            lowerBound[d] = (int) Math.round(Math.floor(min[d]));
+//        return lowerBound;
+//    }
+//
+//    public static int[] approximateUpperBound(final double[] max) {
+//        final int[] upperBound = new int[max.length];
+//        for (int d = 0; d < max.length; ++d) {
+//            upperBound[d] = (int) Math.round(Math.ceil(max[d]));
+//        }
+//        return upperBound;
+//    }
 
 
     public static void computeMaxBoundingBoxDimensions(Dimensions size, final double[] minBB, final double[] maxBB) {

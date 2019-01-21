@@ -321,13 +321,13 @@ public class BigDataTrackerGUI extends JDialog implements ActionListener, FocusL
             System.out.println(e.getActionCommand());
            BigDataConverter.trackerThreadPool.submit(()-> {
                FinalInterval interval = imageViewer.get5DIntervalFromUser();
-               trackingSettings.pMin = new Point3D((int)interval.min(FileInfoConstants.X_AXIS_POSITION),
-                                                   (int)interval.min(FileInfoConstants.Y_AXIS_POSITION),
-                                                   (int)interval.min(FileInfoConstants.Z_AXIS_POSITION));
+               trackingSettings.pMin = new Point3D((int)interval.min(FileInfoConstants.X ),
+                                                   (int)interval.min(FileInfoConstants.Y ),
+                                                   (int)interval.min(FileInfoConstants.Z ));
 
-               trackingSettings.pMax = new Point3D((int)interval.max(FileInfoConstants.X_AXIS_POSITION),
-                                                   (int)interval.max(FileInfoConstants.Y_AXIS_POSITION),
-                                                   (int)interval.max(FileInfoConstants.Z_AXIS_POSITION));
+               trackingSettings.pMax = new Point3D((int)interval.max(FileInfoConstants.X ),
+                                                   (int)interval.max(FileInfoConstants.Y ),
+                                                   (int)interval.max(FileInfoConstants.Z ));
            });
            trackingSettings.tStart= imageViewer.getCurrentTimePoint();
 //        }

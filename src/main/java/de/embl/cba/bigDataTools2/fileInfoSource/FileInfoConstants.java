@@ -22,11 +22,11 @@ public class FileInfoConstants {
 //    public static final int UNSIGNED_BYTE_MAX_VAL = Byte.MAX_VALUE*2+1;
 //    public static final int UNSIGNED_SHORT_MAX_VAL = Short.MAX_VALUE*2+1;
 //    public static final long UNSIGNED_INT_MAX_VAL = 4294967295L;
-    public static final int X_AXIS_POSITION=0;
-    public static final int Y_AXIS_POSITION=1;
-    public static final int C_AXIS_POSITION=2;
-    public static final int Z_AXIS_POSITION=3;
-    public static final int T_AXIS_POSITION=4;
+    public static final int X = 0;
+    public static final int Y = 1;
+    public static final int Z = 2;
+    public static final int C = 3;
+    public static final int T = 4;
     public static final int TOTAL_AXES = 5;
     public static final AxisType[] AXES_ORDER = {Axes.X, Axes.Y, Axes.CHANNEL, Axes.Z, Axes.TIME};
     public static final int MAX_ALLOWED_IMAGE_DIMS = AXES_ORDER.length;

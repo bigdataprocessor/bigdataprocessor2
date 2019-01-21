@@ -71,7 +71,7 @@ public class BigDataTracker {
     public< T extends RealType< T > & NativeType< T >> void showTrackedObjects(ImageViewer imageViewer){
         if(trackResults!=null) {
             List<RandomAccessibleInterval<T>> tracks = new ArrayList<>();
-            int nChannels = (int) trackingSettings.imageRAI.dimension(FileInfoConstants.C_AXIS_POSITION);
+            int nChannels = (int) trackingSettings.imageRAI.dimension(FileInfoConstants.C );
             for (Map.Entry<Integer, Point3D[]> entry : this.trackResults.locations.entrySet()) {
                 Point3D[] pMinMax = entry.getValue();
                 long[] range = {(long) pMinMax[0].getX(),

@@ -15,13 +15,14 @@ import bdv.tools.boundingbox.BoxRealRandomAccessible;
 import bdv.tools.brightness.RealARGBColorConverterSetup;
 import bdv.tools.brightness.SetupAssignments;
 import bdv.tools.transformation.TransformedSource;
-import bdv.util.ModifiableInterval;
 import bdv.util.RealRandomAccessibleSource;
 import bdv.viewer.DisplayMode;
 import bdv.viewer.SourceAndConverter;
 import bdv.viewer.ViewerPanel;
 import bdv.viewer.VisibilityAndGrouping;
+import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
+import net.imglib2.RealInterval;
 import net.imglib2.display.RealARGBColorConverter;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.numeric.ARGBType;
@@ -38,7 +39,7 @@ import java.awt.event.KeyEvent;
 // while dialog is visible, bounding box is added as a source to the viewer
 public class CustomBoundingBoxDialog extends JFrame {
     private static final long serialVersionUID = 1L;
-    protected final ModifiableInterval interval;
+    protected final ModifiableRealInterval realInterval;
     protected final BoxRealRandomAccessible<UnsignedShortType> boxRealRandomAccessible;
     protected final CustomBoxSelectionPanel boxSelectionPanel;
     protected final SourceAndConverter<UnsignedShortType> boxSourceAndConverter;
@@ -52,8 +53,8 @@ public class CustomBoundingBoxDialog extends JFrame {
             final ViewerPanel viewer,
             final SetupAssignments setupAssignments,
             final int boxSetupId,
-            final Interval initialInterval,
-            final Interval rangeInterval,
+            final RealInterval initialInterval,
+            final RealInterval rangeInterval,
             final String[] axesToCrop) {
         this(owner, title, viewer, setupAssignments, boxSetupId, initialInterval, rangeInterval,
                 true, true, axesToCrop);
@@ -65,8 +66,8 @@ public class CustomBoundingBoxDialog extends JFrame {
             final ViewerPanel viewer,
             final SetupAssignments setupAssignments,
             final int boxSetupId,
-            final Interval initialInterval,
-            final Interval rangeInterval,
+            final RealInterval initialInterval,
+            final RealInterval rangeInterval,
             final boolean showBoxSource,
             final boolean showBoxOverlay,
             final String[] axesToCrop) {
@@ -76,14 +77,22 @@ public class CustomBoundingBoxDialog extends JFrame {
         // create a procedural RealRandomAccessible that will render the bounding box
         final UnsignedShortType insideValue = new UnsignedShortType(1000); // inside the box pixel value is 1000
         final UnsignedShortType outsideValue = new UnsignedShortType(0); // outside is 0
-        interval = new ModifiableInterval(initialInterval);
-        boxRealRandomAccessible = new BoxRealRandomAccessible<>(interval, insideValue, outsideValue);
+
+        realInterval = new ModifiableRealInterval( initialInterval );
+
+        boxRealRandomAccessible = new BoxRealRandomAccessible<>(
+                realInterval,
+                insideValue,
+                outsideValue );
 
         // create a bdv.viewer.Source providing data from the bbox RealRandomAccessible
-        final RealRandomAccessibleSource<UnsignedShortType> boxSource = new RealRandomAccessibleSource<UnsignedShortType>(boxRealRandomAccessible, new UnsignedShortType(), "selection") {
+        final RealRandomAccessibleSource<UnsignedShortType> boxSource =
+                new RealRandomAccessibleSource<UnsignedShortType>(
+                        boxRealRandomAccessible,
+                        new UnsignedShortType(), "selection") {
             @Override
             public Interval getInterval(final int t, final int level) {
-                return interval;
+                return toInterval( realInterval );
             }
         };
 
@@ -108,22 +117,22 @@ public class CustomBoundingBoxDialog extends JFrame {
 
             @Override
             public Interval getInterval() {
-                return interval;
+                return toInterval( realInterval );
             }
         });
 
-        // create a JPanel with sliders to modify the bounding box interval (boxRealRandomAccessible.getInterval())
+        // create a JPanel with sliders to modify the bounding box realInterval (boxRealRandomAccessible.getInterval())
         boxSelectionPanel = new CustomBoxSelectionPanel(
                 new CustomBoxSelectionPanel.Box() {
                     @Override
-                    public void setInterval(final Interval i) {
-                        interval.set(i);
+                    public void setInterval( final RealInterval i ) {
+                        realInterval.set( i );
                         viewer.requestRepaint();
                     }
 
                     @Override
-                    public Interval getInterval() {
-                        return interval;
+                    public RealInterval getInterval() {
+                        return realInterval;
                     }
                 },
                 rangeInterval, axesToCrop);
@@ -200,5 +209,24 @@ public class CustomBoundingBoxDialog extends JFrame {
     public void createContent() {
         getContentPane().add(boxSelectionPanel, BorderLayout.NORTH);
         pack();
+    }
+
+    public static FinalInterval toInterval( RealInterval realInterval )
+    {
+        double[] realMin = new double[ 3 ];
+        double[] realMax = new double[ 3 ];
+        realInterval.realMin( realMin );
+        realInterval.realMax( realMax );
+
+        long[] min = new long[ 3 ];
+        long[] max = new long[ 3 ];
+
+        for ( int d = 0; d < 3; d++ )
+        {
+            min[ d ] = (long) realMin[ d ];
+            max[ d ] = (long) realMax[ d ];
+        }
+
+        return new FinalInterval( min, max );
     }
 }

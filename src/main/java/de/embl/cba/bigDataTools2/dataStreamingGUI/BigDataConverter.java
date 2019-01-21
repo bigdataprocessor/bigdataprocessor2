@@ -14,20 +14,14 @@ import net.imglib2.RealRandomAccessible;
 import net.imglib2.cache.img.CachedCellImg;
 import net.imglib2.converter.Converters;
 import net.imglib2.converter.RealUnsignedByteConverter;
-import net.imglib2.converter.RealUnsignedShortConverter;
-import net.imglib2.interpolation.randomaccess.ClampingNLinearInterpolatorFactory;
 import net.imglib2.realtransform.AffineRandomAccessible;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.realtransform.RealViews;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
-import net.imglib2.type.numeric.integer.UnsignedShortType;
-import net.imglib2.util.Util;
-import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -106,8 +100,8 @@ public class BigDataConverter {
 
     public static <T extends RealType<T> & NativeType<T>> RandomAccessibleInterval shearImage(RandomAccessibleInterval rai,ShearingSettings shearingSettings){
         List<RandomAccessibleInterval<T>> timeTracks = new ArrayList<>();
-        int nTimeFrames = (int) rai.dimension(FileInfoConstants.T_AXIS_POSITION);
-        int nChannels = (int) rai.dimension(FileInfoConstants.C_AXIS_POSITION);
+        int nTimeFrames = (int) rai.dimension(FileInfoConstants.T );
+        int nChannels = (int) rai.dimension(FileInfoConstants.C );
         System.out.println("Shear Factor X " + shearingSettings.shearingFactorX);
         System.out.println("Shear Factor Y " + shearingSettings.shearingFactorY);
         AffineTransform3D affine = new AffineTransform3D();
@@ -124,7 +118,7 @@ public class BigDataConverter {
             timeTracks.add((RandomAccessibleInterval) task.join());
         }
         RandomAccessibleInterval sheared = Views.stack(timeTracks);
-        sheared = Views.permute(sheared, FileInfoConstants.C_AXIS_POSITION, FileInfoConstants.Z_AXIS_POSITION);
+        sheared = Views.permute(sheared, FileInfoConstants.C, FileInfoConstants.Z );
         System.out.println("Time elapsed(ms) " + (System.currentTimeMillis() - startTime));
         return sheared;
     }
@@ -149,9 +143,9 @@ public class BigDataConverter {
         @Override
         protected RandomAccessibleInterval<T> compute() {
             List<RandomAccessibleInterval<T>> channelTracks = new ArrayList<>();
-            RandomAccessibleInterval tStep = Views.hyperSlice(rai, FileInfoConstants.T_AXIS_POSITION, t);
+            RandomAccessibleInterval tStep = Views.hyperSlice(rai, FileInfoConstants.T, t);
             for (int channel = 0; channel < nChannels; ++channel) {
-                RandomAccessibleInterval cStep = Views.hyperSlice(tStep, FileInfoConstants.C_AXIS_POSITION, channel);
+                RandomAccessibleInterval cStep = Views.hyperSlice(tStep, FileInfoConstants.C, channel);
                 RealRandomAccessible real = Views.interpolate(Views.extendZero(cStep),this.interpolatorFactory);
                 AffineRandomAccessible af = RealViews.affine(real, affine);
                 FinalRealInterval transformedRealInterval = affine.estimateBounds(cStep);

@@ -35,8 +35,8 @@ public class SaveImgAsTIFFPlanes implements Runnable {
             return;
         }
         RandomAccessibleInterval imgStack = savingSettings.image;
-        long[] minInterval = new long[]{imgStack.min(FileInfoConstants.X_AXIS_POSITION), imgStack.min(FileInfoConstants.Y_AXIS_POSITION), c, z, t};
-        long[] maxInterval = new long[]{imgStack.max(FileInfoConstants.X_AXIS_POSITION), imgStack.max(FileInfoConstants.Y_AXIS_POSITION), c, z, t};
+        long[] minInterval = new long[]{imgStack.min(FileInfoConstants.X ), imgStack.min(FileInfoConstants.Y ), c, z, t};
+        long[] maxInterval = new long[]{imgStack.max(FileInfoConstants.X ), imgStack.max(FileInfoConstants.Y ), c, z, t};
 
         RandomAccessibleInterval newRai = Views.interval(imgStack, minInterval, maxInterval);
 
@@ -85,7 +85,7 @@ public class SaveImgAsTIFFPlanes implements Runnable {
             String sZ = String.format("%1$05d", z);
             String pathCTZ;
 
-            if (imgStack.dimension(FileInfoConstants.C_AXIS_POSITION) > 1 || imgStack.dimension(FileInfoConstants.T_AXIS_POSITION) > 1) {
+            if (imgStack.dimension(FileInfoConstants.C ) > 1 || imgStack.dimension(FileInfoConstants.T ) > 1) {
                 pathCTZ = newPath + "--C" + sC + "--T" + sT + "--Z" + sZ + ".tif";
             } else {
                 pathCTZ = newPath + "--Z" + sZ + ".tif";

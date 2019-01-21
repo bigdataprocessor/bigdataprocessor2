@@ -96,7 +96,7 @@ public class FourNeighborhoodExtrema
 	
 	/**
 	 * split the given Interval into nSplits intervals along the largest dimension
-	 * @param interval input interval
+	 * @param interval input realInterval
 	 * @param nSplits how may splits
 	 * @return list of intervals input was split into
 	 */

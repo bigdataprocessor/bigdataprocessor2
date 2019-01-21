@@ -282,7 +282,7 @@ public class PhaseCorrelationPeak {
 			maxSF[ d ] += 2;
 		}
 
-		final Cursor< T > cursor = Views.iterable( Views.interval( Views.extendPeriodic( pcm ), minSF, maxSF ) ).localizingCursor();
+		final Cursor< T > cursor = Views.iterable( Views.realInterval( Views.extendPeriodic( pcm ), minSF, maxSF ) ).localizingCursor();
 
 		double[] sumW = new double[ pcm.numDimensions() ];
 		double[] sum = new double[ pcm.numDimensions() ];

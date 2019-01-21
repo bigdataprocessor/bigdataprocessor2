@@ -19,6 +19,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import static de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants.*;
+import static de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants.Z;
+
 
 public class ImageLoader implements CellLoader {
 
@@ -27,31 +30,33 @@ public class ImageLoader implements CellLoader {
     private int[] cellDims;
     private LoadingCache<List<Integer>, SerializableFileInfo[]> serializableFileInfoCache;
 
-    public ImageLoader(FileInfoSource infoSource) {
-        this.cellDims = new int[]{infoSource.nX, FileInfoConstants.CELL_DIM_Y, 1, 1, 1};
+    public ImageLoader( FileInfoSource infoSource ) {
+        this.cellDims = new int[]{ infoSource.nX, CELL_DIM_Y, 1, 1, 1};
         this.dimensions = infoSource.getDimensions();
         this.directory = infoSource.directory;
         //Google Guava cache
-        CacheLoader<List<Integer>, SerializableFileInfo[]> loader = new CacheLoader<List<Integer>, SerializableFileInfo[]>(){
-            @Override
-            public SerializableFileInfo[] load(List<Integer> c_t){
-                return infoSource.getSerializableFileStackInfo(c_t.get(0),c_t.get(1));
-            }
+        CacheLoader<List<Integer>, SerializableFileInfo[]> loader =
+                new CacheLoader<List<Integer>, SerializableFileInfo[]>(){
+                    @Override
+                    public SerializableFileInfo[] load( List<Integer> c_t ){
+                        return infoSource.getSerializableFileStackInfo( c_t.get(0), c_t.get(1) );
+                    }
         };
         serializableFileInfoCache = CacheBuilder.newBuilder().maximumSize(50).build(loader);
     }
 
 
-    public ImagePlus getDataCube(long[] positionXYCZTMax, long[]positionXYCZTMin) {
-        int z = Math.toIntExact(positionXYCZTMax[FileInfoConstants.Z_AXIS_POSITION]);// z coordinate is 3
-        int channel = Math.toIntExact(positionXYCZTMax[FileInfoConstants.C_AXIS_POSITION]);
-        int time = Math.toIntExact(positionXYCZTMax[FileInfoConstants.T_AXIS_POSITION]);
+    public ImagePlus getDataCube( long[] min,  long[] max )
+    {
+        int z = Math.toIntExact( max[ Z ]);
+        int channel = Math.toIntExact( max[ C ]);
+        int time = Math.toIntExact( max[ T ]);
         List<Integer> c_t = Arrays.asList(channel,time);
         SerializableFileInfo[] infos_c_t = getFileInfoStack(c_t);
         SerializableFileInfo fileInfo = infos_c_t[z];
         Point3D po, ps;
-        po = new Point3D(0, positionXYCZTMin[FileInfoConstants.Y_AXIS_POSITION], z);
-        long diff = positionXYCZTMax[FileInfoConstants.Y_AXIS_POSITION]-positionXYCZTMin[FileInfoConstants.Y_AXIS_POSITION];
+        po = new Point3D(0, min[ Y ], z);
+        long diff = max[ Y ]-min[ Y ];
         ps = new Point3D(fileInfo.width,diff+1 , 1);
         ImagePlus imagePlus = new OpenerExtension().readDataCube(directory, infos_c_t, 1, po, ps, BigDataConverter.executorService); //TODO: get rid of ImagePlus
         return imagePlus;
@@ -68,12 +73,12 @@ public class ImageLoader implements CellLoader {
     }
 
     @Override
-    public void load(final SingleCellArrayImg cell) {
-        long[] positionXYCZTMax = new long[FileInfoConstants.TOTAL_AXES];
-        long[] positionXYCZTMin = new long[FileInfoConstants.TOTAL_AXES];
-        cell.max(positionXYCZTMax);
-        cell.min(positionXYCZTMin);
-        ImagePlus imagePlus = getDataCube(positionXYCZTMax,positionXYCZTMin);
+    public void load( final SingleCellArrayImg cell ) {
+        long[] max = new long[ TOTAL_AXES ];
+        long[] min = new long[ TOTAL_AXES ];
+        cell.max(max);
+        cell.min(min);
+        ImagePlus imagePlus = getDataCube( min, max );
         if (cell.firstElement() instanceof UnsignedByteType) {
             final byte[] impData = (byte[]) imagePlus.getProcessor().getPixels();
             final byte[] cellData = (byte[]) cell.getStorageArray();

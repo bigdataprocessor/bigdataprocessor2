@@ -41,9 +41,9 @@ public class SaveCentral {
 
     private static void saveTIFFAsPlanes(SavingSettings savingSettings, ExecutorService es) {
         List<Future> futures = new ArrayList<>();
-        for (int c = 0; c < savingSettings.image.dimension(FileInfoConstants.C_AXIS_POSITION); c++) {
-            for (int t = 0; t < savingSettings.image.dimension(FileInfoConstants.T_AXIS_POSITION); t++) {
-                for (int z = 0; z < savingSettings.image.dimension(FileInfoConstants.Z_AXIS_POSITION); z++) {
+        for ( int c = 0; c < savingSettings.image.dimension(FileInfoConstants.C ); c++) {
+            for ( int t = 0; t < savingSettings.image.dimension(FileInfoConstants.T ); t++) {
+                for ( int z = 0; z < savingSettings.image.dimension(FileInfoConstants.Z ); z++) {
                     futures.add(es.submit(
                             new SaveImgAsTIFFPlanes(c, t, z, savingSettings)
                     ));
@@ -75,7 +75,7 @@ public class SaveCentral {
         List<Future> futures = new ArrayList<>();
         AtomicInteger counter = new AtomicInteger(0);
         final long startTime = System.currentTimeMillis();
-        long timeFrames = savingSettings.image.dimension(FileInfoConstants.T_AXIS_POSITION);
+        long timeFrames = savingSettings.image.dimension(FileInfoConstants.T );
         for (int t = 0; t < timeFrames; t++) {
             futures.add(
                     es.submit(
@@ -91,7 +91,7 @@ public class SaveCentral {
         List<Future> futures = new ArrayList<>();
         AtomicInteger counter = new AtomicInteger(0);
         final long startTime = System.currentTimeMillis();
-        long timeFrames = savingSettings.image.dimension(FileInfoConstants.T_AXIS_POSITION);
+        long timeFrames = savingSettings.image.dimension(FileInfoConstants.T );
         NativeType imageType = Util.getTypeFromInterval(savingSettings.image);
         for (int t = 0; t < timeFrames; t++) {
             if (imageType instanceof UnsignedByteType) {
@@ -123,7 +123,7 @@ public class SaveCentral {
         AtomicInteger counter = new AtomicInteger(0);
         ImarisDataSet imarisDataSetProperties = getImarisDataSet(savingSettings);
         final long startTime = System.currentTimeMillis();
-        long timeFrames = savingSettings.image.dimension(FileInfoConstants.T_AXIS_POSITION);
+        long timeFrames = savingSettings.image.dimension(FileInfoConstants.T );
         NativeType imageType = Util.getTypeFromInterval(savingSettings.image);
         for (int t = 0; t < timeFrames; t++) {
             if (imageType instanceof UnsignedByteType) {

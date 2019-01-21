@@ -107,11 +107,11 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
         // - if waiting takes to long somehoe terminate in a nice way
 
 //        long freeMemoryInBytes = IJ.maxMemory() - IJ.currentMemory();
-//        long numBytesOfImage = image.dimension(FileInfoConstants.X_AXIS_POSITION) *
-//                image.dimension(FileInfoConstants.Y_AXIS_POSITION) *
-//                image.dimension(FileInfoConstants.Z_AXIS_POSITION) *
-//                image.dimension(FileInfoConstants.C_AXIS_POSITION) *
-//                image.dimension(FileInfoConstants.T_AXIS_POSITION) *
+//        long numBytesOfImage = image.dimension(FileInfoConstants.X) *
+//                image.dimension(FileInfoConstants.Y) *
+//                image.dimension(FileInfoConstants.Z) *
+//                image.dimension(FileInfoConstants.C) *
+//                image.dimension(FileInfoConstants.T) *
 //                fileInfoSource.bitDepth/8;
 //
 //        if (numBytesOfImage > 1.5 * freeMemoryInBytes) {
@@ -127,11 +127,11 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
             }
             // Load
             //   ImagePlus impChannelTime = getDataCube( c );  May be faster???
-            long[] minInterval = new long[]{image.min(FileInfoConstants.X_AXIS_POSITION), image.min(FileInfoConstants.Y_AXIS_POSITION),
-                    c, image.min(FileInfoConstants.Z_AXIS_POSITION), this.current_t}; //XYCZT order
-            long[] maxInterval = new long[]{image.max(FileInfoConstants.X_AXIS_POSITION),
-                    image.max(FileInfoConstants.Y_AXIS_POSITION),
-                    c, image.max(FileInfoConstants.Z_AXIS_POSITION), this.current_t};//XYCZT order
+            long[] minInterval = new long[]{image.min(FileInfoConstants.X ), image.min(FileInfoConstants.Y ),
+                    c, image.min(FileInfoConstants.Z ), this.current_t}; //XYCZT order
+            long[] maxInterval = new long[]{image.max(FileInfoConstants.X ),
+                    image.max(FileInfoConstants.Y ),
+                    c, image.max(FileInfoConstants.Z ), this.current_t};//XYCZT order
             RandomAccessibleInterval newRai = Views.interval(image, minInterval, maxInterval);
             // Convert
             newRai = SaveImgAsHDF5Helper.convertor(newRai, this.savingSettings);

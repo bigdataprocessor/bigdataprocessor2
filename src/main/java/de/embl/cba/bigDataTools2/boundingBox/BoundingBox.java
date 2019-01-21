@@ -24,6 +24,7 @@ package de.embl.cba.bigDataTools2.boundingBox;
 
 import net.imglib2.Interval;
 import net.imglib2.Positionable;
+import net.imglib2.RealInterval;
 import net.imglib2.RealPositionable;
 import net.imglib2.util.Util;
 // TODO: check if this class is needed at all. Estimate might be taken from FileInfoSource nX,nY,nZ! -- ashis
@@ -33,85 +34,45 @@ import net.imglib2.util.Util;
  * https://imagej.net/Multiview-Reconstruction
  * https://github.com/PreibischLab/multiview-reconstruction
  */
-public class BoundingBox implements Interval, Comparable< BoundingBox >
+public class BoundingBox implements RealInterval, Comparable< BoundingBox >
 {
-	protected int[] min, max;
+	protected double[] min, max;
 	protected String title;
 
-	public BoundingBox(final String title, final int[] min, final int[] max )
+	public BoundingBox( final String title, final double[] min, final double[] max )
 	{
 		this.title = title;
 		this.min = min;
 		this.max = max;
 	}
 
-	public BoundingBox(final int[] min, final int[] max )
+	public BoundingBox(final double[] min, final double[] max )
 	{
 		this.min = min;
 		this.max = max;
 		this.title = "DefaultBoundingBox";
 	}
 
-	public BoundingBox(final Interval interval )
-	{
-		this.min = new int[ interval.numDimensions() ];
-		this.max = new int[ interval.numDimensions() ];
-
-		for ( int d = 0; d < interval.numDimensions(); ++d )
-		{
-			min[ d ] = (int)interval.min( d );
-			max[ d ] = (int)interval.max( d );
-		}
-
-		this.title = "DefaultBoundingBox";
-	}
-
 	public void setTitle( final String title ) { this.title = title; }
 	public String getTitle() { return title; }
 
-	public int[] getMin() { return min; }
-	public int[] getMax() { return max; }
+	public double[] getMin() { return min; }
+	public double[] getMax() { return max; }
 
-	/**
-	 * @param downsampling - how much downsampling (TODO: remove)
-	 * @return - the final dimensions including downsampling of this bounding box (to instantiate an img)
-	 */
-	public long[] getDimensions( final int downsampling )
-	{
-		final long[] dim = new long[ this.numDimensions() ];
-		this.dimensions( dim );
-
-		for ( int d = 0; d < this.numDimensions(); ++d )
-			dim[ d ] /= downsampling;
-
-		return dim;
-	}
-
-	@Override
-	public long min( final int d ) { return min[ d ]; }
-
-	@Override
-	public void min( final long[] min )
-	{
-		for ( int d = 0; d < min.length; ++d )
-			min[ d ] = this.min[ d ];
-	}
-
-	@Override
-	public void min( final Positionable min ) { min.setPosition( this.min ); }
-
-	@Override
-	public long max( final int d ) { return max[ d ]; }
-
-	@Override
-	public void max( final long[] max )
-	{
-		for ( int d = 0; d < max.length; ++d )
-			max[ d ] = this.max[ d ];
-	}
-
-	@Override
-	public void max( final Positionable max ) { max.setPosition( this.max ); }
+//	/**
+//	 * @param downsampling - how much downsampling (TODO: remove)
+//	 * @return - the final dimensions including downsampling of this bounding box (to instantiate an img)
+//	 */
+//	public long[] getDimensions( final int downsampling )
+//	{
+//		final long[] dim = new long[ this.numDimensions() ];
+//		this.dimensions( dim );
+//
+//		for ( int d = 0; d < this.numDimensions(); ++d )
+//			dim[ d ] /= downsampling;
+//
+//		return dim;
+//	}
 
 	@Override
 	public double realMin( final int d ) { return min[ d ]; }
@@ -143,16 +104,6 @@ public class BoundingBox implements Interval, Comparable< BoundingBox >
 	public int numDimensions() { return min.length; }
 
 	@Override
-	public void dimensions( final long[] dimensions )
-	{
-		for ( int d = 0; d < max.length; ++d )
-			dimensions[ d ] = dimension( d );
-	}
-
-	@Override
-	public long dimension( final int d ) { return this.max[ d ] - this.min[ d ] + 1; }
-
-	@Override
 	public int compareTo( final BoundingBox o ) { return o.getTitle().compareTo( this.getTitle() ); }
 
 	@Override
@@ -161,20 +112,4 @@ public class BoundingBox implements Interval, Comparable< BoundingBox >
 		return "Bounding Box '" + getTitle() + "' " + Util.printCoordinates( min ) + " >>> " + Util.printCoordinates( max );
 	}
 
-	public static String getBoundingBoxDescription( final BoundingBox bb )
-	{
-		String title = bb.getTitle() + " (dim=";
-
-		for ( int d = 0; d < bb.numDimensions(); ++d )
-			title += bb.dimension( d ) + "x";
-
-		title = title.substring( 0, title.length() - 1 ) + "px, offset=";
-
-		for ( int d = 0; d < bb.numDimensions(); ++d )
-			title += bb.min( d ) + "x";
-
-		title = title.substring( 0, title.length() - 1 ) + "px)";
-
-		return title;
-	}
 }

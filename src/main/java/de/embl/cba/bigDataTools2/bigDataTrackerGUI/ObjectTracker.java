@@ -45,11 +45,11 @@ public class ObjectTracker<T extends RealType<T>> {
         this.trackingSettings = trackingSettings;
         this.pMin = trackingSettings.pMin;
         this.pMax = trackingSettings.pMax;
-        this.width = (int) trackingSettings.imageRAI.dimension(FileInfoConstants.X_AXIS_POSITION);
-        this.height = (int) trackingSettings.imageRAI.dimension(FileInfoConstants.Y_AXIS_POSITION);
-        this.depth = (int) trackingSettings.imageRAI.dimension(FileInfoConstants.Z_AXIS_POSITION);
-        this.nChannels = (int) trackingSettings.imageRAI.dimension(FileInfoConstants.C_AXIS_POSITION);
-        this.timeFrames =  trackingSettings.nt ==-1? (int)trackingSettings.imageRAI.dimension(FileInfoConstants.T_AXIS_POSITION) : trackingSettings.nt+ trackingSettings.tStart;
+        this.width = (int) trackingSettings.imageRAI.dimension(FileInfoConstants.X );
+        this.height = (int) trackingSettings.imageRAI.dimension(FileInfoConstants.Y );
+        this.depth = (int) trackingSettings.imageRAI.dimension(FileInfoConstants.Z );
+        this.nChannels = (int) trackingSettings.imageRAI.dimension(FileInfoConstants.C );
+        this.timeFrames =  trackingSettings.nt ==-1? (int)trackingSettings.imageRAI.dimension(FileInfoConstants.T ) : trackingSettings.nt+ trackingSettings.tStart;
         this.trackId = 0;
     }
 
@@ -78,7 +78,7 @@ public class ObjectTracker<T extends RealType<T>> {
         long startTime = System.currentTimeMillis();
         for (int t = tStart; t < timeFrames; ++t) {
             logger.info("Current time tracked " + t);
-            randomAccess.setPosition(t, FileInfoConstants.T_AXIS_POSITION);
+            randomAccess.setPosition(t, FileInfoConstants.T );
             double trackingFraction;
             // compute stack center and tracking radii
             // at each iteration, the center of mass is only computed for a subset of the data cube
@@ -153,7 +153,7 @@ public class ObjectTracker<T extends RealType<T>> {
             double[] found = new double[currentFrame.numDimensions()];
             shiftPeak.getSubpixelShift().localize(found);
             //System.out.println(Util.printCoordinates(found));
-            pShift = new Point3D(found[FileInfoConstants.X_AXIS_POSITION],found[FileInfoConstants.Y_AXIS_POSITION],found[FileInfoConstants.Z_AXIS_POSITION]);
+            pShift = new Point3D(found[FileInfoConstants.X ],found[FileInfoConstants.Y ],found[FileInfoConstants.Z ]);
             pMin = pShift.add(pMin);
             pMax = pShift.add(pMax);
             pMinMax[0] = pMin;
@@ -167,7 +167,7 @@ public class ObjectTracker<T extends RealType<T>> {
     private <T> Point3D computeCenterOfMass(RandomAccess<T> randomAccess, Point3D pMin, Point3D pMax, boolean gateIntensity) {
         /*
         crop = new FinalInterval( min, max)
-        cropImage =        Views.interval( image, crop );
+        cropImage =        Views.realInterval( image, crop );
         Views.iterable( cropImage ).cursor();
         long[] positionXYZ = new long[3]
         while ( cursor.hasNext() )
@@ -187,12 +187,12 @@ public class ObjectTracker<T extends RealType<T>> {
         // compute one-based, otherwise the numbers at x=0,y=0,z=0 are lost for the center of mass
         List<Future> futures = new ArrayList<>();
         for (int z = zmin; z < zmax; z++) {
-            randomAccess.setPosition(z, FileInfoConstants.Z_AXIS_POSITION);
+            randomAccess.setPosition(z, FileInfoConstants.Z );
             if (this.interruptTrackingThreads) {
                 return new Point3D(0, 0, 0);
             }
             for (int c = 0; c < nChannels; c++) {
-                randomAccess.setPosition(c, FileInfoConstants.C_AXIS_POSITION);
+                randomAccess.setPosition(c, FileInfoConstants.C );
                 Future<double[]> future = BigDataConverter.trackerThreadPool.submit(new ComputeCenterOfMassPerSliceParallel(randomAccess, z,
                         xmin, xmax, ymin, ymax, gateIntensity));
                 futures.add(future);
@@ -236,9 +236,9 @@ public class ObjectTracker<T extends RealType<T>> {
         public double[] call() {
             double sum = 0.0, xsum = 0.0, ysum = 0.0, zsum = 0.0, v = 0.0;
             for (int x = xmin; x < xmax; x++) {
-                randomAccess.setPosition(x, FileInfoConstants.X_AXIS_POSITION);
+                randomAccess.setPosition(x, FileInfoConstants.X );
                 for (int y = ymin; y < ymax; y++) {
-                    randomAccess.setPosition(y, FileInfoConstants.Y_AXIS_POSITION);
+                    randomAccess.setPosition(y, FileInfoConstants.Y );
                     if (interruptTrackingThreads) {
                         return new double[]{0, 0, 0, 0};
                     }

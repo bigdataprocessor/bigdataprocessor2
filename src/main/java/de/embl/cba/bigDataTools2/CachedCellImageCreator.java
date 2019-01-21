@@ -12,14 +12,18 @@ import static net.imglib2.cache.img.ReadOnlyCachedCellImgOptions.options;
 
 public class CachedCellImageCreator {
 
-    public static CachedCellImg create(FileInfoSource fileInfoSource, ExecutorService executorService) {
+    public static CachedCellImg create( FileInfoSource fileInfoSource, ExecutorService executorService) {
         CachedCellImg cachedCellImg;
-        ImageLoader loader = new ImageLoader(fileInfoSource);
+        ImageLoader loader = new ImageLoader( fileInfoSource );
         final ReadOnlyCachedCellImgOptions options = options()
                 .cellDimensions(loader.getCellDims())
                 .cacheType(CacheType.BOUNDED)
                 .maxCacheSize(100);
-        cachedCellImg = new ReadOnlyCachedCellImgFactory().create(loader.getDimensions(), fileInfoSource.getType(), loader, options);
+        cachedCellImg = new ReadOnlyCachedCellImgFactory().create(
+                loader.getDimensions(),
+                fileInfoSource.getType(),
+                loader,
+                options);
         return cachedCellImg;
 
     }

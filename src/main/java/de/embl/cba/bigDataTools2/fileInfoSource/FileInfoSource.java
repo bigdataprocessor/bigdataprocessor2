@@ -16,6 +16,8 @@ import net.imglib2.type.numeric.real.FloatType;
 import java.io.File;
 import java.io.IOException;
 
+import static de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants.*;
+
 public class FileInfoSource {
     private SerializableFileInfo[][][] infos;
     public long dimensions[];
@@ -65,7 +67,12 @@ public class FileInfoSource {
             FileInfoSourceHelper.setFileSourceInfos(this,directory,namingScheme,filterPattern);
         }
         this.infos = new SerializableFileInfo[nC][nT][nZ];
-        this.dimensions =new long[]{nX,nY,nC,nZ,nT};
+        this.dimensions = new long[ 5 ];
+        dimensions[ X ] = nX;
+        dimensions[ Y ] = nY;
+        dimensions[ Z ] = nZ;
+        dimensions[ C ] = nC;
+        dimensions[ T ] = nT;
 
         if (isAutoContrast()){
             //setMaxMinPixels();
@@ -96,18 +103,22 @@ public class FileInfoSource {
     }
 
 
-    public SerializableFileInfo[] getSerializableFileStackInfo(int channel, int time) {
+    public SerializableFileInfo[] getSerializableFileStackInfo( int channel, int time ) {
+        if ( channel > 2 || time > 1 )
+        {
+            int a = 1;
+        }
         int z = 0;
-            if (fileType.equals(Utils.FileType.TIFF_STACKS.toString())) {
+        if (fileType.equals(Utils.FileType.TIFF_STACKS.toString())) {
+            setInfosFromFile(channel, time, z, true);
+        } else if (fileType.equals(Utils.FileType.HDF5.toString())) {     //TODO: If TIFF and HDF5 have the same code then merge it after verification. -- ashis
+            setInfosFromFile(channel, time, z, true);
+        } else if (fileType.equals(Utils.FileType.SINGLE_PLANE_TIFF.toString())) {
+            int nZ = ctzFileList[channel][time].length;
+            for (; z < nZ; ++z) {
                 setInfosFromFile(channel, time, z, true);
-            } else if (fileType.equals(Utils.FileType.HDF5.toString())) {     //TODO: If TIFF and HDF5 have the same code then merge it after verification. -- ashis
-                setInfosFromFile(channel, time, z, true);
-            } else if (fileType.equals(Utils.FileType.SINGLE_PLANE_TIFF.toString())) {
-                int nZ = ctzFileList[channel][time].length;
-                for (; z < nZ; ++z) {
-                    setInfosFromFile(channel, time, z, true);
-                }
             }
+        }
         return infos[channel][time];
 
     }

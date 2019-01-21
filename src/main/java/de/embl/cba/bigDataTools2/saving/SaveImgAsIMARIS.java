@@ -67,11 +67,11 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
         // - if waiting takes to long somehow terminate in a nice way
 
 //        long freeMemoryInBytes = IJ.maxMemory() - IJ.currentMemory();
-//        long numBytesOfImage = image.dimension(FileInfoConstants.X_AXIS_POSITION) *
-//                image.dimension(FileInfoConstants.Y_AXIS_POSITION) *
-//                image.dimension(FileInfoConstants.Z_AXIS_POSITION) *
-//                image.dimension(FileInfoConstants.C_AXIS_POSITION) *
-//                image.dimension(FileInfoConstants.T_AXIS_POSITION) *
+//        long numBytesOfImage = image.dimension(FileInfoConstants.X) *
+//                image.dimension(FileInfoConstants.Y) *
+//                image.dimension(FileInfoConstants.Z) *
+//                image.dimension(FileInfoConstants.C) *
+//                image.dimension(FileInfoConstants.T) *
 //                fileInfoSource.bitDepth / 8;
 //
 //        if (numBytesOfImage > 1.5 * freeMemoryInBytes) {
@@ -90,8 +90,8 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
             // Load
             //   ImagePlus impChannelTime = getDataCube( c );  May be faster???
             long[] minInterval = new long[]{0, 0, c, 0, 0}; //XYCZT order
-            long[] maxInterval = new long[]{image.dimension(FileInfoConstants.X_AXIS_POSITION) - 1, image.dimension(FileInfoConstants.Y_AXIS_POSITION) - 1, c,
-                    image.dimension(FileInfoConstants.Z_AXIS_POSITION) - 1, image.dimension(FileInfoConstants.T_AXIS_POSITION) - 1};
+            long[] maxInterval = new long[]{image.dimension(FileInfoConstants.X ) - 1, image.dimension(FileInfoConstants.Y ) - 1, c,
+                    image.dimension(FileInfoConstants.Z ) - 1, image.dimension(FileInfoConstants.T ) - 1};
             RandomAccessibleInterval newRai = Views.interval(image, minInterval, maxInterval);
             newRai = SaveImgAsHDF5Helper.convertor(newRai, this.savingSettings);
             Img<T> imgChannelTime = null;

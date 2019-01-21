@@ -11,15 +11,17 @@ package de.embl.cba.bigDataTools2.boundingBox;
 import bdv.tools.brightness.SliderPanel;
 import bdv.util.BoundedInterval;
 import net.imglib2.FinalInterval;
+import net.imglib2.FinalRealInterval;
 import net.imglib2.Interval;
+import net.imglib2.RealInterval;
 
 import javax.swing.*;
 
 public class CustomBoxSelectionPanel extends JPanel {
-    public interface Box {
-        Interval getInterval();
 
-        void setInterval(Interval interval);
+    public interface Box {
+        RealInterval getInterval();
+        void setInterval(RealInterval interval);
     }
 
     private static final long serialVersionUID = 1L;
@@ -37,10 +39,12 @@ public class CustomBoxSelectionPanel extends JPanel {
     private final int n;
 
 
-    public CustomBoxSelectionPanel(final Box selection, final Interval rangeInterval, final String[] axes) {
+    public CustomBoxSelectionPanel(final Box selection,
+                                   final RealInterval rangeInterval,
+                                   final String[] axes) {
         n = selection.getInterval().numDimensions();
         if (n != axes.length) {
-            throw new RuntimeException("axes length doesn't match with interval dims");
+            throw new RuntimeException("axes length doesn't match with realInterval dims");
         }
         this.selection = selection;
         ranges = new BoundedInterval[n];
@@ -48,20 +52,27 @@ public class CustomBoxSelectionPanel extends JPanel {
         maxSliderPanels = new SliderPanel[n];
         cols = 2;
         for (int d = 0; d < n; ++d) {
-            cols = Math.max(cols, Long.toString(rangeInterval.min(d)).length());
-            cols = Math.max(cols, Long.toString(rangeInterval.max(d)).length());
+            cols = Math.max(cols, Double.toString(rangeInterval.realMin(d)).length());
+            cols = Math.max(cols, Double.toString(rangeInterval.realMax(d)).length());
         }
 
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         for (int d = 0; d < n; ++d) {
-            final int rangeMin = (int) rangeInterval.min(d);
-            final int rangeMax = (int) rangeInterval.max(d);
-            final Interval interval = selection.getInterval();
-            final int initialMin = Math.max((int) interval.min(d), rangeMin);
-            final int initialMax = Math.min((int) interval.max(d), rangeMax);
-            final BoundedInterval range = new BoundedInterval(rangeMin, rangeMax, initialMin, initialMax, 0) {
+            final double rangeMin = rangeInterval.realMin(d);
+            final double rangeMax = rangeInterval.realMax(d);
+            final RealInterval interval = selection.getInterval();
+            final double initialMin = Math.max( interval.realMin(d), rangeMin );
+            final double initialMax = Math.min( interval.realMax(d), rangeMax );
+            // TODO: introduce scaling factor to select non-integer values
+            final BoundedInterval range = new BoundedInterval(
+                    (int) rangeMin,
+                    (int) rangeMax,
+                    (int) initialMin,
+                    (int) initialMax,
+                    0) {
                 @Override
-                protected void updateInterval(final int min, final int max) {
+                protected void updateInterval( final int min, final int max)
+                {
                     updateSelection();
                 }
             };
@@ -85,13 +96,14 @@ public class CustomBoxSelectionPanel extends JPanel {
     }
 
     private void updateSelection() {
-        final long[] min = new long[n];
-        final long[] max = new long[n];
+        final double[] min = new double[n];
+        final double[] max = new double[n];
         for (int d = 0; d < n; ++d) {
+            // TODO: one could add a scaling factor here to select non-integer values
             min[d] = ranges[d].getMinBoundedValue().getCurrentValue();
             max[d] = ranges[d].getMaxBoundedValue().getCurrentValue();
         }
-        selection.setInterval(new FinalInterval(min, max));
+        selection.setInterval( new FinalRealInterval(min, max) );
     }
 
 }

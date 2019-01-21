@@ -4,12 +4,14 @@ import bdv.util.volatiles.SharedQueue;
 import bdv.viewer.ViewerFrame;
 import de.embl.cba.bigDataTools2.CachedCellImageCreator;
 import de.embl.cba.bigDataTools2.boundingBox.BoundingBox;
+import de.embl.cba.bigDataTools2.boundingBox.CustomBoundingBoxDialog;
 import de.embl.cba.bigDataTools2.boundingBox.SetupBoundingBox;
 import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
 import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoSource;
 import de.embl.cba.bigDataTools2.saving.SavingSettings;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.RealInterval;
 import net.imglib2.cache.img.CachedCellImg;
 import net.imglib2.img.ImgView;
 import net.imglib2.img.cell.CellImgFactory;
@@ -32,7 +34,7 @@ public class TestBoundingBoxCropAndSave {
         final FileInfoSource fileInfoSource = new FileInfoSource(directory, FileInfoConstants.LOAD_CHANNELS_FROM_FOLDERS,".*","" );
         CachedCellImg myImg = new CachedCellImageCreator().create(fileInfoSource,null);
 
-        final int[] min, max;
+        final double[] min, max;
         final BoundingBox maxBB = SetupBoundingBox.estimateBoundingBox(myImg);
         min = maxBB.getMin().clone();
         max = maxBB.getMax().clone();
@@ -56,18 +58,26 @@ public class TestBoundingBoxCropAndSave {
         SharedQueue loadingQueue = new SharedQueue( 10 );
         ViewerFrame frame = new ViewerFrame(bdvStackSource.getSources(),fileInfoSource.nT, loadingQueue);
         final int boxSetupId = 9999; // some non-existing setup id
-        final Interval initialInterval = Intervals.createMinMax( min[ 0 ], min[ 1 ], min[ 2 ], max[ 0 ], max[ 1 ], max[ 2 ] ); // the initially selected bounding box
-        final Interval rangeInterval = Intervals.createMinMax(
+        final RealInterval initialInterval = Intervals.createMinMaxReal( min[ 0 ], min[ 1 ], min[ 2 ], max[ 0 ], max[ 1 ], max[ 2 ] ); // the initially selected bounding box
+        final RealInterval rangeInterval = Intervals.createMinMaxReal(
                 maxBB.getMin()[ 0 ], maxBB.getMin()[ 1 ], maxBB.getMin()[ 2 ],
                 maxBB.getMax()[ 0 ], maxBB.getMax()[ 1 ], maxBB.getMax()[ 2 ] ); // the range (bounding box of possible bounding boxes)
 
-        final BoundingBoxDialog boundingBoxDialogCopy =
-                new BoundingBoxDialog( frame, "bounding box", bdvStackSource.getBdvHandle().getViewerPanel(),  bdvStackSource.getBdvHandle().getSetupAssignments(), boxSetupId, initialInterval, rangeInterval )
+        final CustomBoundingBoxDialog boundingBoxDialogCopy =
+                new CustomBoundingBoxDialog(
+                        frame,
+                        "bounding box",
+                        bdvStackSource.getBdvHandle().getViewerPanel(),
+                        bdvStackSource.getBdvHandle().getSetupAssignments(),
+                        boxSetupId,
+                        initialInterval,
+                        rangeInterval,
+                        null )
                 {
                     @Override
                     public void createContent()
                     {
-                        // button prints the bounding box interval
+                        // button prints the bounding box realInterval
                         final JButton button = new JButton( "Crop" );
                         button.addActionListener( new AbstractAction()
                         {

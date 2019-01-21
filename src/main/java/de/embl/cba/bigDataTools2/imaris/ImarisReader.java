@@ -136,7 +136,7 @@ public class ImarisReader {
 
         for ( int d = 0; d < 3; ++d )
         {
-            // physical interval
+            // physical realInterval
             min[d] = Double.parseDouble( H5Utils.readStringAttribute( file_id, ImarisUtils.DATA_SET_INFO + "/" + ImarisUtils.IMAGE,
                     "ExtMin" + d ).trim() );
 

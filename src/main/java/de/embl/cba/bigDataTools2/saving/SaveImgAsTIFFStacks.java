@@ -55,18 +55,18 @@ public class SaveImgAsTIFFStacks implements Runnable {
 
         //long freeMemoryInBytes = IJ.maxMemory() - IJ.currentMemory();
         RandomAccessibleInterval image = savingSettings.image;
-        final long totalSlices = image.dimension(FileInfoConstants.T_AXIS_POSITION) * image.dimension(FileInfoConstants.C_AXIS_POSITION);
-//            long numBytesOfImage = image.dimension(FileInfoConstants.X_AXIS_POSITION) *
-//                    image.dimension(FileInfoConstants.Y_AXIS_POSITION) *
-//                    image.dimension(FileInfoConstants.Z_AXIS_POSITION) *
-//                    image.dimension(FileInfoConstants.C_AXIS_POSITION) *
-//                    image.dimension(FileInfoConstants.T_AXIS_POSITION) *
+        final long totalSlices = image.dimension(FileInfoConstants.T ) * image.dimension(FileInfoConstants.C );
+//            long numBytesOfImage = image.dimension(FileInfoConstants.X) *
+//                    image.dimension(FileInfoConstants.Y) *
+//                    image.dimension(FileInfoConstants.Z) *
+//                    image.dimension(FileInfoConstants.C) *
+//                    image.dimension(FileInfoConstants.T) *
 //                    fileInfoSource.bitDepth / 8;
 //
 //            if (numBytesOfImage > 1.5 * freeMemoryInBytes) {
 //                // TODO: do something...
 //            }
-        int totalChannels = Math.toIntExact(savingSettings.image.dimension(FileInfoConstants.C_AXIS_POSITION));
+        int totalChannels = Math.toIntExact(savingSettings.image.dimension(FileInfoConstants.C ));
         for (int c = 0; c < totalChannels; c++) {
             if (SaveCentral.interruptSavingThreads) {
                 logger.progress("Stopped saving thread: ", "" + t);
@@ -74,11 +74,11 @@ public class SaveImgAsTIFFStacks implements Runnable {
             }
             // Load
             //   ImagePlus impChannelTime = getDataCube( c );  May be faster???
-            long[] minInterval = new long[]{image.min(FileInfoConstants.X_AXIS_POSITION), image.min(FileInfoConstants.Y_AXIS_POSITION),
-                    c, image.min(FileInfoConstants.Z_AXIS_POSITION), this.t}; //XYCZT order
-            long[] maxInterval = new long[]{image.max(FileInfoConstants.X_AXIS_POSITION),
-                    image.max(FileInfoConstants.Y_AXIS_POSITION),
-                    c, image.max(FileInfoConstants.Z_AXIS_POSITION), this.t};
+            long[] minInterval = new long[]{image.min(FileInfoConstants.X ), image.min(FileInfoConstants.Y ),
+                    c, image.min(FileInfoConstants.Z ), this.t}; //XYCZT order
+            long[] maxInterval = new long[]{image.max(FileInfoConstants.X ),
+                    image.max(FileInfoConstants.Y ),
+                    c, image.max(FileInfoConstants.Z ), this.t};
 
             RandomAccessibleInterval newRai = Views.interval(image, minInterval, maxInterval);
             ImagePlus impChannelTime = ImageJFunctions.wrap(newRai, "slice");

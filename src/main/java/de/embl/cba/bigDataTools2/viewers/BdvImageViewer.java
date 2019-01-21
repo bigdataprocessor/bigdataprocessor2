@@ -3,10 +3,9 @@ package de.embl.cba.bigDataTools2.viewers;
 import bdv.tools.brightness.ConverterSetup;
 import bdv.util.*;
 import bdv.viewer.SourceAndConverter;
-import de.embl.cba.bigDataTools2.boundingBox.ShowBoundingBoxDialog;
+import de.embl.cba.bigDataTools2.boundingBox.BoundingBoxDialog;
 import de.embl.cba.bigDataTools2.dataStreamingGUI.BdvMenus;
 import de.embl.cba.bigDataTools2.dataStreamingGUI.DisplaySettings;
-import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
 import net.imglib2.Cursor;
 import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccessibleInterval;
@@ -18,6 +17,8 @@ import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
 
 import javax.swing.*;
+
+import static de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants.*;
 
 public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements ImageViewer {
 
@@ -41,14 +42,22 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
 
     @Override
     public FinalInterval get5DIntervalFromUser() {
-        ShowBoundingBoxDialog showBB = new ShowBoundingBoxDialog(this.bdvSS.getBdvHandle());
-        showBB.show(rai, FileInfoConstants.BB_TRACK_BUTTON_LABEL,true);
-        long[] minMax = {showBB.selectedMin[ShowBoundingBoxDialog.BB_X_POS], showBB.selectedMin[ShowBoundingBoxDialog.BB_Y_POS],
-                rai.min(FileInfoConstants.C_AXIS_POSITION), showBB.selectedMin[ShowBoundingBoxDialog.BB_Z_POS], showBB.selectedMin[ShowBoundingBoxDialog.BB_T_POS],
-                showBB.selectedMax[ShowBoundingBoxDialog.BB_X_POS], showBB.selectedMax[ShowBoundingBoxDialog.BB_Y_POS],
-                rai.max(FileInfoConstants.C_AXIS_POSITION), showBB.selectedMax[ShowBoundingBoxDialog.BB_Z_POS],
-                showBB.selectedMax[ShowBoundingBoxDialog.BB_T_POS]};
-        return Intervals.createMinMax(minMax);
+
+        BoundingBoxDialog showBB = new BoundingBoxDialog(this.bdvSS.getBdvHandle());
+        showBB.show( rai, voxelSize, BB_TRACK_BUTTON_LABEL,true);
+        long[] minMax = {
+                showBB.selectedMin[ BoundingBoxDialog.X ],
+                showBB.selectedMin[ BoundingBoxDialog.Y ],
+                rai.min( C ),
+                showBB.selectedMin[ BoundingBoxDialog.Z ],
+                showBB.selectedMin[ BoundingBoxDialog.T ],
+                showBB.selectedMax[ BoundingBoxDialog.X ],
+                showBB.selectedMax[ BoundingBoxDialog.Y ],
+                rai.max( C ),
+                showBB.selectedMax[ BoundingBoxDialog.Z ],
+                showBB.selectedMax[ BoundingBoxDialog.T ]};
+
+        return Intervals.createMinMax( minMax );
     }
 
     @Override
@@ -103,7 +112,7 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
         showImageInViewer( rai, voxelSize ,name );
         SourceAndConverter scnv = this.bdvSS.getBdvHandle().getViewerPanel().getState().getSources().get(0);
         this.bdvSS.getBdvHandle().getViewerPanel().removeSource( scnv.getSpimSource() );
-        int nChannels = (int) this.getRai().dimension( FileInfoConstants.C_AXIS_POSITION);
+        int nChannels = (int) this.getRai().dimension( C );
         for (int channel = 0; channel < nChannels; ++channel) {
 			ConverterSetup converterSetup = this.getBdvSS().getBdvHandle().getSetupAssignments().getConverterSetups().get(channel);
 			this.bdvSS.getBdvHandle().getSetupAssignments().removeSetup(converterSetup);
@@ -128,9 +137,18 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
     }
 
     @Override
-    public DisplaySettings getDisplaySettings(int channel) {
-        RandomAccessibleInterval raiStack = this.bdvSS.getBdvHandle().getViewerPanel().getState().getSources().get(channel).getSpimSource().getSource(0, 0);
-        IntervalView<T> ts = Views.hyperSlice(raiStack, 2, (raiStack.max(2) - raiStack.min(2)) / 2 + raiStack.min(2)); //z is 2 for this rai.
+    public DisplaySettings getDisplaySettings( int channel ) {
+
+        RandomAccessibleInterval raiStack =
+                this.bdvSS.getBdvHandle().getViewerPanel().getState().getSources().get(channel).getSpimSource().getSource(0, 0);
+
+        final long stackCenter = ( raiStack.max( Z ) - raiStack.min( Z ) ) / 2 + raiStack.min( Z );
+
+        IntervalView<T> ts = Views.hyperSlice(
+                raiStack,
+                Z,
+                stackCenter );
+
         Cursor<T> cursor = Views.iterable(ts).cursor();
         double min = Double.MAX_VALUE;
         double max = -Double.MAX_VALUE;
@@ -145,7 +163,7 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
 
 
     public void replicateViewerContrast(ImageViewer newImageView) {
-        int nChannels = (int) this.getRai().dimension(FileInfoConstants.C_AXIS_POSITION);
+        int nChannels = (int) this.getRai().dimension( C );
         for (int channel = 0; channel < nChannels; ++channel) {
             ConverterSetup converterSetup = this.getBdvSS().getBdvHandle().getSetupAssignments().getConverterSetups().get(channel);
             newImageView.setDisplayRange(converterSetup.getDisplayRangeMin(), converterSetup.getDisplayRangeMax(), 0);
@@ -187,7 +205,7 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
         bdvSS = BdvFunctions.show(
                 rai,
                 imageName,
-                BdvOptions.options().axisOrder( AxisOrder.XYCZT )
+                BdvOptions.options().axisOrder( AxisOrder.XYZCT )
                         .addTo( bdvSS ).sourceTransform( scaling ) );
 
         this.imageName = imageName;

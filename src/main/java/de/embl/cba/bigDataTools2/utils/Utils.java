@@ -201,7 +201,7 @@ public class Utils {
 
         double[] translation = new double[ 3 ];
         for( int d = 0; d < 3; ++d ){
-//			final double center = ( interval.realMin( d ) + interval.realMax( d ) ) / 2.0;
+//			final double center = ( realInterval.realMin( d ) + realInterval.realMax( d ) ) / 2.0;
             translation[ d ] = - position[ d ];
         }
         newViewerTransform.setTranslation( translation );
@@ -210,7 +210,7 @@ public class Utils {
         double[] translation2 = new double[ 3 ];
 
         for( int d = 0; d < 3; ++d ){
-//			final double center = ( interval.realMin( d ) + interval.realMax( d ) ) / 2.0;
+//			final double center = ( realInterval.realMin( d ) + realInterval.realMax( d ) ) / 2.0;
             translation2[ d ] = + bdvWindowDimensions[ d ] / 2.0;
         }
 
@@ -220,7 +220,7 @@ public class Utils {
     }
 
     public static void doAutoContrastPerChannel(ImageViewer imageViewer){
-        int nChannels = (int)imageViewer.getRai().dimension(FileInfoConstants.C_AXIS_POSITION);
+        int nChannels = (int)imageViewer.getRai().dimension(FileInfoConstants.C );
         for (int channel=0; channel < nChannels; ++channel){
             DisplaySettings setting = imageViewer.getDisplaySettings(channel);
             imageViewer.setDisplayRange(setting.getMinValue(),setting.getMaxValue(),0);

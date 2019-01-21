@@ -195,7 +195,7 @@ public class ImarisWriter {
 
         for ( int d = 0; d < 3; ++d )
         {
-            // physical interval
+            // physical realInterval
             H5Utils.writeStringAttribute( group_id, "ExtMax" + d, String.valueOf( interval.realMax( d ) ) );
             H5Utils.writeStringAttribute( group_id, "ExtMin" + d, String.valueOf( interval.realMin( d ) ) );
             // number of pixels
