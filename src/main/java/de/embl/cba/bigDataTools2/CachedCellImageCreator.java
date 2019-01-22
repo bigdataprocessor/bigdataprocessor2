@@ -14,16 +14,20 @@ public class CachedCellImageCreator {
 
     public static CachedCellImg create( FileInfoSource fileInfoSource, ExecutorService executorService) {
         CachedCellImg cachedCellImg;
+
         ImageLoader loader = new ImageLoader( fileInfoSource );
+
         final ReadOnlyCachedCellImgOptions options = options()
                 .cellDimensions(loader.getCellDims())
                 .cacheType(CacheType.BOUNDED)
-                .maxCacheSize(100);
+                .maxCacheSize(100).volatileAccesses( true );
+
         cachedCellImg = new ReadOnlyCachedCellImgFactory().create(
                 loader.getDimensions(),
                 fileInfoSource.getType(),
                 loader,
                 options);
+
         return cachedCellImg;
 
     }

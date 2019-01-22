@@ -2,6 +2,7 @@ package de.embl.cba.bigDataTools2.viewers;
 
 import bdv.tools.brightness.ConverterSetup;
 import bdv.util.*;
+import bdv.util.volatiles.VolatileViews;
 import bdv.viewer.SourceAndConverter;
 import de.embl.cba.bigDataTools2.boundingBox.BoundingBoxDialog;
 import de.embl.cba.bigDataTools2.dataStreamingGUI.BdvMenus;
@@ -99,6 +100,8 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
     @Override
     public void show( RandomAccessibleInterval rai, double[] voxelSize, String imageName )
     {
+
+
         if ( this.bdvSS != null )
         {
             replaceImageInViewer( rai, voxelSize, imageName  );
@@ -205,7 +208,7 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
         }
 
         bdvSS = BdvFunctions.show(
-                rai,
+				VolatileViews.wrapAsVolatile( rai ),
                 imageName,
                 BdvOptions.options().axisOrder( AxisOrder.XYZCT )
                         .addTo( bdvSS ).sourceTransform( scaling ) );

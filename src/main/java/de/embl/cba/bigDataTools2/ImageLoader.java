@@ -73,7 +73,7 @@ public class ImageLoader implements CellLoader {
     }
 
     @Override
-    public void load( final SingleCellArrayImg cell ) {
+    public synchronized void load( final SingleCellArrayImg cell ) {
         long[] max = new long[ TOTAL_AXES ];
         long[] min = new long[ TOTAL_AXES ];
         cell.max(max);
