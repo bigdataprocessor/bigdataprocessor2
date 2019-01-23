@@ -76,14 +76,14 @@ public class BigDataTracker {
                 Point3D[] pMinMax = entry.getValue();
                 long[] range = {(long) pMinMax[0].getX(),
                                 (long) pMinMax[0].getY(),
-                                0,
                                 (long) pMinMax[0].getZ(),
+                                0,
                                 entry.getKey(),
                                 (long) pMinMax[1].getX(),
                                 (long) pMinMax[1].getY(),
-                                nChannels-1,
                                 (long) pMinMax[1].getZ(),
-                                entry.getKey()};
+                                nChannels-1,
+                                entry.getKey()}; //XYZCT order
                 FinalInterval trackedInterval = Intervals.createMinMax(range);
                 RandomAccessibleInterval trackedRegion = Views.interval((RandomAccessible) Views.extendZero(trackingSettings.imageRAI), trackedInterval); // Views.extendZero in case range is beyond the original image.
                 RandomAccessibleInterval timeRemovedRAI = Views.zeroMin(Views.hyperSlice(trackedRegion,4, entry.getKey()));
