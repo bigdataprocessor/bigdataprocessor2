@@ -163,11 +163,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>net.preibisch</groupId>
-			<artifactId>multiview-reconstruction</artifactId>
-		</dependency>
-
-		<dependency>
 			<groupId>de.embl.cba</groupId>
 			<artifactId>bdv-utils</artifactId>
 			<version>0.1.26</version>

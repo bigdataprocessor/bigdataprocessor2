@@ -4,23 +4,14 @@ import de.embl.cba.bigDataTools2.dataStreamingGUI.BigDataConverter;
 import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
 import de.embl.cba.bigDataTools2.logging.IJLazySwingLogger;
 import de.embl.cba.bigDataTools2.logging.Logger;
-import de.embl.cba.bigDataTools2.phaseCorrelation.PhaseCorrelation;
-import de.embl.cba.bigDataTools2.phaseCorrelation.PhaseCorrelationPeak;
-import de.embl.cba.bigDataTools2.utils.Utils;
 import javafx.geometry.Point3D;
-import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccess;
-import net.imglib2.RandomAccessible;
-import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
-import net.imglib2.img.cell.CellImgFactory;
 import net.imglib2.type.numeric.RealType;
-import net.imglib2.type.numeric.complex.ComplexFloatType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.type.numeric.real.FloatType;
-import net.imglib2.util.Intervals;
-import net.imglib2.view.Views;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -58,8 +49,8 @@ public class ObjectTracker<T extends RealType<T>> {
         logger.info(centeringMethod);
         if(FileInfoConstants.CENTER_OF_MASS.equalsIgnoreCase(centeringMethod)){
                 return doCenterOfMassTracking();
-        }else if(FileInfoConstants.CROSS_CORRELATION.equalsIgnoreCase(centeringMethod)){
-                return doPhaseCorrelation();
+//        }else if(FileInfoConstants.CROSS_CORRELATION.equalsIgnoreCase(centeringMethod)){
+//                return doPhaseCorrelation();
         }else{
             return null;
         }
@@ -104,65 +95,65 @@ public class ObjectTracker<T extends RealType<T>> {
     }
 
 
-    private Track doPhaseCorrelation() {
-        PhaseCorrelation phaseCorrelation = new PhaseCorrelation();
-        Track trackingResults = new Track(this.trackingSettings, trackId);
-        boolean gateIntensity = isIntensityGated(trackingSettings.intensityGate);
-        double trackingFactor = trackingSettings.trackingFactor;
-        Point3D pShift;
-        Point3D[] pMinMax=new Point3D[2];
-        int tStart = trackingSettings.tStart;
-        long startTime = System.currentTimeMillis();
-        trackingResults.addLocation(tStart, new Point3D[]{pMin,pMax});//For the first time stamp.
-        for (int t = tStart; t < timeFrames-1; ++t) { // last time stamp not considered here.
-            logger.info("Current time tracked " + t);
-            long[] range = {(long) pMin.getX(),
-                    (long) pMin.getY(),
-                    0,
-                    (long) pMin.getZ(),
-                    tStart,
-                    (long) pMax.getX(),
-                    (long) pMax.getY(),
-                    nChannels-1,
-                    (long) pMax.getZ(),
-                    timeFrames-1};
-            FinalInterval trackedInterval = Intervals.createMinMax(range);
-            RandomAccessibleInterval RoI = Views.interval((RandomAccessible) Views.extendZero(trackingSettings.imageRAI) , trackedInterval);
-            RandomAccessibleInterval<T> currentFrame = Views.hyperSlice(RoI,4,t);
-            RandomAccessibleInterval<T> nextFrame = Views.hyperSlice(RoI,4,t+1);
-            //Intensity gating
-            if(gateIntensity) {
-                Future future1 = BigDataConverter.trackerThreadPool.submit(() -> doIntensityGatingForImg(Utils.getCellImgFromInterval(currentFrame)));
-                Future future2 = BigDataConverter.trackerThreadPool.submit(() -> doIntensityGatingForImg(Utils.getCellImgFromInterval(nextFrame)));
-                try {
-                    future1.get();
-                    future2.get();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
-            }
-            RandomAccessibleInterval<FloatType> pcm = phaseCorrelation.calculatePCM(Views.zeroMin(currentFrame), Views.zeroMin(nextFrame), new CellImgFactory(new FloatType()), new FloatType(),
-                    new CellImgFactory(new ComplexFloatType()), new ComplexFloatType(), BigDataConverter.trackerThreadPool);
-            if (this.interruptTrackingThreads) {
-                break;
-            }
-            PhaseCorrelationPeak shiftPeak = phaseCorrelation.getShift(pcm, Views.zeroMin(currentFrame), Views.zeroMin(nextFrame),
-                    2, 0, true, false, BigDataConverter.trackerThreadPool);
-            double[] found = new double[currentFrame.numDimensions()];
-            shiftPeak.getSubpixelShift().localize(found);
-            //System.out.println(Util.printCoordinates(found));
-            pShift = new Point3D(found[FileInfoConstants.X ],found[FileInfoConstants.Y ],found[FileInfoConstants.Z ]);
-            pMin = pShift.add(pMin);
-            pMax = pShift.add(pMax);
-            pMinMax[0] = pMin;
-            pMinMax[1] = pMax;
-            trackingResults.addLocation(t+1, pMinMax);
-        }
-        logger.info("Time elapsed " +(System.currentTimeMillis() - startTime));
-        return trackingResults;
-    }
+//    private Track doPhaseCorrelation() {
+//        PhaseCorrelation phaseCorrelation = new PhaseCorrelation();
+//        Track trackingResults = new Track(this.trackingSettings, trackId);
+//        boolean gateIntensity = isIntensityGated(trackingSettings.intensityGate);
+//        double trackingFactor = trackingSettings.trackingFactor;
+//        Point3D pShift;
+//        Point3D[] pMinMax=new Point3D[2];
+//        int tStart = trackingSettings.tStart;
+//        long startTime = System.currentTimeMillis();
+//        trackingResults.addLocation(tStart, new Point3D[]{pMin,pMax});//For the first time stamp.
+//        for (int t = tStart; t < timeFrames-1; ++t) { // last time stamp not considered here.
+//            logger.info("Current time tracked " + t);
+//            long[] range = {(long) pMin.getX(),
+//                    (long) pMin.getY(),
+//                    0,
+//                    (long) pMin.getZ(),
+//                    tStart,
+//                    (long) pMax.getX(),
+//                    (long) pMax.getY(),
+//                    nChannels-1,
+//                    (long) pMax.getZ(),
+//                    timeFrames-1};
+//            FinalInterval trackedInterval = Intervals.createMinMax(range);
+//            RandomAccessibleInterval RoI = Views.interval((RandomAccessible) Views.extendZero(trackingSettings.imageRAI) , trackedInterval);
+//            RandomAccessibleInterval<T> currentFrame = Views.hyperSlice(RoI,4,t);
+//            RandomAccessibleInterval<T> nextFrame = Views.hyperSlice(RoI,4,t+1);
+//            //Intensity gating
+//            if(gateIntensity) {
+//                Future future1 = BigDataConverter.trackerThreadPool.submit(() -> doIntensityGatingForImg(Utils.getCellImgFromInterval(currentFrame)));
+//                Future future2 = BigDataConverter.trackerThreadPool.submit(() -> doIntensityGatingForImg(Utils.getCellImgFromInterval(nextFrame)));
+//                try {
+//                    future1.get();
+//                    future2.get();
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                } catch (ExecutionException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//            RandomAccessibleInterval<FloatType> pcm = phaseCorrelation.calculatePCM(Views.zeroMin(currentFrame), Views.zeroMin(nextFrame), new CellImgFactory(new FloatType()), new FloatType(),
+//                    new CellImgFactory(new ComplexFloatType()), new ComplexFloatType(), BigDataConverter.trackerThreadPool);
+//            if (this.interruptTrackingThreads) {
+//                break;
+//            }
+//            PhaseCorrelationPeak shiftPeak = phaseCorrelation.getShift(pcm, Views.zeroMin(currentFrame), Views.zeroMin(nextFrame),
+//                    2, 0, true, false, BigDataConverter.trackerThreadPool);
+//            double[] found = new double[currentFrame.numDimensions()];
+//            shiftPeak.getSubpixelShift().localize(found);
+//            //System.out.println(Util.printCoordinates(found));
+//            pShift = new Point3D(found[FileInfoConstants.X ],found[FileInfoConstants.Y ],found[FileInfoConstants.Z ]);
+//            pMin = pShift.add(pMin);
+//            pMax = pShift.add(pMax);
+//            pMinMax[0] = pMin;
+//            pMinMax[1] = pMax;
+//            trackingResults.addLocation(t+1, pMinMax);
+//        }
+//        logger.info("Time elapsed " +(System.currentTimeMillis() - startTime));
+//        return trackingResults;
+//    }
 
     private <T> Point3D computeCenterOfMass(RandomAccess<T> randomAccess, Point3D pMin, Point3D pMax, boolean gateIntensity) {
         /*
