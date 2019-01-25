@@ -104,10 +104,6 @@ public class FileInfoSource {
 
 
     public SerializableFileInfo[] getSerializableFileStackInfo( int channel, int time ) {
-        if ( channel > 2 || time > 1 )
-        {
-            int a = 1;
-        }
         int z = 0;
         if (fileType.equals(Utils.FileType.TIFF_STACKS.toString())) {
             setInfosFromFile(channel, time, z, true);
@@ -120,7 +116,6 @@ public class FileInfoSource {
             }
         }
         return infos[channel][time];
-
     }
 
     private void setInfosFromFile( final int c, final int t, final int z, boolean throwError ) {

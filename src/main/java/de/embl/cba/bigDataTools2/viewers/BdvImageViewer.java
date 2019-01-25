@@ -19,6 +19,8 @@ import net.imglib2.view.Views;
 
 import javax.swing.*;
 
+import java.util.concurrent.ExecutorService;
+
 import static de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants.*;
 
 public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements ImageViewer {
@@ -100,27 +102,22 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
     @Override
     public void show( RandomAccessibleInterval rai, double[] voxelSize, String imageName )
     {
+        if ( this.bdvSS != null ) removeAllSourcesFromBdv();
 
+        showImageInViewer( rai, voxelSize ,imageName  );
 
-        if ( this.bdvSS != null )
-        {
-            replaceImageInViewer( rai, voxelSize, imageName  );
-        }
-        else
-        {
-            showImageInViewer( rai, voxelSize ,imageName  );
-        }
     }
 
-    private void replaceImageInViewer( RandomAccessibleInterval rai, double[] voxelSize, String name )
+    private void removeAllSourcesFromBdv()
     {
-        showImageInViewer( rai, voxelSize ,name );
         SourceAndConverter scnv = this.bdvSS.getBdvHandle().getViewerPanel().getState().getSources().get(0);
         this.bdvSS.getBdvHandle().getViewerPanel().removeSource( scnv.getSpimSource() );
+
         int nChannels = (int) this.getRai().dimension( C );
-        for (int channel = 0; channel < nChannels; ++channel) {
-			ConverterSetup converterSetup = this.getBdvSS().getBdvHandle().getSetupAssignments().getConverterSetups().get(channel);
-			this.bdvSS.getBdvHandle().getSetupAssignments().removeSetup(converterSetup);
+        for (int channel = 0; channel < nChannels; ++channel)
+        {
+			ConverterSetup converterSetup = this.getBdvSS().getBdvHandle().getSetupAssignments().getConverterSetups().get( channel );
+			this.bdvSS.getBdvHandle().getSetupAssignments().removeSetup( converterSetup );
 		}
     }
 
@@ -208,7 +205,7 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
         }
 
         bdvSS = BdvFunctions.show(
-				VolatileViews.wrapAsVolatile( rai ),
+                asVolatile( rai ),
                 imageName,
                 BdvOptions.options().axisOrder( AxisOrder.XYZCT )
                         .addTo( bdvSS ).sourceTransform( scaling ) );
@@ -216,6 +213,20 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
         this.imageName = imageName;
         this.rai = rai;
         this.voxelSize = voxelSize;
+    }
+
+    private RandomAccessibleInterval asVolatile( RandomAccessibleInterval rai )
+    {
+        RandomAccessibleInterval volatileRai;
+        try
+        {
+            volatileRai = VolatileViews.wrapAsVolatile( rai );
+        }
+        catch ( Exception e )
+        {
+            volatileRai = rai;
+        }
+        return volatileRai;
     }
 
 }

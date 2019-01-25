@@ -99,10 +99,12 @@ public class BigDataConverter {
         SaveCentral.interruptSavingThreads = true;
     }
 
-    public static <T extends RealType<T> & NativeType<T>> RandomAccessibleInterval shearImage(RandomAccessibleInterval rai,ShearingSettings shearingSettings){
+    public static <T extends RealType<T> & NativeType<T>>
+    RandomAccessibleInterval shearImage(RandomAccessibleInterval rai, ShearingSettings shearingSettings)
+    {
         List<RandomAccessibleInterval<T>> timeTracks = new ArrayList<>();
-        int nTimeFrames = (int) rai.dimension(FileInfoConstants.T );
-        int nChannels = (int) rai.dimension(FileInfoConstants.C );
+        int nTimeFrames = (int) rai.dimension( FileInfoConstants.T );
+        int nChannels = (int) rai.dimension( FileInfoConstants.C );
         System.out.println("Shear Factor X " + shearingSettings.shearingFactorX);
         System.out.println("Shear Factor Y " + shearingSettings.shearingFactorY);
         AffineTransform3D affine = new AffineTransform3D();
@@ -111,16 +113,15 @@ public class BigDataConverter {
         List<ApplyShearToRAI> tasks = new ArrayList<>();
         long startTime = System.currentTimeMillis();
         for (int t = 0; t < nTimeFrames; ++t) {
-            ApplyShearToRAI task = new ApplyShearToRAI(rai, t, nChannels, affine,shearingSettings.interpolationFactory);
+            ApplyShearToRAI task = new ApplyShearToRAI(rai, t, nChannels, affine, shearingSettings.interpolationFactory);
             task.fork();
             tasks.add(task);
         }
         for (ApplyShearToRAI task : tasks) {
             timeTracks.add((RandomAccessibleInterval) task.join());
         }
-        RandomAccessibleInterval sheared = Views.stack(timeTracks);
-        sheared = Views.permute(sheared, FileInfoConstants.C, FileInfoConstants.Z );
-        System.out.println("Time elapsed(ms) " + (System.currentTimeMillis() - startTime));
+        final RandomAccessibleInterval sheared = Views.stack( timeTracks );
+//        System.out.println("Time elapsed (ms) " + (System.currentTimeMillis() - startTime));
         return sheared;
     }
 
