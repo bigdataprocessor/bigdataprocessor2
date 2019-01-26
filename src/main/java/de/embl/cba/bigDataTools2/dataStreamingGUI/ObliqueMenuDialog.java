@@ -22,14 +22,13 @@ public class ObliqueMenuDialog extends JDialog implements ActionListener {
     });
     private final String ObliqueUpdate = "Update!";
     private final JButton obliqueUpdate =  new JButton(ObliqueUpdate);
-    public int numberOfTimesCalled=1;
     private final ShearingSettings shearingSettings = new ShearingSettings();
-    private ImageViewer imageViewer;
-    //private final ImageViewer imageViewerOriginal;
+    private final ImageViewer imageViewer;
+    private final RandomAccessibleInterval originalRAI;
 
     public ObliqueMenuDialog(ImageViewer imageViewer) {
         this.imageViewer = imageViewer;
-        //this.imageViewerOriginal = imageViewer;
+        this.originalRAI = imageViewer.getRai();
         JTabbedPane menu = new JTabbedPane();
         ArrayList<JPanel> mainPanels = new ArrayList<>();
         ArrayList<JPanel> panels = new ArrayList<>();
@@ -88,11 +87,11 @@ public class ObliqueMenuDialog extends JDialog implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         getShearingSettings(shearingSettings);
         shearingSettings.useObliqueAngle = true;
-        RandomAccessibleInterval sheared = BigDataConverter.shearImage(imageViewer.getRai(),shearingSettings);
+        RandomAccessibleInterval sheared = BigDataConverter.shearImage(originalRAI,shearingSettings);
         imageViewer.show( sheared, imageViewer.getVoxelSize(), "sheared");
         double[] centerCoordinates = {sheared.min(FileInfoConstants.X ) / 2.0,
                 sheared.max(FileInfoConstants.Y ) / 2.0,
-                (sheared.max(FileInfoConstants.Z ) - sheared.min(FileInfoConstants.Z )) / 2
+                (sheared.max(FileInfoConstants.Z ) - sheared.min(FileInfoConstants.Z )) / 2.0
                         + sheared.min(FileInfoConstants.Z )};
         imageViewer.shiftImageToCenter(centerCoordinates);
         Utils.doAutoContrastPerChannel(imageViewer);
@@ -106,7 +105,6 @@ public class ObliqueMenuDialog extends JDialog implements ActionListener {
             shearingSettings.cameraPixelsize = new Double(tfCameraPixelsize.getText());
             shearingSettings.stepSize = new Double(tfStepsize.getText());
             shearingSettings.backwardStackAcquisition = cbViewLeft.isSelected();
-            System.out.println(shearingSettings.backwardStackAcquisition);
             //shearingSettings.viewLeft = cbViewLeft.isSelected();
             shearingSettings.objectiveAngle = new Double(tfObjectiveAngle.getText());
             shearingSettings.useYshear = cbUseYshear.isSelected();
