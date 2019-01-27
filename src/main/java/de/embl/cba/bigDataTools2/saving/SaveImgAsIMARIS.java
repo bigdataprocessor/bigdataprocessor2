@@ -30,7 +30,6 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
     private SavingSettings savingSettings;
     private final long startTime;
     private ImarisDataSet imarisDataSetProperties;
-    //private final Class<T> aClass;
     private final T nativeType;
     private Logger logger = new IJLazySwingLogger();
 
@@ -54,7 +53,6 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
         this.counter = counter;
         this.startTime = startTime;
         this.imarisDataSetProperties = imarisDS;
-        //this.aClass = (Class<T>) image.firstElement().getClass();
     }
 
     @Override
@@ -79,7 +77,6 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
 //        }
 
         final long totalSlices = nFrames * nChannels;
-        //Img image =(Img)savingSettings.image;
         RandomAccessibleInterval image = savingSettings.image;
         for (int c = 0; c < this.nChannels; c++) {
             if (SaveCentral.interruptSavingThreads) {
@@ -91,18 +88,17 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
             //   ImagePlus impChannelTime = getDataCube( c );  May be faster???
 
             long[] minInterval = new long[]{
-                    0,
-                    0,
-                    0,
+                    image.min(FileInfoConstants.X ),
+                    image.min(FileInfoConstants.Y ),
+                    image.min(FileInfoConstants.Z ),
                     c,
-                    0};
-
+                    this.current_t};
             long[] maxInterval = new long[]{
-                    image.dimension(FileInfoConstants.X ) - 1,
-                    image.dimension(FileInfoConstants.Y ) - 1,
-                    image.dimension(FileInfoConstants.Z ) - 1,
+                    image.max(FileInfoConstants.X ),
+                    image.max(FileInfoConstants.Y ),
+                    image.max(FileInfoConstants.Z ),
                     c,
-                    image.dimension(FileInfoConstants.T ) - 1};
+                    this.current_t};
 
             RandomAccessibleInterval newRai = Views.interval(image, minInterval, maxInterval);
             newRai = SaveImgHelper.convertor(newRai, this.savingSettings);
