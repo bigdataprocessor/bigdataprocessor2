@@ -30,8 +30,8 @@ public class SavingSettings {
 
     public enum FileType {
         TIFF_as_PLANES("Tiff Planes"),
-        HDF5("HDF5"),
-        HDF5_IMARIS_BDV("IMARIS HDF5"),
+        HDF5_STACKS("HDF5_STACKS"),
+        HDF5_IMARIS_BDV("IMARIS HDF5_STACKS"),
         TIFF_as_STACKS("Tiff Stacks");
         //SINGLE_PLANE_TIFF("Single Plane Tiff"); //SERIALIZED_HEADERS("Serialized headers");
         private final String text;

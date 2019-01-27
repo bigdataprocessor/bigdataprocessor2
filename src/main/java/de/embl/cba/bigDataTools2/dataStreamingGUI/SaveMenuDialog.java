@@ -29,7 +29,7 @@ public class SaveMenuDialog extends JFrame implements ActionListener {
     JComboBox comboFileTypeForSaving = new JComboBox(new SavingSettings.FileType[]{
             SavingSettings.FileType.TIFF_as_PLANES,
             SavingSettings.FileType.TIFF_as_STACKS,
-            SavingSettings.FileType.HDF5,
+            SavingSettings.FileType.HDF5_STACKS,
             SavingSettings.FileType.HDF5_IMARIS_BDV});
 
     private final String SAVE = "Save";

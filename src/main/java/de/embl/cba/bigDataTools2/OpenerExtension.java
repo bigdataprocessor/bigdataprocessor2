@@ -1407,7 +1407,7 @@ public class OpenerExtension extends Opener {
         }
         catch (OutOfMemoryError o)
         {
-            IJ.outOfMemory("Load HDF5");
+            IJ.outOfMemory("Load HDF5_STACKS");
         }
         return null;
 

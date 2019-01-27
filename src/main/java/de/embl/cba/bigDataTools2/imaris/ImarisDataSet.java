@@ -315,7 +315,7 @@ public class ImarisDataSet {
             currentChunks[ 2 ] = 1;
             IJ.log( "Data set is larger than " + Integer.MAX_VALUE );
             // this forces plane wise writing and thus
-            // avoids java indexing issues when saving the data to HDF5
+            // avoids java indexing issues when saving the data to HDF5_STACKS
         }
     }
 

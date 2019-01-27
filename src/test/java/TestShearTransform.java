@@ -4,6 +4,7 @@ import de.embl.cba.bigDataTools2.dataStreamingGUI.ObliqueMenuDialog;
 import de.embl.cba.bigDataTools2.dataStreamingGUI.ShearingSettings;
 import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
 import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoSource;
+import de.embl.cba.bigDataTools2.saving.SavingSettings;
 import de.embl.cba.bigDataTools2.viewers.BdvImageViewer;
 import de.embl.cba.bigDataTools2.viewers.ImageViewer;
 import net.imglib2.RandomAccessibleInterval;
@@ -26,6 +27,10 @@ public class TestShearTransform {
         imageViewer.show();
         imageViewer.setDisplayRange( 0, 800, 0 );
 
+        final SavingSettings defaults = SavingSettings.getDefaults();
+        defaults.fileType = SavingSettings.FileType.TIFF_as_STACKS;
+        new BigDataConverter().saveImage( defaults, imageViewer );
+
 
         /**
          * Get sheared image and show it in same viewer
@@ -34,6 +39,7 @@ public class TestShearTransform {
         RandomAccessibleInterval sheared = getShearedImage( cachedCellImg, imageViewer );
         imageViewer.show( sheared, imageViewer.getVoxelSize(), "sheared" );
         imageViewer.setDisplayRange( 0, 800, 0 );
+
 
         /**
          * Compute shearing using a 5D Affine Transform.

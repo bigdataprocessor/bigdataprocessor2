@@ -28,7 +28,7 @@ public class FileInfoConstants {
     public static final int C = 3;
     public static final int T = 4;
     public static final int TOTAL_AXES = 5;
-    public static final AxisType[] AXES_ORDER = {Axes.X, Axes.Y, Axes.CHANNEL, Axes.Z, Axes.TIME};
+    public static final AxisType[] AXES_ORDER = {Axes.X, Axes.Y, Axes.Z, Axes.CHANNEL, Axes.TIME};
     public static final int MAX_ALLOWED_IMAGE_DIMS = AXES_ORDER.length;
     public static final String CROPPED_STREAM_NAME = "cropped";
     public static final String UNSIGNEDBYTE_STREAM_NAME = "8 bit converted";

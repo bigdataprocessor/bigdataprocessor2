@@ -127,14 +127,21 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
             }
             // Load
             //   ImagePlus impChannelTime = getDataCube( c );  May be faster???
-            long[] minInterval = new long[]{image.min(FileInfoConstants.X ), image.min(FileInfoConstants.Y ),
-                    c, image.min(FileInfoConstants.Z ), this.current_t}; //XYCZT order
-            long[] maxInterval = new long[]{image.max(FileInfoConstants.X ),
+            long[] minInterval = new long[]{
+                    image.min(FileInfoConstants.X ),
+                    image.min(FileInfoConstants.Y ),
+                    image.min(FileInfoConstants.Z ),
+                    c,
+                    this.current_t};
+            long[] maxInterval = new long[]{
+                    image.max(FileInfoConstants.X ),
                     image.max(FileInfoConstants.Y ),
-                    c, image.max(FileInfoConstants.Z ), this.current_t};//XYCZT order
+                    image.max(FileInfoConstants.Z ),
+                    c,
+                    this.current_t};
             RandomAccessibleInterval newRai = Views.interval(image, minInterval, maxInterval);
             // Convert
-            newRai = SaveImgAsHDF5Helper.convertor(newRai, this.savingSettings);
+            newRai = SaveImgHelper.convertor(newRai, this.savingSettings);
             Img<T> imgChannelTime;
             imgChannelTime = ImgView.wrap(newRai, new CellImgFactory(this.nativeType));
 
@@ -156,7 +163,7 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
                 ImgPlus<T> impBinned = new ImgPlus<>(imgBinned, "", FileInfoConstants.AXES_ORDER);
                 int[] binningA = Utils.delimitedStringToIntegerArray(binning, ",");
                 if (binningA[0] > 1 || binningA[1] > 1 || binningA[2] > 1) {
-                    newPath = SaveImgAsHDF5Helper.doBinning(impBinned, binningA, newPath, null);
+                    newPath = SaveImgHelper.doBinning(impBinned, binningA, newPath, null);
                 }
                 String sC = String.format("%1$02d", c);
                 String sT = String.format("%1$05d", current_t);
@@ -174,7 +181,7 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
                 }
 
             }
-            SaveImgAsHDF5Helper.documentProgress(totalSlices, counter, logger, startTime);
+            SaveImgHelper.documentProgress(totalSlices, counter, logger, startTime);
         }
     }
 
@@ -211,7 +218,7 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
                 throw new IllegalArgumentException("Unsupported Type: " + val.getClass());
             }
         } catch (HDF5Exception err) {
-            logger.error("HDF5 API error occurred while creating '" + filename + "'." + err.getMessage());
+            logger.error("HDF5_STACKS API error occurred while creating '" + filename + "'." + err.getMessage());
             throw new RuntimeException(err);
         } catch (Exception err) {
             logger.error("An unexpected error occurred while creating '" + filename + "'." + err.getMessage());
@@ -280,7 +287,7 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
             writeHyperslabs(hdf5DataType, pixelSlice, start, iniDims);
         }
         logger.info("compressionLevel: " + String.valueOf(compressionLevel));
-        logger.info("Finished writing the HDF5.");
+        logger.info("Finished writing the HDF5_STACKS.");
     }
 
     private <E> void writeHyperslabs(int hdf5DataType, E[][] pixelsSlice, long[] start, long[] colorIniDims) {

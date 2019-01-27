@@ -107,7 +107,7 @@ public class FileInfoSource {
         int z = 0;
         if (fileType.equals(Utils.FileType.TIFF_STACKS.toString())) {
             setInfosFromFile(channel, time, z, true);
-        } else if (fileType.equals(Utils.FileType.HDF5.toString())) {     //TODO: If TIFF and HDF5 have the same code then merge it after verification. -- ashis
+        } else if (fileType.equals(Utils.FileType.HDF5.toString())) {     //TODO: If TIFF and HDF5_STACKS have the same code then merge it after verification. -- ashis
             setInfosFromFile(channel, time, z, true);
         } else if (fileType.equals(Utils.FileType.SINGLE_PLANE_TIFF.toString())) {
             int nZ = ctzFileList[channel][time].length;

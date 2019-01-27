@@ -55,7 +55,7 @@ public class SaveImgAsTIFFStacks implements Runnable {
 
         //long freeMemoryInBytes = IJ.maxMemory() - IJ.currentMemory();
         RandomAccessibleInterval image = savingSettings.image;
-        final long totalSlices = image.dimension(FileInfoConstants.T ) * image.dimension(FileInfoConstants.C );
+        final long totalCubes = image.dimension( FileInfoConstants.T ) * image.dimension(FileInfoConstants.C );
 //            long numBytesOfImage = image.dimension(FileInfoConstants.X) *
 //                    image.dimension(FileInfoConstants.Y) *
 //                    image.dimension(FileInfoConstants.Z) *
@@ -72,16 +72,24 @@ public class SaveImgAsTIFFStacks implements Runnable {
                 logger.progress("Stopped saving thread: ", "" + t);
                 return;
             }
+
             // Load
             //   ImagePlus impChannelTime = getDataCube( c );  May be faster???
-            long[] minInterval = new long[]{image.min(FileInfoConstants.X ), image.min(FileInfoConstants.Y ),
-                    c, image.min(FileInfoConstants.Z ), this.t}; //XYCZT order
-            long[] maxInterval = new long[]{image.max(FileInfoConstants.X ),
+            long[] minInterval = new long[]{
+                    image.min(FileInfoConstants.X ),
+                    image.min(FileInfoConstants.Y ),
+                    image.min(FileInfoConstants.Z ),
+                    c,
+                    this.t};
+            long[] maxInterval = new long[]{
+                    image.max(FileInfoConstants.X ),
                     image.max(FileInfoConstants.Y ),
-                    c, image.max(FileInfoConstants.Z ), this.t};
+                    image.max(FileInfoConstants.Z ),
+                    c,
+                    this.t};
 
-            RandomAccessibleInterval newRai = Views.interval(image, minInterval, maxInterval);
-            ImagePlus impChannelTime = ImageJFunctions.wrap(newRai, "slice");
+            RandomAccessibleInterval rai3D = Views.interval(image, minInterval, maxInterval);
+            ImagePlus impChannelTime = ImageJFunctions.wrap( rai3D, "cube" );
             // Gate
             //
             if (savingSettings.gate) {
@@ -133,7 +141,7 @@ public class SaveImgAsTIFFStacks implements Runnable {
                 }
 
             }
-            SaveImgAsHDF5Helper.documentProgress(totalSlices, counter, logger, startTime);
+            SaveImgHelper.documentProgress(totalCubes, counter, logger, startTime);
         }
     }
 

@@ -93,7 +93,7 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
             long[] maxInterval = new long[]{image.dimension(FileInfoConstants.X ) - 1, image.dimension(FileInfoConstants.Y ) - 1, c,
                     image.dimension(FileInfoConstants.Z ) - 1, image.dimension(FileInfoConstants.T ) - 1};
             RandomAccessibleInterval newRai = Views.interval(image, minInterval, maxInterval);
-            newRai = SaveImgAsHDF5Helper.convertor(newRai, this.savingSettings);
+            newRai = SaveImgHelper.convertor(newRai, this.savingSettings);
             Img<T> imgChannelTime = null;
             imgChannelTime = ImgView.wrap(newRai, new CellImgFactory(nativeType));
 
@@ -112,7 +112,7 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
                 ImgPlus<T> impBinned = new ImgPlus<>(imgBinned, "", FileInfoConstants.AXES_ORDER);
                 int[] binningA = Utils.delimitedStringToIntegerArray(binning, ",");
                 if (binningA[0] > 1 || binningA[1] > 1 || binningA[2] > 1) {
-                    newPath = SaveImgAsHDF5Helper.doBinning(impBinned, binningA, newPath, null);
+                    newPath = SaveImgHelper.doBinning(impBinned, binningA, newPath, null);
                 }
                 String sC = String.format("%1$02d", c);
                 String sT = String.format("%1$05d", current_t);
@@ -130,7 +130,7 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
                     SaveImgAsTIFFStacks.saveAsTiffXYZMaxProjection(imagePlusImage, c, this.current_t, newPath);
                 }
             }
-            SaveImgAsHDF5Helper.documentProgress(totalSlices, counter, logger, startTime);
+            SaveImgHelper.documentProgress(totalSlices, counter, logger, startTime);
         }
     }
 

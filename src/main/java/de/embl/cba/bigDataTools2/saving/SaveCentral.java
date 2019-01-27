@@ -32,7 +32,7 @@ public class SaveCentral {
             saveTIFFAsPlanes(savingSettings, es);
         } else if (savingSettings.fileType.equals( SavingSettings.FileType.TIFF_as_STACKS)) {
             saveTIFFAsStacks(savingSettings, es);
-        } else if (savingSettings.fileType.equals( SavingSettings.FileType.HDF5)) {
+        } else if (savingSettings.fileType.equals( SavingSettings.FileType.HDF5_STACKS )) {
             saveHDFStacks(savingSettings, es);
         } else if (savingSettings.fileType.equals( SavingSettings.FileType.HDF5_IMARIS_BDV)) {
             saveIMARIStacks(savingSettings, es);
