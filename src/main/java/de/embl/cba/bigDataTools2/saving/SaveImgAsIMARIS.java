@@ -89,9 +89,21 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
             }
             // Load
             //   ImagePlus impChannelTime = getDataCube( c );  May be faster???
-            long[] minInterval = new long[]{0, 0, c, 0, 0}; //XYCZT order
-            long[] maxInterval = new long[]{image.dimension(FileInfoConstants.X ) - 1, image.dimension(FileInfoConstants.Y ) - 1, c,
-                    image.dimension(FileInfoConstants.Z ) - 1, image.dimension(FileInfoConstants.T ) - 1};
+
+            long[] minInterval = new long[]{
+                    0,
+                    0,
+                    0,
+                    c,
+                    0};
+
+            long[] maxInterval = new long[]{
+                    image.dimension(FileInfoConstants.X ) - 1,
+                    image.dimension(FileInfoConstants.Y ) - 1,
+                    image.dimension(FileInfoConstants.Z ) - 1,
+                    c,
+                    image.dimension(FileInfoConstants.T ) - 1};
+
             RandomAccessibleInterval newRai = Views.interval(image, minInterval, maxInterval);
             newRai = SaveImgHelper.convertor(newRai, this.savingSettings);
             Img<T> imgChannelTime = null;

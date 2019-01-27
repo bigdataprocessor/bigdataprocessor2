@@ -35,13 +35,23 @@ public class SaveImgAsTIFFPlanes implements Runnable {
             return;
         }
         RandomAccessibleInterval imgStack = savingSettings.image;
-        long[] minInterval = new long[]{imgStack.min(FileInfoConstants.X ), imgStack.min(FileInfoConstants.Y ), c, z, t};
-        long[] maxInterval = new long[]{imgStack.max(FileInfoConstants.X ), imgStack.max(FileInfoConstants.Y ), c, z, t};
+        long[] minInterval = new long[]{
+                imgStack.min(FileInfoConstants.X ),
+                imgStack.min(FileInfoConstants.Y ),
+                z,
+                c,
+                t};
+        long[] maxInterval = new long[]{
+                imgStack.max(FileInfoConstants.X ),
+                imgStack.max(FileInfoConstants.Y ),
+                z,
+                c,
+                t};
 
         RandomAccessibleInterval newRai = Views.interval(imgStack, minInterval, maxInterval);
 
         @SuppressWarnings("unchecked")
-        ImagePlus impCTZ = ImageJFunctions.wrap(newRai, "slice", null); // TODO : check if threads can be given for this operation in place of null --ashis
+        ImagePlus impCTZ = ImageJFunctions.wrap( newRai, "slice", null); // TODO : check if threads can be given for this operation in place of null --ashis
         impCTZ.setTitle("slice");
         impCTZ.setDimensions(1, 1, 1);
 

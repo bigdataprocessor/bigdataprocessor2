@@ -255,8 +255,10 @@ public abstract class H5Utils
             file.delete();
         }
 
-        int file_id = H5.H5Fcreate(path,
-                HDF5Constants.H5F_ACC_TRUNC, HDF5Constants.H5P_DEFAULT,
+        int file_id = H5.H5Fcreate(
+                path,
+                HDF5Constants.H5F_ACC_TRUNC,
+                HDF5Constants.H5P_DEFAULT,
                 HDF5Constants.H5P_DEFAULT);
 
         return ( file_id );

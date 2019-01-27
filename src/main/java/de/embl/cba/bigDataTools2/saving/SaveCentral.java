@@ -147,7 +147,7 @@ public class SaveCentral {
         thread.start();
     }
 
-    private static ImarisDataSet getImarisDataSet(SavingSettings savingSettings) {
+    private static ImarisDataSet getImarisDataSet( SavingSettings savingSettings ) {
         ImagePlus image = ImageJFunctions.wrap(savingSettings.image, "");
         String[] binnings = savingSettings.bin.split(";");
         int[] binning = Utils.delimitedStringToIntegerArray(binnings[0], ",");
