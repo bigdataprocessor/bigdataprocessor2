@@ -55,11 +55,11 @@ public class SaveMenuDialog extends JFrame implements ActionListener {
         panels.get(j).add(comboFileTypeForSaving);
         mainPanels.get(k).add(panels.get(j++));
 
-        panels.add(new JPanel());
+/*      panels.add(new JPanel());
         panels.get(j).add(new JLabel("Binning [pixels]: x1,y1,z1; x2,y2,z2; ... "));
         panels.get(j).add(tfBinning);
         mainPanels.get(k).add(panels.get(j++));
-
+*/
         panels.add(new JPanel());
         panels.get(j).add(cbSaveVolume);
         panels.get(j).add(cbSaveProjection);
@@ -71,7 +71,7 @@ public class SaveMenuDialog extends JFrame implements ActionListener {
         panels.get(j).add(tfRowsPerStrip);
         mainPanels.get(k).add(panels.get(j++));
 
-        panels.add(new JPanel());
+/*      panels.add(new JPanel());
         panels.get(j).add(cbConvertTo8Bit);
         panels.get(j).add(new JLabel("0 ="));
         panels.get(j).add(tfMapTo0);
@@ -90,7 +90,7 @@ public class SaveMenuDialog extends JFrame implements ActionListener {
         panels.get(j).add(new JLabel("Max ="));
         panels.get(j).add(tfGateMax);
         mainPanels.get(k).add(panels.get(j++));
-
+*/
         panels.add(new JPanel());
         panels.get(j).add(new JLabel("Saving Threads"));
         panels.get(j).add(tfNThreads);
