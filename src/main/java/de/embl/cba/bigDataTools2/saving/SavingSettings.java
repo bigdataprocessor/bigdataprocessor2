@@ -27,6 +27,7 @@ public class SavingSettings {
     public String compression;
     public int compressionLevel;
     public int rowsPerStrip;
+    public int nThreads;
 
     public enum FileType {
         TIFF_as_PLANES("Tiff Planes"),

@@ -33,6 +33,7 @@ public class TestTiffStackSaving
          */
         final SavingSettings defaults = SavingSettings.getDefaults();
         defaults.fileType = SavingSettings.FileType.TIFF_as_STACKS;
+        defaults.nThreads = 3;
         new BigDataConverter().saveImage( defaults, imageViewer );
 
 

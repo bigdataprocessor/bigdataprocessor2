@@ -19,6 +19,7 @@ public class SaveMenuDialog extends JFrame implements ActionListener {
 
     private final JTextField tfBinning = new JTextField("1,1,1", 10);
     private final JTextField tfRowsPerStrip = new JTextField("10", 3);
+    private final JTextField tfNThreads = new JTextField("1", 2);
     private final JTextField tfMapTo255 = new JTextField("65535", 5);
     private final JTextField tfMapTo0 = new JTextField("0", 5);
     private final JTextField tfGateMin = new JTextField("0", 5);
@@ -91,6 +92,11 @@ public class SaveMenuDialog extends JFrame implements ActionListener {
         mainPanels.get(k).add(panels.get(j++));
 
         panels.add(new JPanel());
+        panels.get(j).add(new JLabel("Saving Threads"));
+        panels.get(j).add(tfNThreads);
+        mainPanels.get(k).add(panels.get(j++));
+
+        panels.add(new JPanel());
         save.setActionCommand(SAVE);
         save.addActionListener(this);
         panels.get(j).add(save);
@@ -132,7 +138,7 @@ public class SaveMenuDialog extends JFrame implements ActionListener {
                 savingSettings.convertTo8Bit = cbConvertTo8Bit.isSelected();
                 savingSettings.mapTo0 = Integer.parseInt(tfMapTo0.getText());
                 savingSettings.mapTo255 = Integer.parseInt(tfMapTo255.getText());
-
+                savingSettings.nThreads = Integer.parseInt(tfNThreads.getText());
                 if (!(fileType.equals(SavingSettings.FileType.TIFF_as_PLANES))) {
                     // TODO: implement below for planes
                     savingSettings.convertTo16Bit = cbConvertTo16Bit.isSelected();

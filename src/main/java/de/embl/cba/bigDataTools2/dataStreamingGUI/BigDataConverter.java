@@ -38,10 +38,10 @@ public class BigDataConverter {
     public static ExecutorService executorService;  //General thread pool
     public static ExecutorService trackerThreadPool; // Thread pool for tracking
     public int numThreads;
+    public static int MAX_THREAD_LIMIT = Runtime.getRuntime().availableProcessors() * 2;
     private ImageViewer imageViewer;// remove it
 
     public BigDataConverter() {
-        //TODO: Determine Voxel Size to display in the Bdv --ashis
         //TODO: have separate shutdown for the executorService. It will not shutdown when ui exeService is shut. --ashis (DONE but needs testing)
         //Ref: https://stackoverflow.com/questions/23684189/java-how-to-make-an-executorservice-running-inside-another-executorservice-not
         System.out.println("Datastreaming constructor");
@@ -81,6 +81,8 @@ public class BigDataConverter {
 
 
     public static void saveImage( SavingSettings savingSettings, ImageViewer imageViewer ) { //TODO: No need to get imageVieweer.Use only SavinfgSetting
+        int nIOThread = Math.max(1, Math.min(savingSettings.nThreads, MAX_THREAD_LIMIT));
+        ExecutorService saveExecutorService =  Executors.newFixedThreadPool(nIOThread);
         String streamName = imageViewer.getImageName();
         RandomAccessibleInterval rai = imageViewer.getRai();
         if (streamName.equalsIgnoreCase(FileInfoConstants.CROPPED_STREAM_NAME)) {
@@ -88,7 +90,7 @@ public class BigDataConverter {
         }
         savingSettings.image = rai;
         SaveCentral.interruptSavingThreads = false;
-        SaveCentral.goSave(savingSettings, executorService);
+        SaveCentral.goSave(savingSettings, saveExecutorService);
     }
 
     public static void stopSave() {
@@ -110,7 +112,7 @@ public class BigDataConverter {
         affine.set(shearingSettings.shearingFactorX, 0, 2);
         affine.set(shearingSettings.shearingFactorY, 1, 2);
         List<ApplyShearToRAI> tasks = new ArrayList<>();
-        long startTime = System.currentTimeMillis();
+       // long startTime = System.currentTimeMillis();
         for (int t = 0; t < nTimeFrames; ++t) {
             ApplyShearToRAI task = new ApplyShearToRAI(rai, t, nChannels, affine, shearingSettings.interpolationFactory);
             task.fork();

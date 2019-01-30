@@ -30,6 +30,7 @@ public class TestTHdf5StackSaving
          */
         final SavingSettings defaults = SavingSettings.getDefaults();
         defaults.fileType = SavingSettings.FileType.HDF5_STACKS;
+        defaults.nThreads = 3;
         new BigDataConverter().saveImage( defaults, imageViewer );
 
 

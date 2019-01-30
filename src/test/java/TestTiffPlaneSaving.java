@@ -30,6 +30,7 @@ public class TestTiffPlaneSaving
          */
         final SavingSettings defaults = SavingSettings.getDefaults();
         defaults.fileType = SavingSettings.FileType.TIFF_as_PLANES;
+        defaults.nThreads = 3;
         new BigDataConverter().saveImage( defaults, imageViewer );
 
 
