@@ -24,7 +24,7 @@ public class ProgressBar implements PropertyChangeListener {
             do {
                 setProgress(Math.min(progress, 100));
             } while (progress < 100);
-
+            setProgress(0); //to make sure past value is not shown anymore for next save using the same window
             return null;
         }
 

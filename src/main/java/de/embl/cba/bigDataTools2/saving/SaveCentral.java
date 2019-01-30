@@ -53,7 +53,7 @@ public class SaveCentral {
         // Monitor the progress
         Thread thread = new Thread(new Runnable() {
             public void run() {
-                MonitorThreadPoolStatus.showProgressAndWaitUntilDone(futures, "Saved to disk: ", 2000);
+                MonitorThreadPoolStatus.showProgressAndWaitUntilDone(futures, "Saved to disk: ", FileInfoConstants.PROGRESS_UPDATE_MILLISECONDS);
             }
         });
         thread.start();
@@ -83,7 +83,7 @@ public class SaveCentral {
                     ));
         }
         // Monitor the progress
-        Thread thread = new Thread(() -> MonitorThreadPoolStatus.showProgressAndWaitUntilDone(futures, "Saved to disk: ", 500));
+        Thread thread = new Thread(() -> MonitorThreadPoolStatus.showProgressAndWaitUntilDone(futures, "Saved to disk: ", FileInfoConstants.PROGRESS_UPDATE_MILLISECONDS));
         thread.start();
     }
 
@@ -113,7 +113,7 @@ public class SaveCentral {
             }
         }
         // Monitor the progress
-        Thread thread = new Thread(() -> MonitorThreadPoolStatus.showProgressAndWaitUntilDone(futures, "Saved to disk: ", 500));
+        Thread thread = new Thread(() -> MonitorThreadPoolStatus.showProgressAndWaitUntilDone(futures, "Saved to disk: ", FileInfoConstants.PROGRESS_UPDATE_MILLISECONDS));
         thread.start();
     }
 
@@ -143,7 +143,7 @@ public class SaveCentral {
             }
         }
         // Monitor the progress
-        Thread thread = new Thread(() -> MonitorThreadPoolStatus.showProgressAndWaitUntilDone(futures, "Saved to disk: ", 500));
+        Thread thread = new Thread(() -> MonitorThreadPoolStatus.showProgressAndWaitUntilDone(futures, "Saved to disk: ", FileInfoConstants.PROGRESS_UPDATE_MILLISECONDS));
         thread.start();
     }
 

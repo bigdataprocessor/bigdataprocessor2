@@ -27,6 +27,7 @@ public class FileInfoConstants {
     public static final int Z = 2;
     public static final int C = 3;
     public static final int T = 4;
+    public static final int PROGRESS_UPDATE_MILLISECONDS = 200;
     public static final int TOTAL_AXES = 5;
     public static final AxisType[] AXES_ORDER = {Axes.X, Axes.Y, Axes.Z, Axes.CHANNEL, Axes.TIME};
     public static final int MAX_ALLOWED_IMAGE_DIMS = AXES_ORDER.length;
