@@ -84,6 +84,9 @@ public class BigDataConverterCommand<T extends RealType<T> & NativeType<T>> impl
             })
     String imageViewerChoice = ViewerUtils.BIG_DATA_VIEWER;
 
+    @Parameter(label = "Auto Contrast")
+    boolean autoContrast = true;
+
     private static final BigDataConverter BIG_DATA_CONVERTER = new BigDataConverter();
 
     public void run() {
@@ -92,6 +95,7 @@ public class BigDataConverterCommand<T extends RealType<T> & NativeType<T>> impl
                 namingScheme,
                 filterPattern,
                 hdf5DataSet,
+                autoContrast,
                 ViewerUtils.getImageViewer( imageViewerChoice ));
     }
 
