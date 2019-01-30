@@ -218,13 +218,13 @@ public class Utils {
 
         return newViewerTransform;
     }
-
+/*
     public static void doAutoContrastPerChannel(ImageViewer imageViewer){
         int nChannels = (int)imageViewer.getRai().dimension(FileInfoConstants.C );
         for (int channel=0; channel < nChannels; ++channel){
             DisplaySettings setting = imageViewer.getDisplaySettings(channel);
             imageViewer.setDisplayRange(setting.getMinValue(),setting.getMaxValue(),0);
-        }
+        }*/
 	    /*
         int nChannels= bdvStackSource.getBdvHandle().getSetupAssignments().getConverterSetups().size();
         for(int channel=0;channel<nChannels ;channel++){
@@ -235,7 +235,7 @@ public class Utils {
             converterSetup.setDisplayRange(displaySettings.getMinValue(), displaySettings.getMaxValue());
             bdvStackSource.getBdvHandle().getSetupAssignments().addSetup(converterSetup);
         }*/
-    }
+   // }
 
 
     private static < T extends RealType< T > & NativeType< T >> DisplaySettings computeDisplayRange(RandomAccessibleInterval< T > rai) {

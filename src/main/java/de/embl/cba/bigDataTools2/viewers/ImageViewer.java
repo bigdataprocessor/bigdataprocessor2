@@ -20,7 +20,7 @@ public interface ImageViewer {
 
     FinalInterval get5DIntervalFromUser();
 
-    void show( RandomAccessibleInterval rai, double[] voxelSize, String name );
+    void show( RandomAccessibleInterval rai, double[] voxelSize, String name,boolean autoContrast );
 
     void addMenus(BdvMenus menus);
 
@@ -36,4 +36,5 @@ public interface ImageViewer {
 
     void shiftImageToCenter(double[] centerCoordinates);
 
+    void doAutoContrastPerChannel();
 }

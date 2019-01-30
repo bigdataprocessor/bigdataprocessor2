@@ -1,12 +1,17 @@
 package de.embl.cba.bigDataTools2.viewers;
 
 import bdv.tools.brightness.ConverterSetup;
-import bdv.util.*;
+import bdv.util.AxisOrder;
+import bdv.util.BdvFunctions;
+import bdv.util.BdvHandleFrame;
+import bdv.util.BdvOptions;
+import bdv.util.BdvStackSource;
 import bdv.util.volatiles.VolatileViews;
 import bdv.viewer.SourceAndConverter;
 import de.embl.cba.bigDataTools2.boundingBox.BoundingBoxDialog;
 import de.embl.cba.bigDataTools2.dataStreamingGUI.BdvMenus;
 import de.embl.cba.bigDataTools2.dataStreamingGUI.DisplaySettings;
+import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
 import net.imglib2.Cursor;
 import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccessibleInterval;
@@ -16,11 +21,7 @@ import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Intervals;
 import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
-
 import javax.swing.*;
-
-import java.util.concurrent.ExecutorService;
-
 import static de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants.*;
 
 public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements ImageViewer {
@@ -100,13 +101,16 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
     }
 
     @Override
-    public void show( RandomAccessibleInterval rai, double[] voxelSize, String imageName )
-    {
-        if ( this.bdvSS != null ) removeAllSourcesFromBdv();
-
+    public void show( RandomAccessibleInterval rai, double[] voxelSize, String imageName,boolean autoContrast ){
+        if ( this.bdvSS != null ){
+            removeAllSourcesFromBdv();
+        }
         showImageInViewer( rai, voxelSize ,imageName  );
-
+        if(autoContrast) {
+            doAutoContrastPerChannel();
+        }
     }
+
 
     private void removeAllSourcesFromBdv()
     {
@@ -138,32 +142,48 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
 
     }
 
+    /**
+    Returns min and max pixel values of the center slice of the first time point for the RandomAccessibleInterval
+     as a DisplaySettings object of the requested channel.
+     */
     @Override
-    public DisplaySettings getDisplaySettings( int channel ) {
-
-        RandomAccessibleInterval raiStack =
-                this.bdvSS.getBdvHandle().getViewerPanel().getState().getSources().get(channel).getSpimSource().getSource(0, 0);
-
-        final long stackCenter = ( raiStack.max( Z ) - raiStack.min( Z ) ) / 2 + raiStack.min( Z );
-
-        IntervalView<T> ts = Views.hyperSlice(
-                raiStack,
-                Z,
-                stackCenter );
-
-        Cursor<T> cursor = Views.iterable(ts).cursor();
-        double min = Double.MAX_VALUE;
-        double max = -Double.MAX_VALUE;
-        double value;
-        while (cursor.hasNext()) {
-            value = cursor.next().getRealDouble();
-            if (value < min) min = value;
-            if (value > max) max = value;
+    public DisplaySettings getDisplaySettings(int channel) {
+        double min,max;
+        if(this.rai!= null) {
+            RandomAccessibleInterval raiStack = Views.hyperSlice(
+                    Views.hyperSlice(this.rai, T, 0),
+                    C,
+                    channel);
+            final long stackCenter = (raiStack.max(Z) - raiStack.min(Z)) / 2 + raiStack.min(Z);
+            IntervalView<T> ts = Views.hyperSlice(
+                    raiStack,
+                    Z,
+                    stackCenter);
+            Cursor<T> cursor = Views.iterable(ts).cursor();
+            min = Double.MAX_VALUE;
+            max = -Double.MAX_VALUE;
+            double value;
+            while (cursor.hasNext()) {
+                value = cursor.next().getRealDouble();
+                if (value < min) min = value;
+                if (value > max) max = value;
+            }
+        }else{
+            max=0;min=0;
         }
         return new DisplaySettings(min, max);
     }
 
-
+    @Override
+    public void doAutoContrastPerChannel() {
+        int nChannels = (int) this.getRai().dimension(FileInfoConstants.C);
+        for (int channel = 0; channel < nChannels; ++channel) {
+            DisplaySettings setting = getDisplaySettings(channel);
+            setDisplayRange(setting.getMinValue(), setting.getMaxValue(), 0);
+            //channel is always 0 (zero) because converterSetup object gets removed and added at the end of bdvSS in setDisplayRange method.
+            //Hence current channel is always at position 0 of the bdvSS.
+        }
+    }
     public void replicateViewerContrast(ImageViewer newImageView) {
         int nChannels = (int) this.getRai().dimension( C );
         for (int channel = 0; channel < nChannels; ++channel) {

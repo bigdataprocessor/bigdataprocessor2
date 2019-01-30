@@ -27,18 +27,14 @@ public class TestShearTransform {
         imageViewer.show();
         imageViewer.setDisplayRange( 0, 800, 0 );
 
-        final SavingSettings defaults = SavingSettings.getDefaults();
-        defaults.fileType = SavingSettings.FileType.TIFF_as_STACKS;
-        new BigDataConverter().saveImage( defaults, imageViewer );
-
 
         /**
          * Get sheared image and show it in same viewer
          * (replacing the input image);
          */
         RandomAccessibleInterval sheared = getShearedImage( cachedCellImg, imageViewer );
-        imageViewer.show( sheared, imageViewer.getVoxelSize(), "sheared" );
-        imageViewer.setDisplayRange( 0, 800, 0 );
+        imageViewer.show( sheared, imageViewer.getVoxelSize(), "sheared",true );
+        //imageViewer.setDisplayRange( 0, 800, 0 );
 
 
         /**

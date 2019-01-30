@@ -19,6 +19,7 @@ public class TestIJ1ViewerSaving
 				FileInfoConstants.SINGLE_CHANNEL_TIMELAPSE,
 				".*",
 				null,
+				true,
 				ViewerUtils.getImageViewer( ViewerUtils.IJ1_VIEWER ) );
 
 

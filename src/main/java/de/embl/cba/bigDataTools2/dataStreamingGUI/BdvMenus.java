@@ -58,7 +58,7 @@ public class BdvMenus extends JMenu implements ActionListener { //TODO: change n
                 FinalInterval interval = imageViewer.get5DIntervalFromUser();
                 RandomAccessibleInterval croppedRAI = BigDataConverter.crop(rai,interval);
                 ImageViewer newImageViewer = imageViewer.newImageViewer();
-                newImageViewer.show( croppedRAI, imageViewer.getVoxelSize(), FileInfoConstants.CROPPED_STREAM_NAME );
+                newImageViewer.show( croppedRAI, imageViewer.getVoxelSize(), FileInfoConstants.CROPPED_STREAM_NAME,false );
                 BdvMenus menus = new BdvMenus();
                 newImageViewer.addMenus( menus );
                 imageViewer.replicateViewerContrast( newImageViewer );
@@ -76,16 +76,11 @@ public class BdvMenus extends JMenu implements ActionListener { //TODO: change n
         }else if(e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.EIGHT_BIT_MENU_DISPLAY_TEXT)){
             final RandomAccessibleInterval rai = imageViewer.getRai();
             BigDataConverter.executorService.submit(() -> {
-
                 RandomAccessibleInterval newRai = BigDataConverter.unsignedByteTypeConverter(rai,imageViewer.getDisplaySettings(0));
-
                 ImageViewer newImageViewer = imageViewer.newImageViewer();
-                newImageViewer.show( newRai, imageViewer.getVoxelSize(), FileInfoConstants.UNSIGNEDBYTE_STREAM_NAME);
-
+                newImageViewer.show( newRai, imageViewer.getVoxelSize(), FileInfoConstants.UNSIGNEDBYTE_STREAM_NAME,true);
                 BdvMenus menus = new BdvMenus();
                 newImageViewer.addMenus(menus);
-
-                Utils.doAutoContrastPerChannel(newImageViewer);
             });
         }
     }

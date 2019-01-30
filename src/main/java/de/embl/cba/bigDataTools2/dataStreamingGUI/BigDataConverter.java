@@ -65,21 +65,14 @@ public class BigDataConverter {
             String namingScheme,
             String filterPattern,
             String h5DataSetName,
+            boolean autoContrast,
             ImageViewer imageViewer ) {
-
         directory = Utils.fixDirectoryFormat(directory);
-
         this.fileInfoSource = new FileInfoSource(directory, namingScheme, filterPattern, h5DataSetName);
-
         CachedCellImg cachedCellImg = CachedCellImageCreator.create(this.fileInfoSource, this.executorService);
-
         this.imageViewer = imageViewer;
-
-        imageViewer.show( cachedCellImg, fileInfoSource.voxelSize,  FileInfoConstants.IMAGE_NAME );
-
+        imageViewer.show( cachedCellImg, fileInfoSource.voxelSize,  FileInfoConstants.IMAGE_NAME, autoContrast );
         imageViewer.addMenus(new BdvMenus());
-
-        Utils.doAutoContrastPerChannel( imageViewer );
     }
 
     public static RandomAccessibleInterval crop(RandomAccessibleInterval rai,FinalInterval interval){

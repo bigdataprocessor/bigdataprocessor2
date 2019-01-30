@@ -56,7 +56,7 @@ public class BigDataTracker {
         if(!this.objectTracker.interruptTrackingThreads) {
 
             ImageViewer newTrackedView =  imageViewer.newImageViewer();
-            newTrackedView.show( trackingSettings.imageRAI, imageViewer.getVoxelSize(), FileInfoConstants.TRACKED_STREAM_NAME);//No need to add Menus.
+            newTrackedView.show( trackingSettings.imageRAI, imageViewer.getVoxelSize(), FileInfoConstants.TRACKED_STREAM_NAME,false);//No need to add Menus.
             imageViewer.replicateViewerContrast(newTrackedView);
 
             if(newTrackedView instanceof BdvImageViewer) {
@@ -91,9 +91,9 @@ public class BigDataTracker {
             }
             RandomAccessibleInterval stackedRAI = Views.stack(tracks);
             ImageViewer newTrackedView = imageViewer.newImageViewer();
-            newTrackedView.show( stackedRAI, trackingSettings.voxelSize, FileInfoConstants.TRACKED_STREAM_NAME);
+            newTrackedView.show( stackedRAI, trackingSettings.voxelSize, FileInfoConstants.TRACKED_STREAM_NAME,false);
             newTrackedView.addMenus(new BdvMenus());
-            for (int channel=0; channel<nChannels; ++channel){
+            for (int channel=0; channel<nChannels; ++channel){ // TODO: change to method replicateViewerContrast --ashis
                 DisplaySettings setting = imageViewer.getDisplaySettings(channel);
                 newTrackedView.setDisplayRange(setting.getMinValue(),setting.getMaxValue(),channel);
             }
