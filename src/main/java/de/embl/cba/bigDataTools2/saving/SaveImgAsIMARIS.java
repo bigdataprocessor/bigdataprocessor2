@@ -117,15 +117,15 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
                 }
                 String newPath = savingSettings.filePath;
                 Img<T> imgBinned = imgChannelTime;
-                ImgPlus<T> impBinned = new ImgPlus<>(imgBinned, "", FileInfoConstants.AXES_ORDER);
+                ImgPlus<T> imgPlusBinned = new ImgPlus<>(imgBinned, "", FileInfoConstants.AXES_ORDER);
                 int[] binningA = Utils.delimitedStringToIntegerArray(binning, ",");
                 if (binningA[0] > 1 || binningA[1] > 1 || binningA[2] > 1) {
-                    newPath = SaveImgHelper.doBinning(impBinned, binningA, newPath, null);
+                    newPath = SaveImgHelper.doBinning(imgPlusBinned, binningA, newPath, null);
                 }
                 String sC = String.format("%1$02d", c);
                 String sT = String.format("%1$05d", current_t);
                 newPath = newPath + "--C" + sC + "--T" + sT + ".h5";
-                ImagePlus imagePlusImage = ImageJFunctions.wrap(impBinned, "", null);
+                ImagePlus imagePlusImage = Utils.wrapToImagePlus(imgPlusBinned,"BinnedWrapped");
 
                 // Save volume
                 if (savingSettings.saveVolume) {

@@ -53,6 +53,7 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgView;
 import net.imglib2.img.cell.CellImgFactory;
+import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -218,24 +219,6 @@ public class Utils {
 
         return newViewerTransform;
     }
-/*
-    public static void doAutoContrastPerChannel(ImageViewer imageViewer){
-        int nChannels = (int)imageViewer.getRai().dimension(FileInfoConstants.C );
-        for (int channel=0; channel < nChannels; ++channel){
-            DisplaySettings setting = imageViewer.getDisplaySettings(channel);
-            imageViewer.setDisplayRange(setting.getMinValue(),setting.getMaxValue(),0);
-        }*/
-	    /*
-        int nChannels= bdvStackSource.getBdvHandle().getSetupAssignments().getConverterSetups().size();
-        for(int channel=0;channel<nChannels ;channel++){
-            final ConverterSetup converterSetup = bdvStackSource.getBdvHandle().getSetupAssignments().getConverterSetups().get( channel );
-            RandomAccessibleInterval rai = bdvStackSource.getBdvHandle().getViewerPanel().getState().getSources().get(channel).getSpimSource().getSource(0, 0);
-            DisplaySettings displaySettings =  Utils.computeDisplayRange(rai);
-            bdvStackSource.getBdvHandle().getSetupAssignments().removeSetup(converterSetup);
-            converterSetup.setDisplayRange(displaySettings.getMinValue(), displaySettings.getMaxValue());
-            bdvStackSource.getBdvHandle().getSetupAssignments().addSetup(converterSetup);
-        }*/
-   // }
 
 
     private static < T extends RealType< T > & NativeType< T >> DisplaySettings computeDisplayRange(RandomAccessibleInterval< T > rai) {
@@ -268,6 +251,11 @@ public class Utils {
 //        }
 //        return nativeType;
 //    }
+
+    public static ImagePlus wrapToImagePlus(RandomAccessibleInterval randomAccessibleInterval,String name){
+        ImagePlus image = ImageJFunctions.wrap(Views.permute(randomAccessibleInterval,FileInfoConstants.Z,FileInfoConstants.C),name);
+        return image;
+    }
 
     public static String fixDirectoryFormat(String directory){
         directory = directory.trim();
