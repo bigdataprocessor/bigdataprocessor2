@@ -45,7 +45,6 @@ public class BdvMenus extends JMenu implements ActionListener { //TODO: change n
             BigDataConverter.executorService.submit(() -> {
                 SaveMenuDialog saveMenuDialog = new SaveMenuDialog(imageViewer);
                 saveMenuDialog.setVisible(true);
-                saveMenuDialog.pack();
             });
         }else if (e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.OBLIQUE_MENU_DISPLAY_TEXT)) {
             BigDataConverter.executorService.submit(() -> {

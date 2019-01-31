@@ -33,6 +33,7 @@ public class ProgressBar implements PropertyChangeListener {
             Toolkit.getDefaultToolkit().beep();
             currentInstance.progressBar.setVisible(false);
             currentInstance.save.setEnabled(true);
+            currentInstance.MESSAGE.setText(currentInstance.MESSAGE_SAVE_FINISHED);
             currentInstance.pack();
         }
     }

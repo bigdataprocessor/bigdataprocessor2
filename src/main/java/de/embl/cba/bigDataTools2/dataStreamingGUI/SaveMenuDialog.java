@@ -16,7 +16,6 @@ public class SaveMenuDialog extends JFrame implements ActionListener {
     private final JCheckBox cbConvertTo8Bit = new JCheckBox("8-bit Conversion");
     private final JCheckBox cbConvertTo16Bit = new JCheckBox("16-bit Conversion");
     private final JCheckBox cbGating = new JCheckBox("Gate");
-
     private final JTextField tfBinning = new JTextField("1,1,1", 10);
     private final JTextField tfRowsPerStrip = new JTextField("10", 3);
     private final JTextField tfNThreads = new JTextField("1", 2);
@@ -37,6 +36,9 @@ public class SaveMenuDialog extends JFrame implements ActionListener {
     protected final JButton save = new JButton(SAVE);
     private final String STOP_SAVING = "Stop Saving";
     private final JButton stopSaving = new JButton(STOP_SAVING);
+    protected final JLabel MESSAGE = new JLabel("");
+    private final String MESSAGE_SAVE_INTERRUPTED ="Saving Interrupted!";
+    protected final String MESSAGE_SAVE_FINISHED ="Saving Completed!";
     private JFileChooser fc;
     protected final JProgressBar progressBar;
     private final ImageViewer imageViewer;
@@ -112,14 +114,20 @@ public class SaveMenuDialog extends JFrame implements ActionListener {
         progressBar.setVisible(false);
         panels.get(j).add(progressBar);
         mainPanels.get(k).add(panels.get(j++));
-        menu.add("Saving", mainPanels.get(k++));
 
+        panels.add(new JPanel());
+        panels.get(j).add(MESSAGE);
+        mainPanels.get(k).add(panels.get(j++));
+
+        menu.add("Saving", mainPanels.get(k++));
         add(menu);
+        pack();
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals(SAVE)) {
+            MESSAGE.setText(null);
             SavingSettings.FileType fileType = (SavingSettings.FileType) comboFileTypeForSaving.getSelectedItem();
             fc = new JFileChooser(System.getProperty("user.dir"));
             int returnVal = fc.showSaveDialog(SaveMenuDialog.this);
@@ -172,6 +180,7 @@ public class SaveMenuDialog extends JFrame implements ActionListener {
             BigDataConverter.stopSave(); // Don't submit to thread pool. Let the main thread handle it.
             save.setEnabled(true);
             progressBar.setVisible(false);
+            MESSAGE.setText(MESSAGE_SAVE_INTERRUPTED);
             pack();
         }
     }
