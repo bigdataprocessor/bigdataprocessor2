@@ -37,7 +37,6 @@ import de.embl.cba.bigDataTools2.dataStreamingGUI.DisplaySettings;
 import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
 import de.embl.cba.bigDataTools2.logging.IJLazySwingLogger;
 import de.embl.cba.bigDataTools2.logging.Logger;
-import de.embl.cba.bigDataTools2.viewers.ImageViewer;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
@@ -252,9 +251,22 @@ public class Utils {
 //        return nativeType;
 //    }
 
-    public static ImagePlus wrapToImagePlus(RandomAccessibleInterval randomAccessibleInterval,String name){
-        ImagePlus image = ImageJFunctions.wrap(Views.permute(randomAccessibleInterval,FileInfoConstants.Z,FileInfoConstants.C),name);
-        return image;
+    public static ImagePlus wrapToCalibratedImagePlus(
+            RandomAccessibleInterval randomAccessibleInterval,
+            double[] voxelSize,
+            String unit,
+            String name )
+    {
+        ImagePlus imp = ImageJFunctions.wrap(Views.permute(randomAccessibleInterval,FileInfoConstants.Z,FileInfoConstants.C),name);
+
+        final Calibration calibration = new Calibration();
+        calibration.setUnit( unit );
+        calibration.pixelWidth = voxelSize[ 0 ];
+        calibration.pixelHeight = voxelSize[ 1 ];
+        calibration.pixelDepth = voxelSize[ 2 ];
+        imp.setCalibration( calibration );
+
+        return imp;
     }
 
     public static String fixDirectoryFormat(String directory){

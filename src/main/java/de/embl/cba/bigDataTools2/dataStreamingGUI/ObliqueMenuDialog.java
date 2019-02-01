@@ -88,7 +88,12 @@ public class ObliqueMenuDialog extends JDialog implements ActionListener {
         getShearingSettings(shearingSettings);
         shearingSettings.useObliqueAngle = true;
         RandomAccessibleInterval sheared = BigDataConverter.shearImage(originalRAI,shearingSettings);
-        imageViewer.show( sheared, imageViewer.getVoxelSize(), "sheared",true);
+        imageViewer.show(
+                sheared,
+                "Oblique View",
+                imageViewer.getVoxelSize(),
+                imageViewer.getCalibrationUnit(),
+                true);
         double[] centerCoordinates = {sheared.min(FileInfoConstants.X ) / 2.0,
                 sheared.max(FileInfoConstants.Y ) / 2.0,
                 (sheared.max(FileInfoConstants.Z ) - sheared.min(FileInfoConstants.Z )) / 2.0

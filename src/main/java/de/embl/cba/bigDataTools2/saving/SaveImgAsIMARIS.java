@@ -13,7 +13,6 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgView;
 import net.imglib2.img.cell.CellImgFactory;
-import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Util;
@@ -33,7 +32,13 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
     private final T nativeType;
     private Logger logger = new IJLazySwingLogger();
 
-    public SaveImgAsIMARIS(SavingSettings savingSettings, ImarisDataSet imarisDS, int time, AtomicInteger counter, long startTime) {
+    public SaveImgAsIMARIS(
+            SavingSettings savingSettings,
+            ImarisDataSet imarisDS,
+            int time,
+            AtomicInteger counter,
+            long startTime)
+    {
         this.nativeType = (T)Util.getTypeFromInterval(savingSettings.image);
         Img imgTemp = ImgView.wrap(savingSettings.image,new CellImgFactory<>(nativeType));
         this.image = new ImgPlus<>(imgTemp, "", FileInfoConstants.AXES_ORDER);
@@ -84,6 +89,7 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
                 logger.progress("Stopped saving thread: ", "" + this.current_t);
                 return;
             }
+
             // Load
             //   ImagePlus impChannelTime = getDataCube( c );  May be faster???
 
@@ -101,10 +107,11 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
                     this.current_t};
 
             RandomAccessibleInterval newRai = Views.interval(image, minInterval, maxInterval);
-            newRai = SaveImgHelper.convertor(newRai, this.savingSettings);
+            newRai = SaveImgHelper.convertor( newRai, this.savingSettings );
             Img<T> imgChannelTime = null;
-            imgChannelTime = ImgView.wrap(newRai, new CellImgFactory(nativeType));
+            imgChannelTime = ImgView.wrap( newRai, new CellImgFactory(nativeType) );
 
+            // TODO: remove all those binnings!
             // Bin, project and save
             //
             String[] binnings = savingSettings.bin.split(";");
@@ -119,23 +126,36 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
                 Img<T> imgBinned = imgChannelTime;
                 ImgPlus<T> imgPlusBinned = new ImgPlus<>(imgBinned, "", FileInfoConstants.AXES_ORDER);
                 int[] binningA = Utils.delimitedStringToIntegerArray(binning, ",");
-                if (binningA[0] > 1 || binningA[1] > 1 || binningA[2] > 1) {
+
+                // TODO: remove this binning!
+                if (binningA[0] > 1 || binningA[1] > 1 || binningA[2] > 1)
+                {
                     newPath = SaveImgHelper.doBinning(imgPlusBinned, binningA, newPath, null);
                 }
+
                 String sC = String.format("%1$02d", c);
                 String sT = String.format("%1$05d", current_t);
                 newPath = newPath + "--C" + sC + "--T" + sT + ".h5";
-                ImagePlus imagePlusImage = Utils.wrapToImagePlus(imgPlusBinned,"BinnedWrapped");
+                ImagePlus imagePlus =
+                        Utils.wrapToCalibratedImagePlus(
+                        imgPlusBinned,
+                        savingSettings.voxelSize,
+                        savingSettings.unit,
+                        "BinnedWrapped");
+
 
                 // Save volume
                 if (savingSettings.saveVolume) {
                     H5DataCubeWriter writer = new H5DataCubeWriter();
-                    writer.writeImarisCompatibleResolutionPyramid(imagePlusImage, imarisDataSetProperties, c, this.current_t);
+                    writer.writeImarisCompatibleResolutionPyramid(
+                            imagePlus, imarisDataSetProperties, c, this.current_t);
                 }
+
                 // Save projections
                 // TODO: save into one single file
                 if (savingSettings.saveProjection) {
-                    SaveImgAsTIFFStacks.saveAsTiffXYZMaxProjection(imagePlusImage, c, this.current_t, newPath);
+                    SaveImgAsTIFFStacks.saveAsTiffXYZMaxProjection(
+                            imagePlus, c, this.current_t, newPath);
                 }
             }
             SaveImgHelper.documentProgress(totalSlices, counter, logger, startTime);

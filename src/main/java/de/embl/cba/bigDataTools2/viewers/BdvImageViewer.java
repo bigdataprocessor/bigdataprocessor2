@@ -31,16 +31,24 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
     private String imageName;
 
     private BdvStackSource< T > bdvSS;
+    private String calibrationUnit;
 
     public BdvImageViewer()
     {
 
     }
 
-    public BdvImageViewer( RandomAccessibleInterval<T> rai, String imageName, double[] voxelSize ) {
+    // TODO: wrap RAI into a "PhysicalImg" with voxelSize and Calibration
+    public BdvImageViewer(
+            RandomAccessibleInterval<T> rai,
+            String imageName,
+            double[] voxelSize,
+            String calibrationUnit )
+    {
         this.imageName = imageName;
         this.rai = rai;
         this.voxelSize = voxelSize;
+        this.calibrationUnit = calibrationUnit;
     }
 
 
@@ -97,15 +105,21 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
     @Override
     public void show( )
     {
-        showImageInViewer( rai, voxelSize, imageName );
+        showImageInViewer( rai, imageName, voxelSize, calibrationUnit );
     }
 
     @Override
-    public void show( RandomAccessibleInterval rai, double[] voxelSize, String imageName,boolean autoContrast ){
+    public void show(
+            RandomAccessibleInterval rai,
+            String imageName,
+            double[] voxelSize,
+            String calibrationUnit,
+            boolean autoContrast )
+    {
         if ( this.bdvSS != null ){
             removeAllSourcesFromBdv();
         }
-        showImageInViewer( rai, voxelSize ,imageName  );
+        showImageInViewer( rai, imageName, voxelSize, calibrationUnit );
         if(autoContrast) {
             doAutoContrastPerChannel();
         }
@@ -184,6 +198,13 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
             //Hence current channel is always at position 0 of the bdvSS.
         }
     }
+
+    @Override
+    public String getCalibrationUnit()
+    {
+        return calibrationUnit;
+    }
+
     public void replicateViewerContrast(ImageViewer newImageView) {
         int nChannels = (int) this.getRai().dimension( C );
         for (int channel = 0; channel < nChannels; ++channel) {
@@ -215,7 +236,11 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
         return bdvSS;
     }
 
-    private void showImageInViewer( RandomAccessibleInterval rai, double[] voxelSize, String imageName )
+    private void showImageInViewer(
+            RandomAccessibleInterval rai,
+            String imageName,
+            double[] voxelSize,
+            String calibrationUnit )
     {
         final AffineTransform3D scaling = new AffineTransform3D();
 
@@ -231,6 +256,7 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
                         .addTo( bdvSS ).sourceTransform( scaling ) );
 
         this.imageName = imageName;
+        this.calibrationUnit = calibrationUnit;
         this.rai = rai;
         this.voxelSize = voxelSize;
     }

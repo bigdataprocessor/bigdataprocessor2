@@ -9,7 +9,6 @@ import de.embl.cba.bigDataTools2.logging.Logger;
 import de.embl.cba.bigDataTools2.utils.MonitorThreadPoolStatus;
 import de.embl.cba.bigDataTools2.utils.Utils;
 import ij.ImagePlus;
-import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
@@ -118,7 +117,9 @@ public class SaveCentral {
     }
 
 
-    private static void saveIMARISForEachChannelAndTimePoint(SavingSettings savingSettings, ExecutorService es) {
+    private static void saveIMARISForEachChannelAndTimePoint(
+            SavingSettings savingSettings,
+            ExecutorService es) {
         List<Future> futures = new ArrayList<>();
         AtomicInteger counter = new AtomicInteger(0);
         ImarisDataSet imarisDataSetProperties = getImarisDataSet(savingSettings);
@@ -133,7 +134,12 @@ public class SaveCentral {
             } else if (imageType instanceof UnsignedShortType) {
                 futures.add(
                         es.submit(
-                                new SaveImgAsIMARIS<UnsignedShortType>(savingSettings, imarisDataSetProperties, t, counter, startTime)
+                                new SaveImgAsIMARIS<UnsignedShortType>(
+                                        savingSettings,
+                                        imarisDataSetProperties,
+                                        t,
+                                        counter,
+                                        startTime)
                         ));
             } else if (imageType instanceof FloatType) {
                 futures.add(
@@ -148,11 +154,18 @@ public class SaveCentral {
     }
 
     private static ImarisDataSet getImarisDataSet( SavingSettings savingSettings ) {
-        ImagePlus image = Utils.wrapToImagePlus(savingSettings.image,"wrapped");
+
+        ImagePlus image = Utils.wrapToCalibratedImagePlus(
+                savingSettings.image,
+                savingSettings.voxelSize,
+                savingSettings.unit,
+                "wrapped");
+
         String[] binnings = savingSettings.bin.split(";");
         int[] binning = Utils.delimitedStringToIntegerArray(binnings[0], ",");
 
-        ImarisDataSet imarisDataSet = new ImarisDataSet(image,
+        ImarisDataSet imarisDataSet = new ImarisDataSet(
+                image,
                 binning,
                 savingSettings.parentDirectory,
                 savingSettings.fileBaseNameIMARIS);
@@ -162,7 +175,9 @@ public class SaveCentral {
         if (SaveCentral.interruptSavingThreads) {
             return null;
         }
-        ImarisWriter.writeHeaderFile(imarisDataSet,
+
+        ImarisWriter.writeHeaderFile(
+                imarisDataSet,
                 savingSettings.parentDirectory,
                 savingSettings.fileBaseNameIMARIS + ".ims"
         );
@@ -175,7 +190,9 @@ public class SaveCentral {
         }
 
         // TODO: remove below
-        ImarisWriter.writeHeaderFile(imarisDataSet, savingSettings.parentDirectory, savingSettings.fileBaseNameIMARIS + ".h5");
+//        ImarisWriter.writeHeaderFile(
+//                imarisDataSet, savingSettings.parentDirectory,
+//                savingSettings.fileBaseNameIMARIS + ".h5");
 
         logger.info("Image sizes at different resolutions:");
         Utils.logArrayList( imarisDataSet.getDimensions());

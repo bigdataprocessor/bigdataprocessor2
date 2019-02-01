@@ -77,7 +77,12 @@ public class BigDataConverter {
 
         CachedCellImg cachedCellImg = CachedCellImageCreator.create(this.fileInfoSource, this.executorService);
         this.imageViewer = imageViewer;
-        imageViewer.show( cachedCellImg, fileInfoSource.voxelSize,  FileInfoConstants.IMAGE_NAME, autoContrast );
+        imageViewer.show(
+        		cachedCellImg,
+				FileInfoConstants.IMAGE_NAME,
+				fileInfoSource.voxelSize,
+				fileInfoSource.unit,
+				autoContrast );
         imageViewer.addMenus(new BdvMenus());
     }
 
@@ -102,7 +107,10 @@ public class BigDataConverter {
     }
 
 
-    public static void saveImage( SavingSettings savingSettings, ImageViewer imageViewer ) { //TODO: No need to get imageVieweer.Use only SavinfgSetting
+    public static void saveImage(
+    		SavingSettings savingSettings,
+			ImageViewer imageViewer )
+		{ //TODO: No need to get imageVieweer.Use only SavinfgSetting
         int nIOThread = Math.max(1, Math.min(savingSettings.nThreads, MAX_THREAD_LIMIT));
         ExecutorService saveExecutorService =  Executors.newFixedThreadPool(nIOThread);
         String streamName = imageViewer.getImageName();
@@ -111,6 +119,8 @@ public class BigDataConverter {
             rai = Views.zeroMin(rai);
         }
         savingSettings.image = rai;
+        savingSettings.voxelSize = imageViewer.getVoxelSize();
+        savingSettings.unit = imageViewer.getCalibrationUnit();
         SaveCentral.interruptSavingThreads = false;
         SaveCentral.goSave(savingSettings, saveExecutorService);
     }

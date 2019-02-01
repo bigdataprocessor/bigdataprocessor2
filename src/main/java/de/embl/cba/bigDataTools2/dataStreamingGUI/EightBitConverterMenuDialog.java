@@ -69,7 +69,12 @@ public class EightBitConverterMenuDialog extends JDialog implements ActionListen
         DisplaySettings displaySettings= new DisplaySettings(min,max);
         RandomAccessibleInterval<UnsignedByteType> newRai = BigDataConverter.unsignedByteTypeConverter(imageViewer.getRai(),displaySettings);
         ImageViewer newImageViewer = imageViewer.newImageViewer();
-        newImageViewer.show( newRai, imageViewer.getVoxelSize(), FileInfoConstants.UNSIGNEDBYTE_STREAM_NAME,true);
+        newImageViewer.show(
+                newRai,
+                FileInfoConstants.UNSIGNEDBYTE_STREAM_NAME,
+                imageViewer.getVoxelSize(),
+                imageViewer.getCalibrationUnit(),
+                true);
         BdvMenus menus = new BdvMenus();
         newImageViewer.addMenus(menus);
         dispose();

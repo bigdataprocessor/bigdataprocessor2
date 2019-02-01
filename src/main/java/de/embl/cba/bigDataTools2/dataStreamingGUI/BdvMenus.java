@@ -57,7 +57,12 @@ public class BdvMenus extends JMenu implements ActionListener { //TODO: change n
                 FinalInterval interval = imageViewer.get5DIntervalFromUser();
                 RandomAccessibleInterval croppedRAI = BigDataConverter.crop(rai,interval);
                 ImageViewer newImageViewer = imageViewer.newImageViewer();
-                newImageViewer.show( croppedRAI, imageViewer.getVoxelSize(), FileInfoConstants.CROPPED_STREAM_NAME,false );
+                newImageViewer.show(
+                        croppedRAI,
+                        FileInfoConstants.CROPPED_STREAM_NAME,
+                        imageViewer.getVoxelSize(),
+                        imageViewer.getCalibrationUnit(),
+                        false );
                 BdvMenus menus = new BdvMenus();
                 newImageViewer.addMenus( menus );
                 imageViewer.replicateViewerContrast( newImageViewer );

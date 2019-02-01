@@ -23,7 +23,8 @@ public class TestShearTransform {
         ImageViewer imageViewer = new BdvImageViewer<UnsignedShortType>(
                 cachedCellImg,
                 "input",
-                new double[]{1.0, 1.0, 1.0});
+                new double[]{1.0, 1.0, 1.0},
+                "pixel");
         imageViewer.show();
         imageViewer.setDisplayRange( 0, 800, 0 );
 
@@ -33,7 +34,7 @@ public class TestShearTransform {
          * (replacing the input image);
          */
         RandomAccessibleInterval sheared = getShearedImage( cachedCellImg, imageViewer );
-        imageViewer.show( sheared, imageViewer.getVoxelSize(), "sheared",true );
+        imageViewer.show( sheared, "sheared", imageViewer.getVoxelSize(), imageViewer.getCalibrationUnit(), true );
         //imageViewer.setDisplayRange( 0, 800, 0 );
 
 

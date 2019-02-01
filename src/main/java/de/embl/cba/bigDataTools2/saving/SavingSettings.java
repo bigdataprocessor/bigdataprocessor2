@@ -10,8 +10,9 @@ public class SavingSettings {
     public static final String LZW = "LZW";
     public static final String NONE = "None";
 
-
     public RandomAccessibleInterval image;
+    public double[] voxelSize;
+    public String unit;
     public String bin;
     public boolean saveVolume;
     public boolean saveProjection;
@@ -55,6 +56,8 @@ public class SavingSettings {
     public static SavingSettings getDefaults() {
         SavingSettings savingSettings = new SavingSettings();
         savingSettings.bin = "1,1,1";
+        savingSettings.voxelSize = new double[]{1,1,1};
+        savingSettings.unit = "pixel";
         savingSettings.saveVolume = true;
         savingSettings.fileType = FileType.TIFF_as_PLANES;
         savingSettings.filePath = "src/test/resources/file";

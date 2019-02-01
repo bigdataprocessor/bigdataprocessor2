@@ -14,7 +14,6 @@ import java.util.ArrayList;
 
 public class ImarisDataSet {
 
-
     private ArrayList < long[] > dimensions;
     private ArrayList < int[] > relativeBinnings;
     private ArrayList < long[] > chunks;
@@ -363,11 +362,9 @@ public class ImarisDataSet {
             conversionToMicrometer = 1.0 / 1000.0;
         }
 
-
         max[ 0 ] = imp.getWidth() * calibration.pixelWidth * conversionToMicrometer;
         max[ 1 ] = imp.getHeight() * calibration.pixelHeight * conversionToMicrometer;
         max[ 2 ] = imp.getNSlices() * calibration.pixelDepth * conversionToMicrometer;
-
 
         interval = new FinalRealInterval( min, max );
     }

@@ -56,7 +56,12 @@ public class BigDataTracker {
         if(!this.objectTracker.interruptTrackingThreads) {
 
             ImageViewer newTrackedView =  imageViewer.newImageViewer();
-            newTrackedView.show( trackingSettings.imageRAI, imageViewer.getVoxelSize(), FileInfoConstants.TRACKED_STREAM_NAME,false);//No need to add Menus.
+            newTrackedView.show(
+                    trackingSettings.imageRAI,
+                    FileInfoConstants.TRACKED_IMAGE_NAME,
+                    imageViewer.getVoxelSize(),
+                    imageViewer.getCalibrationUnit(),
+                    false);
             imageViewer.replicateViewerContrast(newTrackedView);
 
             if(newTrackedView instanceof BdvImageViewer) {
@@ -68,7 +73,9 @@ public class BigDataTracker {
         }
     }
 
-    public< T extends RealType< T > & NativeType< T >> void showTrackedObjects(ImageViewer imageViewer){
+    public< T extends RealType< T > & NativeType< T >> void showTrackedObjects(
+            ImageViewer imageViewer)
+    {
         if(trackResults!=null) {
             List<RandomAccessibleInterval<T>> tracks = new ArrayList<>();
             int nChannels = (int) trackingSettings.imageRAI.dimension(FileInfoConstants.C );
@@ -91,7 +98,12 @@ public class BigDataTracker {
             }
             RandomAccessibleInterval stackedRAI = Views.stack(tracks);
             ImageViewer newTrackedView = imageViewer.newImageViewer();
-            newTrackedView.show( stackedRAI, trackingSettings.voxelSize, FileInfoConstants.TRACKED_STREAM_NAME,false);
+            newTrackedView.show(
+                    stackedRAI,
+                    FileInfoConstants.TRACKED_IMAGE_NAME,
+                    imageViewer.getVoxelSize(),
+                    imageViewer.getCalibrationUnit(),
+                    false);
             newTrackedView.addMenus(new BdvMenus());
             for (int channel=0; channel<nChannels; ++channel){ // TODO: change to method replicateViewerContrast --ashis
                 DisplaySettings setting = imageViewer.getDisplaySettings(channel);

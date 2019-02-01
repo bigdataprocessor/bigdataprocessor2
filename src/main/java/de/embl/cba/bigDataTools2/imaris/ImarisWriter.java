@@ -14,8 +14,6 @@ import java.util.ArrayList;
 
 public class ImarisWriter {
 
-    // TODO: make non abstract with Constructor
-
     final ImagePlus imp;
     final String directory;
     final String name;
@@ -23,7 +21,7 @@ public class ImarisWriter {
     ArrayList< String > channelNames;
     LogService logService;
 
-    public ImarisWriter(ImagePlus imp, String directory )
+    public ImarisWriter( ImagePlus imp, String directory )
     {
         this.imp = imp;
         this.name = imp.getTitle();
@@ -48,7 +46,7 @@ public class ImarisWriter {
 
     public void write()
     {
-        ImarisDataSet imarisDataSet = getImarisDataSet();
+        ImarisDataSet imarisDataSet = createImarisDataSet();
 
         ImarisWriter.writeHeaderFile( imarisDataSet, directory, name + "-header" + ".ims" );
 
@@ -71,7 +69,7 @@ public class ImarisWriter {
         log( "...done!" );
     }
 
-    private ImarisDataSet getImarisDataSet()
+    private ImarisDataSet createImarisDataSet()
     {
         ImarisDataSet imarisDataSet = new ImarisDataSet( imp, binning, directory, name );
 

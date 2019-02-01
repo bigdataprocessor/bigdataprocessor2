@@ -24,7 +24,8 @@ public class TestTiffStackSaving
         ImageViewer imageViewer = new BdvImageViewer<UnsignedShortType>(
                 cachedCellImg,
                 "input",
-                new double[]{1.0, 1.0, 1.0});
+                new double[]{1.0, 1.0, 1.0},
+                "pixel");
         imageViewer.show();
         imageViewer.setDisplayRange( 0, 800, 0 );
 
