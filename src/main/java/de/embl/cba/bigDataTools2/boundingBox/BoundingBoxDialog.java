@@ -54,14 +54,26 @@ public class BoundingBoxDialog
         }
 
         long[] size = new long[ MAX_ALLOWED_IMAGE_DIMS ];
+
         rai.dimensions(size);
-        int[] center = new int[]{(int) size[ FileInfoConstants.X ] / 2 + min[ X ], (int) size[ FileInfoConstants.Y ] / 2 + min[ Y ], (int) size[ FileInfoConstants.Z ] / 2 + min[ Z ]}; // Center of the image stack.
-        int[] BBsize = new int[]{(int) size[ FileInfoConstants.X ] / 4, (int) size[ FileInfoConstants.X ] / 4, (int) size[ FileInfoConstants.Z ] / 4}; //New BB 1/4th the size of the image.
-        if (BBsize[ Z ] < 1) { // Check if Z goes below 1
-            BBsize[ Z ] = 1;
+
+        int[] center = new int[ 3 ];
+        int[] width = new int[ 3 ];
+        int[] initialBBSize = new int[ 3 ];
+        for ( int d = 0; d < 3; d++ )
+        {
+            width[ d ] = ( max[ d ] - min[ d ] );
+            center[ d ] = (int) ( ( min[ d ] + width[ d ] / 2.0 ) );
+            initialBBSize[ d ] = width[ d ] / 4;
         }
-        int[] minBB = new int[]{center[ X ] - BBsize[ X ] / 2, center[ Y ] - BBsize[ Y ] / 2, center[ Z ] - BBsize[ Z ] / 2}; //Positioning the new BB at the center of the image.
-        int[] maxBB = new int[]{center[ X ] + BBsize[ X ] / 2, center[ Y ] + BBsize[ Y ] / 2, center[ Z ] + BBsize[ Z ] / 2}; //Positioning the new BB at the center of the image.
+
+        if (initialBBSize[ Z ] < 1) { // Check if Z goes below 1
+            initialBBSize[ Z ] = 1;
+        }
+
+        int[] minBB = new int[]{ center[ X ] - initialBBSize[ X ] / 2, center[ Y ] - initialBBSize[ Y ] / 2, center[ Z ] - initialBBSize[ Z ] / 2}; //Positioning the new BB at the center of the image.
+        int[] maxBB = new int[]{ center[ X ] + initialBBSize[ X ] / 2, center[ Y ] + initialBBSize[ Y ] / 2, center[ Z ] + initialBBSize[ Z ] / 2}; //Positioning the new BB at the center of the image.
+
         final Interval initialInterval, rangeInterval;
         final AtomicBoolean lock = new AtomicBoolean(false);
         final int boxSetupId = 8888; // some non-existing setup id TODO: make it static and increment for multiple use--ashis

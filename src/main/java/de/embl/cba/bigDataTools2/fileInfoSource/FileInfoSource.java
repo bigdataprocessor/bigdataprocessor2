@@ -75,6 +75,7 @@ public class FileInfoSource {
         dimensions[ Z ] = nZ;
         dimensions[ C ] = nC;
         dimensions[ T ] = nT;
+        if ( unit == null || unit == "" ) unit = "pixel";
 
         if (isAutoContrast()){
             //setMaxMinPixels();

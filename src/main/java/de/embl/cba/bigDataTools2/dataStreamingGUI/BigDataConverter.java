@@ -84,10 +84,10 @@ public class BigDataConverter {
     private boolean ensureCalibrationUI()
     {
         final GenericDialog genericDialog = new GenericDialog( "Calibration" );
-        genericDialog.addStringField( "Unit", fileInfoSource.unit, 20 );
-        genericDialog.addNumericField( "Spacing X", fileInfoSource.voxelSize[ 0 ], 5 );
-        genericDialog.addNumericField( "Spacing Y", fileInfoSource.voxelSize[ 1 ], 5 );
-        genericDialog.addNumericField( "Spacing Z", fileInfoSource.voxelSize[ 2 ], 5 );
+        genericDialog.addStringField( "Unit", fileInfoSource.unit, 12 );
+        genericDialog.addNumericField( "Spacing X", fileInfoSource.voxelSize[ 0 ], 3 );
+        genericDialog.addNumericField( "Spacing Y", fileInfoSource.voxelSize[ 1 ], 3 );
+        genericDialog.addNumericField( "Spacing Z", fileInfoSource.voxelSize[ 2 ], 3 );
         genericDialog.showDialog();
         if ( genericDialog.wasCanceled() ) return false;
         fileInfoSource.unit = genericDialog.getNextString();
