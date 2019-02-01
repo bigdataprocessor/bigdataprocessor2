@@ -76,7 +76,7 @@ public class BigDataConverter {
     }
 
     public static RandomAccessibleInterval crop(RandomAccessibleInterval rai,FinalInterval interval){
-        return Views.interval(rai, interval);
+        return Views.zeroMin(Views.interval(rai, interval));
     }
 
 
