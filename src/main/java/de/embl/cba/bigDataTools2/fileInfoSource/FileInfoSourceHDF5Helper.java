@@ -39,6 +39,7 @@ public class FileInfoSourceHDF5Helper {
 
         // There is no standard way of retrieving voxelSizes from h5 data....
         imageDataInfo.voxelSize = new double[]{1,1,1};
+        imageDataInfo.unit = "micrometer";
 
     }
 

@@ -89,7 +89,8 @@ public class BigDataConverterCommand<T extends RealType<T> & NativeType<T>> impl
 
     private static final BigDataConverter BIG_DATA_CONVERTER = new BigDataConverter();
 
-    public void run() {
+    public void run()
+    {
         BIG_DATA_CONVERTER.openFromDirectory(
                 directory.toString(),
                 namingScheme,

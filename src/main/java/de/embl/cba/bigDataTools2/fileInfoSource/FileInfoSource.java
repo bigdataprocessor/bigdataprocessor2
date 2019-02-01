@@ -27,6 +27,7 @@ public class FileInfoSource {
     public int nX;
     public int nY;
     public int nZ;
+    public String unit;
     public double[] voxelSize;
     public String fileType;
     public String h5DataSetName;
@@ -60,14 +61,15 @@ public class FileInfoSource {
         this.namingPattern = namingScheme;
         this.isAutoContrast = isAutoContrast;
         if ( namingScheme.contains("<Z") ){// TODO: change below logic somehow (maybe via GUI?)
-            FileInfoSourceHelper.setFileSourceInfos(this,directory,namingScheme);
+            FileInfoSourceHelper.setFileSourceInfos(this, directory, namingScheme );
         }
         else{
             this.h5DataSetName = h5DataSetName;
-            FileInfoSourceHelper.setFileSourceInfos(this,directory,namingScheme,filterPattern);
+            FileInfoSourceHelper.setFileSourceInfos(
+                    this, directory, namingScheme, filterPattern );
         }
-        this.infos = new SerializableFileInfo[nC][nT][nZ];
-        this.dimensions = new long[ 5 ];
+        infos = new SerializableFileInfo[nC][nT][nZ];
+        dimensions = new long[ 5 ];
         dimensions[ X ] = nX;
         dimensions[ Y ] = nY;
         dimensions[ Z ] = nZ;

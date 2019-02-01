@@ -166,6 +166,8 @@ public class FileInfoSourceHelper {
                 info[0].pixelHeight,
                 info[0].pixelDepth };
 
+        infoSource.unit = info[0].unit;
+
     }
 
 

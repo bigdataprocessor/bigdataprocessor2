@@ -7,6 +7,7 @@ import de.embl.cba.bigDataTools2.saving.SaveCentral;
 import de.embl.cba.bigDataTools2.saving.SavingSettings;
 import de.embl.cba.bigDataTools2.utils.Utils;
 import de.embl.cba.bigDataTools2.viewers.ImageViewer;
+import ij.gui.GenericDialog;
 import net.imglib2.*;
 import net.imglib2.cache.img.CachedCellImg;
 import net.imglib2.converter.Converters;
@@ -66,13 +67,34 @@ public class BigDataConverter {
             String filterPattern,
             String h5DataSetName,
             boolean autoContrast,
-            ImageViewer imageViewer ) {
+            ImageViewer imageViewer )
+    {
         directory = Utils.fixDirectoryFormat(directory);
-        this.fileInfoSource = new FileInfoSource(directory, namingScheme, filterPattern, h5DataSetName);
+
+        this.fileInfoSource = new FileInfoSource( directory, namingScheme, filterPattern, h5DataSetName );
+
+        if ( ! ensureCalibrationUI() ) return;
+
         CachedCellImg cachedCellImg = CachedCellImageCreator.create(this.fileInfoSource, this.executorService);
         this.imageViewer = imageViewer;
         imageViewer.show( cachedCellImg, fileInfoSource.voxelSize,  FileInfoConstants.IMAGE_NAME, autoContrast );
         imageViewer.addMenus(new BdvMenus());
+    }
+
+    private boolean ensureCalibrationUI()
+    {
+        final GenericDialog genericDialog = new GenericDialog( "Calibration" );
+        genericDialog.addStringField( "Unit", fileInfoSource.unit, 20 );
+        genericDialog.addNumericField( "Spacing X", fileInfoSource.voxelSize[ 0 ], 5 );
+        genericDialog.addNumericField( "Spacing Y", fileInfoSource.voxelSize[ 1 ], 5 );
+        genericDialog.addNumericField( "Spacing Z", fileInfoSource.voxelSize[ 2 ], 5 );
+        genericDialog.showDialog();
+        if ( genericDialog.wasCanceled() ) return false;
+        fileInfoSource.unit = genericDialog.getNextString();
+        fileInfoSource.voxelSize[ 0 ] = genericDialog.getNextNumber();
+        fileInfoSource.voxelSize[ 1 ] = genericDialog.getNextNumber();
+        fileInfoSource.voxelSize[ 2 ] = genericDialog.getNextNumber();
+        return true;
     }
 
     public static RandomAccessibleInterval crop(RandomAccessibleInterval rai,FinalInterval interval){

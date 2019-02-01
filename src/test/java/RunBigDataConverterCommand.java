@@ -1,7 +1,7 @@
 import de.embl.cba.bigDataTools2.dataStreamingGUI.BigDataConverterCommand;
 import net.imagej.ImageJ;
 
-public class TestLazyLoadingCommand
+public class RunBigDataConverterCommand
 {
 	public static void main ( String... args )
 	{
