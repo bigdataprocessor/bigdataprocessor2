@@ -9,7 +9,7 @@
 	</parent>
 
 	<artifactId>fiji-plugin-BigDataTools2</artifactId>
-	<version>0.1.02</version>
+	<version>0.1.03</version>
 
 	<name>Fiji Plugin BigDataTools2</name>
 	<description>TODO</description>
@@ -82,7 +82,7 @@
 		<package-name>de.embl.cba.bigDataTools2</package-name>
 		<license.licenseName>bsd_2</license.licenseName>
 		<license.copyrightOwners>EMBL</license.copyrightOwners>
-		<imagej.app.directory>C:/programs/fiji-win64/Fiji.app/</imagej.app.directory>
+		<scijava.app.directory>/Applications/Fiji.app/</scijava.app.directory>
 		<enforcer.skip>true</enforcer.skip>
 	</properties>
 

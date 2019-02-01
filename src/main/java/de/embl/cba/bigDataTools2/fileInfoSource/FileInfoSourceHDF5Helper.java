@@ -13,7 +13,10 @@ import java.util.stream.Collectors;
 public class FileInfoSourceHDF5Helper {
 
 
-    public static void setImageDataInfoFromH5(FileInfoSource imageDataInfo, String directory, String fileName) {
+    public static void setImageDataInfoFromH5(
+            FileInfoSource imageDataInfo,
+            String directory,
+            String fileName) {
 
         IHDF5Reader reader = HDF5Factory.openForReading(directory + "/" + fileName);
         StringBuilder hdf5DataSetSB = new StringBuilder(imageDataInfo.h5DataSetName);
@@ -33,6 +36,10 @@ public class FileInfoSourceHDF5Helper {
             imageDataInfo.nX = (int) dsInfo.getDimensions()[1];
         }
         imageDataInfo.bitDepth = assignHDF5TypeToImagePlusBitdepth(dsInfo);
+
+        // There is no standard way of retrieving voxelSizes from h5 data....
+        imageDataInfo.voxelSize = new double[]{1,1,1};
+
     }
 
     private static int assignHDF5TypeToImagePlusBitdepth(HDF5DataSetInformation dsInfo) {

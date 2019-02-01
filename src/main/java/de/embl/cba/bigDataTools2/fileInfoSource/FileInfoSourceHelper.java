@@ -131,7 +131,11 @@ public class FileInfoSourceHelper {
         return isObtainedImageDataInfo;
     }
 
-    public static void setImageDataInfoFromTiff(FileInfoSource infoSource,String directory,String fileName){
+    public static void setImageDataInfoFromTiff(
+            FileInfoSource infoSource,
+            String directory,
+            String fileName)
+    {
         SerializableFileInfo[] info;
         try
         {
@@ -163,7 +167,13 @@ public class FileInfoSourceHelper {
                 info[0].pixelDepth };
 
     }
-    public static boolean setFileSourceInfos(FileInfoSource infoSource,String directory,String namingScheme,String filterPattern) { //previously, setAllInfosByParsingFilesAndFolders
+
+
+    public static boolean setFileSourceInfos(
+            FileInfoSource infoSource,
+            String directory,
+            String namingScheme,
+            String filterPattern) { //previously, setAllInfosByParsingFilesAndFolders
 
         String[][] fileLists;
         int t = 0, z = 0, c = 0;
@@ -338,9 +348,12 @@ public class FileInfoSourceHelper {
                     infoSource.fileType = Utils.FileType.TIFF_STACKS.toString();
                 }
             }
-            else if (fileLists[0][0].endsWith(".h5"))
+            else if ( fileLists[0][0].endsWith(".h5") )
             {
-                FileInfoSourceHDF5Helper.setImageDataInfoFromH5(infoSource, directory + infoSource.channelFolders[0], fileLists[0][0]);
+                FileInfoSourceHDF5Helper.setImageDataInfoFromH5(
+                        infoSource,
+                        directory + infoSource.channelFolders[0],
+                        fileLists[0][0]);
                 infoSource.fileType = Utils.FileType.HDF5.toString();
             }
             else
