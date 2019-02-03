@@ -158,7 +158,9 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
                             imagePlus, c, this.current_t, newPath);
                 }
             }
-            SaveImgHelper.documentProgress(totalSlices, counter, logger, startTime);
+            if (!SaveCentral.interruptSavingThreads) {
+                SaveImgHelper.documentProgress(totalSlices, counter, logger, startTime);
+            }
         }
     }
 

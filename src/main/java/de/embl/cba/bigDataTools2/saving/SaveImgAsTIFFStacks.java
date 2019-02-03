@@ -141,7 +141,9 @@ public class SaveImgAsTIFFStacks implements Runnable {
                 }
 
             }
-            SaveImgHelper.documentProgress(totalCubes, counter, logger, startTime);
+            if (!SaveCentral.interruptSavingThreads) {
+                SaveImgHelper.documentProgress(totalCubes, counter, logger, startTime);
+            }
         }
     }
 
@@ -188,6 +190,12 @@ public class SaveImgAsTIFFStacks implements Runnable {
                 rowsPerStripArray[0] = rowsPerStrip;
 
                 for (int z = 0; z < imp.getNSlices(); z++) {
+                    if (SaveCentral.interruptSavingThreads) {
+                        logger.progress("Stopped saving thread: ", "" + t);
+                        savingSettings.saveProjection = false;
+                        return;
+                    }
+
                     IFD ifd = new IFD();
                     ifd.put(IFD.ROWS_PER_STRIP, rowsPerStripArray);
                     //tiffWriter.saveBytes(z, Bytes.fromShorts((short[])image.getStack().getProcessor(z+1).getPixels(), false), ifd);
@@ -203,8 +211,12 @@ public class SaveImgAsTIFFStacks implements Runnable {
             } catch (Exception e) {
                 logger.error(e.toString());
             }
-        } else  // no compression: use ImageJ's FileSaver, as it is faster than BioFormats
-        {
+        } else{  // no compression: use ImageJ's FileSaver, as it is faster than BioFormats
+            if (SaveCentral.interruptSavingThreads) {
+                savingSettings.saveProjection = false;
+                logger.progress("Stopped saving thread: ", "" + t);
+                return;
+            }
             FileSaver fileSaver = new FileSaver(imp);
             String sC = String.format("%1$02d", c);
             String sT = String.format("%1$05d", t);
