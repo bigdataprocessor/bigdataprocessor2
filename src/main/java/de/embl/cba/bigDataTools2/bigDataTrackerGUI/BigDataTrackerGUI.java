@@ -83,8 +83,8 @@ public class BigDataTrackerGUI extends JDialog implements ActionListener, FocusL
             imageFilters[i] = Utils.ImageFilterTypes.values()[i].toString();
         }
         //comboChoices[0] = imageFilters;
-        comboChoices[0] = new String[]{FileInfoConstants.CENTER_OF_MASS};
-                //FileInfoConstants.CROSS_CORRELATION};
+        comboChoices[0] = new String[]{FileInfoConstants.CENTER_OF_MASS,
+                FileInfoConstants.CROSS_CORRELATION};
 
         trackingSettings.trackingMethod = FileInfoConstants.CENTER_OF_MASS;
         trackingSettings.objectSize = new Point3D( 200, 200, 30);
