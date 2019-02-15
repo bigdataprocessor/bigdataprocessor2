@@ -1,8 +1,8 @@
 package de.embl.cba.bigDataTools2.saving;
 
 import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
-import de.embl.cba.bigDataTools2.imaris.H5DataCubeWriter;
-import de.embl.cba.bigDataTools2.imaris.ImarisDataSet;
+import de.embl.cba.imaris.H5DataCubeWriter;
+import de.embl.cba.imaris.ImarisDataSet;
 import de.embl.cba.bigDataTools2.logging.IJLazySwingLogger;
 import de.embl.cba.bigDataTools2.logging.Logger;
 import de.embl.cba.bigDataTools2.utils.Utils;

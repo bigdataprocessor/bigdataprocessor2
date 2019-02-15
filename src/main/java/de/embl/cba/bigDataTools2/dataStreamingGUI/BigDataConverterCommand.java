@@ -1,7 +1,7 @@
 package de.embl.cba.bigDataTools2.dataStreamingGUI;
 
 import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
-import de.embl.cba.bigDataTools2.imaris.ImarisUtils;
+import de.embl.cba.imaris.ImarisUtils;
 import de.embl.cba.bigDataTools2.viewers.ViewerUtils;
 import net.imagej.DatasetService;
 import net.imagej.ops.OpService;

@@ -1,9 +1,9 @@
 package de.embl.cba.bigDataTools2.saving;
 
 import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
-import de.embl.cba.bigDataTools2.imaris.ImarisDataSet;
-import de.embl.cba.bigDataTools2.imaris.ImarisUtils;
-import de.embl.cba.bigDataTools2.imaris.ImarisWriter;
+import de.embl.cba.imaris.ImarisDataSet;
+import de.embl.cba.imaris.ImarisUtils;
+import de.embl.cba.imaris.ImarisWriter;
 import de.embl.cba.bigDataTools2.logging.IJLazySwingLogger;
 import de.embl.cba.bigDataTools2.logging.Logger;
 import de.embl.cba.bigDataTools2.utils.MonitorThreadPoolStatus;
@@ -170,7 +170,7 @@ public class SaveCentral {
                 savingSettings.parentDirectory,
                 savingSettings.fileBaseNameIMARIS);
 
-        imarisDataSet.setLogger( logger );
+        imarisDataSet.setLogger( new de.embl.cba.logging.IJLazySwingLogger() );
 
         if (SaveCentral.interruptSavingThreads) {
             return null;

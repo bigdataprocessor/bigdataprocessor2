@@ -1,6 +1,6 @@
 package de.embl.cba.bigDataTools2.fileInfoSource;
 
-import de.embl.cba.bigDataTools2.imaris.ImarisUtils;
+import de.embl.cba.imaris.ImarisUtils;
 import net.imagej.axis.Axes;
 import net.imagej.axis.AxisType;
 
@@ -46,7 +46,7 @@ public class FileInfoConstants {
 
     public static final String[] POSSIBLE_HDF5_DATASETNAMES = new String[] {"None",
             "Data","Data111",
-            ImarisUtils.RESOLUTION_LEVEL +"0/Data", //TODO . include IMARIS --ashis
+            ImarisUtils.RESOLUTION_LEVEL +"0/Data",
             ImarisUtils.RESOLUTION_LEVEL +"1/Data",
             ImarisUtils.RESOLUTION_LEVEL +"2/Data",
             ImarisUtils.RESOLUTION_LEVEL +"3/Data",
