@@ -9,8 +9,10 @@
 
 package de.embl.cba.bigDataTools2.boundingBox;
 
-import bdv.tools.boundingbox.BoundingBoxOverlay;
-import bdv.tools.boundingbox.BoundingBoxOverlay.BoundingBoxOverlaySource;
+//import bdv.tools.boundingbox.BoundingBoxOverlay;
+import bdv.tools.boundingbox.TransformedBox;
+import bdv.tools.boundingbox.TransformedBoxOverlay;
+//import bdv.tools.boundingbox.BoundingBoxOverlay.BoundingBoxOverlaySource;
 import bdv.tools.boundingbox.BoxRealRandomAccessible;
 import bdv.tools.brightness.RealARGBColorConverterSetup;
 import bdv.tools.brightness.SetupAssignments;
@@ -44,7 +46,7 @@ public class CustomBoundingBoxDialog extends JFrame {
     protected final CustomBoxSelectionPanel boxSelectionPanel;
     protected final SourceAndConverter<UnsignedShortType> boxSourceAndConverter;
     protected final RealARGBColorConverterSetup boxConverterSetup;
-    protected final BoundingBoxOverlay boxOverlay;
+    protected final TransformedBoxOverlay boxOverlay;
     private boolean contentCreated = false;
 
     public CustomBoundingBoxDialog(
@@ -109,9 +111,9 @@ public class CustomBoundingBoxDialog extends JFrame {
         boxSourceAndConverter = new SourceAndConverter<>(ts, converter);
 
         // create an Overlay to show 3D wireframe box
-        boxOverlay = new BoundingBoxOverlay(new BoundingBoxOverlaySource() {
+        boxOverlay = new TransformedBoxOverlay(new TransformedBox() {
             @Override
-            public void getIntervalTransform(final AffineTransform3D transform) {
+            public void getTransform(final AffineTransform3D transform) {
                 ts.getSourceTransform(0, 0, transform);
             }
 
