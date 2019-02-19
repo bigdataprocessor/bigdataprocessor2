@@ -37,7 +37,7 @@ public class SaveMenuDialog extends JFrame implements ActionListener {
     private final String STOP_SAVING = "Stop Saving";
     private final JButton stopSaving = new JButton(STOP_SAVING);
     protected final JLabel MESSAGE = new JLabel("");
-    private final String MESSAGE_SAVE_INTERRUPTED ="Saving Interrupted!";
+    protected final String MESSAGE_SAVE_INTERRUPTED ="Saving Interrupted!";
     protected final String MESSAGE_SAVE_FINISHED ="Saving Completed!";
     private JFileChooser fc;
     protected final JProgressBar progressBar;

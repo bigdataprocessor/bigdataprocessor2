@@ -3,6 +3,7 @@ package de.embl.cba.bigDataTools2.utils;
 import de.embl.cba.bigDataTools2.dataStreamingGUI.ProgressBar;
 import de.embl.cba.bigDataTools2.logging.IJLazySwingLogger;
 import de.embl.cba.bigDataTools2.logging.Logger;
+import de.embl.cba.bigDataTools2.saving.SaveCentral;
 
 import java.util.List;
 import java.util.concurrent.Future;
@@ -28,9 +29,10 @@ public class MonitorThreadPoolStatus {
             {
                 if (f.isDone() ) i++;
             }
-
-            logger.progress( message, null, start, i, futures.size() );
-            ProgressBar.progress = i*100/futures.size(); //Updating UI progress bar.
+            if (!SaveCentral.interruptSavingThreads) {
+                logger.progress(message, null, start, i, futures.size());
+                ProgressBar.progress = i * 100 / futures.size(); //Updating UI progress bar.
+            }
             try {
                 Thread.sleep(updateFrequencyMilliseconds);
             } catch(InterruptedException ex) {

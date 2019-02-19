@@ -121,7 +121,6 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
         RandomAccessibleInterval image = savingSettings.image;
         for (int c = 0; c < this.nChannels; c++) {
             if (SaveCentral.interruptSavingThreads) {
-                System.out.println("STOP hdf5");
                 logger.progress("Stopped saving thread: ", "" + this.current_t);
                 return;
             }
@@ -151,8 +150,7 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
             for (String binning : binnings) {
 
                 if (SaveCentral.interruptSavingThreads) {
-                    System.out.println("STOP hdf5");
-                    logger.progress("Stopped saving thread: ", "" + current_t);
+                    logger.progress("Stopped saving thread @ run: ", "" + current_t);
                     return;
                 }
                 String newPath = savingSettings.filePath;
@@ -181,7 +179,9 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
                 }
 
             }
-            SaveImgHelper.documentProgress(totalSlices, counter, logger, startTime);
+            if (!SaveCentral.interruptSavingThreads) {
+                SaveImgHelper.documentProgress(totalSlices, counter, logger, startTime);
+            }
         }
     }
 
@@ -282,6 +282,13 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
             } else {
                 throw new IllegalArgumentException("Trying to save dataset of unknown datatype.");
             }
+
+            if (SaveCentral.interruptSavingThreads) {
+                savingSettings.saveProjection = false;
+                logger.progress("Stopped saving thread @ writeIndividualChannels: ", "" + current_t);
+                return;
+            }
+
             fillStackSlice(rai, pixelSlice);
             long[] start = {z, 0, 0};
             writeHyperslabs(hdf5DataType, pixelSlice, start, iniDims);
@@ -291,6 +298,12 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
     }
 
     private <E> void writeHyperslabs(int hdf5DataType, E[][] pixelsSlice, long[] start, long[] colorIniDims) {
+        if (SaveCentral.interruptSavingThreads) {
+            savingSettings.saveProjection = false;
+            logger.progress("Stopped saving thread @ writeHyperslabs: ", "" + current_t);
+            return;
+        }
+
         try {
             dataspaceId = H5.H5Dget_space(datasetId);
             H5.H5Sselect_hyperslab(dataspaceId, HDF5Constants.H5S_SELECT_SET, start, null, colorIniDims, null);
@@ -313,6 +326,13 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
             for (int y = 0; y < nRows; y++) {
                 rai.setPosition(y, image.dimensionIndex(Axes.Y));
                 T value = rai.get();
+
+                if (SaveCentral.interruptSavingThreads) {
+                    savingSettings.saveProjection = false;
+                    logger.progress("Stopped saving thread @ fillStackSlice: ", "" + current_t);
+                    return;
+                }
+
                 if (value instanceof UnsignedByteType) {
                     if (this.gate) {
                         int v = (Integer.valueOf(((UnsignedByteType) value).get()).byteValue()) & 0xff;

@@ -110,6 +110,7 @@
 		<dependency>
 			<groupId>sc.fiji</groupId>
 			<artifactId>bigdataviewer-core</artifactId>
+			<version>6.0.0</version>
 		</dependency>
 
 		<dependency>
@@ -145,6 +146,7 @@
 		<dependency>
 			<groupId>sc.fiji</groupId>
 			<artifactId>bigdataviewer-vistools</artifactId>
+			<version>1.0.0-beta-14-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
@@ -174,16 +176,27 @@
 		</dependency>
 
 		<dependency>
-            <groupId>net.imagej</groupId>
-            <artifactId>imagej-plugins-commands</artifactId>
-        </dependency>
+        	    	<groupId>net.imagej</groupId>
+			<artifactId>imagej-plugins-commands</artifactId>
+	        </dependency>
+
+		<dependency>
+			<groupId>net.imglib2.algorithm.phasecorrelation</groupId>
+			<artifactId>BigStitcher</artifactId>
+			<version>0.3.1-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>de.embl.cba</groupId>
+			<artifactId>imaris-writer</artifactId>
+			<version>0.1.0</version>
+		</dependency>
 
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 		</dependency>
-
-    </dependencies>
+	</dependencies>
 
 </project>
 
