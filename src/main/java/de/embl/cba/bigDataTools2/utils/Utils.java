@@ -257,7 +257,7 @@ public class Utils {
             String unit,
             String name )
     {
-        ImagePlus imp = ImageJFunctions.wrap(Views.permute(randomAccessibleInterval,FileInfoConstants.Z,FileInfoConstants.C),name);
+        ImagePlus imp = ImageJFunctions.wrap( Views.permute(randomAccessibleInterval,FileInfoConstants.Z,FileInfoConstants.C),name);
 
         final Calibration calibration = new Calibration();
         calibration.setUnit( unit );

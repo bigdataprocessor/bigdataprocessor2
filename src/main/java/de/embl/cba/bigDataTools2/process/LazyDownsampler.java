@@ -33,14 +33,15 @@ public class LazyDownsampler < R extends RealType< R > & NativeType< R > >
 		return Views.subsample( averageView( rai, span ), span );
 	}
 
-
 	private RandomAccessibleInterval< R > averageView(
 			RandomAccessibleInterval< R > rai,
 			int span )
 	{
 		Shape shape = new RectangleShape( span, false );
+
 		final RandomAccessible< Neighborhood< R > > nra =
 				shape.neighborhoodsRandomAccessible( Views.extendBorder( rai ) );
+
 		final RandomAccessibleInterval< Neighborhood< R > > nrai = Views.interval( nra, rai );
 
 		final RandomAccessibleInterval< R > averageView =

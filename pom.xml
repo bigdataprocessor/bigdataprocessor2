@@ -9,7 +9,7 @@
 	</parent>
 
 	<artifactId>fiji-plugin-BigDataTools2</artifactId>
-	<version>0.1.03</version>
+	<version>0.1.04</version>
 
 	<name>Fiji Plugin BigDataTools2</name>
 	<description>TODO</description>
@@ -103,6 +103,11 @@
 	<dependencies>
 
 		<dependency>
+			<groupId>cisd</groupId>
+			<artifactId>jhdf5</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>sc.fiji</groupId>
 			<artifactId>bigdataviewer-core</artifactId>
 		</dependency>
@@ -177,6 +182,7 @@
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 		</dependency>
+
     </dependencies>
 
 </project>
