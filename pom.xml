@@ -176,14 +176,13 @@
 		</dependency>
 
 		<dependency>
-        	    	<groupId>net.imagej</groupId>
+			<groupId>net.imagej</groupId>
 			<artifactId>imagej-plugins-commands</artifactId>
-	        </dependency>
+		</dependency>
 
 		<dependency>
 			<groupId>net.imglib2.algorithm.phasecorrelation</groupId>
 			<artifactId>BigStitcher</artifactId>
-			<version>0.3.1-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
@@ -196,6 +195,7 @@
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 		</dependency>
+
 	</dependencies>
 
 </project>
