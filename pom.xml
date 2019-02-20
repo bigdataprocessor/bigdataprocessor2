@@ -5,13 +5,13 @@
 	<parent>
 		<groupId>org.scijava</groupId>
 		<artifactId>pom-scijava</artifactId>
-		<version>24.2.0</version>
+		<version>25.0.0</version>
 	</parent>
 
-	<artifactId>fiji-plugin-BigDataTools2</artifactId>
-	<version>0.1.04</version>
+	<artifactId>fiji-plugin-BigDataConverter2</artifactId>
+	<version>0.1.05</version>
 
-	<name>Fiji Plugin BigDataTools2</name>
+	<name>Fiji Plugin BigDataConverter2</name>
 	<description>TODO</description>
 	<inceptionYear>2018</inceptionYear>
 	<organization>

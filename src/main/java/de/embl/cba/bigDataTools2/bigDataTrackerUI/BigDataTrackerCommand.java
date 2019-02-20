@@ -24,7 +24,7 @@ import java.net.URISyntaxException;
 
 @Plugin(type = Command.class)
 @Deprecated
-public class BigDataTrackerUICommand extends DynamicCommand implements Interactive {
+public class BigDataTrackerCommand extends DynamicCommand implements Interactive {
 
     @Parameter
     private LogService logService;
@@ -153,6 +153,6 @@ public class BigDataTrackerUICommand extends DynamicCommand implements Interacti
         ij.launch(args);
         double [] voxelSize = new double[]{0,0};
         ImageViewer img = new BdvImageViewer( null, "dummy", voxelSize, "pixel" );
-        ij.command().run(BigDataTrackerUICommand.class, true, "imageViewer", img);
+        ij.command().run(BigDataTrackerCommand.class, true, "imageViewer", img);
     }
 }
