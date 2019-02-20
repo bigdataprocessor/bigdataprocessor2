@@ -27,7 +27,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * #L%
  */
-package de.embl.cba.bigDataTools2.bigDataTrackerGUI;
+package de.embl.cba.bigDataTools2.bigDataTrackerUI;
 
 import bdv.tools.boundingbox.TransformedBox;
 import bdv.tools.boundingbox.TransformedBoxOverlay;

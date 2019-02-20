@@ -1,9 +1,9 @@
-package de.embl.cba.bigDataTools2.bigDataTrackerGUI;
+package de.embl.cba.bigDataTools2.bigDataTrackerUI;
 
 import bdv.util.*;
-import de.embl.cba.bigDataTools2.dataStreamingGUI.BdvMenus;
-import de.embl.cba.bigDataTools2.dataStreamingGUI.BigDataConverter;
-import de.embl.cba.bigDataTools2.dataStreamingGUI.DisplaySettings;
+import de.embl.cba.bigDataTools2.bigDataConverterUI.BdvMenus;
+import de.embl.cba.bigDataTools2.bigDataConverterUI.BigDataConverter;
+import de.embl.cba.bigDataTools2.bigDataConverterUI.DisplaySettings;
 import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
 import de.embl.cba.bigDataTools2.logging.IJLazySwingLogger;
 import de.embl.cba.bigDataTools2.logging.Logger;

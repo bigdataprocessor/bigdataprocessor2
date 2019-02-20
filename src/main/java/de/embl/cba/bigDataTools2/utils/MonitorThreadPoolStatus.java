@@ -1,6 +1,6 @@
 package de.embl.cba.bigDataTools2.utils;
 
-import de.embl.cba.bigDataTools2.dataStreamingGUI.ProgressBar;
+import de.embl.cba.bigDataTools2.bigDataConverterUI.ProgressBar;
 import de.embl.cba.bigDataTools2.logging.IJLazySwingLogger;
 import de.embl.cba.bigDataTools2.logging.Logger;
 import de.embl.cba.bigDataTools2.saving.SaveCentral;

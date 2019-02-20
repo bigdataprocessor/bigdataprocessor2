@@ -1,4 +1,4 @@
-import de.embl.cba.bigDataTools2.dataStreamingGUI.BigDataConverterCommand;
+import de.embl.cba.bigDataTools2.bigDataConverterUI.BigDataConverterCommand;
 import net.imagej.ImageJ;
 
 public class RunBigDataConverterCommand

@@ -1,4 +1,4 @@
-package de.embl.cba.bigDataTools2.dataStreamingGUI;
+package de.embl.cba.bigDataTools2.bigDataConverterUI;
 
 import de.embl.cba.bigDataTools2.CachedCellImageCreator;
 import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
@@ -12,7 +12,6 @@ import net.imglib2.*;
 import net.imglib2.cache.img.CachedCellImg;
 import net.imglib2.converter.Converters;
 import net.imglib2.converter.RealUnsignedByteConverter;
-import net.imglib2.interpolation.randomaccess.ClampingNLinearInterpolatorFactory;
 import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
 import net.imglib2.realtransform.AffineRandomAccessible;
 import net.imglib2.realtransform.AffineTransform;

@@ -170,19 +170,18 @@
 		</dependency>
 
 		<dependency>
-			<groupId>de.embl.cba</groupId>
-			<artifactId>bdv-utils</artifactId>
-			<version>0.1.26</version>
-		</dependency>
-
-		<dependency>
 			<groupId>net.imagej</groupId>
 			<artifactId>imagej-plugins-commands</artifactId>
 		</dependency>
 
+        <dependency>
+            <groupId>net.preibisch</groupId>
+            <artifactId>BigStitcher</artifactId>
+        </dependency>
+
 		<dependency>
-			<groupId>net.imglib2.algorithm.phasecorrelation</groupId>
-			<artifactId>BigStitcher</artifactId>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
 		</dependency>
 
 		<dependency>
@@ -192,8 +191,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
+			<groupId>de.embl.cba</groupId>
+			<artifactId>bdv-utils</artifactId>
+			<version>0.2.00</version>
 		</dependency>
 
 	</dependencies>

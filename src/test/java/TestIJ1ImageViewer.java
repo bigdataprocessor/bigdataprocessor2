@@ -1,4 +1,4 @@
-import de.embl.cba.bigDataTools2.dataStreamingGUI.BigDataConverter;
+import de.embl.cba.bigDataTools2.bigDataConverterUI.BigDataConverter;
 import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
 import de.embl.cba.bigDataTools2.viewers.ViewerUtils;
 import ij.ImageJ;

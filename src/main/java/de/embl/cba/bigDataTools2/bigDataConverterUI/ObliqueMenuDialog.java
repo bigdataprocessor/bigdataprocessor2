@@ -1,7 +1,6 @@
-package de.embl.cba.bigDataTools2.dataStreamingGUI;
+package de.embl.cba.bigDataTools2.bigDataConverterUI;
 
 import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
-import de.embl.cba.bigDataTools2.utils.Utils;
 import de.embl.cba.bigDataTools2.viewers.ImageViewer;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.interpolation.InterpolatorFactory;

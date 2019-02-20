@@ -1,4 +1,4 @@
-package de.embl.cba.bigDataTools2.dataStreamingGUI;
+package de.embl.cba.bigDataTools2.bigDataConverterUI;
 
 import javafx.geometry.Point3D;
 import net.imglib2.interpolation.InterpolatorFactory;

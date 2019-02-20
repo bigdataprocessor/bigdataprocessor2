@@ -1,6 +1,6 @@
-package de.embl.cba.bigDataTools2.bigDataTrackerGUI;
+package de.embl.cba.bigDataTools2.bigDataTrackerUI;
 
-import de.embl.cba.bigDataTools2.dataStreamingGUI.BigDataConverter;
+import de.embl.cba.bigDataTools2.bigDataConverterUI.BigDataConverter;
 import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
 import de.embl.cba.bigDataTools2.logging.IJLazySwingLogger;
 import de.embl.cba.bigDataTools2.logging.Logger;
@@ -21,7 +21,6 @@ import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.util.Intervals;
 import net.imglib2.view.Views;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;

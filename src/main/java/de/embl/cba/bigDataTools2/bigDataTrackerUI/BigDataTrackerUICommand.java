@@ -1,6 +1,6 @@
-package de.embl.cba.bigDataTools2.bigDataTrackerGUI;
+package de.embl.cba.bigDataTools2.bigDataTrackerUI;
 
-import de.embl.cba.bigDataTools2.dataStreamingGUI.BigDataConverter;
+import de.embl.cba.bigDataTools2.bigDataConverterUI.BigDataConverter;
 import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
 import de.embl.cba.bigDataTools2.utils.Utils;
 import de.embl.cba.bigDataTools2.viewers.BdvImageViewer;

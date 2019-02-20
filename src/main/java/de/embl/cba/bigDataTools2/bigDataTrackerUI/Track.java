@@ -28,7 +28,7 @@
  * #L%
  */
 
-package de.embl.cba.bigDataTools2.bigDataTrackerGUI;
+package de.embl.cba.bigDataTools2.bigDataTrackerUI;
 
 import de.embl.cba.bigDataTools2.logging.IJLazySwingLogger;
 import de.embl.cba.bigDataTools2.logging.Logger;

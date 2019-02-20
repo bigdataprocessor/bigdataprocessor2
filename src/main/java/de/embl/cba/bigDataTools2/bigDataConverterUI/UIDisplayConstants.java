@@ -1,4 +1,4 @@
-package de.embl.cba.bigDataTools2.dataStreamingGUI;
+package de.embl.cba.bigDataTools2.bigDataConverterUI;
 
 public class UIDisplayConstants {
 

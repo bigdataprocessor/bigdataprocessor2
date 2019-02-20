@@ -33,7 +33,7 @@ package de.embl.cba.bigDataTools2.utils;
 import bdv.util.Bdv;
 import bdv.viewer.animate.SimilarityTransformAnimator;
 import de.embl.cba.bigDataTools2.Region5D;
-import de.embl.cba.bigDataTools2.dataStreamingGUI.DisplaySettings;
+import de.embl.cba.bigDataTools2.bigDataConverterUI.DisplaySettings;
 import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
 import de.embl.cba.bigDataTools2.logging.IJLazySwingLogger;
 import de.embl.cba.bigDataTools2.logging.Logger;

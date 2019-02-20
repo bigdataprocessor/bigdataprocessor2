@@ -1,10 +1,9 @@
 import de.embl.cba.bigDataTools2.CachedCellImageCreator;
-import de.embl.cba.bigDataTools2.dataStreamingGUI.BigDataConverter;
-import de.embl.cba.bigDataTools2.dataStreamingGUI.ObliqueMenuDialog;
-import de.embl.cba.bigDataTools2.dataStreamingGUI.ShearingSettings;
+import de.embl.cba.bigDataTools2.bigDataConverterUI.BigDataConverter;
+import de.embl.cba.bigDataTools2.bigDataConverterUI.ObliqueMenuDialog;
+import de.embl.cba.bigDataTools2.bigDataConverterUI.ShearingSettings;
 import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
 import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoSource;
-import de.embl.cba.bigDataTools2.saving.SavingSettings;
 import de.embl.cba.bigDataTools2.viewers.BdvImageViewer;
 import de.embl.cba.bigDataTools2.viewers.ImageViewer;
 import net.imglib2.RandomAccessibleInterval;

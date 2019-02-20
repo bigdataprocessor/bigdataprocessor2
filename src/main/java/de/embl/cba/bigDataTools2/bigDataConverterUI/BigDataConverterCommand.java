@@ -1,4 +1,4 @@
-package de.embl.cba.bigDataTools2.dataStreamingGUI;
+package de.embl.cba.bigDataTools2.bigDataConverterUI;
 
 import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
 import de.embl.cba.imaris.ImarisUtils;
@@ -16,7 +16,7 @@ import org.scijava.ui.UIService;
 
 import java.io.File;
 
-@Plugin(type = Command.class, menuPath = "Plugins>BigDataTools>BigDataConverter", initializer = "init")
+@Plugin(type = Command.class, menuPath = "Plugins>BigDataTools>Big Data Converter 2", initializer = "init")
 public class BigDataConverterCommand<T extends RealType<T> & NativeType<T>> implements Command {
     @Parameter
     public static UIService uiService;
