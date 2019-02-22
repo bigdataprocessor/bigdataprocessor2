@@ -1,7 +1,7 @@
-import de.embl.cba.bigDataTools2.bigDataProcessorUI.BigDataProcessor;
-import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
-import de.embl.cba.bigDataTools2.saving.SavingSettings;
-import de.embl.cba.bigDataTools2.viewers.ViewerUtils;
+import de.embl.cba.bdp2.ui.BigDataProcessor;
+import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
+import de.embl.cba.bdp2.saving.SavingSettings;
+import de.embl.cba.bdp2.viewers.ViewerUtils;
 import ij.ImageJ;
 
 public class TestIJ1ViewerSaving

@@ -1,10 +1,10 @@
 import bdv.util.AxisOrder;
 import bdv.util.BdvFunctions;
 import bdv.util.BdvOptions;
-import de.embl.cba.bigDataTools2.CachedCellImageCreator;
-import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
-import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoSource;
-import de.embl.cba.bigDataTools2.viewers.BdvTransformEventHandler;
+import de.embl.cba.bdp2.CachedCellImageCreator;
+import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
+import de.embl.cba.bdp2.fileinfosource.FileInfoSource;
+import de.embl.cba.bdp2.viewers.BdvTransformEventHandler;
 import net.imglib2.img.Img;
 
 /**

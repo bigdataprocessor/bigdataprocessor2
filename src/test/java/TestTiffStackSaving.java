@@ -1,10 +1,10 @@
-import de.embl.cba.bigDataTools2.CachedCellImageCreator;
-import de.embl.cba.bigDataTools2.bigDataProcessorUI.BigDataProcessor;
-import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
-import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoSource;
-import de.embl.cba.bigDataTools2.saving.SavingSettings;
-import de.embl.cba.bigDataTools2.viewers.BdvImageViewer;
-import de.embl.cba.bigDataTools2.viewers.ImageViewer;
+import de.embl.cba.bdp2.CachedCellImageCreator;
+import de.embl.cba.bdp2.ui.BigDataProcessor;
+import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
+import de.embl.cba.bdp2.fileinfosource.FileInfoSource;
+import de.embl.cba.bdp2.saving.SavingSettings;
+import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import de.embl.cba.bdp2.viewers.ImageViewer;
 import net.imglib2.cache.img.CachedCellImg;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 

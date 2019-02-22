@@ -1,5 +1,5 @@
 import bdv.util.BdvFunctions;
-import de.embl.cba.bigDataTools2.process.LazyDownsampler;
+import de.embl.cba.bdp2.process.LazyDownsampler;
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.array.ArrayImgs;

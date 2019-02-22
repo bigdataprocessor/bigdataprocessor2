@@ -1,5 +1,5 @@
-import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
-import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoSource;
+import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
+import de.embl.cba.bdp2.fileinfosource.FileInfoSource;
 import ij.IJ;
 import ij.ImageJ;
 import ij.io.FileInfo;
