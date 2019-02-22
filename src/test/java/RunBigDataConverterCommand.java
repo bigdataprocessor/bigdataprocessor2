@@ -1,7 +1,7 @@
-import de.embl.cba.bigDataTools2.bigDataConverterUI.BigDataConverterCommand;
+import de.embl.cba.bigDataTools2.bigDataProcessorUI.BigDataProcessorCommand;
 import net.imagej.ImageJ;
 
-public class RunBigDataConverterCommand
+public class RunBigDataProcessorCommand
 {
 	public static void main ( String... args )
 	{
@@ -9,6 +9,6 @@ public class RunBigDataConverterCommand
 		ij.ui().showUI();
 
 		// invoke the plugin
-		ij.command().run( BigDataConverterCommand.class, true );
+		ij.command().run( BigDataProcessorCommand.class, true );
 	}
 }

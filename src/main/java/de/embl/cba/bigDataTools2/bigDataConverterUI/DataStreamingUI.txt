@@ -1,4 +1,4 @@
-package de.embl.cba.bigDataTools2.bigDataConverterUI;
+package de.embl.cba.bigDataTools2.bigDataProcessorUI;
 
 import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
 import de.embl.cba.bigDataTools2.imaris.ImarisUtils;
@@ -91,7 +91,7 @@ public class DataStreamingUI extends JFrame implements ActionListener, FocusList
     Logger logger = new IJLazySwingLogger();
 
     JFileChooser fc;
-    static final BigDataConverter BIG_DATA_CONVERTER = new BigDataConverter();
+    static final BigDataProcessor BIG_DATA_CONVERTER = new BigDataProcessor();
     public DataStreamingUI() {
         ImageIcon icon = new ImageIcon("src/main/resources/logo.png");
         setIconImage(icon.getImage());

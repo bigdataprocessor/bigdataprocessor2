@@ -96,7 +96,7 @@ public class FileInfoSourceHelper {
                     if (infoSource.fileType.equals(Utils.FileType.SINGLE_PLANE_TIFF.toString())) {
                         fileName = namingPattern.replaceFirst("<Z(\\d+)-(\\d+)>",String.format("%1$0" + ctzPad[2] + "d", z));
                     } else {
-                        logger.error("BigDataConverter:setMissingInfos:unsupported file type");
+                        logger.error("BigDataProcessor:setMissingInfos:unsupported file type");
                     }
                     if (hasC) {
                         fileName = fileName.replaceFirst("<C(\\d+)-(\\d+)>",String.format("%1$0" + ctzPad[0] + "d", c));

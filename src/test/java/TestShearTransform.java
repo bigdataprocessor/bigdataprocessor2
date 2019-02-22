@@ -1,7 +1,7 @@
 import de.embl.cba.bigDataTools2.CachedCellImageCreator;
-import de.embl.cba.bigDataTools2.bigDataConverterUI.BigDataConverter;
-import de.embl.cba.bigDataTools2.bigDataConverterUI.ObliqueMenuDialog;
-import de.embl.cba.bigDataTools2.bigDataConverterUI.ShearingSettings;
+import de.embl.cba.bigDataTools2.bigDataProcessorUI.BigDataProcessor;
+import de.embl.cba.bigDataTools2.bigDataProcessorUI.ObliqueMenuDialog;
+import de.embl.cba.bigDataTools2.bigDataProcessorUI.ShearingSettings;
 import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
 import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoSource;
 import de.embl.cba.bigDataTools2.viewers.BdvImageViewer;
@@ -57,7 +57,7 @@ public class TestShearTransform {
         ShearingSettings shearingSettings = new ShearingSettings();
         ObliqueMenuDialog dialog = new ObliqueMenuDialog(imageViewer);
         dialog.getShearingSettings( shearingSettings ); // sets default values.
-        return BigDataConverter.shearImage( cachedCellImg, shearingSettings );
+        return BigDataProcessor.shearImage( cachedCellImg, shearingSettings );
     }
 
     private static RandomAccessibleInterval getShearedImage5D( CachedCellImg cachedCellImg, ImageViewer imageViewer )
@@ -65,6 +65,6 @@ public class TestShearTransform {
         ShearingSettings shearingSettings = new ShearingSettings();
         ObliqueMenuDialog dialog = new ObliqueMenuDialog(imageViewer);
         dialog.getShearingSettings( shearingSettings ); // sets default values.
-        return BigDataConverter.shearImage5D( cachedCellImg, shearingSettings );
+        return BigDataProcessor.shearImage5D( cachedCellImg, shearingSettings );
     }
 }

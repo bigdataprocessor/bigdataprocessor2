@@ -1,4 +1,4 @@
-package de.embl.cba.bigDataTools2.bigDataConverterUI;
+package de.embl.cba.bigDataTools2.bigDataProcessorUI;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;

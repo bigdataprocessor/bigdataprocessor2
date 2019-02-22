@@ -1,4 +1,4 @@
-package de.embl.cba.bigDataTools2.bigDataConverterUI;
+package de.embl.cba.bigDataTools2.bigDataProcessorUI;
 
 import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
 import de.embl.cba.bigDataTools2.viewers.ImageViewer;
@@ -86,7 +86,7 @@ public class ObliqueMenuDialog extends JDialog implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         getShearingSettings(shearingSettings);
         shearingSettings.useObliqueAngle = true;
-        RandomAccessibleInterval sheared = BigDataConverter.shearImage(originalRAI,shearingSettings);
+        RandomAccessibleInterval sheared = BigDataProcessor.shearImage(originalRAI,shearingSettings);
         imageViewer.show(
                 sheared,
                 "Oblique View",

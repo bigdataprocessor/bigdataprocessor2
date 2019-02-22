@@ -1,4 +1,4 @@
-package de.embl.cba.bigDataTools2.bigDataConverterUI;
+package de.embl.cba.bigDataTools2.bigDataProcessorUI;
 
 import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
 import de.embl.cba.imaris.ImarisUtils;
@@ -17,7 +17,7 @@ import org.scijava.ui.UIService;
 import java.io.File;
 
 @Plugin(type = Command.class, menuPath = "Plugins>BigDataTools>Big Data Converter 2", initializer = "init")
-public class BigDataConverterCommand<T extends RealType<T> & NativeType<T>> implements Command {
+public class BigDataProcessorCommand<T extends RealType<T> & NativeType<T>> implements Command {
     @Parameter
     public static UIService uiService;
 
@@ -87,7 +87,7 @@ public class BigDataConverterCommand<T extends RealType<T> & NativeType<T>> impl
     @Parameter(label = "Auto Contrast")
     boolean autoContrast = true;
 
-    private static final BigDataConverter BIG_DATA_CONVERTER = new BigDataConverter();
+    private static final BigDataProcessor BIG_DATA_CONVERTER = new BigDataProcessor();
 
     public void run()
     {

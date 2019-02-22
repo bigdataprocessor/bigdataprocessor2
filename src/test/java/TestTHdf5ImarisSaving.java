@@ -1,5 +1,5 @@
 import de.embl.cba.bigDataTools2.CachedCellImageCreator;
-import de.embl.cba.bigDataTools2.bigDataConverterUI.BigDataConverter;
+import de.embl.cba.bigDataTools2.bigDataProcessorUI.BigDataProcessor;
 import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
 import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoSource;
 import de.embl.cba.bigDataTools2.saving.SavingSettings;
@@ -31,7 +31,7 @@ public class TestTHdf5ImarisSaving {
         defaults.fileType = SavingSettings.FileType.HDF5_IMARIS_BDV;
         defaults.fileBaseNameIMARIS = "file";
         defaults.parentDirectory = "src/test/resources/";
-        new BigDataConverter().saveImage(defaults, imageViewer);
+        new BigDataProcessor().saveImage(defaults, imageViewer);
 
     }
 

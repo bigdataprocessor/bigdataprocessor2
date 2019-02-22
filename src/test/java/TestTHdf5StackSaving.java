@@ -1,5 +1,5 @@
 import de.embl.cba.bigDataTools2.CachedCellImageCreator;
-import de.embl.cba.bigDataTools2.bigDataConverterUI.BigDataConverter;
+import de.embl.cba.bigDataTools2.bigDataProcessorUI.BigDataProcessor;
 import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
 import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoSource;
 import de.embl.cba.bigDataTools2.saving.SavingSettings;
@@ -32,7 +32,7 @@ public class TestTHdf5StackSaving
         final SavingSettings defaults = SavingSettings.getDefaults();
         defaults.fileType = SavingSettings.FileType.HDF5_STACKS;
         defaults.nThreads = 3;
-        new BigDataConverter().saveImage( defaults, imageViewer );
+        new BigDataProcessor().saveImage( defaults, imageViewer );
 
 
     }

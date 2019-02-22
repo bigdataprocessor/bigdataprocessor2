@@ -1,4 +1,4 @@
-package de.embl.cba.bigDataTools2.bigDataConverterUI;
+package de.embl.cba.bigDataTools2.bigDataProcessorUI;
 
 import de.embl.cba.bigDataTools2.saving.SavingSettings;
 import de.embl.cba.bigDataTools2.viewers.ImageViewer;
@@ -170,14 +170,14 @@ public class SaveMenuDialog extends JFrame implements ActionListener {
                 progressBar.setVisible(true);
                 pack();
                 save.setEnabled(false);
-                BigDataConverter.executorService.submit(() -> {
+                BigDataProcessor.executorService.submit(() -> {
                     new ProgressBar(this).createGUIandRunMonitor();
-                    BigDataConverter.saveImage(savingSettings, imageViewer);
+                    BigDataProcessor.saveImage(savingSettings, imageViewer);
                 });
 
             }
         } else if (e.getActionCommand().equals(STOP_SAVING)) {
-            BigDataConverter.stopSave(); // Don't submit to thread pool. Let the main thread handle it.
+            BigDataProcessor.stopSave(); // Don't submit to thread pool. Let the main thread handle it.
             save.setEnabled(true);
             progressBar.setVisible(false);
             MESSAGE.setText(MESSAGE_SAVE_INTERRUPTED);

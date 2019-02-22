@@ -1,4 +1,4 @@
-import de.embl.cba.bigDataTools2.bigDataConverterUI.BigDataConverter;
+import de.embl.cba.bigDataTools2.bigDataProcessorUI.BigDataProcessor;
 import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
 import de.embl.cba.bigDataTools2.viewers.ViewerUtils;
 import ij.ImageJ;
@@ -9,11 +9,11 @@ public class TestIJ1ImageViewer
 	{
 		new ImageJ();
 
-		BigDataConverter bigDataConverter = new BigDataConverter();
+		BigDataProcessor bigDataProcessor = new BigDataProcessor();
 
 		String imageDirectory = TestBdvViewer.class.getResource( "tiff-nc1-nt2"  ).getFile().toString();
 
-		bigDataConverter.openFromDirectory(
+		bigDataProcessor.openFromDirectory(
 				imageDirectory.toString(),
 				FileInfoConstants.SINGLE_CHANNEL_TIMELAPSE,
 				".*",

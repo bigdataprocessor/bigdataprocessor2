@@ -3,7 +3,7 @@ package de.embl.cba.bigDataTools2;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import de.embl.cba.bigDataTools2.bigDataConverterUI.BigDataConverter;
+import de.embl.cba.bigDataTools2.bigDataProcessorUI.BigDataProcessor;
 import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoSource;
 import de.embl.cba.bigDataTools2.fileInfoSource.SerializableFileInfo;
 import ij.ImagePlus;
@@ -57,7 +57,7 @@ public class ImageLoader implements CellLoader {
         po = new Point3D(0, min[ Y ], z);
         long diff = max[ Y ]-min[ Y ];
         ps = new Point3D(fileInfo.width,diff+1 , 1);
-        ImagePlus imagePlus = new OpenerExtension().readDataCube(directory, infos_c_t, 1, po, ps, BigDataConverter.executorService); //TODO: get rid of ImagePlus
+        ImagePlus imagePlus = new OpenerExtension().readDataCube(directory, infos_c_t, 1, po, ps, BigDataProcessor.executorService); //TODO: get rid of ImagePlus
         return imagePlus;
     }
 

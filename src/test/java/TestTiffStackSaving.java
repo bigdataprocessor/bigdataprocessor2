@@ -1,5 +1,5 @@
 import de.embl.cba.bigDataTools2.CachedCellImageCreator;
-import de.embl.cba.bigDataTools2.bigDataConverterUI.BigDataConverter;
+import de.embl.cba.bigDataTools2.bigDataProcessorUI.BigDataProcessor;
 import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
 import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoSource;
 import de.embl.cba.bigDataTools2.saving.SavingSettings;
@@ -32,7 +32,7 @@ public class TestTiffStackSaving
         final SavingSettings defaults = SavingSettings.getDefaults();
         defaults.fileType = SavingSettings.FileType.TIFF_as_STACKS;
         defaults.nThreads = 3;
-        new BigDataConverter().saveImage( defaults, imageViewer );
+        new BigDataProcessor().saveImage( defaults, imageViewer );
 
 
     }

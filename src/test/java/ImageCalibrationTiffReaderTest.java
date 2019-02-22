@@ -29,11 +29,11 @@ public class ImageCalibrationTiffReaderTest
 				".*",
 				"" );
 
-//		BigDataConverter bigDataConverter = new BigDataConverter();
+//		BigDataProcessor bigDataProcessor = new BigDataProcessor();
 //
 //		String imageDirectory = TestBdvViewer.class.getResource( "tiff-nc1-nt2"  ).getFile().toString();
 //
-//		bigDataConverter.openFromDirectory(
+//		bigDataProcessor.openFromDirectory(
 //				imageDirectory.toString(),
 //				FileInfoConstants.SINGLE_CHANNEL_TIMELAPSE,
 //				".*",

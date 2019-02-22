@@ -1,4 +1,4 @@
-import de.embl.cba.bigDataTools2.bigDataConverterUI.BigDataConverter;
+import de.embl.cba.bigDataTools2.bigDataProcessorUI.BigDataProcessor;
 import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
 import de.embl.cba.bigDataTools2.viewers.ViewerUtils;
 import ij.ImageJ;
@@ -15,11 +15,11 @@ public class ImageCalibrationBdvVisualisationTest
 		final File file = new File(
 				TestBdvViewer.class.getResource( "nc1-nt1-calibrated-tiff" ).getFile() );
 
-		BigDataConverter bigDataConverter = new BigDataConverter();
+		BigDataProcessor bigDataProcessor = new BigDataProcessor();
 
 		String imageDirectory = file.toString();
 
-		bigDataConverter.openFromDirectory(
+		bigDataProcessor.openFromDirectory(
 				imageDirectory.toString(),
 				FileInfoConstants.SINGLE_CHANNEL_TIMELAPSE,
 				".*",

@@ -1,4 +1,4 @@
-package de.embl.cba.bigDataTools2.bigDataConverterUI;
+package de.embl.cba.bigDataTools2.bigDataProcessorUI;
 
 import de.embl.cba.bigDataTools2.CachedCellImageCreator;
 import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
@@ -32,7 +32,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.RecursiveTask;
 import net.imglib2.interpolation.InterpolatorFactory;
 
-public class BigDataConverter {
+public class BigDataProcessor {
 
     public FileInfoSource fileInfoSource;
     public static ExecutorService executorService;  //General thread pool
@@ -41,7 +41,7 @@ public class BigDataConverter {
     public static int MAX_THREAD_LIMIT = Runtime.getRuntime().availableProcessors() * 2;
     private ImageViewer imageViewer;// remove it
 
-    public BigDataConverter() {
+    public BigDataProcessor() {
         //TODO: have separate shutdown for the executorService. It will not shutdown when ui exeService is shut. --ashis (DONE but needs testing)
         //Ref: https://stackoverflow.com/questions/23684189/java-how-to-make-an-executorservice-running-inside-another-executorservice-not
         System.out.println("Datastreaming constructor");

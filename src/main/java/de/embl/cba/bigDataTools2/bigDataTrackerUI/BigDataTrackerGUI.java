@@ -1,6 +1,6 @@
 package de.embl.cba.bigDataTools2.bigDataTrackerUI;
 
-import de.embl.cba.bigDataTools2.bigDataConverterUI.BigDataConverter;
+import de.embl.cba.bigDataTools2.bigDataProcessorUI.BigDataProcessor;
 import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
 import de.embl.cba.bigDataTools2.logging.IJLazySwingLogger;
 import de.embl.cba.bigDataTools2.logging.Logger;
@@ -320,7 +320,7 @@ public class BigDataTrackerGUI extends JDialog implements ActionListener, FocusL
 
        if (e.getActionCommand().equals("Select ROI")) {
             System.out.println(e.getActionCommand());
-           BigDataConverter.trackerThreadPool.submit(()-> {
+           BigDataProcessor.trackerThreadPool.submit(()-> {
                FinalInterval interval = imageViewer.get5DIntervalFromUser();
                trackingSettings.pMin = new Point3D((int)interval.min(FileInfoConstants.X ),
                                                    (int)interval.min(FileInfoConstants.Y ),
@@ -374,7 +374,7 @@ public class BigDataTrackerGUI extends JDialog implements ActionListener, FocusL
 
             // do it
             //
-           BigDataConverter.trackerThreadPool.submit(()-> {
+           BigDataProcessor.trackerThreadPool.submit(()-> {
                bigDataTracker.trackObject(trackingSettings,imageViewer);
            });
         }

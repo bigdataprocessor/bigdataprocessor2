@@ -1,7 +1,7 @@
 package de.embl.cba.bigDataTools2.viewers;
 
-import de.embl.cba.bigDataTools2.bigDataConverterUI.BdvMenus;
-import de.embl.cba.bigDataTools2.bigDataConverterUI.DisplaySettings;
+import de.embl.cba.bigDataTools2.bigDataProcessorUI.BdvMenus;
+import de.embl.cba.bigDataTools2.bigDataProcessorUI.DisplaySettings;
 import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.realtransform.AffineTransform3D;

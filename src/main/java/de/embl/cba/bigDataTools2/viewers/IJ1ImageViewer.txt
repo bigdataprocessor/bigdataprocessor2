@@ -1,7 +1,7 @@
 package de.embl.cba.bigDataTools2.viewers;
 
-import de.embl.cba.bigDataTools2.bigDataConverterUI.BdvMenus;
-import de.embl.cba.bigDataTools2.bigDataConverterUI.DisplaySettings;
+import de.embl.cba.bigDataTools2.bigDataProcessorUI.BdvMenus;
+import de.embl.cba.bigDataTools2.bigDataProcessorUI.DisplaySettings;
 import ij.CompositeImage;
 import ij.ImagePlus;
 import net.imglib2.FinalInterval;

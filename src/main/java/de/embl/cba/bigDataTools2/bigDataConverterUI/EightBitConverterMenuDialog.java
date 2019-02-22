@@ -1,4 +1,4 @@
-package de.embl.cba.bigDataTools2.bigDataConverterUI;
+package de.embl.cba.bigDataTools2.bigDataProcessorUI;
 
 import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
 import de.embl.cba.bigDataTools2.viewers.ImageViewer;
@@ -67,7 +67,7 @@ public class EightBitConverterMenuDialog extends JDialog implements ActionListen
         int min = Integer.parseInt(mapToZero.getText());
         int max = Integer.parseInt(mapTo255.getText());
         DisplaySettings displaySettings= new DisplaySettings(min,max);
-        RandomAccessibleInterval<UnsignedByteType> newRai = BigDataConverter.unsignedByteTypeConverter(imageViewer.getRai(),displaySettings);
+        RandomAccessibleInterval<UnsignedByteType> newRai = BigDataProcessor.unsignedByteTypeConverter(imageViewer.getRai(),displaySettings);
         ImageViewer newImageViewer = imageViewer.newImageViewer();
         newImageViewer.show(
                 newRai,

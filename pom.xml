@@ -8,10 +8,11 @@
 		<version>25.0.0</version>
 	</parent>
 
-	<artifactId>fiji-plugin-BigDataConverter2</artifactId>
+	<groupId>de.embl.cba</groupId>
+	<artifactId>fiji-plugin-bigDataProcessor2</artifactId>
 	<version>0.1.05</version>
 
-	<name>Fiji Plugin BigDataConverter2</name>
+	<name>Fiji Plugin BigDataProcessor2</name>
 	<description>TODO</description>
 	<inceptionYear>2018</inceptionYear>
 	<organization>

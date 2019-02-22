@@ -1,4 +1,4 @@
-import de.embl.cba.bigDataTools2.bigDataConverterUI.BigDataConverter;
+import de.embl.cba.bigDataTools2.bigDataProcessorUI.BigDataProcessor;
 import de.embl.cba.bigDataTools2.fileInfoSource.FileInfoConstants;
 import de.embl.cba.bigDataTools2.viewers.ViewerUtils;
 
@@ -6,11 +6,11 @@ public class TestBdvViewer
 {
 	public static void main( String[] args )
 	{
-		BigDataConverter bigDataConverter = new BigDataConverter();
+		BigDataProcessor bigDataProcessor = new BigDataProcessor();
 
 		String imageDirectory = TestBdvViewer.class.getResource( ""  ).toString();
 
-		bigDataConverter.openFromDirectory(
+		bigDataProcessor.openFromDirectory(
 				imageDirectory.toString(),
 				FileInfoConstants.SINGLE_CHANNEL_TIMELAPSE,
 				".*",
