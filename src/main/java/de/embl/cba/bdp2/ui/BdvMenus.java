@@ -6,6 +6,7 @@ import de.embl.cba.bdp2.viewers.ImageViewer;
 import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.display.imagej.ImageJFunctions;
+import net.imglib2.view.Views;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -67,14 +68,16 @@ public class BdvMenus extends JMenu implements ActionListener { //TODO: change n
                 imageViewer.replicateViewerContrast( newImageViewer );
             });
         }else if(e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.IMAGEJ_VIEW_MENU_DISPLAY_TEXT)){
-            ImageJFunctions.show(imageViewer.getRai(), BigDataProcessor.executorService);
+            RandomAccessibleInterval permuted = Views.permute(imageViewer.getRai(),FileInfoConstants.Z,FileInfoConstants.C);
+            ImageJFunctions.show(permuted, BigDataProcessor.executorService);
         }else if(e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.BIG_DATA_TRACKER_MENU_DISPLAY_TEXT)){
            BigDataProcessor.executorService.submit(() -> {
                 BigDataTrackerGUI bigDataTrackerGUI = new BigDataTrackerGUI(imageViewer);
                 bigDataTrackerGUI.showDialog();
-//            CommandService commandService = LazyLoadingCommand.uiService.getContext().service(CommandService.class);
-//            commandService.run( BigDataTrackerUICommand.class, true, "imageViewer", imageViewer );
-
+                /*
+                CommandService commandService = LazyLoadingCommand.uiService.getContext().service(CommandService.class);
+                commandService.run( BigDataTrackerUICommand.class, true, "imageViewer", imageViewer );
+                */
             });
         }else if(e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.EIGHT_BIT_MENU_DISPLAY_TEXT)){
             BigDataProcessor.executorService.submit(() -> {
