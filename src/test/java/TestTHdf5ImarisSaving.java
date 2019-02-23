@@ -13,7 +13,7 @@ public class TestTHdf5ImarisSaving {
     public static void main(String[] args) {
         String imageDirectory = "src/test/resources/shear_transform_test";
         final FileInfoSource fileInfoSource = new FileInfoSource(imageDirectory, FileInfoConstants.SINGLE_CHANNEL_TIMELAPSE,
-                ".*", "", true);
+                ".*", "");
         CachedCellImg cachedCellImg = CachedCellImageCreator.create(fileInfoSource, null);
 
         ImageViewer imageViewer = new BdvImageViewer<UnsignedShortType>(

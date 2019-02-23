@@ -21,8 +21,7 @@ public class TestOpenHDF5WithUI {
         FileInfoSource fileInfoSource = new FileInfoSource(directory,
                 FileInfoConstants.SINGLE_CHANNEL_TIMELAPSE,
                 ".*.h5",
-                "Data",
-                true);
+                "Data");
         //FileInfoSource fileinfosource = new FileInfoSource(directory,"None",".*.h5","Datawrong",true,10);
         Img myImg = new CachedCellImageCreator().create(fileInfoSource,null);
 
@@ -31,9 +30,7 @@ public class TestOpenHDF5WithUI {
                 .doubleBuffered(false)
                 .transformEventHandlerFactory(new BehaviourTransformEventHandler3D.BehaviourTransformEventHandler3DFactory()));
 
-        if(fileInfoSource.isAutoContrast()) {
             bdvSource.setDisplayRange(fileInfoSource.min_pixel_val, fileInfoSource.max_pixel_val);
-        }
 
     }
 }

@@ -12,15 +12,15 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.type.numeric.real.FloatType;
-
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 import static de.embl.cba.bdp2.fileinfosource.FileInfoConstants.*;
 
 public class FileInfoSource {
-    private SerializableFileInfo[][][] infos;
-    public long dimensions[];
+    private final SerializableFileInfo[][][] infos;
+    private final long[] dimensions;
     public int bitDepth;
     public int nC;
     public int nT;
@@ -33,37 +33,20 @@ public class FileInfoSource {
     public String h5DataSetName;
     public String[] channelFolders;
     public String[][][] ctzFileList;
-    public String directory;
-    public String namingPattern;
-    private Logger logger = new IJLazySwingLogger();
+    public final String directory;
+    private final Logger logger = new IJLazySwingLogger();
     public double max_pixel_val;
     public double min_pixel_val;
-    private boolean isAutoContrast;
-
 
     public FileInfoSource(
             String directory,
             String namingScheme,
             String filterPattern,
-            String h5DataSetName)
-    {
-        this( directory,  namingScheme, filterPattern, h5DataSetName,true );
-    }
-
-    public FileInfoSource(
-            String directory,
-            String namingScheme,
-            String filterPattern,
-            String h5DataSetName,
-            boolean isAutoContrast)
-    {
+            String h5DataSetName){
         this.directory = directory;
-        this.namingPattern = namingScheme;
-        this.isAutoContrast = isAutoContrast;
         if ( namingScheme.contains("<Z") ){// TODO: change below logic somehow (maybe via GUI?)
             FileInfoSourceHelper.setFileSourceInfos(this, directory, namingScheme );
-        }
-        else{
+        }else{
             this.h5DataSetName = h5DataSetName;
             FileInfoSourceHelper.setFileSourceInfos(
                     this, directory, namingScheme, filterPattern );
@@ -75,11 +58,7 @@ public class FileInfoSource {
         dimensions[ Z ] = nZ;
         dimensions[ C ] = nC;
         dimensions[ T ] = nT;
-        if ( unit == null || unit == "" ) unit = "pixel";
-
-        if (isAutoContrast()){
-            //setMaxMinPixels();
-        }
+        if ( unit == null || Objects.equals(unit, "")) unit = "pixel";
     }
 
     public long[] getDimensions() {
@@ -216,57 +195,5 @@ public class FileInfoSource {
             }
         }
 
-    }
-    /*
-    public void setMaxMinPixels(){
-        ImageLoader loadPlate = new ImageLoader(this);
-        long[] positionXYCZT = {0,0,0,nZ/2,0};
-        ImagePlus imagePlus = loadPlate.getDataCube(positionXYCZT);
-        double min=0;
-        double max=255;
-        if (this.bitDepth == Byte.SIZE){
-            final byte[] impData = (byte []) imagePlus.getProcessor().getPixels();
-            Byte[] boxedVar = new Byte[impData.length];
-            Arrays.parallelSetAll(boxedVar, n -> impData[n]);
-            List<Byte> temp = Arrays.asList(boxedVar);
-            max = Collections.max(temp);
-            min = Collections.min(temp);
-        }else if (this.bitDepth == Short.SIZE){
-            final short[] impData = (short []) imagePlus.getProcessor().getPixels();
-            Short[] boxedVar = new Short[impData.length];
-            Arrays.parallelSetAll(boxedVar, n -> impData[n]);
-            List<Short> temp = Arrays.asList(boxedVar);
-            max = Collections.max(temp);
-            min = Collections.min(temp);
-        }else if (this.bitDepth == Float.SIZE){
-            final float[] impData = (float []) imagePlus.getProcessor().getPixels();
-            Float[] boxedVar = new Float[impData.length];
-            Arrays.parallelSetAll(boxedVar, n -> impData[n]);
-            List<Float> temp = Arrays.asList(boxedVar);
-            max = Float.valueOf(Collections.max(temp)).intValue();
-            min = Float.valueOf(Collections.min(temp)).intValue();
-        }
-        max = max -min;
-
-        //Setting bit level for the image.
-        for(int i =0; i<Float.SIZE; ++i){
-            double bitLevel = (2L<<i)-1;
-            if(max <= bitLevel){
-                max = bitLevel;
-                break;
-            }
-        }
-        min=0;
-        this.max_pixel_val = max;
-        this.min_pixel_val = min;
-        setAutoContrast(true);
-    }
-*/
-    public void setAutoContrast(boolean autoContrast) {
-        isAutoContrast = autoContrast;
-    }
-
-    public boolean isAutoContrast() {
-        return isAutoContrast;
     }
 }
