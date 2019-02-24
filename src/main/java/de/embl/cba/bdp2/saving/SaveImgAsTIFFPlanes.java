@@ -51,8 +51,7 @@ public class SaveImgAsTIFFPlanes implements Runnable {
         RandomAccessibleInterval newRai = Views.interval(imgStack, minInterval, maxInterval);
 
         @SuppressWarnings("unchecked")
-        ImagePlus impCTZ = ImageJFunctions.wrap( newRai, "slice", null); // TODO : check if threads can be given for this operation in place of null --ashis
-        impCTZ.setTitle("slice");
+        ImagePlus impCTZ = ImageJFunctions.wrap( newRai, "slice");
         impCTZ.setDimensions(1, 1, 1);
 
         // Convert

@@ -89,7 +89,10 @@ public class SaveImgAsTIFFStacks implements Runnable {
                     this.t};
 
             RandomAccessibleInterval rai3D = Views.interval(image, minInterval, maxInterval);
-            ImagePlus impChannelTime = ImageJFunctions.wrap( rai3D, "cube" );
+            ImagePlus impChannelTime = Utils.wrapToCalibratedImagePlus( rai3D,
+                    savingSettings.voxelSize,
+                    savingSettings.unit,
+                    "cube" );
             // Gate
             //
             if (savingSettings.gate) {
