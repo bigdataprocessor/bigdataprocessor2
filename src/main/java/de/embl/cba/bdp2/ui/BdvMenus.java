@@ -55,17 +55,19 @@ public class BdvMenus extends JMenu implements ActionListener { //TODO: change n
             final RandomAccessibleInterval rai = imageViewer.getRai();
             BigDataProcessor.executorService.submit(() -> {
                 FinalInterval interval = imageViewer.get5DIntervalFromUser();
-                RandomAccessibleInterval croppedRAI = BigDataProcessor.crop(rai,interval);
-                ImageViewer newImageViewer = imageViewer.newImageViewer();
-                newImageViewer.show(
-                        croppedRAI,
-                        FileInfoConstants.CROPPED_STREAM_NAME,
-                        imageViewer.getVoxelSize(),
-                        imageViewer.getCalibrationUnit(),
-                        false );
-                BdvMenus menus = new BdvMenus();
-                newImageViewer.addMenus( menus );
-                imageViewer.replicateViewerContrast( newImageViewer );
+                if (interval != null) {
+                    RandomAccessibleInterval croppedRAI = BigDataProcessor.crop(rai, interval);
+                    ImageViewer newImageViewer = imageViewer.newImageViewer();
+                    newImageViewer.show(
+                            croppedRAI,
+                            FileInfoConstants.CROPPED_STREAM_NAME,
+                            imageViewer.getVoxelSize(),
+                            imageViewer.getCalibrationUnit(),
+                            false);
+                    BdvMenus menus = new BdvMenus();
+                    newImageViewer.addMenus(menus);
+                    imageViewer.replicateViewerContrast(newImageViewer);
+                }
             });
         }else if(e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.IMAGEJ_VIEW_MENU_DISPLAY_TEXT)){
             RandomAccessibleInterval permuted = Views.permute(imageViewer.getRai(),FileInfoConstants.Z,FileInfoConstants.C);
