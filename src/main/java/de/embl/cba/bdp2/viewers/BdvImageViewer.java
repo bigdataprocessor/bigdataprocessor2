@@ -11,7 +11,6 @@ import bdv.viewer.SourceAndConverter;
 import de.embl.cba.bdp2.boundingbox.BoundingBoxDialog;
 import de.embl.cba.bdp2.ui.BdvMenus;
 import de.embl.cba.bdp2.ui.DisplaySettings;
-import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
 import net.imglib2.Cursor;
 import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccessibleInterval;
@@ -22,6 +21,8 @@ import net.imglib2.util.Intervals;
 import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
 import javax.swing.*;
+
+
 import static de.embl.cba.bdp2.fileinfosource.FileInfoConstants.*;
 
 public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements ImageViewer {
@@ -30,12 +31,11 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
     private double[] voxelSize;
     private String imageName;
 
-    private BdvStackSource< T > bdvSS;
+    private BdvStackSource<T> bdvSS;
     private String calibrationUnit;
+    private BdvGrayValuesOverlay overlay;
 
-    public BdvImageViewer()
-    {
-
+    public BdvImageViewer() {
     }
 
     // TODO: wrap RAI into a "PhysicalImg" with voxelSize and Calibration
@@ -43,8 +43,7 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
             RandomAccessibleInterval<T> rai,
             String imageName,
             double[] voxelSize,
-            String calibrationUnit )
-    {
+            String calibrationUnit) {
         this.imageName = imageName;
         this.rai = rai;
         this.voxelSize = voxelSize;
@@ -56,26 +55,25 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
     public FinalInterval get5DIntervalFromUser() {
         BoundingBoxDialog showBB = new BoundingBoxDialog(this.bdvSS.getBdvHandle());
         //showBB.show( rai, voxelSize, BB_TRACK_BUTTON_LABEL,true);
-        showBB.show( rai, voxelSize);
+        showBB.show(rai, voxelSize);
         long[] minMax = {
-                (long) ( showBB.selectedMin[ BoundingBoxDialog.X ] / voxelSize[ X ] ),
-                (long) ( showBB.selectedMin[ BoundingBoxDialog.Y ] / voxelSize[ Y ] ),
-                (long) ( showBB.selectedMin[ BoundingBoxDialog.Z ] / voxelSize[ Z ] ),
-                rai.min( C ),
-                showBB.selectedMin[ BoundingBoxDialog.T ],
-                (long) ( showBB.selectedMax[ BoundingBoxDialog.X ] / voxelSize[ X ] ),
-                (long) ( showBB.selectedMax[ BoundingBoxDialog.Y ] / voxelSize[ Y ] ),
-                (long) ( showBB.selectedMax[ BoundingBoxDialog.Z ] / voxelSize[ Z ] ),
-                rai.max( C ),
-                showBB.selectedMax[ BoundingBoxDialog.T ]};
-
-        return Intervals.createMinMax( minMax );
+                (long) (showBB.selectedMin[BoundingBoxDialog.X] / voxelSize[X]),
+                (long) (showBB.selectedMin[BoundingBoxDialog.Y] / voxelSize[Y]),
+                (long) (showBB.selectedMin[BoundingBoxDialog.Z] / voxelSize[Z]),
+                rai.min(C),
+                showBB.selectedMin[BoundingBoxDialog.T],
+                (long) (showBB.selectedMax[BoundingBoxDialog.X] / voxelSize[X]),
+                (long) (showBB.selectedMax[BoundingBoxDialog.Y] / voxelSize[Y]),
+                (long) (showBB.selectedMax[BoundingBoxDialog.Z] / voxelSize[Z]),
+                rai.max(C),
+                showBB.selectedMax[BoundingBoxDialog.T]};
+        return Intervals.createMinMax(minMax);
 
     }
 
     @Override
-    public ImageViewer newImageViewer( ) {
-        return new BdvImageViewer<T>( );
+    public ImageViewer newImageViewer() {
+        return new BdvImageViewer<T>();
     }
 
     @Override
@@ -84,8 +82,7 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
     }
 
     @Override
-    public double[] getVoxelSize()
-    {
+    public double[] getVoxelSize() {
         return voxelSize;
     }
 
@@ -96,15 +93,13 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
 
 
     @Override
-    public void repaint( AffineTransform3D viewerTransform )
-    {
-        this.bdvSS.getBdvHandle().getViewerPanel().setCurrentViewerTransform( viewerTransform );
+    public void repaint(AffineTransform3D viewerTransform) {
+        this.bdvSS.getBdvHandle().getViewerPanel().setCurrentViewerTransform(viewerTransform);
     }
 
     @Override
-    public void show( )
-    {
-        showImageInViewer( rai, imageName, voxelSize, calibrationUnit );
+    public void show() {
+        showImageInViewer(rai, imageName, voxelSize, calibrationUnit);
     }
 
     @Override
@@ -113,29 +108,33 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
             String imageName,
             double[] voxelSize,
             String calibrationUnit,
-            boolean autoContrast )
-    {
-        if ( this.bdvSS != null ){
+            boolean autoContrast) {
+        if (this.bdvSS != null) {
             removeAllSourcesFromBdv();
         }
-        showImageInViewer( rai, imageName, voxelSize, calibrationUnit );
-        if(autoContrast) {
+        showImageInViewer(rai, imageName, voxelSize, calibrationUnit);
+        if (autoContrast) {
             doAutoContrastPerChannel();
         }
     }
 
 
-    private void removeAllSourcesFromBdv()
-    {
-        SourceAndConverter scnv = this.bdvSS.getBdvHandle().getViewerPanel().getState().getSources().get(0);
-        this.bdvSS.getBdvHandle().getViewerPanel().removeSource( scnv.getSpimSource() );
+    private void removeAllSourcesFromBdv() {
+        int nSources = this.bdvSS.getBdvHandle().getViewerPanel().getState().getSources().size();
+        for (int source = 0; source < nSources; ++source) {
+            SourceAndConverter scnv = this.bdvSS.getBdvHandle().getViewerPanel().getState().getSources().get(0);
+            this.bdvSS.getBdvHandle().getViewerPanel().removeSource(scnv.getSpimSource());
+            //source is always 0 (zero) because SourceAndConverter object gets removed from bdvSS.
+            //Hence source is always at position 0 of the bdvSS.
+        }
 
-        int nChannels = (int) this.getRai().dimension( C );
-        for (int channel = 0; channel < nChannels; ++channel)
-        {
-			ConverterSetup converterSetup = this.getBdvSS().getBdvHandle().getSetupAssignments().getConverterSetups().get( channel );
-			this.bdvSS.getBdvHandle().getSetupAssignments().removeSetup( converterSetup );
-		}
+        int nChannels = this.getBdvSS().getBdvHandle().getSetupAssignments().getConverterSetups().size();
+        for (int channel = 0; channel < nChannels; ++channel) {
+            ConverterSetup converterSetup = this.getBdvSS().getBdvHandle().getSetupAssignments().getConverterSetups().get(0);
+            this.bdvSS.getBdvHandle().getSetupAssignments().removeSetup(converterSetup);
+            //channel is always 0 (zero) because converterSetup object gets removed from bdvSS.
+            //Hence current channel is always at position 0 of the bdvSS.
+        }
     }
 
     public void addMenus(BdvMenus menus) {
@@ -156,13 +155,13 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
     }
 
     /**
-    Returns min and max pixel values of the center slice of the first time point for the RandomAccessibleInterval
-     as a DisplaySettings object of the requested channel.
+     * Returns min and max pixel values of the center slice of the first time point for the RandomAccessibleInterval
+     * as a DisplaySettings object of the requested channel.
      */
     @Override
     public DisplaySettings getDisplaySettings(int channel) {
-        double min,max;
-        if(this.rai!= null) {
+        double min, max;
+        if (this.rai != null) {
             RandomAccessibleInterval raiStack = Views.hyperSlice(
                     Views.hyperSlice(this.rai, T, 0),
                     C,
@@ -181,15 +180,16 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
                 if (value < min) min = value;
                 if (value > max) max = value;
             }
-        }else{
-            max=0;min=0;
+        } else {
+            max = 0;
+            min = 0;
         }
         return new DisplaySettings(min, max);
     }
 
     @Override
     public void doAutoContrastPerChannel() {
-        int nChannels = (int) this.getRai().dimension(FileInfoConstants.C);
+        int nChannels = (int) this.getRai().dimension(C);
         for (int channel = 0; channel < nChannels; ++channel) {
             DisplaySettings setting = getDisplaySettings(channel);
             setDisplayRange(setting.getMinValue(), setting.getMaxValue(), 0);
@@ -199,13 +199,12 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
     }
 
     @Override
-    public String getCalibrationUnit()
-    {
+    public String getCalibrationUnit() {
         return calibrationUnit;
     }
 
     public void replicateViewerContrast(ImageViewer newImageView) {
-        int nChannels = (int) this.getRai().dimension( C );
+        int nChannels = (int) this.getRai().dimension(C);
         for (int channel = 0; channel < nChannels; ++channel) {
             ConverterSetup converterSetup = this.getBdvSS().getBdvHandle().getSetupAssignments().getConverterSetups().get(channel);
             newImageView.setDisplayRange(converterSetup.getDisplayRangeMin(), converterSetup.getDisplayRangeMax(), 0);
@@ -215,7 +214,6 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
     }
 
     public int getCurrentTimePoint() {
-        System.out.println("Time is" + this.bdvSS.getBdvHandle().getViewerPanel().getState().getCurrentTimepoint());
         return this.bdvSS.getBdvHandle().getViewerPanel().getState().getCurrentTimepoint();
     }
 
@@ -239,39 +237,42 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
             RandomAccessibleInterval rai,
             String imageName,
             double[] voxelSize,
-            String calibrationUnit )
-    {
+            String calibrationUnit) {
         final AffineTransform3D scaling = new AffineTransform3D();
 
-        for ( int d = 0; d < 3; d++ )
-        {
-            scaling.set( voxelSize[ d ], d, d );
+        for (int d = 0; d < 3; d++) {
+            scaling.set(voxelSize[d], d, d);
         }
 
         bdvSS = BdvFunctions.show(
-                asVolatile( rai ),
+                asVolatile(rai),
                 imageName,
-                BdvOptions.options().axisOrder( AxisOrder.XYZCT )
-                        .addTo( bdvSS ).sourceTransform( scaling ) );
-
+                BdvOptions.options().axisOrder(AxisOrder.XYZCT)
+                        .addTo(bdvSS).sourceTransform(scaling));
+        addGrayValueOverlay();
         this.imageName = imageName;
         this.calibrationUnit = calibrationUnit;
         this.rai = rai;
         this.voxelSize = voxelSize;
     }
 
-    private RandomAccessibleInterval asVolatile( RandomAccessibleInterval rai )
-    {
-        RandomAccessibleInterval volatileRai;
-        try
-        {
-            volatileRai = VolatileViews.wrapAsVolatile( rai );
-        }
-        catch ( Exception e )
-        {
-            volatileRai = rai;
+    private RandomAccessibleInterval asVolatile(RandomAccessibleInterval volatileRai) {
+        try {
+            volatileRai = VolatileViews.wrapAsVolatile(volatileRai);
+        } catch (IllegalArgumentException e) { //Never mind!
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return volatileRai;
     }
 
+    private void addGrayValueOverlay() {
+        if (overlay == null) {
+            overlay = new BdvGrayValuesOverlay(this.bdvSS, 12, "Courier New");
+        }
+        BdvFunctions.showOverlay(overlay,
+                "GrayOverlay",
+                BdvOptions.options().addTo(bdvSS));
+
+    }
 }
