@@ -2,6 +2,8 @@ package de.embl.cba.bdp2.ui;
 
 import de.embl.cba.bdp2.motioncorrection.BigDataTrackerGUI;
 import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
+import de.embl.cba.bdp2.process.BinnedView;
+import de.embl.cba.bdp2.process.UnsignedByteTypeView;
 import de.embl.cba.bdp2.viewers.ImageViewer;
 import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccessibleInterval;
@@ -89,6 +91,13 @@ public class BdvMenus extends JMenu implements ActionListener { //TODO: change n
             BigDataProcessor.executorService.submit(() -> {
                 UnsignedByteTypeView menuDialog =
                         new UnsignedByteTypeView(imageViewer);
+                menuDialog.setVisible(true);
+            });
+        }else if(e.getActionCommand().equalsIgnoreCase(
+                UIDisplayConstants.INTERACTIVE_BINNING)){
+            BigDataProcessor.executorService.submit(() -> {
+                BinnedView menuDialog =
+                        new BinnedView<>(imageViewer);
                 menuDialog.setVisible(true);
             });
         }

@@ -1,8 +1,9 @@
-package de.embl.cba.bdp2.ui;
+package de.embl.cba.bdp2.process;
 
 import bdv.tools.brightness.SliderPanelDouble;
 import bdv.util.BoundedValueDouble;
 import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
+import de.embl.cba.bdp2.ui.BdvMenus;
 import de.embl.cba.bdp2.viewers.ImageViewer;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.Converters;
@@ -14,11 +15,11 @@ import net.imglib2.util.Util;
 import javax.swing.*;
 import java.awt.*;
 
-public class UnsignedByteTypeView< T extends RealType< T > > extends JFrame
+public class BinnedView< T extends RealType< T > > extends JFrame
 {
 	private static Point dialogLocation;
 
-	public UnsignedByteTypeView( final ImageViewer imageViewer  )
+	public BinnedView( final ImageViewer imageViewer  )
 	{
 
 		final RandomAccessibleInterval rai = imageViewer.getRai();
@@ -30,6 +31,9 @@ public class UnsignedByteTypeView< T extends RealType< T > > extends JFrame
 
 		final double mapTo0 = imageViewer.getDisplaySettings( 0 ).getMinValue();
 		final double mapTo255 = imageViewer.getDisplaySettings( 0 ).getMaxValue();
+
+
+
 
 		final RealUnsignedByteConverter< T > converter =
 				new RealUnsignedByteConverter<>(

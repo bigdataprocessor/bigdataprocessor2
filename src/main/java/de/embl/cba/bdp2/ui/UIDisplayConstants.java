@@ -11,4 +11,5 @@ public class UIDisplayConstants {
     public static final String BIG_DATA_TRACKER_MENU_DISPLAY_TEXT = "Big Data Tracker";
     public static final String OBLIQUE_MENU_DISPLAY_TEXT = "Oblique View";
     public static final String INTERACTIVE_EIGHT_BIT_MENU_DISPLAY_TEXT = "8-bit View";
+    public static final String INTERACTIVE_BINNING = "Binned View";
 }

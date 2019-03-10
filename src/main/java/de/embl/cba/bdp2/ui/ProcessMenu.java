@@ -7,6 +7,7 @@ public class ProcessMenu extends JMenu {
     private final JMenuItem obliqueView;
     private final JMenuItem cropSelectMenu;
     private final JMenuItem interactiveUnsignedByteConverter;
+    private final JMenuItem interactiveBinner;
 
     public ProcessMenu(BdvMenus actionListener) {
 
@@ -24,6 +25,11 @@ public class ProcessMenu extends JMenu {
                 new JMenuItem(UIDisplayConstants.INTERACTIVE_EIGHT_BIT_MENU_DISPLAY_TEXT);
         add(interactiveUnsignedByteConverter);
         interactiveUnsignedByteConverter.addActionListener( actionListener );
+
+        interactiveBinner =
+                new JMenuItem(UIDisplayConstants.INTERACTIVE_BINNING);
+        add(interactiveBinner);
+        interactiveBinner.addActionListener( actionListener );
     }
 
 
