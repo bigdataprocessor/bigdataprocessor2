@@ -23,7 +23,7 @@ public class BinnedView< T extends RealType< T > & NativeType< T > > extends JFr
 
 		final RandomAccessibleInterval< T > rai = imageViewer.getRai();
 
-		long[] span = new long[]{1,1,0};
+		long[] span = new long[]{1,1,0,0,0};
 
 		final RandomAccessibleInterval< T > downsampledView =
 				new LazyDownsampler<>( rai, span ).getDownsampledView();
@@ -47,11 +47,12 @@ public class BinnedView< T extends RealType< T > & NativeType< T > > extends JFr
 
 	private double[] getBinnedVoxelSize( long[] span, double[] voxelSize )
 	{
+		final double[] newVoxelSize = new double[ voxelSize.length ];
+
 		for ( int d = 0; d < 3; d++ )
-		{
-			voxelSize[ d ] /= 2 * span[ d ] + 1;
-		}
-		return voxelSize;
+			newVoxelSize[ d ] = voxelSize[ d ] * ( 2 * span[ d ] + 1 );
+
+		return newVoxelSize;
 	}
 
 	private void showBinningAdjustmentDialog(
@@ -88,7 +89,7 @@ public class BinnedView< T extends RealType< T > & NativeType< T > > extends JFr
 			@Override
 			public void update()
 			{
-				final long[] span = new long[ 3 ];
+				final long[] span = new long[ 5 ];
 
 				for ( int d = 0; d < 3; d++ )
 				{
@@ -106,7 +107,7 @@ public class BinnedView< T extends RealType< T > & NativeType< T > > extends JFr
 						imageViewer.getImageName(),
 						binnedVoxelSize,
 						imageViewer.getCalibrationUnit(),
-						false );
+						true );
 			}
 		}
 

@@ -118,14 +118,15 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
             String imageName,
             double[] voxelSize,
             String calibrationUnit,
-            boolean autoContrast) {
-        if (this.bdvSS != null) {
+            boolean autoContrast)
+    {
+        if (this.bdvSS != null)
             removeAllSourcesFromBdv();
-        }
+
         showImageInViewer(rai, imageName, voxelSize, calibrationUnit);
-        if (autoContrast) {
+
+        if (autoContrast)
             doAutoContrastPerChannel();
-        }
     }
 
 
@@ -248,18 +249,20 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
             String imageName,
             double[] voxelSize,
             String calibrationUnit) {
+
         final AffineTransform3D scaling = new AffineTransform3D();
 
-        for (int d = 0; d < 3; d++) {
+        for (int d = 0; d < 3; d++)
             scaling.set(voxelSize[d], d, d);
-        }
 
         bdvSS = BdvFunctions.show(
                 asVolatile(rai),
                 imageName,
                 BdvOptions.options().axisOrder(AxisOrder.XYZCT)
                         .addTo(bdvSS).sourceTransform(scaling));
+
         addGrayValueOverlay();
+
         this.imageName = imageName;
         this.calibrationUnit = calibrationUnit;
         this.rai = rai;
