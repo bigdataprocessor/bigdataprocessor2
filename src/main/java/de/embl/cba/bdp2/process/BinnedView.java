@@ -74,12 +74,12 @@ public class BinnedView< T extends RealType< T > & NativeType< T > > extends JFr
 		for ( int d = 0; d < 3; d++ )
 		{
 			boundedValues.add( new BoundedValue(
-					0, 10, ( int ) span[ d ] ) );
+					1, 11, ( int ) ( 2 * span[ d ] + 1 ) ) );
 			sliderPanels.add(
 					new SliderPanel(
-							"Binning span dimension " + d ,
+							"Binning, dimension " + d ,
 								boundedValues.get( d ),
-								1));
+								2 ));
 		}
 
 
@@ -93,7 +93,7 @@ public class BinnedView< T extends RealType< T > & NativeType< T > > extends JFr
 
 				for ( int d = 0; d < 3; d++ )
 				{
-					span[ d ] = boundedValues.get( d ).getCurrentValue();
+					span[ d ] = ( boundedValues.get( d ).getCurrentValue() - 1 ) / 2;
 					sliderPanels.get( d ).update();
 				}
 
