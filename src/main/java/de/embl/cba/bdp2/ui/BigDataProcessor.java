@@ -8,7 +8,11 @@ import de.embl.cba.bdp2.saving.SavingSettings;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.ImageViewer;
 import ij.gui.GenericDialog;
-import net.imglib2.*;
+import net.imglib2.FinalInterval;
+import net.imglib2.FinalRealInterval;
+import net.imglib2.Interval;
+import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.RealRandomAccessible;
 import net.imglib2.cache.img.CachedCellImg;
 import net.imglib2.converter.Converters;
 import net.imglib2.converter.RealUnsignedByteConverter;
@@ -24,7 +28,6 @@ import net.imglib2.util.Intervals;
 import net.imglib2.util.Util;
 import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -39,7 +42,6 @@ public class BigDataProcessor {
     public static ExecutorService trackerThreadPool; // Thread pool for tracking
     public int numThreads;
     public static int MAX_THREAD_LIMIT = Runtime.getRuntime().availableProcessors() * 2;
-    private ImageViewer imageViewer;// remove it
 
     public BigDataProcessor() {
         //TODO: have separate shutdown for the executorService. It will not shutdown when ui exeService is shut. --ashis (DONE but needs testing)
@@ -56,10 +58,6 @@ public class BigDataProcessor {
         executorService = Executors.newFixedThreadPool(nIOthreads);
     }
 
-    public void shutdownThreadPack() {
-        Utils.shutdownThreadPack(executorService, 10);
-    }
-
     public void openFromDirectory(
             String directory,
             String namingScheme,
@@ -69,13 +67,9 @@ public class BigDataProcessor {
             ImageViewer imageViewer )
     {
         directory = Utils.fixDirectoryFormat(directory);
-
         this.fileInfoSource = new FileInfoSource( directory, namingScheme, filterPattern, h5DataSetName );
-
         if ( ! ensureCalibrationUI() ) return;
-
         CachedCellImg cachedCellImg = CachedCellImageCreator.create(this.fileInfoSource, this.executorService);
-        this.imageViewer = imageViewer;
         imageViewer.show(
         		cachedCellImg,
 				FileInfoConstants.IMAGE_NAME,
@@ -101,25 +95,17 @@ public class BigDataProcessor {
         return true;
     }
 
-    public static RandomAccessibleInterval crop(RandomAccessibleInterval rai,FinalInterval interval){
+    public static RandomAccessibleInterval crop(RandomAccessibleInterval rai, FinalInterval interval){
         return Views.zeroMin(Views.interval(rai, interval));
     }
 
 
     public static void saveImage(
     		SavingSettings savingSettings,
-			ImageViewer imageViewer )
-		{ //TODO: No need to get imageVieweer.Use only SavinfgSetting
+			RandomAccessibleInterval rai ) {
         int nIOThread = Math.max(1, Math.min(savingSettings.nThreads, MAX_THREAD_LIMIT));
         ExecutorService saveExecutorService =  Executors.newFixedThreadPool(nIOThread);
-        String streamName = imageViewer.getImageName();
-        RandomAccessibleInterval rai = imageViewer.getRai();
-        if (streamName.equalsIgnoreCase(FileInfoConstants.CROPPED_STREAM_NAME)) {
-            rai = Views.zeroMin(rai);
-        }
         savingSettings.image = rai;
-        savingSettings.voxelSize = imageViewer.getVoxelSize();
-        savingSettings.unit = imageViewer.getCalibrationUnit();
         SaveCentral.interruptSavingThreads = false;
         SaveCentral.goSave(savingSettings, saveExecutorService);
     }
@@ -231,11 +217,6 @@ public class BigDataProcessor {
             }
             return Views.stack(channelTracks);
         }
-    }
-
-    public ImageViewer getImageViewer()
-    {
-        return imageViewer;
     }
 
     public static <T extends RealType<T>> RandomAccessibleInterval unsignedByteTypeConverter(RandomAccessibleInterval rai,DisplaySettings displaySettings){

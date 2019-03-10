@@ -32,8 +32,9 @@ public class TestTHdf5StackSaving
         final SavingSettings defaults = SavingSettings.getDefaults();
         defaults.fileType = SavingSettings.FileType.HDF5_STACKS;
         defaults.nThreads = 3;
-        new BigDataProcessor().saveImage( defaults, imageViewer );
-
+        defaults.voxelSize =imageViewer.getVoxelSize();
+        defaults.unit = imageViewer.getCalibrationUnit();
+        new BigDataProcessor().saveImage( defaults, cachedCellImg );
 
     }
 
