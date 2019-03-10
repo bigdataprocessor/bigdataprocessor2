@@ -5,12 +5,14 @@ import de.embl.cba.bdp2.ui.DisplaySettings;
 import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.realtransform.AffineTransform3D;
+import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.RealType;
 
-public interface ImageViewer {
+public interface ImageViewer < R extends RealType< R > & NativeType< R > >  {
 
     void show();
 
-    RandomAccessibleInterval getRai();
+    RandomAccessibleInterval< R > getRai();
 
     double[] getVoxelSize();
 
@@ -20,7 +22,12 @@ public interface ImageViewer {
 
     FinalInterval get5DIntervalFromUser();
 
-    void show( RandomAccessibleInterval rai, String name, double[] voxelSize, String calibrationUnit, boolean autoContrast );
+    void show(
+            RandomAccessibleInterval rai,
+            String name,
+            double[] voxelSize,
+            String calibrationUnit,
+            boolean autoContrast );
 
     void addMenus(BdvMenus menus);
 
