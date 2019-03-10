@@ -22,7 +22,7 @@ import net.imglib2.algorithm.neighborhood.*;
  * @author Jonathan Hale (University of Konstanz)
  * @author Christian Tischer
  */
-public class ActualRectangleShape implements Shape
+public class RectangleShape2 implements Shape
 {
 	final Interval spanInterval;
 
@@ -32,37 +32,83 @@ public class ActualRectangleShape implements Shape
 	 * @param spanInterval
 	 * @param skipCenter
 	 */
-	public ActualRectangleShape( final Interval spanInterval, final boolean skipCenter )
+	public RectangleShape2( final Interval spanInterval, final boolean skipCenter )
 	{
 		this.spanInterval = spanInterval;
 		this.skipCenter = skipCenter;
 	}
 
-	@Override
-	public < T > RectangleShape.NeighborhoodsIterableInterval< T > neighborhoods( final RandomAccessibleInterval< T > source )
+	/**
+	 *
+	 * Note that the width of the rectangle along each dimension will be
+	 * 2 * span + 1
+	 *
+	 * @param spans
+	 * @param skipCenter
+	 */
+	public RectangleShape2( final long[] spans, final boolean skipCenter )
 	{
-		final RectangleNeighborhoodFactory< T > f = skipCenter ? RectangleNeighborhoodSkipCenterUnsafe.< T >factory() : RectangleNeighborhoodUnsafe.< T >factory();
-		return new RectangleShape.NeighborhoodsIterableInterval< T >( source, spanInterval, f );
+		this.spanInterval = createSpanInterval( spans );
+		this.skipCenter = skipCenter;
+	}
+
+	private FinalInterval createSpanInterval( long[] spans )
+	{
+		int n = spans.length;
+		final long[] min = new long[ n ];
+		final long[] max = new long[ n ];
+		for ( int d = 0; d < n; ++d )
+		{
+			min[ d ] = -spans[d];
+			max[ d ] = spans[d];
+		}
+		return new FinalInterval( min, max );
 	}
 
 	@Override
-	public < T > RectangleShape.NeighborhoodsAccessible< T > neighborhoodsRandomAccessible( final RandomAccessible< T > source )
+	public < T > RectangleShape.NeighborhoodsIterableInterval< T >
+	neighborhoods( final RandomAccessibleInterval< T > source )
 	{
-		final RectangleNeighborhoodFactory< T > f = skipCenter ? RectangleNeighborhoodSkipCenterUnsafe.< T >factory() : RectangleNeighborhoodUnsafe.< T >factory();
+		final RectangleNeighborhoodFactory< T > f =
+				skipCenter ?
+						RectangleNeighborhoodSkipCenterUnsafe.< T >factory() :
+						RectangleNeighborhoodUnsafe.< T >factory();
+
+		return new RectangleShape.NeighborhoodsIterableInterval< T >(
+				source, spanInterval, f );
+	}
+
+	@Override
+	public < T > RectangleShape.NeighborhoodsAccessible< T >
+	neighborhoodsRandomAccessible( final RandomAccessible< T > source )
+	{
+		final RectangleNeighborhoodFactory< T > f =
+				skipCenter ?
+						RectangleNeighborhoodSkipCenterUnsafe.< T >factory() :
+						RectangleNeighborhoodUnsafe.< T >factory();
+
 		return new RectangleShape.NeighborhoodsAccessible< T >( source, spanInterval, f );
 	}
 
 	@Override
-	public < T > RectangleShape.NeighborhoodsIterableInterval< T > neighborhoodsSafe( final RandomAccessibleInterval< T > source )
+	public < T > RectangleShape.NeighborhoodsIterableInterval< T >
+	neighborhoodsSafe( final RandomAccessibleInterval< T > source )
 	{
-		final RectangleNeighborhoodFactory< T > f = skipCenter ? RectangleNeighborhoodSkipCenter.< T >factory() : RectangleNeighborhood.< T >factory();
+		final RectangleNeighborhoodFactory< T > f =
+				skipCenter ?
+						RectangleNeighborhoodSkipCenter.< T >factory() :
+						RectangleNeighborhood.< T >factory();
 		return new RectangleShape.NeighborhoodsIterableInterval< T >( source, spanInterval, f );
 	}
 
 	@Override
-	public < T > RectangleShape.NeighborhoodsAccessible< T > neighborhoodsRandomAccessibleSafe( final RandomAccessible< T > source )
+	public < T > RectangleShape.NeighborhoodsAccessible< T >
+	neighborhoodsRandomAccessibleSafe( final RandomAccessible< T > source )
 	{
-		final RectangleNeighborhoodFactory< T > f = skipCenter ? RectangleNeighborhoodSkipCenter.< T >factory() : RectangleNeighborhood.< T >factory();
+		final RectangleNeighborhoodFactory< T > f =
+				skipCenter ?
+				RectangleNeighborhoodSkipCenter.< T >factory() :
+				RectangleNeighborhood.< T >factory();
 		return new RectangleShape.NeighborhoodsAccessible< T >( source, spanInterval, f );
 	}
 
@@ -90,7 +136,8 @@ public class ActualRectangleShape implements Shape
 		return "RectangleShape, span = " + spanInterval;
 	}
 
-	public static final class NeighborhoodsIterableInterval< T > extends AbstractInterval implements IterableInterval< Neighborhood< T > >
+	public static final class NeighborhoodsIterableInterval< T >
+			extends AbstractInterval implements IterableInterval< Neighborhood< T > >
 	{
 		final RandomAccessibleInterval< T > source;
 
@@ -100,7 +147,10 @@ public class ActualRectangleShape implements Shape
 
 		final long size;
 
-		public NeighborhoodsIterableInterval( final RandomAccessibleInterval< T > source, final Interval span, final RectangleNeighborhoodFactory< T > factory )
+		public NeighborhoodsIterableInterval(
+				final RandomAccessibleInterval< T > source,
+				final Interval span,
+				final RectangleNeighborhoodFactory< T > factory )
 		{
 			super( source );
 			this.source = source;
@@ -149,7 +199,8 @@ public class ActualRectangleShape implements Shape
 		}
 	}
 
-	public static final class NeighborhoodsAccessible< T > extends AbstractEuclideanSpace implements RandomAccessible< Neighborhood< T > >
+	public static final class NeighborhoodsAccessible< T >
+			extends AbstractEuclideanSpace implements RandomAccessible< Neighborhood< T > >
 	{
 		final RandomAccessible< T > source;
 
@@ -157,7 +208,10 @@ public class ActualRectangleShape implements Shape
 
 		final RectangleNeighborhoodFactory< T > factory;
 
-		public NeighborhoodsAccessible( final RandomAccessible< T > source, final Interval span, final RectangleNeighborhoodFactory< T > factory )
+		public NeighborhoodsAccessible(
+				final RandomAccessible< T > source,
+				final Interval span,
+				final RectangleNeighborhoodFactory< T > factory )
 		{
 			super( source.numDimensions() );
 			this.source = source;
@@ -181,14 +235,7 @@ public class ActualRectangleShape implements Shape
 	@Override
 	public Interval getStructuringElementBoundingBox( final int numDimensions )
 	{
-		// TODO
-//		final long[] min = new long[ numDimensions ];
-//		Arrays.fill( min, -getSpan() );
-//
-//		final long[] max = new long[ numDimensions ];
-//		Arrays.fill( max, getSpan() );
-
-		return null;
+		return spanInterval;
 	}
 }
 

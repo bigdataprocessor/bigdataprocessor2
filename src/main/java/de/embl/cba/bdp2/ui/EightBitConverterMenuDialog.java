@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+@Deprecated
 public class EightBitConverterMenuDialog extends JDialog implements ActionListener {
     private final JTextField mapToZero= new JTextField("0", 5);
     private final JTextField mapTo255 = new JTextField("65535",5);
@@ -67,7 +68,8 @@ public class EightBitConverterMenuDialog extends JDialog implements ActionListen
         int min = Integer.parseInt(mapToZero.getText());
         int max = Integer.parseInt(mapTo255.getText());
         DisplaySettings displaySettings= new DisplaySettings(min,max);
-        RandomAccessibleInterval<UnsignedByteType> newRai = BigDataProcessor.unsignedByteTypeConverter(imageViewer.getRai(),displaySettings);
+        RandomAccessibleInterval<UnsignedByteType> newRai =
+                BigDataProcessor.unsignedByteTypeConverter(imageViewer.getRai(),displaySettings );
         ImageViewer newImageViewer = imageViewer.newImageViewer();
         newImageViewer.show(
                 newRai,

@@ -1,4 +1,5 @@
 import bdv.util.BdvFunctions;
+import de.embl.cba.bdp2.neighborhood.RectangleShape2;
 import net.imglib2.*;
 import net.imglib2.algorithm.neighborhood.Neighborhood;
 import net.imglib2.algorithm.neighborhood.RectangleShape;
@@ -20,21 +21,27 @@ public class ExploreLazyDownsampling
 
 		BdvFunctions.show( rai, "input" );
 
-		final RandomAccessibleInterval< UnsignedIntType > averageView = createAverageView( rai, 3 );
+		final RandomAccessibleInterval< UnsignedIntType > averageView =
+				createAverageView2( rai, new long[]{0,0,5} );
 
 		BdvFunctions.show( averageView, "average" );
 
-		final SubsampleIntervalView< UnsignedIntType > downsampleView = Views.subsample( averageView, 3 );
+		final SubsampleIntervalView< UnsignedIntType > downsampleView =
+				Views.subsample( averageView, 3 );
 
 		BdvFunctions.show( downsampleView, "downsample" );
 	}
 
-	private static RandomAccessibleInterval< UnsignedIntType > createAverageView( RandomAccessibleInterval< IntType > rai, int span )
+	private static RandomAccessibleInterval< UnsignedIntType >
+	createAverageView( RandomAccessibleInterval< IntType > rai, int span )
 	{
 		Shape shape = new RectangleShape( span, false );
+
 		final RandomAccessible< Neighborhood< IntType > > nra =
 				shape.neighborhoodsRandomAccessible( Views.extendBorder( rai ) );
-		final RandomAccessibleInterval< Neighborhood< IntType > > nrai = Views.interval( nra, rai );
+
+		final RandomAccessibleInterval< Neighborhood< IntType > > nrai =
+				Views.interval( nra, rai );
 
 		final RandomAccessibleInterval< UnsignedIntType > averageView =
 				Converters.convert( nrai,
@@ -43,6 +50,28 @@ public class ExploreLazyDownsampling
 						setNeighborhoodAverage( neighborhood, output );
 					},
 				new UnsignedIntType() );
+
+		return averageView;
+	}
+
+	private static RandomAccessibleInterval< UnsignedIntType >
+	createAverageView2( RandomAccessibleInterval< IntType > rai, long[] radii )
+	{
+		Shape shape = new RectangleShape2( radii, false );
+
+		final RandomAccessible< Neighborhood< IntType > > nra =
+				shape.neighborhoodsRandomAccessible( Views.extendBorder( rai ) );
+
+		final RandomAccessibleInterval< Neighborhood< IntType > > nrai =
+				Views.interval( nra, rai );
+
+		final RandomAccessibleInterval< UnsignedIntType > averageView =
+				Converters.convert( nrai,
+						( neighborhood, output ) ->
+						{
+							setNeighborhoodAverage( neighborhood, output );
+						},
+						new UnsignedIntType() );
 
 		return averageView;
 	}

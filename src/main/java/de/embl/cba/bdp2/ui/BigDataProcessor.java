@@ -46,7 +46,7 @@ public class BigDataProcessor {
     public BigDataProcessor() {
         //TODO: have separate shutdown for the executorService. It will not shutdown when ui exeService is shut. --ashis (DONE but needs testing)
         //Ref: https://stackoverflow.com/questions/23684189/java-how-to-make-an-executorservice-running-inside-another-executorservice-not
-        System.out.println("Datastreaming constructor");
+        System.out.println("BigDataProcessor constructor");
         kickOffThreadPack(Runtime.getRuntime().availableProcessors() * 2);
     }
 
@@ -95,7 +95,7 @@ public class BigDataProcessor {
         return true;
     }
 
-    public static RandomAccessibleInterval crop(RandomAccessibleInterval rai, FinalInterval interval){
+    public static RandomAccessibleInterval crop(RandomAccessibleInterval rai,FinalInterval interval){
         return Views.zeroMin(Views.interval(rai, interval));
     }
 
@@ -219,10 +219,20 @@ public class BigDataProcessor {
         }
     }
 
-    public static <T extends RealType<T>> RandomAccessibleInterval unsignedByteTypeConverter(RandomAccessibleInterval rai,DisplaySettings displaySettings){
+
+    public static <T extends RealType<T>> RandomAccessibleInterval
+    unsignedByteTypeConverter(
+            RandomAccessibleInterval rai,
+            DisplaySettings displaySettings)
+    {
         RandomAccessibleInterval<UnsignedByteType> newRai;
         if (!(Util.getTypeFromInterval(rai) instanceof UnsignedByteType)){
-            newRai = Converters.convert(rai, new RealUnsignedByteConverter<T>(displaySettings.getMinValue(),displaySettings.getMaxValue()), new UnsignedByteType());
+            newRai = Converters.convert(
+                    rai,
+                    new RealUnsignedByteConverter<T>(
+                            displaySettings.getMinValue(),
+                            displaySettings.getMaxValue()),
+                    new UnsignedByteType());
         }else{
             newRai = rai;
         }

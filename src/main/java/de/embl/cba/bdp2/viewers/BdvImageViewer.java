@@ -97,9 +97,14 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
     }
 
 
-    @Override
+    @Override // TODO: remove this...
     public void repaint(AffineTransform3D viewerTransform) {
         this.bdvSS.getBdvHandle().getViewerPanel().setCurrentViewerTransform(viewerTransform);
+    }
+
+    @Override
+    public void repaint() {
+        this.bdvSS.getBdvHandle().getViewerPanel().requestRepaint();
     }
 
     @Override

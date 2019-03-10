@@ -13,12 +13,12 @@ public class TestLazyDownsampler
 	public static void main( String[] args )
 	{
 		final RandomAccessibleInterval< IntType > randomImage = createRandomImage();
-		BdvFunctions.show( randomImage, "downsampled" );
+		BdvFunctions.show( randomImage, "input" );
 
 		final RandomAccessibleInterval downsampledView =
-				new LazyDownsampler( randomImage, 3 ).get();
+				new LazyDownsampler( randomImage, new long[]{3,0,0} ).get();
 
-		BdvFunctions.show( downsampledView, "downsampled" );
+		BdvFunctions.show( downsampledView, "down-sampled" );
 	}
 
 	private static RandomAccessibleInterval< IntType > createRandomImage()

@@ -69,10 +69,13 @@ public class BdvMenus extends JMenu implements ActionListener { //TODO: change n
                     imageViewer.replicateViewerContrast(newImageViewer);
                 }
             });
-        }else if(e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.IMAGEJ_VIEW_MENU_DISPLAY_TEXT)){
-            RandomAccessibleInterval permuted = Views.permute(imageViewer.getRai(),FileInfoConstants.Z,FileInfoConstants.C);
+        }else if(e.getActionCommand().equalsIgnoreCase(
+                UIDisplayConstants.IMAGEJ_VIEW_MENU_DISPLAY_TEXT)){
+            RandomAccessibleInterval permuted =
+                    Views.permute(imageViewer.getRai(),FileInfoConstants.Z,FileInfoConstants.C);
             ImageJFunctions.show(permuted, BigDataProcessor.executorService);
-        }else if(e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.BIG_DATA_TRACKER_MENU_DISPLAY_TEXT)){
+        }else if(e.getActionCommand().equalsIgnoreCase(
+                UIDisplayConstants.BIG_DATA_TRACKER_MENU_DISPLAY_TEXT)){
            BigDataProcessor.executorService.submit(() -> {
                 BigDataTrackerGUI bigDataTrackerGUI = new BigDataTrackerGUI(imageViewer);
                 bigDataTrackerGUI.showDialog();
@@ -81,9 +84,11 @@ public class BdvMenus extends JMenu implements ActionListener { //TODO: change n
                 commandService.run( BigDataTrackerUICommand.class, true, "imageViewer", imageViewer );
                 */
             });
-        }else if(e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.EIGHT_BIT_MENU_DISPLAY_TEXT)){
+        }else if(e.getActionCommand().equalsIgnoreCase(
+                UIDisplayConstants.INTERACTIVE_EIGHT_BIT_MENU_DISPLAY_TEXT)){
             BigDataProcessor.executorService.submit(() -> {
-                EightBitConverterMenuDialog menuDialog = new EightBitConverterMenuDialog(imageViewer);
+                UnsignedByteTypeView menuDialog =
+                        new UnsignedByteTypeView(imageViewer);
                 menuDialog.setVisible(true);
             });
         }
