@@ -1,43 +1,40 @@
+import de.embl.cba.bdp2.CachedCellImageCreator;
+import de.embl.cba.bdp2.fileinfosource.FileInfoSource;
 import de.embl.cba.bdp2.ui.BigDataProcessor;
 import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
 import de.embl.cba.bdp2.saving.SavingSettings;
+import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import de.embl.cba.bdp2.viewers.ImageViewer;
 import de.embl.cba.bdp2.viewers.ViewerUtils;
 import ij.ImageJ;
+import net.imglib2.cache.img.CachedCellImg;
+import net.imglib2.type.numeric.integer.UnsignedShortType;
 
 public class TestIJ1ViewerSaving
 {
-	public static void main( String[] args )
-	{
-		new ImageJ();
+	//TODO: reinstate this when IJ1Viewer is active.
+	public static void main( String[] args ){
+//		new ImageJ();
+//
+//		BigDataProcessor bigDataProcessor = new BigDataProcessor();
+//
+//		String imageDirectory = TestBdvViewer.class.getResource( "tiff-nc1-nt2"  ).getFile().toString();
+//
+//		final FileInfoSource fileInfoSource = new FileInfoSource(imageDirectory, FileInfoConstants.SINGLE_CHANNEL_TIMELAPSE,
+//				".*", "");
+//		CachedCellImg cachedCellImg = CachedCellImageCreator.create(fileInfoSource, null);
 
-		BigDataProcessor bigDataProcessor = new BigDataProcessor();
+//		ImageViewer imageViewer = new IJ1ImageViewer<UnsignedShortType>(
+//				cachedCellImg,
+//				"input",
+//				new double[]{1.0, 1.0, 1.0},
+//				"pixel");
+//		imageViewer.show();
+//		imageViewer.setDisplayRange(0, 800, 0);
 
-		String imageDirectory = TestBdvViewer.class.getResource( "tiff-nc1-nt2"  ).getFile().toString();
-
-		bigDataProcessor.openFromDirectory(
-				imageDirectory.toString(),
-				FileInfoConstants.SINGLE_CHANNEL_TIMELAPSE,
-				".*",
-				null,
-				true,
-				ViewerUtils.getImageViewer( ViewerUtils.IJ1_VIEWER ) );
-
-
-		/*final SavingSettings savingSettings = new SavingSettings();
-
-		savingSettings.compression = SavingSettings.NONE;
-		savingSettings.bin = "1,1,1"; // TODO: is this correct?
-		savingSettings.saveVolume = true;
-		savingSettings.saveProjection = false;
-		savingSettings.convertTo8Bit = false;
-		savingSettings.convertTo16Bit = false;
-		savingSettings.gate = false;
-		savingSettings.filePath = "/Users/tischer/Desktop/bc-saving/im";
-		savingSettings.fileType = SavingSettings.FileType.TIFF_as_STACKS;
-		*/
-        final SavingSettings savingSettings = SavingSettings.getDefaults();
-
-		BigDataProcessor.saveImage( savingSettings, bigDataProcessor.getImageViewer() );
-
+//      final SavingSettings savingSettings = SavingSettings.getDefaults();
+//		savingSettings.voxelSize =imageViewer.getVoxelSize();
+//		savingSettings.unit = imageViewer.getCalibrationUnit();
+//		BigDataProcessor.saveImage( savingSettings, bigDataProcessor.getImageViewer() );
 	}
 }

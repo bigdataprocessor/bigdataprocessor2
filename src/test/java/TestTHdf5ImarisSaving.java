@@ -31,7 +31,9 @@ public class TestTHdf5ImarisSaving {
         defaults.fileType = SavingSettings.FileType.HDF5_IMARIS_BDV;
         defaults.fileBaseNameIMARIS = "file";
         defaults.parentDirectory = "src/test/resources/";
-        new BigDataProcessor().saveImage(defaults, imageViewer);
+        defaults.voxelSize =imageViewer.getVoxelSize();
+        defaults.unit = imageViewer.getCalibrationUnit();
+        new BigDataProcessor().saveImage(defaults, cachedCellImg);
 
     }
 
