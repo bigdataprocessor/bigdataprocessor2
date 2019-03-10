@@ -34,6 +34,8 @@ public interface ImageViewer {
 
     void repaint(AffineTransform3D viewerTransform);
 
+    void repaint();
+
     void shiftImageToCenter(double[] centerCoordinates);
 
     void doAutoContrastPerChannel();

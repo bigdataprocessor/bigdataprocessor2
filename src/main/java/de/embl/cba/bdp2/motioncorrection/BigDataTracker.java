@@ -32,6 +32,7 @@ public class BigDataTracker {
     public Track trackResults;
     public TrackingSettings trackingSettings;
     private ObjectTracker objectTracker;
+
     public BigDataTracker(){
         System.out.println("BigDataTracker constructor");
         kickOffThreadPack(Runtime.getRuntime().availableProcessors()*2); //TODO: decide if this n threads is ok --ashis
