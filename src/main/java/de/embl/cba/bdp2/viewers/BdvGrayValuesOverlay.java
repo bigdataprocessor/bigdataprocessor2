@@ -35,7 +35,7 @@ public class BdvGrayValuesOverlay extends BdvOverlay implements MouseMotionListe
 
     @Override
     protected void draw(final Graphics2D g) {
-        int[] stringPosition = new int[]{(int) g.getClipBounds().getWidth() - 107, 20 + fontSize};//Handcrafted
+        int[] stringPosition = new int[]{(int) g.getClipBounds().getWidth() - 160, 20 + fontSize};//Handcrafted
 
         for (int i = 0; i < values.size(); ++i) {
             final int colorIndex = colors.get(i).get();
