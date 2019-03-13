@@ -387,26 +387,21 @@ public class FileInfoSourceHelper {
                 {
 
                     Matcher matcherCT = patternCT.matcher( fileName );
-                    if (matcherCT.matches())
-                    {
-                        try
-                        {
-                            c = channels.indexOf( matcherCT.group("C") );
-                            t = timepoints.indexOf( matcherCT.group("T") );
-                        }
-                        catch (Exception e)
-                        {
+                    if (matcherCT.matches()) {
+                        try {
+                            c = channels.indexOf(matcherCT.group("C"));
+                            t = timepoints.indexOf(matcherCT.group("T"));
+                        } catch (Exception e) {
                             IJ.showMessage("The multi-channel loading did not match the filenames.\n" +
                                     "Please change the pattern.\n\n" +
                                     "The Java error message was:\n" +
                                     e.toString());
                             return false;
                         }
-                    }
 
-                    for (z = 0; z < infoSource.nZ; z++)
-                    {
-                        infoSource.ctzFileList[c][t][z] = fileName; // all z with same file-name, because it is stacks
+                        for (z = 0; z < infoSource.nZ; z++) {
+                            infoSource.ctzFileList[c][t][z] = fileName; // all z with same file-name, because it is stacks
+                        }
                     }
 
                 }
