@@ -6,11 +6,10 @@ Interactive processing of TB-sized image data within [Fiji](http://fiji.sc/), on
 
 ### Opening TB-sized Tiff or Hdf5 based raw data
 
-[<img width="848" alt="image" src="https://user-images.githubusercontent.com/2157566/54459444-fa1dbd00-4766-11e9-9eb1-225573d3ed07.png">](https://drive.google.com/open?id=1wJgZb_Hd1S8ScTbKq9KOYyz-4lmS7-Sf)
+[<img width="500" alt="image" src="https://user-images.githubusercontent.com/2157566/54459444-fa1dbd00-4766-11e9-9eb1-225573d3ed07.png">](https://drive.google.com/open?id=1wJgZb_Hd1S8ScTbKq9KOYyz-4lmS7-Sf)
 
 ### Interactive 3D+t Cropping
 
-![bdp2-interactive-crop-of-binned-view-670gb](https://user-images.githubusercontent.com/2157566/54450529-e10a1180-4750-11e9-85c8-ecebe936710d.gif)
 
 **BigDataProcessor** is an [ImageJ](https://imagej.net) plugin designed for inspection, manipulation and conversion of big data image formats flawlessly even on a basic laptop or a computer.
 The plugin implements a [Lazy Loading design pattern](https://en.wikipedia.org/wiki/Lazy_loading) to seamlessly render Terabyte sized big data image data produced by light-sheet and electron microscopy, without bothering the RAM capacity. 
@@ -24,12 +23,14 @@ The BigDataProcessor is a new revamped version of the popular [BigDataTools](htt
 The new plugin uses Big Data Viewer for flexible and efficient rendering however the backward compatibility with ImageJ1 viewer is a work in progress! Keep Posted!
 
 ## Supported Formats
+
 - Multi-stack TIFF
 - Single plane TIFF
 - Multi-stack HDF
 - Multi-stack IMARIS HDF
 
 ## Export Options
+
 - Binning
 - 2D Projections of stacks
 - Gating pixels
