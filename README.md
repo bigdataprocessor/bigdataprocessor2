@@ -6,7 +6,9 @@ Interactive processing of TB-sized image data within [Fiji](http://fiji.sc/), on
 
 ### Opening TB-sized Tiff or Hdf5 based raw data
 
-https://drive.google.com/open?id=1wJgZb_Hd1S8ScTbKq9KOYyz-4lmS7-Sf
+[<img width="105" alt="image" src="https://user-images.githubusercontent.com/2157566/54459359-c347a700-4766-11e9-8def-9aa4eefa89e8.png">](https://drive.google.com/open?id=1wJgZb_Hd1S8ScTbKq9KOYyz-4lmS7-Sf)
+
+
 
 ### Interactive 3D+t Cropping
 
