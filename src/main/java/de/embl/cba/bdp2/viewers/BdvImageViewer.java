@@ -296,7 +296,7 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
 
     private void addGrayValueOverlay() {
         if (overlay == null) {
-            overlay = new BdvGrayValuesOverlay(this.bdvSS, 12, "Courier New");
+            overlay = new BdvGrayValuesOverlay(this.bdvSS, 20, "Courier New");
         }
         BdvFunctions.showOverlay(overlay,
                 "GrayOverlay",
