@@ -2,6 +2,10 @@
 
 # BigDataProcessor
 
+### Interactive cropping
+
+![bdp2-interactive-crop-of-binned-view-670gb](https://user-images.githubusercontent.com/2157566/54450529-e10a1180-4750-11e9-85c8-ecebe936710d.gif)
+
 **BigDataProcessor** is an [ImageJ](https://imagej.net) plugin designed for inspection, manipulation and conversion of big data image formats flawlessly even on a basic laptop or a computer.
 The plugin implements a [Lazy Loading design pattern](https://en.wikipedia.org/wiki/Lazy_loading) to seamlessly render Terabyte sized big data image data produced by light-sheet and electron microscopy, without bothering the RAM capacity. 
 The plugin facilitates loading & re-saving of TIF, HDF5 and Imaris HDF5 formats meanwhile allowing the user to shear, crop or bin. *(check out the User Documentation section below to explore what more you can do!)*
@@ -35,7 +39,6 @@ Note: The plugins need Java 1.8 if you see error messages popping up that might 
 Ashis Ravindran&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;Christian Tischer  
 ashis.r91@gmail.com&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;christian.tischer@embl.de
-
 
 ## User Documentation
 
