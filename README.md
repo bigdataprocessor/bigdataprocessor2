@@ -4,7 +4,7 @@
 
 Interactive processing of TB-sized image data within [Fiji](http://fiji.sc/), on your laptop.
 
-### Interactive 3D Cropping
+### Interactive 3D+t Cropping
 
 ![bdp2-interactive-crop-of-binned-view-670gb](https://user-images.githubusercontent.com/2157566/54450529-e10a1180-4750-11e9-85c8-ecebe936710d.gif)
 
