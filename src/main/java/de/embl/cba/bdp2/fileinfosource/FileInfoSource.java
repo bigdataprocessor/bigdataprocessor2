@@ -12,6 +12,8 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.type.numeric.real.FloatType;
+import sun.rmi.runtime.Log;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
@@ -59,6 +61,32 @@ public class FileInfoSource {
         dimensions[ C ] = nC;
         dimensions[ T ] = nT;
         if ( unit == null || Objects.equals(unit, "")) unit = "pixel";
+
+        logger.info( this.toString() );
+    }
+
+    @Override
+    public String toString()
+    {
+        String info = "";
+        info += "Folder: " + directory + "\n";
+        info += "FileType: " + fileType + "\n";
+        info += "BitDepth: " + bitDepth + "\n";
+        info += "nX: " + nX + "\n";
+        info += "nY: " + nY + "\n";
+        info += "nZ: " + nZ + "\n";
+        info += "nC: " + nC + "\n";
+        info += "nT: " + nT + "\n";
+        info += "GB: " + getSizeInGB() + "\n";
+
+        return info;
+    }
+
+    private double getSizeInGB()
+    {
+        long bytes = (long) bitDepth / 8 * nX * nY * nZ * nT * nC;
+        final double sizeGB = ( double ) bytes / ( 1000_000_000L );
+        return sizeGB;
     }
 
     public long[] getDimensions() {

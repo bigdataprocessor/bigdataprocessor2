@@ -1,9 +1,12 @@
 package de.embl.cba.bdp2.ui;
 
+import de.embl.cba.bdp2.logging.ImageJLogger;
 import de.embl.cba.bdp2.motioncorrection.BigDataTrackerGUI;
 import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
 import de.embl.cba.bdp2.process.BinnedView;
+import de.embl.cba.bdp2.process.CroppedView;
 import de.embl.cba.bdp2.process.UnsignedByteTypeView;
+import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.ImageViewer;
 import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccessibleInterval;
@@ -15,7 +18,8 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BdvMenus extends JMenu implements ActionListener { //TODO: change name as Menus --ashis
+public class BdvMenus extends JMenu implements ActionListener {
+    //TODO: change name as Menus --ashis
 
     private final SaveSelectMenu saveSelectMenu;
     private final OthersMenu othersMenu;
@@ -54,22 +58,8 @@ public class BdvMenus extends JMenu implements ActionListener { //TODO: change n
                 obliqueMenuDialog.setVisible(true);
             });
         }else if(e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.CROP_MENU_DISPLAY_TEXT)){
-            final RandomAccessibleInterval rai = imageViewer.getRai();
-            BigDataProcessor.executorService.submit(() -> {
-                FinalInterval interval = imageViewer.get5DIntervalFromUser();
-                if (interval != null) {
-                    RandomAccessibleInterval croppedRAI = BigDataProcessor.crop(rai, interval);
-                    ImageViewer newImageViewer = imageViewer.newImageViewer();
-                    newImageViewer.show(
-                            croppedRAI,
-                            FileInfoConstants.CROPPED_VIEW_NAME,
-                            imageViewer.getVoxelSize(),
-                            imageViewer.getCalibrationUnit(),
-                            false);
-                    BdvMenus menus = new BdvMenus();
-                    newImageViewer.addMenus(menus);
-                    imageViewer.replicateViewerContrast(newImageViewer);
-                }
+        	BigDataProcessor.executorService.submit(() -> {
+            	new CroppedView<>( imageViewer );
             });
         }else if(e.getActionCommand().equalsIgnoreCase(
                 UIDisplayConstants.IMAGEJ_VIEW_MENU_DISPLAY_TEXT)){

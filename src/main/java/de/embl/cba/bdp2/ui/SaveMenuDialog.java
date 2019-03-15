@@ -57,11 +57,6 @@ public class SaveMenuDialog extends JFrame implements ActionListener {
         panels.get(j).add(comboFileTypeForSaving);
         mainPanels.get(k).add(panels.get(j++));
 
-/*      panels.add(new JPanel());
-        panels.get(j).add(new JLabel("Binning [pixels]: x1,y1,z1; x2,y2,z2; ... "));
-        panels.get(j).add(tfBinning);
-        mainPanels.get(k).add(panels.get(j++));
-*/
         panels.add(new JPanel());
         panels.get(j).add(cbSaveVolume);
         panels.get(j).add(cbSaveProjection);
@@ -69,32 +64,12 @@ public class SaveMenuDialog extends JFrame implements ActionListener {
 
         panels.add(new JPanel());
         panels.get(j).add(cbLZW);
-        panels.get(j).add(new JLabel("Chunks [ny]"));
+        panels.get(j).add(new JLabel("Tiff Strip Chunks [ny]"));
         panels.get(j).add(tfRowsPerStrip);
         mainPanels.get(k).add(panels.get(j++));
 
-/*      panels.add(new JPanel());
-        panels.get(j).add(cbConvertTo8Bit);
-        panels.get(j).add(new JLabel("0 ="));
-        panels.get(j).add(tfMapTo0);
-        panels.get(j).add(new JLabel("255 ="));
-        panels.get(j).add(tfMapTo255);
-        mainPanels.get(k).add(panels.get(j++));
-
         panels.add(new JPanel());
-        panels.get(j).add(cbConvertTo16Bit);
-        mainPanels.get(k).add(panels.get(j++));
-
-        panels.add(new JPanel());
-        panels.get(j).add(cbGating);
-        panels.get(j).add(new JLabel("Min ="));
-        panels.get(j).add(tfGateMin);
-        panels.get(j).add(new JLabel("Max ="));
-        panels.get(j).add(tfGateMax);
-        mainPanels.get(k).add(panels.get(j++));
-*/
-        panels.add(new JPanel());
-        panels.get(j).add(new JLabel("Saving Threads"));
+        panels.get(j).add(new JLabel("I/O Threads"));
         panels.get(j).add(tfNThreads);
         mainPanels.get(k).add(panels.get(j++));
 

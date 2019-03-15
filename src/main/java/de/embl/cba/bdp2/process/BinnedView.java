@@ -2,8 +2,9 @@ package de.embl.cba.bdp2.process;
 
 import bdv.tools.brightness.SliderPanel;
 import bdv.util.BoundedValue;
-import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
+import de.embl.cba.bdp2.logging.ImageJLogger;
 import de.embl.cba.bdp2.ui.BdvMenus;
+import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.ImageViewer;
 import de.embl.cba.lazyalgorithm.LazyDownsampler;
 import net.imglib2.RandomAccessibleInterval;
@@ -17,16 +18,13 @@ import java.util.ArrayList;
 
 public class BinnedView< T extends RealType< T > & NativeType< T > > extends JFrame
 {
-	private static Point dialogLocation;
-
-	public BinnedView( final ImageViewer imageViewer  )
+	public BinnedView( final ImageViewer< T > imageViewer  )
 	{
-
 		final RandomAccessibleInterval< T > rai = imageViewer.getRai();
 
-		long[] span = new long[]{1,1,0,0,0};
+		long[] span = new long[]{0,0,0,0,0};
 
-		final RandomAccessibleInterval< T > downsampledView =
+		final RandomAccessibleInterval< T > downSampledView =
 				new LazyDownsampler<>( rai, span ).getDownsampledView();
 
 		ImageViewer newImageViewer = imageViewer.newImageViewer();
@@ -36,11 +34,14 @@ public class BinnedView< T extends RealType< T > & NativeType< T > > extends JFr
 		final AffineTransform3D transform3D = imageViewer.getViewerTransform().copy();
 
 		newImageViewer.show(
-				downsampledView,
+				downSampledView,
 				"binned view",
 				getBinnedVoxelSize( span, originalVoxelSize ),
 				imageViewer.getCalibrationUnit(),
 				true);
+
+		ImageJLogger.info( "Binned view size [GB]: "
+				+ Utils.getSizeGB( downSampledView ) );
 
 		newImageViewer.setViewerTransform( transform3D );
 
@@ -79,7 +80,10 @@ public class BinnedView< T extends RealType< T > & NativeType< T > > extends JFr
 		for ( int d = 0; d < 3; d++ )
 		{
 			boundedValues.add( new BoundedValue(
-					1, 11, ( int ) ( 2 * span[ d ] + 1 ) ) );
+					1,
+					11,
+					( int ) ( 2 * span[ d ] + 1 ) ) );
+
 			sliderPanels.add(
 					new SliderPanel(
 							"Binning, dimension " + d ,
@@ -91,18 +95,37 @@ public class BinnedView< T extends RealType< T > & NativeType< T > > extends JFr
 
 		class UpdateListener implements BoundedValue.UpdateListener
 		{
+			private long[] previousSpan;
+
 			@Override
-			public void update()
+			public synchronized void update()
 			{
 				final long[] span = new long[ 5 ];
 
 				for ( int d = 0; d < 3; d++ )
-				{
 					span[ d ] = ( boundedValues.get( d ).getCurrentValue() - 1 ) / 2;
-					sliderPanels.get( d ).update();
+
+				boolean spanChanged = false;
+				if ( previousSpan != null )
+				{
+					for ( int d = 0; d < 3; d++ )
+					{
+						if ( span[ d ] != previousSpan[ d ] )
+						{
+							sliderPanels.get( d ).update();
+							previousSpan[ d ] = span[ d ];
+							spanChanged = true;
+						}
+					}
+				}
+				else
+				{
+					spanChanged = true;
 				}
 
-				final RandomAccessibleInterval< T > downsampledView =
+				if ( ! spanChanged ) return;
+
+				final RandomAccessibleInterval< T > downSampleView =
 						new LazyDownsampler<>( rai, span ).getDownsampledView();
 
 				final double[] binnedVoxelSize = getBinnedVoxelSize( span, originalVoxelSize );
@@ -110,11 +133,14 @@ public class BinnedView< T extends RealType< T > & NativeType< T > > extends JFr
 				final AffineTransform3D transform3D = imageViewer.getViewerTransform().copy();
 
 				imageViewer.show(
-						downsampledView,
+						downSampleView,
 						imageViewer.getImageName(),
 						binnedVoxelSize,
 						imageViewer.getCalibrationUnit(),
 						true );
+
+				ImageJLogger.info( "Binned view size [GB]: "
+						+ Utils.getSizeGB( downSampleView ) );
 
 				imageViewer.setViewerTransform( transform3D );
 
@@ -125,10 +151,10 @@ public class BinnedView< T extends RealType< T > & NativeType< T > > extends JFr
 		final UpdateListener updateListener = new UpdateListener();
 
 		for ( int d = 0; d < 3; d++ )
+		{
 			boundedValues.get( d ).setUpdateListener( updateListener );
-
-		for ( int d = 0; d < 3; d++ )
 			panel.add( sliderPanels.get( d ) );
+		}
 
 
 		frame.setContentPane( panel );
@@ -139,8 +165,6 @@ public class BinnedView< T extends RealType< T > & NativeType< T > > extends JFr
 		frame.setResizable( false );
 		frame.pack();
 		frame.setVisible( true );
-		if ( dialogLocation != null )
-			frame.setLocation( dialogLocation );
 	}
 
 

@@ -30,7 +30,12 @@ public class ImageLoader implements CellLoader {
     private LoadingCache<List<Integer>, SerializableFileInfo[]> serializableFileInfoCache;
 
     public ImageLoader( FileInfoSource infoSource ) {
-        this.cellDims = new int[]{ infoSource.nX, CELL_DIM_Y, 1, 1, 1};
+
+        // TODO: optimise based on input file format
+        int cellDimX = infoSource.nX;
+        int cellDimY = 9;
+
+        this.cellDims = new int[]{ cellDimX, cellDimY, 1, 1, 1};
         this.dimensions = infoSource.getDimensions();
         this.directory = infoSource.directory;
         //Google Guava cache
@@ -41,7 +46,7 @@ public class ImageLoader implements CellLoader {
                         return infoSource.getSerializableFileStackInfo( c_t.get(0), c_t.get(1) );
                     }
         };
-        serializableFileInfoCache = CacheBuilder.newBuilder().maximumSize(50).build(loader);
+        serializableFileInfoCache = CacheBuilder.newBuilder().maximumSize( 50 ).build(loader);
     }
 
 
@@ -54,11 +59,27 @@ public class ImageLoader implements CellLoader {
         SerializableFileInfo[] infos_c_t = getFileInfoStack(c_t);
         SerializableFileInfo fileInfo = infos_c_t[z];
         Point3D po, ps;
-        po = new Point3D(0, min[ Y ], z);
-        long diff = max[ Y ]-min[ Y ];
-        ps = new Point3D(fileInfo.width,diff+1 , 1);
-        ImagePlus imagePlus = new OpenerExtension().readDataCube(directory, infos_c_t, 1, po, ps, BigDataProcessor.executorService); //TODO: get rid of ImagePlus
+        po = getOffset( min[ X ], min[ Y ], z );
+        ps = getSize( min, max );
+        //TODO: get rid of ImagePlus
+        ImagePlus imagePlus = new OpenerExtension().readDataCube(directory, infos_c_t, 1, po, ps, BigDataProcessor.executorService);
         return imagePlus;
+    }
+
+    private Point3D getOffset( long minX, long minY, int z )
+    {
+        Point3D po;
+        po = new Point3D( minX, minY, z );
+        return po;
+    }
+
+    private Point3D getSize( long[] min, long[] max )
+    {
+        Point3D ps;
+        long sX = max[ X  ] - min[ X ] + 1;
+        long sY = max[ Y  ] - min[ Y ] + 1;
+        ps = new Point3D( sX, sY, 1);
+        return ps;
     }
 
     private SerializableFileInfo[] getFileInfoStack(List<Integer> c_t) {
@@ -73,10 +94,10 @@ public class ImageLoader implements CellLoader {
 
     @Override
     public synchronized void load( final SingleCellArrayImg cell ) {
-        long[] max = new long[ TOTAL_AXES ];
         long[] min = new long[ TOTAL_AXES ];
-        cell.max(max);
+        long[] max = new long[ TOTAL_AXES ];
         cell.min(min);
+        cell.max(max);
         ImagePlus imagePlus = getDataCube( min, max );
         if (cell.firstElement() instanceof UnsignedByteType) {
             final byte[] impData = (byte[]) imagePlus.getProcessor().getPixels();

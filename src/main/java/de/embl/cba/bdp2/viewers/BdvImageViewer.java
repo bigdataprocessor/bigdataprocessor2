@@ -11,6 +11,7 @@ import bdv.viewer.SourceAndConverter;
 import de.embl.cba.bdp2.boundingbox.BoundingBoxDialog;
 import de.embl.cba.bdp2.ui.BdvMenus;
 import de.embl.cba.bdp2.ui.DisplaySettings;
+import de.embl.cba.bdp2.utils.Utils;
 import net.imglib2.Cursor;
 import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccessibleInterval;
@@ -284,14 +285,14 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
         this.voxelSize = voxelSize;
     }
 
-    private RandomAccessibleInterval asVolatile(RandomAccessibleInterval volatileRai) {
+    private RandomAccessibleInterval asVolatile(RandomAccessibleInterval rai) {
         try {
-            volatileRai = VolatileViews.wrapAsVolatile(volatileRai);
+            rai = VolatileViews.wrapAsVolatile(rai);
         } catch (IllegalArgumentException e) { //Never mind!
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return volatileRai;
+        return rai;
     }
 
     private void addGrayValueOverlay() {

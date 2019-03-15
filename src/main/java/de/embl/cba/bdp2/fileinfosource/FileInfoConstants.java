@@ -37,7 +37,6 @@ public class FileInfoConstants {
     public static final String IMAGE_NAME = "image";
     public static final String BB_CROP_BUTTON_LABEL= "Crop";
     public static final String BB_TRACK_BUTTON_LABEL= "Select";
-    public static final int CELL_DIM_Y = 15;
     public static final String CENTER_OF_MASS = "Center of Mass";
     public static final String CROSS_CORRELATION = "Cross Correlation";
     public static final String[] BOUNDING_BOX_AXES_3D ={"x","y","z"};

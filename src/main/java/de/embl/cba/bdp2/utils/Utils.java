@@ -101,6 +101,27 @@ public class Utils {
 		return dataCube;
 	}
 
+	public static double getSizeGB( RandomAccessibleInterval rai )
+	{
+		final int n = rai.numDimensions();
+		final long[] dims = new long[ n ];
+		rai.dimensions( dims );
+
+		double sizeGB = 1;
+
+		for ( int d = 0; d < n; d++ )
+			sizeGB *= dims[ d ];
+
+		final Object type = Util.getTypeFromInterval( rai );
+		if ( type instanceof UnsignedByteType )
+			sizeGB *= 8;
+		else if ( type instanceof UnsignedShortType )
+			sizeGB *= 16;
+
+		sizeGB /= 8.0 * 1000000000L;
+		return sizeGB;
+	}
+
 //	public static ImagePlus getFullStackFromInfo(int channel, int time, FileInfoSource infoSource){
 //	    SerializableFileInfo[] infos_c_t = infoSource.getSerializableFileStackInfo(channel,time);
 //        ImagePlus imagePlus;

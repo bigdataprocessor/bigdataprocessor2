@@ -3,7 +3,9 @@ package de.embl.cba.bdp2.process;
 import bdv.tools.brightness.SliderPanelDouble;
 import bdv.util.BoundedValueDouble;
 import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
+import de.embl.cba.bdp2.logging.ImageJLogger;
 import de.embl.cba.bdp2.ui.BdvMenus;
+import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.ImageViewer;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.Converters;
@@ -17,7 +19,6 @@ import java.awt.*;
 
 public class UnsignedByteTypeView< T extends RealType< T > > extends JFrame
 {
-	private static Point dialogLocation;
 
 	public UnsignedByteTypeView( final ImageViewer imageViewer  )
 	{
@@ -51,6 +52,8 @@ public class UnsignedByteTypeView< T extends RealType< T > > extends JFrame
 				imageViewer.getVoxelSize(),
 				imageViewer.getCalibrationUnit(),
 				true);
+
+		ImageJLogger.info( "8-bit view size [GB]: " + Utils.getSizeGB( converted ) );
 
 		newImageViewer.addMenus( new BdvMenus() );
 
@@ -117,8 +120,7 @@ public class UnsignedByteTypeView< T extends RealType< T > > extends JFrame
 		frame.setResizable( false );
 		frame.pack();
 		frame.setVisible( true );
-		if ( dialogLocation != null )
-			frame.setLocation( dialogLocation );
+
 	}
 
 
