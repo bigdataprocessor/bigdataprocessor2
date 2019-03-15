@@ -48,4 +48,9 @@ public interface ImageViewer < R extends RealType< R > & NativeType< R > >  {
     void doAutoContrastPerChannel();
 
     String getCalibrationUnit();
+
+    AffineTransform3D getViewerTransform();
+
+    void setViewerTransform( AffineTransform3D viewerTransform );
+
 }

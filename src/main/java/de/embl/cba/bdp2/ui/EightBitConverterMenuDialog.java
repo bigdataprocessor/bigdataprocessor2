@@ -73,7 +73,7 @@ public class EightBitConverterMenuDialog extends JDialog implements ActionListen
         ImageViewer newImageViewer = imageViewer.newImageViewer();
         newImageViewer.show(
                 newRai,
-                FileInfoConstants.UNSIGNEDBYTE_STREAM_NAME,
+                FileInfoConstants.UNSIGNED_BYTE_VIEW_NAME,
                 imageViewer.getVoxelSize(),
                 imageViewer.getCalibrationUnit(),
                 true);

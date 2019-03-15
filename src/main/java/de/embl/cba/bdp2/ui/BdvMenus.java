@@ -62,7 +62,7 @@ public class BdvMenus extends JMenu implements ActionListener { //TODO: change n
                     ImageViewer newImageViewer = imageViewer.newImageViewer();
                     newImageViewer.show(
                             croppedRAI,
-                            FileInfoConstants.CROPPED_STREAM_NAME,
+                            FileInfoConstants.CROPPED_VIEW_NAME,
                             imageViewer.getVoxelSize(),
                             imageViewer.getCalibrationUnit(),
                             false);

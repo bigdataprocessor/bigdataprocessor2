@@ -214,6 +214,21 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
         return calibrationUnit;
     }
 
+    @Override
+    public AffineTransform3D getViewerTransform()
+    {
+        final AffineTransform3D transform3D = new AffineTransform3D();
+        bdvSS.getBdvHandle().getViewerPanel().getState().getViewerTransform( transform3D );
+        return transform3D;
+    }
+
+    @Override
+    public void setViewerTransform( AffineTransform3D viewerTransform )
+    {
+        bdvSS.getBdvHandle().getViewerPanel().setCurrentViewerTransform( viewerTransform );
+        bdvSS.getBdvHandle().getViewerPanel().requestRepaint();
+    }
+
     public void replicateViewerContrast(ImageViewer newImageView) {
         int nChannels = (int) this.getRai().dimension(C);
         for (int channel = 0; channel < nChannels; ++channel) {

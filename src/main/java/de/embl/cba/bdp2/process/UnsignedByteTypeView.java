@@ -47,7 +47,7 @@ public class UnsignedByteTypeView< T extends RealType< T > > extends JFrame
 
 		newImageViewer.show(
 				converted,
-				FileInfoConstants.UNSIGNEDBYTE_STREAM_NAME,
+				FileInfoConstants.UNSIGNED_BYTE_VIEW_NAME,
 				imageViewer.getVoxelSize(),
 				imageViewer.getCalibrationUnit(),
 				true);

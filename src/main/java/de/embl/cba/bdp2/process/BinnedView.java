@@ -7,6 +7,7 @@ import de.embl.cba.bdp2.ui.BdvMenus;
 import de.embl.cba.bdp2.viewers.ImageViewer;
 import de.embl.cba.lazyalgorithm.LazyDownsampler;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
@@ -32,12 +33,16 @@ public class BinnedView< T extends RealType< T > & NativeType< T > > extends JFr
 
 		final double[] originalVoxelSize = imageViewer.getVoxelSize();
 
+		final AffineTransform3D transform3D = imageViewer.getViewerTransform().copy();
+
 		newImageViewer.show(
 				downsampledView,
-				FileInfoConstants.UNSIGNEDBYTE_STREAM_NAME,
+				"binned view",
 				getBinnedVoxelSize( span, originalVoxelSize ),
 				imageViewer.getCalibrationUnit(),
 				true);
+
+		newImageViewer.setViewerTransform( transform3D );
 
 		newImageViewer.addMenus( new BdvMenus() );
 
@@ -102,12 +107,18 @@ public class BinnedView< T extends RealType< T > & NativeType< T > > extends JFr
 
 				final double[] binnedVoxelSize = getBinnedVoxelSize( span, originalVoxelSize );
 
+				final AffineTransform3D transform3D = imageViewer.getViewerTransform().copy();
+
 				imageViewer.show(
 						downsampledView,
 						imageViewer.getImageName(),
 						binnedVoxelSize,
 						imageViewer.getCalibrationUnit(),
 						true );
+
+				imageViewer.setViewerTransform( transform3D );
+
+
 			}
 		}
 
