@@ -6,7 +6,7 @@ Interactive processing of TB-sized image data within [Fiji](http://fiji.sc/), on
 
 ### Opening TB-sized Tiff or Hdf5 based raw data
 
-![bdp2-open-luxendo-h5-670gb](https://user-images.githubusercontent.com/2157566/54458942-829b5e00-4765-11e9-8cf5-cb62eaf56f04.gif)
+https://drive.google.com/open?id=1wJgZb_Hd1S8ScTbKq9KOYyz-4lmS7-Sf
 
 ### Interactive 3D+t Cropping
 
