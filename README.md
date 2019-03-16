@@ -1,6 +1,6 @@
 <img src="https://www.huber.embl.de/courses/images/BioIT_logo.jpeg" width="200">
 
-# Big Data Processor 2
+# BigDataProcessor2
 
 Interactive processing of TB-sized image data within [Fiji](http://fiji.sc/), on your laptop.
 
