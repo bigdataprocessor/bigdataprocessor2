@@ -10,7 +10,7 @@ Interactive processing of TB-sized image data within [Fiji](http://fiji.sc/), on
 
 Below movie demonstrates opening of 670 GB Hdf5 image data, as acquired by light-sheet microscopy. The data format is one volumetric Hdf5 file per time-point. As the data needed to streamed from the camera onto disk as efficient as possible, the Hdf5 files are not specifically chunked for efficient 3D access, nor do they contain a multi-resolution pyramid. There also is no special header file, linking the different time-points. Nevertheless, as the movie shows, the data can be openend and browsed within seconds. 
 
-[<img width="1000" alt="image" src="https://user-images.githubusercontent.com/2157566/54459444-fa1dbd00-4766-11e9-9eb1-225573d3ed07.png">](https://drive.google.com/open?id=1wJgZb_Hd1S8ScTbKq9KOYyz-4lmS7-Sf)
+[<img width="1000" alt="image" src="https://user-images.githubusercontent.com/2157566/54475547-b375a480-47f2-11e9-919d-cf14eba4594e.png">](https://drive.google.com/open?id=1wJgZb_Hd1S8ScTbKq9KOYyz-4lmS7-Sf)
 
 ### Interactive binning
 
