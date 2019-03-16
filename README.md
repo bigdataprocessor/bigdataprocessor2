@@ -26,9 +26,11 @@ Frequently, larger volumes are acuired than strictly necessary, e.g. to accomoda
 
 ### Interactive conversion to 8-bit
 
-Cameras typically produce image data at 12, 14, or 16 bit-depth (as 12 and 14 bit are no common data formats, they are often stored as 16 bit anyway). For many image analysis tasks 8-bit are in fact sufficient, providing the opportunity to reduce data size by a factor of 2, as well as increase processing bandwidth by a factor of 2. However, converting 16-bit to 8-bit data can be tricky as it entails deciding on a specific mapping from the higher into the lower bit-depth. Below movie demonstrates interactive 8-bit conversion, where the user can interactively explore different mappings, while browsing the entire data set. This is done lazily, i.e. the data on disk it not altered at this stage.
+Cameras typically produce image data at 12, 14, or 16 bit-depth (as 12 and 14 bit are no common data formats, they are often stored as 16 bit anyway). For many image analysis tasks 8-bit are in fact sufficient, providing the opportunity to reduce data size by a factor of 2, as well as increase processing bandwidth by a factor of 2. However, converting 16-bit to 8-bit data can be tricky as it entails deciding on a specific mapping from the higher into the lower bit-depth. For example, choosing a mapping of 65535 => 255 and 0 => 0 can lead to a low dynamic range in the 8-bit range, e.g. if the input only occupied a small range of the 16-bit range. Also choosing `max` => 255 and `min` => 0, can be sub-optimal because there might be spurious pixels with very high values, making the `max` value very high, again lead to a low dynamic range for the relevant gray values in the 8-bit converted data. 
 
-[<img width="600" alt="image" src="https://user-images.githubusercontent.com/2157566/54475084-9a1e2980-47ed-11e9-9080-71d03db3b1c5.png">](https://drive.google.com/open?id=1jRZEepD1C8rM5t2gDi7tYnFh092vUztm)
+Below movie demonstrates interactive 8-bit conversion, where the user can interactively explore different mappings, while browsing the entire data set. This is done lazily, i.e. the data on disk it not altered at this stage.
+
+[<img width="600" alt="image" src="https://user-images.githubusercontent.com/2157566/54475439-a310fa00-47f1-11e9-913a-cdf292ae991c.png">](https://drive.google.com/open?id=1jRZEepD1C8rM5t2gDi7tYnFh092vUztm)
 
 ## Detailed information
 
