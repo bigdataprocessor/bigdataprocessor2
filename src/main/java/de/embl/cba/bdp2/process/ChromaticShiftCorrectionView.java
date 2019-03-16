@@ -19,8 +19,16 @@ import java.util.ArrayList;
 
 public class ChromaticShiftCorrectionView< T extends RealType< T > & NativeType< T > > extends JFrame
 {
+
+	private final ImageViewer< T > imageViewer;
+	private ArrayList< BoundedValue > boundedValues;
+	private ArrayList< SliderPanel > sliderPanels;
+	private final ImageViewer newImageViewer;
+
 	public ChromaticShiftCorrectionView( final ImageViewer< T > imageViewer  )
 	{
+		this.imageViewer = imageViewer;
+
 		final RandomAccessibleInterval< T > rai = imageViewer.getRai();
 
 		long[] span = new long[]{0,0,0,0,0};
@@ -28,11 +36,9 @@ public class ChromaticShiftCorrectionView< T extends RealType< T > & NativeType<
 		final RandomAccessibleInterval< T > downSampledView =
 				new LazyDownsampler<>( rai, span ).getDownsampledView();
 
-		ImageViewer newImageViewer = imageViewer.newImageViewer();
+		newImageViewer = imageViewer.newImageViewer();
 
 		final double[] originalVoxelSize = imageViewer.getVoxelSize();
-
-		final AffineTransform3D transform3D = imageViewer.getViewerTransform().copy();
 
 		newImageViewer.show(
 				downSampledView,
@@ -43,8 +49,6 @@ public class ChromaticShiftCorrectionView< T extends RealType< T > & NativeType<
 
 		ImageJLogger.info( "Binned view size [GB]: "
 				+ Utils.getSizeGB( downSampledView ) );
-
-		newImageViewer.setViewerTransform( transform3D );
 
 		newImageViewer.addMenus( new BdvMenus() );
 
@@ -68,88 +72,25 @@ public class ChromaticShiftCorrectionView< T extends RealType< T > & NativeType<
 			ImageViewer imageViewer,
 			long[] span )
 	{
-		final JFrame frame = new JFrame( "Binning" );
-
-		frame.setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
-
 		JPanel panel = new JPanel();
 		panel.setLayout( new BoxLayout( panel, BoxLayout.PAGE_AXIS ) );
 
-		final ArrayList< BoundedValue > boundedValues = new ArrayList<>();
-		final ArrayList< SliderPanel > sliderPanels = new ArrayList<>();
+		boundedValues = new ArrayList<>();
+		sliderPanels = new ArrayList<>();
 
-		rai.dimensions( DimensionOrder.C );
+		final long numChannels = rai.dimension( DimensionOrder.C );
 
-		for ( int d = 0; d < 3; d++ )
+		final String[] xyz = { "X", "Y", "Z" };
+
+		for ( int c = 0; c < numChannels; c++ )
 		{
-			boundedValues.add( new BoundedValue(
-					1,
-					11,
-					( int ) ( 2 * span[ d ] + 1 ) ) );
-
-			sliderPanels.add(
-					new SliderPanel(
-							"Binning, dimension " + d ,
-								boundedValues.get( d ),
-								2 ));
-		}
-
-
-
-		class UpdateListener implements BoundedValue.UpdateListener
-		{
-			private long[] previousSpan;
-
-			@Override
-			public synchronized void update()
+			for ( String axis : xyz )
 			{
-				final long[] span = new long[ 5 ];
-
-				for ( int d = 0; d < 3; d++ )
-					span[ d ] = ( boundedValues.get( d ).getCurrentValue() - 1 ) / 2;
-
-				boolean spanChanged = false;
-				if ( previousSpan != null )
-				{
-					for ( int d = 0; d < 3; d++ )
-					{
-						if ( span[ d ] != previousSpan[ d ] )
-						{
-							sliderPanels.get( d ).update();
-							previousSpan[ d ] = span[ d ];
-							spanChanged = true;
-						}
-					}
-				}
-				else
-				{
-					spanChanged = true;
-				}
-
-				if ( ! spanChanged ) return;
-
-				final RandomAccessibleInterval< T > downSampleView =
-						new LazyDownsampler<>( rai, span ).getDownsampledView();
-
-				final double[] binnedVoxelSize = getBinnedVoxelSize( span, originalVoxelSize );
-
-				final AffineTransform3D transform3D = imageViewer.getViewerTransform().copy();
-
-				imageViewer.show(
-						downSampleView,
-						imageViewer.getImageName(),
-						binnedVoxelSize,
-						imageViewer.getCalibrationUnit(),
-						true );
-
-				ImageJLogger.info( "Binned view size [GB]: "
-						+ Utils.getSizeGB( downSampleView ) );
-
-				imageViewer.setViewerTransform( transform3D );
-
-
+				addValueAndSlider( c, axis );
 			}
 		}
+
+
 
 		final UpdateListener updateListener = new UpdateListener();
 
@@ -159,6 +100,13 @@ public class ChromaticShiftCorrectionView< T extends RealType< T > & NativeType<
 			panel.add( sliderPanels.get( d ) );
 		}
 
+		showFrame( panel );
+	}
+
+	private void showFrame( JPanel panel )
+	{
+		final JFrame frame = new JFrame( "Chromatic Shift Correction" );
+		frame.setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
 
 		frame.setContentPane( panel );
 		frame.setBounds(
@@ -169,6 +117,76 @@ public class ChromaticShiftCorrectionView< T extends RealType< T > & NativeType<
 		frame.pack();
 		frame.setVisible( true );
 	}
+
+	private void addValueAndSlider( int c, String axis )
+	{
+		final BoundedValue boundedValue
+				= new BoundedValue(
+				0,
+				50, // TODO
+				0 );
+
+		boundedValues.add( boundedValue );
+
+		sliderPanels.add(
+				new SliderPanel(
+						"Channel " + c + ", " + axis,
+						boundedValue,
+						1 ) );
+	}
+
+	class UpdateListener implements BoundedValue.UpdateListener
+	{
+		private long[] previousSpan;
+
+		@Override
+		public synchronized void update()
+		{
+			final long[] span = new long[ 5 ];
+
+			for ( int d = 0; d < 3; d++ )
+				span[ d ] = ( boundedValues.get( d ).getCurrentValue() - 1 ) / 2;
+
+			boolean spanChanged = false;
+			if ( previousSpan != null )
+			{
+				for ( int d = 0; d < 3; d++ )
+				{
+					if ( span[ d ] != previousSpan[ d ] )
+					{
+						sliderPanels.get( d ).update();
+						previousSpan[ d ] = span[ d ];
+						spanChanged = true;
+					}
+				}
+			}
+			else
+			{
+				spanChanged = true;
+			}
+
+			if ( ! spanChanged ) return;
+
+			final RandomAccessibleInterval< T > downSampleView =
+					new LazyDownsampler<>( rai, span ).getDownsampledView();
+
+			final double[] binnedVoxelSize = getBinnedVoxelSize( span, originalVoxelSize );
+
+			final AffineTransform3D transform3D = newImageViewer.getViewerTransform().copy();
+
+			newImageViewer.show(
+					downSampleView,
+					imageViewer.getImageName(),
+					binnedVoxelSize,
+					imageViewer.getCalibrationUnit(),
+					true );
+
+			ImageJLogger.info( "Binned view size [GB]: "
+					+ Utils.getSizeGB( downSampleView ) );
+
+		}
+	}
+
 
 
 }

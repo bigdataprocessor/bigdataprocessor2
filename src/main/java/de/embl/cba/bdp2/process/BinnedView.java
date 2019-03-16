@@ -31,8 +31,6 @@ public class BinnedView< T extends RealType< T > & NativeType< T > > extends JFr
 
 		final double[] originalVoxelSize = imageViewer.getVoxelSize();
 
-		final AffineTransform3D transform3D = imageViewer.getViewerTransform().copy();
-
 		newImageViewer.show(
 				downSampledView,
 				"binned view",
@@ -42,8 +40,6 @@ public class BinnedView< T extends RealType< T > & NativeType< T > > extends JFr
 
 		ImageJLogger.info( "Binned view size [GB]: "
 				+ Utils.getSizeGB( downSampledView ) );
-
-		newImageViewer.setViewerTransform( transform3D );
 
 		newImageViewer.addMenus( new BdvMenus() );
 
@@ -130,8 +126,6 @@ public class BinnedView< T extends RealType< T > & NativeType< T > > extends JFr
 
 				final double[] binnedVoxelSize = getBinnedVoxelSize( span, originalVoxelSize );
 
-				final AffineTransform3D transform3D = imageViewer.getViewerTransform().copy();
-
 				imageViewer.show(
 						downSampleView,
 						imageViewer.getImageName(),
@@ -141,8 +135,6 @@ public class BinnedView< T extends RealType< T > & NativeType< T > > extends JFr
 
 				ImageJLogger.info( "Binned view size [GB]: "
 						+ Utils.getSizeGB( downSampleView ) );
-
-				imageViewer.setViewerTransform( transform3D );
 
 
 			}

@@ -215,9 +215,15 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
     @Override
     public AffineTransform3D getViewerTransform()
     {
-        final AffineTransform3D transform3D = new AffineTransform3D();
-        bdvSS.getBdvHandle().getViewerPanel().getState().getViewerTransform( transform3D );
-        return transform3D;
+        if ( bdvSS != null )
+        {
+            final AffineTransform3D transform3D = new AffineTransform3D();
+            bdvSS.getBdvHandle().getViewerPanel()
+                    .getState().getViewerTransform( transform3D );
+            return transform3D.copy();
+        }
+        else
+           return null;
     }
 
     @Override
@@ -261,7 +267,10 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
             RandomAccessibleInterval rai,
             String imageName,
             double[] voxelSize,
-            String calibrationUnit) {
+            String calibrationUnit)
+    {
+
+        AffineTransform3D transform3D = getViewerTransform();
 
         final AffineTransform3D scaling = new AffineTransform3D();
 
@@ -273,6 +282,8 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
                 imageName,
                 BdvOptions.options().axisOrder(AxisOrder.XYZCT)
                         .addTo(bdvSS).sourceTransform(scaling));
+
+        if ( transform3D != null ) setViewerTransform( transform3D );
 
         addGrayValueOverlay();
 
