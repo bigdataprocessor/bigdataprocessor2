@@ -14,7 +14,7 @@ Below movie demonstrates opening of 670 GB Hdf5 image data, as acquired by light
 
 ### Interactive binning
 
-For some camera based microscope systems the pixel size can not be freely chosen during acquisition. Thus, one often resorts to over-sampling in order not loose important information. However, this leads to larger data volumes than necessary, to noisier data, because the information is spread across more pixels, and to (vastly) increased image processing times. The BigDataProcessor makes it possible to interactively explore different binnings, thereby providing an efficient means to find  the binning at which the scientific question can be address most efficiently.  
+For camera based microscope systems the pixel size cannot be freely chosen during acquisition. Thus, one often resorts to over-sampling in order not loose important information. However, this leads to larger data volumes than necessary, to noisier data, because the information is spread across more pixels, and to (vastly) increased image processing times. BigDataProcessor makes it possible to interactively explore different binnings, thereby providing an efficient means to find  a binning at which the respective scientific question can be efficiently addressed. 
 
 [<img width="1000" alt="image" src="https://user-images.githubusercontent.com/2157566/54475194-d4d49180-47ee-11e9-8e65-ba73fed52b44.png">](https://drive.google.com/open?id=1AVFW3M5QYEDH9XUgR-q2LWUsuy16zF1A)
 
