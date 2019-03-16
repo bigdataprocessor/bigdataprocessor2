@@ -1,6 +1,7 @@
 package de.embl.cba.bdp2.saving;
 
 import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
+import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.imaris.ImarisDataSet;
 import de.embl.cba.imaris.ImarisUtils;
 import de.embl.cba.imaris.ImarisWriter;
@@ -40,9 +41,9 @@ public class SaveCentral {
 
     private static void saveTIFFAsPlanes(SavingSettings savingSettings, ExecutorService es) {
         List<Future> futures = new ArrayList<>();
-        for ( int c = 0; c < savingSettings.image.dimension(FileInfoConstants.C ); c++) {
-            for ( int t = 0; t < savingSettings.image.dimension(FileInfoConstants.T ); t++) {
-                for ( int z = 0; z < savingSettings.image.dimension(FileInfoConstants.Z ); z++) {
+        for ( int c = 0; c < savingSettings.image.dimension( DimensionOrder.C ); c++) {
+            for ( int t = 0; t < savingSettings.image.dimension( DimensionOrder.T ); t++) {
+                for ( int z = 0; z < savingSettings.image.dimension( DimensionOrder.Z ); z++) {
                     futures.add(es.submit(
                             new SaveImgAsTIFFPlanes(c, t, z, savingSettings)
                     ));
@@ -74,7 +75,7 @@ public class SaveCentral {
         List<Future> futures = new ArrayList<>();
         AtomicInteger counter = new AtomicInteger(0);
         final long startTime = System.currentTimeMillis();
-        long timeFrames = savingSettings.image.dimension(FileInfoConstants.T );
+        long timeFrames = savingSettings.image.dimension( DimensionOrder.T );
         for (int t = 0; t < timeFrames; t++) {
             futures.add(
                     es.submit(
@@ -90,7 +91,7 @@ public class SaveCentral {
         List<Future> futures = new ArrayList<>();
         AtomicInteger counter = new AtomicInteger(0);
         final long startTime = System.currentTimeMillis();
-        long timeFrames = savingSettings.image.dimension(FileInfoConstants.T );
+        long timeFrames = savingSettings.image.dimension( DimensionOrder.T );
         NativeType imageType = Util.getTypeFromInterval(savingSettings.image);
         for (int t = 0; t < timeFrames; t++) {
             if (imageType instanceof UnsignedByteType) {
@@ -124,7 +125,7 @@ public class SaveCentral {
         AtomicInteger counter = new AtomicInteger(0);
         ImarisDataSet imarisDataSetProperties = getImarisDataSet(savingSettings);
         final long startTime = System.currentTimeMillis();
-        long timeFrames = savingSettings.image.dimension(FileInfoConstants.T );
+        long timeFrames = savingSettings.image.dimension( DimensionOrder.T );
         NativeType imageType = Util.getTypeFromInterval(savingSettings.image);
         for (int t = 0; t < timeFrames; t++) {
             if (imageType instanceof UnsignedByteType) {

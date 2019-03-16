@@ -2,6 +2,7 @@ package de.embl.cba.bdp2.motioncorrection;
 
 import de.embl.cba.bdp2.ui.BigDataProcessor;
 import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
+import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import de.embl.cba.bdp2.viewers.ImageViewer;
@@ -96,13 +97,13 @@ public class BigDataTrackerCommand extends DynamicCommand implements Interactive
         System.out.println("select");
         BigDataProcessor.trackerThreadPool.submit(() -> {
             FinalInterval interval = imageViewer.get5DIntervalFromUser();
-            trackingSettings.pMin = new Point3D((int) interval.min(FileInfoConstants.X ),
-                    (int) interval.min(FileInfoConstants.Y ),
-                    (int) interval.min(FileInfoConstants.Z ));
+            trackingSettings.pMin = new Point3D((int) interval.min( DimensionOrder.X ),
+                    (int) interval.min( DimensionOrder.Y ),
+                    (int) interval.min( DimensionOrder.Z ));
 
-            trackingSettings.pMax = new Point3D((int) interval.max(FileInfoConstants.X ),
-                    (int) interval.max(FileInfoConstants.Y ),
-                    (int) interval.max(FileInfoConstants.Z ));
+            trackingSettings.pMax = new Point3D((int) interval.max( DimensionOrder.X ),
+                    (int) interval.max( DimensionOrder.Y ),
+                    (int) interval.max( DimensionOrder.Z ));
         });
         trackingSettings.tStart = imageViewer.getCurrentTimePoint();
     }

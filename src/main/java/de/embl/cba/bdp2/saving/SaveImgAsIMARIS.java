@@ -1,6 +1,7 @@
 package de.embl.cba.bdp2.saving;
 
 import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
+import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.imaris.H5DataCubeWriter;
 import de.embl.cba.imaris.ImarisDataSet;
 import de.embl.cba.bdp2.logging.IJLazySwingLogger;
@@ -94,15 +95,15 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
             //   ImagePlus impChannelTime = getDataCube( c );  May be faster???
 
             long[] minInterval = new long[]{
-                    image.min(FileInfoConstants.X ),
-                    image.min(FileInfoConstants.Y ),
-                    image.min(FileInfoConstants.Z ),
+                    image.min( DimensionOrder.X ),
+                    image.min( DimensionOrder.Y ),
+                    image.min( DimensionOrder.Z ),
                     c,
                     this.current_t};
             long[] maxInterval = new long[]{
-                    image.max(FileInfoConstants.X ),
-                    image.max(FileInfoConstants.Y ),
-                    image.max(FileInfoConstants.Z ),
+                    image.max( DimensionOrder.X ),
+                    image.max( DimensionOrder.Y ),
+                    image.max( DimensionOrder.Z ),
                     c,
                     this.current_t};
 

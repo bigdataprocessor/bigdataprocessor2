@@ -4,6 +4,7 @@ import de.embl.cba.bdp2.ui.BigDataProcessor;
 import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
 import de.embl.cba.bdp2.logging.IJLazySwingLogger;
 import de.embl.cba.bdp2.logging.Logger;
+import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import javafx.geometry.Point3D;
 import net.imglib2.FinalInterval;
@@ -45,11 +46,11 @@ public class ObjectTracker<T extends RealType<T>> {
         this.trackingSettings = trackingSettings;
         this.pMin = trackingSettings.pMin;
         this.pMax = trackingSettings.pMax;
-        this.width = (int) trackingSettings.imageRAI.dimension(FileInfoConstants.X );
-        this.height = (int) trackingSettings.imageRAI.dimension(FileInfoConstants.Y );
-        this.depth = (int) trackingSettings.imageRAI.dimension(FileInfoConstants.Z );
-        this.nChannels = (int) trackingSettings.imageRAI.dimension(FileInfoConstants.C );
-        this.timeFrames =  trackingSettings.nt ==-1? (int)trackingSettings.imageRAI.dimension(FileInfoConstants.T ) : trackingSettings.nt+ trackingSettings.tStart;
+        this.width = (int) trackingSettings.imageRAI.dimension( DimensionOrder.X );
+        this.height = (int) trackingSettings.imageRAI.dimension( DimensionOrder.Y );
+        this.depth = (int) trackingSettings.imageRAI.dimension( DimensionOrder.Z );
+        this.nChannels = (int) trackingSettings.imageRAI.dimension( DimensionOrder.C );
+        this.timeFrames =  trackingSettings.nt ==-1? (int)trackingSettings.imageRAI.dimension( DimensionOrder.T ) : trackingSettings.nt+ trackingSettings.tStart;
         this.trackId = 0;
     }
 
@@ -78,7 +79,7 @@ public class ObjectTracker<T extends RealType<T>> {
         long startTime = System.currentTimeMillis();
         for (int t = tStart; t < timeFrames; ++t) {
             logger.info("Current time tracked " + t);
-            randomAccess.setPosition(t, FileInfoConstants.T );
+            randomAccess.setPosition(t, DimensionOrder.T );
             double trackingFraction;
             // compute stack center and tracking radii
             // at each iteration, the center of mass is only computed for a subset of the data cube
@@ -151,7 +152,7 @@ public class ObjectTracker<T extends RealType<T>> {
             double[] found = new double[currentFrame.numDimensions()];
             shiftPeak.getSubpixelShift().localize(found);
             //System.out.println(Util.printCoordinates(found));
-            pShift = new Point3D(found[FileInfoConstants.X ],found[FileInfoConstants.Y ],found[FileInfoConstants.Z ]);
+            pShift = new Point3D(found[ DimensionOrder.X ],found[ DimensionOrder.Y ],found[ DimensionOrder.Z ]);
             pMin = pShift.add(pMin);
             pMax = pShift.add(pMax);
             pMinMax[0] = pMin;
@@ -174,12 +175,12 @@ public class ObjectTracker<T extends RealType<T>> {
         // compute one-based, otherwise the numbers at x=0,y=0,z=0 are lost for the center of mass
         List<Future> futures = new ArrayList<>();
         for (int z = zmin; z < zmax; z++) {
-            randomAccess.setPosition(z, FileInfoConstants.Z );
+            randomAccess.setPosition(z, DimensionOrder.Z );
             if (this.interruptTrackingThreads) {
                 return new Point3D(0, 0, 0);
             }
             for (int c = 0; c < nChannels; c++) {
-                randomAccess.setPosition(c, FileInfoConstants.C );
+                randomAccess.setPosition(c, DimensionOrder.C );
                 Future<double[]> future = BigDataProcessor.trackerThreadPool.submit(new ComputeCenterOfMassPerSliceParallel(randomAccess, z,
                         xmin, xmax, ymin, ymax, gateIntensity));
                 futures.add(future);
@@ -227,9 +228,9 @@ public class ObjectTracker<T extends RealType<T>> {
         public double[] call() {
             double sum = 0.0, xsum = 0.0, ysum = 0.0, zsum = 0.0, v = 0.0;
             for (int x = xmin; x < xmax; x++) {
-                randomAccess.setPosition(x, FileInfoConstants.X );
+                randomAccess.setPosition(x, DimensionOrder.X );
                 for (int y = ymin; y < ymax; y++) {
-                    randomAccess.setPosition(y, FileInfoConstants.Y );
+                    randomAccess.setPosition(y, DimensionOrder.Y );
                     if (interruptTrackingThreads) {
                         return new double[]{0, 0, 0, 0};
                     }

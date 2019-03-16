@@ -1,6 +1,6 @@
 package de.embl.cba.bdp2.saving;
 
-import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
+import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import ij.IJ;
 import ij.ImagePlus;
@@ -36,14 +36,14 @@ public class SaveImgAsTIFFPlanes implements Runnable {
         }
         RandomAccessibleInterval imgStack = savingSettings.image;
         long[] minInterval = new long[]{
-                imgStack.min(FileInfoConstants.X ),
-                imgStack.min(FileInfoConstants.Y ),
+                imgStack.min( DimensionOrder.X ),
+                imgStack.min( DimensionOrder.Y ),
                 z,
                 c,
                 t};
         long[] maxInterval = new long[]{
-                imgStack.max(FileInfoConstants.X ),
-                imgStack.max(FileInfoConstants.Y ),
+                imgStack.max( DimensionOrder.X ),
+                imgStack.max( DimensionOrder.Y ),
                 z,
                 c,
                 t};
@@ -94,7 +94,7 @@ public class SaveImgAsTIFFPlanes implements Runnable {
             String sZ = String.format("%1$05d", z);
             String pathCTZ;
 
-            if (imgStack.dimension(FileInfoConstants.C ) > 1 || imgStack.dimension(FileInfoConstants.T ) > 1) {
+            if (imgStack.dimension( DimensionOrder.C ) > 1 || imgStack.dimension( DimensionOrder.T ) > 1) {
                 pathCTZ = newPath + "--C" + sC + "--T" + sT + "--Z" + sZ + ".tif";
             } else {
                 pathCTZ = newPath + "--Z" + sZ + ".tif";

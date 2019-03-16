@@ -5,6 +5,7 @@ import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
 import de.embl.cba.bdp2.fileinfosource.FileInfoSource;
 import de.embl.cba.bdp2.saving.SaveCentral;
 import de.embl.cba.bdp2.saving.SavingSettings;
+import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.ImageViewer;
 import ij.gui.GenericDialog;
@@ -121,8 +122,8 @@ public class BigDataProcessor {
         System.out.println("Shear Factor Y " + shearingSettings.shearingFactorY);
 
         List<RandomAccessibleInterval<T>> timeTracks = new ArrayList<>();
-        int nTimeFrames = (int) rai.dimension( FileInfoConstants.T );
-        int nChannels = (int) rai.dimension( FileInfoConstants.C );
+        int nTimeFrames = (int) rai.dimension( DimensionOrder.T );
+        int nChannels = (int) rai.dimension( DimensionOrder.C );
         System.out.println("Shear Factor X " + shearingSettings.shearingFactorX);
         System.out.println("Shear Factor Y " + shearingSettings.shearingFactorY);
         AffineTransform3D affine = new AffineTransform3D();
@@ -172,7 +173,7 @@ public class BigDataProcessor {
         affine3DtoEstimateBoundsAfterTransformation.set(shearingSettings.shearingFactorY, 1, 2);
 
 
-        final IntervalView intervalView3D = Views.hyperSlice( Views.hyperSlice( rai5D, FileInfoConstants.T, 0 ), FileInfoConstants.C, 0 );
+        final IntervalView intervalView3D = Views.hyperSlice( Views.hyperSlice( rai5D, DimensionOrder.T, 0 ), DimensionOrder.C, 0 );
         FinalRealInterval transformedRealInterval = affine3DtoEstimateBoundsAfterTransformation.estimateBounds( intervalView3D );
 
         final Interval interval = Intervals.largestContainedInterval( transformedRealInterval );
@@ -205,9 +206,9 @@ public class BigDataProcessor {
         @Override
         protected RandomAccessibleInterval<T> compute() {
             List<RandomAccessibleInterval<T>> channelTracks = new ArrayList<>();
-            RandomAccessibleInterval tStep = Views.hyperSlice(rai, FileInfoConstants.T, t);
+            RandomAccessibleInterval tStep = Views.hyperSlice(rai, DimensionOrder.T, t);
             for (int channel = 0; channel < nChannels; ++channel) {
-                RandomAccessibleInterval cStep = Views.hyperSlice(tStep, FileInfoConstants.C, channel);
+                RandomAccessibleInterval cStep = Views.hyperSlice(tStep, DimensionOrder.C, channel);
                 RealRandomAccessible real = Views.interpolate(Views.extendZero(cStep),this.interpolatorFactory);
                 AffineRandomAccessible af = RealViews.affine(real, affine);
                 FinalRealInterval transformedRealInterval = affine.estimateBounds(cStep);

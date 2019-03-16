@@ -7,6 +7,7 @@ import de.embl.cba.bdp2.ui.DisplaySettings;
 import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
 import de.embl.cba.bdp2.logging.IJLazySwingLogger;
 import de.embl.cba.bdp2.logging.Logger;
+import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import de.embl.cba.bdp2.viewers.ImageViewer;
@@ -79,7 +80,7 @@ public class BigDataTracker {
     {
         if(trackResults!=null) {
             List<RandomAccessibleInterval<T>> tracks = new ArrayList<>();
-            int nChannels = (int) trackingSettings.imageRAI.dimension(FileInfoConstants.C );
+            int nChannels = (int) trackingSettings.imageRAI.dimension( DimensionOrder.C );
             for (Map.Entry<Integer, Point3D[]> entry : this.trackResults.locations.entrySet()) {
                 Point3D[] pMinMax = entry.getValue();
                 long[] range = {(long) pMinMax[0].getX(),

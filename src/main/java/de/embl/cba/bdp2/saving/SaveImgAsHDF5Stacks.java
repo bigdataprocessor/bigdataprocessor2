@@ -4,6 +4,7 @@ import ch.systemsx.cisd.hdf5.hdf5lib.HDF5Constants;
 import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
 import de.embl.cba.bdp2.logging.IJLazySwingLogger;
 import de.embl.cba.bdp2.logging.Logger;
+import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import ij.ImagePlus;
 import ncsa.hdf.hdf5lib.H5;
@@ -127,15 +128,15 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
             // Load
             //   ImagePlus impChannelTime = getDataCube( c );  May be faster???
             long[] minInterval = new long[]{
-                    image.min(FileInfoConstants.X ),
-                    image.min(FileInfoConstants.Y ),
-                    image.min(FileInfoConstants.Z ),
+                    image.min( DimensionOrder.X ),
+                    image.min( DimensionOrder.Y ),
+                    image.min( DimensionOrder.Z ),
                     c,
                     this.current_t};
             long[] maxInterval = new long[]{
-                    image.max(FileInfoConstants.X ),
-                    image.max(FileInfoConstants.Y ),
-                    image.max(FileInfoConstants.Z ),
+                    image.max( DimensionOrder.X ),
+                    image.max( DimensionOrder.Y ),
+                    image.max( DimensionOrder.Z ),
                     c,
                     this.current_t};
             RandomAccessibleInterval newRai = Views.interval(image, minInterval, maxInterval);

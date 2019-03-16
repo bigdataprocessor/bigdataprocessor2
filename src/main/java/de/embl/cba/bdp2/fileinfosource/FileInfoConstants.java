@@ -17,16 +17,6 @@ public class FileInfoConstants {
     public static final String PATTERN_4= ".*_C<c>_T<t>.tif";
     public static final String PATTERN_5= ".*--t<t>--Z<z>--C<c>.tif";
     public static final String PATTERN_6= "Cam_<c>_<t>.h5";
-    //public static final String PATTERN_7= "classified--C<C01-01>--T<T00001-00001>--Z<Z00001-01162>.tif";
-    //public static final String PATTERN_8= "classified--C<C00-00>--T<T00000-00000>--Z<Z00001-01162>.tif";
-//    public static final int UNSIGNED_BYTE_MAX_VAL = Byte.MAX_VALUE*2+1;
-//    public static final int UNSIGNED_SHORT_MAX_VAL = Short.MAX_VALUE*2+1;
-//    public static final long UNSIGNED_INT_MAX_VAL = 4294967295L;
-    public static final int X = 0;
-    public static final int Y = 1;
-    public static final int Z = 2;
-    public static final int C = 3;
-    public static final int T = 4;
     public static final int PROGRESS_UPDATE_MILLISECONDS = 200;
     public static final int TOTAL_AXES = 5;
     public static final AxisType[] AXES_ORDER = {Axes.X, Axes.Y, Axes.Z, Axes.CHANNEL, Axes.TIME};

@@ -11,7 +11,7 @@ import bdv.viewer.SourceAndConverter;
 import de.embl.cba.bdp2.boundingbox.BoundingBoxDialog;
 import de.embl.cba.bdp2.ui.BdvMenus;
 import de.embl.cba.bdp2.ui.DisplaySettings;
-import de.embl.cba.bdp2.utils.Utils;
+import de.embl.cba.bdp2.utils.DimensionOrder;
 import net.imglib2.Cursor;
 import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccessibleInterval;
@@ -22,9 +22,6 @@ import net.imglib2.util.Intervals;
 import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
 import javax.swing.*;
-
-
-import static de.embl.cba.bdp2.fileinfosource.FileInfoConstants.*;
 
 public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements ImageViewer {
 
@@ -60,15 +57,15 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
         FinalInterval interval;
         if (showBB.selectedMax != null && showBB.selectedMin != null) {
             long[] minMax = {
-                    (long) (showBB.selectedMin[BoundingBoxDialog.X] / voxelSize[X]),
-                    (long) (showBB.selectedMin[BoundingBoxDialog.Y] / voxelSize[Y]),
-                    (long) (showBB.selectedMin[BoundingBoxDialog.Z] / voxelSize[Z]),
-                    rai.min(C),
+                    (long) (showBB.selectedMin[BoundingBoxDialog.X] / voxelSize[ DimensionOrder.X]),
+                    (long) (showBB.selectedMin[BoundingBoxDialog.Y] / voxelSize[ DimensionOrder.Y]),
+                    (long) (showBB.selectedMin[BoundingBoxDialog.Z] / voxelSize[ DimensionOrder.Z]),
+                    rai.min( DimensionOrder.C),
                     showBB.selectedMin[BoundingBoxDialog.T],
-                    (long) (showBB.selectedMax[BoundingBoxDialog.X] / voxelSize[X]),
-                    (long) (showBB.selectedMax[BoundingBoxDialog.Y] / voxelSize[Y]),
-                    (long) (showBB.selectedMax[BoundingBoxDialog.Z] / voxelSize[Z]),
-                    rai.max(C),
+                    (long) (showBB.selectedMax[BoundingBoxDialog.X] / voxelSize[ DimensionOrder.X]),
+                    (long) (showBB.selectedMax[BoundingBoxDialog.Y] / voxelSize[ DimensionOrder.Y]),
+                    (long) (showBB.selectedMax[BoundingBoxDialog.Z] / voxelSize[ DimensionOrder.Z]),
+                    rai.max( DimensionOrder.C),
                     showBB.selectedMax[BoundingBoxDialog.T]};
             interval= Intervals.createMinMax(minMax);
         }else{
@@ -175,13 +172,13 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
         double min, max;
         if (this.rai != null) {
             RandomAccessibleInterval raiStack = Views.hyperSlice(
-                    Views.hyperSlice(this.rai, T, 0),
-                    C,
+                    Views.hyperSlice(this.rai, DimensionOrder.T, 0),
+                    DimensionOrder.C,
                     channel);
-            final long stackCenter = (raiStack.max(Z) - raiStack.min(Z)) / 2 + raiStack.min(Z);
+            final long stackCenter = (raiStack.max( DimensionOrder.Z) - raiStack.min( DimensionOrder.Z)) / 2 + raiStack.min( DimensionOrder.Z);
             IntervalView<T> ts = Views.hyperSlice(
                     raiStack,
-                    Z,
+                    DimensionOrder.Z,
                     stackCenter);
             Cursor<T> cursor = Views.iterable(ts).cursor();
             min = Double.MAX_VALUE;
@@ -201,7 +198,7 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
 
     @Override
     public void doAutoContrastPerChannel() {
-        int nChannels = (int) this.getRai().dimension(C);
+        int nChannels = (int) this.getRai().dimension( DimensionOrder.C);
         for (int channel = 0; channel < nChannels; ++channel) {
             DisplaySettings setting = getDisplaySettings(channel);
             setDisplayRange(setting.getMinValue(), setting.getMaxValue(), 0);
@@ -231,7 +228,7 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
     }
 
     public void replicateViewerContrast(ImageViewer newImageView) {
-        int nChannels = (int) this.getRai().dimension(C);
+        int nChannels = (int) this.getRai().dimension( DimensionOrder.C);
         for (int channel = 0; channel < nChannels; ++channel) {
             ConverterSetup converterSetup = this.getBdvSS().getBdvHandle().getSetupAssignments().getConverterSetups().get(channel);
             newImageView.setDisplayRange(converterSetup.getDisplayRangeMin(), converterSetup.getDisplayRangeMax(), 0);

@@ -7,18 +7,16 @@ import ch.systemsx.cisd.hdf5.IHDF5Reader;
 import de.embl.cba.bdp2.FastTiffDecoder;
 import de.embl.cba.bdp2.logging.IJLazySwingLogger;
 import de.embl.cba.bdp2.logging.Logger;
+import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.type.numeric.real.FloatType;
-import sun.rmi.runtime.Log;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
-
-import static de.embl.cba.bdp2.fileinfosource.FileInfoConstants.*;
 
 public class FileInfoSource {
     private final SerializableFileInfo[][][] infos;
@@ -55,11 +53,11 @@ public class FileInfoSource {
         }
         infos = new SerializableFileInfo[nC][nT][nZ];
         dimensions = new long[ 5 ];
-        dimensions[ X ] = nX;
-        dimensions[ Y ] = nY;
-        dimensions[ Z ] = nZ;
-        dimensions[ C ] = nC;
-        dimensions[ T ] = nT;
+        dimensions[ DimensionOrder.X ] = nX;
+        dimensions[ DimensionOrder.Y ] = nY;
+        dimensions[ DimensionOrder.Z ] = nZ;
+        dimensions[ DimensionOrder.C ] = nC;
+        dimensions[ DimensionOrder.T ] = nT;
         if ( unit == null || Objects.equals(unit, "")) unit = "pixel";
 
         logger.info( this.toString() );

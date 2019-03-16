@@ -1,6 +1,6 @@
 package de.embl.cba.bdp2.ui;
 
-import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
+import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.viewers.ImageViewer;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.interpolation.InterpolatorFactory;
@@ -93,10 +93,10 @@ public class ObliqueMenuDialog extends JDialog implements ActionListener {
                 imageViewer.getVoxelSize(),
                 imageViewer.getCalibrationUnit(),
                 true);
-        double[] centerCoordinates = {sheared.min(FileInfoConstants.X ) / 2.0,
-                sheared.max(FileInfoConstants.Y ) / 2.0,
-                (sheared.max(FileInfoConstants.Z ) - sheared.min(FileInfoConstants.Z )) / 2.0
-                        + sheared.min(FileInfoConstants.Z )};
+        double[] centerCoordinates = {sheared.min( DimensionOrder.X ) / 2.0,
+                sheared.max( DimensionOrder.Y ) / 2.0,
+                (sheared.max( DimensionOrder.Z ) - sheared.min( DimensionOrder.Z )) / 2.0
+                        + sheared.min( DimensionOrder.Z )};
         imageViewer.shiftImageToCenter(centerCoordinates);
     }
 

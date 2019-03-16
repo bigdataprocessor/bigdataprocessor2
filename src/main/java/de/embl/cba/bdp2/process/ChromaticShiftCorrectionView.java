@@ -4,6 +4,7 @@ import bdv.tools.brightness.SliderPanel;
 import bdv.util.BoundedValue;
 import de.embl.cba.bdp2.logging.ImageJLogger;
 import de.embl.cba.bdp2.ui.BdvMenus;
+import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.ImageViewer;
 import de.embl.cba.lazyalgorithm.LazyDownsampler;
@@ -47,7 +48,7 @@ public class ChromaticShiftCorrectionView< T extends RealType< T > & NativeType<
 
 		newImageViewer.addMenus( new BdvMenus() );
 
-		showBinningAdjustmentDialog( rai, originalVoxelSize, newImageViewer, span );
+		showChromaticShiftCorrectionDialog( rai, originalVoxelSize, newImageViewer, span );
 
 	}
 
@@ -61,7 +62,7 @@ public class ChromaticShiftCorrectionView< T extends RealType< T > & NativeType<
 		return newVoxelSize;
 	}
 
-	private void showBinningAdjustmentDialog(
+	private void showChromaticShiftCorrectionDialog(
 			RandomAccessibleInterval< T > rai,
 			double[] originalVoxelSize,
 			ImageViewer imageViewer,
@@ -76,6 +77,8 @@ public class ChromaticShiftCorrectionView< T extends RealType< T > & NativeType<
 
 		final ArrayList< BoundedValue > boundedValues = new ArrayList<>();
 		final ArrayList< SliderPanel > sliderPanels = new ArrayList<>();
+
+		rai.dimensions( DimensionOrder.C );
 
 		for ( int d = 0; d < 3; d++ )
 		{

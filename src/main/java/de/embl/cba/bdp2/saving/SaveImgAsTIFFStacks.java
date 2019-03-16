@@ -1,7 +1,6 @@
 package de.embl.cba.bdp2.saving;
 
 import de.embl.cba.bdp2.ProjectionXYZ;
-import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
 import de.embl.cba.bdp2.logging.IJLazySwingLogger;
 import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.utils.Utils;
@@ -17,7 +16,6 @@ import loci.formats.out.TiffWriter;
 import loci.formats.services.OMEXMLService;
 import loci.formats.tiff.IFD;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.view.Views;
 import ome.xml.model.enums.DimensionOrder;
 import ome.xml.model.enums.PixelType;
@@ -55,7 +53,7 @@ public class SaveImgAsTIFFStacks implements Runnable {
 
         //long freeMemoryInBytes = IJ.maxMemory() - IJ.currentMemory();
         RandomAccessibleInterval image = savingSettings.image;
-        final long totalCubes = image.dimension( FileInfoConstants.T ) * image.dimension(FileInfoConstants.C );
+        final long totalCubes = image.dimension( de.embl.cba.bdp2.utils.DimensionOrder.T ) * image.dimension( de.embl.cba.bdp2.utils.DimensionOrder.C );
 //            long numBytesOfImage = image.dimension(FileInfoConstants.X) *
 //                    image.dimension(FileInfoConstants.Y) *
 //                    image.dimension(FileInfoConstants.Z) *
@@ -66,7 +64,7 @@ public class SaveImgAsTIFFStacks implements Runnable {
 //            if (numBytesOfImage > 1.5 * freeMemoryInBytes) {
 //                // TODO: do something...
 //            }
-        int totalChannels = Math.toIntExact(savingSettings.image.dimension(FileInfoConstants.C ));
+        int totalChannels = Math.toIntExact(savingSettings.image.dimension( de.embl.cba.bdp2.utils.DimensionOrder.C ));
         for (int c = 0; c < totalChannels; c++) {
             if (SaveCentral.interruptSavingThreads) {
                 logger.progress("Stopped saving thread: ", "" + t);
@@ -76,15 +74,15 @@ public class SaveImgAsTIFFStacks implements Runnable {
             // Load
             //   ImagePlus impChannelTime = getDataCube( c );  May be faster???
             long[] minInterval = new long[]{
-                    image.min(FileInfoConstants.X ),
-                    image.min(FileInfoConstants.Y ),
-                    image.min(FileInfoConstants.Z ),
+                    image.min( de.embl.cba.bdp2.utils.DimensionOrder.X ),
+                    image.min( de.embl.cba.bdp2.utils.DimensionOrder.Y ),
+                    image.min( de.embl.cba.bdp2.utils.DimensionOrder.Z ),
                     c,
                     this.t};
             long[] maxInterval = new long[]{
-                    image.max(FileInfoConstants.X ),
-                    image.max(FileInfoConstants.Y ),
-                    image.max(FileInfoConstants.Z ),
+                    image.max( de.embl.cba.bdp2.utils.DimensionOrder.X ),
+                    image.max( de.embl.cba.bdp2.utils.DimensionOrder.Y ),
+                    image.max( de.embl.cba.bdp2.utils.DimensionOrder.Z ),
                     c,
                     this.t};
 

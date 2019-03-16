@@ -34,7 +34,6 @@ import bdv.util.Bdv;
 import bdv.viewer.animate.SimilarityTransformAnimator;
 import de.embl.cba.bdp2.Region5D;
 import de.embl.cba.bdp2.ui.DisplaySettings;
-import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
 import de.embl.cba.bdp2.logging.IJLazySwingLogger;
 import de.embl.cba.bdp2.logging.Logger;
 import ij.IJ;
@@ -278,7 +277,7 @@ public class Utils {
             String unit,
             String name )
     {
-        ImagePlus imp = ImageJFunctions.wrap( Views.permute(randomAccessibleInterval,FileInfoConstants.Z,FileInfoConstants.C),name);
+        ImagePlus imp = ImageJFunctions.wrap( Views.permute(randomAccessibleInterval, DimensionOrder.Z, DimensionOrder.C),name);
 
         final Calibration calibration = new Calibration();
         calibration.setUnit( unit );

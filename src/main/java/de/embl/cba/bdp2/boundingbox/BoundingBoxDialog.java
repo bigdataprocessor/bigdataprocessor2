@@ -3,19 +3,13 @@ package de.embl.cba.bdp2.boundingbox;
 import bdv.tools.boundingbox.BoxSelectionOptions;
 import bdv.util.Bdv;
 import bdv.util.BdvFunctions;
-import bdv.util.BdvHandleFrame;
-import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
+import de.embl.cba.bdp2.utils.DimensionOrder;
 import net.imglib2.FinalRealInterval;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.util.Intervals;
 import bdv.tools.boundingbox.TransformedRealBoxSelectionDialog;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static de.embl.cba.bdp2.fileinfosource.FileInfoConstants.*;
 
@@ -39,9 +33,9 @@ public class BoundingBoxDialog
     public void show(RandomAccessibleInterval rai, double[] voxelSize) {
         final int[] min, max;
         min = new int[4];
-        min[T] = (int) rai.min(FileInfoConstants.T);
+        min[T] = (int) rai.min( DimensionOrder.T);
         max = new int[4];
-        max[T] = (int) rai.max(FileInfoConstants.T);
+        max[T] = (int) rai.max( DimensionOrder.T);
 
         for (int d = 0; d < 3; d++) {
             min[d] = (int) (rai.min(d) * voxelSize[d]);

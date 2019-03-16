@@ -6,6 +6,7 @@ import com.google.common.cache.LoadingCache;
 import de.embl.cba.bdp2.ui.BigDataProcessor;
 import de.embl.cba.bdp2.fileinfosource.FileInfoSource;
 import de.embl.cba.bdp2.fileinfosource.SerializableFileInfo;
+import de.embl.cba.bdp2.utils.DimensionOrder;
 import ij.ImagePlus;
 import javafx.geometry.Point3D;
 import net.imglib2.cache.img.CellLoader;
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import static de.embl.cba.bdp2.fileinfosource.FileInfoConstants.*;
-import static de.embl.cba.bdp2.fileinfosource.FileInfoConstants.Z;
+import static de.embl.cba.bdp2.utils.DimensionOrder.Z;
 
 
 public class ImageLoader implements CellLoader {
@@ -53,13 +54,13 @@ public class ImageLoader implements CellLoader {
     public ImagePlus getDataCube( long[] min,  long[] max )
     {
         int z = Math.toIntExact( max[ Z ]);
-        int channel = Math.toIntExact( max[ C ]);
-        int time = Math.toIntExact( max[ T ]);
+        int channel = Math.toIntExact( max[ DimensionOrder.C ]);
+        int time = Math.toIntExact( max[ DimensionOrder.T ]);
         List<Integer> c_t = Arrays.asList(channel,time);
         SerializableFileInfo[] infos_c_t = getFileInfoStack(c_t);
         SerializableFileInfo fileInfo = infos_c_t[z];
         Point3D po, ps;
-        po = getOffset( min[ X ], min[ Y ], z );
+        po = getOffset( min[ DimensionOrder.X ], min[ DimensionOrder.Y ], z );
         ps = getSize( min, max );
         //TODO: get rid of ImagePlus
         ImagePlus imagePlus = new OpenerExtension().readDataCube(directory, infos_c_t, 1, po, ps, BigDataProcessor.executorService);
@@ -76,8 +77,8 @@ public class ImageLoader implements CellLoader {
     private Point3D getSize( long[] min, long[] max )
     {
         Point3D ps;
-        long sX = max[ X  ] - min[ X ] + 1;
-        long sY = max[ Y  ] - min[ Y ] + 1;
+        long sX = max[ DimensionOrder.X  ] - min[ DimensionOrder.X ] + 1;
+        long sY = max[ DimensionOrder.Y  ] - min[ DimensionOrder.Y ] + 1;
         ps = new Point3D( sX, sY, 1);
         return ps;
     }

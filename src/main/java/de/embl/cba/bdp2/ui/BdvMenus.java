@@ -1,14 +1,11 @@
 package de.embl.cba.bdp2.ui;
 
-import de.embl.cba.bdp2.logging.ImageJLogger;
 import de.embl.cba.bdp2.motioncorrection.BigDataTrackerGUI;
-import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
 import de.embl.cba.bdp2.process.BinnedView;
 import de.embl.cba.bdp2.process.CroppedView;
 import de.embl.cba.bdp2.process.UnsignedByteTypeView;
-import de.embl.cba.bdp2.utils.Utils;
+import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.viewers.ImageViewer;
-import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.view.Views;
@@ -64,7 +61,7 @@ public class BdvMenus extends JMenu implements ActionListener {
         }else if(e.getActionCommand().equalsIgnoreCase(
                 UIDisplayConstants.IMAGEJ_VIEW_MENU_DISPLAY_TEXT)){
             RandomAccessibleInterval permuted =
-                    Views.permute(imageViewer.getRai(),FileInfoConstants.Z,FileInfoConstants.C);
+                    Views.permute(imageViewer.getRai(), DimensionOrder.Z, DimensionOrder.C);
             ImageJFunctions.show(permuted, BigDataProcessor.executorService);
         }else if(e.getActionCommand().equalsIgnoreCase(
                 UIDisplayConstants.BIG_DATA_TRACKER_MENU_DISPLAY_TEXT)){
