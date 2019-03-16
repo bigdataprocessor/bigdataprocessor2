@@ -10,19 +10,19 @@ Interactive processing of TB-sized image data within [Fiji](http://fiji.sc/), on
 
 Below movie demonstrates opening of 670 GB Hdf5 image data, as acquired by light-sheet microscopy. The data format is one volumetric Hdf5 file per time-point. As the data needed to streamed from the camera onto disk as efficient as possible, the Hdf5 files are not specifically chunked for efficient 3D access, nor do they contain a multi-resolution pyramid. There also is no special header file, linking the different time-points. Nevertheless, as the movie shows, the data can be openend and browsed within seconds. 
 
-[<img width="600" alt="image" src="https://user-images.githubusercontent.com/2157566/54459444-fa1dbd00-4766-11e9-9eb1-225573d3ed07.png">](https://drive.google.com/open?id=1wJgZb_Hd1S8ScTbKq9KOYyz-4lmS7-Sf)
+[<img width="1000" alt="image" src="https://user-images.githubusercontent.com/2157566/54459444-fa1dbd00-4766-11e9-9eb1-225573d3ed07.png">](https://drive.google.com/open?id=1wJgZb_Hd1S8ScTbKq9KOYyz-4lmS7-Sf)
 
 ### Interactive binning
 
 For some camera based microscope systems the pixel size can not be freely chosen during acquisition. Thus, one often resorts to over-sampling in order not loose important information. However, this leads to larger data volumes than necessary, to noisier data, because the information is spread across more pixels, and to (vastly) increased image processing times. The BigDataProcessor makes it possible to interactively explore different binnings, thereby providing an efficient means to find  the binning at which the scientific question can be address most efficiently.  
 
-[<img width="600" alt="image" src="https://user-images.githubusercontent.com/2157566/54475194-d4d49180-47ee-11e9-8e65-ba73fed52b44.png">](https://drive.google.com/open?id=1AVFW3M5QYEDH9XUgR-q2LWUsuy16zF1A)
+[<img width="1000" alt="image" src="https://user-images.githubusercontent.com/2157566/54475194-d4d49180-47ee-11e9-8e65-ba73fed52b44.png">](https://drive.google.com/open?id=1AVFW3M5QYEDH9XUgR-q2LWUsuy16zF1A)
 
 ### Interactive 3D+t Cropping
 
 Frequently, larger volumes are acuired than strictly necessary, e.g. to accomodate sample drift, motion, or growth. Below movie shows how the BigDataProcessor can be used to interactivly crop the data to only contain the relevant parts.
 
-[<img width="600" alt="image" src="https://user-images.githubusercontent.com/2157566/54475398-3138b080-47f1-11e9-9a13-1d7d8a8b61b1.png">](https://drive.google.com/open?id=1iabVP9jbISI1WclMRjtDHvcNWxMTC95-)
+[<img width="1000" alt="image" src="https://user-images.githubusercontent.com/2157566/54475398-3138b080-47f1-11e9-9a13-1d7d8a8b61b1.png">](https://drive.google.com/open?id=1iabVP9jbISI1WclMRjtDHvcNWxMTC95-)
 
 ### Interactive conversion to 8-bit
 
@@ -30,7 +30,7 @@ Cameras typically produce image data at 12, 14, or 16 bit-depth (as 12 and 14 bi
 
 Below movie demonstrates interactive 8-bit conversion, where the user can interactively explore different mappings, while browsing the entire data set. This is done lazily, i.e. the data on disk it not altered at this stage.
 
-[<img width="600" alt="image" src="https://user-images.githubusercontent.com/2157566/54475439-a310fa00-47f1-11e9-913a-cdf292ae991c.png">](https://drive.google.com/open?id=1jRZEepD1C8rM5t2gDi7tYnFh092vUztm)
+[<img width="1000" alt="image" src="https://user-images.githubusercontent.com/2157566/54475439-a310fa00-47f1-11e9-913a-cdf292ae991c.png">](https://drive.google.com/open?id=1jRZEepD1C8rM5t2gDi7tYnFh092vUztm)
 
 ## Detailed information
 
