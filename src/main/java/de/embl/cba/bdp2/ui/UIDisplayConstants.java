@@ -12,5 +12,5 @@ public class UIDisplayConstants {
     public static final String OBLIQUE_MENU_DISPLAY_TEXT = "Oblique View";
     public static final String INTERACTIVE_EIGHT_BIT_MENU_DISPLAY_TEXT = "8-bit View";
     public static final String INTERACTIVE_BINNING = "Binned View";
-    public static final String CHROMATIC_SHIFT_CORRECTION_MENU_DISPLAY_TEXT = "Chromatic Shift Correction View";
+    public static final String CHROMATIC_SHIFT_CORRECTION_MENU_DISPLAY_TEXT = "Chromatic Shift Corrected View";
 }

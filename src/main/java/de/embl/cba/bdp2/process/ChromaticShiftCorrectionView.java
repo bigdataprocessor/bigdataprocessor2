@@ -8,10 +8,14 @@ import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.ImageViewer;
 import de.embl.cba.lazyalgorithm.LazyDownsampler;
+import net.imglib2.Interval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.util.Intervals;
+import net.imglib2.view.IntervalView;
+import net.imglib2.view.Views;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,39 +25,63 @@ public class ChromaticShiftCorrectionView< T extends RealType< T > & NativeType<
 {
 
 	private final ImageViewer< T > imageViewer;
+	private final RandomAccessibleInterval< T > rai;
 	private ArrayList< BoundedValue > boundedValues;
 	private ArrayList< SliderPanel > sliderPanels;
 	private final ImageViewer newImageViewer;
+	private final long numChannels;
+	private final ArrayList< RandomAccessibleInterval< T > > channelRAIs;
+	private RandomAccessibleInterval< T > correctedRai;
+	private UpdateListener updateListener;
+	private JPanel panel;
+	private ArrayList< RandomAccessibleInterval< T > > correctedChannelRAIs;
 
 	public ChromaticShiftCorrectionView( final ImageViewer< T > imageViewer  )
 	{
 		this.imageViewer = imageViewer;
+		this.rai = imageViewer.getRai();
+		numChannels = rai.dimension( DimensionOrder.C );
 
-		final RandomAccessibleInterval< T > rai = imageViewer.getRai();
+		channelRAIs = getChannelRAIs();
+		correctedChannelRAIs = channelRAIs;
+		setCorrectedRai();
 
-		long[] span = new long[]{0,0,0,0,0};
+		newImageViewer = createNewImageViewer( imageViewer );
 
-		final RandomAccessibleInterval< T > downSampledView =
-				new LazyDownsampler<>( rai, span ).getDownsampledView();
+		showChromaticShiftCorrectionDialog();
+	}
 
-		newImageViewer = imageViewer.newImageViewer();
-
-		final double[] originalVoxelSize = imageViewer.getVoxelSize();
+	private ImageViewer< T > createNewImageViewer( ImageViewer< T > imageViewer )
+	{
+		ImageViewer newImageViewer = imageViewer.newImageViewer();
 
 		newImageViewer.show(
-				downSampledView,
-				"binned view",
-				getBinnedVoxelSize( span, originalVoxelSize ),
+				correctedRai,
+				"chromatic shift corrected view",
+				imageViewer.getVoxelSize(),
 				imageViewer.getCalibrationUnit(),
 				true);
 
-		ImageJLogger.info( "Binned view size [GB]: "
-				+ Utils.getSizeGB( downSampledView ) );
-
 		newImageViewer.addMenus( new BdvMenus() );
 
-		showChromaticShiftCorrectionDialog( rai, originalVoxelSize, newImageViewer, span );
+		return imageViewer;
+	}
 
+	private void setCorrectedRai()
+	{
+		correctedRai = Views.permute(
+				Views.stack( correctedChannelRAIs ),
+				DimensionOrder.C, DimensionOrder.T );
+	}
+
+	private ArrayList< RandomAccessibleInterval< T > > getChannelRAIs()
+	{
+		ArrayList< RandomAccessibleInterval< T > > channelRais = new ArrayList<>();
+
+		for ( int c = 0; c < numChannels; c++ )
+			channelRais.add( Views.hyperSlice( rai, DimensionOrder.C, c ) );
+
+		return channelRais;
 	}
 
 	private double[] getBinnedVoxelSize( long[] span, double[] voxelSize )
@@ -66,39 +94,20 @@ public class ChromaticShiftCorrectionView< T extends RealType< T > & NativeType<
 		return newVoxelSize;
 	}
 
-	private void showChromaticShiftCorrectionDialog(
-			RandomAccessibleInterval< T > rai,
-			double[] originalVoxelSize,
-			ImageViewer imageViewer,
-			long[] span )
+	private void showChromaticShiftCorrectionDialog()
 	{
-		JPanel panel = new JPanel();
+		panel = new JPanel();
 		panel.setLayout( new BoxLayout( panel, BoxLayout.PAGE_AXIS ) );
 
 		boundedValues = new ArrayList<>();
 		sliderPanels = new ArrayList<>();
-
-		final long numChannels = rai.dimension( DimensionOrder.C );
+		updateListener = new UpdateListener();
 
 		final String[] xyz = { "X", "Y", "Z" };
 
 		for ( int c = 0; c < numChannels; c++ )
-		{
 			for ( String axis : xyz )
-			{
-				addValueAndSlider( c, axis );
-			}
-		}
-
-
-
-		final UpdateListener updateListener = new UpdateListener();
-
-		for ( int d = 0; d < 3; d++ )
-		{
-			boundedValues.get( d ).setUpdateListener( updateListener );
-			panel.add( sliderPanels.get( d ) );
-		}
+				createValueAndSlider( c, axis );
 
 		showFrame( panel );
 	}
@@ -118,75 +127,107 @@ public class ChromaticShiftCorrectionView< T extends RealType< T > & NativeType<
 		frame.setVisible( true );
 	}
 
-	private void addValueAndSlider( int c, String axis )
+	private void createValueAndSlider( int c, String axis )
 	{
 		final BoundedValue boundedValue
 				= new BoundedValue(
 				0,
-				50, // TODO
+				50, // TODO: how much?
 				0 );
 
-		boundedValues.add( boundedValue );
+		final SliderPanel sliderPanel = new SliderPanel(
+				"Channel " + c + ", " + axis,
+				boundedValue,
+				1 );
 
-		sliderPanels.add(
-				new SliderPanel(
-						"Channel " + c + ", " + axis,
-						boundedValue,
-						1 ) );
+		boundedValue.setUpdateListener( updateListener );
+
+		boundedValues.add( boundedValue );
+		sliderPanels.add( sliderPanel );
+		panel.add( sliderPanel );
+
 	}
 
 	class UpdateListener implements BoundedValue.UpdateListener
 	{
-		private long[] previousSpan;
+
+		private ArrayList< long[] > previousTranslations;
 
 		@Override
 		public synchronized void update()
 		{
-			final long[] span = new long[ 5 ];
+			correctedChannelRAIs = new ArrayList<>(  );
 
-			for ( int d = 0; d < 3; d++ )
-				span[ d ] = ( boundedValues.get( d ).getCurrentValue() - 1 ) / 2;
+			final ArrayList< long[] > translations = getTranslations();
 
-			boolean spanChanged = false;
-			if ( previousSpan != null )
+			if ( ! isTranslationsChanged( translations ) ) return;
+
+			previousTranslations = translations;
+
+			updateSliders();
+
+			for ( int c = 0; c < numChannels; c++ )
+				correctedChannelRAIs.add( Views.translate( channelRAIs.get( c ), translations.get( c ) ) );
+
+			Interval intersect = correctedChannelRAIs.get( 0 );
+			for ( int c = 1; c < numChannels; c++ )
+				intersect = Intervals.intersect( intersect, correctedChannelRAIs.get( c ) );
+
+			final ArrayList< RandomAccessibleInterval< T > > cropped = new ArrayList<>();
+			for ( int c = 0; c < numChannels; c++ )
+				cropped.add( Views.interval( correctedChannelRAIs.get( c ), intersect ) );
+
+			correctedChannelRAIs = cropped;
+			setCorrectedRai();
+			showCorrectedRai();
+		}
+
+		private boolean isTranslationsChanged( ArrayList< long[] > translations )
+		{
+
+			if ( previousTranslations != null )
+				for ( int c = 0; c < numChannels; c++ )
+					for ( int d = 0; d < 3; d++ )
+						if ( translations.get( c )[ d ] != previousTranslations.get( c )[ d ] )
+							return true;
+
+			return false;
+		}
+
+		private ArrayList< long[] > getTranslations()
+		{
+			final ArrayList< long[] > translations = new ArrayList<>();
+			int valueIndex = 0;
+			for ( int c = 0; c < numChannels; c++ )
 			{
+				long[] translation = new long[ 4 ];
+
 				for ( int d = 0; d < 3; d++ )
-				{
-					if ( span[ d ] != previousSpan[ d ] )
-					{
-						sliderPanels.get( d ).update();
-						previousSpan[ d ] = span[ d ];
-						spanChanged = true;
-					}
-				}
+					translation[ d ] = boundedValues.get( valueIndex++ ).getCurrentValue();
+
+				translations.add( translation );
 			}
-			else
-			{
-				spanChanged = true;
-			}
+			return translations;
+		}
 
-			if ( ! spanChanged ) return;
-
-			final RandomAccessibleInterval< T > downSampleView =
-					new LazyDownsampler<>( rai, span ).getDownsampledView();
-
-			final double[] binnedVoxelSize = getBinnedVoxelSize( span, originalVoxelSize );
-
-			final AffineTransform3D transform3D = newImageViewer.getViewerTransform().copy();
-
-			newImageViewer.show(
-					downSampleView,
-					imageViewer.getImageName(),
-					binnedVoxelSize,
-					imageViewer.getCalibrationUnit(),
-					true );
-
-			ImageJLogger.info( "Binned view size [GB]: "
-					+ Utils.getSizeGB( downSampleView ) );
-
+		private void updateSliders()
+		{
+			int i = 0;
+			for ( int c = 0; c < numChannels; c++ )
+				for ( int d = 0; d < 3; d++ )
+					sliderPanels.get( i++ ).update();
 		}
 	}
 
+	private void showCorrectedRai()
+	{
+		newImageViewer.show(
+				correctedRai,
+				imageViewer.getImageName(),
+				imageViewer.getVoxelSize(),
+				imageViewer.getCalibrationUnit(),
+				true );
+	}
 
 
 }

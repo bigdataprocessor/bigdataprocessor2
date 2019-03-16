@@ -2,6 +2,7 @@ package de.embl.cba.bdp2.ui;
 
 import de.embl.cba.bdp2.motioncorrection.BigDataTrackerGUI;
 import de.embl.cba.bdp2.process.BinnedView;
+import de.embl.cba.bdp2.process.ChromaticShiftCorrectionView;
 import de.embl.cba.bdp2.process.CroppedView;
 import de.embl.cba.bdp2.process.UnsignedByteTypeView;
 import de.embl.cba.bdp2.utils.DimensionOrder;
@@ -87,6 +88,13 @@ public class BdvMenus extends JMenu implements ActionListener {
                         new BinnedView<>(imageViewer);
                 menuDialog.setVisible(true);
             });
-        }
+        }else if(e.getActionCommand().equalsIgnoreCase(
+            UIDisplayConstants.CHROMATIC_SHIFT_CORRECTION_MENU_DISPLAY_TEXT)){
+            BigDataProcessor.executorService.submit(() -> {
+                ChromaticShiftCorrectionView menuDialog =
+                    new ChromaticShiftCorrectionView<>(imageViewer);
+            menuDialog.setVisible(true);
+        });
+    }
     }
 }
