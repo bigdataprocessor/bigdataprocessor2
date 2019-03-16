@@ -22,7 +22,7 @@ For some camera based microscope systems the pixel size can not be freely chosen
 
 Frequently, larger volumes are acuired than strictly necessary, e.g. to accomodate sample drift, motion, or growth. Below movie shows how the BigDataProcessor can be used to interactivly crop the data to only contain the relevant parts.
 
-[<img width="600" alt="image" src="https://user-images.githubusercontent.com/2157566/54474988-3c3d1200-47ec-11e9-8b38-fc98de4df6dd.png">](https://drive.google.com/open?id=1iabVP9jbISI1WclMRjtDHvcNWxMTC95-)
+[<img width="600" alt="image" src="https://user-images.githubusercontent.com/2157566/54475398-3138b080-47f1-11e9-9a13-1d7d8a8b61b1.png">](https://drive.google.com/open?id=1iabVP9jbISI1WclMRjtDHvcNWxMTC95-)
 
 ### Interactive conversion to 8-bit
 
