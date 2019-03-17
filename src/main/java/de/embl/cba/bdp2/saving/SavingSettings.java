@@ -9,7 +9,7 @@ public class SavingSettings {
 
     public static final String LZW = "LZW";
     public static final String NONE = "None";
-
+    public Integer saveId;
     public RandomAccessibleInterval image;
     public double[] voxelSize;
     public String unit;
@@ -62,6 +62,7 @@ public class SavingSettings {
         savingSettings.fileType = FileType.TIFF_as_PLANES;
         savingSettings.filePath = "src/test/resources/file";
         savingSettings.compression = SavingSettings.NONE;
+        savingSettings.saveId = 9999;
         return savingSettings;
     }
 }

@@ -20,7 +20,7 @@ import net.imglib2.view.Views;
 import ome.xml.model.enums.DimensionOrder;
 import ome.xml.model.enums.PixelType;
 import ome.xml.model.primitives.PositiveInteger;
-
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class SaveImgAsTIFFStacks implements Runnable {
@@ -28,18 +28,20 @@ public class SaveImgAsTIFFStacks implements Runnable {
     private final AtomicInteger counter;
     private final SavingSettings savingSettings;
     private final long startTime;
-
+    private final AtomicBoolean stop;
     private final Logger logger = new IJLazySwingLogger();
 
 
     public SaveImgAsTIFFStacks(int t,
                                SavingSettings savingSettings,
                                AtomicInteger counter,
-                               final long startTime) {
+                               final long startTime,
+                               AtomicBoolean stop) {
         this.t = t;
         this.savingSettings = savingSettings;
         this.counter = counter;
         this.startTime = startTime;
+        this.stop = stop;
     }
 
     @Override
@@ -66,7 +68,7 @@ public class SaveImgAsTIFFStacks implements Runnable {
 //            }
         int totalChannels = Math.toIntExact(savingSettings.image.dimension( de.embl.cba.bdp2.utils.DimensionOrder.C ));
         for (int c = 0; c < totalChannels; c++) {
-            if (SaveCentral.interruptSavingThreads) {
+            if (stop.get()) {
                 logger.progress("Stopped saving thread: ", "" + t);
                 return;
             }
@@ -113,7 +115,7 @@ public class SaveImgAsTIFFStacks implements Runnable {
             String[] binnings = savingSettings.bin.split(";");
             for (String binning : binnings) {
 
-                if (SaveCentral.interruptSavingThreads) {
+                if (stop.get()) {
                     logger.progress("Stopped saving thread: ", "" + t);
                     return;
                 }
@@ -142,7 +144,7 @@ public class SaveImgAsTIFFStacks implements Runnable {
                 }
 
             }
-            if (!SaveCentral.interruptSavingThreads) {
+            if (!stop.get()) {
                 SaveImgHelper.documentProgress(totalCubes, counter, logger, startTime);
             }
         }
@@ -191,7 +193,7 @@ public class SaveImgAsTIFFStacks implements Runnable {
                 rowsPerStripArray[0] = rowsPerStrip;
 
                 for (int z = 0; z < imp.getNSlices(); z++) {
-                    if (SaveCentral.interruptSavingThreads) {
+                    if (stop.get()) {
                         logger.progress("Stopped saving thread: ", "" + t);
                         savingSettings.saveProjection = false;
                         return;
@@ -213,7 +215,7 @@ public class SaveImgAsTIFFStacks implements Runnable {
                 logger.error(e.toString());
             }
         } else{  // no compression: use ImageJ's FileSaver, as it is faster than BioFormats
-            if (SaveCentral.interruptSavingThreads) {
+            if (stop.get()) {
                 savingSettings.saveProjection = false;
                 logger.progress("Stopped saving thread: ", "" + t);
                 return;

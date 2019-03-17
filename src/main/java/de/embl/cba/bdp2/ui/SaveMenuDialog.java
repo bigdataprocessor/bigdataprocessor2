@@ -2,7 +2,6 @@ package de.embl.cba.bdp2.ui;
 
 import de.embl.cba.bdp2.saving.SavingSettings;
 import de.embl.cba.bdp2.viewers.ImageViewer;
-
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -42,6 +41,7 @@ public class SaveMenuDialog extends JFrame implements ActionListener {
     private JFileChooser fc;
     protected final JProgressBar progressBar;
     private final ImageViewer imageViewer;
+
 
     public SaveMenuDialog(ImageViewer imageViewer) {
         this.imageViewer = imageViewer;
@@ -148,19 +148,23 @@ public class SaveMenuDialog extends JFrame implements ActionListener {
                 pack();
                 save.setEnabled(false);
                 BigDataProcessor.executorService.submit(() -> {
+                    savingSettings.saveId = this.hashCode();
                     new ProgressBar(this).createGUIandRunMonitor();
                     BigDataProcessor.saveImage(savingSettings, imageViewer.getVolatileRai());
                 });
 
             }
         } else if (e.getActionCommand().equals(STOP_SAVING)) {
-            BigDataProcessor.stopSave(); // Don't submit to thread pool. Let the main thread handle it.
+            BigDataProcessor.stopSave(this.hashCode()); // Don't submit to thread pool. Let the main thread handle it.
             save.setEnabled(true);
             progressBar.setVisible(false);
             MESSAGE.setText(MESSAGE_SAVE_INTERRUPTED);
             pack();
         }
     }
+     public Integer getSaveId(){
+        return this.hashCode();
+     }
 
 }
 

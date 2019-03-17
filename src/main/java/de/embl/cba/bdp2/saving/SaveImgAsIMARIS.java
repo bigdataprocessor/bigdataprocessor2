@@ -19,6 +19,7 @@ import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Util;
 import net.imglib2.view.Views;
 
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements Runnable {
@@ -32,13 +33,15 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
     private ImarisDataSet imarisDataSetProperties;
     private final T nativeType;
     private Logger logger = new IJLazySwingLogger();
+    private final AtomicBoolean stop;
 
     public SaveImgAsIMARIS(
             SavingSettings savingSettings,
             ImarisDataSet imarisDS,
             int time,
             AtomicInteger counter,
-            long startTime)
+            long startTime,
+            AtomicBoolean stop)
     {
         this.nativeType = (T)Util.getTypeFromInterval(savingSettings.image);
         Img imgTemp = ImgView.wrap(savingSettings.image,new CellImgFactory<>(nativeType));
@@ -59,6 +62,7 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
         this.counter = counter;
         this.startTime = startTime;
         this.imarisDataSetProperties = imarisDS;
+        this.stop = stop;
     }
 
     @Override
@@ -85,7 +89,7 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
         final long totalSlices = nFrames * nChannels;
         RandomAccessibleInterval image = savingSettings.image;
         for (int c = 0; c < this.nChannels; c++) {
-            if (SaveCentral.interruptSavingThreads) {
+            if (stop.get()) {
                 savingSettings.saveVolume = false;
                 logger.progress("Stopped saving thread: ", "" + this.current_t);
                 return;
@@ -117,7 +121,7 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
             //
             String[] binnings = savingSettings.bin.split(";");
             for (String binning : binnings) {
-                if (SaveCentral.interruptSavingThreads) {
+                if (stop.get()) {
                     savingSettings.saveVolume = false;
                     savingSettings.saveProjection = false;
                     logger.progress("Stopped saving thread: ", "" + current_t);
@@ -159,7 +163,7 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
                             imagePlus, c, this.current_t, newPath);
                 }
             }
-            if (!SaveCentral.interruptSavingThreads) {
+            if (!stop.get()) {
                 SaveImgHelper.documentProgress(totalSlices, counter, logger, startTime);
             }
         }

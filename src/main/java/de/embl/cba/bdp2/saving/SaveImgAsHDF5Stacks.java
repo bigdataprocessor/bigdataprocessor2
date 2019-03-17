@@ -25,7 +25,7 @@ import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.util.Util;
 import net.imglib2.view.Views;
-
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static ch.systemsx.cisd.hdf5.hdf5lib.HDF5Constants.*;
@@ -61,8 +61,9 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
     private final long startTime;
     private final T nativeType;
     private final Logger logger = new IJLazySwingLogger();
+    private AtomicBoolean stop;
 
-    public SaveImgAsHDF5Stacks(String dataset, SavingSettings savingSettings, int t, AtomicInteger counter, long startTime) {
+    public SaveImgAsHDF5Stacks(String dataset, SavingSettings savingSettings, int t, AtomicInteger counter, long startTime, AtomicBoolean stop) {
         this.nativeType = (T) Util.getTypeFromInterval(savingSettings.image);
         Img imgTemp = ImgView.wrap(savingSettings.image, new CellImgFactory<>(nativeType));
         this.image = new ImgPlus<>(imgTemp, "", FileInfoConstants.AXES_ORDER);
@@ -96,6 +97,7 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
         this.gateMin = savingSettings.gateMin;
         this.counter = counter;
         this.startTime = startTime;
+        this.stop = stop;
     }
 
     @Override
@@ -121,7 +123,7 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
         final long totalSlices = nFrames * nChannels;
         RandomAccessibleInterval image = savingSettings.image;
         for (int c = 0; c < this.nChannels; c++) {
-            if (SaveCentral.interruptSavingThreads) {
+            if (stop.get()) {
                 logger.progress("Stopped saving thread: ", "" + this.current_t);
                 return;
             }
@@ -150,7 +152,7 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
             String[] binnings = savingSettings.bin.split(";");
             for (String binning : binnings) {
 
-                if (SaveCentral.interruptSavingThreads) {
+                if (stop.get()) {
                     logger.progress("Stopped saving thread @ run: ", "" + current_t);
                     return;
                 }
@@ -180,7 +182,7 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
                 }
 
             }
-            if (!SaveCentral.interruptSavingThreads) {
+            if (!stop.get()) {
                 SaveImgHelper.documentProgress(totalSlices, counter, logger, startTime);
             }
         }
@@ -284,7 +286,7 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
                 throw new IllegalArgumentException("Trying to save dataset of unknown datatype.");
             }
 
-            if (SaveCentral.interruptSavingThreads) {
+            if (stop.get()) {
                 savingSettings.saveProjection = false;
                 logger.progress("Stopped saving thread @ writeIndividualChannels: ", "" + current_t);
                 return;
@@ -299,7 +301,7 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
     }
 
     private <E> void writeHyperslabs(int hdf5DataType, E[][] pixelsSlice, long[] start, long[] colorIniDims) {
-        if (SaveCentral.interruptSavingThreads) {
+        if (stop.get()) {
             savingSettings.saveProjection = false;
             logger.progress("Stopped saving thread @ writeHyperslabs: ", "" + current_t);
             return;
@@ -328,7 +330,7 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
                 rai.setPosition(y, image.dimensionIndex(Axes.Y));
                 T value = rai.get();
 
-                if (SaveCentral.interruptSavingThreads) {
+                if (stop.get()) {
                     savingSettings.saveProjection = false;
                     logger.progress("Stopped saving thread @ fillStackSlice: ", "" + current_t);
                     return;

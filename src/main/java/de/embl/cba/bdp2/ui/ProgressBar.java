@@ -8,7 +8,6 @@ import java.beans.PropertyChangeListener;
 
 public class ProgressBar implements PropertyChangeListener {
 
-    public static int progress; //This variable is written from MonitorThreadPoolStatus class.
     private final SaveMenuDialog currentInstance;
 
     public ProgressBar(SaveMenuDialog currentInstance) {
@@ -16,13 +15,16 @@ public class ProgressBar implements PropertyChangeListener {
     }
 
     class Task extends SwingWorker<Void, Void> {
-
         @Override
         public Void doInBackground() {
             setProgress(0);
-            progress = 0;
+            int progress = 0;
+            Integer currentSaveId = currentInstance.getSaveId();
             do {
                 setProgress(Math.min(progress, 100));
+                if(null != BigDataProcessor.progressTracker.get(currentSaveId)){
+                    progress = Math.min(BigDataProcessor.progressTracker.get(currentSaveId), 100);
+                }
             } while (progress < 100);
             setProgress(0); //to make sure past value is not shown anymore for next save using the same window
             return null;

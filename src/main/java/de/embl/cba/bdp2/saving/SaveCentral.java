@@ -2,6 +2,7 @@ package de.embl.cba.bdp2.saving;
 
 import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
 import de.embl.cba.bdp2.utils.DimensionOrder;
+import de.embl.cba.bdp2.ui.BigDataProcessor;
 import de.embl.cba.imaris.ImarisDataSet;
 import de.embl.cba.imaris.ImarisUtils;
 import de.embl.cba.imaris.ImarisWriter;
@@ -21,117 +22,121 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class SaveCentral {
     private static Logger logger = new IJLazySwingLogger();
-    public static boolean interruptSavingThreads;
 
-    public static void goSave(SavingSettings savingSettings, ExecutorService es) {
-        if (savingSettings.fileType.equals( SavingSettings.FileType.TIFF_as_PLANES)) {
-            saveTIFFAsPlanes(savingSettings, es);
-        } else if (savingSettings.fileType.equals( SavingSettings.FileType.TIFF_as_STACKS)) {
-            saveTIFFAsStacks(savingSettings, es);
-        } else if (savingSettings.fileType.equals( SavingSettings.FileType.HDF5_STACKS )) {
-            saveHDFStacks(savingSettings, es);
-        } else if (savingSettings.fileType.equals( SavingSettings.FileType.HDF5_IMARIS_BDV)) {
-            saveIMARIStacks(savingSettings, es);
+    public static void goSave(SavingSettings savingSettings, ExecutorService es, Integer saveId) {
+        if (savingSettings.fileType.equals(SavingSettings.FileType.TIFF_as_PLANES)) {
+            saveTIFFAsPlanes(savingSettings, es, saveId);
+        } else if (savingSettings.fileType.equals(SavingSettings.FileType.TIFF_as_STACKS)) {
+            saveTIFFAsStacks(savingSettings, es, saveId);
+        } else if (savingSettings.fileType.equals(SavingSettings.FileType.HDF5_STACKS)) {
+            saveHDFStacks(savingSettings, es, saveId);
+        } else if (savingSettings.fileType.equals(SavingSettings.FileType.HDF5_IMARIS_BDV)) {
+            saveIMARIStacks(savingSettings, es, saveId);
         }
     }
 
-    private static void saveTIFFAsPlanes(SavingSettings savingSettings, ExecutorService es) {
+    private static void saveTIFFAsPlanes(SavingSettings savingSettings, ExecutorService es, Integer saveId) {
+        AtomicBoolean stop = new AtomicBoolean(false);
+        updateTrackers(saveId, stop);
         List<Future> futures = new ArrayList<>();
-        for ( int c = 0; c < savingSettings.image.dimension( DimensionOrder.C ); c++) {
-            for ( int t = 0; t < savingSettings.image.dimension( DimensionOrder.T ); t++) {
-                for ( int z = 0; z < savingSettings.image.dimension( DimensionOrder.Z ); z++) {
+        for (int c = 0; c < savingSettings.image.dimension(DimensionOrder.C); c++) {
+            for (int t = 0; t < savingSettings.image.dimension(DimensionOrder.T); t++) {
+                for (int z = 0; z < savingSettings.image.dimension(DimensionOrder.Z); z++) {
                     futures.add(es.submit(
-                            new SaveImgAsTIFFPlanes(c, t, z, savingSettings)
+                            new SaveImgAsTIFFPlanes(c, t, z, savingSettings, stop)
                     ));
                 }
             }
         }
         // Monitor the progress
-        Thread thread = new Thread(new Runnable() {
-            public void run() {
-                MonitorThreadPoolStatus.showProgressAndWaitUntilDone(futures, "Saved to disk: ", FileInfoConstants.PROGRESS_UPDATE_MILLISECONDS);
-            }
-        });
+        Thread thread = new Thread(() -> MonitorThreadPoolStatus.showProgressAndWaitUntilDone(futures, saveId, "Saved to disk: ", FileInfoConstants.PROGRESS_UPDATE_MILLISECONDS));
         thread.start();
     }
 
-    private static void saveTIFFAsStacks(SavingSettings savingSettings, ExecutorService es) {
-        saveTIFFForEachChannelAndTimePoint(savingSettings, es);
+    private static void saveTIFFAsStacks(SavingSettings savingSettings, ExecutorService es, Integer saveId) {
+        saveTIFFForEachChannelAndTimePoint(savingSettings, es, saveId);
     }
 
-    private static void saveHDFStacks(SavingSettings savingSettings, ExecutorService es) {
-        saveHDF5ForEachChannelAndTimePoint(savingSettings, es);
+    private static void saveHDFStacks(SavingSettings savingSettings, ExecutorService es, Integer saveId) {
+        saveHDF5ForEachChannelAndTimePoint(savingSettings, es, saveId);
     }
 
-    private static void saveIMARIStacks(SavingSettings savingSettings, ExecutorService es) {
-        saveIMARISForEachChannelAndTimePoint(savingSettings, es);
+    private static void saveIMARIStacks(SavingSettings savingSettings, ExecutorService es, Integer saveId) {
+        saveIMARISForEachChannelAndTimePoint(savingSettings, es, saveId);
     }
 
-    private static void saveTIFFForEachChannelAndTimePoint(SavingSettings savingSettings, ExecutorService es) {
+    private static void saveTIFFForEachChannelAndTimePoint(SavingSettings savingSettings, ExecutorService es, Integer saveId) {
         List<Future> futures = new ArrayList<>();
         AtomicInteger counter = new AtomicInteger(0);
+        AtomicBoolean stop = new AtomicBoolean(false);
+        updateTrackers(saveId, stop);
         final long startTime = System.currentTimeMillis();
-        long timeFrames = savingSettings.image.dimension( DimensionOrder.T );
+        long timeFrames = savingSettings.image.dimension(DimensionOrder.T);
         for (int t = 0; t < timeFrames; t++) {
             futures.add(
                     es.submit(
-                            new SaveImgAsTIFFStacks(t, savingSettings, counter, startTime)
+                            new SaveImgAsTIFFStacks(t, savingSettings, counter, startTime,stop)
                     ));
         }
         // Monitor the progress
-        Thread thread = new Thread(() -> MonitorThreadPoolStatus.showProgressAndWaitUntilDone(futures, "Saved to disk: ", FileInfoConstants.PROGRESS_UPDATE_MILLISECONDS));
+        Thread thread = new Thread(() -> MonitorThreadPoolStatus.showProgressAndWaitUntilDone(futures, saveId, "Saved to disk: ", FileInfoConstants.PROGRESS_UPDATE_MILLISECONDS));
         thread.start();
     }
 
-    private static void saveHDF5ForEachChannelAndTimePoint(SavingSettings savingSettings, ExecutorService es) {
+    private static void saveHDF5ForEachChannelAndTimePoint(SavingSettings savingSettings, ExecutorService es, Integer saveId) {
         List<Future> futures = new ArrayList<>();
         AtomicInteger counter = new AtomicInteger(0);
+        AtomicBoolean stop = new AtomicBoolean(false);
+        updateTrackers(saveId, stop);
         final long startTime = System.currentTimeMillis();
-        long timeFrames = savingSettings.image.dimension( DimensionOrder.T );
+        long timeFrames = savingSettings.image.dimension(DimensionOrder.T);
         NativeType imageType = Util.getTypeFromInterval(savingSettings.image);
         for (int t = 0; t < timeFrames; t++) {
             if (imageType instanceof UnsignedByteType) {
                 futures.add(es.submit(
-                                new SaveImgAsHDF5Stacks<UnsignedByteType>("Data", savingSettings, t, counter, startTime)
-                        ));
+                        new SaveImgAsHDF5Stacks<UnsignedByteType>("Data", savingSettings, t, counter, startTime, stop)
+                ));
             } else if (imageType instanceof UnsignedShortType) {
                 futures.add(
                         es.submit(
-                                new SaveImgAsHDF5Stacks<UnsignedShortType>("Data", savingSettings, t, counter, startTime)
+                                new SaveImgAsHDF5Stacks<UnsignedShortType>("Data", savingSettings, t, counter, startTime, stop)
                         ));
             } else if (imageType instanceof FloatType) {
                 futures.add(
                         es.submit(
-                                new SaveImgAsHDF5Stacks<FloatType>("Data", savingSettings, t, counter, startTime)
-                      ));
+                                new SaveImgAsHDF5Stacks<FloatType>("Data", savingSettings, t, counter, startTime, stop)
+                        ));
             } else {
                 // throw Type not found exception : TODO --ashis
             }
         }
         // Monitor the progress
-        Thread thread = new Thread(() -> MonitorThreadPoolStatus.showProgressAndWaitUntilDone(futures, "Saved to disk: ", FileInfoConstants.PROGRESS_UPDATE_MILLISECONDS));
+        Thread thread = new Thread(() -> MonitorThreadPoolStatus.showProgressAndWaitUntilDone(futures, saveId, "Saved to disk: ", FileInfoConstants.PROGRESS_UPDATE_MILLISECONDS));
         thread.start();
     }
 
 
     private static void saveIMARISForEachChannelAndTimePoint(
             SavingSettings savingSettings,
-            ExecutorService es) {
+            ExecutorService es, Integer saveId) {
         List<Future> futures = new ArrayList<>();
         AtomicInteger counter = new AtomicInteger(0);
-        ImarisDataSet imarisDataSetProperties = getImarisDataSet(savingSettings);
+        AtomicBoolean stop = new AtomicBoolean(false);
+        updateTrackers(saveId, stop);
+        ImarisDataSet imarisDataSetProperties = getImarisDataSet(savingSettings,stop);
         final long startTime = System.currentTimeMillis();
-        long timeFrames = savingSettings.image.dimension( DimensionOrder.T );
+        long timeFrames = savingSettings.image.dimension(DimensionOrder.T);
         NativeType imageType = Util.getTypeFromInterval(savingSettings.image);
         for (int t = 0; t < timeFrames; t++) {
             if (imageType instanceof UnsignedByteType) {
                 futures.add(es.submit(
-                                new SaveImgAsIMARIS<UnsignedByteType>(savingSettings, imarisDataSetProperties, t, counter, startTime)
-                        ));
+                        new SaveImgAsIMARIS<UnsignedByteType>(savingSettings, imarisDataSetProperties, t, counter, startTime, stop)
+                ));
             } else if (imageType instanceof UnsignedShortType) {
                 futures.add(
                         es.submit(
@@ -140,21 +145,22 @@ public class SaveCentral {
                                         imarisDataSetProperties,
                                         t,
                                         counter,
-                                        startTime)
+                                        startTime,
+                                        stop)
                         ));
             } else if (imageType instanceof FloatType) {
                 futures.add(
                         es.submit(
-                                new SaveImgAsIMARIS<FloatType>(savingSettings, imarisDataSetProperties, t, counter, startTime)
+                                new SaveImgAsIMARIS<FloatType>(savingSettings, imarisDataSetProperties, t, counter, startTime,stop)
                         ));
             }
         }
         // Monitor the progress
-        Thread thread = new Thread(() -> MonitorThreadPoolStatus.showProgressAndWaitUntilDone(futures, "Saved to disk: ", FileInfoConstants.PROGRESS_UPDATE_MILLISECONDS));
+        Thread thread = new Thread(() -> MonitorThreadPoolStatus.showProgressAndWaitUntilDone(futures, saveId, "Saved to disk: ", FileInfoConstants.PROGRESS_UPDATE_MILLISECONDS));
         thread.start();
     }
 
-    private static ImarisDataSet getImarisDataSet( SavingSettings savingSettings ) {
+    private static ImarisDataSet getImarisDataSet(SavingSettings savingSettings,AtomicBoolean stop) {
 
         ImagePlus image = Utils.wrapToCalibratedImagePlus(
                 savingSettings.image,
@@ -171,9 +177,9 @@ public class SaveCentral {
                 savingSettings.parentDirectory,
                 savingSettings.fileBaseNameIMARIS);
 
-        imarisDataSet.setLogger( new de.embl.cba.logging.IJLazySwingLogger() );
+        imarisDataSet.setLogger(new de.embl.cba.logging.IJLazySwingLogger());
 
-        if (SaveCentral.interruptSavingThreads) {
+        if (stop.get()) {
             return null;
         }
 
@@ -182,7 +188,6 @@ public class SaveCentral {
                 savingSettings.parentDirectory,
                 savingSettings.fileBaseNameIMARIS + ".ims"
         );
-
 
         ArrayList<File> imarisFiles = ImarisUtils.getImarisFiles(savingSettings.parentDirectory);
 
@@ -196,11 +201,15 @@ public class SaveCentral {
 //                savingSettings.fileBaseNameIMARIS + ".h5");
 
         logger.info("Image sizes at different resolutions:");
-        Utils.logArrayList( imarisDataSet.getDimensions());
+        Utils.logArrayList(imarisDataSet.getDimensions());
 
         logger.info("Image chunking:");
-        Utils.logArrayList( imarisDataSet.getChunks());
-
+        Utils.logArrayList(imarisDataSet.getChunks());
         return imarisDataSet;
+    }
+
+    private static void updateTrackers(Integer saveId, AtomicBoolean stop) {
+        BigDataProcessor.saveTracker.put(saveId, stop);
+        BigDataProcessor.progressTracker.put(saveId, 0);
     }
 }
