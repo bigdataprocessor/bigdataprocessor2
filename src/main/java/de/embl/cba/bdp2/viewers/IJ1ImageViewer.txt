@@ -16,7 +16,7 @@ import javax.swing.*;
 public class IJ1ImageViewer<T extends RealType<T> & NativeType<T> > implements ImageViewer {
 
     private ImagePlus imp;
-    private RandomAccessibleInterval rai;
+    private RandomAccessibleInterval volatileRai;
 
     public IJ1ImageViewer()
     {
@@ -33,14 +33,14 @@ public class IJ1ImageViewer<T extends RealType<T> & NativeType<T> > implements I
     }
 
     @Override
-    public void setRai( RandomAccessibleInterval rai ) {
-        this.rai = rai;
-        imp = ImageJFunctions.wrap( rai, "" );
+    public void setRai( RandomAccessibleInterval volatileRai ) {
+        this.volatileRai = volatileRai;
+        imp = ImageJFunctions.wrap( volatileRai, "" );
     }
 
     @Override
     public RandomAccessibleInterval getRai() {
-        return rai;
+        return volatileRai;
     }
 
     @Override
@@ -52,7 +52,7 @@ public class IJ1ImageViewer<T extends RealType<T> & NativeType<T> > implements I
     }
 
     @Override
-    public ImageViewer newImageViewer(RandomAccessibleInterval rai, String streamName) {
+    public ImageViewer newImageViewer(RandomAccessibleInterval volatileRai, String streamName) {
         return null;
     }
 
@@ -99,7 +99,7 @@ public class IJ1ImageViewer<T extends RealType<T> & NativeType<T> > implements I
     }
 
     @Override
-    public void replaceRai( RandomAccessibleInterval rai, String newStreamName) {
+    public void replaceRai( RandomAccessibleInterval volatileRai, String newStreamName) {
 
     }
 

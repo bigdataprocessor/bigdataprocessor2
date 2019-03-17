@@ -51,7 +51,7 @@ public class EightBitConverterMenuDialog extends JDialog implements ActionListen
         mainPanels.get(k).add(panels.get(j++));
 
         menu.add(DIALOG_NAME, mainPanels.get(k++));
-        if (Util.getTypeFromInterval(imageViewer.getRai()) instanceof UnsignedByteType){
+        if (Util.getTypeFromInterval(imageViewer.getVolatileRai()) instanceof UnsignedByteType){
             warning.setVisible(true);
             convertButton.setEnabled(false);
         }else{
@@ -69,7 +69,7 @@ public class EightBitConverterMenuDialog extends JDialog implements ActionListen
         int max = Integer.parseInt(mapTo255.getText());
         DisplaySettings displaySettings= new DisplaySettings(min,max);
         RandomAccessibleInterval<UnsignedByteType> newRai =
-                BigDataProcessor.unsignedByteTypeConverter(imageViewer.getRai(),displaySettings );
+                BigDataProcessor.unsignedByteTypeConverter(imageViewer.getVolatileRai(),displaySettings );
         ImageViewer newImageViewer = imageViewer.newImageViewer();
         newImageViewer.show(
                 newRai,

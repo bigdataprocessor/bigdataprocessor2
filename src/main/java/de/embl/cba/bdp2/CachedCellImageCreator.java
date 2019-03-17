@@ -12,7 +12,10 @@ import static net.imglib2.cache.img.ReadOnlyCachedCellImgOptions.options;
 
 public class CachedCellImageCreator {
 
-    public static CachedCellImg create( FileInfoSource fileInfoSource, ExecutorService executorService) {
+    public static CachedCellImg create(
+            FileInfoSource fileInfoSource,
+            ExecutorService executorService)
+    {
         CachedCellImg cachedCellImg;
 
         ImageLoader loader = new ImageLoader( fileInfoSource );

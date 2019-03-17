@@ -149,7 +149,7 @@ public class SaveMenuDialog extends JFrame implements ActionListener {
                 save.setEnabled(false);
                 BigDataProcessor.executorService.submit(() -> {
                     new ProgressBar(this).createGUIandRunMonitor();
-                    BigDataProcessor.saveImage(savingSettings, imageViewer.getRai());
+                    BigDataProcessor.saveImage(savingSettings, imageViewer.getVolatileRai());
                 });
 
             }

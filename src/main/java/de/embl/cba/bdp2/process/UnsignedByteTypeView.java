@@ -23,7 +23,7 @@ public class UnsignedByteTypeView< T extends RealType< T > > extends JFrame
 	public UnsignedByteTypeView( final ImageViewer imageViewer  )
 	{
 
-		final RandomAccessibleInterval rai = imageViewer.getRai();
+		final RandomAccessibleInterval rai = imageViewer.getVolatileRai();
 
 		if ( ( Util.getTypeFromInterval( rai ) instanceof UnsignedByteType) )
 		{

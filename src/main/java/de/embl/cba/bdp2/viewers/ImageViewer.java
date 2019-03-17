@@ -4,6 +4,7 @@ import de.embl.cba.bdp2.ui.BdvMenus;
 import de.embl.cba.bdp2.ui.DisplaySettings;
 import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.Volatile;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -12,7 +13,7 @@ public interface ImageViewer < R extends RealType< R > & NativeType< R > >  {
 
     void show();
 
-    RandomAccessibleInterval< R > getRai();
+    RandomAccessibleInterval< Volatile< R > > getVolatileRai();
 
     double[] getVoxelSize();
 
@@ -23,7 +24,7 @@ public interface ImageViewer < R extends RealType< R > & NativeType< R > >  {
     FinalInterval get5DIntervalFromUser();
 
     void show(
-            RandomAccessibleInterval rai,
+            RandomAccessibleInterval< Volatile< R > > rai,
             String name,
             double[] voxelSize,
             String calibrationUnit,

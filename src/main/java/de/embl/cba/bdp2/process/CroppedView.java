@@ -18,7 +18,7 @@ public class CroppedView < T extends RealType< T > & NativeType< T > >
 		FinalInterval interval = imageViewer.get5DIntervalFromUser();
 
 		if (interval != null) {
-			RandomAccessibleInterval croppedRAI = BigDataProcessor.crop( imageViewer.getRai(), interval);
+			RandomAccessibleInterval croppedRAI = BigDataProcessor.crop( imageViewer.getVolatileRai(), interval);
 			ImageViewer newImageViewer = imageViewer.newImageViewer();
 			newImageViewer.show(
 					croppedRAI,
