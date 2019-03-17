@@ -15,6 +15,7 @@ import de.embl.cba.bdp2.utils.DimensionOrder;
 import net.imglib2.Cursor;
 import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.Volatile;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ARGBType;
@@ -274,8 +275,10 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
         AffineTransform3D transform3D = getViewerTransform();
         final AffineTransform3D scaling = getScalingTransform( voxelSize );
 
+        final RandomAccessibleInterval volatileRai = asVolatile( rai );
+
         bdvSS = BdvFunctions.show(
-                asVolatile(rai),
+                volatileRai,
                 imageName,
                 BdvOptions.options().axisOrder(AxisOrder.XYZCT)
                         .addTo(bdvSS).sourceTransform(scaling));
@@ -317,7 +320,6 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
 
     private ARGBType getColor( int sourceIndex, int numSources )
     {
-
         switch ( sourceIndex )
         {
             case 0:
@@ -331,12 +333,12 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
             default:
                 return new ARGBType( ARGBType.rgba( 255, 255, 255, 255 / numSources ) );
         }
-
     }
 
-    private RandomAccessibleInterval asVolatile(RandomAccessibleInterval rai) {
+    private RandomAccessibleInterval asVolatile( RandomAccessibleInterval< T > rai ) {
         try {
-            rai = VolatileViews.wrapAsVolatile(rai);
+            final RandomAccessibleInterval< Volatile< T > > volatileRai
+                    = VolatileViews.wrapAsVolatile( rai );
         } catch (IllegalArgumentException e) { //Never mind!
         } catch (Exception e) {
             e.printStackTrace();

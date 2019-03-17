@@ -2,15 +2,11 @@ package de.embl.cba.bdp2.process;
 
 import bdv.tools.brightness.SliderPanel;
 import bdv.util.BoundedValue;
-import de.embl.cba.bdp2.logging.ImageJLogger;
 import de.embl.cba.bdp2.ui.BdvMenus;
 import de.embl.cba.bdp2.utils.DimensionOrder;
-import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.ImageViewer;
-import de.embl.cba.lazyalgorithm.LazyDownsampler;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Intervals;
@@ -32,9 +28,9 @@ public class ChromaticShiftCorrectionView< T extends RealType< T > & NativeType<
 	private final long numChannels;
 	private final ArrayList< RandomAccessibleInterval< T > > channelRAIs;
 	private RandomAccessibleInterval< T > correctedRai;
-	private UpdateListener updateListener;
+	private ChromaticShiftUpdateListener updateListener;
 	private JPanel panel;
-	private ArrayList< RandomAccessibleInterval< T > > correctedChannelRAIs;
+	private ArrayList< RandomAccessibleInterval< T > > shiftedChannelRAIs;
 
 	public ChromaticShiftCorrectionView( final ImageViewer< T > imageViewer  )
 	{
@@ -43,7 +39,7 @@ public class ChromaticShiftCorrectionView< T extends RealType< T > & NativeType<
 		numChannels = rai.dimension( DimensionOrder.C );
 
 		channelRAIs = getChannelRAIs();
-		correctedChannelRAIs = channelRAIs;
+		shiftedChannelRAIs = channelRAIs;
 		setCorrectedRai();
 
 		newImageViewer = createNewImageViewer( imageViewer );
@@ -64,14 +60,14 @@ public class ChromaticShiftCorrectionView< T extends RealType< T > & NativeType<
 
 		newImageViewer.addMenus( new BdvMenus() );
 
-		return imageViewer;
+		return newImageViewer;
 	}
 
 	private void setCorrectedRai()
 	{
-		correctedRai = Views.permute(
-				Views.stack( correctedChannelRAIs ),
-				DimensionOrder.C, DimensionOrder.T );
+		final RandomAccessibleInterval< T > stack = Views.stack( shiftedChannelRAIs );
+
+		correctedRai = Views.permute( stack, DimensionOrder.C, DimensionOrder.T );
 	}
 
 	private ArrayList< RandomAccessibleInterval< T > > getChannelRAIs()
@@ -101,7 +97,7 @@ public class ChromaticShiftCorrectionView< T extends RealType< T > & NativeType<
 
 		boundedValues = new ArrayList<>();
 		sliderPanels = new ArrayList<>();
-		updateListener = new UpdateListener();
+		updateListener = new ChromaticShiftUpdateListener();
 
 		final String[] xyz = { "X", "Y", "Z" };
 
@@ -132,7 +128,7 @@ public class ChromaticShiftCorrectionView< T extends RealType< T > & NativeType<
 		final BoundedValue boundedValue
 				= new BoundedValue(
 				0,
-				50, // TODO: how much?
+				500, // TODO: how much?
 				0 );
 
 		final SliderPanel sliderPanel = new SliderPanel(
@@ -148,7 +144,7 @@ public class ChromaticShiftCorrectionView< T extends RealType< T > & NativeType<
 
 	}
 
-	class UpdateListener implements BoundedValue.UpdateListener
+	class ChromaticShiftUpdateListener implements BoundedValue.UpdateListener
 	{
 
 		private ArrayList< long[] > previousTranslations;
@@ -156,41 +152,51 @@ public class ChromaticShiftCorrectionView< T extends RealType< T > & NativeType<
 		@Override
 		public synchronized void update()
 		{
-			correctedChannelRAIs = new ArrayList<>(  );
-
 			final ArrayList< long[] > translations = getTranslations();
 
 			if ( ! isTranslationsChanged( translations ) ) return;
 
-			previousTranslations = translations;
-
 			updateSliders();
 
+			shiftedChannelRAIs = new ArrayList<>();
 			for ( int c = 0; c < numChannels; c++ )
-				correctedChannelRAIs.add( Views.translate( channelRAIs.get( c ), translations.get( c ) ) );
+				shiftedChannelRAIs.add( Views.translate( channelRAIs.get( c ), translations.get( c ) ) );
 
-			Interval intersect = correctedChannelRAIs.get( 0 );
+			Interval intersect = shiftedChannelRAIs.get( 0 );
 			for ( int c = 1; c < numChannels; c++ )
-				intersect = Intervals.intersect( intersect, correctedChannelRAIs.get( c ) );
+				intersect = Intervals.intersect( intersect, shiftedChannelRAIs.get( c ) );
 
 			final ArrayList< RandomAccessibleInterval< T > > cropped = new ArrayList<>();
 			for ( int c = 0; c < numChannels; c++ )
-				cropped.add( Views.interval( correctedChannelRAIs.get( c ), intersect ) );
+			{
+				final IntervalView< T > crop = Views.interval( shiftedChannelRAIs.get( c ), intersect );
+				cropped.add( crop );
+			}
 
-			correctedChannelRAIs = cropped;
+			shiftedChannelRAIs = cropped;
 			setCorrectedRai();
 			showCorrectedRai();
 		}
 
 		private boolean isTranslationsChanged( ArrayList< long[] > translations )
 		{
-
-			if ( previousTranslations != null )
+			if ( previousTranslations == null )
+			{
+				previousTranslations = translations;
+				return true;
+			}
+			else
+			{
 				for ( int c = 0; c < numChannels; c++ )
 					for ( int d = 0; d < 3; d++ )
 						if ( translations.get( c )[ d ] != previousTranslations.get( c )[ d ] )
+						{
+							previousTranslations = translations;
 							return true;
+						}
+			}
 
+			previousTranslations = translations;
 			return false;
 		}
 
