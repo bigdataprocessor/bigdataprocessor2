@@ -17,6 +17,7 @@ import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Intervals;
 import net.imglib2.view.IntervalView;
@@ -271,11 +272,7 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
     {
 
         AffineTransform3D transform3D = getViewerTransform();
-
-        final AffineTransform3D scaling = new AffineTransform3D();
-
-        for (int d = 0; d < 3; d++)
-            scaling.set(voxelSize[d], d, d);
+        final AffineTransform3D scaling = getScalingTransform( voxelSize );
 
         bdvSS = BdvFunctions.show(
                 asVolatile(rai),
@@ -284,13 +281,57 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
                         .addTo(bdvSS).sourceTransform(scaling));
 
         if ( transform3D != null ) setViewerTransform( transform3D );
-
+        setColors();
         addGrayValueOverlay();
 
         this.imageName = imageName;
         this.calibrationUnit = calibrationUnit;
         this.rai = rai;
         this.voxelSize = voxelSize;
+    }
+
+    private AffineTransform3D getScalingTransform( double[] voxelSize )
+    {
+        final AffineTransform3D scaling = new AffineTransform3D();
+
+        for (int d = 0; d < 3; d++)
+            scaling.set(voxelSize[d], d, d);
+        return scaling;
+    }
+
+    private void setColors()
+    {
+        final int numSources = bdvSS.getSources().size();
+        if ( numSources > 1 )
+        {
+            for ( int sourceIndex = 0; sourceIndex < numSources; sourceIndex++ )
+            {
+                final ConverterSetup converterSetup =
+                        bdvSS.getBdvHandle().getSetupAssignments().getConverterSetups().get( sourceIndex );
+
+                converterSetup.setColor( getColor( sourceIndex, numSources ) );
+            }
+
+        }
+    }
+
+    private ARGBType getColor( int sourceIndex, int numSources )
+    {
+
+        switch ( sourceIndex )
+        {
+            case 0:
+                return new ARGBType( ARGBType.rgba( 0, 255, 0, 255 / numSources ) );
+            case 1:
+                return new ARGBType( ARGBType.rgba( 255, 0, 255, 255 / numSources ) );
+            case 2:
+                return new ARGBType( ARGBType.rgba( 0, 255, 255, 255 / numSources ) );
+            case 3:
+                return new ARGBType( ARGBType.rgba( 255, 0, 0, 255 / numSources ) );
+            default:
+                return new ARGBType( ARGBType.rgba( 255, 255, 255, 255 / numSources ) );
+        }
+
     }
 
     private RandomAccessibleInterval asVolatile(RandomAccessibleInterval rai) {
