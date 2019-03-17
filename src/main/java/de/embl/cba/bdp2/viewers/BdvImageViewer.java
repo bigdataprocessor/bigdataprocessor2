@@ -31,7 +31,7 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
     private double[] voxelSize;
     private String imageName;
 
-    private BdvStackSource<T> bdvSS;
+    private BdvStackSource< Volatile< T > > bdvSS;
     private String calibrationUnit;
     private BdvGrayValuesOverlay overlay;
 
@@ -275,13 +275,26 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
         AffineTransform3D transform3D = getViewerTransform();
         final AffineTransform3D scaling = getScalingTransform( voxelSize );
 
-        final RandomAccessibleInterval volatileRai = asVolatile( rai );
+        final RandomAccessibleInterval< Volatile< T > > volatileRai = asVolatile( rai );
 
-        bdvSS = BdvFunctions.show(
-                volatileRai,
-                imageName,
-                BdvOptions.options().axisOrder(AxisOrder.XYZCT)
-                        .addTo(bdvSS).sourceTransform(scaling));
+        if ( volatileRai == null )
+        {
+            System.out.println("Could not wrap asVolatile :-(");
+
+            bdvSS = BdvFunctions.show(
+                    rai,
+                    imageName,
+                    BdvOptions.options().axisOrder( AxisOrder.XYZCT )
+                            .addTo( bdvSS ).sourceTransform( scaling ));
+        }
+        else
+        {
+            bdvSS = BdvFunctions.show(
+                    volatileRai,
+                    imageName,
+                    BdvOptions.options().axisOrder( AxisOrder.XYZCT )
+                            .addTo( bdvSS ).sourceTransform( scaling ) );
+        }
 
         if ( transform3D != null ) setViewerTransform( transform3D );
         setColors();
@@ -335,15 +348,17 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
         }
     }
 
-    private RandomAccessibleInterval asVolatile( RandomAccessibleInterval< T > rai ) {
+    private RandomAccessibleInterval< Volatile< T > >
+    asVolatile( RandomAccessibleInterval< T > rai ) {
         try {
             final RandomAccessibleInterval< Volatile< T > > volatileRai
                     = VolatileViews.wrapAsVolatile( rai );
+            return volatileRai;
         } catch (IllegalArgumentException e) { //Never mind!
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return rai;
+        return null;
     }
 
     private void addGrayValueOverlay() {

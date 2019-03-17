@@ -170,7 +170,7 @@ public class ChromaticShiftCorrectionView< T extends RealType< T > & NativeType<
 			for ( int c = 0; c < numChannels; c++ )
 			{
 				final IntervalView< T > crop = Views.interval( shiftedChannelRAIs.get( c ), intersect );
-				cropped.add( crop );
+				cropped.add(  crop );
 			}
 
 			shiftedChannelRAIs = cropped;
