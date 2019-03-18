@@ -126,8 +126,10 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
 
         showImageInViewer(rai, imageName, voxelSize, calibrationUnit);
 
-        if (autoContrast)
-            doAutoContrastPerChannel();
+        if ( autoContrast )
+        {
+            new Thread( () ->  doAutoContrastPerChannel() ).start();
+        }
     }
 
 
@@ -158,55 +160,92 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
     }
 
     @Override
-    public void setDisplayRange(double min, double max, int channel) {
-        final ConverterSetup converterSetup = this.bdvSS.getBdvHandle().getSetupAssignments().getConverterSetups().get(channel);
-        this.bdvSS.getBdvHandle().getSetupAssignments().removeSetup(converterSetup);
+    public void setDisplayRange( double min, double max, int channel )
+    {
+        final ConverterSetup converterSetup =
+                this.bdvSS.getBdvHandle().getSetupAssignments().getConverterSetups().get( channel );
+        //this.bdvSS.getBdvHandle().getSetupAssignments().removeSetup( converterSetup );
         converterSetup.setDisplayRange(min, max);
-        this.bdvSS.getBdvHandle().getSetupAssignments().addSetup(converterSetup);
-
-    }
-
-    /**
-     * Returns min and max pixel values of the center slice of the first time point for the RandomAccessibleInterval
-     * as a DisplaySettings object of the requested channel.
-     */
-    @Override
-    public DisplaySettings getDisplaySettings(int channel) {
-        double min, max;
-        if (this.volatileRai != null) {
-            RandomAccessibleInterval raiStack = Views.hyperSlice(
-                    Views.hyperSlice(this.volatileRai, DimensionOrder.T, 0),
-                    DimensionOrder.C,
-                    channel);
-            final long stackCenter = (raiStack.max( DimensionOrder.Z) - raiStack.min( DimensionOrder.Z)) / 2 + raiStack.min( DimensionOrder.Z);
-            IntervalView< R > ts = Views.hyperSlice(
-                    raiStack,
-                    DimensionOrder.Z,
-                    stackCenter);
-            Cursor< R > cursor = Views.iterable(ts).cursor();
-            min = Double.MAX_VALUE;
-            max = -Double.MAX_VALUE;
-            double value;
-            while (cursor.hasNext()) {
-                value = cursor.next().getRealDouble();
-                if (value < min) min = value;
-                if (value > max) max = value;
-            }
-        } else {
-            max = 0;
-            min = 0;
-        }
-        return new DisplaySettings(min, max);
+        //this.bdvSS.getBdvHandle().getSetupAssignments().addSetup(converterSetup);
     }
 
     @Override
-    public void doAutoContrastPerChannel() {
+    public DisplaySettings getDisplaySettings( int channel )
+    {
+        final ConverterSetup converterSetup =
+                this.bdvSS.getBdvHandle().getSetupAssignments().getConverterSetups().get(channel);
+
+        final DisplaySettings displaySettings = new DisplaySettings(
+                converterSetup.getDisplayRangeMin(),
+                converterSetup.getDisplayRangeMax() );
+
+        return displaySettings;
+    }
+
+
+    private IntervalView< Volatile< R > > getCentralPlane( int channel )
+    {
+        RandomAccessibleInterval< Volatile< R > > raiStack =
+				Views.hyperSlice(
+					Views.hyperSlice( this.volatileRai, DimensionOrder.T, 0),
+						DimensionOrder.C, channel);
+
+        final long stackCenter =
+                ( raiStack.max( DimensionOrder.Z) - raiStack.min( DimensionOrder.Z))
+                        / 2 + raiStack.min( DimensionOrder.Z);
+
+        final IntervalView< Volatile< R > > centralPlane = Views.hyperSlice(
+                raiStack,
+                DimensionOrder.Z,
+                stackCenter );
+
+        return centralPlane;
+    }
+
+    @Override
+    public void doAutoContrastPerChannel()
+    {
         int nChannels = (int) this.getVolatileRai().dimension( DimensionOrder.C);
+
         for (int channel = 0; channel < nChannels; ++channel) {
-            DisplaySettings setting = getDisplaySettings(channel);
-            setDisplayRange(setting.getMinValue(), setting.getMaxValue(), 0);
-            //channel is always 0 (zero) because converterSetup object gets removed and added at the end of bdvSS in setDisplayRange method.
-            //Hence current channel is always at position 0 of the bdvSS.
+
+            double min, max;
+
+            if ( this.volatileRai != null )
+            {
+                IntervalView< Volatile< R > > centralPlane = getCentralPlane( channel );
+
+                Cursor< Volatile< R > > cursor = Views.iterable(centralPlane).cursor();
+                min = Double.MAX_VALUE;
+                max = -Double.MAX_VALUE;
+
+                double value;
+
+                while ( cursor.hasNext() ) {
+                    cursor.fwd();
+
+                    while( ! cursor.get().isValid() ){
+                        int a = 1;
+                    }
+
+                    if ( cursor.get().isValid()  )
+                    {
+                        value = cursor.get().get().getRealDouble();
+                        if ( value < min ) min = value;
+                        if ( value > max ) max = value;
+                    }
+                    else
+                    {
+                        int a = 1;
+                    }
+
+                }
+            } else {
+                max = 0;
+                min = 0;
+            }
+
+            setDisplayRange(min, max, channel);
         }
     }
 
@@ -236,13 +275,19 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
         bdvSS.getBdvHandle().getViewerPanel().requestRepaint();
     }
 
-    public void replicateViewerContrast(ImageViewer newImageView) {
+    public void replicateViewerContrast(ImageViewer newImageView)
+    {
         int nChannels = (int) this.getVolatileRai().dimension( DimensionOrder.C);
-        for (int channel = 0; channel < nChannels; ++channel) {
-            ConverterSetup converterSetup = this.getBdvSS().getBdvHandle().getSetupAssignments().getConverterSetups().get(channel);
-            newImageView.setDisplayRange(converterSetup.getDisplayRangeMin(), converterSetup.getDisplayRangeMax(), 0);
-            //channel is always 0 (zero) because converterSetup object gets removed and added at the end of bdvSS in setDisplayRange method.
-            //Hence current channel is always at position 0 of the bdvSS.
+
+        for (int channel = 0; channel < nChannels; ++channel)
+        {
+            ConverterSetup converterSetup =
+                    this.getBdvSS().getBdvHandle().getSetupAssignments().getConverterSetups().get(channel);
+
+            newImageView.setDisplayRange(
+                    converterSetup.getDisplayRangeMin(),
+                    converterSetup.getDisplayRangeMax(),
+                    channel);
         }
     }
 
@@ -310,11 +355,9 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
             {
                 final ConverterSetup converterSetup =
                         bdvSS.getBdvHandle().getSetupAssignments().getConverterSetups().get( sourceIndex );
-
                 final ARGBType color = getColor( sourceIndex, numSources );
                 converterSetup.setColor( color );
             }
-
         }
     }
 

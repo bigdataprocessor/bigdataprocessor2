@@ -17,21 +17,8 @@ import org.scijava.ui.UIService;
 import java.io.File;
 
 @Plugin(type = Command.class, menuPath = "Plugins>BigDataTools>BigDataProcessor2", initializer = "init")
-public class BigDataProcessorCommand<T extends RealType<T> & NativeType<T>> implements Command {
-    @Parameter
-    public static UIService uiService;
-
-    @Parameter
-    public DatasetService datasetService;
-
-    @Parameter
-    public LogService logService;
-
-    @Parameter
-    public OpService opService;
-
-    @Parameter
-    public StatusService statusService;
+public class BigDataProcessorCommand < T extends RealType<T> & NativeType<T> >
+        implements Command {
 
     @Parameter(label = "Image data directory", style = "directory")
     File directory;

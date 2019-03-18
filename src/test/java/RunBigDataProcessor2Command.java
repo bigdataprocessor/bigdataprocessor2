@@ -1,7 +1,7 @@
 import de.embl.cba.bdp2.ui.BigDataProcessorCommand;
 import net.imagej.ImageJ;
 
-public class RunBigDataProcessorCommand
+public class RunBigDataProcessor2Command
 {
 	public static void main ( String... args )
 	{
