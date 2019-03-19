@@ -30,7 +30,7 @@ public class TestTiffStackSaving
          * Save as Tiff Stacks
          */
         final SavingSettings defaults = SavingSettings.getDefaults();
-        defaults.fileType = SavingSettings.FileType.TIFF_as_STACKS;
+        defaults.fileType = SavingSettings.FileType.TIFF_STACKS;
         defaults.nThreads = 3;
         defaults.voxelSize =imageViewer.getVoxelSize();
         defaults.unit = imageViewer.getCalibrationUnit();

@@ -30,7 +30,7 @@ public class TestTiffPlaneSaving
 		 * Save as Tiff Planes
          */
         final SavingSettings defaults = SavingSettings.getDefaults();
-        defaults.fileType = SavingSettings.FileType.TIFF_as_PLANES;
+        defaults.fileType = SavingSettings.FileType.TIFF_PLANES;
         defaults.nThreads = 3;
         defaults.voxelSize =imageViewer.getVoxelSize();
         defaults.unit = imageViewer.getCalibrationUnit();

@@ -27,10 +27,10 @@ public class SaveMenuDialog extends JFrame implements ActionListener {
     @SuppressWarnings("unchecked")
     private final
     JComboBox comboFileTypeForSaving = new JComboBox(new SavingSettings.FileType[]{
-            SavingSettings.FileType.TIFF_as_PLANES,
-            SavingSettings.FileType.TIFF_as_STACKS,
+            SavingSettings.FileType.TIFF_PLANES,
+            SavingSettings.FileType.TIFF_STACKS,
             SavingSettings.FileType.HDF5_STACKS,
-            SavingSettings.FileType.HDF5_IMARIS_BDV});
+            SavingSettings.FileType.IMARIS_STACKS });
 
     private final String SAVE = "Save";
     protected final JButton save = new JButton(SAVE);
@@ -124,7 +124,7 @@ public class SaveMenuDialog extends JFrame implements ActionListener {
                 savingSettings.nThreads = Integer.parseInt(tfNThreads.getText());
                 savingSettings.voxelSize = imageViewer.getVoxelSize();
                 savingSettings.unit = imageViewer.getCalibrationUnit();
-                if (!(fileType.equals(SavingSettings.FileType.TIFF_as_PLANES))) {
+                if (!(fileType.equals(SavingSettings.FileType.TIFF_PLANES ))) {
                     // TODO: implement below for planes
                     savingSettings.convertTo16Bit = cbConvertTo16Bit.isSelected();
                     savingSettings.gate = cbGating.isSelected();
@@ -139,7 +139,7 @@ public class SaveMenuDialog extends JFrame implements ActionListener {
                 //savingSettings.nThreads = ioThreads;
                 savingSettings.filePath = file.getAbsolutePath();
                 savingSettings.fileType = fileType;
-                if (fileType.equals(SavingSettings.FileType.HDF5_IMARIS_BDV)) {
+                if (fileType.equals(SavingSettings.FileType.IMARIS_STACKS )) {
                     savingSettings.fileBaseNameIMARIS = file.getName();
                     savingSettings.parentDirectory = file.getParent();
                 }

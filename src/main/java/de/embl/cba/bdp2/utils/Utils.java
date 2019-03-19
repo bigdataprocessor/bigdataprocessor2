@@ -135,7 +135,7 @@ public class Utils {
         CENTER_OF_MASS("Center of Mass"),
         CROSS_CORRELATION("Cross Correlation"),
         HDF5("Hdf5"),
-        HDF5_IMARIS_BDV("Imaris_Hdf5"),
+        HDF5_IMARIS_BDV("Partitioned Imaris"),
         TIFF_STACKS("Tiff stacks"),
         SINGLE_PLANE_TIFF("Single plane Tiff"); //SERIALIZED_HEADERS("Serialized headers");
         private final String text;

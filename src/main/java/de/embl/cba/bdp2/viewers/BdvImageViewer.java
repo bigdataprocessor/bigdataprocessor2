@@ -6,12 +6,12 @@ import bdv.util.BdvFunctions;
 import bdv.util.BdvHandleFrame;
 import bdv.util.BdvOptions;
 import bdv.util.BdvStackSource;
-import bdv.util.volatiles.VolatileViews;
 import bdv.viewer.SourceAndConverter;
 import de.embl.cba.bdp2.boundingbox.BoundingBoxDialog;
 import de.embl.cba.bdp2.ui.BdvMenus;
 import de.embl.cba.bdp2.ui.DisplaySettings;
 import de.embl.cba.bdp2.utils.DimensionOrder;
+import de.embl.cba.bdp2.volatiles.VolatileViews;
 import net.imglib2.Cursor;
 import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccessibleInterval;
@@ -203,7 +203,7 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
         int nChannels = (int) this.getRai().dimension( DimensionOrder.C);
         for (int channel = 0; channel < nChannels; ++channel) {
             DisplaySettings setting = getDisplaySettings(channel);
-            setDisplayRange(setting.getMinValue(), setting.getMaxValue(), 0);
+            setDisplayRange( setting.getMinValue(), setting.getMaxValue(), 0);
             //channel is always 0 (zero) because converterSetup object gets removed and added at the end of bdvSS in setDisplayRange method.
             //Hence current channel is always at position 0 of the bdvSS.
         }
@@ -354,7 +354,9 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
             final RandomAccessibleInterval< Volatile< T > > volatileRai
                     = VolatileViews.wrapAsVolatile( rai );
             return volatileRai;
-        } catch (IllegalArgumentException e) { //Never mind!
+        } catch (IllegalArgumentException e)
+		{
+			System.out.println( "Wrap as volatile failed!");
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -200,7 +200,7 @@
 		<dependency>
 			<groupId>de.embl.cba</groupId>
 			<artifactId>imglib2-lazy-algorithm</artifactId>
-			<version>0.1.01</version>
+			<version>0.1.02</version>
 		</dependency>
 
 	</dependencies>

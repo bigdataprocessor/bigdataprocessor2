@@ -68,15 +68,21 @@ public class BigDataProcessor {
             ImageViewer imageViewer )
     {
         directory = Utils.fixDirectoryFormat(directory);
-        this.fileInfoSource = new FileInfoSource( directory, namingScheme, filterPattern, h5DataSetName );
+        this.fileInfoSource =
+				new FileInfoSource( directory, namingScheme, filterPattern, h5DataSetName );
+
         if ( ! ensureCalibrationUI() ) return;
-        CachedCellImg cachedCellImg = CachedCellImageCreator.create(this.fileInfoSource, this.executorService);
+
+        CachedCellImg cachedCellImg =
+				CachedCellImageCreator.create( this.fileInfoSource, this.executorService);
+
         imageViewer.show(
         		cachedCellImg,
 				FileInfoConstants.IMAGE_NAME,
 				fileInfoSource.voxelSize,
 				fileInfoSource.unit,
 				autoContrast );
+
         imageViewer.addMenus(new BdvMenus());
     }
 
