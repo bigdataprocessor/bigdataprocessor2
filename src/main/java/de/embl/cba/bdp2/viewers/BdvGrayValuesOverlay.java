@@ -12,8 +12,10 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ArrayBlockingQueue;
 
 public class BdvGrayValuesOverlay extends BdvOverlay implements MouseMotionListener {
     private final Bdv bdv;
@@ -71,14 +73,20 @@ public class BdvGrayValuesOverlay extends BdvOverlay implements MouseMotionListe
         final List< ConverterSetup > converterSetups
                 = bdv.getBdvHandle().getSetupAssignments().getConverterSetups();
 
-        int add = 0;
-        if ( converterSetups.get( 0 ) instanceof PlaceHolderConverterSetup )
-            add = 1;
+        final ArrayList< Integer > keys = new ArrayList<>( pixelValuesOfActiveSources.keySet() );
 
-        for ( int sourceId : pixelValuesOfActiveSources.keySet() )
+        for ( int i = 0; i < keys.size(); i++ )
         {
-            values.add( pixelValuesOfActiveSources.get( sourceId ) );
-            final ARGBType color = BdvUtils.getColor(bdv, sourceId + add );
+            values.add( pixelValuesOfActiveSources.get( keys.get( i ) ) ) ;
+        }
+
+        for ( int i = 0; i < converterSetups.size(); i++ )
+        {
+            final ConverterSetup converterSetup = converterSetups.get( i );
+
+            if ( converterSetup instanceof PlaceHolderConverterSetup ) continue;
+
+            final ARGBType color = converterSetup.getColor();
             final int colorIndex = color.get();
             if (colorIndex == 0) {
                 colors.add(new ARGBType(ARGBType.rgba(255, 255, 255, 255)));
@@ -86,6 +94,7 @@ public class BdvGrayValuesOverlay extends BdvOverlay implements MouseMotionListe
                 colors.add(color);
             }
         }
-         setValuesAndColors(values, colors);
+
+        setValuesAndColors(values, colors);
     }
 }
