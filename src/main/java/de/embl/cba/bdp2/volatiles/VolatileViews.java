@@ -16,6 +16,8 @@ import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.Volatile;
 import net.imglib2.algorithm.neighborhood.Neighborhood;
+import net.imglib2.algorithm.neighborhood.RectangleNeighborhood;
+import net.imglib2.algorithm.neighborhood.RectangleNeighborhoodRandomAccess;
 import net.imglib2.algorithm.neighborhood.RectangleShape;
 import net.imglib2.cache.Cache;
 import net.imglib2.cache.img.CachedCellImg;
@@ -308,6 +310,12 @@ public class VolatileViews
 		}
 		else if ( rai instanceof RectangleShape2.NeighborhoodsAccessible )
 		{
+			/*
+			RectangleShape2 is a modified version of the original Rectangle shape:
+			1. it allows for non-cubic rectangles
+			2. it can return its span and factory => can be used here to reconstruct itself.
+			 */
+
 			// TODO: I did not manage to put the typing here
 			final RectangleShape2.NeighborhoodsAccessible view =
 					( RectangleShape2.NeighborhoodsAccessible ) rai;
@@ -350,16 +358,16 @@ public class VolatileViews
 		throw new IllegalArgumentException();
 	}
 
-	private static < T extends NativeType< T >, V extends Volatile< T > > boolean isNeighborhood( RandomAccessibleInterval< V > vRAI )
+	private static < T extends NativeType< T >, V extends Volatile< T > >
+	boolean isNeighborhood( RandomAccessibleInterval< V > vRAI )
 	{
 		final RandomAccess< V > vRandomAccess = vRAI.randomAccess();
 
-		// place it at the first pixel
-		vRAI.min( vRandomAccess );
-
-		final V v = vRandomAccess.get();
-
-		return v instanceof Neighborhood;
+		// TODO: make more general
+		if ( vRandomAccess instanceof RectangleNeighborhoodRandomAccess )
+			return true;
+		else
+			return false;
 	}
 
 	@SuppressWarnings( "unchecked" )
