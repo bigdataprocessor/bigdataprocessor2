@@ -21,6 +21,7 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Intervals;
+import net.imglib2.util.Util;
 import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
 import javax.swing.*;
@@ -350,9 +351,11 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
 
     private RandomAccessibleInterval< Volatile< T > >
     asVolatile( RandomAccessibleInterval< T > rai ) {
+
         try {
             final RandomAccessibleInterval< Volatile< T > > volatileRai
                     = VolatileViews.wrapAsVolatile( rai );
+            final Volatile< T > typeFromInterval = Util.getTypeFromInterval( volatileRai );
             return volatileRai;
         } catch (IllegalArgumentException e)
 		{
@@ -360,6 +363,7 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return null;
     }
 

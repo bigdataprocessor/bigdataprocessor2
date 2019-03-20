@@ -3,15 +3,19 @@ package de.embl.cba.bdp2.volatiles;
 import static net.imglib2.img.basictypeaccess.AccessFlags.DIRTY;
 import static net.imglib2.img.basictypeaccess.AccessFlags.VOLATILE;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import bdv.img.cache.CreateInvalidVolatileCell;
 import bdv.img.cache.VolatileCachedCellImg;
 import bdv.util.volatiles.*;
 import de.embl.cba.neighborhood.RectangleShape2;
+import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.Volatile;
+import net.imglib2.algorithm.neighborhood.Neighborhood;
 import net.imglib2.algorithm.neighborhood.RectangleShape;
 import net.imglib2.cache.Cache;
 import net.imglib2.cache.img.CachedCellImg;
@@ -158,7 +162,7 @@ public class VolatileViews
 
 			return volatileViewData;
 		}
-		else if ( rai instanceof SubsampleView )
+		else if ( rai instanceof SubsampleView ) // TODO: do we need this ?
 		{
 			final SubsampleView< T > view = ( SubsampleView< T > ) rai;
 			final VolatileViewData< T, V > sourceData =
@@ -177,27 +181,134 @@ public class VolatileViews
 			final ConvertedRandomAccessibleInterval< T, S > view
 					= ( ConvertedRandomAccessibleInterval< T, S > ) rai;
 
-			final VolatileViewData< T, V > sourceData =
+			final VolatileViewData< T, V > vViewData =
 					wrapAsVolatileViewData( view.getSource(), queue, hints );
 
 			final S destinationType = view.getDestinationType();
 
-			final NativeType< ? > volatileTypeForType =
+			final NativeType< ? > volatileDestinationType =
 					VolatileTypeMatcher.getVolatileTypeForType( destinationType );
 
+			final RandomAccessibleInterval< V > vRAI =
+					( RandomAccessibleInterval< V > ) vViewData.getImg();
+
+			final Converter< ? super T, ? super S > converter = view.getConverter();
+
+			if ( isNeighborhood( vRAI ) )
+			{
+
+				/*
+				TODO
+				Wrapping into a volatile version like below did
+				not work for me here, because it was trying to cast,
+				in my case, RectangleNeighborhoodUnsafe to Volatile
+				and thereby throwing and exception.
+
+
+				Converter< V, Volatile< S > > volatileConverter
+						= (vt, vu) -> {
+					boolean isValid = vt.isValid();
+					vu.setValid(isValid);
+					if (isValid) {
+						converter.convert(vt.get(), vu.get());
+					}
+				};
+
+				Interestingly just passing on the nonVolatile
+				original converter does work for me here.
+				I believe this might be luck, because my converter is of this type:
+
+				 < R extends RealType< R > >
+				Converter< Neighborhood< R >, R >
+
+
+				...and Volatile Types extend RealType, so it maybe that is way it works.
+				But I am not sure!
+				 */
+
+
+				final ConvertedRandomAccessibleInterval converted
+						= new ConvertedRandomAccessibleInterval(
+						vRAI,
+						converter,
+						volatileDestinationType );
+
+				final VolatileViewData volatileViewData = new VolatileViewData(
+						converted,
+						vViewData.getCacheControl(),
+						destinationType,
+						( Volatile ) volatileDestinationType // TODO: can one avoid cast?
+				);
+
+				return volatileViewData;
+			}
+			else
+			{
+				/**
+				 * Brilliant suggestion from Philipp Hanslovsky!
+				 */
+				Converter< V, Volatile< S > > volatileConverter
+						= (vt, vu) -> {
+					boolean isValid = vt.isValid();
+					vu.setValid(isValid);
+					if (isValid) {
+						converter.convert(vt.get(), vu.get());
+					}
+				};
+
+				final ConvertedRandomAccessibleInterval converted
+						= new ConvertedRandomAccessibleInterval(
+						vRAI,
+						volatileConverter,
+						volatileDestinationType );
+
+				final VolatileViewData volatileViewData = new VolatileViewData(
+						converted,
+						vViewData.getCacheControl(),
+						destinationType,
+						( Volatile ) volatileDestinationType );
+
+				return volatileViewData;
+			}
+
+		}
+		else if ( rai instanceof StackView )
+		{
+			final StackView< T > view =
+					( StackView< T > ) rai;
+
+			final List< RandomAccessibleInterval< T > > slices = view.getSourceSlices();
+
+			final List< VolatileViewData< T, V > > volatileViews = new ArrayList<>();
+			for ( RandomAccessibleInterval< T > sourceSlice : slices )
+			{
+				volatileViews.add(
+						wrapAsVolatileViewData( sourceSlice, queue, hints ));
+			}
+
+			final List< RandomAccessible< V > > volatileSlices = new ArrayList<>();
+			for ( VolatileViewData< T, V > volatileViewData : volatileViews )
+			{
+				volatileSlices.add( volatileViewData.getImg() );
+			}
+
+			/*
+			TODO:
+			It works but it feels wrong just taking the first slice to get the
+			cacheControl, type and volatileType.
+			How to do this properly?
+			 */
 			final VolatileViewData volatileViewData = new VolatileViewData(
-					new ConvertedRandomAccessibleInterval(
-							( RandomAccessibleInterval< V > ) sourceData.getImg(),
-							view.getConverter(),
-							volatileTypeForType ),
-					sourceData.getCacheControl(),
-					sourceData.getType(),
-					sourceData.getVolatileType() );
+					new StackView( volatileSlices ),
+					volatileViews.get( 0 ).getCacheControl(),
+					volatileViews.get( 0 ).getType(),
+					volatileViews.get( 0 ).getVolatileType() );
 
 			return volatileViewData;
 		}
 		else if ( rai instanceof RectangleShape2.NeighborhoodsAccessible )
 		{
+			// TODO: I did not manage to put the typing here
 			final RectangleShape2.NeighborhoodsAccessible view =
 					( RectangleShape2.NeighborhoodsAccessible ) rai;
 
@@ -217,6 +328,7 @@ public class VolatileViews
 		}
 		else if ( rai instanceof ExtendedRandomAccessibleInterval )
 		{
+			// TODO: I did not manage to put the typing here
 			final ExtendedRandomAccessibleInterval view =
 					( ExtendedRandomAccessibleInterval ) rai;
 
@@ -225,6 +337,7 @@ public class VolatileViews
 
 			final VolatileViewData volatileViewData = new VolatileViewData(
 					new ExtendedRandomAccessibleInterval(
+							// TODO: can we avoid the casting?
 							( RandomAccessibleInterval< V > ) sourceData.getImg(),
 							view.getOutOfBoundsFactory() ),
 					sourceData.getCacheControl(),
@@ -235,6 +348,18 @@ public class VolatileViews
 		}
 
 		throw new IllegalArgumentException();
+	}
+
+	private static < T extends NativeType< T >, V extends Volatile< T > > boolean isNeighborhood( RandomAccessibleInterval< V > vRAI )
+	{
+		final RandomAccess< V > vRandomAccess = vRAI.randomAccess();
+
+		// place it at the first pixel
+		vRAI.min( vRandomAccess );
+
+		final V v = vRandomAccess.get();
+
+		return v instanceof Neighborhood;
 	}
 
 	@SuppressWarnings( "unchecked" )
