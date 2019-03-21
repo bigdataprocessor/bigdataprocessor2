@@ -31,9 +31,13 @@ import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RecursiveTask;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import net.imglib2.interpolation.InterpolatorFactory;
 
 public class BigDataProcessor {
@@ -43,6 +47,9 @@ public class BigDataProcessor {
     public static ExecutorService trackerThreadPool; // Thread pool for tracking
     public int numThreads;
     public static int MAX_THREAD_LIMIT = Runtime.getRuntime().availableProcessors() * 2;
+    public static Map<Integer, AtomicBoolean> saveTracker = new ConcurrentHashMap<>();
+    public static Map<Integer, Integer> progressTracker = new ConcurrentHashMap<>();
+
 
     public BigDataProcessor() {
         //TODO: have separate shutdown for the executorService. It will not shutdown when ui exeService is shut. --ashis (DONE but needs testing)
@@ -109,16 +116,16 @@ public class BigDataProcessor {
 
     public static void saveImage(
     		SavingSettings savingSettings,
-			RandomAccessibleInterval rai ) {
+			RandomAccessibleInterval rai) {
         int nIOThread = Math.max(1, Math.min(savingSettings.nThreads, MAX_THREAD_LIMIT));
         ExecutorService saveExecutorService =  Executors.newFixedThreadPool(nIOThread);
         savingSettings.image = rai;
-        SaveCentral.interruptSavingThreads = false;
-        SaveCentral.goSave(savingSettings, saveExecutorService);
+        SaveCentral.goSave(savingSettings, saveExecutorService, savingSettings.saveId);
     }
 
-    public static void stopSave() {
-        SaveCentral.interruptSavingThreads = true;
+    public static void stopSave(Integer saveId) {
+        AtomicBoolean stop = BigDataProcessor.saveTracker.get(saveId);
+        stop.set(true);
     }
 
     public static <T extends RealType<T> & NativeType<T>>

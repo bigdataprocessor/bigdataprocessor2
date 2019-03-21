@@ -10,27 +10,32 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.view.Views;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 public class SaveImgAsTIFFPlanes implements Runnable {
 
     private final int c;
     private final int t;
     private final int z;
     private final SavingSettings savingSettings;
+    private final AtomicBoolean stop;
 
     public SaveImgAsTIFFPlanes(int c,
                                int t,
                                int z,
-                               SavingSettings savingSettings) {
+                               SavingSettings savingSettings,
+                               AtomicBoolean stop) {
         this.c = c;
         this.z = z;
         this.t = t;
         this.savingSettings = savingSettings;
+        this.stop = stop;
     }
 
     @Override
     public void run() {
 
-        if (SaveCentral.interruptSavingThreads) {
+        if (stop.get()) {
             savingSettings.saveVolume = true;
             return;
         }
@@ -70,7 +75,7 @@ public class SaveImgAsTIFFPlanes implements Runnable {
 
         for (String binning : binnings) {
 
-            if (SaveCentral.interruptSavingThreads) {
+            if (stop.get()) {
                 return;
             }
 
