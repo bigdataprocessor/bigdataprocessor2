@@ -76,7 +76,7 @@ public class BigDataTrackerGUI extends JDialog implements ActionListener, FocusL
     public BigDataTrackerGUI( ImageViewer handle )
     {
         this.imageViewer= handle;
-        this.image = imageViewer.getVolatileRai();
+        this.image = imageViewer.getRai();
         //
 
         String[] imageFilters = new String[ Utils.ImageFilterTypes.values().length];

@@ -7,6 +7,7 @@ import de.embl.cba.bdp2.logging.ImageJLogger;
 import de.embl.cba.bdp2.ui.BdvMenus;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.ImageViewer;
+import ij.IJ;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.Converters;
 import net.imglib2.converter.RealUnsignedByteConverter;
@@ -23,10 +24,11 @@ public class UnsignedByteTypeView< T extends RealType< T > > extends JFrame
 	public UnsignedByteTypeView( final ImageViewer imageViewer  )
 	{
 
-		final RandomAccessibleInterval rai = imageViewer.getVolatileRai();
+		final RandomAccessibleInterval rai = imageViewer.getRai();
 
 		if ( ( Util.getTypeFromInterval( rai ) instanceof UnsignedByteType) )
 		{
+			IJ.showMessage("This image is already 8-bit.");
 			return;
 		}
 

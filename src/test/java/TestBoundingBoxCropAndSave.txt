@@ -133,20 +133,20 @@ public class TestBoundingBoxCropAndSave {
 
         long[] minLong = {min[0],min[1],0,min[2],0};
         long[] maxLong = {max[0],max[1],myImg.dimension(2)-1,max[2],myImg.dimension(4)-1};
-        RandomAccessibleInterval volatileRai = Views.interval(myImg, minLong,maxLong);
-        BdvFunctions.show(volatileRai,"cropped", BdvOptions.options().axisOrder(AxisOrder.XYCZT).addTo( bdv ));
+        RandomAccessibleInterval rai = Views.interval(myImg, minLong,maxLong);
+        BdvFunctions.show(rai,"cropped", BdvOptions.options().axisOrder(AxisOrder.XYCZT).addTo( bdv ));
         bdvStackSource.removeFromBdv();
         // Crop
         System.out.println("Crop Dims");
-        System.out.println(volatileRai.dimension(0));
-        System.out.println(volatileRai.dimension(1));
-        System.out.println(volatileRai.dimension(2));
-        System.out.println(volatileRai.dimension(3));
-        System.out.println(volatileRai.dimension(4));
+        System.out.println(rai.dimension(0));
+        System.out.println(rai.dimension(1));
+        System.out.println(rai.dimension(2));
+        System.out.println(rai.dimension(3));
+        System.out.println(rai.dimension(4));
 
         SavingSettings savingSettings = new SavingSettings();
         NativeType type = fileInfoSource.getType();
-        savingSettings.image = ImgView.wrap(volatileRai, new CellImgFactory(type));
+        savingSettings.image = ImgView.wrap(rai, new CellImgFactory(type));
         // user selection from GUI
         savingSettings.bin = "2,2,2";
         savingSettings.saveVolume = true;

@@ -10,7 +10,7 @@
 
 	<groupId>de.embl.cba</groupId>
 	<artifactId>fiji-plugin-bigDataProcessor2</artifactId>
-	<version>0.2.00</version>
+	<version>0.2.01</version>
 
 	<name>Fiji Plugin BigDataProcessor2</name>
 	<description>TODO</description>
@@ -66,14 +66,14 @@
 
 
 	<scm>
-		<connection>scm:git:git://github.com/tischi/fiji-plugin-bigDataTools2</connection>
-		<developerConnection>scm:git:git@github.com/tischi/fiji-plugin-bigDataTools2</developerConnection>
+		<connection>scm:git:git@github.com:tischi/fiji-plugin-bigDataProcessor2</connection>
+		<developerConnection>scm:git:git@github.com:tischi/fiji-plugin-bigDataProcessor2</developerConnection>
 		<tag>HEAD</tag>
-		<url>https://github.com/tischi/fiji-plugin-bigDataTools2</url>
+		<url>https://github.com/tischi/fiji-plugin-bigDataProcessor2</url>
 	</scm>
 	<issueManagement>
 		<system>GitHub</system>
-		<url>https://github.com/tischi/fiji-plugin-bigDataTools2/issues</url>
+		<url>https://github.com/tischi/fiji-plugin-bigDataProcessor2/issues</url>
 	</issueManagement>
 	<ciManagement>
 		<system>None</system>
@@ -200,7 +200,7 @@
 		<dependency>
 			<groupId>de.embl.cba</groupId>
 			<artifactId>imglib2-lazy-algorithm</artifactId>
-			<version>0.1.01</version>
+			<version>0.1.02</version>
 		</dependency>
 
 	</dependencies>

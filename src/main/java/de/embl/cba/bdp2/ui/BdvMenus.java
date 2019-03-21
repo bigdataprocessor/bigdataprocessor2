@@ -62,7 +62,7 @@ public class BdvMenus extends JMenu implements ActionListener {
         }else if(e.getActionCommand().equalsIgnoreCase(
                 UIDisplayConstants.IMAGEJ_VIEW_MENU_DISPLAY_TEXT)){
             RandomAccessibleInterval permuted =
-                    Views.permute(imageViewer.getVolatileRai(), DimensionOrder.Z, DimensionOrder.C);
+                    Views.permute(imageViewer.getRai(), DimensionOrder.Z, DimensionOrder.C);
             ImageJFunctions.show(permuted, BigDataProcessor.executorService);
         }else if(e.getActionCommand().equalsIgnoreCase(
                 UIDisplayConstants.BIG_DATA_TRACKER_MENU_DISPLAY_TEXT)){

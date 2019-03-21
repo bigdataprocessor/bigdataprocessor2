@@ -31,17 +31,15 @@ public class SavingSettings {
     public int nThreads;
 
     public enum FileType {
-        TIFF_as_PLANES("Tiff Planes"),
-        HDF5_STACKS("Hdf5 Stacks"),
-        HDF5_IMARIS_BDV("Imaris"),
-        TIFF_as_STACKS("Tiff Stacks");
-        //SINGLE_PLANE_TIFF("Single Plane Tiff"); //SERIALIZED_HEADERS("Serialized headers");
-        private final String text;
+        TIFF_PLANES("Tiff Planes"),
+        TIFF_STACKS("Tiff Volumes"),
+        HDF5_STACKS("Hdf5 Volumes"),
+        IMARIS_STACKS("Partitioned Imaris");
 
+        private final String text;
         FileType(String s) {
             text = s;
         }
-
         @Override
         public String toString() {
             return text;
@@ -59,7 +57,7 @@ public class SavingSettings {
         savingSettings.voxelSize = new double[]{1,1,1};
         savingSettings.unit = "pixel";
         savingSettings.saveVolume = true;
-        savingSettings.fileType = FileType.TIFF_as_PLANES;
+        savingSettings.fileType = FileType.TIFF_PLANES;
         savingSettings.filePath = "src/test/resources/file";
         savingSettings.compression = SavingSettings.NONE;
         savingSettings.saveId = 9999;

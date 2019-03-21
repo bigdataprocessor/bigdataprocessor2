@@ -1,6 +1,5 @@
 package de.embl.cba.bdp2.ui;
 
-import bdv.util.volatiles.VolatileViews;
 import de.embl.cba.bdp2.CachedCellImageCreator;
 import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
 import de.embl.cba.bdp2.fileinfosource.FileInfoSource;
@@ -10,7 +9,11 @@ import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.ImageViewer;
 import ij.gui.GenericDialog;
-import net.imglib2.*;
+import net.imglib2.FinalInterval;
+import net.imglib2.FinalRealInterval;
+import net.imglib2.Interval;
+import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.RealRandomAccessible;
 import net.imglib2.cache.img.CachedCellImg;
 import net.imglib2.converter.Converters;
 import net.imglib2.converter.RealUnsignedByteConverter;
@@ -37,8 +40,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import net.imglib2.interpolation.InterpolatorFactory;
 
-public class BigDataProcessor < T extends RealType< T > & NativeType< T > >
-{
+public class BigDataProcessor {
 
     public FileInfoSource fileInfoSource;
     public static ExecutorService executorService;  //General thread pool
@@ -74,29 +76,21 @@ public class BigDataProcessor < T extends RealType< T > & NativeType< T > >
     {
         directory = Utils.fixDirectoryFormat(directory);
         this.fileInfoSource =
-                new FileInfoSource( directory, namingScheme, filterPattern, h5DataSetName );
+				new FileInfoSource( directory, namingScheme, filterPattern, h5DataSetName );
 
         if ( ! ensureCalibrationUI() ) return;
 
-        final RandomAccessibleInterval< Volatile< T > > volatileRai = createVolatileRai();
+        CachedCellImg cachedCellImg =
+				CachedCellImageCreator.create( this.fileInfoSource, this.executorService);
 
         imageViewer.show(
-                volatileRai,
+        		cachedCellImg,
 				FileInfoConstants.IMAGE_NAME,
 				fileInfoSource.voxelSize,
 				fileInfoSource.unit,
 				autoContrast );
 
         imageViewer.addMenus(new BdvMenus());
-    }
-
-    private RandomAccessibleInterval< Volatile< T > > createVolatileRai()
-    {
-        CachedCellImg cachedCellImg = CachedCellImageCreator.create(
-                this.fileInfoSource,
-                this.executorService);
-
-        return VolatileViews.wrapAsVolatile( cachedCellImg );
     }
 
     private boolean ensureCalibrationUI()

@@ -28,15 +28,17 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class SaveCentral {
     private static Logger logger = new IJLazySwingLogger();
 
-    public static void goSave(SavingSettings savingSettings, ExecutorService es, Integer saveId) {
-        if (savingSettings.fileType.equals(SavingSettings.FileType.TIFF_as_PLANES)) {
-            saveTIFFAsPlanes(savingSettings, es, saveId);
-        } else if (savingSettings.fileType.equals(SavingSettings.FileType.TIFF_as_STACKS)) {
-            saveTIFFAsStacks(savingSettings, es, saveId);
-        } else if (savingSettings.fileType.equals(SavingSettings.FileType.HDF5_STACKS)) {
-            saveHDFStacks(savingSettings, es, saveId);
-        } else if (savingSettings.fileType.equals(SavingSettings.FileType.HDF5_IMARIS_BDV)) {
-            saveIMARIStacks(savingSettings, es, saveId);
+    public static boolean interruptSavingThreads;
+
+    public static void goSave(SavingSettings savingSettings, ExecutorService es) {
+        if (savingSettings.fileType.equals( SavingSettings.FileType.TIFF_PLANES )) {
+            saveTIFFAsPlanes(savingSettings, es);
+        } else if (savingSettings.fileType.equals( SavingSettings.FileType.TIFF_STACKS )) {
+            saveTIFFAsStacks(savingSettings, es);
+        } else if (savingSettings.fileType.equals( SavingSettings.FileType.HDF5_STACKS )) {
+            saveHDFStacks(savingSettings, es);
+        } else if (savingSettings.fileType.equals( SavingSettings.FileType.IMARIS_STACKS )) {
+            saveIMARIStacks(savingSettings, es);
         }
     }
 

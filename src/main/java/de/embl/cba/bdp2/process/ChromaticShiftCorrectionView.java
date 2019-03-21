@@ -7,7 +7,6 @@ import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.viewers.ImageViewer;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.Volatile;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Intervals;
@@ -18,25 +17,25 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class ChromaticShiftCorrectionView< R extends RealType< R > & NativeType< R > > extends JFrame
+public class ChromaticShiftCorrectionView< T extends RealType< T > & NativeType< T > > extends JFrame
 {
 
-	private final ImageViewer< R > imageViewer;
-	private final RandomAccessibleInterval< Volatile< R > > rai;
+	private final ImageViewer< T > imageViewer;
+	private final RandomAccessibleInterval< T > rai;
 	private ArrayList< BoundedValue > boundedValues;
 	private ArrayList< SliderPanel > sliderPanels;
 	private final ImageViewer newImageViewer;
 	private final long numChannels;
-	private final ArrayList< RandomAccessibleInterval< Volatile< R > > > channelRAIs;
-	private RandomAccessibleInterval< Volatile< R > > correctedRai;
+	private final ArrayList< RandomAccessibleInterval< T > > channelRAIs;
+	private RandomAccessibleInterval< T > correctedRai;
 	private ChromaticShiftUpdateListener updateListener;
 	private JPanel panel;
-	private ArrayList< RandomAccessibleInterval< Volatile< R >> > shiftedChannelRAIs;
+	private ArrayList< RandomAccessibleInterval< T > > shiftedChannelRAIs;
 
-	public ChromaticShiftCorrectionView( final ImageViewer< R > imageViewer  )
+	public ChromaticShiftCorrectionView( final ImageViewer< T > imageViewer  )
 	{
 		this.imageViewer = imageViewer;
-		this.rai = imageViewer.getVolatileRai();
+		this.rai = imageViewer.getRai();
 		numChannels = rai.dimension( DimensionOrder.C );
 
 		channelRAIs = getChannelRAIs();
@@ -48,7 +47,7 @@ public class ChromaticShiftCorrectionView< R extends RealType< R > & NativeType<
 		showChromaticShiftCorrectionDialog();
 	}
 
-	private ImageViewer< R > createNewImageViewer( ImageViewer< R > imageViewer )
+	private ImageViewer< T > createNewImageViewer( ImageViewer< T > imageViewer )
 	{
 		ImageViewer newImageViewer = imageViewer.newImageViewer();
 
@@ -66,14 +65,14 @@ public class ChromaticShiftCorrectionView< R extends RealType< R > & NativeType<
 
 	private void setCorrectedRai()
 	{
-		final RandomAccessibleInterval< Volatile< R > > stack = Views.stack( shiftedChannelRAIs );
+		final RandomAccessibleInterval< T > stack = Views.stack( shiftedChannelRAIs );
 
 		correctedRai = Views.permute( stack, DimensionOrder.C, DimensionOrder.T );
 	}
 
-	private ArrayList< RandomAccessibleInterval< Volatile< R > > > getChannelRAIs()
+	private ArrayList< RandomAccessibleInterval< T > > getChannelRAIs()
 	{
-		ArrayList< RandomAccessibleInterval< Volatile< R > > > channelRais = new ArrayList<>();
+		ArrayList< RandomAccessibleInterval< T > > channelRais = new ArrayList<>();
 
 		for ( int c = 0; c < numChannels; c++ )
 			channelRais.add( Views.hyperSlice( rai, DimensionOrder.C, c ) );
@@ -167,23 +166,16 @@ public class ChromaticShiftCorrectionView< R extends RealType< R > & NativeType<
 			for ( int c = 1; c < numChannels; c++ )
 				intersect = Intervals.intersect( intersect, shiftedChannelRAIs.get( c ) );
 
-			shiftedChannelRAIs = getCroppedRAIs( intersect );
-			setCorrectedRai();
-			showCorrectedRai();
-		}
-
-		private ArrayList< RandomAccessibleInterval< Volatile< R > > > getCroppedRAIs( Interval intersect )
-		{
-			final ArrayList< RandomAccessibleInterval< Volatile< R > > > cropped
-					= new ArrayList<>();
-
+			final ArrayList< RandomAccessibleInterval< T > > cropped = new ArrayList<>();
 			for ( int c = 0; c < numChannels; c++ )
 			{
-				final IntervalView< Volatile< R > > crop
-						= Views.interval( shiftedChannelRAIs.get( c ), intersect );
+				final IntervalView< T > crop = Views.interval( shiftedChannelRAIs.get( c ), intersect );
 				cropped.add(  crop );
 			}
-			return cropped;
+
+			shiftedChannelRAIs = cropped;
+			setCorrectedRai();
+			showCorrectedRai();
 		}
 
 		private boolean isTranslationsChanged( ArrayList< long[] > translations )

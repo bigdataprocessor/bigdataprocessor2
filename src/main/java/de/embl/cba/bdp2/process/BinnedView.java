@@ -8,7 +8,6 @@ import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.ImageViewer;
 import de.embl.cba.lazyalgorithm.LazyDownsampler;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.Volatile;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
@@ -16,16 +15,16 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class BinnedView< R extends RealType< R > & NativeType< R > > extends JFrame
+public class BinnedView< T extends RealType< T > & NativeType< T > > extends JFrame
 {
-	public BinnedView( final ImageViewer< R > imageViewer  )
+	public BinnedView( final ImageViewer< T > imageViewer  )
 	{
-		final RandomAccessibleInterval< Volatile< R > > rai = imageViewer.getVolatileRai();
+		final RandomAccessibleInterval< T > rai = imageViewer.getRai();
 
 		long[] span = new long[]{0,0,0,0,0};
 
-		final RandomAccessibleInterval< Volatile< R > > downSampledView =
-				new LazyDownsampler( rai, span ).getDownsampledView();
+		final RandomAccessibleInterval< T > downSampledView =
+				new LazyDownsampler<>( rai, span ).getDownsampledView();
 
 		ImageViewer newImageViewer = imageViewer.newImageViewer();
 
@@ -58,7 +57,7 @@ public class BinnedView< R extends RealType< R > & NativeType< R > > extends JFr
 	}
 
 	private void showBinningAdjustmentDialog(
-			RandomAccessibleInterval< Volatile< R > > rai,
+			RandomAccessibleInterval< T > rai,
 			double[] originalVoxelSize,
 			ImageViewer imageViewer,
 			long[] span )
@@ -121,8 +120,8 @@ public class BinnedView< R extends RealType< R > & NativeType< R > > extends JFr
 
 				if ( ! spanChanged ) return;
 
-				final RandomAccessibleInterval< Volatile< R > > downSampleView =
-						new LazyDownsampler( rai, span ).getDownsampledView();
+				final RandomAccessibleInterval< T > downSampleView =
+						new LazyDownsampler<>( rai, span ).getDownsampledView();
 
 				final double[] binnedVoxelSize = getBinnedVoxelSize( span, originalVoxelSize );
 
@@ -135,6 +134,7 @@ public class BinnedView< R extends RealType< R > & NativeType< R > > extends JFr
 
 				ImageJLogger.info( "Binned view size [GB]: "
 						+ Utils.getSizeGB( downSampleView ) );
+
 
 			}
 		}

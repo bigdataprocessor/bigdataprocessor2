@@ -27,7 +27,7 @@ public class ObliqueMenuDialog extends JDialog implements ActionListener {
 
     public ObliqueMenuDialog(ImageViewer imageViewer) {
         this.imageViewer = imageViewer;
-        this.originalRAI = imageViewer.getVolatileRai();
+        this.originalRAI = imageViewer.getRai();
         JTabbedPane menu = new JTabbedPane();
         ArrayList<JPanel> mainPanels = new ArrayList<>();
         ArrayList<JPanel> panels = new ArrayList<>();

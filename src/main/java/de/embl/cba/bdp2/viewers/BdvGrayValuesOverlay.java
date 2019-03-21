@@ -1,7 +1,10 @@
 package de.embl.cba.bdp2.viewers;
 
+import bdv.tools.brightness.ConverterSetup;
 import bdv.util.Bdv;
 import bdv.util.BdvOverlay;
+import bdv.util.PlaceHolderConverterSetup;
+import bdv.util.PlaceHolderSource;
 import de.embl.cba.bdv.utils.BdvUtils;
 import net.imglib2.RealPoint;
 import net.imglib2.type.numeric.ARGBType;
@@ -9,7 +12,10 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ArrayBlockingQueue;
 
 public class BdvGrayValuesOverlay extends BdvOverlay implements MouseMotionListener {
     private final Bdv bdv;
@@ -49,19 +55,38 @@ public class BdvGrayValuesOverlay extends BdvOverlay implements MouseMotionListe
     public void mouseDragged(MouseEvent e) {}
 
     @Override
-    public void mouseMoved(MouseEvent e) {
+    public synchronized void mouseMoved(MouseEvent e) {
+
         final RealPoint realPoint = new RealPoint(3);
+
         bdv.getBdvHandle().getViewerPanel().getGlobalMouseCoordinates(realPoint);
-        final int currentTimepoint = bdv.getBdvHandle().getViewerPanel().getState().getCurrentTimepoint();
+
+        final int currentTimepoint =
+                bdv.getBdvHandle().getViewerPanel().getState().getCurrentTimepoint();
+
         final Map<Integer, Double> pixelValuesOfActiveSources =
                 BdvUtils.getPixelValuesOfActiveSources(bdv, realPoint, currentTimepoint);
 
         ArrayList<Double> values = new ArrayList<>();
         ArrayList<ARGBType> colors = new ArrayList<>();
 
-        for (int sourceId : pixelValuesOfActiveSources.keySet()) {
-            values.add(pixelValuesOfActiveSources.get(sourceId));
-            final ARGBType color = BdvUtils.getColor(bdv, sourceId);
+        final List< ConverterSetup > converterSetups
+                = bdv.getBdvHandle().getSetupAssignments().getConverterSetups();
+
+        final ArrayList< Integer > keys = new ArrayList<>( pixelValuesOfActiveSources.keySet() );
+
+        for ( int i = 0; i < keys.size(); i++ )
+        {
+            values.add( pixelValuesOfActiveSources.get( keys.get( i ) ) ) ;
+        }
+
+        for ( int i = 0; i < converterSetups.size(); i++ )
+        {
+            final ConverterSetup converterSetup = converterSetups.get( i );
+
+            if ( converterSetup instanceof PlaceHolderConverterSetup ) continue;
+
+            final ARGBType color = converterSetup.getColor();
             final int colorIndex = color.get();
             if (colorIndex == 0) {
                 colors.add(new ARGBType(ARGBType.rgba(255, 255, 255, 255)));
@@ -69,6 +94,7 @@ public class BdvGrayValuesOverlay extends BdvOverlay implements MouseMotionListe
                 colors.add(color);
             }
         }
+
         setValuesAndColors(values, colors);
     }
 }

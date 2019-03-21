@@ -25,10 +25,10 @@ public class TestTHdf5ImarisSaving {
         imageViewer.setDisplayRange(0, 800, 0);
 
         /**
-         * Save as HDF5_IMARIS_BDV Stacks
+         * Save as IMARIS_STACKS Stacks
          */
         final SavingSettings defaults = SavingSettings.getDefaults();
-        defaults.fileType = SavingSettings.FileType.HDF5_IMARIS_BDV;
+        defaults.fileType = SavingSettings.FileType.IMARIS_STACKS;
         defaults.fileBaseNameIMARIS = "file";
         defaults.parentDirectory = "src/test/resources/";
         defaults.voxelSize =imageViewer.getVoxelSize();
