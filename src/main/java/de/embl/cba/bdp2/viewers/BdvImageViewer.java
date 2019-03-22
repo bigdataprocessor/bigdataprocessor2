@@ -140,9 +140,11 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
             //Hence source is always at position 0 of the bdvSS.
         }
 
-        int nChannels = this.getBdvSS().getBdvHandle().getSetupAssignments().getConverterSetups().size();
+        int nChannels = this.getBdvSS()
+                .getBdvHandle().getSetupAssignments().getConverterSetups().size();
         for (int channel = 0; channel < nChannels; ++channel) {
-            ConverterSetup converterSetup = this.getBdvSS().getBdvHandle().getSetupAssignments().getConverterSetups().get(0);
+            ConverterSetup converterSetup = this.getBdvSS()
+                    .getBdvHandle().getSetupAssignments().getConverterSetups().get(0);
             this.bdvSS.getBdvHandle().getSetupAssignments().removeSetup(converterSetup);
             //channel is always 0 (zero) because converterSetup object gets removed from bdvSS.
             //Hence current channel is always at position 0 of the bdvSS.
@@ -152,9 +154,11 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
     public void addMenus(BdvMenus menus) {
         menus.setImageViewer(this);
         for (JMenu menu : menus.getMenus()) {
-            ((BdvHandleFrame) this.bdvSS.getBdvHandle()).getBigDataViewer().getViewerFrame().getJMenuBar().add((menu));
+            ((BdvHandleFrame) this.bdvSS.getBdvHandle())
+                    .getBigDataViewer().getViewerFrame().getJMenuBar().add((menu));
         }
-        ((BdvHandleFrame) this.bdvSS.getBdvHandle()).getBigDataViewer().getViewerFrame().getJMenuBar().updateUI();
+        ((BdvHandleFrame) this.bdvSS.getBdvHandle())
+                .getBigDataViewer().getViewerFrame().getJMenuBar().updateUI();
     }
 
     @Override
@@ -286,7 +290,7 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
                     rai,
                     imageName,
                     BdvOptions.options().axisOrder( AxisOrder.XYZCT )
-                            .addTo( bdvSS ).sourceTransform( scaling ));
+                            .addTo( bdvSS ).sourceTransform( scaling ) );
         }
         else
         {
@@ -294,7 +298,8 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
                     volatileRai,
                     imageName,
                     BdvOptions.options().axisOrder( AxisOrder.XYZCT )
-                            .addTo( bdvSS ).sourceTransform( scaling ) );
+                            .addTo( bdvSS )
+                            .sourceTransform( scaling ) );
         }
 
         if ( transform3D != null ) setViewerTransform( transform3D );

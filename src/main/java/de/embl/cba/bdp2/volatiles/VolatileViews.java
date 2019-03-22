@@ -1,24 +1,16 @@
 package de.embl.cba.bdp2.volatiles;
 
-import static net.imglib2.img.basictypeaccess.AccessFlags.DIRTY;
-import static net.imglib2.img.basictypeaccess.AccessFlags.VOLATILE;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
 import bdv.img.cache.CreateInvalidVolatileCell;
 import bdv.img.cache.VolatileCachedCellImg;
 import bdv.util.volatiles.*;
+import de.embl.cba.lazyalgorithm.converter.NeighborhoodAverageConverter;
+import de.embl.cba.lazyalgorithm.converter.VolatileNeighborhoodAverageConverter;
 import de.embl.cba.neighborhood.RectangleShape2;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.Volatile;
-import net.imglib2.algorithm.neighborhood.Neighborhood;
-import net.imglib2.algorithm.neighborhood.RectangleNeighborhood;
 import net.imglib2.algorithm.neighborhood.RectangleNeighborhoodRandomAccess;
-import net.imglib2.algorithm.neighborhood.RectangleShape;
 import net.imglib2.cache.Cache;
 import net.imglib2.cache.img.CachedCellImg;
 import net.imglib2.cache.ref.WeakRefVolatileCache;
@@ -34,7 +26,15 @@ import net.imglib2.img.cell.Cell;
 import net.imglib2.img.cell.CellGrid;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
+import net.imglib2.type.numeric.RealType;
 import net.imglib2.view.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import static net.imglib2.img.basictypeaccess.AccessFlags.DIRTY;
+import static net.imglib2.img.basictypeaccess.AccessFlags.VOLATILE;
 
 /**
  * Wrap view cascades ending in {@link CachedCellImg} as volatile views.
@@ -101,7 +101,10 @@ public class VolatileViews
 	// ==============================================================
 
 	@SuppressWarnings( "unchecked" )
-	private static < T extends NativeType< T >, S extends NativeType< S >, V extends Volatile< T > >
+	private static < T extends NativeType< T >,
+			S extends NativeType< S >,
+			V extends Volatile< T >,
+			R extends RealType< R > >
 	VolatileViewData< T, V > wrapAsVolatileViewData(
 			final RandomAccessible< T > rai,
 			final SharedQueue queue,
@@ -196,43 +199,15 @@ public class VolatileViews
 
 			final Converter< ? super T, ? super S > converter = view.getConverter();
 
-			if ( isNeighborhood( vRAI ) )
+			if ( converter instanceof NeighborhoodAverageConverter )
 			{
-
-				/*
-				TODO
-				Wrapping into a volatile version like below did
-				not work for me here, because it was trying to cast,
-				in my case, RectangleNeighborhoodUnsafe to Volatile
-				and thereby throwing and exception.
-
-
-				Converter< V, Volatile< S > > volatileConverter
-						= (vt, vu) -> {
-					boolean isValid = vt.isValid();
-					vu.setValid(isValid);
-					if (isValid) {
-						converter.convert(vt.get(), vu.get());
-					}
-				};
-
-				Interestingly just passing on the nonVolatile
-				original converter does work for me here.
-				I believe this might be luck, because my converter is of this type:
-
-				 < R extends RealType< R > >
-				Converter< Neighborhood< R >, R >
-
-
-				...and Volatile Types extend RealType, so it maybe that is way it works.
-				But I am not sure!
-				 */
-
+				final VolatileNeighborhoodAverageConverter< R > vConverter =
+						new VolatileNeighborhoodAverageConverter<>();
 
 				final ConvertedRandomAccessibleInterval converted
 						= new ConvertedRandomAccessibleInterval(
 						vRAI,
-						converter,
+						vConverter,
 						volatileDestinationType );
 
 				final VolatileViewData volatileViewData = new VolatileViewData(

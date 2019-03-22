@@ -30,19 +30,21 @@ public class SaveCentral {
 
     public static boolean interruptSavingThreads;
 
-    public static void goSave(SavingSettings savingSettings, ExecutorService es) {
+    public static void goSave(SavingSettings savingSettings, ExecutorService es, int saveId) {
         if (savingSettings.fileType.equals( SavingSettings.FileType.TIFF_PLANES )) {
-            saveTIFFAsPlanes(savingSettings, es);
+            saveTIFFAsPlanes(savingSettings, es, saveId);
         } else if (savingSettings.fileType.equals( SavingSettings.FileType.TIFF_STACKS )) {
-            saveTIFFAsStacks(savingSettings, es);
+            saveTIFFAsStacks(savingSettings, es, saveId);
         } else if (savingSettings.fileType.equals( SavingSettings.FileType.HDF5_STACKS )) {
-            saveHDFStacks(savingSettings, es);
+            saveHDFStacks(savingSettings, es, saveId);
         } else if (savingSettings.fileType.equals( SavingSettings.FileType.IMARIS_STACKS )) {
-            saveIMARIStacks(savingSettings, es);
+            saveIMARIStacks(savingSettings, es, saveId);
         }
     }
 
-    private static void saveTIFFAsPlanes(SavingSettings savingSettings, ExecutorService es, Integer saveId) {
+    private static void saveTIFFAsPlanes(
+            SavingSettings savingSettings, ExecutorService es, Integer saveId )
+    {
         AtomicBoolean stop = new AtomicBoolean(false);
         updateTrackers(saveId, stop);
         List<Future> futures = new ArrayList<>();
