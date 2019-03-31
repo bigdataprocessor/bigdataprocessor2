@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BdvMenus extends JMenu implements ActionListener {
-    //TODO: change name as Menus --ashis
 
     private final SaveSelectMenu saveSelectMenu;
     private final OthersMenu othersMenu;
@@ -77,23 +76,17 @@ public class BdvMenus extends JMenu implements ActionListener {
         }else if(e.getActionCommand().equalsIgnoreCase(
                 UIDisplayConstants.INTERACTIVE_EIGHT_BIT_MENU_DISPLAY_TEXT)){
             BigDataProcessor.executorService.submit(() -> {
-                UnsignedByteTypeView menuDialog =
-                        new UnsignedByteTypeView(imageViewer);
-                menuDialog.setVisible(true);
+                new UnsignedByteTypeView(imageViewer);
             });
         }else if(e.getActionCommand().equalsIgnoreCase(
                 UIDisplayConstants.INTERACTIVE_BINNING)){
             BigDataProcessor.executorService.submit(() -> {
-                BinnedView menuDialog =
-                        new BinnedView<>(imageViewer);
-                menuDialog.setVisible(true);
+               new BinnedView<>(imageViewer);
             });
         }else if(e.getActionCommand().equalsIgnoreCase(
             UIDisplayConstants.CHROMATIC_SHIFT_CORRECTION_MENU_DISPLAY_TEXT)){
             BigDataProcessor.executorService.submit(() -> {
-                ChromaticShiftCorrectionView menuDialog =
-                    new ChromaticShiftCorrectionView<>(imageViewer);
-            menuDialog.setVisible(true);
+                new ChromaticShiftCorrectionView<>(imageViewer);
         });
     }
     }

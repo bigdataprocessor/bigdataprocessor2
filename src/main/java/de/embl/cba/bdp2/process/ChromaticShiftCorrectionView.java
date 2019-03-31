@@ -17,7 +17,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class ChromaticShiftCorrectionView< T extends RealType< T > & NativeType< T > > extends JFrame
+public class ChromaticShiftCorrectionView< T extends RealType< T > & NativeType< T > >
 {
 
 	private final ImageViewer< T > imageViewer;
