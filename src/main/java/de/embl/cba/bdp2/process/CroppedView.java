@@ -25,7 +25,7 @@ public class CroppedView < T extends RealType< T > & NativeType< T > >
 					FileInfoConstants.CROPPED_VIEW_NAME,
 					imageViewer.getVoxelSize(),
 					imageViewer.getCalibrationUnit(),
-					true );
+					false );
 			ImageJLogger.info( "Cropped view size [GB]: "
 					+ Utils.getSizeGB( croppedRAI ) );
 			BdvMenus menus = new BdvMenus();
