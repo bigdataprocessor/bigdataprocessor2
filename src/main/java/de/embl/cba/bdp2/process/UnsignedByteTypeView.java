@@ -18,7 +18,7 @@ import net.imglib2.util.Util;
 import javax.swing.*;
 import java.awt.*;
 
-public class UnsignedByteTypeView< T extends RealType< T > > extends JFrame
+public class UnsignedByteTypeView< T extends RealType< T > >
 {
 
 	public UnsignedByteTypeView( final ImageViewer imageViewer  )

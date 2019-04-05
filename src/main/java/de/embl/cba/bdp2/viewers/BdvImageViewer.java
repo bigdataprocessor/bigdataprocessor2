@@ -6,6 +6,7 @@ import bdv.util.BdvFunctions;
 import bdv.util.BdvHandleFrame;
 import bdv.util.BdvOptions;
 import bdv.util.BdvStackSource;
+import bdv.util.PlaceHolderConverterSetup;
 import bdv.viewer.SourceAndConverter;
 import de.embl.cba.bdp2.boundingbox.BoundingBoxDialog;
 import de.embl.cba.bdp2.ui.BdvMenus;
@@ -241,10 +242,12 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
     }
 
     public void replicateViewerContrast(ImageViewer newImageView) {
-        int nChannels = (int) this.getRai().dimension( DimensionOrder.C);
+        int nChannels =this.getBdvSS().getBdvHandle().getSetupAssignments().getConverterSetups().size();
         for (int channel = 0; channel < nChannels; ++channel) {
             ConverterSetup converterSetup = this.getBdvSS().getBdvHandle().getSetupAssignments().getConverterSetups().get(channel);
-            newImageView.setDisplayRange(converterSetup.getDisplayRangeMin(), converterSetup.getDisplayRangeMax(), 0);
+            if (!(converterSetup instanceof PlaceHolderConverterSetup)) { // PlaceHolderConverterSetup is the Overlay.
+                newImageView.setDisplayRange(converterSetup.getDisplayRangeMin(), converterSetup.getDisplayRangeMax(), 0);
+            }
             //channel is always 0 (zero) because converterSetup object gets removed and added at the end of bdvSS in setDisplayRange method.
             //Hence current channel is always at position 0 of the bdvSS.
         }

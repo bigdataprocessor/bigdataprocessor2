@@ -15,7 +15,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class BinnedView< T extends RealType< T > & NativeType< T > > extends JFrame
+public class BinnedView< T extends RealType< T > & NativeType< T > >
 {
 	public BinnedView( final ImageViewer< T > imageViewer  )
 	{
