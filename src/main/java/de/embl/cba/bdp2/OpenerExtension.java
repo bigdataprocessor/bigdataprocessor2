@@ -691,48 +691,122 @@ public class OpenerExtension extends Opener {
                 {
 
                     // init to hold all data present in the uncompressed strips
-                    byte[] unCompressedBuffer = new byte[(se - ss + 1) * rps * imByteWidth];
+                    byte[] unCompressedBuffer = new byte[ ( se - ss + 1 ) * rps * imByteWidth ];
 
                     int pos = 0;
-                    for (int s = ss; s <= se; s++) {
+                    for ( int s = ss; s <= se; s++ )
+                    {
 
                         // TODO: multithreading here?
 
-                        int stripLength = (int)fi.stripLengths[s];
-                        byte[] strip = new byte[stripLength];
+                        int stripLength = ( int ) fi.stripLengths[ s ];
+                        byte[] strip = new byte[ stripLength ];
 
                         // get strip from read data
-                        try {
-                            System.arraycopy(buffer[(z - zs)/dz], pos, strip, 0, stripLength);
-                        } catch (Exception e) {
-                              logger.info("" + e.toString());
-                              logger.info("------- s [#] : " + s);
-                              logger.info("stripLength [bytes] : " + strip.length);
-                              logger.info("pos [bytes] : " + pos);
-                              logger.info("pos + stripLength [bytes] : " + (pos + stripLength));
-                              logger.info("z-zs : " + (z - zs));
-                              logger.info("z-zs/dz : " + (z - zs) / dz);
-                              logger.info("buffer[z-zs].length : " + buffer[z - zs].length);
-                              logger.info("imWidth [bytes] : " + imByteWidth);
-                              logger.info("rows per strip [#] : " + rps);
-                              logger.info("ny [#] : " + ny);
-                              logger.info("(s - ss) * imByteWidth * rps [bytes] : " + ((s - ss) * imByteWidth *
-                                      rps));
-                              logger.info("unCompressedBuffer.length [bytes] : " + unCompressedBuffer.length);
+                        try
+                        {
+                            System.arraycopy( buffer[ ( z - zs ) / dz ], pos, strip, 0, stripLength );
+                        } catch ( Exception e )
+                        {
+                            logger.info( "" + e.toString() );
+                            logger.info( "------- s [#] : " + s );
+                            logger.info( "stripLength [bytes] : " + strip.length );
+                            logger.info( "pos [bytes] : " + pos );
+                            logger.info( "pos + stripLength [bytes] : " + ( pos + stripLength ) );
+                            logger.info( "z-zs : " + ( z - zs ) );
+                            logger.info( "z-zs/dz : " + ( z - zs ) / dz );
+                            logger.info( "buffer[z-zs].length : " + buffer[ z - zs ].length );
+                            logger.info( "imWidth [bytes] : " + imByteWidth );
+                            logger.info( "rows per strip [#] : " + rps );
+                            logger.info( "ny [#] : " + ny );
+                            logger.info( "(s - ss) * imByteWidth * rps [bytes] : " + ( ( s - ss ) * imByteWidth *
+                                    rps ) );
+                            logger.info( "unCompressedBuffer.length [bytes] : " + unCompressedBuffer.length );
                         }
 
                         //info("strip.length " + strip.length);
                         // uncompress strip
 
-                        strip = lzwUncompress(strip, imByteWidth * rps);
+                        strip = lzwUncompress( strip, imByteWidth * rps );
 
                         // put uncompressed strip into large array
-                        System.arraycopy(strip, 0, unCompressedBuffer, (s - ss) * imByteWidth * rps, imByteWidth * rps);
+                        System.arraycopy( strip, 0, unCompressedBuffer, ( s - ss ) * imByteWidth * rps, imByteWidth * rps );
 
                         pos += stripLength;
                     }
 
-                    buffer[(z - zs)/dz] = unCompressedBuffer;
+                    buffer[ ( z - zs ) / dz ] = unCompressedBuffer;
+
+                }  else if (fi.compression == ZIP)  {
+
+                    // init to hold all data present in the uncompressed strips
+                    byte[] unCompressedBuffer = new byte[ ( se - ss + 1 ) * rps * imByteWidth ];
+
+                    int pos = 0;
+
+                    for ( int s = ss; s <= se; s++ )
+                    {
+
+                        // TODO: multithreading here?
+                        int compressedStripLength = ( int ) fi.stripLengths[ s ];
+                        byte[] strip = new byte[ compressedStripLength ];
+
+                        // get strip from read data
+                        try
+                        {
+                            System.arraycopy( buffer[ ( z - zs ) / dz ], pos, strip, 0, compressedStripLength );
+                        }
+                        catch ( Exception e )
+                        {
+                            logger.info( "" + e.toString() );
+                            logger.info( "------- s [#] : " + s );
+                            logger.info( "stripLength [bytes] : " + strip.length );
+                            logger.info( "pos [bytes] : " + pos );
+                            logger.info( "pos + stripLength [bytes] : " + ( pos + compressedStripLength ) );
+                            logger.info( "z-zs : " + ( z - zs ) );
+                            logger.info( "z-zs/dz : " + ( z - zs ) / dz );
+                            logger.info( "buffer[z-zs].length : " + buffer[ z - zs ].length );
+                            logger.info( "imWidth [bytes] : " + imByteWidth );
+                            logger.info( "rows per strip [#] : " + rps );
+                            logger.info( "ny [#] : " + ny );
+                            logger.info( "(s - ss) * imByteWidth * rps [bytes] : " + ( ( s - ss ) * imByteWidth *
+                                    rps ) );
+                            logger.info( "unCompressedBuffer.length [bytes] : " + unCompressedBuffer.length );
+                        }
+
+
+                        /** TIFF Adobe ZIP support contributed by Jason Newton. */
+                        ByteArrayOutputStream imageBuffer = new ByteArrayOutputStream();
+                        byte[] tmpBuffer = new byte[1024];
+
+                        Inflater decompressor = new Inflater();
+
+                        decompressor.setInput( strip );
+                        try {
+                            while(!decompressor.finished()) {
+                                int rlen = decompressor.inflate(tmpBuffer);
+                                imageBuffer.write(tmpBuffer, 0, rlen);
+                            }
+                        } catch(DataFormatException e){
+                            IJ.log(e.toString());
+                        }
+                        decompressor.end();
+
+                        strip = imageBuffer.toByteArray();
+
+                        // put uncompressed strip into large array
+                        System.arraycopy(
+                                strip,
+                                0,
+                                unCompressedBuffer,
+                                ( s - ss ) * imByteWidth * rps,
+                                imByteWidth * rps );
+
+                        pos += compressedStripLength;
+                    }
+
+                    buffer[ ( z - zs ) / dz ] = unCompressedBuffer;
+
 
                 } else {
 
