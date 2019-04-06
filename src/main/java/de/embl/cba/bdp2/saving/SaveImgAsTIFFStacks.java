@@ -1,8 +1,6 @@
 package de.embl.cba.bdp2.saving;
 
 import de.embl.cba.bdp2.ProjectionXYZ;
-import de.embl.cba.bdp2.logging.IJLazySwingLogger;
-import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.utils.Utils;
 import ij.IJ;
 import ij.ImagePlus;
@@ -22,6 +20,7 @@ import ome.xml.model.enums.PixelType;
 import ome.xml.model.primitives.PositiveInteger;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
 
 public class SaveImgAsTIFFStacks implements Runnable {
     private final int t;
@@ -29,8 +28,6 @@ public class SaveImgAsTIFFStacks implements Runnable {
     private final SavingSettings savingSettings;
     private final long startTime;
     private final AtomicBoolean stop;
-    private final Logger logger = new IJLazySwingLogger();
-
 
     public SaveImgAsTIFFStacks(int t,
                                SavingSettings savingSettings,

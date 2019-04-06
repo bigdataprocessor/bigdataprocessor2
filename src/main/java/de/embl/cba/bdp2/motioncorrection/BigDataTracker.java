@@ -5,8 +5,7 @@ import de.embl.cba.bdp2.ui.BdvMenus;
 import de.embl.cba.bdp2.ui.BigDataProcessor;
 import de.embl.cba.bdp2.ui.DisplaySettings;
 import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
-import de.embl.cba.bdp2.logging.IJLazySwingLogger;
-import de.embl.cba.bdp2.logging.Logger;
+import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
@@ -28,7 +27,6 @@ import java.util.concurrent.Executors;
 
 public class BigDataTracker {
 
-    private Logger logger = new IJLazySwingLogger();
     public ArrayList<Track> tracks = new ArrayList<>();
     public Track trackResults;
     public TrackingSettings trackingSettings;

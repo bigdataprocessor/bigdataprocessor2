@@ -34,8 +34,7 @@ import bdv.util.Bdv;
 import bdv.viewer.animate.SimilarityTransformAnimator;
 import de.embl.cba.bdp2.Region5D;
 import de.embl.cba.bdp2.ui.DisplaySettings;
-import de.embl.cba.bdp2.logging.IJLazySwingLogger;
-import de.embl.cba.bdp2.logging.Logger;
+import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
@@ -77,8 +76,6 @@ import java.util.concurrent.TimeUnit;
 public class Utils {
 
     public static boolean verbose = false;
-
-    static Logger logger = new IJLazySwingLogger();
 
 	public static ImagePlus getDataCube(ImagePlus image, int c, int t, int[] binning )
 	{

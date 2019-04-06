@@ -1,6 +1,8 @@
 package de.embl.cba.bdp2.ui;
 
 import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
+import de.embl.cba.bdp2.logging.IJLazySwingLogger;
+import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.imaris.ImarisUtils;
 import de.embl.cba.bdp2.viewers.ViewerUtils;
 import net.imagej.DatasetService;
@@ -88,6 +90,7 @@ public class BigDataProcessorCommand<T extends RealType<T> & NativeType<T>> impl
     boolean autoContrast = true;
 
     private static final BigDataProcessor BIG_DATA_CONVERTER = new BigDataProcessor();
+    public static final Logger logger = new IJLazySwingLogger();
 
     public void run()
     {

@@ -2,15 +2,13 @@ package de.embl.cba.bdp2.motioncorrection;
 
 import de.embl.cba.bdp2.ui.BigDataProcessor;
 import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
-import de.embl.cba.bdp2.logging.IJLazySwingLogger;
-import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.ImageViewer;
 import javafx.geometry.Point3D;
 import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccessibleInterval;
-
+import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -33,8 +31,6 @@ public class BigDataTrackerGUI extends JDialog implements ActionListener, FocusL
     //TrackTablePanel trackTablePanel;
     String[] defaults;
     TrackingSettings trackingSettings = new TrackingSettings();
-
-    Logger logger = new IJLazySwingLogger();
 
     String[] texts = {
             //"Region size: x,y,z [pixels]",
@@ -322,6 +318,7 @@ public class BigDataTrackerGUI extends JDialog implements ActionListener, FocusL
        if (e.getActionCommand().equals("Select ROI")) {
             System.out.println(e.getActionCommand());
            BigDataProcessor.trackerThreadPool.submit(()-> {
+               System.out.println(e.getActionCommand());
                FinalInterval interval = imageViewer.get5DIntervalFromUser();
                trackingSettings.pMin = new Point3D((int)interval.min( DimensionOrder.X ),
                                                    (int)interval.min( DimensionOrder.Y ),

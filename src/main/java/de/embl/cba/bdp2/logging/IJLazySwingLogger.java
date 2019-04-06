@@ -20,7 +20,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class IJLazySwingLogger implements Logger {
 
     private boolean showDebug = false;
-
     public boolean isIJLogWindowLogging = true;
     public boolean isFileLogging = false;
     private String logFileDirectory = null;

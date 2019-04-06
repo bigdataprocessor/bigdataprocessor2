@@ -4,8 +4,7 @@ import ch.systemsx.cisd.hdf5.HDF5DataSetInformation;
 import ch.systemsx.cisd.hdf5.HDF5DataTypeInformation;
 import ch.systemsx.cisd.hdf5.HDF5Factory;
 import ch.systemsx.cisd.hdf5.IHDF5Reader;
-import ij.IJ;
-
+import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -55,7 +54,7 @@ public class FileInfoSourceHDF5Helper {
         } else if (type.equals("float32") || type.equals("float64")) {
             nBits = Float.SIZE;
         } else {
-            IJ.error("Type '" + type + "' Not handled yet!");
+            logger.error("Type '" + type + "' Not handled yet!");
         }
         return nBits;
     }
@@ -82,7 +81,7 @@ public class FileInfoSourceHDF5Helper {
             hdf5DataSet.append(head.get(0));
         }
         if (!dataSetExists) {
-            IJ.showMessage("The selected Hdf5 data set does not exist; " +
+            logger.error("The selected Hdf5 data set does not exist; " +
                     "please change to one of the following:\n\n" +
                     dataSets);
         }

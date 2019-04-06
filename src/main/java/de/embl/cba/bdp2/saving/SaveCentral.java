@@ -6,8 +6,7 @@ import de.embl.cba.bdp2.ui.BigDataProcessor;
 import de.embl.cba.imaris.ImarisDataSet;
 import de.embl.cba.imaris.ImarisUtils;
 import de.embl.cba.imaris.ImarisWriter;
-import de.embl.cba.bdp2.logging.IJLazySwingLogger;
-import de.embl.cba.bdp2.logging.Logger;
+import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
 import de.embl.cba.bdp2.utils.MonitorThreadPoolStatus;
 import de.embl.cba.bdp2.utils.Utils;
 import ij.ImagePlus;
@@ -26,9 +25,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class SaveCentral {
-    private static Logger logger = new IJLazySwingLogger();
-
-    public static boolean interruptSavingThreads;
 
     public static void goSave(SavingSettings savingSettings, ExecutorService es, int saveId) {
         if (savingSettings.fileType.equals( SavingSettings.FileType.TIFF_PLANES )) {

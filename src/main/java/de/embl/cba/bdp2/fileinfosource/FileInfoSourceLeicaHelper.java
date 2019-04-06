@@ -1,10 +1,10 @@
 package de.embl.cba.bdp2.fileinfosource;
 
-import de.embl.cba.bdp2.logging.IJLazySwingLogger;
-import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.utils.Utils;
+
 import ij.IJ;
 
+import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -12,8 +12,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class FileInfoSourceLeicaHelper {
-
-    private static Logger logger = new IJLazySwingLogger();
 
     public static boolean initLeicaSinglePlaneTiffData(FileInfoSource imageDataInfo, String directory, String filterPattern, String[] fileList, int t, int z, int nC, int nZ)
     {
@@ -32,7 +30,7 @@ public class FileInfoSourceLeicaHelper {
 
         if ( fileList.length == 0 )
         {
-            IJ.showMessage("No files matching this pattern were found: " + filterPattern);
+            logger.error("No files matching this pattern were found: " + filterPattern);
             return false;
         }
 

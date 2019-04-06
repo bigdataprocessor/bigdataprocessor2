@@ -18,8 +18,6 @@ import ch.systemsx.cisd.hdf5.HDF5DataTypeInformation;
 import ch.systemsx.cisd.hdf5.HDF5Factory;
 import ch.systemsx.cisd.hdf5.IHDF5Reader;
 import de.embl.cba.bdp2.fileinfosource.SerializableFileInfo;
-import de.embl.cba.bdp2.logging.IJLazySwingLogger;
-import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.utils.Utils;
 import ij.IJ;
 import ij.ImagePlus;
@@ -27,7 +25,7 @@ import ij.ImageStack;
 import ij.io.BitBuffer;
 import ij.io.Opener;
 import javafx.geometry.Point3D;
-
+import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.RandomAccessFile;
@@ -41,9 +39,6 @@ import java.util.zip.Inflater;
 public class OpenerExtension extends Opener {
 
     // TODO: make it NOT an extension
-
-    Logger logger = new IJLazySwingLogger();
-
     public OpenerExtension()
     {
 
@@ -788,7 +783,7 @@ public class OpenerExtension extends Opener {
                                 imageBuffer.write(tmpBuffer, 0, rlen);
                             }
                         } catch(DataFormatException e){
-                            IJ.log(e.toString());
+                            logger.error(e.toString());
                         }
                         decompressor.end();
 
@@ -833,7 +828,7 @@ public class OpenerExtension extends Opener {
                             imageBuffer.write(tmpBuffer, 0, rlen);
                         }
                     } catch(DataFormatException e){
-                        IJ.log(e.toString());
+                        logger.error(e.toString());
                     }
                     decompressor.end();
 

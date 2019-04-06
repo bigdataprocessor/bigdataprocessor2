@@ -3,7 +3,7 @@ package de.embl.cba.bdp2.process;
 import bdv.tools.brightness.SliderPanelDouble;
 import bdv.util.BoundedValueDouble;
 import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
-import de.embl.cba.bdp2.logging.ImageJLogger;
+import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
 import de.embl.cba.bdp2.ui.BdvMenus;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.ImageViewer;
@@ -55,7 +55,7 @@ public class UnsignedByteTypeView< T extends RealType< T > >
 				imageViewer.getCalibrationUnit(),
 				true);
 
-		ImageJLogger.info( "8-bit view size [GB]: " + Utils.getSizeGB( converted ) );
+		logger.info( "8-bit view size [GB]: " + Utils.getSizeGB( converted ) );
 
 		newImageViewer.addMenus( new BdvMenus() );
 

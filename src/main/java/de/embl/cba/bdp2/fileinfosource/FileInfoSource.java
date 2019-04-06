@@ -5,15 +5,13 @@ import ch.systemsx.cisd.hdf5.HDF5DataSetInformation;
 import ch.systemsx.cisd.hdf5.HDF5Factory;
 import ch.systemsx.cisd.hdf5.IHDF5Reader;
 import de.embl.cba.bdp2.FastTiffDecoder;
-import de.embl.cba.bdp2.logging.IJLazySwingLogger;
-import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.type.numeric.real.FloatType;
-
+import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
@@ -34,7 +32,6 @@ public class FileInfoSource {
     public String[] channelFolders;
     public String[][][] ctzFileList;
     public final String directory;
-    private final Logger logger = new IJLazySwingLogger();
     public double max_pixel_val;
     public double min_pixel_val;
 
