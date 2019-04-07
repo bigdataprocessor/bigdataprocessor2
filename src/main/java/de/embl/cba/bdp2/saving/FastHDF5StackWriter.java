@@ -123,7 +123,7 @@ public class FastHDF5StackWriter<T extends RealType<T> & NativeType<T>> implemen
                 }
                 // Save projections
                 if (savingSettings.saveProjection) {
-                    ImagePlus imagePlusImage = ImageJFunctions.wrap(newRai, "", null);
+                    ImagePlus imagePlusImage = ImageJFunctions.wrap(newRai, "");
                     SaveImgAsTIFFStacks.saveAsTiffXYZMaxProjection(imagePlusImage, c, this.current_t, newPath);
                 }
             }
@@ -178,6 +178,11 @@ public class FastHDF5StackWriter<T extends RealType<T> & NativeType<T>> implemen
             for (int x = 0; x < dimX; x++) {
                 rai.setPosition(x, image.dimensionIndex(Axes.X));
                 for (int y = 0; y < dimY; y++) {
+                    if (stop.get()) {
+                        savingSettings.saveProjection = false;
+                        logger.progress("Stopped saving thread @ writeHDF5: ", "" + current_t);
+                        return;
+                    }
                     rai.setPosition(y, image.dimensionIndex(Axes.Y));
                     int index = y * dimX + x;
                     flatArr[index] = getValue(rai, pixelClass);
@@ -280,7 +285,6 @@ public class FastHDF5StackWriter<T extends RealType<T> & NativeType<T>> implemen
             // otherwise use 128x128 chunk size
             bSize = FileInfoConstants.HDF5_BLOCK_SIZE_2D;
         }
-
         int[] result = new int[datasetDims.length];
         for (int i = 0; i < datasetDims.length; i++) {
             result[i] = (int) Math.min(bSize, datasetDims[i]);
