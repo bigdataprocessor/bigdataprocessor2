@@ -29,7 +29,7 @@ import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
 import static ch.systemsx.cisd.hdf5.hdf5lib.HDF5Constants.*;
 import static java.lang.Long.min;
 
-
+@Deprecated
 public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implements Runnable {
     private final ImgPlus<T> image;
     private static final int RANK = 3;

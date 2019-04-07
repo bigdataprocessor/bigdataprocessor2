@@ -99,18 +99,16 @@ public class SaveCentral {
         for (int t = 0; t < timeFrames; t++) {
             if (imageType instanceof UnsignedByteType) {
                 futures.add(es.submit(
-                        new SaveImgAsHDF5Stacks<UnsignedByteType>("Data", savingSettings, t, counter, startTime, stop)
+                        new FastHDF5StackWriter<UnsignedByteType>("Data", savingSettings, t, counter, startTime, stop)
                 ));
             } else if (imageType instanceof UnsignedShortType) {
-                futures.add(
-                        es.submit(
-                                new SaveImgAsHDF5Stacks<UnsignedShortType>("Data", savingSettings, t, counter, startTime, stop)
-                        ));
+                futures.add(es.submit(
+                        new FastHDF5StackWriter<UnsignedShortType>("Data", savingSettings, t, counter, startTime, stop)
+                ));
             } else if (imageType instanceof FloatType) {
-                futures.add(
-                        es.submit(
-                                new SaveImgAsHDF5Stacks<FloatType>("Data", savingSettings, t, counter, startTime, stop)
-                        ));
+                futures.add(es.submit(
+                        new FastHDF5StackWriter<FloatType>("Data", savingSettings, t, counter, startTime, stop)
+                ));
             } else {
                 // throw Type not found exception : TODO --ashis
             }
