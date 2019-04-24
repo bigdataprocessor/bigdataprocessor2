@@ -110,7 +110,7 @@ public class ChromaticShiftCorrectionView< T extends RealType< T > & NativeType<
 
 	private void showFrame( JPanel panel )
 	{
-		final JFrame frame = new JFrame( "Chromatic Shift Correction" );
+		final JFrame frame = new JFrame( "Chromatic Shift Correction [Pixels]" );
 		frame.setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
 
 		frame.setContentPane( panel );
@@ -125,10 +125,12 @@ public class ChromaticShiftCorrectionView< T extends RealType< T > & NativeType<
 
 	private void createValueAndSlider( int c, String axis )
 	{
+
+
 		final BoundedValue boundedValue
 				= new BoundedValue(
-				0,
-				500, // TODO: how much?
+				-200, // TODO: how much?
+				200,
 				0 );
 
 		final SliderPanel sliderPanel = new SliderPanel(

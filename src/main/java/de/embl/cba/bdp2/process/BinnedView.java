@@ -71,6 +71,8 @@ public class BinnedView< T extends RealType< T > & NativeType< T > >
 		final ArrayList< BoundedValue > boundedValues = new ArrayList<>();
 		final ArrayList< SliderPanel > sliderPanels = new ArrayList<>();
 
+		final String[] xyz = { "X", "Y", "Z" };
+
 		for ( int d = 0; d < 3; d++ )
 		{
 			boundedValues.add( new BoundedValue(
@@ -80,12 +82,10 @@ public class BinnedView< T extends RealType< T > & NativeType< T > >
 
 			sliderPanels.add(
 					new SliderPanel(
-							"Binning, dimension " + d ,
+							"Binning " + xyz[ d ] ,
 								boundedValues.get( d ),
 								2 ));
 		}
-
-
 
 		class UpdateListener implements BoundedValue.UpdateListener
 		{
