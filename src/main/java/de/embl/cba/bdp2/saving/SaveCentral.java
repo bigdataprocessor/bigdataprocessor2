@@ -6,8 +6,7 @@ import de.embl.cba.bdp2.ui.BigDataProcessor;
 import de.embl.cba.imaris.ImarisDataSet;
 import de.embl.cba.imaris.ImarisUtils;
 import de.embl.cba.imaris.ImarisWriter;
-import de.embl.cba.bdp2.logging.IJLazySwingLogger;
-import de.embl.cba.bdp2.logging.Logger;
+import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
 import de.embl.cba.bdp2.utils.MonitorThreadPoolStatus;
 import de.embl.cba.bdp2.utils.Utils;
 import ij.ImagePlus;
@@ -26,9 +25,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class SaveCentral {
-    private static Logger logger = new IJLazySwingLogger();
-
-    public static boolean interruptSavingThreads;
 
     public static void goSave(SavingSettings savingSettings, ExecutorService es, int saveId) {
         if (savingSettings.fileType.equals( SavingSettings.FileType.TIFF_PLANES )) {
@@ -103,18 +99,16 @@ public class SaveCentral {
         for (int t = 0; t < timeFrames; t++) {
             if (imageType instanceof UnsignedByteType) {
                 futures.add(es.submit(
-                        new SaveImgAsHDF5Stacks<UnsignedByteType>("Data", savingSettings, t, counter, startTime, stop)
+                        new FastHDF5StackWriter<UnsignedByteType>("Data", savingSettings, t, counter, startTime, stop)
                 ));
             } else if (imageType instanceof UnsignedShortType) {
-                futures.add(
-                        es.submit(
-                                new SaveImgAsHDF5Stacks<UnsignedShortType>("Data", savingSettings, t, counter, startTime, stop)
-                        ));
+                futures.add(es.submit(
+                        new FastHDF5StackWriter<UnsignedShortType>("Data", savingSettings, t, counter, startTime, stop)
+                ));
             } else if (imageType instanceof FloatType) {
-                futures.add(
-                        es.submit(
-                                new SaveImgAsHDF5Stacks<FloatType>("Data", savingSettings, t, counter, startTime, stop)
-                        ));
+                futures.add(es.submit(
+                        new FastHDF5StackWriter<FloatType>("Data", savingSettings, t, counter, startTime, stop)
+                ));
             } else {
                 // throw Type not found exception : TODO --ashis
             }

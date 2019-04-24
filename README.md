@@ -21,7 +21,7 @@ For camera based microscopy systems the pixel size cannot be freely chosen durin
 Thus, the user is often forced to over-sample in order not to lose important information. 
 However, this leads to large data volumes with noise since the information is spread across many pixels and therefore resulting in 
 (vastly) increased image processing times.  
-The BigDataProcessor makes it possible to explore different binnings interactively, thereby providing an efficient means to 
+The BigDataProcessor2 makes it possible to explore different binnings interactively, thereby providing an efficient means to 
 attain a binning at which the corresponding scientific question can be efficiently addressed.*(click below to play the movie)*
 
 [<img width="1000" alt="image" src="./docs/images/2.png">](https://drive.google.com/open?id=1AVFW3M5QYEDH9XUgR-q2LWUsuy16zF1A)
@@ -29,7 +29,7 @@ attain a binning at which the corresponding scientific question can be efficient
 ### Interactive 3D+t Cropping
 
 Often, large volumes are acquired than required, e.g. to accommodate sample drift, motion, or growth. 
-Below movie shows *(click below to play)* how the BigDataProcessor can be interactively used to crop the data to only contain the relevant parts.
+Below movie shows *(click below to play)* how the BigDataProcessor2 can be interactively used to crop the data to only contain the relevant parts.
 
 [<img width="1000" alt="image" src="./docs/images/3.png">](https://drive.google.com/open?id=1iabVP9jbISI1WclMRjtDHvcNWxMTC95-)
 
@@ -49,15 +49,15 @@ This is done lazily, i.e. the data on disk is not altered at this stage.
 
 ## Detailed information
 
-**BigDataProcessor** is an [ImageJ](https://imagej.net) plugin designed for inspection, manipulation and conversion of big data image formats flawlessly even on a basic laptop or a computer.
+**BigDataProcessor2** is an [ImageJ](https://imagej.net) plugin designed for inspection, manipulation and conversion of big data image formats flawlessly even on a basic laptop or a computer.
 The plugin implements a [Lazy Loading design pattern](https://en.wikipedia.org/wiki/Lazy_loading) to seamlessly render Terabyte sized big data image data produced by light-sheet and electron microscopy, without bothering the RAM capacity. 
 The plugin facilitates loading & re-saving of TIF, HDF5 and Imaris HDF5 formats meanwhile allowing the user to shear, crop or bin. *(check out the User Documentation section below to explore what more you can do!)*
 
 The plugin also encloses **BigDataTracker**, an object tracker tool for the big data images and also allowing to view and save just the tracked regions.
-The BigDataProcessor harnesses the power of the popular [BigDataViewer](https://imagej.net/BigDataViewer) to render and [ImgLib2](https://imagej.net/ImgLib2) library for image processing towards an efficient plugin software suitable for everyday use for all microscopy practitioners.
+The BigDataProcessor2 harnesses the power of the popular [BigDataViewer](https://imagej.net/BigDataViewer) to render and [ImgLib2](https://imagej.net/ImgLib2) library for image processing towards an efficient plugin software suitable for everyday use for all microscopy practitioners.
 
 ## History
-The BigDataProcessor is a new revamped version of the popular [BigDataTools](https://github.com/tischi/fiji-plugin-bigDataTools2). The BigDataProcessor is developed almost from scratch using ImgLib2 framework while preserving crux the BigDataTools. 
+The BigDataProcessor2 is a new revamped version of the popular **BigDataTools**, a.k.a [BigDataProcessor](https://github.com/embl-cba/fiji-plugin-bigDataProcessor). The BigDataProcessor2 is developed almost from scratch using ImgLib2 framework while preserving crux the BigDataTools. 
 The new plugin uses Big Data Viewer for flexible and efficient rendering however the backward compatibility with ImageJ1 viewer is a work in progress! Keep Posted!
 
 ## Supported Formats

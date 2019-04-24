@@ -33,7 +33,7 @@ package de.embl.cba.bdp2;
 
 
 import de.embl.cba.bdp2.fileinfosource.SerializableFileInfo;
-import de.embl.cba.bdp2.logging.IJLazySwingLogger;
+import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
 import de.embl.cba.bdp2.logging.Logger;
 import ij.IJ;
 import ij.io.FileInfo;
@@ -50,9 +50,6 @@ import java.util.Properties;
  */
 
 public class FastTiffDecoder {
-
-    Logger logger = new IJLazySwingLogger();
-
     private boolean readingStrips;
     // tags
     public static final int NEW_SUBFILE_TYPE = 254;

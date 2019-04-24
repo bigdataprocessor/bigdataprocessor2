@@ -1,10 +1,8 @@
 package de.embl.cba.bdp2.fileinfosource;
 
 import de.embl.cba.bdp2.FastTiffDecoder;
-import de.embl.cba.bdp2.logging.IJLazySwingLogger;
-import de.embl.cba.bdp2.logging.Logger;
+import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
 import de.embl.cba.bdp2.utils.Utils;
-import ij.IJ; // TODO. REMOVE IJ references and use logger --ashis
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.*;
@@ -12,8 +10,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class FileInfoSourceHelper {
-    
-    private static Logger logger = new IJLazySwingLogger();
 
     public static boolean setFileSourceInfos(
             FileInfoSource infoSource,
@@ -211,7 +207,7 @@ public class FileInfoSourceHelper {
             else
             {
                 logger.info("no sub-folders found.");
-                IJ.showMessage("No sub-folders found; please specify a different options for loading " +
+                logger.info("No sub-folders found; please specify a different options for loading " +
                         "the channels");
                 return false;
             }
@@ -360,7 +356,7 @@ public class FileInfoSourceHelper {
             }
             else
             {
-                IJ.showMessage("Unsupported file type: " + fileLists[0][0]);
+                logger.error("Unsupported file type: " + fileLists[0][0]);
                 return false;
             }
 
@@ -392,7 +388,7 @@ public class FileInfoSourceHelper {
                             c = channels.indexOf(matcherCT.group("C"));
                             t = timepoints.indexOf(matcherCT.group("T"));
                         } catch (Exception e) {
-                            IJ.showMessage("The multi-channel loading did not match the filenames.\n" +
+                            logger.error("The multi-channel loading did not match the filenames.\n" +
                                     "Please change the pattern.\n\n" +
                                     "The Java error message was:\n" +
                                     e.toString());

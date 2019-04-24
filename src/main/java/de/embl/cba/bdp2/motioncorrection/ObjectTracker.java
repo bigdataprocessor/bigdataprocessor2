@@ -2,8 +2,7 @@ package de.embl.cba.bdp2.motioncorrection;
 
 import de.embl.cba.bdp2.ui.BigDataProcessor;
 import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
-import de.embl.cba.bdp2.logging.IJLazySwingLogger;
-import de.embl.cba.bdp2.logging.Logger;
+import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import javafx.geometry.Point3D;
@@ -29,7 +28,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public class ObjectTracker<T extends RealType<T>> {
-    private final Logger logger = new IJLazySwingLogger();
     private final TrackingSettings trackingSettings;
     private Point3D pMin, pMax;
     private final int width;

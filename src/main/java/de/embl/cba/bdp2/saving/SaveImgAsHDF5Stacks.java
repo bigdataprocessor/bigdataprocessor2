@@ -2,8 +2,6 @@ package de.embl.cba.bdp2.saving;
 
 import ch.systemsx.cisd.hdf5.hdf5lib.HDF5Constants;
 import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
-import de.embl.cba.bdp2.logging.IJLazySwingLogger;
-import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import ij.ImagePlus;
@@ -27,11 +25,11 @@ import net.imglib2.util.Util;
 import net.imglib2.view.Views;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-
+import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
 import static ch.systemsx.cisd.hdf5.hdf5lib.HDF5Constants.*;
 import static java.lang.Long.min;
 
-
+@Deprecated
 public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implements Runnable {
     private final ImgPlus<T> image;
     private static final int RANK = 3;
@@ -60,7 +58,6 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
     private AtomicInteger counter;
     private final long startTime;
     private final T nativeType;
-    private final Logger logger = new IJLazySwingLogger();
     private AtomicBoolean stop;
 
     public SaveImgAsHDF5Stacks(String dataset, SavingSettings savingSettings, int t, AtomicInteger counter, long startTime, AtomicBoolean stop) {

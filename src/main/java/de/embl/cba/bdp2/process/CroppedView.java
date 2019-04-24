@@ -1,7 +1,7 @@
 package de.embl.cba.bdp2.process;
 
 import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
-import de.embl.cba.bdp2.logging.ImageJLogger;
+import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
 import de.embl.cba.bdp2.ui.BdvMenus;
 import de.embl.cba.bdp2.ui.BigDataProcessor;
 import de.embl.cba.bdp2.utils.Utils;
@@ -26,7 +26,7 @@ public class CroppedView < T extends RealType< T > & NativeType< T > >
 					imageViewer.getVoxelSize(),
 					imageViewer.getCalibrationUnit(),
 					false );
-			ImageJLogger.info( "Cropped view size [GB]: "
+			logger.info( "Cropped view size [GB]: "
 					+ Utils.getSizeGB( croppedRAI ) );
 			BdvMenus menus = new BdvMenus();
 			newImageViewer.addMenus(menus);

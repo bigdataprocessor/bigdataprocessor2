@@ -23,13 +23,12 @@ package de.embl.cba.bdp2;
  *
  */
 
-import de.embl.cba.bdp2.logging.IJLazySwingLogger;
-import de.embl.cba.bdp2.logging.Logger;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.measure.Calibration;
 import ij.process.Blitter;
 import ij.process.ImageProcessor;
+import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
 
 public class ProjectionXYZ {
 
@@ -40,8 +39,6 @@ public class ProjectionXYZ {
     private double yscale;
     private double zscale;
     private double zf = 1;			//zfactor
-
-    private Logger logger = new IJLazySwingLogger();
 
     public ProjectionXYZ(ImagePlus imp){
         this.imp = imp;

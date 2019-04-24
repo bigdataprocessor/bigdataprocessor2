@@ -2,6 +2,7 @@ package de.embl.cba.bdp2.logging;
 
 import ij.IJ;
 
+@Deprecated
 public abstract class ImageJLogger
 {
 

@@ -4,8 +4,7 @@ import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.imaris.H5DataCubeWriter;
 import de.embl.cba.imaris.ImarisDataSet;
-import de.embl.cba.bdp2.logging.IJLazySwingLogger;
-import de.embl.cba.bdp2.logging.Logger;
+import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
 import de.embl.cba.bdp2.utils.Utils;
 import ij.ImagePlus;
 import net.imagej.ImgPlus;
@@ -32,7 +31,6 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
     private final long startTime;
     private ImarisDataSet imarisDataSetProperties;
     private final T nativeType;
-    private Logger logger = new IJLazySwingLogger();
     private final AtomicBoolean stop;
 
     public SaveImgAsIMARIS(

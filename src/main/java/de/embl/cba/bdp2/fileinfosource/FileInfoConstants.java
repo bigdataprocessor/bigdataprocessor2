@@ -31,7 +31,8 @@ public class FileInfoConstants {
     public static final String CROSS_CORRELATION = "Cross Correlation";
     public static final String[] BOUNDING_BOX_AXES_3D ={"x","y","z"};
     public static final String[] BOUNDING_BOX_AXES_4D ={"x","y","z","t"};
-
+    public static final long HDF5_BLOCK_SIZE_2D = 128;
+    public static final long HDF5_BLOCK_SIZE_3D = 32;
 
     public static final String[] POSSIBLE_HDF5_DATASETNAMES = new String[] {"None",
             "Data","Data111",

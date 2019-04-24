@@ -30,10 +30,8 @@
 
 package de.embl.cba.bdp2.motioncorrection;
 
-import de.embl.cba.bdp2.logging.IJLazySwingLogger;
-import de.embl.cba.bdp2.logging.Logger;
-import javafx.geometry.Point3D;
 
+import javafx.geometry.Point3D;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -47,8 +45,6 @@ public class Track {
     Map<Integer, Point3D[]> locations = new LinkedHashMap<>();
     Point3D trackStart;
     int trackID;
-
-    Logger logger = new IJLazySwingLogger();
 
     Track(TrackingSettings trackingSettings, int id) {
 
