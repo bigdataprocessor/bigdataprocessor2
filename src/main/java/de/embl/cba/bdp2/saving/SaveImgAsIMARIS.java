@@ -38,7 +38,7 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
     public SaveImgAsIMARIS(
             SavingSettings savingSettings,
             ImarisDataSet imarisDS,
-            int time,
+            int timePoint,
             AtomicInteger counter,
             long startTime,
             AtomicBoolean stop)
@@ -58,7 +58,7 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
             this.nChannels = 1;
         }
         this.savingSettings = savingSettings;
-        this.current_t = time;
+        this.current_t = timePoint;
         this.counter = counter;
         this.startTime = startTime;
         this.imarisDataSetProperties = imarisDS;
@@ -88,7 +88,8 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
 
         final long totalSlices = nFrames * nChannels;
         RandomAccessibleInterval image = savingSettings.image;
-        for (int c = 0; c < this.nChannels; c++) {
+        for (int c = 0; c < this.nChannels; c++)
+        {
             if (stop.get()) {
                 savingSettings.saveVolume = false;
                 logger.progress("Stopped saving thread: ", "" + this.current_t);
@@ -113,60 +114,48 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
 
             RandomAccessibleInterval newRai = Views.interval(image, minInterval, maxInterval);
             newRai = SaveImgHelper.convertor( newRai, this.savingSettings );
-            Img<T> imgChannelTime = null;
-            imgChannelTime = ImgView.wrap( newRai, new CellImgFactory(nativeType) );
+            Img<T> imgChannelTime = ImgView.wrap( newRai, new CellImgFactory(nativeType) );
 
-            // TODO: remove all those binnings!
-            // Bin, project and save
-            //
-            String[] binnings = savingSettings.bin.split(";");
-            for (String binning : binnings) {
-                if (stop.get()) {
-                    savingSettings.saveVolume = false;
-                    savingSettings.saveProjection = false;
-                    logger.progress("Stopped saving thread: ", "" + current_t);
-                    return;
-                }
-                String newPath = savingSettings.filePath;
-                Img<T> imgBinned = imgChannelTime;
-                ImgPlus<T> imgPlusBinned = new ImgPlus<>(imgBinned, "", FileInfoConstants.AXES_ORDER);
-                int[] binningA = Utils.delimitedStringToIntegerArray(binning, ",");
+            if (stop.get()) {
+                savingSettings.saveVolume = false;
+                savingSettings.saveProjection = false;
+                logger.progress("Stopped saving thread: ", "" + current_t);
+                return;
+            }
 
-                // TODO: remove this binning!
-                if (binningA[0] > 1 || binningA[1] > 1 || binningA[2] > 1)
-                {
-                    newPath = SaveImgHelper.doBinning(imgPlusBinned, binningA, newPath, null);
-                }
+            String newPath = savingSettings.filePath;
 
-                String sC = String.format("%1$02d", c);
-                String sT = String.format("%1$05d", current_t);
-                newPath = newPath + "--C" + sC + "--T" + sT + ".h5";
-                ImagePlus imagePlus =
-                        Utils.wrapToCalibratedImagePlus(
-                        imgPlusBinned,
-                        savingSettings.voxelSize,
-                        savingSettings.unit,
+            String sC = String.format("%1$02d", c);
+            String sT = String.format("%1$05d", current_t);
+            newPath = newPath + "--C" + sC + "--T" + sT + ".h5";
+
+            ImagePlus imagePlus =
+                    Utils.wrapToCalibratedImagePlus(
+                            imgChannelTime,
+                            savingSettings.voxelSize,
+                            savingSettings.unit,
                         "BinnedWrapped");
 
 
-                // Save volume
-                if (savingSettings.saveVolume) {
-                    H5DataCubeWriter writer = new H5DataCubeWriter();
-                    writer.writeImarisCompatibleResolutionPyramid(
-                            imagePlus, imarisDataSetProperties, c, this.current_t);
-                }
-
-                // Save projections
-                // TODO: save into one single file
-                if (savingSettings.saveProjection) {
-                    SaveImgAsTIFFStacks.saveAsTiffXYZMaxProjection(
-                            imagePlus, c, this.current_t, newPath);
-                }
+            // Save volume
+            if (savingSettings.saveVolume) {
+                H5DataCubeWriter writer = new H5DataCubeWriter();
+                writer.writeImarisCompatibleResolutionPyramid(
+                        imagePlus, imarisDataSetProperties, c, this.current_t);
             }
-            if (!stop.get()) {
-                SaveImgHelper.documentProgress(totalSlices, counter, logger, startTime);
+
+            // Save projections
+            // TODO: save into one single file
+            if (savingSettings.saveProjection) {
+                SaveImgAsTIFFStacks.saveAsTiffXYZMaxProjection(
+                        imagePlus, c, this.current_t, newPath);
             }
         }
+
+        if (!stop.get()) {
+            SaveImgHelper.documentProgress(totalSlices, counter, logger, startTime);
+        }
+
     }
 
 

@@ -34,7 +34,7 @@ public class ImageLoader implements CellLoader {
 
         // TODO: optimise based on input file format
         int cellDimX = infoSource.nX;
-        int cellDimY = 9;
+        int cellDimY = 45;
 
         this.cellDims = new int[]{ cellDimX, cellDimY, 1, 1, 1};
         this.dimensions = infoSource.getDimensions();
