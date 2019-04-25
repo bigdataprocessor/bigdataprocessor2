@@ -151,11 +151,9 @@ public class ObjectTracker<T extends RealType<T>> {
             shiftPeak.getSubpixelShift().localize(found);
             //System.out.println(Util.printCoordinates(found));
             pShift = new Point3D(found[ DimensionOrder.X ],found[ DimensionOrder.Y ],found[ DimensionOrder.Z ]);
-            pMin = pShift.add(pMin);
-            pMax = pShift.add(pMax);
-            pMinMax[0] = pMin;
-            pMinMax[1] = pMax;
-            trackingResults.addLocation(t+1, pMinMax);
+            pMin = pMin.subtract(pShift);
+            pMax = pMax.subtract(pShift);
+            trackingResults.addLocation(t+1, new Point3D[]{pMin,pMax});
         }
         logger.info("Time elapsed " +(System.currentTimeMillis() - startTime));
         return trackingResults;
