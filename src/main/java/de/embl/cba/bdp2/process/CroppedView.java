@@ -15,6 +15,7 @@ public class CroppedView < T extends RealType< T > & NativeType< T > >
 {
 	public CroppedView( ImageViewer< T > imageViewer )
 	{
+		logger.info( "\nCropping..." );
 		FinalInterval interval = imageViewer.get5DIntervalFromUser();
 
 		if (interval != null) {

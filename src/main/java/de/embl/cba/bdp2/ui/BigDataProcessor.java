@@ -54,15 +54,13 @@ public class BigDataProcessor {
     public BigDataProcessor() {
         //TODO: have separate shutdown for the executorService. It will not shutdown when ui exeService is shut. --ashis (DONE but needs testing)
         //Ref: https://stackoverflow.com/questions/23684189/java-how-to-make-an-executorservice-running-inside-another-executorservice-not
-        kickOffThreadPack(Runtime.getRuntime().availableProcessors() * 2);
+        kickOffThreadPack( Runtime.getRuntime().availableProcessors() * 2 );
     }
 
-    public void kickOffThreadPack(int nIOthreads) {
-        this.numThreads = nIOthreads;
-        if (executorService != null) {
-            return;
-        }
-        executorService = Executors.newFixedThreadPool(nIOthreads);
+    public void kickOffThreadPack(int numThreads) {
+        this.numThreads = numThreads;
+        if (executorService != null) return;
+        executorService = Executors.newFixedThreadPool(numThreads);
     }
 
     public void openFromDirectory(

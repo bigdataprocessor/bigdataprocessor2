@@ -42,7 +42,6 @@ public class BinnedView< T extends RealType< T > & NativeType< T > >
 		newImageViewer.addMenus( new BdvMenus() );
 
 		showBinningAdjustmentDialog( rai, originalVoxelSize, newImageViewer, span );
-
 	}
 
 	private double[] getBinnedVoxelSize( long[] span, double[] voxelSize )
@@ -62,7 +61,6 @@ public class BinnedView< T extends RealType< T > & NativeType< T > >
 			long[] span )
 	{
 		final JFrame frame = new JFrame( "Binning" );
-
 		frame.setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
 
 		JPanel panel = new JPanel();
@@ -94,30 +92,11 @@ public class BinnedView< T extends RealType< T > & NativeType< T > >
 			@Override
 			public synchronized void update()
 			{
-				final long[] span = new long[ 5 ];
+				final long[] span = getNewSpan();
 
-				for ( int d = 0; d < 3; d++ )
-					span[ d ] = ( boundedValues.get( d ).getCurrentValue() - 1 ) / 2;
+				if ( ! isSpanChanged( span ) ) return;
 
-				boolean spanChanged = false;
-				if ( previousSpan != null )
-				{
-					for ( int d = 0; d < 3; d++ )
-					{
-						if ( span[ d ] != previousSpan[ d ] )
-						{
-							sliderPanels.get( d ).update();
-							previousSpan[ d ] = span[ d ];
-							spanChanged = true;
-						}
-					}
-				}
-				else
-				{
-					spanChanged = true;
-				}
-
-				if ( ! spanChanged ) return;
+				previousSpan = span;
 
 				final RandomAccessibleInterval< T > downSampleView =
 						new LazyDownsampler<>( rai, span ).getDownsampledView();
@@ -133,8 +112,25 @@ public class BinnedView< T extends RealType< T > & NativeType< T > >
 
 				logger.info( "Binned view size [GB]: "
 						+ Utils.getSizeGB( downSampleView ) );
+			}
 
+			private boolean isSpanChanged( long[] span )
+			{
+				if ( previousSpan == null ) return true;
 
+				for ( int d = 0; d < 3; d++ )
+					if ( span[ d ] != previousSpan[ d ] )
+						return true;
+
+				return false;
+			}
+
+			private long[] getNewSpan()
+			{
+				final long[] span = new long[ 5 ];
+				for ( int d = 0; d < 3; d++ )
+					span[ d ] = ( boundedValues.get( d ).getCurrentValue() - 1 ) / 2;
+				return span;
 			}
 		}
 

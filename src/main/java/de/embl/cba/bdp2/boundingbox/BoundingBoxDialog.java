@@ -29,7 +29,6 @@ public class BoundingBoxDialog
         this.bdv = bdv;
     }
 
-
     public void show(RandomAccessibleInterval rai, double[] voxelSize) {
         final int[] min, max;
         min = new int[4];
@@ -67,6 +66,7 @@ public class BoundingBoxDialog
 
         final AffineTransform3D boxTransform = new AffineTransform3D();
 
+        // TODO: Sometimes get stuck here
         final TransformedRealBoxSelectionDialog.Result result = BdvFunctions.selectRealBox(
                 bdv,
                 boxTransform,

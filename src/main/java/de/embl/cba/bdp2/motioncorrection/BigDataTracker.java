@@ -37,9 +37,9 @@ public class BigDataTracker {
         kickOffThreadPack(Runtime.getRuntime().availableProcessors()*2); //TODO: decide if this n threads is ok --ashis
     }
 
-    public void kickOffThreadPack(int nIOthreads){
+    public void kickOffThreadPack(int numThreads){
         if(null == BigDataProcessor.trackerThreadPool ||  BigDataProcessor.trackerThreadPool.isTerminated()){
-            BigDataProcessor.trackerThreadPool = Executors.newFixedThreadPool(nIOthreads);
+            BigDataProcessor.trackerThreadPool = Executors.newFixedThreadPool(numThreads);
         }
     }
 

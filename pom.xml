@@ -10,7 +10,7 @@
 
 	<groupId>de.embl.cba</groupId>
 	<artifactId>fiji-plugin-bigDataProcessor2</artifactId>
-	<version>0.2.02</version>
+	<version>0.2.03</version>
 
 	<name>Fiji Plugin BigDataProcessor2</name>
 	<description>TODO</description>
