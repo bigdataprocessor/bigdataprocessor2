@@ -33,7 +33,7 @@ public class ObjectTracker<T extends RealType<T>> {
     private final int width;
     private final int height;
     private final int depth;
-    private final int nChannels;
+    private final int channel;
     private final int timeFrames;
     private final int trackId;
     private int gateIntensityMin;
@@ -47,7 +47,7 @@ public class ObjectTracker<T extends RealType<T>> {
         this.width = (int) trackingSettings.imageRAI.dimension( DimensionOrder.X );
         this.height = (int) trackingSettings.imageRAI.dimension( DimensionOrder.Y );
         this.depth = (int) trackingSettings.imageRAI.dimension( DimensionOrder.Z );
-        this.nChannels = (int) trackingSettings.imageRAI.dimension( DimensionOrder.C );
+        this.channel = trackingSettings.channel;
         this.timeFrames =  trackingSettings.nt ==-1? (int)trackingSettings.imageRAI.dimension( DimensionOrder.T ) : trackingSettings.nt+ trackingSettings.tStart;
         this.trackId = 0;
     }
@@ -112,12 +112,12 @@ public class ObjectTracker<T extends RealType<T>> {
             long[] range = {(long) pMin.getX(),
                     (long) pMin.getY(),
                     (long) pMin.getZ(),
-                    0,
+                    channel,
                     tStart,
                     (long) pMax.getX(),
                     (long) pMax.getY(),
                     (long) pMax.getZ(),
-                    nChannels-1,
+                    channel,
                     timeFrames-1};//XYZCT
             FinalInterval trackedInterval = Intervals.createMinMax(range);
             RandomAccessibleInterval rai = Views.interval( (RandomAccessible) Views.extendZero(trackingSettings.imageRAI) , trackedInterval);
@@ -171,12 +171,10 @@ public class ObjectTracker<T extends RealType<T>> {
             if (this.interruptTrackingThreads) {
                 return new Point3D(0, 0, 0);
             }
-            for (int c = 0; c < nChannels; c++) {
-                randomAccess.setPosition(c, DimensionOrder.C );
-                Future<double[]> future = BigDataProcessor.trackerThreadPool.submit(new ComputeCenterOfMassPerSliceParallel(randomAccess, z,
+            randomAccess.setPosition(channel, DimensionOrder.C );
+            Future<double[]> future = BigDataProcessor.trackerThreadPool.submit(new ComputeCenterOfMassPerSliceParallel(randomAccess, z,
                         xmin, xmax, ymin, ymax, gateIntensity));
-                futures.add(future);
-            }
+            futures.add(future);
         }
         for (Future<double[]> future : futures) {
             try {

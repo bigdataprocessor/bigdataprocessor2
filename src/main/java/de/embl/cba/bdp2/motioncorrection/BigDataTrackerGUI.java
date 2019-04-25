@@ -19,6 +19,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.stream.LongStream;
 
 public class BigDataTrackerGUI extends JDialog implements ActionListener, FocusListener
 {
@@ -56,24 +57,26 @@ public class BigDataTrackerGUI extends JDialog implements ActionListener, FocusL
 
     String[] comboNames = {
             //"Enhance image features",
-            "Tracking method"
+            "Tracking method",
+            "Select Channel to track"
     };
 
-    String[][] comboChoices = new String[1][];
-
+    String[][] comboChoices = new String[comboNames.length][];
+    String[] channelChoices;
     JTextField[] textFields = new JTextField[texts.length];
 
     JLabel[] labels = new JLabel[texts.length];
-
-    int previouslySelectedZ = -1;
     private RandomAccessibleInterval image;
     public final ImageViewer imageViewer;
     public BigDataTrackerGUI( ImageViewer handle )
     {
         this.imageViewer= handle;
         this.image = imageViewer.getRai();
-        //
-
+        long nChannels = this.image.dimension(DimensionOrder.C);
+        channelChoices = new String[(int)nChannels];
+        LongStream.range(0, nChannels).forEach( //Dynamically filling the array.
+                n -> channelChoices[(int)n]=Long.toString(n)
+        );
         String[] imageFilters = new String[ Utils.ImageFilterTypes.values().length];
         for ( int i = 0; i < imageFilters.length; i++ ){
             imageFilters[i] = Utils.ImageFilterTypes.values()[i].toString();
@@ -81,10 +84,11 @@ public class BigDataTrackerGUI extends JDialog implements ActionListener, FocusL
         //comboChoices[0] = imageFilters;
         comboChoices[0] = new String[]{TrackingSettings.CENTER_OF_MASS,
                 TrackingSettings.CROSS_CORRELATION};
+        comboChoices[1] = channelChoices;
 
         trackingSettings.trackingMethod = TrackingSettings.CENTER_OF_MASS;
         trackingSettings.objectSize = new Point3D( 200, 200, 30);
-        trackingSettings.maxDisplacement = maxDisplacement;//new Point3D( 15, 15, 1);
+        trackingSettings.maxDisplacement = maxDisplacement;
         trackingSettings.subSamplingXYZ = new Point3D( 3, 3, 1);
         trackingSettings.subSamplingT = 1;
         trackingSettings.intensityGate = new int[]{-1,-1};
@@ -229,6 +233,13 @@ public class BigDataTrackerGUI extends JDialog implements ActionListener, FocusL
         panels.get(iPanel).add(comboLabels[iComboBox]);
         panels.get(iPanel).add(comboBoxes[iComboBox++]);
         c.add(panels.get(iPanel++));
+
+        // Select Channel
+        panels.add(new JPanel(new FlowLayout(FlowLayout.RIGHT)));
+        panels.get(iPanel).add(comboLabels[iComboBox]);
+        panels.get(iPanel).add(comboBoxes[iComboBox++]);
+        c.add(panels.get(iPanel++));
+
         // ObjectTracker button
         panels.add(new JPanel(new FlowLayout(FlowLayout.CENTER)));
         //buttons[1].setEnabled(false);
@@ -509,6 +520,12 @@ public class BigDataTrackerGUI extends JDialog implements ActionListener, FocusL
             trackingSettings.trackingMethod = (String)cb.getSelectedItem();
             System.out.println(trackingSettings.trackingMethod);
         }
+       else if ( e.getActionCommand().equals("Select Channel to track") )
+       {    // ObjectTracker method
+           JComboBox cb = (JComboBox)e.getSource();
+           trackingSettings.channel = Integer.parseInt((String)cb.getSelectedItem());
+           System.out.println("channel selected "+trackingSettings.channel);
+       }
 
 
     }

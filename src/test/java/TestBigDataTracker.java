@@ -14,8 +14,8 @@ public class TestBigDataTracker {
 
     public static void main(String[] args) {
 
-        String imageDirectory = "src/test/resources/tiff-nc2-nt3-tracking/ch0";
-        final FileInfoSource fileInfoSource = new FileInfoSource(imageDirectory, FileInfoConstants.SINGLE_CHANNEL_TIMELAPSE,
+        String imageDirectory = "src/test/resources/tiff-nc2-nt3-tracking/";
+        final FileInfoSource fileInfoSource = new FileInfoSource(imageDirectory, FileInfoConstants.LOAD_CHANNELS_FROM_FOLDERS,
                 ".*", "");
         CachedCellImg cachedCellImg = CachedCellImageCreator.create(fileInfoSource, null);
         ImageViewer imageViewer = new BdvImageViewer<UnsignedShortType>(
@@ -24,7 +24,6 @@ public class TestBigDataTracker {
                 new double[]{1.0, 1.0, 1.0},
                 "pixel");
         imageViewer.show();
-        imageViewer.setDisplayRange(0, 800, 0);
 
         BigDataTracker bdt = new BigDataTracker();
         TrackingSettings trackingSettings = getTrackingSettingWithDummyValues(imageViewer);
@@ -51,6 +50,7 @@ public class TestBigDataTracker {
         trackingSettings.intensityGate = new int[]{75, -1};
         trackingSettings.imageFeatureEnhancement = Utils.ImageFilterTypes.NONE.toString();
         trackingSettings.nt = -1;
+        trackingSettings.channel=0;
         return trackingSettings;
     }
 }
