@@ -1,7 +1,6 @@
 package de.embl.cba.bdp2.motioncorrection;
 
 import de.embl.cba.bdp2.ui.BigDataProcessor;
-import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
@@ -42,8 +41,8 @@ public class BigDataTrackerCommand extends DynamicCommand implements Interactive
     @Parameter(label = "Intensity Gating [min,max]")
     private String gate = "-1,-1"; //default value
 
-    @Parameter(label = "Tracking Method", choices = {FileInfoConstants.CENTER_OF_MASS, FileInfoConstants.CROSS_CORRELATION})
-    String trackMethod = FileInfoConstants.CENTER_OF_MASS; //default value
+    @Parameter(label = "Tracking Method", choices = {TrackingSettings.CENTER_OF_MASS, TrackingSettings.CROSS_CORRELATION})
+    String trackMethod = TrackingSettings.CENTER_OF_MASS; //default value
 
     @Parameter(label = "Track Selected Object", callback = "doTracking")
     private Button track;

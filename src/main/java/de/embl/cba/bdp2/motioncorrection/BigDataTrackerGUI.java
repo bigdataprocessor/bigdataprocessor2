@@ -1,7 +1,6 @@
 package de.embl.cba.bdp2.motioncorrection;
 
 import de.embl.cba.bdp2.ui.BigDataProcessor;
-import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.ImageViewer;
@@ -80,10 +79,10 @@ public class BigDataTrackerGUI extends JDialog implements ActionListener, FocusL
             imageFilters[i] = Utils.ImageFilterTypes.values()[i].toString();
         }
         //comboChoices[0] = imageFilters;
-        comboChoices[0] = new String[]{FileInfoConstants.CENTER_OF_MASS,
-                FileInfoConstants.CROSS_CORRELATION};
+        comboChoices[0] = new String[]{TrackingSettings.CENTER_OF_MASS,
+                TrackingSettings.CROSS_CORRELATION};
 
-        trackingSettings.trackingMethod = FileInfoConstants.CENTER_OF_MASS;
+        trackingSettings.trackingMethod = TrackingSettings.CENTER_OF_MASS;
         trackingSettings.objectSize = new Point3D( 200, 200, 30);
         trackingSettings.maxDisplacement = maxDisplacement;//new Point3D( 15, 15, 1);
         trackingSettings.subSamplingXYZ = new Point3D( 3, 3, 1);

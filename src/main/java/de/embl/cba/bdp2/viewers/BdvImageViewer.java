@@ -307,8 +307,7 @@ public class BdvImageViewer<T extends RealType<T> & NativeType<T>> implements Im
 
         if ( transform3D != null ) setViewerTransform( transform3D );
         setColors();
-        //addGrayValueOverlay();
-
+        addGrayValueOverlay();
         this.imageName = imageName;
         this.calibrationUnit = calibrationUnit;
         this.rai = rai;

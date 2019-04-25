@@ -1,7 +1,7 @@
 package de.embl.cba.bdp2.motioncorrection;
 
 import de.embl.cba.bdp2.ui.BigDataProcessor;
-import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
+
 import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
@@ -55,9 +55,9 @@ public class ObjectTracker<T extends RealType<T>> {
     public Track getTrackingPoints() {
         final String centeringMethod = trackingSettings.trackingMethod;
         logger.info(centeringMethod);
-        if(FileInfoConstants.CENTER_OF_MASS.equalsIgnoreCase(centeringMethod)){
+        if(TrackingSettings.CENTER_OF_MASS.equalsIgnoreCase(centeringMethod)){
                 return doCenterOfMassTracking();
-        }else if(FileInfoConstants.CROSS_CORRELATION.equalsIgnoreCase(centeringMethod)){
+        }else if(TrackingSettings.CROSS_CORRELATION.equalsIgnoreCase(centeringMethod)){
                 return doPhaseCorrelation();
         }else{
             return null;
@@ -69,7 +69,6 @@ public class ObjectTracker<T extends RealType<T>> {
         RandomAccess<T> randomAccess = trackingSettings.imageRAI.randomAccess();
         int tStart = trackingSettings.tStart;
         Point3D pCentroid;
-        Point3D[] pMinMax = new Point3D[2];
         Track trackingResults = new Track(this.trackingSettings, trackId);
         boolean gateIntensity = isIntensityGated(trackingSettings.intensityGate);
         double trackingFactor = trackingSettings.trackingFactor;
@@ -94,9 +93,7 @@ public class ObjectTracker<T extends RealType<T>> {
                 pMin = pCentroid.subtract(boxDim.multiply(trackingFraction/2));
                 pMax = pCentroid.add(boxDim.multiply(trackingFraction/2));
             }
-            pMinMax[0] = pMin;
-            pMinMax[1] = pMax;
-            trackingResults.addLocation(t, pMinMax);
+            trackingResults.addLocation(t, new Point3D[]{pMin,pMax});
         }
         logger.info("Time elapsed " +(System.currentTimeMillis() - startTime));
         return trackingResults;
@@ -107,7 +104,6 @@ public class ObjectTracker<T extends RealType<T>> {
         Track trackingResults = new Track(this.trackingSettings, trackId);
         boolean gateIntensity = isIntensityGated(trackingSettings.intensityGate);
         Point3D pShift;
-        Point3D[] pMinMax=new Point3D[2];
         int tStart = trackingSettings.tStart;
         long startTime = System.currentTimeMillis();
         trackingResults.addLocation(tStart, new Point3D[]{pMin,pMax});//For the first time stamp.
@@ -124,9 +120,9 @@ public class ObjectTracker<T extends RealType<T>> {
                     nChannels-1,
                     timeFrames-1};//XYZCT
             FinalInterval trackedInterval = Intervals.createMinMax(range);
-            RandomAccessibleInterval RoI = Views.interval( (RandomAccessible) Views.extendZero(trackingSettings.imageRAI) , trackedInterval);
-            RandomAccessibleInterval<T> currentFrame = Views.hyperSlice(RoI,4,t);
-            RandomAccessibleInterval<T> nextFrame = Views.hyperSlice(RoI,4,t+1);
+            RandomAccessibleInterval rai = Views.interval( (RandomAccessible) Views.extendZero(trackingSettings.imageRAI) , trackedInterval);
+            RandomAccessibleInterval<T> currentFrame = Views.hyperSlice(rai,4,t);
+            RandomAccessibleInterval<T> nextFrame = Views.hyperSlice(rai,4,t+1);
             //Intensity gating
             if(gateIntensity) {
                 Future future1 = BigDataProcessor.trackerThreadPool.submit(() -> doIntensityGating(Utils.getCellImgFromInterval(currentFrame)));

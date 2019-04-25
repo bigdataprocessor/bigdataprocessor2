@@ -27,8 +27,6 @@ public class FileInfoConstants {
     public static final String IMAGE_NAME = "image";
     public static final String BB_CROP_BUTTON_LABEL= "Crop";
     public static final String BB_TRACK_BUTTON_LABEL= "Select";
-    public static final String CENTER_OF_MASS = "Center of Mass";
-    public static final String CROSS_CORRELATION = "Cross Correlation";
     public static final String[] BOUNDING_BOX_AXES_3D ={"x","y","z"};
     public static final String[] BOUNDING_BOX_AXES_4D ={"x","y","z","t"};
     public static final long HDF5_BLOCK_SIZE_2D = 128;
