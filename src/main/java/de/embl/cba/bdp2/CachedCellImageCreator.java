@@ -1,6 +1,6 @@
 package de.embl.cba.bdp2;
 
-import de.embl.cba.bdp2.fileinfosource.FileInfoSource;
+import de.embl.cba.bdp2.files.FileInfos;
 import net.imglib2.cache.img.CachedCellImg;
 import net.imglib2.cache.img.DiskCachedCellImgOptions.CacheType;
 import net.imglib2.cache.img.ReadOnlyCachedCellImgFactory;
@@ -12,10 +12,10 @@ import static net.imglib2.cache.img.ReadOnlyCachedCellImgOptions.options;
 
 public class CachedCellImageCreator {
 
-    public static CachedCellImg create( FileInfoSource fileInfoSource, ExecutorService executorService) {
+    public static CachedCellImg create( FileInfos fileInfos, ExecutorService executorService) {
         CachedCellImg cachedCellImg;
 
-        ImageLoader loader = new ImageLoader( fileInfoSource );
+        ImageLoader loader = new ImageLoader( fileInfos );
 
         final ReadOnlyCachedCellImgOptions options = options()
                 .cellDimensions(loader.getCellDims())
@@ -24,7 +24,7 @@ public class CachedCellImageCreator {
 
         cachedCellImg = new ReadOnlyCachedCellImgFactory().create(
                 loader.getDimensions(),
-                fileInfoSource.getType(),
+                fileInfos.getType(),
                 loader,
                 options);
 

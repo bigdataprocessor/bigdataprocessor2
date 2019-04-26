@@ -1,6 +1,6 @@
 package de.embl.cba.bdp2.ui;
 
-import de.embl.cba.bdp2.motioncorrection.BigDataTrackerGUI;
+import de.embl.cba.bdp2.tracking.BigDataTrackerGUI;
 import de.embl.cba.bdp2.process.BinnedView;
 import de.embl.cba.bdp2.process.ChromaticShiftCorrectionView;
 import de.embl.cba.bdp2.process.CroppedView;

@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.motioncorrection;
+package de.embl.cba.bdp2.tracking;
 
 import javafx.geometry.Point3D;
 import net.imglib2.RandomAccessibleInterval;

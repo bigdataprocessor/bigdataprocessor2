@@ -1,8 +1,8 @@
 package de.embl.cba.bdp2.ui;
 
 import de.embl.cba.bdp2.CachedCellImageCreator;
-import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
-import de.embl.cba.bdp2.fileinfosource.FileInfoSource;
+import de.embl.cba.bdp2.files.FileInfoConstants;
+import de.embl.cba.bdp2.files.FileInfos;
 import de.embl.cba.bdp2.saving.SaveCentral;
 import de.embl.cba.bdp2.saving.SavingSettings;
 import de.embl.cba.bdp2.utils.DimensionOrder;
@@ -43,7 +43,7 @@ import net.imglib2.interpolation.InterpolatorFactory;
 public class BigDataProcessor2
 {
 
-    public FileInfoSource fileInfoSource;
+    public FileInfos fileInfos;
     public static ExecutorService executorService;  //General thread pool
     public static ExecutorService trackerThreadPool; // Thread pool for tracking
     public int numThreads;
@@ -74,19 +74,19 @@ public class BigDataProcessor2
     {
         directory = Utils.fixDirectoryFormat( directory );
 
-        this.fileInfoSource =
-				new FileInfoSource( directory, loadingScheme, filterPattern, h5DataSetName );
+        this.fileInfos =
+				new FileInfos( directory, loadingScheme, filterPattern, h5DataSetName );
 
         if ( ! ensureCalibrationUI() ) return;
 
         CachedCellImg cachedCellImg =
-				CachedCellImageCreator.create( this.fileInfoSource, this.executorService);
+				CachedCellImageCreator.create( this.fileInfos, this.executorService);
 
         imageViewer.show(
         		cachedCellImg,
 				FileInfoConstants.IMAGE_NAME,
-				fileInfoSource.voxelSize,
-				fileInfoSource.unit,
+				fileInfos.voxelSize,
+				fileInfos.unit,
 				autoContrast );
 
         imageViewer.addMenus(new BdvMenus());
@@ -95,16 +95,16 @@ public class BigDataProcessor2
     private boolean ensureCalibrationUI()
     {
         final GenericDialog genericDialog = new GenericDialog( "Calibration" );
-        genericDialog.addStringField( "Unit", fileInfoSource.unit, 12 );
-        genericDialog.addNumericField( "Spacing X", fileInfoSource.voxelSize[ 0 ], 3 );
-        genericDialog.addNumericField( "Spacing Y", fileInfoSource.voxelSize[ 1 ], 3 );
-        genericDialog.addNumericField( "Spacing Z", fileInfoSource.voxelSize[ 2 ], 3 );
+        genericDialog.addStringField( "Unit", fileInfos.unit, 12 );
+        genericDialog.addNumericField( "Spacing X", fileInfos.voxelSize[ 0 ], 3 );
+        genericDialog.addNumericField( "Spacing Y", fileInfos.voxelSize[ 1 ], 3 );
+        genericDialog.addNumericField( "Spacing Z", fileInfos.voxelSize[ 2 ], 3 );
         genericDialog.showDialog();
         if ( genericDialog.wasCanceled() ) return false;
-        fileInfoSource.unit = genericDialog.getNextString();
-        fileInfoSource.voxelSize[ 0 ] = genericDialog.getNextNumber();
-        fileInfoSource.voxelSize[ 1 ] = genericDialog.getNextNumber();
-        fileInfoSource.voxelSize[ 2 ] = genericDialog.getNextNumber();
+        fileInfos.unit = genericDialog.getNextString();
+        fileInfos.voxelSize[ 0 ] = genericDialog.getNextNumber();
+        fileInfos.voxelSize[ 1 ] = genericDialog.getNextNumber();
+        fileInfos.voxelSize[ 2 ] = genericDialog.getNextNumber();
         return true;
     }
 

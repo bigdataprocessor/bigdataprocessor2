@@ -32,9 +32,9 @@
 package de.embl.cba.bdp2;
 
 
-import de.embl.cba.bdp2.fileinfosource.SerializableFileInfo;
+import de.embl.cba.bdp2.files.SerializableFileInfo;
 import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
-import de.embl.cba.bdp2.logging.Logger;
+
 import ij.IJ;
 import ij.io.FileInfo;
 import ij.io.RandomAccessStream;

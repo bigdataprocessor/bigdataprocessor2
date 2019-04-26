@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.fileinfosource;
+package de.embl.cba.bdp2.files;
 
 import de.embl.cba.bdp2.FastTiffDecoder;
 import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
@@ -9,10 +9,11 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class FileInfoSourceHelper {
+public class FileInfosHelper
+{
 
     public static boolean setFileSourceInfos(
-            FileInfoSource infoSource,
+            FileInfos infoSource,
             String directory,
             String namingPattern)
     { // previously, setMissingInfos
@@ -128,7 +129,7 @@ public class FileInfoSourceHelper {
     }
 
     public static void setImageDataInfoFromTiff(
-            FileInfoSource infoSource,
+            FileInfos infoSource,
             String directory,
             String fileName)
     {
@@ -168,7 +169,7 @@ public class FileInfoSourceHelper {
 
 
     public static boolean setFileSourceInfos(
-            FileInfoSource infoSource,
+            FileInfos infoSource,
             String directory,
             String namingScheme,
             String filterPattern) { //previously, setAllInfosByParsingFilesAndFolders
@@ -248,7 +249,7 @@ public class FileInfoSourceHelper {
                 dataDirectory = directory + infoSource.channelFolders[ 0 ];
             }
 
-            boolean success = FileInfoSourceLeicaHelper.initLeicaSinglePlaneTiffData( infoSource, dataDirectory, filterPattern, fileLists[ 0 ], t, z, nC, nZ);
+            boolean success = FileInfosLeicaHelper.initLeicaSinglePlaneTiffData( infoSource, dataDirectory, filterPattern, fileLists[ 0 ], t, z, nC, nZ);
             if ( ! success )
             {
                 return false;
@@ -348,7 +349,7 @@ public class FileInfoSourceHelper {
             }
             else if ( fileLists[0][0].endsWith(".h5") )
             {
-                FileInfoSourceHDF5Helper.setImageDataInfoFromH5(
+                FileInfosHDF5Helper.setImageDataInfoFromH5(
                         infoSource,
                         directory + infoSource.channelFolders[0],
                         fileLists[0][0]);

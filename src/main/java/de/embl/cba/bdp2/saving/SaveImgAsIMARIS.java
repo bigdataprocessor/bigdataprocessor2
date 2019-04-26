@@ -1,6 +1,6 @@
 package de.embl.cba.bdp2.saving;
 
-import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
+import de.embl.cba.bdp2.files.FileInfoConstants;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.imaris.H5DataCubeWriter;
 import de.embl.cba.imaris.ImarisDataSet;
@@ -78,7 +78,7 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
 //                image.dimension(FileInfoConstants.Z) *
 //                image.dimension(FileInfoConstants.C) *
 //                image.dimension(FileInfoConstants.T) *
-//                fileinfosource.bitDepth / 8;
+//                files.bitDepth / 8;
 //
 //        if (numBytesOfImage > 1.5 * freeMemoryInBytes) {
 //            // TODO: do something...

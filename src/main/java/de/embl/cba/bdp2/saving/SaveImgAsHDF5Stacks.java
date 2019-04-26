@@ -1,7 +1,7 @@
 package de.embl.cba.bdp2.saving;
 
 import ch.systemsx.cisd.hdf5.hdf5lib.HDF5Constants;
-import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
+import de.embl.cba.bdp2.files.FileInfoConstants;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import ij.ImagePlus;
@@ -112,7 +112,7 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
 //                image.dimension(FileInfoConstants.Z) *
 //                image.dimension(FileInfoConstants.C) *
 //                image.dimension(FileInfoConstants.T) *
-//                fileinfosource.bitDepth/8;
+//                files.bitDepth/8;
 //
 //        if (numBytesOfImage > 1.5 * freeMemoryInBytes) {
 //            // TODO: do something...

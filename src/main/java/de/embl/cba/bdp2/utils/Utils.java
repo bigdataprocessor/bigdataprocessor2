@@ -79,7 +79,7 @@ public class Utils {
 
 	public static ImagePlus getDataCube(ImagePlus image, int c, int t, int[] binning )
 	{
-        ImagePlus dataCube; //= getFullStackFromInfo(c,t,fileinfosource);
+        ImagePlus dataCube; //= getFullStackFromInfo(c,t,files);
 
 //        if( image.getStack() instanceof VirtualStackOfStacks )
 //        {

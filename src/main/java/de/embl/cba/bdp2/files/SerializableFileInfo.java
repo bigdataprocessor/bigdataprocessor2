@@ -28,7 +28,7 @@
  * #L%
  */
 
-package de.embl.cba.bdp2.fileinfosource;
+package de.embl.cba.bdp2.files;
 
 import ij.io.FileInfo;
 import javafx.geometry.Point3D;
@@ -100,15 +100,12 @@ public class SerializableFileInfo implements Cloneable, Serializable {
     public static final int TIFF = 2;
 
 
-    // todo: there is a lot of duplicated information that would only be needed once
-
-    //
-
+    // TODO: there is a lot of duplicated information that would only be needed once
     public SerializableFileInfo() {
 
     }
 
-    public SerializableFileInfo(FileInfo info ) {
+    public SerializableFileInfo( FileInfo info ) {
         this.fileFormat = info.fileFormat;
         this.fileName = info.fileName;
         this.directory = info.directory;
@@ -128,7 +125,7 @@ public class SerializableFileInfo implements Cloneable, Serializable {
         this.bytesPerPixel = info.getBytesPerPixel();
     }
 
-    public SerializableFileInfo(SerializableFileInfo info ) {
+    public SerializableFileInfo( SerializableFileInfo info ) {
         this.fileFormat = info.fileFormat;
         this.fileName = info.fileName;
         this.directory = info.directory;
@@ -168,54 +165,10 @@ public class SerializableFileInfo implements Cloneable, Serializable {
 
     }
 
-    public FileInfo getFileInfo() {
-        FileInfo fi = new FileInfo();
-        fi.fileName = this.fileName;
-        fi.fileFormat = this.fileFormat;
-        fi.fileType = this.fileType;
-        fi.directory = this.directory;
-        fi.url = this.url;
-        fi.width = this.width;
-        fi.height = this.height;
-        //fi.longOffset = this.longOffset;
-        fi.intelByteOrder = this.intelByteOrder;
-        fi.compression = this.compression;
-        //fi.stripOffsets = this.stripOffsets;
-        //fi.stripLengths = this.stripLengths;
-        fi.rowsPerStrip = this.rowsPerStrip;
-        fi.pixelWidth = this.pixelWidth;
-        fi.pixelHeight = this.pixelHeight;
-        fi.pixelDepth = this.pixelDepth;
-        fi.frameInterval = this.frameInterval;
-
-        return(fi);
-    }
 
     public synchronized Object clone() {
         try {return super.clone();}
         catch (CloneNotSupportedException e) {return null;}
     }
-
-    public void setCropOffset(Point3D p) {
-        pCropOffset[0] = (int) p.getX();
-        pCropOffset[1] = (int) p.getY();
-        pCropOffset[2] = (int) p.getZ();
-    }
-
-    public void setCropSize(Point3D p) {
-        pCropSize[0] = (int) p.getX();
-        pCropSize[1] = (int) p.getY();
-        pCropSize[2] = (int) p.getZ();
-    }
-
-    public Point3D getCropOffset() {
-        return(new Point3D(pCropOffset[0], pCropOffset[1], pCropOffset[2]));
-    }
-
-    public Point3D getCropSize() {
-        return(new Point3D(pCropSize[0], pCropSize[1], pCropSize[2]));
-    }
-
-
 
 }

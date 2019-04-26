@@ -2,8 +2,8 @@ import bdv.util.AxisOrder;
 import bdv.util.BdvFunctions;
 import bdv.util.BdvOptions;
 import de.embl.cba.bdp2.CachedCellImageCreator;
-import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
-import de.embl.cba.bdp2.fileinfosource.FileInfoSource;
+import de.embl.cba.bdp2.files.FileInfoConstants;
+import de.embl.cba.bdp2.files.FileInfos;
 import de.embl.cba.bdp2.viewers.BdvTransformEventHandler;
 import net.imglib2.img.Img;
 
@@ -15,12 +15,12 @@ public class TestOpenLeicaDLS
     public static void main(String[] args)
     {
         final String directory = "src\\test\\resources\\leicaDLS\\";
-        FileInfoSource fileInfoSource = new FileInfoSource(directory, FileInfoConstants.LEICA_SINGLE_TIFF,".*","");
-        System.out.println(fileInfoSource.nT);
-        System.out.println(fileInfoSource.nC);
-        System.out.println(fileInfoSource.nZ);
-        System.out.println("BitDepth "+fileInfoSource.bitDepth);
-        Img myImg = new CachedCellImageCreator().create(fileInfoSource,null);
+        FileInfos fileInfos = new FileInfos(directory, FileInfoConstants.LEICA_SINGLE_TIFF,".*","");
+        System.out.println( fileInfos.nT);
+        System.out.println( fileInfos.nC);
+        System.out.println( fileInfos.nZ);
+        System.out.println("BitDepth "+ fileInfos.bitDepth);
+        Img myImg = new CachedCellImageCreator().create( fileInfos,null);
 
 //        AffineTransform3D affineTransform3D = new AffineTransform3D(); // TODO: Play with it later
 //        affineTransform3D.set( 1.0, 0, 0);

@@ -1,6 +1,6 @@
 package de.embl.cba.bdp2.saving;
 
-import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
+import de.embl.cba.bdp2.files.FileInfoConstants;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.imaris.ImarisDataSet;

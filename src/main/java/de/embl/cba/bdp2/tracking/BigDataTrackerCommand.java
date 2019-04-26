@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.motioncorrection;
+package de.embl.cba.bdp2.tracking;
 
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.utils.DimensionOrder;

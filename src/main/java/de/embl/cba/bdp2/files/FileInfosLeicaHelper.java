@@ -1,8 +1,6 @@
-package de.embl.cba.bdp2.fileinfosource;
+package de.embl.cba.bdp2.files;
 
 import de.embl.cba.bdp2.utils.Utils;
-
-import ij.IJ;
 
 import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
 import java.util.ArrayList;
@@ -11,9 +9,10 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class FileInfoSourceLeicaHelper {
+public class FileInfosLeicaHelper
+{
 
-    public static boolean initLeicaSinglePlaneTiffData(FileInfoSource imageDataInfo, String directory, String filterPattern, String[] fileList, int t, int z, int nC, int nZ)
+    public static boolean initLeicaSinglePlaneTiffData( FileInfos imageDataInfo, String directory, String filterPattern, String[] fileList, int t, int z, int nC, int nZ)
     {
         int nT;
         int c;
@@ -229,7 +228,7 @@ public class FileInfoSourceLeicaHelper {
             }
         }
 
-        FileInfoSourceHelper.setImageDataInfoFromTiff(imageDataInfo, directory, imageDataInfo.ctzFileList[0][0][0]);
+        FileInfosHelper.setImageDataInfoFromTiff(imageDataInfo, directory, imageDataInfo.ctzFileList[0][0][0]);
         imageDataInfo.nZ = nZ;
         imageDataInfo.nC = nC;
         imageDataInfo.nT = nT;

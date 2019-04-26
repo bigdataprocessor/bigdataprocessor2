@@ -4,8 +4,8 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
-import de.embl.cba.bdp2.fileinfosource.FileInfoSource;
-import de.embl.cba.bdp2.fileinfosource.SerializableFileInfo;
+import de.embl.cba.bdp2.files.FileInfos;
+import de.embl.cba.bdp2.files.SerializableFileInfo;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import ij.ImagePlus;
 import javafx.geometry.Point3D;
@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import static de.embl.cba.bdp2.fileinfosource.FileInfoConstants.*;
+import static de.embl.cba.bdp2.files.FileInfoConstants.*;
 import static de.embl.cba.bdp2.utils.DimensionOrder.Z;
 
 
@@ -30,7 +30,7 @@ public class ImageLoader implements CellLoader {
     private int[] cellDims;
     private LoadingCache<List<Integer>, SerializableFileInfo[]> serializableFileInfoCache;
 
-    public ImageLoader( FileInfoSource infoSource ) {
+    public ImageLoader( FileInfos infoSource ) {
 
         // TODO: optimise based on input file format
         int cellDimX = infoSource.nX;

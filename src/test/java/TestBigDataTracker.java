@@ -1,8 +1,8 @@
 import de.embl.cba.bdp2.CachedCellImageCreator;
-import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
-import de.embl.cba.bdp2.fileinfosource.FileInfoSource;
-import de.embl.cba.bdp2.motioncorrection.BigDataTracker;
-import de.embl.cba.bdp2.motioncorrection.TrackingSettings;
+import de.embl.cba.bdp2.files.FileInfoConstants;
+import de.embl.cba.bdp2.files.FileInfos;
+import de.embl.cba.bdp2.tracking.BigDataTracker;
+import de.embl.cba.bdp2.tracking.TrackingSettings;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import de.embl.cba.bdp2.viewers.ImageViewer;
@@ -15,9 +15,9 @@ public class TestBigDataTracker {
     public static void main(String[] args) {
 
         String imageDirectory = "src/test/resources/tiff-nc2-nt3-tracking/";
-        final FileInfoSource fileInfoSource = new FileInfoSource(imageDirectory, FileInfoConstants.LOAD_CHANNELS_FROM_FOLDERS,
+        final FileInfos fileInfos = new FileInfos(imageDirectory, FileInfoConstants.LOAD_CHANNELS_FROM_FOLDERS,
                 ".*", "");
-        CachedCellImg cachedCellImg = CachedCellImageCreator.create(fileInfoSource, null);
+        CachedCellImg cachedCellImg = CachedCellImageCreator.create( fileInfos, null);
         ImageViewer imageViewer = new BdvImageViewer<UnsignedShortType>(
                 cachedCellImg,
                 "input",

@@ -58,7 +58,7 @@ public class SaveImgAsTIFFStacks implements Runnable {
 //                    image.dimension(FileInfoConstants.Z) *
 //                    image.dimension(FileInfoConstants.C) *
 //                    image.dimension(FileInfoConstants.T) *
-//                    fileinfosource.bitDepth / 8;
+//                    files.bitDepth / 8;
 //
 //            if (numBytesOfImage > 1.5 * freeMemoryInBytes) {
 //                // TODO: do something...

@@ -11,7 +11,7 @@ import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.util.Intervals;
 import bdv.tools.boundingbox.TransformedRealBoxSelectionDialog;
 
-import static de.embl.cba.bdp2.fileinfosource.FileInfoConstants.*;
+import static de.embl.cba.bdp2.files.FileInfoConstants.*;
 
 public class BoundingBoxDialog
 {

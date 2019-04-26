@@ -1,5 +1,5 @@
-import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
-import de.embl.cba.bdp2.fileinfosource.FileInfoSource;
+import de.embl.cba.bdp2.files.FileInfoConstants;
+import de.embl.cba.bdp2.files.FileInfos;
 import ij.IJ;
 import ij.ImageJ;
 import ij.io.FileInfo;
@@ -23,7 +23,7 @@ public class ImageCalibrationTiffReaderTest
 				file.toString(), "mri-stack.tif" );
 		final FileInfo[] tiffInfo = tiffDecoder.getTiffInfo();
 
-		final FileInfoSource fileInfoSource = new FileInfoSource(
+		final FileInfos fileInfos = new FileInfos(
 				file.toString(),
 				FileInfoConstants.SINGLE_CHANNEL_TIMELAPSE,
 				".*",

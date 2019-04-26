@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.fileinfosource;
+package de.embl.cba.bdp2.files;
 
 import de.embl.cba.imaris.ImarisUtils;
 import net.imagej.axis.Axes;

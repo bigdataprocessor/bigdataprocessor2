@@ -1,5 +1,4 @@
-package de.embl.cba.bdp2.fileinfosource;
-
+package de.embl.cba.bdp2.files;
 
 import ch.systemsx.cisd.hdf5.HDF5DataSetInformation;
 import ch.systemsx.cisd.hdf5.HDF5Factory;
@@ -16,7 +15,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
-public class FileInfoSource {
+public class FileInfos
+{
     private final SerializableFileInfo[][][] infos;
     private final long[] dimensions;
     public int bitDepth;
@@ -35,7 +35,7 @@ public class FileInfoSource {
     public double max_pixel_val;
     public double min_pixel_val;
 
-    public FileInfoSource(
+    public FileInfos(
             String directory,
             String loadingScheme,
             String filterPattern,
@@ -44,10 +44,10 @@ public class FileInfoSource {
         this.directory = directory;
 
         if ( loadingScheme.contains("<Z") ){// TODO: change below logic somehow (maybe via GUI?)
-            FileInfoSourceHelper.setFileSourceInfos(this, directory, loadingScheme );
+            FileInfosHelper.setFileSourceInfos(this, directory, loadingScheme );
         }else{
             this.h5DataSetName = h5DataSetName;
-            FileInfoSourceHelper.setFileSourceInfos(
+            FileInfosHelper.setFileSourceInfos(
                     this, directory, loadingScheme, filterPattern );
         }
         infos = new SerializableFileInfo[nC][nT][nZ];
@@ -175,7 +175,7 @@ public class FileInfoSource {
                 IHDF5Reader reader = HDF5Factory.openForReading(directory + channelFolders[c] + "/" + ctzFileList[c][t][0]);
                 HDF5DataSetInformation dsInfo = reader.getDataSetInformation( h5DataSetName );
                 //String dsTypeString = OpenerExtension.hdf5InfoToString(dsInfo);
-                String dsTypeString = FileInfoSourceHDF5Helper.dsInfoToTypeString(dsInfo); //TODO: Check if OpenerExtension.hdf5InfoToString can be made public and called.
+                String dsTypeString = FileInfosHDF5Helper.dsInfoToTypeString(dsInfo); //TODO: Check if OpenerExtension.hdf5InfoToString can be made public and called.
 
                 if (dsTypeString.equals("int16") || dsTypeString.equals("uint16")){
                     bytesPerPixel = 2;

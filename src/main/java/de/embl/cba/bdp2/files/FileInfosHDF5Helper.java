@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.fileinfosource;
+package de.embl.cba.bdp2.files;
 
 import ch.systemsx.cisd.hdf5.HDF5DataSetInformation;
 import ch.systemsx.cisd.hdf5.HDF5DataTypeInformation;
@@ -9,11 +9,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class FileInfoSourceHDF5Helper {
-
+public class FileInfosHDF5Helper
+{
 
     public static void setImageDataInfoFromH5(
-            FileInfoSource imageDataInfo,
+            FileInfos imageDataInfo,
             String directory,
             String fileName) {
 
