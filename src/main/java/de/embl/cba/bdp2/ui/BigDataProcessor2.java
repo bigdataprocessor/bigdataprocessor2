@@ -40,7 +40,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import net.imglib2.interpolation.InterpolatorFactory;
 
-public class BigDataProcessor {
+public class BigDataProcessor2
+{
 
     public FileInfoSource fileInfoSource;
     public static ExecutorService executorService;  //General thread pool
@@ -51,7 +52,7 @@ public class BigDataProcessor {
     public static Map<Integer, Integer> progressTracker = new ConcurrentHashMap<>();
 
 
-    public BigDataProcessor() {
+    public BigDataProcessor2() {
         //TODO: have separate shutdown for the executorService. It will not shutdown when ui exeService is shut. --ashis (DONE but needs testing)
         //Ref: https://stackoverflow.com/questions/23684189/java-how-to-make-an-executorservice-running-inside-another-executorservice-not
         kickOffThreadPack( Runtime.getRuntime().availableProcessors() * 2 );
@@ -121,7 +122,7 @@ public class BigDataProcessor {
     }
 
     public static void stopSave(Integer saveId) {
-        AtomicBoolean stop = BigDataProcessor.saveTracker.get(saveId);
+        AtomicBoolean stop = BigDataProcessor2.saveTracker.get(saveId);
         stop.set(true);
     }
 

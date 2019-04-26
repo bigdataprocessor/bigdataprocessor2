@@ -3,7 +3,7 @@ package de.embl.cba.bdp2;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import de.embl.cba.bdp2.ui.BigDataProcessor;
+import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.fileinfosource.FileInfoSource;
 import de.embl.cba.bdp2.fileinfosource.SerializableFileInfo;
 import de.embl.cba.bdp2.utils.DimensionOrder;
@@ -63,7 +63,7 @@ public class ImageLoader implements CellLoader {
         po = getOffset( min[ DimensionOrder.X ], min[ DimensionOrder.Y ], z );
         ps = getSize( min, max );
         //TODO: get rid of ImagePlus
-        ImagePlus imagePlus = new OpenerExtension().readDataCube(directory, infos_c_t, 1, po, ps, BigDataProcessor.executorService);
+        ImagePlus imagePlus = new OpenerExtension().readDataCube(directory, infos_c_t, 1, po, ps, BigDataProcessor2.executorService);
         return imagePlus;
     }
 

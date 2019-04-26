@@ -1,5 +1,5 @@
 import de.embl.cba.bdp2.CachedCellImageCreator;
-import de.embl.cba.bdp2.ui.BigDataProcessor;
+import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
 import de.embl.cba.bdp2.fileinfosource.FileInfoSource;
 import de.embl.cba.bdp2.saving.SavingSettings;
@@ -34,7 +34,7 @@ public class TestTHdf5StackSaving
         defaults.nThreads = 3;
         defaults.voxelSize =imageViewer.getVoxelSize();
         defaults.unit = imageViewer.getCalibrationUnit();
-        new BigDataProcessor().saveImage( defaults, cachedCellImg );
+        new BigDataProcessor2().saveImage( defaults, cachedCellImg );
 
     }
 

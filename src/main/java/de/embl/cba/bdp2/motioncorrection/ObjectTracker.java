@@ -1,6 +1,6 @@
 package de.embl.cba.bdp2.motioncorrection;
 
-import de.embl.cba.bdp2.ui.BigDataProcessor;
+import de.embl.cba.bdp2.ui.BigDataProcessor2;
 
 import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
 import de.embl.cba.bdp2.utils.DimensionOrder;
@@ -125,8 +125,8 @@ public class ObjectTracker<T extends RealType<T>> {
             RandomAccessibleInterval<T> nextFrame = Views.hyperSlice(rai,4,t+1);
             //Intensity gating
             if(gateIntensity) {
-                Future future1 = BigDataProcessor.trackerThreadPool.submit(() -> doIntensityGating(Utils.getCellImgFromInterval(currentFrame)));
-                Future future2 = BigDataProcessor.trackerThreadPool.submit(() -> doIntensityGating(Utils.getCellImgFromInterval(nextFrame)));
+                Future future1 = BigDataProcessor2.trackerThreadPool.submit(() -> doIntensityGating(Utils.getCellImgFromInterval(currentFrame)));
+                Future future2 = BigDataProcessor2.trackerThreadPool.submit(() -> doIntensityGating(Utils.getCellImgFromInterval(nextFrame)));
                 try {
                     future1.get();
                     future2.get();
@@ -137,12 +137,12 @@ public class ObjectTracker<T extends RealType<T>> {
                 }
             }
             RandomAccessibleInterval<FloatType> pcm = PhaseCorrelation2.calculatePCM(Views.zeroMin(currentFrame), Views.zeroMin(nextFrame), new CellImgFactory(new FloatType()), new FloatType(),
-                    new CellImgFactory(new ComplexFloatType()), new ComplexFloatType(), BigDataProcessor.trackerThreadPool);
+                    new CellImgFactory(new ComplexFloatType()), new ComplexFloatType(), BigDataProcessor2.trackerThreadPool);
             if (this.interruptTrackingThreads) {
                 break;
             }
             PhaseCorrelationPeak2 shiftPeak = PhaseCorrelation2.getShift(pcm, Views.zeroMin(currentFrame), Views.zeroMin(nextFrame),
-                    2, 0, true, false, BigDataProcessor.trackerThreadPool);
+                    2, 0, true, false, BigDataProcessor2.trackerThreadPool);
             double[] found = new double[currentFrame.numDimensions()];
             shiftPeak.getSubpixelShift().localize(found);
             //System.out.println(Util.printCoordinates(found));
@@ -172,7 +172,7 @@ public class ObjectTracker<T extends RealType<T>> {
                 return new Point3D(0, 0, 0);
             }
             randomAccess.setPosition(channel, DimensionOrder.C );
-            Future<double[]> future = BigDataProcessor.trackerThreadPool.submit(new ComputeCenterOfMassPerSliceParallel(randomAccess, z,
+            Future<double[]> future = BigDataProcessor2.trackerThreadPool.submit(new ComputeCenterOfMassPerSliceParallel(randomAccess, z,
                         xmin, xmax, ymin, ymax, gateIntensity));
             futures.add(future);
         }

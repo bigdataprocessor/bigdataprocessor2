@@ -1,15 +1,3 @@
-import de.embl.cba.bdp2.CachedCellImageCreator;
-import de.embl.cba.bdp2.fileinfosource.FileInfoSource;
-import de.embl.cba.bdp2.ui.BigDataProcessor;
-import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
-import de.embl.cba.bdp2.saving.SavingSettings;
-import de.embl.cba.bdp2.viewers.BdvImageViewer;
-import de.embl.cba.bdp2.viewers.ImageViewer;
-import de.embl.cba.bdp2.viewers.ViewerUtils;
-import ij.ImageJ;
-import net.imglib2.cache.img.CachedCellImg;
-import net.imglib2.type.numeric.integer.UnsignedShortType;
-
 public class TestIJ1ViewerSaving
 {
 	//TODO: reinstate this when IJ1Viewer is active.

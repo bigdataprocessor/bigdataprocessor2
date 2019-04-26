@@ -2,7 +2,7 @@ package de.embl.cba.bdp2.motioncorrection;
 
 import bdv.util.*;
 import de.embl.cba.bdp2.ui.BdvMenus;
-import de.embl.cba.bdp2.ui.BigDataProcessor;
+import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.ui.DisplaySettings;
 import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
 import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
@@ -37,14 +37,14 @@ public class BigDataTracker {
     }
 
     public void kickOffThreadPack(int numThreads){
-        if(null == BigDataProcessor.trackerThreadPool
-                ||  BigDataProcessor.trackerThreadPool.isTerminated()){
-            BigDataProcessor.trackerThreadPool = Executors.newFixedThreadPool(numThreads);
+        if(null == BigDataProcessor2.trackerThreadPool
+                ||  BigDataProcessor2.trackerThreadPool.isTerminated()){
+            BigDataProcessor2.trackerThreadPool = Executors.newFixedThreadPool(numThreads);
         }
     }
 
     public void shutdownThreadPack(){
-        Utils.shutdownThreadPack(BigDataProcessor.trackerThreadPool,5);
+        Utils.shutdownThreadPack( BigDataProcessor2.trackerThreadPool,5);
     }
 
     public void trackObject(TrackingSettings trackingSettings, ImageViewer imageViewer)

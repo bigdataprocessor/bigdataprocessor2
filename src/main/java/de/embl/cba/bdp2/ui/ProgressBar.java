@@ -22,8 +22,8 @@ public class ProgressBar implements PropertyChangeListener {
             Integer currentSaveId = currentInstance.getSaveId();
             do {
                 setProgress(Math.min(progress, 100));
-                if(null != BigDataProcessor.progressTracker.get(currentSaveId)){
-                    progress = Math.min(BigDataProcessor.progressTracker.get(currentSaveId), 100);
+                if(null != BigDataProcessor2.progressTracker.get(currentSaveId)){
+                    progress = Math.min( BigDataProcessor2.progressTracker.get(currentSaveId), 100);
                 }
             } while (progress < 100);
             setProgress(0); //to make sure past value is not shown anymore for next save using the same window

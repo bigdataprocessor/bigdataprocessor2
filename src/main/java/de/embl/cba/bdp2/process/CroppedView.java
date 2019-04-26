@@ -3,7 +3,7 @@ package de.embl.cba.bdp2.process;
 import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
 import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
 import de.embl.cba.bdp2.ui.BdvMenus;
-import de.embl.cba.bdp2.ui.BigDataProcessor;
+import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.ImageViewer;
 import net.imglib2.FinalInterval;
@@ -19,7 +19,7 @@ public class CroppedView < T extends RealType< T > & NativeType< T > >
 		FinalInterval interval = imageViewer.get5DIntervalFromUser();
 
 		if (interval != null) {
-			RandomAccessibleInterval croppedRAI = BigDataProcessor.crop( imageViewer.getRai(), interval);
+			RandomAccessibleInterval croppedRAI = BigDataProcessor2.crop( imageViewer.getRai(), interval);
 			ImageViewer newImageViewer = imageViewer.newImageViewer();
 			newImageViewer.show(
 					croppedRAI,

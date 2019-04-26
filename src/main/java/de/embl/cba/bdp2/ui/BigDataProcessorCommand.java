@@ -89,7 +89,7 @@ public class BigDataProcessorCommand<T extends RealType<T> & NativeType<T>> impl
     @Parameter(label = "Auto Contrast")
     boolean autoContrast = true;
 
-    private static final BigDataProcessor BIG_DATA_CONVERTER = new BigDataProcessor();
+    private static final BigDataProcessor2 BIG_DATA_CONVERTER = new BigDataProcessor2();
     public static final Logger logger = new IJLazySwingLogger();
 
     public void run()

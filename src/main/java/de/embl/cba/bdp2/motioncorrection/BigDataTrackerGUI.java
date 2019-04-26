@@ -1,6 +1,6 @@
 package de.embl.cba.bdp2.motioncorrection;
 
-import de.embl.cba.bdp2.ui.BigDataProcessor;
+import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.ImageViewer;
@@ -327,7 +327,7 @@ public class BigDataTrackerGUI extends JDialog implements ActionListener, FocusL
 
        if (e.getActionCommand().equals("Select ROI")) {
             System.out.println(e.getActionCommand());
-           BigDataProcessor.trackerThreadPool.submit(()-> {
+           BigDataProcessor2.trackerThreadPool.submit(()-> {
                System.out.println(e.getActionCommand());
                FinalInterval interval = imageViewer.get5DIntervalFromUser();
                trackingSettings.pMin = new Point3D((int)interval.min( DimensionOrder.X ),
@@ -382,7 +382,7 @@ public class BigDataTrackerGUI extends JDialog implements ActionListener, FocusL
 
             // do it
             //
-           BigDataProcessor.trackerThreadPool.submit(()-> {
+           BigDataProcessor2.trackerThreadPool.submit(()-> {
                bigDataTracker.trackObject(trackingSettings,imageViewer);
            });
         }

@@ -1,6 +1,6 @@
 package de.embl.cba.bdp2.utils;
 
-import de.embl.cba.bdp2.ui.BigDataProcessor;
+import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
 import java.util.List;
 import java.util.concurrent.Future;
@@ -24,7 +24,7 @@ public class MonitorThreadPoolStatus {
                 if (f.isDone() ) i++;
             }
             logger.progress(message, null, start, i, futures.size());
-            BigDataProcessor.progressTracker.put(saveId,i*100/futures.size()); //Updating UI progress bar.
+            BigDataProcessor2.progressTracker.put(saveId,i*100/futures.size()); //Updating UI progress bar.
             try {
                 Thread.sleep(updateFrequencyMilliseconds);
             } catch(InterruptedException ex) {

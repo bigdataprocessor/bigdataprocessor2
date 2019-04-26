@@ -86,7 +86,7 @@ public class ObliqueMenuDialog extends JDialog implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         getShearingSettings(shearingSettings);
         shearingSettings.useObliqueAngle = true;
-        RandomAccessibleInterval sheared = BigDataProcessor.shearImage(originalRAI,shearingSettings);
+        RandomAccessibleInterval sheared = BigDataProcessor2.shearImage(originalRAI,shearingSettings);
         imageViewer.show(
                 sheared,
                 "Oblique View",

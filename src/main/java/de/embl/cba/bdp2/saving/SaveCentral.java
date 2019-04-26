@@ -2,7 +2,7 @@ package de.embl.cba.bdp2.saving;
 
 import de.embl.cba.bdp2.fileinfosource.FileInfoConstants;
 import de.embl.cba.bdp2.utils.DimensionOrder;
-import de.embl.cba.bdp2.ui.BigDataProcessor;
+import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.imaris.ImarisDataSet;
 import de.embl.cba.imaris.ImarisUtils;
 import de.embl.cba.imaris.ImarisWriter;
@@ -207,7 +207,7 @@ public class SaveCentral {
     }
 
     private static void updateTrackers(Integer saveId, AtomicBoolean stop) {
-        BigDataProcessor.saveTracker.put(saveId, stop);
-        BigDataProcessor.progressTracker.put(saveId, 0);
+        BigDataProcessor2.saveTracker.put(saveId, stop);
+        BigDataProcessor2.progressTracker.put(saveId, 0);
     }
 }

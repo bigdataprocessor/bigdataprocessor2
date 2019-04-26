@@ -3,9 +3,6 @@ package de.embl.cba.bdp2.motioncorrection;
 import javafx.geometry.Point3D;
 import net.imglib2.RandomAccessibleInterval;
 
-/**
- * Created by tischi on 14/04/17.
- */
 public class TrackingSettings {
 
     public static final String CENTER_OF_MASS = "Center of Mass";
@@ -27,7 +24,5 @@ public class TrackingSettings {
     public int viewFirstNProcessedRegions;
     public String imageFeatureEnhancement;
     public double[] voxelSize;
-
-
 
 }

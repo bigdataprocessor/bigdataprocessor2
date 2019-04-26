@@ -1,6 +1,6 @@
 package de.embl.cba.bdp2.motioncorrection;
 
-import de.embl.cba.bdp2.ui.BigDataProcessor;
+import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
@@ -94,7 +94,7 @@ public class BigDataTrackerCommand extends DynamicCommand implements Interactive
 
     private void selectROI() {
         System.out.println("select");
-        BigDataProcessor.trackerThreadPool.submit(() -> {
+        BigDataProcessor2.trackerThreadPool.submit(() -> {
             FinalInterval interval = imageViewer.get5DIntervalFromUser();
             trackingSettings.pMin = new Point3D((int) interval.min( DimensionOrder.X ),
                     (int) interval.min( DimensionOrder.Y ),
@@ -120,7 +120,7 @@ public class BigDataTrackerCommand extends DynamicCommand implements Interactive
         trackingSettings.trackingFactor = 1.0 + 2.0 * maxDisplacement.getX() / trackingSettings.objectSize.getX();
         trackingSettings.iterationsCenterOfMass =
                 (int) Math.ceil(Math.pow(trackingSettings.trackingFactor, 2));
-        BigDataProcessor.trackerThreadPool.submit(() -> {
+        BigDataProcessor2.trackerThreadPool.submit(() -> {
             bigDataTracker.trackObject(trackingSettings, imageViewer);
         });
     }
