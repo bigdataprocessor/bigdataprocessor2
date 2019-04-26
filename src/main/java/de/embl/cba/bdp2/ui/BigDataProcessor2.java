@@ -66,15 +66,16 @@ public class BigDataProcessor2
 
     public void openFromDirectory(
             String directory,
-            String namingScheme,
+            String loadingScheme,
             String filterPattern,
             String h5DataSetName,
             boolean autoContrast,
             ImageViewer imageViewer )
     {
-        directory = Utils.fixDirectoryFormat(directory);
+        directory = Utils.fixDirectoryFormat( directory );
+
         this.fileInfoSource =
-				new FileInfoSource( directory, namingScheme, filterPattern, h5DataSetName );
+				new FileInfoSource( directory, loadingScheme, filterPattern, h5DataSetName );
 
         if ( ! ensureCalibrationUI() ) return;
 

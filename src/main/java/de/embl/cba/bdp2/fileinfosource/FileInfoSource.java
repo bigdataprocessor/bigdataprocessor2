@@ -37,16 +37,18 @@ public class FileInfoSource {
 
     public FileInfoSource(
             String directory,
-            String namingScheme,
+            String loadingScheme,
             String filterPattern,
             String h5DataSetName){
+
         this.directory = directory;
-        if ( namingScheme.contains("<Z") ){// TODO: change below logic somehow (maybe via GUI?)
-            FileInfoSourceHelper.setFileSourceInfos(this, directory, namingScheme );
+
+        if ( loadingScheme.contains("<Z") ){// TODO: change below logic somehow (maybe via GUI?)
+            FileInfoSourceHelper.setFileSourceInfos(this, directory, loadingScheme );
         }else{
             this.h5DataSetName = h5DataSetName;
             FileInfoSourceHelper.setFileSourceInfos(
-                    this, directory, namingScheme, filterPattern );
+                    this, directory, loadingScheme, filterPattern );
         }
         infos = new SerializableFileInfo[nC][nT][nZ];
         dimensions = new long[ 5 ];
