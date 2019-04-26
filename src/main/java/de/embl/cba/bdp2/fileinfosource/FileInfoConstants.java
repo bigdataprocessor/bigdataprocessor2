@@ -6,10 +6,10 @@ import net.imagej.axis.AxisType;
 
 public class FileInfoConstants {
 
-    public static final String LOAD_CHANNELS_FROM_FOLDERS = "Channels from Sub-folders";
+    public static final String LOAD_CHANNELS_FROM_FOLDERS = "Channels from Subfolders";
     public static final String EM_TIFF_SLICES = "EM Tiff Slices";
     public static final String LEICA_SINGLE_TIFF = "Leica Single Tiff";
-    public static final String SINGLE_CHANNEL_TIMELAPSE = "Single Channel Time-lapse";
+    public static final String SINGLE_CHANNEL_TIMELAPSE = "Single Channel Movie";
 
     public static final String PATTERN_1= "<Z0000-0009>.tif"; // make pattern class
     public static final String PATTERN_2= ".*--C<c>--T<t>.tif";

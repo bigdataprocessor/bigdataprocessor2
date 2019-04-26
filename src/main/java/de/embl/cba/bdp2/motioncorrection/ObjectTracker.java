@@ -57,7 +57,7 @@ public class ObjectTracker<T extends RealType<T>> {
         logger.info(centeringMethod);
         if(TrackingSettings.CENTER_OF_MASS.equalsIgnoreCase(centeringMethod)){
                 return doCenterOfMassTracking();
-        }else if(TrackingSettings.CROSS_CORRELATION.equalsIgnoreCase(centeringMethod)){
+        }else if(TrackingSettings.CORRELATION.equalsIgnoreCase(centeringMethod)){
                 return doPhaseCorrelation();
         }else{
             return null;

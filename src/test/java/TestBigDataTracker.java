@@ -26,16 +26,16 @@ public class TestBigDataTracker {
         imageViewer.show();
 
         BigDataTracker bdt = new BigDataTracker();
-        TrackingSettings trackingSettings = getTrackingSettingWithDummyValues(imageViewer);
+        TrackingSettings trackingSettings = createTrackingSettings(imageViewer);
         //Test for CROSS_CORRELATION tracking
-        trackingSettings.trackingMethod = TrackingSettings.CROSS_CORRELATION;
+        trackingSettings.trackingMethod = TrackingSettings.CORRELATION;
         bdt.trackObject(trackingSettings, imageViewer);
         //Test for CENTER of MASS tracking
-        trackingSettings.trackingMethod = TrackingSettings.CENTER_OF_MASS;
-        bdt.trackObject(trackingSettings, imageViewer);
+//        trackingSettings.trackingMethod = TrackingSettings.CENTER_OF_MASS;
+//        bdt.trackObject(trackingSettings, imageViewer);
     }
 
-    private static TrackingSettings getTrackingSettingWithDummyValues(ImageViewer imageViewer) {
+    private static TrackingSettings createTrackingSettings( ImageViewer imageViewer) {
         Point3D maxDisplacement = new Point3D(20, 20, 1);
         TrackingSettings trackingSettings = new TrackingSettings();
         trackingSettings.imageRAI = imageViewer.getRai();

@@ -41,7 +41,7 @@ public class BigDataTrackerCommand extends DynamicCommand implements Interactive
     @Parameter(label = "Intensity Gating [min,max]")
     private String gate = "-1,-1"; //default value
 
-    @Parameter(label = "Tracking Method", choices = {TrackingSettings.CENTER_OF_MASS, TrackingSettings.CROSS_CORRELATION})
+    @Parameter(label = "Tracking Method", choices = {TrackingSettings.CENTER_OF_MASS, TrackingSettings.CORRELATION })
     String trackMethod = TrackingSettings.CENTER_OF_MASS; //default value
 
     @Parameter(label = "Track Selected Object", callback = "doTracking")

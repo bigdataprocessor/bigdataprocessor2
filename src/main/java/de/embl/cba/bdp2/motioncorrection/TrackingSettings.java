@@ -9,7 +9,7 @@ import net.imglib2.RandomAccessibleInterval;
 public class TrackingSettings {
 
     public static final String CENTER_OF_MASS = "Center of Mass";
-    public static final String CROSS_CORRELATION = "Cross Correlation";
+    public static final String CORRELATION = "Correlation";
     public RandomAccessibleInterval imageRAI;
     public String trackingMethod;
     public Point3D objectSize;

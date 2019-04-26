@@ -129,8 +129,6 @@ public class Utils {
 //    }
 
 	public enum FileType {
-        CENTER_OF_MASS("Center of Mass"),
-        CROSS_CORRELATION("Cross Correlation"),
         HDF5("Hdf5"),
         HDF5_IMARIS_BDV("Partitioned Imaris"),
         TIFF_STACKS("Tiff stacks"),
