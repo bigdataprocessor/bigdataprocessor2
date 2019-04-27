@@ -3,14 +3,14 @@ package de.embl.cba.bdp2.process;
 import bdv.tools.boundingbox.TransformedBox;
 import bdv.tools.boundingbox.TransformedBoxOverlay;
 import bdv.tools.brightness.SliderPanel;
-import bdv.util.BoundedValue;
+import bdv.tools.brightness.SliderPanelDouble;
+import bdv.util.BoundedValueDouble;
 import bdv.util.ModifiableRealInterval;
 import bdv.viewer.ViewerPanel;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.FinalRealInterval;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.RealInterval;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -34,8 +34,8 @@ public class SplitViewMerging < R extends RealType< R > & NativeType< R > >
 	public static final int Z = 2;
 
 	private final BdvImageViewer< R > viewer;
-	private Map< String, BoundedValue > boundedValues;
-	private ArrayList< SliderPanel > sliderPanels;
+	private Map< String, BoundedValueDouble > boundedValues;
+	private ArrayList< SliderPanelDouble > sliderPanels;
 	private SelectionUpdateListener updateListener;
 	private JPanel panel;
 	private ArrayList< RandomAccessibleInterval< R > > shiftedChannelRAIs;
@@ -52,28 +52,53 @@ public class SplitViewMerging < R extends RealType< R > & NativeType< R > >
 		//newImageViewer = createNewImageViewer( imageViewer );
 	}
 
-	private void showRegionSelectionDialog( ModifiableRealInterval modifiableRealInterval )
+	private void showRegionSelectionDialog( ModifiableRealInterval interval )
 	{
 		panel = new JPanel();
 		panel.setLayout( new BoxLayout( panel, BoxLayout.PAGE_AXIS ) );
 		sliderPanels = new ArrayList<>(  );
 		boundedValues = new HashMap<>(  );
 
-		updateListener = new SelectionUpdateListener( modifiableRealInterval );
+		updateListener = new SelectionUpdateListener( interval );
 
-		boundedValues.put( CX, new BoundedValue( 0, 1000, 500 ) );
+		boundedValues.put( CX, new BoundedValueDouble(
+				0.0,
+				1000.0,
+				getCenter( interval, X ) ) );
 		createPanel( CX , boundedValues.get( CX ) );
 
-		boundedValues.put( CY, new BoundedValue( 0, 1000, 500 ) );
+		boundedValues.put( CY,
+				new BoundedValueDouble(
+						0,
+						1000,
+						getCenter( interval, Y ) ) );
 		createPanel( CY , boundedValues.get( CY ) );
 
-		boundedValues.put( W, new BoundedValue( 0, 1000, 100 ) );
+		boundedValues.put( W,
+				new BoundedValueDouble(
+						0,
+						1000,
+						getSpan( interval, X ) ) );
 		createPanel( W , boundedValues.get( W ) );
 
-		boundedValues.put( H, new BoundedValue( 0, 1000, 100 ) );
+		boundedValues.put( H,
+				new BoundedValueDouble(
+						0,
+						1000,
+						getSpan( interval, Y ) ) );
 		createPanel( H , boundedValues.get( H ) );
 
 		showFrame( panel );
+	}
+
+	private double getCenter( ModifiableRealInterval interval, int d )
+	{
+		return ( interval.realMax( d ) - interval.realMin( d ) ) / 2 + interval.realMin( d );
+	}
+
+	private double getSpan( ModifiableRealInterval interval, int d )
+	{
+		return ( interval.realMax( d ) - interval.realMin( d ) );
 	}
 
 	private ModifiableRealInterval showRegionSelectionOverlay()
@@ -138,10 +163,11 @@ public class SplitViewMerging < R extends RealType< R > & NativeType< R > >
 		frame.setVisible( true );
 	}
 
-	private void createPanel( String name, BoundedValue boundedValue )
+	private void createPanel( String name, BoundedValueDouble boundedValue )
 	{
-		final SliderPanel sliderPanel =
-				new SliderPanel(
+
+		final SliderPanelDouble sliderPanel =
+				new SliderPanelDouble(
 						name,
 						boundedValue,
 						1 );
@@ -151,7 +177,7 @@ public class SplitViewMerging < R extends RealType< R > & NativeType< R > >
 		panel.add( sliderPanel );
 	}
 
-	class SelectionUpdateListener implements BoundedValue.UpdateListener
+	class SelectionUpdateListener implements BoundedValueDouble.UpdateListener
 	{
 		private final ModifiableRealInterval interval;
 
@@ -213,47 +239,32 @@ public class SplitViewMerging < R extends RealType< R > & NativeType< R > >
 
 		}
 
-		private boolean isTranslationsChanged( ArrayList< long[] > translations )
-		{
-			if ( previousTranslations == null )
-			{
-				previousTranslations = translations;
-				return true;
-			}
-			else
-			{
-				for ( int c = 0; c < numChannels; c++ )
-					for ( int d = 0; d < 3; d++ )
-						if ( translations.get( c )[ d ] != previousTranslations.get( c )[ d ] )
-						{
-							previousTranslations = translations;
-							return true;
-						}
-			}
+//		private boolean isTranslationsChanged( ArrayList< long[] > translations )
+//		{
+//			if ( previousTranslations == null )
+//			{
+//				previousTranslations = translations;
+//				return true;
+//			}
+//			else
+//			{
+//				for ( int c = 0; c < numChannels; c++ )
+//					for ( int d = 0; d < 3; d++ )
+//						if ( translations.get( c )[ d ] != previousTranslations.get( c )[ d ] )
+//						{
+//							previousTranslations = translations;
+//							return true;
+//						}
+//			}
+//
+//			previousTranslations = translations;
+//			return false;
+//		}
 
-			previousTranslations = translations;
-			return false;
-		}
-
-		private ArrayList< long[] > getTranslations()
-		{
-			final ArrayList< long[] > translations = new ArrayList<>();
-			int valueIndex = 0;
-			for ( int c = 0; c < numChannels; c++ )
-			{
-				long[] translation = new long[ 4 ];
-
-				for ( int d = 0; d < 3; d++ )
-					translation[ d ] = boundedValues.get( valueIndex++ ).getCurrentValue();
-
-				translations.add( translation );
-			}
-			return translations;
-		}
 
 		private void updateSliders()
 		{
-			for ( SliderPanel sliderPanel : sliderPanels )
+			for ( SliderPanelDouble sliderPanel : sliderPanels )
 					sliderPanel.update();
 		}
 	}
