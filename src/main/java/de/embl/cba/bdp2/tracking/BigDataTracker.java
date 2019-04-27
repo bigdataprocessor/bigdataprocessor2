@@ -66,8 +66,8 @@ public class BigDataTracker {
 
             if(newTrackedView instanceof BdvImageViewer) {
                 TrackedAreaBoxOverlay tabo = new TrackedAreaBoxOverlay(this.trackResults,
-                        ((BdvHandleFrame) ((BdvImageViewer) newTrackedView).getBdvSS().getBdvHandle()).getBigDataViewer().getViewer(),
-                        ((BdvHandleFrame) ((BdvImageViewer) newTrackedView).getBdvSS().getBdvHandle()).getBigDataViewer().getSetupAssignments(), 9991,
+                        ((BdvHandleFrame) ((BdvImageViewer) newTrackedView).getBdvStackSource().getBdvHandle()).getBigDataViewer().getViewer(),
+                        ((BdvHandleFrame) ((BdvImageViewer) newTrackedView).getBdvStackSource().getBdvHandle()).getBigDataViewer().getSetupAssignments(), 9991,
                         Intervals.createMinMax((long) minInit.getX(), (long) minInit.getY(), (long) minInit.getZ(), (long) maXinit.getX(), (long) maXinit.getY(), (long) maXinit.getZ()));
             }
         }

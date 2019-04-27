@@ -3,7 +3,7 @@ package de.embl.cba.bdp2.files;
 import ch.systemsx.cisd.hdf5.HDF5DataSetInformation;
 import ch.systemsx.cisd.hdf5.HDF5Factory;
 import ch.systemsx.cisd.hdf5.IHDF5Reader;
-import de.embl.cba.bdp2.FastTiffDecoder;
+import de.embl.cba.bdp2.loading.FastTiffDecoder;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import net.imglib2.type.NativeType;

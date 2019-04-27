@@ -9,7 +9,7 @@
 * GNU General Public License for more details.
 */
 
-package de.embl.cba.bdp2;
+package de.embl.cba.bdp2.loading;
 
 import ch.systemsx.cisd.base.mdarray.MDByteArray;
 import ch.systemsx.cisd.base.mdarray.MDShortArray;
@@ -48,7 +48,13 @@ public class OpenerExtension extends Opener {
         // TODO: implement :-)
     }
 */
-    public ImagePlus readDataCube(String directory, SerializableFileInfo[] info, int dz, Point3D po, Point3D ps, ExecutorService executorService)
+    public ImagePlus readDataCube(
+            String directory,
+            SerializableFileInfo[] info,
+            int dz,
+            Point3D po,
+            Point3D ps,
+            ExecutorService executorService )
     {
 
         // compute ranges to be loaded

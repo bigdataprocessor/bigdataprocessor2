@@ -1,5 +1,6 @@
 package de.embl.cba.bdp2.viewers;
 
+import de.embl.cba.bdp2.RaiPlus;
 import de.embl.cba.bdp2.ui.BdvMenus;
 import de.embl.cba.bdp2.ui.DisplaySettings;
 import net.imglib2.FinalInterval;
@@ -12,22 +13,13 @@ public interface ImageViewer < R extends RealType< R > & NativeType< R > >  {
 
     void show();
 
-    RandomAccessibleInterval< R > getRai();
+    void show(RaiPlus< R > raiPlus, boolean autoContrast);
 
-    double[] getVoxelSize();
-
-    String getImageName();
+    RaiPlus< R > getRaiPlus();
 
     ImageViewer newImageViewer();
 
     FinalInterval get5DIntervalFromUser();
-
-    void show(
-            RandomAccessibleInterval rai,
-            String name,
-            double[] voxelSize,
-            String calibrationUnit,
-            boolean autoContrast );
 
     void addMenus(BdvMenus menus);
 
@@ -46,8 +38,6 @@ public interface ImageViewer < R extends RealType< R > & NativeType< R > >  {
     void shiftImageToCenter(double[] centerCoordinates);
 
     void doAutoContrastPerChannel();
-
-    String getCalibrationUnit();
 
     AffineTransform3D getViewerTransform();
 

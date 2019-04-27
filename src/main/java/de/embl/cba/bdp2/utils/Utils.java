@@ -32,7 +32,6 @@ package de.embl.cba.bdp2.utils;
 
 import bdv.util.Bdv;
 import bdv.viewer.animate.SimilarityTransformAnimator;
-import de.embl.cba.bdp2.Region5D;
 import de.embl.cba.bdp2.ui.DisplaySettings;
 import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
 import ij.IJ;
@@ -411,51 +410,7 @@ public class Utils {
         imp.updateAndDraw();
     }
 
-    public static ImagePlus getDataCube(ImagePlus imp, Region5D region5D )
-    {
 
-        // TODO: out-of-bounds strategy?
-
-        Rectangle rect = new Rectangle(
-                (int)region5D.offset.getX(),
-                (int)region5D.offset.getY(),
-                (int)region5D.size.getX(),
-                (int)region5D.size.getY());
-
-        ImageStack stack = imp.getStack();
-        ImageStack stack2 = null;
-
-        int firstT = region5D.t + 1;
-        int lastT = region5D.t + 1;
-        int firstC = region5D.c + 1;
-        int lastC = region5D.c + 1;
-        int firstZ = (int)region5D.offset.getZ() + 1;
-        int lastZ = (int)region5D.offset.getZ() + (int)region5D.size.getZ();
-
-        // TODO:
-        // copy code from VSS to include an out-of-bounds strategy
-
-        for (int t=firstT; t<=lastT; t++) {
-            for (int z=firstZ; z<=lastZ; z++) {
-                for (int c=firstC; c<=lastC; c++) {
-                    int n1 = imp.getStackIndex(c, z, t);
-                    ImageProcessor ip = stack.getProcessor(n1);
-                    String label = stack.getSliceLabel(n1);
-                    ip.setRoi(rect);
-                    ip = ip.crop();
-                    if (stack2==null)
-                        stack2 = new ImageStack(ip.getWidth(), ip.getHeight(), null);
-                    stack2.addSlice(label, ip);
-                }
-            }
-        }
-        ImagePlus imp2 = imp.createImagePlus();
-        imp2.setStack("DUP_" + imp.getTitle(), stack2);
-        imp2.setDimensions(lastC - firstC + 1, lastZ - firstZ + 1, lastT - firstT + 1);
-        imp2.setOpenAsHyperStack(true);
-
-        return imp2;
-    }
 //
 //    public static VirtualStackOfStacks getVirtualStackOfStacks( ImagePlus image) {
 //        VirtualStackOfStacks vss = null;

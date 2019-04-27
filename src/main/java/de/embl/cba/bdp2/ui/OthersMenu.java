@@ -6,16 +6,11 @@ import javax.swing.JMenuItem;
 public class OthersMenu extends JMenu {
 
     private final JMenuItem imageJViewerItem;
-    private final JMenuItem bigDataTrackerItem;
-
 
     public OthersMenu(BdvMenus actionListener) {
-        setText(UIDisplayConstants.OTHERS_MENU_DISPLAY_TEXT);
-        imageJViewerItem = new JMenuItem(UIDisplayConstants.IMAGEJ_VIEW_MENU_DISPLAY_TEXT);
+        setText(UIDisplayConstants.MISC_MENU );
+        imageJViewerItem = new JMenuItem(UIDisplayConstants.IMAGEJ_VIEW_MENU_ITEM );
         add(imageJViewerItem);
-        bigDataTrackerItem = new JMenuItem(UIDisplayConstants.BIG_DATA_TRACKER_MENU_DISPLAY_TEXT);
-        add(bigDataTrackerItem);
-        bigDataTrackerItem.addActionListener(actionListener);
         imageJViewerItem.addActionListener(actionListener);
     }
 }

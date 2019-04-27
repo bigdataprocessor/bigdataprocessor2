@@ -4,7 +4,7 @@ import bdv.util.BdvFunctions;
 import bdv.util.BdvOptions;
 import bdv.util.BdvSource;
 import bdv.util.volatiles.VolatileViews;
-import de.embl.cba.bdp2.CachedCellImageCreator;
+import de.embl.cba.bdp2.loading.CachedCellImageCreator;
 import de.embl.cba.bdp2.files.FileInfoConstants;
 import de.embl.cba.bdp2.files.FileInfos;
 import net.imglib2.img.Img;
@@ -23,7 +23,7 @@ public class TestOpenHDF5WithUI {
                 ".*.h5",
                 "Data");
         //FileInfoSource files = new FileInfoSource(directory,"None",".*.h5","Datawrong",true,10);
-        Img myImg = new CachedCellImageCreator().create( fileInfos,null);
+        Img myImg = new CachedCellImageCreator().create( fileInfos );
 
         BdvSource bdvSource = BdvFunctions.show(
                 VolatileViews.wrapAsVolatile( myImg ), "stream", BdvOptions.options().axisOrder(AxisOrder.XYCZT)

@@ -1,6 +1,5 @@
 package de.embl.cba.bdp2.saving;
 
-import de.embl.cba.bdp2.ProjectionXYZ;
 import de.embl.cba.bdp2.utils.Utils;
 import ij.IJ;
 import ij.ImagePlus;

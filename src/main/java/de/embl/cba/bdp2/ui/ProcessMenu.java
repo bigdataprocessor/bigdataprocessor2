@@ -11,11 +11,13 @@ public class ProcessMenu extends JMenu {
         setText(UIDisplayConstants.PROCESS_MENU_DISPLAY_TEXT);
         this.bdvMenus = bdvMenus;
 
-        addMenuItem( UIDisplayConstants.INTERACTIVE_BINNING );
-        addMenuItem( UIDisplayConstants.OBLIQUE_MENU_DISPLAY_TEXT );
-        addMenuItem( UIDisplayConstants.CROP_MENU_DISPLAY_TEXT );
-        addMenuItem( UIDisplayConstants.INTERACTIVE_EIGHT_BIT_MENU_DISPLAY_TEXT );
-        addMenuItem( UIDisplayConstants.CHROMATIC_SHIFT_CORRECTION_MENU_DISPLAY_TEXT );
+        addMenuItem( UIDisplayConstants.BINNING_MENU_ITEM );
+        addMenuItem( UIDisplayConstants.OBLIQUE_MENU_ITEM );
+        addMenuItem( UIDisplayConstants.CROP_MENU_ITEM );
+        addMenuItem( UIDisplayConstants.EIGHT_BIT_CONVERSION_MENU_ITEM );
+        addMenuItem( UIDisplayConstants.CHROMATIC_SHIFT_CORRECTION_MENU_ITEM );
+        addMenuItem( UIDisplayConstants.SPLIT_VIEW_MENU_ITEM );
+        addMenuItem( UIDisplayConstants.CORRECT_MOTION_MENU_ITEM );
     }
 
     private void addMenuItem( String name )

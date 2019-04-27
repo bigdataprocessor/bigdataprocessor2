@@ -1,4 +1,4 @@
-import de.embl.cba.bdp2.CachedCellImageCreator;
+import de.embl.cba.bdp2.loading.CachedCellImageCreator;
 import de.embl.cba.bdp2.files.FileInfoConstants;
 import de.embl.cba.bdp2.files.FileInfos;
 import de.embl.cba.bdp2.tracking.BigDataTracker;
@@ -17,7 +17,7 @@ public class TestBigDataTracker {
         String imageDirectory = "src/test/resources/tiff-nc2-nt3-tracking/";
         final FileInfos fileInfos = new FileInfos(imageDirectory, FileInfoConstants.LOAD_CHANNELS_FROM_FOLDERS,
                 ".*", "");
-        CachedCellImg cachedCellImg = CachedCellImageCreator.create( fileInfos, null);
+        CachedCellImg cachedCellImg = CachedCellImageCreator.create( fileInfos );
         ImageViewer imageViewer = new BdvImageViewer<UnsignedShortType>(
                 cachedCellImg,
                 "input",
@@ -38,7 +38,7 @@ public class TestBigDataTracker {
     private static TrackingSettings createTrackingSettings( ImageViewer imageViewer) {
         Point3D maxDisplacement = new Point3D(20, 20, 1);
         TrackingSettings trackingSettings = new TrackingSettings();
-        trackingSettings.imageRAI = imageViewer.getRai();
+        trackingSettings.imageRAI = imageViewer.getRaiPlus();
         trackingSettings.maxDisplacement = maxDisplacement;
         trackingSettings.objectSize = new Point3D(200, 200, 10);
         trackingSettings.trackingFactor = 1.0 + 2.0 * maxDisplacement.getX() /

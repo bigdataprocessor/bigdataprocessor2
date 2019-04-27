@@ -29,7 +29,7 @@
  */
 
 
-package de.embl.cba.bdp2;
+package de.embl.cba.bdp2.loading;
 
 
 import de.embl.cba.bdp2.files.SerializableFileInfo;

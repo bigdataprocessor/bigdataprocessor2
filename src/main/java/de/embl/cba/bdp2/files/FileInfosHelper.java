@@ -1,6 +1,6 @@
 package de.embl.cba.bdp2.files;
 
-import de.embl.cba.bdp2.FastTiffDecoder;
+import de.embl.cba.bdp2.loading.FastTiffDecoder;
 import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
 import de.embl.cba.bdp2.utils.Utils;
 import java.io.File;

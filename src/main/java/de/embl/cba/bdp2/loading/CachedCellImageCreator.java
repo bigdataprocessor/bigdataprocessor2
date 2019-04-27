@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2;
+package de.embl.cba.bdp2.loading;
 
 import de.embl.cba.bdp2.files.FileInfos;
 import net.imglib2.cache.img.CachedCellImg;
@@ -12,7 +12,8 @@ import static net.imglib2.cache.img.ReadOnlyCachedCellImgOptions.options;
 
 public class CachedCellImageCreator {
 
-    public static CachedCellImg create( FileInfos fileInfos, ExecutorService executorService) {
+    public static CachedCellImg create( FileInfos fileInfos )
+    {
         CachedCellImg cachedCellImg;
 
         ImageLoader loader = new ImageLoader( fileInfos );

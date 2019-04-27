@@ -1,7 +1,7 @@
 import bdv.util.AxisOrder;
 import bdv.util.BdvFunctions;
 import bdv.util.BdvOptions;
-import de.embl.cba.bdp2.CachedCellImageCreator;
+import de.embl.cba.bdp2.loading.CachedCellImageCreator;
 import de.embl.cba.bdp2.files.FileInfoConstants;
 import de.embl.cba.bdp2.files.FileInfos;
 import de.embl.cba.bdp2.viewers.BdvTransformEventHandler;
@@ -20,7 +20,7 @@ public class TestOpenLeicaDLS
         System.out.println( fileInfos.nC);
         System.out.println( fileInfos.nZ);
         System.out.println("BitDepth "+ fileInfos.bitDepth);
-        Img myImg = new CachedCellImageCreator().create( fileInfos,null);
+        Img myImg = new CachedCellImageCreator().create( fileInfos );
 
 //        AffineTransform3D affineTransform3D = new AffineTransform3D(); // TODO: Play with it later
 //        affineTransform3D.set( 1.0, 0, 0);

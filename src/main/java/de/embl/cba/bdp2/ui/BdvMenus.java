@@ -44,27 +44,27 @@ public class BdvMenus extends JMenu implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.SAVE_AS_MENU_DISPLAY_TEXT)) {
+        if (e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.SAVE_AS_MENU_ITEM )) {
             BigDataProcessor2.executorService.submit(() -> {
                 SaveMenuDialog saveMenuDialog = new SaveMenuDialog(imageViewer);
                 saveMenuDialog.setVisible(true);
             });
-        }else if (e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.OBLIQUE_MENU_DISPLAY_TEXT)) {
+        }else if (e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.OBLIQUE_MENU_ITEM )) {
             BigDataProcessor2.executorService.submit(() -> {
                 ObliqueMenuDialog obliqueMenuDialog = new ObliqueMenuDialog(imageViewer);
                 obliqueMenuDialog.setVisible(true);
             });
-        }else if(e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.CROP_MENU_DISPLAY_TEXT)){
+        }else if(e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.CROP_MENU_ITEM )){
         	BigDataProcessor2.executorService.submit(() -> {
             	new CroppedView<>( imageViewer );
             });
         }else if(e.getActionCommand().equalsIgnoreCase(
-                UIDisplayConstants.IMAGEJ_VIEW_MENU_DISPLAY_TEXT)){
+                UIDisplayConstants.IMAGEJ_VIEW_MENU_ITEM )){
             RandomAccessibleInterval permuted =
-                    Views.permute(imageViewer.getRai(), DimensionOrder.Z, DimensionOrder.C);
+                    Views.permute(imageViewer.getRaiPlus(), DimensionOrder.Z, DimensionOrder.C);
             ImageJFunctions.show(permuted, BigDataProcessor2.executorService);
         }else if(e.getActionCommand().equalsIgnoreCase(
-                UIDisplayConstants.BIG_DATA_TRACKER_MENU_DISPLAY_TEXT)){
+                UIDisplayConstants.CORRECT_MOTION_MENU_ITEM )){
            BigDataProcessor2.executorService.submit(() -> {
                 BigDataTrackerGUI bigDataTrackerGUI = new BigDataTrackerGUI(imageViewer);
                 bigDataTrackerGUI.showDialog();
@@ -74,19 +74,24 @@ public class BdvMenus extends JMenu implements ActionListener {
                 */
             });
         }else if(e.getActionCommand().equalsIgnoreCase(
-                UIDisplayConstants.INTERACTIVE_EIGHT_BIT_MENU_DISPLAY_TEXT)){
+                UIDisplayConstants.EIGHT_BIT_CONVERSION_MENU_ITEM )){
             BigDataProcessor2.executorService.submit(() -> {
                 new UnsignedByteTypeView(imageViewer);
             });
         }else if(e.getActionCommand().equalsIgnoreCase(
-                UIDisplayConstants.INTERACTIVE_BINNING)){
+                UIDisplayConstants.BINNING_MENU_ITEM )){
             BigDataProcessor2.executorService.submit(() -> {
                new BinnedView<>(imageViewer);
             });
         }else if(e.getActionCommand().equalsIgnoreCase(
-            UIDisplayConstants.CHROMATIC_SHIFT_CORRECTION_MENU_DISPLAY_TEXT)){
+            UIDisplayConstants.SPLIT_VIEW_MENU_ITEM )){
             BigDataProcessor2.executorService.submit(() -> {
-                new ChromaticShiftCorrectionView<>(imageViewer);
+                new ChromaticShiftCorrectionView<>( imageViewer );
+            });
+        }else if(e.getActionCommand().equalsIgnoreCase(
+                    UIDisplayConstants.SPLIT_VIEW_MENU_ITEM )){
+                BigDataProcessor2.executorService.submit(() -> {
+                    new ChromaticShiftCorrectionView<>(imageViewer);
         });
     }
     }

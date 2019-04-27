@@ -18,7 +18,7 @@ public class BinnedView< T extends RealType< T > & NativeType< T > >
 {
 	public BinnedView( final ImageViewer< T > imageViewer  )
 	{
-		final RandomAccessibleInterval< T > rai = imageViewer.getRai();
+		final RandomAccessibleInterval< T > rai = imageViewer.getRaiPlus();
 
 		long[] span = new long[]{0,0,0,0,0};
 

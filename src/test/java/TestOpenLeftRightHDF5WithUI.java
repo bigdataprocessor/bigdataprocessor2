@@ -2,7 +2,7 @@ import bdv.util.AxisOrder;
 import bdv.util.BdvFunctions;
 import bdv.util.BdvOptions;
 import bdv.util.BdvStackSource;
-import de.embl.cba.bdp2.CachedCellImageCreator;
+import de.embl.cba.bdp2.loading.CachedCellImageCreator;
 import de.embl.cba.bdp2.files.FileInfos;
 import de.embl.cba.bdp2.viewers.BdvTransformEventHandler;
 import net.imglib2.img.Img;
@@ -21,8 +21,8 @@ public class TestOpenLeftRightHDF5WithUI {
         FileInfos fileInfosRight = new FileInfos(directory,"None",
                 ".*Right.*.h5","Data");
 
-        Img myImgLeft = new CachedCellImageCreator().create( fileInfosLeft,null);
-        Img myImgRight = new CachedCellImageCreator().create( fileInfosRight,null);
+        Img myImgLeft = new CachedCellImageCreator().create( fileInfosLeft );
+        Img myImgRight = new CachedCellImageCreator().create( fileInfosRight );
         double [] voxelSize = new double[]{0,0};
         final BdvStackSource bdvss0 = BdvFunctions.show(myImgLeft, "left", BdvOptions.options().axisOrder(AxisOrder.XYCZT)
                 .doubleBuffered(false)

@@ -1,6 +1,6 @@
 package de.embl.cba.bdp2.ui;
 
-import de.embl.cba.bdp2.CachedCellImageCreator;
+import de.embl.cba.bdp2.loading.CachedCellImageCreator;
 import de.embl.cba.bdp2.files.FileInfoConstants;
 import de.embl.cba.bdp2.files.FileInfos;
 import de.embl.cba.bdp2.saving.SaveCentral;
@@ -80,7 +80,7 @@ public class BigDataProcessor2
         if ( ! ensureCalibrationUI() ) return;
 
         CachedCellImg cachedCellImg =
-				CachedCellImageCreator.create( this.fileInfos, this.executorService);
+				CachedCellImageCreator.create( this.fileInfos );
 
         imageViewer.show(
         		cachedCellImg,
@@ -108,14 +108,10 @@ public class BigDataProcessor2
         return true;
     }
 
-    public static RandomAccessibleInterval crop(RandomAccessibleInterval rai,FinalInterval interval){
-        return Views.zeroMin(Views.interval(rai, interval));
-    }
-
 
     public static void saveImage(
     		SavingSettings savingSettings,
-			RandomAccessibleInterval rai) {
+			RandomAccessibleInterval rai ) {
         int nIOThread = Math.max(1, Math.min(savingSettings.nThreads, MAX_THREAD_LIMIT));
         ExecutorService saveExecutorService =  Executors.newFixedThreadPool(nIOThread);
         savingSettings.image = rai;

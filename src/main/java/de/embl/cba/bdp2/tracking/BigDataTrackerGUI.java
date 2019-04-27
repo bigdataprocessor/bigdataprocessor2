@@ -71,7 +71,7 @@ public class BigDataTrackerGUI extends JDialog implements ActionListener, FocusL
     public BigDataTrackerGUI( ImageViewer handle )
     {
         this.imageViewer= handle;
-        this.image = imageViewer.getRai();
+        this.image = imageViewer.getRaiPlus();
         long nChannels = this.image.dimension(DimensionOrder.C);
         channelChoices = new String[(int)nChannels];
         LongStream.range(0, nChannels).forEach( //Dynamically filling the array.

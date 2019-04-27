@@ -8,7 +8,7 @@ public class SaveSelectMenu extends JMenu {
 
     public SaveSelectMenu(BdvMenus actionListener) {
         setText(UIDisplayConstants.SAVE_MENU_DISPLAY_TEXT);
-        item = new JMenuItem(UIDisplayConstants.SAVE_AS_MENU_DISPLAY_TEXT);
+        item = new JMenuItem(UIDisplayConstants.SAVE_AS_MENU_ITEM );
         item.addActionListener(actionListener);
         add(item);
     }

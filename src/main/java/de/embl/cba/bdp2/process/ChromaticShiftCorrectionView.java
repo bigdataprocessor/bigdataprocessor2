@@ -35,7 +35,7 @@ public class ChromaticShiftCorrectionView< T extends RealType< T > & NativeType<
 	public ChromaticShiftCorrectionView( final ImageViewer< T > imageViewer  )
 	{
 		this.imageViewer = imageViewer;
-		this.rai = imageViewer.getRai();
+		this.rai = imageViewer.getRaiPlus();
 		numChannels = rai.dimension( DimensionOrder.C );
 
 		channelRAIs = getChannelRAIs();
