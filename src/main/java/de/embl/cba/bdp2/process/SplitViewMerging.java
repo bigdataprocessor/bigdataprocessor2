@@ -2,7 +2,6 @@ package de.embl.cba.bdp2.process;
 
 import bdv.tools.boundingbox.TransformedBox;
 import bdv.tools.boundingbox.TransformedBoxOverlay;
-import bdv.tools.brightness.SliderPanel;
 import bdv.tools.brightness.SliderPanelDouble;
 import bdv.util.BoundedValueDouble;
 import bdv.util.ModifiableRealInterval;
@@ -63,32 +62,38 @@ public class SplitViewMerging < R extends RealType< R > & NativeType< R > >
 
 		boundedValues.put( CX, new BoundedValueDouble(
 				0.0,
-				1000.0,
+				getRangeMax( X ),
 				getCenter( interval, X ) ) );
 		createPanel( CX , boundedValues.get( CX ) );
 
 		boundedValues.put( CY,
 				new BoundedValueDouble(
 						0,
-						1000,
+						getRangeMax( Y ),
 						getCenter( interval, Y ) ) );
 		createPanel( CY , boundedValues.get( CY ) );
 
 		boundedValues.put( W,
 				new BoundedValueDouble(
 						0,
-						1000,
+						getRangeMax( X ),
 						getSpan( interval, X ) ) );
 		createPanel( W , boundedValues.get( W ) );
 
 		boundedValues.put( H,
 				new BoundedValueDouble(
 						0,
-						1000,
+						getRangeMax( Y ),
 						getSpan( interval, Y ) ) );
 		createPanel( H , boundedValues.get( H ) );
 
 		showFrame( panel );
+	}
+
+	private double getRangeMax( int d )
+	{
+		return viewer.getImage().getRai().dimension( d )
+				* viewer.getImage().getVoxelSpacing()[ d ];
 	}
 
 	private double getCenter( ModifiableRealInterval interval, int d )
@@ -126,7 +131,6 @@ public class SplitViewMerging < R extends RealType< R > & NativeType< R > >
 					{
 						viewer.getBdvStackSource().getSources().get( 0 )
 								.getSpimSource().getSourceTransform( 0, 0, transform );
-
 					}
 
 					@Override
@@ -207,12 +211,22 @@ public class SplitViewMerging < R extends RealType< R > & NativeType< R > >
 					+ boundedValues.get( H ).getCurrentValue() / 2.0 ;
 
 			min[ Z ] = interval.realMin( Z );
-
 			max[ Z ] = interval.realMax( Z );
 
 
+			final AffineTransform3D transform = new AffineTransform3D();
+			viewer.getBdvStackSource().getSources().get( 0 )
+					.getSpimSource().getSourceTransform( 0, 0, transform );
+			final double[] voxelSpacing = viewer.getImage().getVoxelSpacing();
+			for ( int d = 0; d < 2; d++ )
+			{
+				min[ d ] /= voxelSpacing[ d ];
+				max[ d ] /= voxelSpacing[ d ];
+			}
+
 			interval.set( new FinalRealInterval( min, max ) );
 
+			viewer.repaint();
 
 			/*final ArrayList< long[] > translations = getTranslations();
 
