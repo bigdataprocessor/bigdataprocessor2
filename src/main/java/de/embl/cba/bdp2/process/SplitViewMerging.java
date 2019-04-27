@@ -61,31 +61,21 @@ public class SplitViewMerging < R extends RealType< R > & NativeType< R > >
 
 		updateListener = new SelectionUpdateListener( intervals );
 
-		boundedValues.put( CX0, new BoundedValueDouble(
-				0.0,
-				getRangeMax( X ),
-				getCenter( intervals.get( 0 ), X ) ) );
-		createPanel( CX0, boundedValues.get( CX0 ) );
+		for ( int d = 0; d < 2; d++ )
+		{
+			boundedValues.put( CX[ d ], new BoundedValueDouble(
+					0.0,
+					getRangeMax( X ),
+					getCenter( intervals.get( d ), X ) ) );
+			createPanel( CX[ d ], boundedValues.get( CX[ d ] ) );
 
-		boundedValues.put( CY0,
-				new BoundedValueDouble(
-						0,
-						getRangeMax( Y ),
-						getCenter( intervals.get( 0 ), Y ) ) );
-		createPanel( CY0, boundedValues.get( CY0 ) );
-
-		boundedValues.put( CX1, new BoundedValueDouble(
-				0.0,
-				getRangeMax( X ),
-				getCenter( intervals.get( 1 ), X ) ) );
-		createPanel( CX1, boundedValues.get( CX1 ) );
-
-		boundedValues.put( CY1,
-				new BoundedValueDouble(
-						0,
-						getRangeMax( Y ),
-						getCenter( intervals.get( 1 ), Y ) ) );
-		createPanel( CY1, boundedValues.get( CY1 ) );
+			boundedValues.put( CY[ d ],
+					new BoundedValueDouble(
+							0,
+							getRangeMax( Y ),
+							getCenter( intervals.get( d ), Y ) ) );
+			createPanel( CY[ d ], boundedValues.get( CY[ d ] ) );
+		}
 
 		boundedValues.put( W,
 				new BoundedValueDouble(
