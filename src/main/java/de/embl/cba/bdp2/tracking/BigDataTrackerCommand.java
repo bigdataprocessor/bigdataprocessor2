@@ -1,5 +1,6 @@
 package de.embl.cba.bdp2.tracking;
 
+import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
@@ -8,7 +9,6 @@ import de.embl.cba.bdp2.viewers.ImageViewer;
 import javafx.geometry.Point3D;
 import net.imagej.ImageJ;
 import net.imglib2.FinalInterval;
-import net.imglib2.RandomAccessibleInterval;
 import org.scijava.ItemVisibility;
 import org.scijava.command.Command;
 import org.scijava.command.DynamicCommand;
@@ -69,7 +69,7 @@ public class BigDataTrackerCommand extends DynamicCommand implements Interactive
     Point3D maxDisplacement = new Point3D(20, 20, 1);
     final BigDataTracker bigDataTracker = new BigDataTracker();
     TrackingSettings trackingSettings = new TrackingSettings();
-    private RandomAccessibleInterval image;
+    private Image image;
 
     @Parameter(visibility = ItemVisibility.INVISIBLE)
     public ImageViewer imageViewer = null;
@@ -77,8 +77,8 @@ public class BigDataTrackerCommand extends DynamicCommand implements Interactive
 
     @Override
     public void run() {
-        System.out.println(imageViewer.getImageName());
-        this.image = imageViewer.getRaiPlus();
+        System.out.println(imageViewer.getImage().getName());
+        this.image = imageViewer.getImage();
         String[] imageFilters = new String[Utils.ImageFilterTypes.values().length];
         for (int i = 0; i < imageFilters.length; i++) {
             imageFilters[i] = Utils.ImageFilterTypes.values()[i].toString();
@@ -109,7 +109,7 @@ public class BigDataTrackerCommand extends DynamicCommand implements Interactive
 
     private void doTracking() {
         // configure tracking
-        trackingSettings.imageRAI = image;
+        trackingSettings.rai = image.getRai();
         if (length < -1) {
             length = -1;
         }
@@ -151,8 +151,8 @@ public class BigDataTrackerCommand extends DynamicCommand implements Interactive
         // Test using Dummy ImageViewer
         final ImageJ ij = new ImageJ();
         ij.launch(args);
-        double [] voxelSize = new double[]{0,0};
-        ImageViewer img = new BdvImageViewer( null, "dummy", voxelSize, "pixel" );
+        double [] voxelSpacing = new double[]{0,0};
+        ImageViewer img = new BdvImageViewer( null, "dummy", voxelSpacing, "pixel" );
         ij.command().run(BigDataTrackerCommand.class, true, "imageViewer", img);
     }
 }

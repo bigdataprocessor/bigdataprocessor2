@@ -26,7 +26,7 @@ public class FileInfos
     public int nY;
     public int nZ;
     public String unit;
-    public double[] voxelSize;
+    public double[] voxelSpacing;
     public String fileType;
     public String h5DataSetName;
     public String[] channelFolders;

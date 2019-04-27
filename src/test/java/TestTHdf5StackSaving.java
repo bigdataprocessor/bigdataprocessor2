@@ -1,4 +1,4 @@
-import de.embl.cba.bdp2.loading.CachedCellImageCreator;
+import de.embl.cba.bdp2.loading.CachedCellImgReader;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.files.FileInfoConstants;
 import de.embl.cba.bdp2.files.FileInfos;
@@ -16,7 +16,7 @@ public class TestTHdf5StackSaving
         String imageDirectory = "src/test/resources/shear_transform_test";
         final FileInfos fileInfos = new FileInfos( imageDirectory, FileInfoConstants.SINGLE_CHANNEL_TIMELAPSE,
                 ".*", "");
-        CachedCellImg cachedCellImg = CachedCellImageCreator.create( fileInfos );
+        CachedCellImg cachedCellImg = CachedCellImgReader.asCachedCellImg( fileInfos );
 
         ImageViewer imageViewer = new BdvImageViewer<UnsignedShortType>(
                 cachedCellImg,
@@ -32,9 +32,9 @@ public class TestTHdf5StackSaving
         final SavingSettings defaults = SavingSettings.getDefaults();
         defaults.fileType = SavingSettings.FileType.HDF5_STACKS;
         defaults.nThreads = 3;
-        defaults.voxelSize =imageViewer.getVoxelSize();
-        defaults.unit = imageViewer.getCalibrationUnit();
-        new BigDataProcessor2().saveImage( defaults, cachedCellImg );
+        defaults.voxelSpacing =imageViewer.getImage().getVoxelSpacing();
+        defaults.unit = imageViewer.getImage().getVoxelUnit();
+        new BigDataProcessor2().saveImage( imageViewer.getImage(), defaults );
 
     }
 

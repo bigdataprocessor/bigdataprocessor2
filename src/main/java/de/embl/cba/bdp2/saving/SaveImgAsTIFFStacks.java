@@ -50,7 +50,7 @@ public class SaveImgAsTIFFStacks implements Runnable {
         // - if waiting takes to long somehoe terminate in a nice way
 
         //long freeMemoryInBytes = IJ.maxMemory() - IJ.currentMemory();
-        RandomAccessibleInterval image = savingSettings.image;
+        RandomAccessibleInterval image = savingSettings.rai;
         final long totalCubes = image.dimension( de.embl.cba.bdp2.utils.DimensionOrder.T ) * image.dimension( de.embl.cba.bdp2.utils.DimensionOrder.C );
 //            long numBytesOfImage = image.dimension(FileInfoConstants.X) *
 //                    image.dimension(FileInfoConstants.Y) *
@@ -62,7 +62,7 @@ public class SaveImgAsTIFFStacks implements Runnable {
 //            if (numBytesOfImage > 1.5 * freeMemoryInBytes) {
 //                // TODO: do something...
 //            }
-        int totalChannels = Math.toIntExact(savingSettings.image.dimension( de.embl.cba.bdp2.utils.DimensionOrder.C ));
+        int totalChannels = Math.toIntExact(savingSettings.rai.dimension( de.embl.cba.bdp2.utils.DimensionOrder.C ));
         for (int c = 0; c < totalChannels; c++) {
             if (stop.get()) {
                 logger.progress("Stopped saving thread: ", "" + t);
@@ -86,7 +86,7 @@ public class SaveImgAsTIFFStacks implements Runnable {
 
             RandomAccessibleInterval rai3D = Views.interval(image, minInterval, maxInterval);
             ImagePlus impChannelTime = Utils.wrapToCalibratedImagePlus( rai3D,
-                    savingSettings.voxelSize,
+                    savingSettings.voxelSpacing,
                     savingSettings.unit,
                     "cube" );
             // Gate

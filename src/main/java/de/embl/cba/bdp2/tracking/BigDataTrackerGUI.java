@@ -71,7 +71,7 @@ public class BigDataTrackerGUI extends JDialog implements ActionListener, FocusL
     public BigDataTrackerGUI( ImageViewer handle )
     {
         this.imageViewer= handle;
-        this.image = imageViewer.getRaiPlus();
+        this.image = imageViewer.getImage().getRai();
         long nChannels = this.image.dimension(DimensionOrder.C);
         channelChoices = new String[(int)nChannels];
         LongStream.range(0, nChannels).forEach( //Dynamically filling the array.
@@ -95,7 +95,7 @@ public class BigDataTrackerGUI extends JDialog implements ActionListener, FocusL
         trackingSettings.viewFirstNProcessedRegions = 0;
         trackingSettings.imageFeatureEnhancement = Utils.ImageFilterTypes.NONE.toString();
         trackingSettings.nt = -1;
-        trackingSettings.voxelSize = imageViewer.getVoxelSize();
+        trackingSettings.voxelSpacing = imageViewer.getImage().getVoxelSpacing();
         setDefaults();
     }
 
@@ -372,7 +372,7 @@ public class BigDataTrackerGUI extends JDialog implements ActionListener, FocusL
             // configure tracking
             //
 
-            trackingSettings.imageRAI = image;
+            trackingSettings.rai = image;
             // TODO: think about below:
             trackingSettings.trackingFactor = 1.0 + 2.0 * maxDisplacement.getX() /
                     trackingSettings.objectSize.getX() ;

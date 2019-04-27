@@ -1,6 +1,6 @@
 package de.embl.cba.bdp2.process;
 
-import de.embl.cba.bdp2.RaiPlus;
+import de.embl.cba.bdp2.Image;
 
 import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
 import de.embl.cba.bdp2.ui.BdvMenus;
@@ -18,11 +18,11 @@ public class CroppedView < T extends RealType< T > & NativeType< T > >
 	{
 		logger.info( "\nCropping..." );
 		FinalInterval interval = imageViewer.get5DIntervalFromUser();
-		final RaiPlus< T > raiPlus = imageViewer.getRaiPlus();
+		final Image< T > image = imageViewer.getImage();
 
 		if (interval != null) {
 
-			RaiPlus< T > cropped = crop( raiPlus, interval );
+			Image< T > cropped = crop( image, interval );
 
 			ImageViewer newImageViewer = imageViewer.newImageViewer();
 			newImageViewer.show( cropped, false );
@@ -35,15 +35,15 @@ public class CroppedView < T extends RealType< T > & NativeType< T > >
 	}
 
 	public static < T extends RealType< T > & NativeType< T > >
-	RaiPlus< T > crop( RaiPlus< T > raiPlus, FinalInterval interval )
+	Image< T > crop( Image< T > image, FinalInterval interval )
 	{
-		Views.zeroMin( Views.interval( raiPlus.getRai(), interval ) );
+		Views.zeroMin( Views.interval( image.getRai(), interval ) );
 
-		return new RaiPlus<>(
-				Views.zeroMin( Views.interval( raiPlus.getRai(), interval ) ),
-				raiPlus.getName(),
-				raiPlus.getVoxelSize(),
-				raiPlus.getVoxelSizeUnit()
+		return new Image<>(
+				Views.zeroMin( Views.interval( image.getRai(), interval ) ),
+				image.getName(),
+				image.getVoxelSpacing(),
+				image.getVoxelUnit()
 		);
 	}
 }

@@ -35,7 +35,7 @@ public class ChromaticShiftCorrectionView< T extends RealType< T > & NativeType<
 	public ChromaticShiftCorrectionView( final ImageViewer< T > imageViewer  )
 	{
 		this.imageViewer = imageViewer;
-		this.rai = imageViewer.getRaiPlus();
+		this.rai = imageViewer.getImage().getRai();
 		numChannels = rai.dimension( DimensionOrder.C );
 
 		channelRAIs = getChannelRAIs();
@@ -53,9 +53,9 @@ public class ChromaticShiftCorrectionView< T extends RealType< T > & NativeType<
 
 		newImageViewer.show(
 				correctedRai,
-				"chromatic shift corrected view",
-				imageViewer.getVoxelSize(),
-				imageViewer.getCalibrationUnit(),
+				imageViewer.getImage().getName() + "_csc",
+				imageViewer.getImage().getVoxelSpacing(),
+				imageViewer.getImage().getVoxelUnit(),
 				true);
 
 		newImageViewer.addMenus( new BdvMenus() );
@@ -80,12 +80,12 @@ public class ChromaticShiftCorrectionView< T extends RealType< T > & NativeType<
 		return channelRais;
 	}
 
-	private double[] getBinnedVoxelSize( long[] span, double[] voxelSize )
+	private double[] getBinnedVoxelSize( long[] span, double[] voxelSpacing )
 	{
-		final double[] newVoxelSize = new double[ voxelSize.length ];
+		final double[] newVoxelSize = new double[ voxelSpacing.length ];
 
 		for ( int d = 0; d < 3; d++ )
-			newVoxelSize[ d ] = voxelSize[ d ] * ( 2 * span[ d ] + 1 );
+			newVoxelSize[ d ] = voxelSpacing[ d ] * ( 2 * span[ d ] + 1 );
 
 		return newVoxelSize;
 	}
@@ -231,9 +231,9 @@ public class ChromaticShiftCorrectionView< T extends RealType< T > & NativeType<
 	{
 		newImageViewer.show(
 				correctedRai,
-				imageViewer.getImageName(),
-				imageViewer.getVoxelSize(),
-				imageViewer.getCalibrationUnit(),
+				imageViewer.getImage().getName(),
+				imageViewer.getImage().getVoxelSpacing(),
+				imageViewer.getImage().getVoxelUnit(),
 				true );
 	}
 

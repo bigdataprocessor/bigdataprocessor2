@@ -2,6 +2,7 @@ package de.embl.cba.bdp2.process;
 
 import bdv.tools.brightness.SliderPanel;
 import bdv.util.BoundedValue;
+import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.ui.BdvMenus;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.ImageViewer;
@@ -14,51 +15,33 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class BinnedView< T extends RealType< T > & NativeType< T > >
+public class Binning< T extends RealType< T > & NativeType< T > >
 {
-	public BinnedView( final ImageViewer< T > imageViewer  )
+
+	public Binning( final ImageViewer< T > imageViewer  )
 	{
-		final RandomAccessibleInterval< T > rai = imageViewer.getRaiPlus();
-
-		long[] span = new long[]{0,0,0,0,0};
-
-		final RandomAccessibleInterval< T > downSampledView =
-				new LazyDownsampler<>( rai, span ).getDownsampledView();
-
+		final Image< T > inputImage = imageViewer.getImage();
 		ImageViewer newImageViewer = imageViewer.newImageViewer();
+		newImageViewer.show( imageViewer.getImage(), true );
 
-		final double[] originalVoxelSize = imageViewer.getVoxelSize();
-
-		newImageViewer.show(
-				downSampledView,
-				"binned view",
-				getBinnedVoxelSize( span, originalVoxelSize ),
-				imageViewer.getCalibrationUnit(),
-				true);
-
-		logger.info( "Binned view size [GB]: "
-				+ Utils.getSizeGB( downSampledView ) );
-
+		logger.info( "Image size without binning [GB]: "
+				+ Utils.getSizeGB( imageViewer.getImage().getRai() ) );
 		newImageViewer.addMenus( new BdvMenus() );
 
-		showBinningAdjustmentDialog( rai, originalVoxelSize, newImageViewer, span );
+		showBinningAdjustmentDialog( newImageViewer, inputImage );
 	}
 
-	private double[] getBinnedVoxelSize( long[] span, double[] voxelSize )
+	private static double[] getBinnedVoxelSize( long[] span, double[] voxelSpacing )
 	{
-		final double[] newVoxelSize = new double[ voxelSize.length ];
+		final double[] newVoxelSize = new double[ voxelSpacing.length ];
 
 		for ( int d = 0; d < 3; d++ )
-			newVoxelSize[ d ] = voxelSize[ d ] * ( 2 * span[ d ] + 1 );
+			newVoxelSize[ d ] = voxelSpacing[ d ] * ( 2 * span[ d ] + 1 );
 
 		return newVoxelSize;
 	}
 
-	private void showBinningAdjustmentDialog(
-			RandomAccessibleInterval< T > rai,
-			double[] originalVoxelSize,
-			ImageViewer imageViewer,
-			long[] span )
+	private void showBinningAdjustmentDialog( ImageViewer imageViewer, Image< T > inputImage )
 	{
 		final JFrame frame = new JFrame( "Binning" );
 		frame.setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
@@ -73,10 +56,8 @@ public class BinnedView< T extends RealType< T > & NativeType< T > >
 
 		for ( int d = 0; d < 3; d++ )
 		{
-			boundedValues.add( new BoundedValue(
-					1,
-					11,
-					( int ) ( 2 * span[ d ] + 1 ) ) );
+			boundedValues.add(
+					new BoundedValue(1,11,1 ) );
 
 			sliderPanels.add(
 					new SliderPanel(
@@ -98,20 +79,12 @@ public class BinnedView< T extends RealType< T > & NativeType< T > >
 
 				previousSpan = span;
 
-				final RandomAccessibleInterval< T > downSampleView =
-						new LazyDownsampler<>( rai, span ).getDownsampledView();
+				final Image< T > binned = bin( inputImage, span );
 
-				final double[] binnedVoxelSize = getBinnedVoxelSize( span, originalVoxelSize );
-
-				imageViewer.show(
-						downSampleView,
-						imageViewer.getImageName(),
-						binnedVoxelSize,
-						imageViewer.getCalibrationUnit(),
-						true );
+				imageViewer.show( binned, true );
 
 				logger.info( "Binned view size [GB]: "
-						+ Utils.getSizeGB( downSampleView ) );
+						+ Utils.getSizeGB( binned.getRai() ) );
 			}
 
 			private boolean isSpanChanged( long[] span )
@@ -142,7 +115,6 @@ public class BinnedView< T extends RealType< T > & NativeType< T > >
 			panel.add( sliderPanels.get( d ) );
 		}
 
-
 		frame.setContentPane( panel );
 		frame.setBounds(
 				MouseInfo.getPointerInfo().getLocation().x,
@@ -151,6 +123,22 @@ public class BinnedView< T extends RealType< T > & NativeType< T > >
 		frame.setResizable( false );
 		frame.pack();
 		frame.setVisible( true );
+	}
+
+	public static < T extends RealType< T > & NativeType< T > >
+	Image< T > bin( Image< T > inputImage, long[] span )
+	{
+		final RandomAccessibleInterval< T > downSampleView =
+				new LazyDownsampler<>( inputImage.getRai(), span ).getDownsampledView();
+
+		return ( Image< T > ) new Image(
+				downSampleView,
+				inputImage.getName() + "_bin",
+				getBinnedVoxelSize(
+						span,
+						inputImage.getVoxelSpacing() ),
+				inputImage.getVoxelUnit()
+		);
 	}
 
 

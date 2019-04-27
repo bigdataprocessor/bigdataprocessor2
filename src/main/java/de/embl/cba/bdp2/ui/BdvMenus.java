@@ -1,7 +1,7 @@
 package de.embl.cba.bdp2.ui;
 
 import de.embl.cba.bdp2.tracking.BigDataTrackerGUI;
-import de.embl.cba.bdp2.process.BinnedView;
+import de.embl.cba.bdp2.process.Binning;
 import de.embl.cba.bdp2.process.ChromaticShiftCorrectionView;
 import de.embl.cba.bdp2.process.CroppedView;
 import de.embl.cba.bdp2.process.UnsignedByteTypeView;
@@ -60,8 +60,12 @@ public class BdvMenus extends JMenu implements ActionListener {
             });
         }else if(e.getActionCommand().equalsIgnoreCase(
                 UIDisplayConstants.IMAGEJ_VIEW_MENU_ITEM )){
+            // TODO: improve this:
+            // - make own class
+            // - add calibration
             RandomAccessibleInterval permuted =
-                    Views.permute(imageViewer.getRaiPlus(), DimensionOrder.Z, DimensionOrder.C);
+                    Views.permute( imageViewer.getImage().getRai(),
+                            DimensionOrder.Z, DimensionOrder.C);
             ImageJFunctions.show(permuted, BigDataProcessor2.executorService);
         }else if(e.getActionCommand().equalsIgnoreCase(
                 UIDisplayConstants.CORRECT_MOTION_MENU_ITEM )){
@@ -81,7 +85,7 @@ public class BdvMenus extends JMenu implements ActionListener {
         }else if(e.getActionCommand().equalsIgnoreCase(
                 UIDisplayConstants.BINNING_MENU_ITEM )){
             BigDataProcessor2.executorService.submit(() -> {
-               new BinnedView<>(imageViewer);
+               new Binning<>(imageViewer);
             });
         }else if(e.getActionCommand().equalsIgnoreCase(
             UIDisplayConstants.SPLIT_VIEW_MENU_ITEM )){

@@ -41,8 +41,8 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
             long startTime,
             AtomicBoolean stop)
     {
-        this.nativeType = (T)Util.getTypeFromInterval(savingSettings.image);
-        Img imgTemp = ImgView.wrap(savingSettings.image,new CellImgFactory<>(nativeType));
+        this.nativeType = (T)Util.getTypeFromInterval(savingSettings.rai );
+        Img imgTemp = ImgView.wrap(savingSettings.rai,new CellImgFactory<>(nativeType));
         this.image = new ImgPlus<>(imgTemp, "", FileInfoConstants.AXES_ORDER);
 
         if (this.image.dimensionIndex(Axes.TIME) >= 0) {
@@ -85,7 +85,7 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
 //        }
 
         final long totalSlices = nFrames * nChannels;
-        RandomAccessibleInterval image = savingSettings.image;
+        RandomAccessibleInterval image = savingSettings.rai;
         for (int c = 0; c < this.nChannels; c++)
         {
             if (stop.get()) {
@@ -130,7 +130,7 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
             ImagePlus imagePlus =
                     Utils.wrapToCalibratedImagePlus(
                             imgChannelTime,
-                            savingSettings.voxelSize,
+                            savingSettings.voxelSpacing,
                             savingSettings.unit,
                         "BinnedWrapped");
 

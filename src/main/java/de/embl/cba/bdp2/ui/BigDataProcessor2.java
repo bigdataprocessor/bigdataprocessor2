@@ -1,6 +1,7 @@
 package de.embl.cba.bdp2.ui;
 
-import de.embl.cba.bdp2.loading.CachedCellImageCreator;
+import de.embl.cba.bdp2.Image;
+import de.embl.cba.bdp2.loading.CachedCellImgReader;
 import de.embl.cba.bdp2.files.FileInfoConstants;
 import de.embl.cba.bdp2.files.FileInfos;
 import de.embl.cba.bdp2.saving.SaveCentral;
@@ -80,14 +81,15 @@ public class BigDataProcessor2
         if ( ! ensureCalibrationUI() ) return;
 
         CachedCellImg cachedCellImg =
-				CachedCellImageCreator.create( this.fileInfos );
+				CachedCellImgReader.asCachedCellImg( this.fileInfos );
 
         imageViewer.show(
-        		cachedCellImg,
-				FileInfoConstants.IMAGE_NAME,
-				fileInfos.voxelSize,
-				fileInfos.unit,
-				autoContrast );
+                new Image(
+                        cachedCellImg,
+                        FileInfoConstants.IMAGE_NAME,
+                        fileInfos.voxelSpacing,
+                        fileInfos.unit )
+                , autoContrast );
 
         imageViewer.addMenus(new BdvMenus());
     }
@@ -96,25 +98,25 @@ public class BigDataProcessor2
     {
         final GenericDialog genericDialog = new GenericDialog( "Calibration" );
         genericDialog.addStringField( "Unit", fileInfos.unit, 12 );
-        genericDialog.addNumericField( "Spacing X", fileInfos.voxelSize[ 0 ], 3 );
-        genericDialog.addNumericField( "Spacing Y", fileInfos.voxelSize[ 1 ], 3 );
-        genericDialog.addNumericField( "Spacing Z", fileInfos.voxelSize[ 2 ], 3 );
+        genericDialog.addNumericField( "Spacing X", fileInfos.voxelSpacing[ 0 ], 3 );
+        genericDialog.addNumericField( "Spacing Y", fileInfos.voxelSpacing[ 1 ], 3 );
+        genericDialog.addNumericField( "Spacing Z", fileInfos.voxelSpacing[ 2 ], 3 );
         genericDialog.showDialog();
         if ( genericDialog.wasCanceled() ) return false;
         fileInfos.unit = genericDialog.getNextString();
-        fileInfos.voxelSize[ 0 ] = genericDialog.getNextNumber();
-        fileInfos.voxelSize[ 1 ] = genericDialog.getNextNumber();
-        fileInfos.voxelSize[ 2 ] = genericDialog.getNextNumber();
+        fileInfos.voxelSpacing[ 0 ] = genericDialog.getNextNumber();
+        fileInfos.voxelSpacing[ 1 ] = genericDialog.getNextNumber();
+        fileInfos.voxelSpacing[ 2 ] = genericDialog.getNextNumber();
         return true;
     }
 
 
-    public static void saveImage(
-    		SavingSettings savingSettings,
-			RandomAccessibleInterval rai ) {
+    public static < R extends RealType< R > & NativeType< R >> void saveImage(
+            Image< R > image,
+    		SavingSettings savingSettings ) {
         int nIOThread = Math.max(1, Math.min(savingSettings.nThreads, MAX_THREAD_LIMIT));
         ExecutorService saveExecutorService =  Executors.newFixedThreadPool(nIOThread);
-        savingSettings.image = rai;
+        savingSettings.rai = image.getRai();
         SaveCentral.goSave(savingSettings, saveExecutorService, savingSettings.saveId);
     }
 

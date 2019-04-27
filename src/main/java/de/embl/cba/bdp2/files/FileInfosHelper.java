@@ -158,7 +158,7 @@ public class FileInfosHelper
         infoSource.nY = info[0].height;
         infoSource.bitDepth = info[0].bytesPerPixel * 8;
 
-        infoSource.voxelSize = new double[]{
+        infoSource.voxelSpacing = new double[]{
                 info[0].pixelWidth,
                 info[0].pixelHeight,
                 info[0].pixelDepth };
@@ -367,7 +367,7 @@ public class FileInfosHelper
             logger.info("File type: " + infoSource.fileType );
 
             //
-            // create the final file list
+            // asCachedCellImg the final file list
             //
 
             infoSource.ctzFileList = new String[ infoSource.nC ][ infoSource.nT ][ infoSource.nZ ];

@@ -1,6 +1,6 @@
 package de.embl.cba.bdp2.viewers;
 
-import de.embl.cba.bdp2.RaiPlus;
+import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.ui.BdvMenus;
 import de.embl.cba.bdp2.ui.DisplaySettings;
 import net.imglib2.FinalInterval;
@@ -13,9 +13,15 @@ public interface ImageViewer < R extends RealType< R > & NativeType< R > >  {
 
     void show();
 
-    void show(RaiPlus< R > raiPlus, boolean autoContrast);
+    void show( Image< R > image, boolean autoContrast);
 
-    RaiPlus< R > getRaiPlus();
+    void show( RandomAccessibleInterval< R > rai,
+               String name,
+               double[] voxelSpacing,
+               String voxelUnit,
+               boolean autoContrast);
+
+    Image< R > getImage();
 
     ImageViewer newImageViewer();
 

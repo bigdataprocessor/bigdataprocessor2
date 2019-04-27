@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 import static de.embl.cba.bdp2.utils.DimensionOrder.C;
 
-public class MultiFromSingleChannelImageCreator
+public class SplitViewCombiner
 {
 	/**
 	 * Crops a single channel 5D image into multiple and stacks them as
@@ -25,7 +25,7 @@ public class MultiFromSingleChannelImageCreator
 	 * @return
 	 */
 	public static < R extends RealType< R > > RandomAccessibleInterval< R >
-	create(
+	run(
 			RandomAccessibleInterval< R > singleChannelRai,
 			ArrayList< long[] > channelCentres,
 			long span )

@@ -7,7 +7,7 @@ public class TrackingSettings {
 
     public static final String CENTER_OF_MASS = "Center of Mass";
     public static final String CORRELATION = "Correlation";
-    public RandomAccessibleInterval imageRAI;
+    public RandomAccessibleInterval rai;
     public String trackingMethod;
     public Point3D objectSize;
     public Point3D maxDisplacement;
@@ -23,6 +23,6 @@ public class TrackingSettings {
     public int[] intensityGate =new int[2];
     public int viewFirstNProcessedRegions;
     public String imageFeatureEnhancement;
-    public double[] voxelSize;
+    public double[] voxelSpacing;
 
 }

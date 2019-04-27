@@ -29,9 +29,9 @@ public class BdvTransformEventHandler implements BehaviourTransformEventHandler<
     protected static final String helpString;
 
 
-    public BdvTransformEventHandler( TransformListener<AffineTransform3D> listener, InputTriggerConfig config, double[] voxelSize ) {
+    public BdvTransformEventHandler( TransformListener<AffineTransform3D> listener, InputTriggerConfig config, double[] voxelSpacing ) {
 
-        // TODO: use voxelSize[ 2 ] to set z-step size
+        // TODO: use voxelSpacing[ 2 ] to set z-step size
 
         this.listener = listener;
         String DRAG_TRANSLATE = "drag translate";
@@ -318,12 +318,12 @@ public class BdvTransformEventHandler implements BehaviourTransformEventHandler<
 
     public static class BehaviourTransformEventHandler3DFactory implements BehaviourTransformEventHandlerFactory<AffineTransform3D> {
 
-        final double[] voxelSize;
+        final double[] voxelSpacing;
 
         private InputTriggerConfig config = new InputTriggerConfig();
 
-        public BehaviourTransformEventHandler3DFactory( double[] voxelSize ) { //TODO  :add new arguments for voxel size--ashis
-            this.voxelSize = voxelSize;
+        public BehaviourTransformEventHandler3DFactory( double[] voxelSpacing ) { //TODO  :add new arguments for voxel size--ashis
+            this.voxelSpacing = voxelSpacing;
         }
 
         public void setConfig(InputTriggerConfig config) {
@@ -331,7 +331,7 @@ public class BdvTransformEventHandler implements BehaviourTransformEventHandler<
         }
 
         public BdvTransformEventHandler create(TransformListener<AffineTransform3D> transformListener) {
-            return new BdvTransformEventHandler( transformListener, this.config, voxelSize);
+            return new BdvTransformEventHandler( transformListener, this.config, voxelSpacing);
         }
     }
 }

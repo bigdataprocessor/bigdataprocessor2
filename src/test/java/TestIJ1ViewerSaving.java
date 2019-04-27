@@ -10,7 +10,7 @@ public class TestIJ1ViewerSaving
 //
 //		final FileInfoSource fileInfoSource = new FileInfoSource(imageDirectory, FileInfoConstants.SINGLE_CHANNEL_TIMELAPSE,
 //				".*", "");
-//		CachedCellImg cachedCellImg = CachedCellImageCreator.create(fileInfoSource, null);
+//		CachedCellImg cachedCellImg = CachedCellImageCreator.asCachedCellImg(fileInfoSource, null);
 
 //		ImageViewer imageViewer = new IJ1ImageViewer<UnsignedShortType>(
 //				cachedCellImg,
@@ -21,8 +21,8 @@ public class TestIJ1ViewerSaving
 //		imageViewer.setDisplayRange(0, 800, 0);
 
 //      final SavingSettings savingSettings = SavingSettings.getDefaults();
-//		savingSettings.voxelSize =imageViewer.getVoxelSize();
-//		savingSettings.unit = imageViewer.getCalibrationUnit();
+//		savingSettings.voxelSpacing =imageViewer.getImage().getVoxelSpacing();
+//		savingSettings.unit = imageViewer.getImage().getVoxelUnit();
 //		BigDataProcessor.saveImage( savingSettings, bigDataProcessor.getImageViewer() );
 	}
 }

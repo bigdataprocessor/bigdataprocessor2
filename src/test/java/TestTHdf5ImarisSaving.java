@@ -1,4 +1,4 @@
-import de.embl.cba.bdp2.loading.CachedCellImageCreator;
+import de.embl.cba.bdp2.loading.CachedCellImgReader;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.files.FileInfoConstants;
 import de.embl.cba.bdp2.files.FileInfos;
@@ -14,7 +14,7 @@ public class TestTHdf5ImarisSaving {
         String imageDirectory = "src/test/resources/shear_transform_test";
         final FileInfos fileInfos = new FileInfos(imageDirectory, FileInfoConstants.SINGLE_CHANNEL_TIMELAPSE,
                 ".*", "");
-        CachedCellImg cachedCellImg = CachedCellImageCreator.create( fileInfos );
+        CachedCellImg cachedCellImg = CachedCellImgReader.asCachedCellImg( fileInfos );
 
         ImageViewer imageViewer = new BdvImageViewer<UnsignedShortType>(
                 cachedCellImg,
@@ -31,9 +31,9 @@ public class TestTHdf5ImarisSaving {
         defaults.fileType = SavingSettings.FileType.IMARIS_STACKS;
         defaults.fileBaseNameIMARIS = "file";
         defaults.parentDirectory = "src/test/resources/";
-        defaults.voxelSize =imageViewer.getVoxelSize();
-        defaults.unit = imageViewer.getCalibrationUnit();
-        new BigDataProcessor2().saveImage(defaults, cachedCellImg);
+        defaults.voxelSpacing = imageViewer.getImage().getVoxelSpacing();
+        defaults.unit = imageViewer.getImage().getVoxelUnit();
+        new BigDataProcessor2().saveImage( imageViewer.getImage(), defaults );
 
     }
 

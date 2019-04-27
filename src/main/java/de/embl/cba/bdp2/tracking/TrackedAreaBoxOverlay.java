@@ -78,13 +78,13 @@ public class TrackedAreaBoxOverlay
             final boolean showBoxSource,
             final boolean showBoxOverlay) {
 
-        // create a procedural RealRandomAccessible that will render the bounding box
+        // asCachedCellImg a procedural RealRandomAccessible that will render the bounding box
         final UnsignedShortType insideValue = new UnsignedShortType(1000); // inside the box pixel value is 1000
         final UnsignedShortType outsideValue = new UnsignedShortType(0); // outside is 0
         interval = new ModifiableInterval(initialInterval);
         boxRealRandomAccessible = new BoxRealRandomAccessible<>(interval, insideValue, outsideValue);
         this.trackingResults = trackingResults;
-        // create a bdv.viewer.Source providing data from the bbox RealRandomAccessible
+        // asCachedCellImg a bdv.viewer.Source providing data from the bbox RealRandomAccessible
         final RealRandomAccessibleSource<UnsignedShortType> boxSource = new RealRandomAccessibleSource<UnsignedShortType>(boxRealRandomAccessible, new UnsignedShortType(), "selection") {
             @Override
             public Interval getInterval(final int t, final int level) {
@@ -113,15 +113,15 @@ public class TrackedAreaBoxOverlay
         //converter.setColor( new ARGBType( 0x00994499 ) ); // set bounding box color to magenta
         converter.setColor(new ARGBType(0x7AA7D5)); // set bounding box color to ...
 
-        // create a ConverterSetup (can be used by the brightness dialog to adjust the converter settings)
+        // asCachedCellImg a ConverterSetup (can be used by the brightness dialog to adjust the converter settings)
         boxConverterSetup = new RealARGBColorConverterSetup(boxSetupId, converter);
         boxConverterSetup.setViewer(viewer);
 
-        // create a SourceAndConverter (can be added to the viewer for display)
+        // asCachedCellImg a SourceAndConverter (can be added to the viewer for display)
         final TransformedSource<UnsignedShortType> ts = new TransformedSource<>(boxSource);
         boxSourceAndConverter = new SourceAndConverter<>(ts, converter);
 
-        // create an Overlay to show 3D wireframe box
+        // asCachedCellImg an Overlay to show 3D wireframe box
         boxOverlay = new TransformedBoxOverlay(new TransformedBox() {
             @Override
             public void getTransform(final AffineTransform3D transform) {

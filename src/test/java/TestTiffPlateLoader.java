@@ -1,7 +1,7 @@
 import bdv.util.AxisOrder;
 import bdv.util.BdvFunctions;
 import bdv.util.BdvOptions;
-import de.embl.cba.bdp2.loading.CachedCellImageCreator;
+import de.embl.cba.bdp2.loading.CachedCellImgReader;
 import de.embl.cba.bdp2.files.FileInfoConstants;
 import de.embl.cba.bdp2.files.FileInfos;
 import net.imglib2.img.Img;
@@ -13,7 +13,7 @@ public class TestTiffPlateLoader {
         final String directory = "src\\test\\resources\\tiff-nc2-nt2\\";
         final FileInfos fileInfos = new FileInfos(directory, FileInfoConstants.LOAD_CHANNELS_FROM_FOLDERS,".*","");
 
-        Img myImg = new CachedCellImageCreator().create( fileInfos );
+        Img myImg = new CachedCellImgReader().asCachedCellImg( fileInfos );
         //ImgOpener imgOpener = new ImgOpener();
         //Img vsa = ( Img) imgOpener.openImgs( directory+fileName ).get( 0 );
 

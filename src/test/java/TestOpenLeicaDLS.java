@@ -1,7 +1,7 @@
 import bdv.util.AxisOrder;
 import bdv.util.BdvFunctions;
 import bdv.util.BdvOptions;
-import de.embl.cba.bdp2.loading.CachedCellImageCreator;
+import de.embl.cba.bdp2.loading.CachedCellImgReader;
 import de.embl.cba.bdp2.files.FileInfoConstants;
 import de.embl.cba.bdp2.files.FileInfos;
 import de.embl.cba.bdp2.viewers.BdvTransformEventHandler;
@@ -20,19 +20,19 @@ public class TestOpenLeicaDLS
         System.out.println( fileInfos.nC);
         System.out.println( fileInfos.nZ);
         System.out.println("BitDepth "+ fileInfos.bitDepth);
-        Img myImg = new CachedCellImageCreator().create( fileInfos );
+        Img myImg = new CachedCellImgReader().asCachedCellImg( fileInfos );
 
 //        AffineTransform3D affineTransform3D = new AffineTransform3D(); // TODO: Play with it later
 //        affineTransform3D.set( 1.0, 0, 0);
 //        affineTransform3D.set( 1.0, 1, 1);
 //        affineTransform3D.set( 1.0, 2, 2);
-        double [] voxelSize = new double[]{0,0};
+        double [] voxelSpacing = new double[]{0,0};
 
         BdvFunctions.show(myImg,"LeicaDLS", BdvOptions.options().axisOrder( AxisOrder.XYCZT)
                 .doubleBuffered( false )
                 .numRenderingThreads(10)
                 //.sourceTransform( affineTransform3D )
-                .transformEventHandlerFactory( new BdvTransformEventHandler.BehaviourTransformEventHandler3DFactory( voxelSize )));// TODO: Play with it later
+                .transformEventHandlerFactory( new BdvTransformEventHandler.BehaviourTransformEventHandler3DFactory( voxelSpacing )));// TODO: Play with it later
 
 
     }

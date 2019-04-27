@@ -1,7 +1,7 @@
 import bdv.util.AxisOrder;
 import bdv.util.BdvFunctions;
 import bdv.util.BdvOptions;
-import de.embl.cba.bdp2.loading.CachedCellImageCreator;
+import de.embl.cba.bdp2.loading.CachedCellImgReader;
 import de.embl.cba.bdp2.files.FileInfoConstants;
 import de.embl.cba.bdp2.files.FileInfos;
 import net.imglib2.img.Img;
@@ -14,7 +14,7 @@ public class TestOpenEmTiffSlices {
         System.out.println( fileInfos.nT);
         System.out.println( fileInfos.nC);
         System.out.println( fileInfos.nX);
-        Img myImg = new CachedCellImageCreator().create( fileInfos );
+        Img myImg = new CachedCellImgReader().asCachedCellImg( fileInfos );
         BdvFunctions.show(myImg,"stream", BdvOptions.options().axisOrder( AxisOrder.XYCZT));
 
     }

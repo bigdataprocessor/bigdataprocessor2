@@ -122,8 +122,8 @@ public class SaveMenuDialog extends JFrame implements ActionListener {
                 savingSettings.mapTo0 = Integer.parseInt(tfMapTo0.getText());
                 savingSettings.mapTo255 = Integer.parseInt(tfMapTo255.getText());
                 savingSettings.nThreads = Integer.parseInt(tfNThreads.getText());
-                savingSettings.voxelSize = imageViewer.getVoxelSize();
-                savingSettings.unit = imageViewer.getCalibrationUnit();
+                savingSettings.voxelSpacing = imageViewer.getImage().getVoxelSpacing();
+                savingSettings.unit = imageViewer.getImage().getVoxelUnit();
                 if (!(fileType.equals(SavingSettings.FileType.TIFF_PLANES ))) {
                     // TODO: implement below for planes
                     savingSettings.convertTo16Bit = cbConvertTo16Bit.isSelected();
@@ -150,7 +150,7 @@ public class SaveMenuDialog extends JFrame implements ActionListener {
                 BigDataProcessor2.executorService.submit(() -> {
                     savingSettings.saveId = this.hashCode();
                     new ProgressBar(this).createGUIandRunMonitor();
-                    BigDataProcessor2.saveImage(savingSettings, imageViewer.getRaiPlus());
+                    BigDataProcessor2.saveImage( imageViewer.getImage(), savingSettings);
                 });
 
             }

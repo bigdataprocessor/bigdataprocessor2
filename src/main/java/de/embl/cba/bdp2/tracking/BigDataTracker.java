@@ -47,7 +47,10 @@ public class BigDataTracker {
         Utils.shutdownThreadPack( BigDataProcessor2.trackerThreadPool,5);
     }
 
-    public void trackObject(TrackingSettings trackingSettings, ImageViewer imageViewer)
+    // TODO:
+    // is the imageViewer needed???
+    // separate image from settings
+    public void trackObject( TrackingSettings trackingSettings, ImageViewer imageViewer )
     {   this.trackingSettings = trackingSettings;
         Point3D minInit = trackingSettings.pMin;
         Point3D maXinit = trackingSettings.pMax;
@@ -57,10 +60,10 @@ public class BigDataTracker {
 
             ImageViewer newTrackedView =  imageViewer.newImageViewer();
             newTrackedView.show(
-                    trackingSettings.imageRAI,
+                    trackingSettings.rai,
                     FileInfoConstants.TRACKED_IMAGE_NAME,
-                    imageViewer.getVoxelSize(),
-                    imageViewer.getCalibrationUnit(),
+                    imageViewer.getImage().getVoxelSpacing(),
+                    imageViewer.getImage().getVoxelUnit(),
                     false);
             imageViewer.replicateViewerContrast(newTrackedView);
 
@@ -78,7 +81,7 @@ public class BigDataTracker {
     {
         if(trackResults!=null) {
             List<RandomAccessibleInterval<T>> tracks = new ArrayList<>();
-            int nChannels = (int) trackingSettings.imageRAI.dimension( DimensionOrder.C );
+            int nChannels = (int) trackingSettings.rai.dimension( DimensionOrder.C );
             for (Map.Entry<Integer, Point3D[]> entry : this.trackResults.locations.entrySet()) {
                 Point3D[] pMinMax = entry.getValue();
                 long[] range = {(long) pMinMax[0].getX(),
@@ -92,7 +95,7 @@ public class BigDataTracker {
                                 nChannels-1,
                                 entry.getKey()}; //XYZCT order
                 FinalInterval trackedInterval = Intervals.createMinMax(range);
-                RandomAccessibleInterval trackedRegion = Views.interval((RandomAccessible) Views.extendZero(trackingSettings.imageRAI), trackedInterval); // Views.extendZero in case range is beyond the original image.
+                RandomAccessibleInterval trackedRegion = Views.interval((RandomAccessible) Views.extendZero(trackingSettings.rai ), trackedInterval); // Views.extendZero in case range is beyond the original image.
                 RandomAccessibleInterval timeRemovedRAI = Views.zeroMin(Views.hyperSlice(trackedRegion,4, entry.getKey()));
                 tracks.add(timeRemovedRAI);
             }
@@ -101,8 +104,8 @@ public class BigDataTracker {
             newTrackedView.show(
                     stackedRAI,
                     FileInfoConstants.TRACKED_IMAGE_NAME,
-                    imageViewer.getVoxelSize(),
-                    imageViewer.getCalibrationUnit(),
+                    imageViewer.getImage().getVoxelSpacing(),
+                    imageViewer.getImage().getVoxelUnit(),
                     false);
             newTrackedView.addMenus(new BdvMenus());
             for (int channel=0; channel<nChannels; ++channel){ // TODO: change to method replicateViewerContrast --ashis

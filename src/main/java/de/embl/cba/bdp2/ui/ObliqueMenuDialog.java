@@ -27,7 +27,7 @@ public class ObliqueMenuDialog extends JDialog implements ActionListener {
 
     public ObliqueMenuDialog(ImageViewer imageViewer) {
         this.imageViewer = imageViewer;
-        this.originalRAI = imageViewer.getRaiPlus();
+        this.originalRAI = imageViewer.getImage().getRai();
         JTabbedPane menu = new JTabbedPane();
         ArrayList<JPanel> mainPanels = new ArrayList<>();
         ArrayList<JPanel> panels = new ArrayList<>();
@@ -90,8 +90,8 @@ public class ObliqueMenuDialog extends JDialog implements ActionListener {
         imageViewer.show(
                 sheared,
                 "Oblique View",
-                imageViewer.getVoxelSize(),
-                imageViewer.getCalibrationUnit(),
+                imageViewer.getImage().getVoxelSpacing(),
+                imageViewer.getImage().getVoxelUnit(),
                 true);
         double[] centerCoordinates = {sheared.min( DimensionOrder.X ) / 2.0,
                 sheared.max( DimensionOrder.Y ) / 2.0,

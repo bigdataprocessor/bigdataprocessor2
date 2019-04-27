@@ -29,7 +29,7 @@ public class BoundingBoxDialog
         this.bdv = bdv;
     }
 
-    public void show(RandomAccessibleInterval rai, double[] voxelSize) {
+    public void show(RandomAccessibleInterval rai, double[] voxelSpacing) {
         final int[] min, max;
         min = new int[4];
         min[T] = (int) rai.min( DimensionOrder.T);
@@ -37,8 +37,8 @@ public class BoundingBoxDialog
         max[T] = (int) rai.max( DimensionOrder.T);
 
         for (int d = 0; d < 3; d++) {
-            min[d] = (int) (rai.min(d) * voxelSize[d]);
-            max[d] = (int) (rai.max(d) * voxelSize[d]);
+            min[d] = (int) (rai.min(d) * voxelSpacing[d]);
+            max[d] = (int) (rai.max(d) * voxelSpacing[d]);
         }
         long[] size = new long[MAX_ALLOWED_IMAGE_DIMS];
         rai.dimensions(size);

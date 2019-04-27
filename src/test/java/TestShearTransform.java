@@ -1,4 +1,4 @@
-import de.embl.cba.bdp2.loading.CachedCellImageCreator;
+import de.embl.cba.bdp2.loading.CachedCellImgReader;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.ui.ObliqueMenuDialog;
 import de.embl.cba.bdp2.ui.ShearingSettings;
@@ -17,7 +17,7 @@ public class TestShearTransform {
         String imageDirectory = "src/test/resources/shear_transform_test";
         final FileInfos fileInfos = new FileInfos( imageDirectory, FileInfoConstants.SINGLE_CHANNEL_TIMELAPSE,
                 ".*", "");
-        CachedCellImg cachedCellImg = CachedCellImageCreator.create( fileInfos );
+        CachedCellImg cachedCellImg = CachedCellImgReader.asCachedCellImg( fileInfos );
 
         ImageViewer imageViewer = new BdvImageViewer<UnsignedShortType>(
                 cachedCellImg,
@@ -33,7 +33,7 @@ public class TestShearTransform {
          * (replacing the input image);
          */
         RandomAccessibleInterval sheared = getShearedImage( cachedCellImg, imageViewer );
-        imageViewer.show( sheared, "sheared", imageViewer.getVoxelSize(), imageViewer.getCalibrationUnit(), true );
+        imageViewer.show( sheared, "sheared", imageViewer.getImage().getVoxelSpacing(), imageViewer.getImage().getVoxelUnit(), true );
         //imageViewer.setDisplayRange( 0, 800, 0 );
 
 

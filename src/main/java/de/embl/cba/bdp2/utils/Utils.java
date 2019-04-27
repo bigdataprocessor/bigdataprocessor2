@@ -267,7 +267,7 @@ public class Utils {
 
     public static ImagePlus wrapToCalibratedImagePlus(
             RandomAccessibleInterval randomAccessibleInterval,
-            double[] voxelSize,
+            double[] voxelSpacing,
             String unit,
             String name )
     {
@@ -275,9 +275,9 @@ public class Utils {
 
         final Calibration calibration = new Calibration();
         calibration.setUnit( unit );
-        calibration.pixelWidth = voxelSize[ 0 ];
-        calibration.pixelHeight = voxelSize[ 1 ];
-        calibration.pixelDepth = voxelSize[ 2 ];
+        calibration.pixelWidth = voxelSpacing[ 0 ];
+        calibration.pixelHeight = voxelSpacing[ 1 ];
+        calibration.pixelDepth = voxelSpacing[ 2 ];
         imp.setCalibration( calibration );
 
         return imp;

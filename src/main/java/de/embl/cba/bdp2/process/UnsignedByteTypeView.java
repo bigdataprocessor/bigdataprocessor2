@@ -24,7 +24,7 @@ public class UnsignedByteTypeView< T extends RealType< T > >
 	public UnsignedByteTypeView( final ImageViewer imageViewer  )
 	{
 
-		final RandomAccessibleInterval rai = imageViewer.getRaiPlus();
+		final RandomAccessibleInterval rai = imageViewer.getImage().getRai();
 
 		if ( ( Util.getTypeFromInterval( rai ) instanceof UnsignedByteType) )
 		{
@@ -51,8 +51,8 @@ public class UnsignedByteTypeView< T extends RealType< T > >
 		newImageViewer.show(
 				converted,
 				FileInfoConstants.UNSIGNED_BYTE_VIEW_NAME,
-				imageViewer.getVoxelSize(),
-				imageViewer.getCalibrationUnit(),
+				imageViewer.getImage().getVoxelSpacing(),
+				imageViewer.getImage().getVoxelUnit(),
 				true);
 
 		logger.info( "8-bit view size [GB]: " + Utils.getSizeGB( converted ) );

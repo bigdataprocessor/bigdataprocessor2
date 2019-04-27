@@ -8,7 +8,7 @@ import bdv.util.BdvOptions;
 import bdv.util.BdvStackSource;
 import bdv.util.PlaceHolderConverterSetup;
 import bdv.viewer.SourceAndConverter;
-import de.embl.cba.bdp2.RaiPlus;
+import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.boundingbox.BoundingBoxDialog;
 import de.embl.cba.bdp2.ui.BdvMenus;
 import de.embl.cba.bdp2.ui.BigDataProcessorCommand;
@@ -19,7 +19,6 @@ import net.imglib2.Cursor;
 import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.Volatile;
-import net.imglib2.cache.img.CachedCellImg;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ARGBType;
@@ -35,42 +34,42 @@ public class BdvImageViewer< R extends RealType< R > & NativeType< R >>
         implements ImageViewer
 {
 
-    private RaiPlus< R > raiPlus;
+    private Image< R > image;
     private BdvStackSource< Volatile< R > > bdvStackSource;
     private BdvGrayValuesOverlay overlay;
 
     public BdvImageViewer( ) {
     }
 
-    public BdvImageViewer( RaiPlus< R > raiPlus ) {
-        this.raiPlus = raiPlus;
+    public BdvImageViewer( Image< R > image ) {
+        this.image = image;
     }
 
     public BdvImageViewer( RandomAccessibleInterval< R > rai,
                            String name,
-                           double[] voxelSize,
-                           String voxelSizeUnit )
+                           double[] voxelSpacing,
+                           String voxelUnit )
     {
-        this.raiPlus = new RaiPlus<>( rai, name, voxelSize, voxelSizeUnit  );
+        this.image = new Image<>( rai, name, voxelSpacing, voxelUnit  );
     }
 
     @Override
     public FinalInterval get5DIntervalFromUser() {
         BoundingBoxDialog showBB = new BoundingBoxDialog(this.bdvStackSource.getBdvHandle());
-        final double[] voxelSize = raiPlus.getVoxelSize();
-        final RandomAccessibleInterval< R > rai = raiPlus.getRai();
-        showBB.show( rai, voxelSize );
+        final double[] voxelSpacing = image.getVoxelSpacing();
+        final RandomAccessibleInterval< R > rai = image.getRai();
+        showBB.show( rai, voxelSpacing );
         FinalInterval interval;
         if (showBB.selectedMax != null && showBB.selectedMin != null) {
             long[] minMax = {
-                    (long) (showBB.selectedMin[BoundingBoxDialog.X] / voxelSize[ DimensionOrder.X]),
-                    (long) (showBB.selectedMin[BoundingBoxDialog.Y] / voxelSize[ DimensionOrder.Y]),
-                    (long) (showBB.selectedMin[BoundingBoxDialog.Z] / voxelSize[ DimensionOrder.Z]),
+                    (long) (showBB.selectedMin[BoundingBoxDialog.X] / voxelSpacing[ DimensionOrder.X]),
+                    (long) (showBB.selectedMin[BoundingBoxDialog.Y] / voxelSpacing[ DimensionOrder.Y]),
+                    (long) (showBB.selectedMin[BoundingBoxDialog.Z] / voxelSpacing[ DimensionOrder.Z]),
                     rai.min( DimensionOrder.C),
                     showBB.selectedMin[BoundingBoxDialog.T],
-                    (long) (showBB.selectedMax[BoundingBoxDialog.X] / voxelSize[ DimensionOrder.X]),
-                    (long) (showBB.selectedMax[BoundingBoxDialog.Y] / voxelSize[ DimensionOrder.Y]),
-                    (long) (showBB.selectedMax[BoundingBoxDialog.Z] / voxelSize[ DimensionOrder.Z]),
+                    (long) (showBB.selectedMax[BoundingBoxDialog.X] / voxelSpacing[ DimensionOrder.X]),
+                    (long) (showBB.selectedMax[BoundingBoxDialog.Y] / voxelSpacing[ DimensionOrder.Y]),
+                    (long) (showBB.selectedMax[BoundingBoxDialog.Z] / voxelSpacing[ DimensionOrder.Z]),
                     rai.max( DimensionOrder.C),
                     showBB.selectedMax[BoundingBoxDialog.T]};
             interval= Intervals.createMinMax(minMax);
@@ -87,8 +86,8 @@ public class BdvImageViewer< R extends RealType< R > & NativeType< R >>
     }
 
     @Override
-    public RaiPlus< R > getRaiPlus() {
-        return raiPlus;
+    public Image< R > getImage() {
+        return image;
     }
 
 
@@ -104,19 +103,30 @@ public class BdvImageViewer< R extends RealType< R > & NativeType< R >>
 
     @Override
     public void show() {
-        showImage( raiPlus );
+        showImage( image );
     }
 
     @Override
-    public void show( RaiPlus raiPlus, boolean autoContrast )
+    public void show( Image image, boolean autoContrast )
     {
         if ( bdvStackSource != null )
             removeAllSourcesFromBdv();
 
-        showImage( raiPlus );
+        showImage( image );
 
         if (autoContrast)
             doAutoContrastPerChannel();
+    }
+
+    @Override
+    public void show(
+            RandomAccessibleInterval rai,
+            String name,
+            double[] voxelSpacing,
+            String voxelUnit,
+            boolean autoContrast )
+    {
+        show( new Image<>( rai, name, voxelSpacing, voxelUnit  ), autoContrast );
     }
 
     private void removeAllSourcesFromBdv() {
@@ -166,9 +176,9 @@ public class BdvImageViewer< R extends RealType< R > & NativeType< R >>
     @Override
     public DisplaySettings getDisplaySettings(int channel) {
         double min, max;
-        if ( raiPlus != null) {
+        if ( image != null) {
             RandomAccessibleInterval raiStack = Views.hyperSlice(
-                    Views.hyperSlice( raiPlus.getRai(), DimensionOrder.T, 0),
+                    Views.hyperSlice( image.getRai(), DimensionOrder.T, 0),
                     DimensionOrder.C,
                     channel);
             final long stackCenter = (raiStack.max( DimensionOrder.Z) - raiStack.min( DimensionOrder.Z)) / 2 + raiStack.min( DimensionOrder.Z);
@@ -194,7 +204,7 @@ public class BdvImageViewer< R extends RealType< R > & NativeType< R >>
 
     @Override
     public void doAutoContrastPerChannel() {
-        int nChannels = (int) raiPlus.getRai().dimension( DimensionOrder.C);
+        int nChannels = (int) image.getRai().dimension( DimensionOrder.C);
         for (int channel = 0; channel < nChannels; ++channel) {
             DisplaySettings setting = getDisplaySettings(channel);
             setDisplayRange( setting.getMinValue(), setting.getMaxValue(), 0);
@@ -256,27 +266,28 @@ public class BdvImageViewer< R extends RealType< R > & NativeType< R >>
         return bdvStackSource;
     }
 
-    private void showImage( RaiPlus< R > raiPlus )
+    private void showImage( Image< R > image )
     {
-        bdvStackSource = addToBdv( raiPlus );
+        this.image = image;
+        bdvStackSource = addToBdv( image );
         setTransform();
         setColors();
         addGrayValueOverlay();
     }
 
-    private BdvStackSource< Volatile< R > > addToBdv( RaiPlus< R > raiPlus )
+    private BdvStackSource< Volatile< R > > addToBdv( Image< R > image )
     {
-        final AffineTransform3D scaling = getScalingTransform( raiPlus.getVoxelSize() );
+        final AffineTransform3D scaling = getScalingTransform( image.getVoxelSpacing() );
 
         final RandomAccessibleInterval< Volatile< R > > volatileRai =
-                asVolatile( raiPlus.getRai() );
+                asVolatile( image.getRai() );
 
         if ( volatileRai == null )
             BigDataProcessorCommand.logger.error( "Could not wrap as volatile!" );
         else
             bdvStackSource = BdvFunctions.show(
                         volatileRai,
-                        raiPlus.getName(),
+                        image.getName(),
                         BdvOptions.options().axisOrder( AxisOrder.XYZCT )
                                 .addTo( bdvStackSource )
                                 .sourceTransform( scaling ) );
@@ -289,12 +300,12 @@ public class BdvImageViewer< R extends RealType< R > & NativeType< R >>
         if ( transform3D != null ) setViewerTransform( transform3D );
     }
 
-    private AffineTransform3D getScalingTransform( double[] voxelSize )
+    private AffineTransform3D getScalingTransform( double[] voxelSpacing )
     {
         final AffineTransform3D scaling = new AffineTransform3D();
 
         for (int d = 0; d < 3; d++)
-            scaling.set(voxelSize[d], d, d);
+            scaling.set(voxelSpacing[d], d, d);
         return scaling;
     }
 

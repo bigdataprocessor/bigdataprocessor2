@@ -26,6 +26,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class SaveCentral {
 
+    // TODO: remove the image from the settings
     public static void goSave(SavingSettings savingSettings, ExecutorService es, int saveId) {
         if (savingSettings.fileType.equals( SavingSettings.FileType.TIFF_PLANES )) {
             saveTIFFAsPlanes(savingSettings, es, saveId);
@@ -44,9 +45,9 @@ public class SaveCentral {
         AtomicBoolean stop = new AtomicBoolean(false);
         updateTrackers(saveId, stop);
         List<Future> futures = new ArrayList<>();
-        for (int c = 0; c < savingSettings.image.dimension(DimensionOrder.C); c++) {
-            for (int t = 0; t < savingSettings.image.dimension(DimensionOrder.T); t++) {
-                for (int z = 0; z < savingSettings.image.dimension(DimensionOrder.Z); z++) {
+        for ( int c = 0; c < savingSettings.rai.dimension(DimensionOrder.C); c++) {
+            for ( int t = 0; t < savingSettings.rai.dimension(DimensionOrder.T); t++) {
+                for ( int z = 0; z < savingSettings.rai.dimension(DimensionOrder.Z); z++) {
                     futures.add(es.submit(
                             new SaveImgAsTIFFPlanes(c, t, z, savingSettings, stop)
                     ));
@@ -76,7 +77,7 @@ public class SaveCentral {
         AtomicBoolean stop = new AtomicBoolean(false);
         updateTrackers(saveId, stop);
         final long startTime = System.currentTimeMillis();
-        long timeFrames = savingSettings.image.dimension(DimensionOrder.T);
+        long timeFrames = savingSettings.rai.dimension(DimensionOrder.T);
         for (int t = 0; t < timeFrames; t++) {
             futures.add(
                     es.submit(
@@ -94,8 +95,8 @@ public class SaveCentral {
         AtomicBoolean stop = new AtomicBoolean(false);
         updateTrackers(saveId, stop);
         final long startTime = System.currentTimeMillis();
-        long timeFrames = savingSettings.image.dimension(DimensionOrder.T);
-        NativeType imageType = Util.getTypeFromInterval(savingSettings.image);
+        long timeFrames = savingSettings.rai.dimension(DimensionOrder.T);
+        NativeType imageType = Util.getTypeFromInterval(savingSettings.rai );
         for (int t = 0; t < timeFrames; t++) {
             if (imageType instanceof UnsignedByteType) {
                 futures.add(es.submit(
@@ -128,8 +129,8 @@ public class SaveCentral {
         updateTrackers(saveId, stop);
         ImarisDataSet imarisDataSetProperties = getImarisDataSet(savingSettings,stop);
         final long startTime = System.currentTimeMillis();
-        long timeFrames = savingSettings.image.dimension(DimensionOrder.T);
-        NativeType imageType = Util.getTypeFromInterval(savingSettings.image);
+        long timeFrames = savingSettings.rai.dimension(DimensionOrder.T);
+        NativeType imageType = Util.getTypeFromInterval(savingSettings.rai );
         for (int t = 0; t < timeFrames; t++) {
             if (imageType instanceof UnsignedByteType) {
                 futures.add(es.submit(
@@ -161,8 +162,8 @@ public class SaveCentral {
     private static ImarisDataSet getImarisDataSet(SavingSettings savingSettings,AtomicBoolean stop) {
 
         ImagePlus image = Utils.wrapToCalibratedImagePlus(
-                savingSettings.image,
-                savingSettings.voxelSize,
+                savingSettings.rai,
+                savingSettings.voxelSpacing,
                 savingSettings.unit,
                 "wrapped");
 

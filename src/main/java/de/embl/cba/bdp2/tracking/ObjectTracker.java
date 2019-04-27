@@ -44,11 +44,11 @@ public class ObjectTracker<T extends RealType<T>> {
         this.trackingSettings = trackingSettings;
         this.pMin = trackingSettings.pMin;
         this.pMax = trackingSettings.pMax;
-        this.width = (int) trackingSettings.imageRAI.dimension( DimensionOrder.X );
-        this.height = (int) trackingSettings.imageRAI.dimension( DimensionOrder.Y );
-        this.depth = (int) trackingSettings.imageRAI.dimension( DimensionOrder.Z );
+        this.width = (int) trackingSettings.rai.dimension( DimensionOrder.X );
+        this.height = (int) trackingSettings.rai.dimension( DimensionOrder.Y );
+        this.depth = (int) trackingSettings.rai.dimension( DimensionOrder.Z );
         this.channel = trackingSettings.channel;
-        this.timeFrames =  trackingSettings.nt ==-1? (int)trackingSettings.imageRAI.dimension( DimensionOrder.T ) : trackingSettings.nt+ trackingSettings.tStart;
+        this.timeFrames =  trackingSettings.nt ==-1? (int)trackingSettings.rai.dimension( DimensionOrder.T ) : trackingSettings.nt+ trackingSettings.tStart;
         this.trackId = 0;
     }
 
@@ -66,7 +66,7 @@ public class ObjectTracker<T extends RealType<T>> {
 
     private Track doCenterOfMassTracking(){
         final Point3D boxDim = pMax.subtract(pMin);
-        RandomAccess<T> randomAccess = trackingSettings.imageRAI.randomAccess();
+        RandomAccess<T> randomAccess = trackingSettings.rai.randomAccess();
         int tStart = trackingSettings.tStart;
         Point3D pCentroid;
         Track trackingResults = new Track(this.trackingSettings, trackId);
@@ -120,7 +120,7 @@ public class ObjectTracker<T extends RealType<T>> {
                     channel,
                     timeFrames-1};//XYZCT
             FinalInterval trackedInterval = Intervals.createMinMax(range);
-            RandomAccessibleInterval rai = Views.interval( (RandomAccessible) Views.extendZero(trackingSettings.imageRAI) , trackedInterval);
+            RandomAccessibleInterval rai = Views.interval( (RandomAccessible) Views.extendZero(trackingSettings.rai ) , trackedInterval);
             RandomAccessibleInterval<T> currentFrame = Views.hyperSlice(rai,4,t);
             RandomAccessibleInterval<T> nextFrame = Views.hyperSlice(rai,4,t+1);
             //Intensity gating

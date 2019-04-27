@@ -39,7 +39,7 @@ public class SaveImgAsTIFFPlanes implements Runnable {
             savingSettings.saveVolume = true;
             return;
         }
-        RandomAccessibleInterval imgStack = savingSettings.image;
+        RandomAccessibleInterval imgStack = savingSettings.rai;
         long[] minInterval = new long[]{
                 imgStack.min( DimensionOrder.X ),
                 imgStack.min( DimensionOrder.Y ),

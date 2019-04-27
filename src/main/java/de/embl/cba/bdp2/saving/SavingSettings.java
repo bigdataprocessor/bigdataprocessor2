@@ -7,13 +7,17 @@ import net.imglib2.RandomAccessibleInterval;
  */
 public class SavingSettings {
 
+    // TODO: remove the image itself from the settings
+    public RandomAccessibleInterval rai;
+    public double[] voxelSpacing;
+    public String unit;
+
+    // TODO: also remove the binning
+    public String bin;
+
     public static final String LZW = "LZW";
     public static final String NONE = "None";
     public Integer saveId;
-    public RandomAccessibleInterval image;
-    public double[] voxelSize;
-    public String unit;
-    public String bin;
     public boolean saveVolume;
     public boolean saveProjection;
     public boolean convertTo8Bit;
@@ -54,7 +58,7 @@ public class SavingSettings {
     public static SavingSettings getDefaults() {
         SavingSettings savingSettings = new SavingSettings();
         savingSettings.bin = "1,1,1";
-        savingSettings.voxelSize = new double[]{1,1,1};
+        savingSettings.voxelSpacing = new double[]{1,1,1};
         savingSettings.unit = "pixel";
         savingSettings.saveVolume = true;
         savingSettings.fileType = FileType.TIFF_PLANES;
