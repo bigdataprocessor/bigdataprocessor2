@@ -3,9 +3,12 @@ package de.embl.cba.bdp2.ui;
 import de.embl.cba.bdp2.process.*;
 import de.embl.cba.bdp2.tracking.BigDataTrackerGUI;
 import de.embl.cba.bdp2.utils.DimensionOrder;
+import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import de.embl.cba.bdp2.viewers.ImageViewer;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.display.imagej.ImageJFunctions;
+import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.RealType;
 import net.imglib2.view.Views;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -13,7 +16,8 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BdvMenus extends JMenu implements ActionListener {
+public class BdvMenus
+        extends JMenu implements ActionListener {
 
     private final SaveSelectMenu saveSelectMenu;
     private final OthersMenu othersMenu;
@@ -92,7 +96,7 @@ public class BdvMenus extends JMenu implements ActionListener {
         }else if(e.getActionCommand().equalsIgnoreCase(
                     UIDisplayConstants.SPLIT_VIEW_MENU_ITEM )){
                 BigDataProcessor2.executorService.submit(() -> {
-                    new SplitViewMerging<>(imageViewer);
+                    new SplitViewMerging( ( BdvImageViewer ) imageViewer );
         });
     }
     }

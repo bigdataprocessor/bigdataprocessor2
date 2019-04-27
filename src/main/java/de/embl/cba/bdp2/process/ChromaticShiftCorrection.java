@@ -125,8 +125,6 @@ public class ChromaticShiftCorrection< T extends RealType< T > & NativeType< T >
 
 	private void createValueAndSlider( int c, String axis )
 	{
-
-
 		final BoundedValue boundedValue
 				= new BoundedValue(
 				-200, // TODO: how much?
@@ -143,7 +141,6 @@ public class ChromaticShiftCorrection< T extends RealType< T > & NativeType< T >
 		boundedValues.add( boundedValue );
 		sliderPanels.add( sliderPanel );
 		panel.add( sliderPanel );
-
 	}
 
 	class ChromaticShiftUpdateListener implements BoundedValue.UpdateListener

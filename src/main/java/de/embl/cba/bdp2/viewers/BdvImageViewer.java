@@ -38,7 +38,7 @@ public class BdvImageViewer< R extends RealType< R > & NativeType< R >>
     private BdvStackSource< Volatile< R > > bdvStackSource;
     private BdvGrayValuesOverlay overlay;
 
-    public BdvImageViewer( ) {
+    public BdvImageViewer() {
     }
 
     public BdvImageViewer( Image< R > image ) {
@@ -151,7 +151,7 @@ public class BdvImageViewer< R extends RealType< R > & NativeType< R >>
         }
     }
 
-    public void addMenus(BdvMenus menus) {
+    public void addMenus( BdvMenus menus ) {
         menus.setImageViewer(this);
         for (JMenu menu : menus.getMenus()) {
             ((BdvHandleFrame) this.bdvStackSource.getBdvHandle())
@@ -264,7 +264,7 @@ public class BdvImageViewer< R extends RealType< R > & NativeType< R >>
         repaint(sourceTransform);
     }
 
-    public BdvStackSource getBdvStackSource() {
+    public BdvStackSource< Volatile< R > > getBdvStackSource() {
         return bdvStackSource;
     }
 

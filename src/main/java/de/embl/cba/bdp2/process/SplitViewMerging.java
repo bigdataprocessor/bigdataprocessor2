@@ -1,116 +1,131 @@
 package de.embl.cba.bdp2.process;
 
+import bdv.tools.boundingbox.TransformedBox;
+import bdv.tools.boundingbox.TransformedBoxOverlay;
 import bdv.tools.brightness.SliderPanel;
 import bdv.util.BoundedValue;
-import de.embl.cba.bdp2.ui.BdvMenus;
-import de.embl.cba.bdp2.utils.DimensionOrder;
-import de.embl.cba.bdp2.viewers.ImageViewer;
+import bdv.util.ModifiableRealInterval;
+import bdv.viewer.ViewerPanel;
+import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import net.imglib2.FinalRealInterval;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.RealInterval;
+import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Intervals;
-import net.imglib2.view.IntervalView;
-import net.imglib2.view.Views;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-public class SplitViewMerging< T extends RealType< T > & NativeType< T > >
+public class SplitViewMerging < R extends RealType< R > & NativeType< R > >
 {
 
-	private final ImageViewer< T > imageViewer;
-	private final RandomAccessibleInterval< T > rai;
-	private ArrayList< BoundedValue > boundedValues;
+	public static final String CX = "cx";
+	public static final String CY = "cy";
+	public static final String W = "w";
+	public static final String H = "h";
+	public static final int X = 0;
+	public static final int Y = 1;
+	public static final int Z = 2;
+
+	private final BdvImageViewer< R > viewer;
+	private Map< String, BoundedValue > boundedValues;
 	private ArrayList< SliderPanel > sliderPanels;
-	private final ImageViewer newImageViewer;
-	private final long numChannels;
-	private final ArrayList< RandomAccessibleInterval< T > > channelRAIs;
-	private RandomAccessibleInterval< T > correctedRai;
-	private ChromaticShiftUpdateListener updateListener;
+	private SelectionUpdateListener updateListener;
 	private JPanel panel;
-	private ArrayList< RandomAccessibleInterval< T > > shiftedChannelRAIs;
+	private ArrayList< RandomAccessibleInterval< R > > shiftedChannelRAIs;
+	private int numChannels = 1;
 
-	public SplitViewMerging( final ImageViewer< T > imageViewer  )
+	public SplitViewMerging( final BdvImageViewer< R > viewer )
 	{
-		this.imageViewer = imageViewer;
-		this.rai = imageViewer.getImage().getRai();
-		numChannels = rai.dimension( DimensionOrder.C );
+		this.viewer = viewer;
 
-		channelRAIs = getChannelRAIs();
-		shiftedChannelRAIs = channelRAIs;
-		setCorrectedRai();
+		final ModifiableRealInterval modifiableRealInterval = showRegionSelectionOverlay();
 
-		newImageViewer = createNewImageViewer( imageViewer );
+		showRegionSelectionDialog( modifiableRealInterval );
 
-		showChromaticShiftCorrectionDialog();
+		//newImageViewer = createNewImageViewer( imageViewer );
 	}
 
-	private ImageViewer< T > createNewImageViewer( ImageViewer< T > imageViewer )
-	{
-		ImageViewer newImageViewer = imageViewer.newImageViewer();
-
-		newImageViewer.show(
-				correctedRai,
-				imageViewer.getImage().getName() + "_csc",
-				imageViewer.getImage().getVoxelSpacing(),
-				imageViewer.getImage().getVoxelUnit(),
-				true);
-
-		newImageViewer.addMenus( new BdvMenus() );
-
-		return newImageViewer;
-	}
-
-	private void setCorrectedRai()
-	{
-		final RandomAccessibleInterval< T > stack = Views.stack( shiftedChannelRAIs );
-
-		correctedRai = Views.permute( stack, DimensionOrder.C, DimensionOrder.T );
-	}
-
-	private ArrayList< RandomAccessibleInterval< T > > getChannelRAIs()
-	{
-		ArrayList< RandomAccessibleInterval< T > > channelRais = new ArrayList<>();
-
-		for ( int c = 0; c < numChannels; c++ )
-			channelRais.add( Views.hyperSlice( rai, DimensionOrder.C, c ) );
-
-		return channelRais;
-	}
-
-	private double[] getBinnedVoxelSize( long[] span, double[] voxelSpacing )
-	{
-		final double[] newVoxelSize = new double[ voxelSpacing.length ];
-
-		for ( int d = 0; d < 3; d++ )
-			newVoxelSize[ d ] = voxelSpacing[ d ] * ( 2 * span[ d ] + 1 );
-
-		return newVoxelSize;
-	}
-
-	private void showChromaticShiftCorrectionDialog()
+	private void showRegionSelectionDialog( ModifiableRealInterval modifiableRealInterval )
 	{
 		panel = new JPanel();
 		panel.setLayout( new BoxLayout( panel, BoxLayout.PAGE_AXIS ) );
+		sliderPanels = new ArrayList<>(  );
+		boundedValues = new HashMap<>(  );
 
-		boundedValues = new ArrayList<>();
-		sliderPanels = new ArrayList<>();
-		updateListener = new ChromaticShiftUpdateListener();
+		updateListener = new SelectionUpdateListener( modifiableRealInterval );
 
-		final String[] xyz = { "X", "Y", "Z" };
+		boundedValues.put( CX, new BoundedValue( 0, 1000, 500 ) );
+		createPanel( CX , boundedValues.get( CX ) );
 
-		for ( int c = 0; c < numChannels; c++ )
-			for ( String axis : xyz )
-				createValueAndSlider( c, axis );
+		boundedValues.put( CY, new BoundedValue( 0, 1000, 500 ) );
+		createPanel( CY , boundedValues.get( CY ) );
+
+		boundedValues.put( W, new BoundedValue( 0, 1000, 100 ) );
+		createPanel( W , boundedValues.get( W ) );
+
+		boundedValues.put( H, new BoundedValue( 0, 1000, 100 ) );
+		createPanel( H , boundedValues.get( H ) );
 
 		showFrame( panel );
 	}
 
+	private ModifiableRealInterval showRegionSelectionOverlay()
+	{
+		final RandomAccessibleInterval rai = viewer.getImage().getRai();
+		final double[] min = new double[ 3 ];
+		final double[] max = new double[ 3 ];
+
+		final double[] voxelSpacing = viewer.getImage().getVoxelSpacing();
+
+		for (int d = 0; d < 3; d++) {
+			min[d] = (int) (rai.min(d) * voxelSpacing[d]);
+			max[d] = (int) (0.7 * rai.max(d) * voxelSpacing[d]);
+		}
+
+		final FinalRealInterval interval = new FinalRealInterval( min, max );
+
+		ModifiableRealInterval modifiableRealInterval = new ModifiableRealInterval( interval );
+
+		final TransformedBoxOverlay transformedBoxOverlay =
+				new TransformedBoxOverlay( new TransformedBox()
+				{
+					@Override
+					public void getTransform( final AffineTransform3D transform )
+					{
+						viewer.getBdvStackSource().getSources().get( 0 )
+								.getSpimSource().getSourceTransform( 0, 0, transform );
+
+					}
+
+					@Override
+					public Interval getInterval()
+					{
+						return Intervals.largestContainedInterval( modifiableRealInterval );
+					}
+
+
+				} );
+
+		transformedBoxOverlay.boxDisplayMode().set( TransformedBoxOverlay.BoxDisplayMode.SECTION );
+
+		final ViewerPanel viewerPanel = viewer.getBdvStackSource().getBdvHandle().getViewerPanel();
+		viewerPanel.getDisplay().addOverlayRenderer(transformedBoxOverlay);
+		viewerPanel.addRenderTransformListener(transformedBoxOverlay);
+
+		return modifiableRealInterval;
+
+	}
+
 	private void showFrame( JPanel panel )
 	{
-		final JFrame frame = new JFrame( "Chromatic Shift Correction [Pixels]" );
+		final JFrame frame = new JFrame( "Region Selection" );
 		frame.setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
 
 		frame.setContentPane( panel );
@@ -123,38 +138,57 @@ public class SplitViewMerging< T extends RealType< T > & NativeType< T > >
 		frame.setVisible( true );
 	}
 
-	private void createValueAndSlider( int c, String axis )
+	private void createPanel( String name, BoundedValue boundedValue )
 	{
-
-
-		final BoundedValue boundedValue
-				= new BoundedValue(
-				-200, // TODO: how much?
-				200,
-				0 );
-
-		final SliderPanel sliderPanel = new SliderPanel(
-				"Channel " + c + ", " + axis,
-				boundedValue,
-				1 );
+		final SliderPanel sliderPanel =
+				new SliderPanel(
+						name,
+						boundedValue,
+						1 );
 
 		boundedValue.setUpdateListener( updateListener );
-
-		boundedValues.add( boundedValue );
 		sliderPanels.add( sliderPanel );
 		panel.add( sliderPanel );
-
 	}
 
-	class ChromaticShiftUpdateListener implements BoundedValue.UpdateListener
+	class SelectionUpdateListener implements BoundedValue.UpdateListener
 	{
+		private final ModifiableRealInterval interval;
 
-		private ArrayList< long[] > previousTranslations;
+		public SelectionUpdateListener( ModifiableRealInterval interval )
+		{
+			this.interval = interval;
+		}
 
 		@Override
 		public synchronized void update()
 		{
-			final ArrayList< long[] > translations = getTranslations();
+			updateSliders();
+
+			final double[] min = new double[ 3 ];
+			final double[] max = new double[ 3 ];
+
+			min[ X ] = boundedValues.get( CX ).getCurrentValue()
+					- boundedValues.get( W ).getCurrentValue() / 2.0 ;
+
+			max[ X ] = boundedValues.get( CX ).getCurrentValue()
+					+ boundedValues.get( W ).getCurrentValue() / 2.0 ;
+
+			min[ Y ] = boundedValues.get( CY ).getCurrentValue()
+					- boundedValues.get( H ).getCurrentValue() / 2.0 ;
+
+			max[ Y ] = boundedValues.get( CY ).getCurrentValue()
+					+ boundedValues.get( H ).getCurrentValue() / 2.0 ;
+
+			min[ Z ] = interval.realMin( Z );
+
+			max[ Z ] = interval.realMax( Z );
+
+
+			interval.set( new FinalRealInterval( min, max ) );
+
+
+			/*final ArrayList< long[] > translations = getTranslations();
 
 			if ( ! isTranslationsChanged( translations ) ) return;
 
@@ -175,9 +209,8 @@ public class SplitViewMerging< T extends RealType< T > & NativeType< T > >
 				cropped.add(  crop );
 			}
 
-			shiftedChannelRAIs = cropped;
-			setCorrectedRai();
-			showCorrectedRai();
+			shiftedChannelRAIs = cropped;*/
+
 		}
 
 		private boolean isTranslationsChanged( ArrayList< long[] > translations )
@@ -220,22 +253,9 @@ public class SplitViewMerging< T extends RealType< T > & NativeType< T > >
 
 		private void updateSliders()
 		{
-			int i = 0;
-			for ( int c = 0; c < numChannels; c++ )
-				for ( int d = 0; d < 3; d++ )
-					sliderPanels.get( i++ ).update();
+			for ( SliderPanel sliderPanel : sliderPanels )
+					sliderPanel.update();
 		}
 	}
-
-	private void showCorrectedRai()
-	{
-		newImageViewer.show(
-				correctedRai,
-				imageViewer.getImage().getName(),
-				imageViewer.getImage().getVoxelSpacing(),
-				imageViewer.getImage().getVoxelUnit(),
-				true );
-	}
-
 
 }
