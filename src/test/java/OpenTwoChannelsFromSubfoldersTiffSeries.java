@@ -20,7 +20,6 @@ public class OpenTwoChannelsFromSubfoldersTiffSeries
                 imageDirectory,
                 FileInfoConstants.LOAD_CHANNELS_FROM_FOLDERS,
                 ".*",
-                null,
                 true,
                 ViewerUtils.getImageViewer( ViewerUtils.BIG_DATA_VIEWER ) );
     }

@@ -21,7 +21,6 @@ public class OpenSingleChannelTiffSeries
                 imageDirectory,
                 FileInfoConstants.SINGLE_CHANNEL_TIMELAPSE,
                 ".*",
-                null,
                 true,
                 ViewerUtils.getImageViewer( ViewerUtils.BIG_DATA_VIEWER ) );
     }

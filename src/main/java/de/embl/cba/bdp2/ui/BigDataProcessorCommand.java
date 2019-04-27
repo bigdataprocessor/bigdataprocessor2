@@ -65,20 +65,6 @@ public class BigDataProcessorCommand<T extends RealType<T> & NativeType<T>> impl
                     FileInfoConstants.PATTERN_6})
     String namingScheme = FileInfoConstants.SINGLE_CHANNEL_TIMELAPSE;
 
-    @Parameter(label = "Hdf5 data set name",
-            choices = {
-                    "None",
-                    "Data",
-                    "Data111",
-                    ImarisUtils.RESOLUTION_LEVEL + "0/Data",
-                    ImarisUtils.RESOLUTION_LEVEL + "1/Data",
-                    ImarisUtils.RESOLUTION_LEVEL + "2/Data",
-                    ImarisUtils.RESOLUTION_LEVEL + "3/Data",
-                    "ITKImage/0/VoxelData",
-                    "Data222",
-                    "Data444"})
-    String hdf5DataSet = "None";
-
     @Parameter(label = "Image viewer",
             choices = {
                     ViewerUtils.BIG_DATA_VIEWER
@@ -98,7 +84,6 @@ public class BigDataProcessorCommand<T extends RealType<T> & NativeType<T>> impl
                 directory.toString(),
                 namingScheme,
                 filterPattern,
-                hdf5DataSet,
                 autoContrast,
                 ViewerUtils.getImageViewer( imageViewerChoice ));
     }

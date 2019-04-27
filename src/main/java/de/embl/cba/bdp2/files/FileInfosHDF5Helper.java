@@ -4,6 +4,7 @@ import ch.systemsx.cisd.hdf5.HDF5DataSetInformation;
 import ch.systemsx.cisd.hdf5.HDF5DataTypeInformation;
 import ch.systemsx.cisd.hdf5.HDF5Factory;
 import ch.systemsx.cisd.hdf5.IHDF5Reader;
+import de.embl.cba.bdp2.ui.HDF5DatasetDialog;
 import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
 import java.util.Arrays;
 import java.util.List;
@@ -18,10 +19,15 @@ public class FileInfosHDF5Helper
             String fileName) {
 
         IHDF5Reader reader = HDF5Factory.openForReading(directory + "/" + fileName);
-        StringBuilder hdf5DataSetSB = new StringBuilder(imageDataInfo.h5DataSetName);
+        StringBuilder hdf5DataSetSB = new StringBuilder();
 
-        if (!hdf5DataSetExists(reader, hdf5DataSetSB))
-            return; // TODO: handle as exception
+        if (imageDataInfo.h5DataSetName != null && !imageDataInfo.h5DataSetName.isEmpty()
+                && !imageDataInfo.h5DataSetName.trim().isEmpty()) {
+            hdf5DataSetSB = new StringBuilder(imageDataInfo.h5DataSetName);
+            if (!hdf5DataSetExists(reader, hdf5DataSetSB)) return;
+        }else {
+            setHDF5DatasetViaUI(reader,hdf5DataSetSB);
+        }
         imageDataInfo.h5DataSetName = hdf5DataSetSB.toString();
         HDF5DataSetInformation dsInfo = reader.object().getDataSetInformation("/" + imageDataInfo.h5DataSetName);
 
@@ -43,9 +49,7 @@ public class FileInfosHDF5Helper
     }
 
     private static int assignHDF5TypeToImagePlusBitdepth(HDF5DataSetInformation dsInfo) {
-
         String type = dsInfoToTypeString(dsInfo);
-
         int nBits = 0;
         if (type.equals("uint8")) {
             nBits = Byte.SIZE;
@@ -65,14 +69,6 @@ public class FileInfosHDF5Helper
         if (reader.object().isDataSet(hdf5DataSet.toString())) {
             return true;
         } else {
-//        for (String dataSet : reader.getGroupMembers("/")) {
-//            /*
-//            if (dataSet.equals(hdf5DataSet)) {
-//                dataSetExists = true;
-//            }
-//            */
-//            dataSets += "- " + dataSet + "\n";
-//        }
             List<String> hdf5Header = reader.getGroupMembers("/");
             hdf5Header.replaceAll(String::toUpperCase);
             dataSetExists = Arrays.stream(FileInfoConstants.POSSIBLE_HDF5_DATASETNAMES).parallel().anyMatch(x -> hdf5Header.contains(x.toUpperCase()));
@@ -87,6 +83,18 @@ public class FileInfosHDF5Helper
         }
 
         return dataSetExists;
+    }
+
+
+    private static void setHDF5DatasetViaUI(IHDF5Reader reader, StringBuilder hdf5DataSet) {
+        List<String> hdf5Header = reader.getGroupMembers("/");
+        HDF5DatasetDialog chooseDatasetDialog = new HDF5DatasetDialog(hdf5Header,true);
+        chooseDatasetDialog.setLocationRelativeTo(null);
+        chooseDatasetDialog.setVisible(true);
+        if (null != chooseDatasetDialog.getSelectedDataset()){
+            hdf5DataSet.delete(0, hdf5DataSet.length());
+            hdf5DataSet.append(chooseDatasetDialog.getSelectedDataset());
+        }
     }
 
     public static String dsInfoToTypeString(HDF5DataSetInformation dsInfo) {  //TODO : DUPLICATE CODE! Fix it! --ashis

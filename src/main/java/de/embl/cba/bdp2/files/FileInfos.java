@@ -15,8 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
-public class FileInfos
-{
+public class FileInfos {
     private final SerializableFileInfo[][][] infos;
     private final long[] dimensions;
     public int bitDepth;
@@ -38,11 +37,17 @@ public class FileInfos
     public FileInfos(
             String directory,
             String loadingScheme,
+            String filterPattern){
+        this(directory,loadingScheme,filterPattern,null);
+    }
+
+    public FileInfos(
+            String directory,
+            String loadingScheme,
             String filterPattern,
             String h5DataSetName){
 
         this.directory = directory;
-
         if ( loadingScheme.contains("<Z") ){// TODO: change below logic somehow (maybe via GUI?)
             FileInfosHelper.setFileSourceInfos(this, directory, loadingScheme );
         }else{

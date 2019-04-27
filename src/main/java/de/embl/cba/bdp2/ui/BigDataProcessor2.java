@@ -69,14 +69,12 @@ public class BigDataProcessor2
             String directory,
             String loadingScheme,
             String filterPattern,
-            String h5DataSetName,
             boolean autoContrast,
-            ImageViewer imageViewer )
-    {
+            ImageViewer imageViewer ){
         directory = Utils.fixDirectoryFormat( directory );
 
         this.fileInfos =
-				new FileInfos( directory, loadingScheme, filterPattern, h5DataSetName );
+				new FileInfos( directory, loadingScheme, filterPattern );
 
         if ( ! ensureCalibrationUI() ) return;
 
