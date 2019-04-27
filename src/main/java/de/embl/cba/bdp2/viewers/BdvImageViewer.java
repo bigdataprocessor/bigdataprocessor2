@@ -59,6 +59,8 @@ public class BdvImageViewer< R extends RealType< R > & NativeType< R >>
         final double[] voxelSpacing = image.getVoxelSpacing();
         final RandomAccessibleInterval< R > rai = image.getRai();
         showBB.show( rai, voxelSpacing );
+
+        // TODO: refactor this into a BoundingBox class
         FinalInterval interval;
         if (showBB.selectedMax != null && showBB.selectedMin != null) {
             long[] minMax = {

@@ -18,10 +18,10 @@ import net.imglib2.util.Util;
 import javax.swing.*;
 import java.awt.*;
 
-public class UnsignedByteTypeView< T extends RealType< T > >
+public class UnsignedByteTypeConversion< T extends RealType< T > >
 {
 
-	public UnsignedByteTypeView( final ImageViewer imageViewer  )
+	public UnsignedByteTypeConversion( final ImageViewer imageViewer  )
 	{
 
 		final RandomAccessibleInterval rai = imageViewer.getImage().getRai();

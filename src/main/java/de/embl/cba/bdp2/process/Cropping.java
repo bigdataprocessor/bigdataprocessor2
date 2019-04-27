@@ -11,10 +11,10 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.view.Views;
 
-public class CroppedView < T extends RealType< T > & NativeType< T > >
+public class Cropping< T extends RealType< T > & NativeType< T > >
 {
 	// TODO: better split UI
-	public CroppedView( ImageViewer< T > imageViewer )
+	public Cropping( ImageViewer< T > imageViewer )
 	{
 		logger.info( "\nCropping..." );
 		FinalInterval interval = imageViewer.get5DIntervalFromUser();

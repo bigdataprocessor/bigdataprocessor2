@@ -40,6 +40,7 @@ public class BoundingBoxDialog
             min[d] = (int) (rai.min(d) * voxelSpacing[d]);
             max[d] = (int) (rai.max(d) * voxelSpacing[d]);
         }
+
         long[] size = new long[MAX_ALLOWED_IMAGE_DIMS];
         rai.dimensions(size);
         int[] center = new int[3];

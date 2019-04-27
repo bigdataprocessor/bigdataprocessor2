@@ -17,7 +17,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class ChromaticShiftCorrectionView< T extends RealType< T > & NativeType< T > >
+public class SplitViewMerging< T extends RealType< T > & NativeType< T > >
 {
 
 	private final ImageViewer< T > imageViewer;
@@ -32,7 +32,7 @@ public class ChromaticShiftCorrectionView< T extends RealType< T > & NativeType<
 	private JPanel panel;
 	private ArrayList< RandomAccessibleInterval< T > > shiftedChannelRAIs;
 
-	public ChromaticShiftCorrectionView( final ImageViewer< T > imageViewer  )
+	public SplitViewMerging( final ImageViewer< T > imageViewer  )
 	{
 		this.imageViewer = imageViewer;
 		this.rai = imageViewer.getImage().getRai();

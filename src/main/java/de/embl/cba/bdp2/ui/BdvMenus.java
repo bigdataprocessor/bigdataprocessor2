@@ -1,10 +1,7 @@
 package de.embl.cba.bdp2.ui;
 
+import de.embl.cba.bdp2.process.*;
 import de.embl.cba.bdp2.tracking.BigDataTrackerGUI;
-import de.embl.cba.bdp2.process.Binning;
-import de.embl.cba.bdp2.process.ChromaticShiftCorrectionView;
-import de.embl.cba.bdp2.process.CroppedView;
-import de.embl.cba.bdp2.process.UnsignedByteTypeView;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.viewers.ImageViewer;
 import net.imglib2.RandomAccessibleInterval;
@@ -56,7 +53,7 @@ public class BdvMenus extends JMenu implements ActionListener {
             });
         }else if(e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.CROP_MENU_ITEM )){
         	BigDataProcessor2.executorService.submit(() -> {
-            	new CroppedView<>( imageViewer );
+            	new Cropping<>( imageViewer );
             });
         }else if(e.getActionCommand().equalsIgnoreCase(
                 UIDisplayConstants.IMAGEJ_VIEW_MENU_ITEM )){
@@ -80,7 +77,7 @@ public class BdvMenus extends JMenu implements ActionListener {
         }else if(e.getActionCommand().equalsIgnoreCase(
                 UIDisplayConstants.EIGHT_BIT_CONVERSION_MENU_ITEM )){
             BigDataProcessor2.executorService.submit(() -> {
-                new UnsignedByteTypeView(imageViewer);
+                new UnsignedByteTypeConversion(imageViewer);
             });
         }else if(e.getActionCommand().equalsIgnoreCase(
                 UIDisplayConstants.BINNING_MENU_ITEM )){
@@ -90,12 +87,12 @@ public class BdvMenus extends JMenu implements ActionListener {
         }else if(e.getActionCommand().equalsIgnoreCase(
             UIDisplayConstants.SPLIT_VIEW_MENU_ITEM )){
             BigDataProcessor2.executorService.submit(() -> {
-                new ChromaticShiftCorrectionView<>( imageViewer );
+                new ChromaticShiftCorrection<>( imageViewer );
             });
         }else if(e.getActionCommand().equalsIgnoreCase(
                     UIDisplayConstants.SPLIT_VIEW_MENU_ITEM )){
                 BigDataProcessor2.executorService.submit(() -> {
-                    new ChromaticShiftCorrectionView<>(imageViewer);
+                    new SplitViewMerging<>(imageViewer);
         });
     }
     }
