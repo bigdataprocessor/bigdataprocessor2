@@ -10,6 +10,7 @@ import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.Img;
+import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
@@ -22,7 +23,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-public class ObjectTracker< T extends RealType<T> > {
+public class ObjectTracker< T extends RealType<T> & NativeType< T > > {
     private final TrackingSettings< T > trackingSettings;
     private Point3D pMin, pMax;
     private final int width;

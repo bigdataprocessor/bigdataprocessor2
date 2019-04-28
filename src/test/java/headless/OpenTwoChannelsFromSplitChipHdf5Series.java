@@ -35,14 +35,13 @@ public class OpenTwoChannelsFromSplitChipHdf5Series
                 FileInfos.SINGLE_CHANNEL_TIMELAPSE,
                 ".*.h5", "Data" );
 
-        fileInfos.voxelSpacing = new double[]{ 1.0, 1.0, 10.0};
+        fileInfos.voxelSpacing = new double[]{ 0.5, 0.5, 10.0 };
 
         final Image< R > image = CachedCellImgReader.asImage( fileInfos );
 
         final ArrayList< double[] > centres = new ArrayList<>();
         centres.add( new double[]{ 522.0, 1143.0 } );
-        centres.add( new double[]{ 522.0 - 30, 1143.0 - 30 } );
-//        centres.add( new double[]{ 1407.0 + 50, 546.0 + 50 } );
+        centres.add( new double[]{ 1407.0 + 50, 546.0 + 50 } );
         final double[] spans = { 800, 800 };
 
         final ArrayList< double[] > optimisedCentres =
@@ -55,7 +54,6 @@ public class OpenTwoChannelsFromSplitChipHdf5Series
         final RandomAccessibleInterval< R > colorRAI
                 = RegionMerger.merge(
                         image.getRai(), optimisedCentres, spans, fileInfos.voxelSpacing );
-
 
         viewer.show(
                 colorRAI,

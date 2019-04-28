@@ -9,6 +9,7 @@ import de.embl.cba.bdp2.viewers.ImageViewer;
 import javafx.geometry.Point3D;
 import net.imagej.ImageJ;
 import net.imglib2.FinalInterval;
+import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.ItemVisibility;
 import org.scijava.command.Command;
@@ -25,7 +26,8 @@ import java.net.URISyntaxException;
 
 @Plugin(type = Command.class)
 @Deprecated
-public class BigDataTrackerCommand < T extends RealType<T> > extends DynamicCommand implements Interactive {
+public class BigDataTrackerCommand < R extends RealType< R > & NativeType< R > >
+        extends DynamicCommand implements Interactive {
 
     @Parameter
     private LogService logService;
@@ -69,7 +71,7 @@ public class BigDataTrackerCommand < T extends RealType<T> > extends DynamicComm
 
     Point3D maxDisplacement = new Point3D(20, 20, 1);
     final BigDataTracker bigDataTracker = new BigDataTracker();
-    TrackingSettings< T > trackingSettings = new TrackingSettings<>();
+    TrackingSettings< R > trackingSettings = new TrackingSettings<>();
     private Image image;
 
     @Parameter(visibility = ItemVisibility.INVISIBLE)

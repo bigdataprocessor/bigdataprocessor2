@@ -2,9 +2,10 @@ package de.embl.cba.bdp2.tracking;
 
 import javafx.geometry.Point3D;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
-public class TrackingSettings< T extends RealType< T > >
+public class TrackingSettings< T extends RealType< T > & NativeType< T > >
 {
 
     public static final String CENTER_OF_MASS = "Center of Mass";

@@ -32,6 +32,7 @@ package de.embl.cba.bdp2.tracking;
 
 
 import javafx.geometry.Point3D;
+import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
 import java.util.Collections;
@@ -41,14 +42,14 @@ import java.util.Map;
 /**
  * Created by tischi on 03/12/16.
  */
-public class Track < T extends RealType<T> >    {
+public class Track < R extends RealType< R > & NativeType< R > >    {
 
-    TrackingSettings< T > trackingSettings;
+    TrackingSettings< R > trackingSettings;
     Map<Integer, Point3D[]> locations = new LinkedHashMap<>();
     Point3D trackStart;
     int trackID;
 
-    Track( TrackingSettings< T > trackingSettings, int id) {
+    Track( TrackingSettings< R > trackingSettings, int id) {
 
         this.trackingSettings = trackingSettings;
 
