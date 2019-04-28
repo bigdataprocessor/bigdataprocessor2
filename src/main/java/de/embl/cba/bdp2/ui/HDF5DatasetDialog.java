@@ -1,7 +1,5 @@
 package de.embl.cba.bdp2.ui;
 
-import de.embl.cba.bdp2.files.FileInfoConstants;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
