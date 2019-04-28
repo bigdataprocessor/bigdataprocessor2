@@ -38,7 +38,7 @@ public class CachedCellImgReader
     }
 
     public static < R extends RealType< R > & NativeType< R > >
-    Image< R > asImage( FileInfos fileInfos )
+    Image< R > loadImage( FileInfos fileInfos )
     {
         CachedCellImg cachedCellImg;
 

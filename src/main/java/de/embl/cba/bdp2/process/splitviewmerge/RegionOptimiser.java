@@ -1,5 +1,6 @@
 package de.embl.cba.bdp2.process.splitviewmerge;
 
+import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.tracking.Trackers;
 import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccessibleInterval;
@@ -16,6 +17,21 @@ import static de.embl.cba.bdp2.utils.DimensionOrder.*;
 
 public class RegionOptimiser
 {
+
+	public static < R extends RealType< R > & NativeType< R > >
+	ArrayList< double[] > optimiseCentres2D(
+			Image< R > image,
+			ArrayList< double[] > calibratedCentres2D,
+			double[] calibratedSpan2D )
+	{
+		return optimiseCentres2D(
+				image.getRai(),
+				calibratedCentres2D,
+				calibratedSpan2D,
+				image.getVoxelSpacing()
+		);
+	}
+
 	public static < R extends RealType< R > & NativeType< R > >
 	ArrayList< double[] > optimiseCentres2D(
 			RandomAccessibleInterval< R > rai5D,

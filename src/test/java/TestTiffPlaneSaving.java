@@ -15,7 +15,7 @@ public class TestTiffPlaneSaving
         String imageDirectory = "src/test/resources/shear_transform_test";
         final FileInfos fileInfos = new FileInfos( imageDirectory, FileInfos.SINGLE_CHANNEL_TIMELAPSE,
                 ".*", "");
-        final Image image = CachedCellImgReader.asImage( fileInfos );
+        final Image image = CachedCellImgReader.loadImage( fileInfos );
 
         ImageViewer imageViewer = new BdvImageViewer<UnsignedShortType>( image );
         imageViewer.show();

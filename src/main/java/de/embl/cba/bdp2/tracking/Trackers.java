@@ -1,10 +1,5 @@
 package de.embl.cba.bdp2.tracking;
 
-import bdv.util.BdvFunctions;
-import bdv.util.BdvOptions;
-import de.embl.cba.bdp2.Image;
-import de.embl.cba.bdp2.ui.BigDataProcessor2;
-import net.imagej.ImageJ;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.gauss3.Gauss3;
 import net.imglib2.algorithm.phasecorrelation.PhaseCorrelation2;
@@ -15,8 +10,10 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.complex.ComplexFloatType;
 import net.imglib2.type.numeric.real.FloatType;
+import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
 
+import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 
 import static de.embl.cba.transforms.utils.ImageCreators.createEmptyArrayImg;
@@ -24,49 +21,54 @@ import static de.embl.cba.transforms.utils.ImageCreators.createEmptyArrayImg;
 public class Trackers
 {
 
-	public static < T extends RealType < T > & NativeType< T > >
+	public static < R extends RealType < R > & NativeType< R > >
 	double[] getPhaseCorrelationShift(
-			RandomAccessibleInterval< T > im0,
-			RandomAccessibleInterval< T > im1,
+			RandomAccessibleInterval< R > input0,
+			RandomAccessibleInterval< R > input1,
 			ExecutorService executorService )
 	{
-
 		final double[] sigmas = {5,5};
 
-		RandomAccessibleInterval< T > blur0 = createEmptyArrayImg( im0 );
-		Gauss3.gauss( sigmas, Views.extendBorder( im0 ), blur0 ) ;
+		final ArrayList< RandomAccessibleInterval< R > > inputs = new ArrayList<>();
+		inputs.add( input0 );
+		inputs.add( input1 );
 
-		RandomAccessibleInterval< T > blur1 = createEmptyArrayImg( im1 );
-		Gauss3.gauss( sigmas, Views.extendBorder( im1 ), blur1 ) ;
+		final ArrayList< RandomAccessibleInterval< R > > processed = new ArrayList<>();
+
+		for ( RandomAccessibleInterval< R > input : inputs )
+		{
+			RandomAccessibleInterval< R > blur = createEmptyArrayImg( input );
+			Gauss3.gauss( sigmas, Views.extendBorder( input ), blur ) ;
+			RandomAccessibleInterval< R > image = Views.zeroMin( blur );
+			processed.add( image );
+			ImageJFunctions.show( image );
+		}
 
 		RandomAccessibleInterval< FloatType > pcm =
 				PhaseCorrelation2.calculatePCM(
-						Views.zeroMin(blur0),
-						Views.zeroMin(blur1),
+						processed.get( 0 ),
+						processed.get( 1 ),
 						new CellImgFactory(new FloatType()),
 						new FloatType(),
 						new CellImgFactory(new ComplexFloatType()),
 						new ComplexFloatType(),
 						executorService );
 
-
-		ImageJFunctions.show( blur0, "" );
-		ImageJFunctions.show( blur1, "" );
 		ImageJFunctions.show( pcm, "corr" );
 
 
 		PhaseCorrelationPeak2 shiftPeak =
 				PhaseCorrelation2.getShift(
 						pcm,
-						Views.zeroMin(blur0),
-						Views.zeroMin(blur1),
+						processed.get( 0 ),
+						processed.get( 1 ),
 						10,
-						(long) ( 0.5 * im0.dimension( 0 ) * im0.dimension( 1 ) ),
+						(long) ( 0.5 * input0.dimension( 0 ) * input0.dimension( 1 ) ),
 						true,
 						false,
 						executorService );
 
-		double[] shift = new double[im0.numDimensions()];
+		double[] shift = new double[input0.numDimensions()];
 		shiftPeak.getSubpixelShift().localize(shift);
 
 		return shift;

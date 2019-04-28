@@ -107,6 +107,6 @@ public class BoundingBoxSelection
 
 		fileInfos.voxelSpacing = new double[]{ 0.5, 0.5, 5.0};
 
-		return CachedCellImgReader.asImage( fileInfos );
+		return CachedCellImgReader.loadImage( fileInfos );
 	}
 }

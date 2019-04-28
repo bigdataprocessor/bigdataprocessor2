@@ -31,29 +31,27 @@ public class OpenTwoChannelsFromSplitChipHdf5Series
 
         String imageDirectory = "/Users/tischer/Desktop/stack_0_channel_0";
 
+        // TODO: put into BDP2 as convenience method
         final FileInfos fileInfos = new FileInfos( imageDirectory,
                 FileInfos.SINGLE_CHANNEL_TIMELAPSE,
                 ".*.h5", "Data" );
-
         fileInfos.voxelSpacing = new double[]{ 0.5, 0.5, 10.0 };
+        final Image< R > image = CachedCellImgReader.loadImage( fileInfos );
 
-        final Image< R > image = CachedCellImgReader.asImage( fileInfos );
-
-        final ArrayList< double[] > centres = new ArrayList<>();
-        centres.add( new double[]{ 522.0, 1143.0 } );
-        centres.add( new double[]{ 1407.0 + 50, 546.0 + 50 } );
-        final double[] spans = { 800, 800 };
+        final ArrayList< double[] > calibratedCentres = new ArrayList<>();
+        calibratedCentres.add( new double[]{ 522.0 * 0.5, 1143.0 * 0.5 } );
+        calibratedCentres.add( new double[]{ 1407.0 * 0.5 + 50 * 0.5, 546.0 * 0.5 + 50 * 0.5 } );
+        final double[] calibratedSpan = { 800 * 0.5 , 800 * 0.5 };
 
         final ArrayList< double[] > optimisedCentres =
                 RegionOptimiser.optimiseCentres2D(
-                        image.getRai(),
-                        centres,
-                        spans,
-                        fileInfos.voxelSpacing );
+                        image,
+                        calibratedCentres,
+                        calibratedSpan );
 
         final RandomAccessibleInterval< R > colorRAI
                 = RegionMerger.merge(
-                        image.getRai(), optimisedCentres, spans, fileInfos.voxelSpacing );
+                        image.getRai(), optimisedCentres, calibratedSpan, fileInfos.voxelSpacing );
 
         viewer.show(
                 colorRAI,
