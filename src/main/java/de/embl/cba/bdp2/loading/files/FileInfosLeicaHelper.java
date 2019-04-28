@@ -2,7 +2,7 @@ package de.embl.cba.bdp2.loading.files;
 
 import de.embl.cba.bdp2.utils.Utils;
 
-import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
+import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.Logger;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -29,7 +29,7 @@ public class FileInfosLeicaHelper
 
         if ( fileList.length == 0 )
         {
-            logger.error("No files matching this pattern were found: " + filterPattern);
+            Logger.error("No files matching this pattern were found: " + filterPattern);
             return false;
         }
 
@@ -150,10 +150,10 @@ public class FileInfosLeicaHelper
             nC = Math.max( 1, channelsHS.get(iFileID).size()) ;
             nZ = slicesHS.get( iFileID ).size(); // must be the same for all fileIDs
 
-            logger.info("FileID: " + fileIDs[iFileID]);
-            logger.info("  Channels: " + nC);
-            logger.info("  TimePoints: " + timepointsHS.get( iFileID ).size());
-            logger.info("  Slices: " + nZ);
+            Logger.info("FileID: " + fileIDs[iFileID]);
+            Logger.info("  Channels: " + nC);
+            Logger.info("  TimePoints: " + timepointsHS.get( iFileID ).size());
+            Logger.info("  Slices: " + nZ);
 
             nT += timepointsHS.get( iFileID ).size();
             tOffsets[iFileID + 1] = nT;

@@ -2,10 +2,8 @@ package de.embl.cba.bdp2.process;
 
 import bdv.tools.brightness.SliderPanelDouble;
 import bdv.util.BoundedValueDouble;
-
-import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
-
 import de.embl.cba.bdp2.loading.files.FileInfos;
+import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.ui.BdvMenus;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.ImageViewer;
@@ -57,7 +55,7 @@ public class UnsignedByteTypeConversion< T extends RealType< T > >
 				imageViewer.getImage().getVoxelUnit(),
 				true);
 
-		logger.info( "8-bit view size [GB]: " + Utils.getSizeGB( converted ) );
+		Logger.info( "8-bit view size [GB]: " + Utils.getSizeGB( converted ) );
 
 		newImageViewer.addMenus( new BdvMenus() );
 

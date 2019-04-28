@@ -33,8 +33,7 @@ package de.embl.cba.bdp2.loading;
 
 
 import de.embl.cba.bdp2.loading.files.SerializableFileInfo;
-import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
-
+import de.embl.cba.bdp2.logging.Logger;
 import ij.IJ;
 import ij.io.FileInfo;
 import ij.io.RandomAccessStream;
@@ -774,7 +773,7 @@ public class FastTiffDecoder {
                             convertToInt(fi.stripOffsets, buffer);
                         }
                         //readingStrips = false;
-                        //if(ifdCount == 1) logger.info("Strip offset 10:" + fi.stripOffsets[10]); //76728  //76427
+                        //if(ifdCount == 1) Logger.info("Strip offset 10:" + fi.stripOffsets[10]); //76728  //76427
                         //info(""+(in.getFilePointer()-pos));
                         //info(""+(count*4));
                         in.seek(saveLoc); // go back to IFD
@@ -842,26 +841,26 @@ public class FastTiffDecoder {
                         }
                         else if (value==32)
                         {
-                            logger.error("Unsupported FileType: " + value);
+                            Logger.error("Unsupported FileType: " + value);
                             fi.fileType = FileInfo.GRAY32_INT;
                         }
                         else if (value==12)
                         {
                             fi.fileType = FileInfo.GRAY12_UNSIGNED;
-                            logger.error("Unsupported FileType: " + value);
+                            Logger.error("Unsupported FileType: " + value);
                         }
                         else if (value==1)
                         {
-                            logger.error("Unsupported FileType: " + value);
+                            Logger.error("Unsupported FileType: " + value);
                             fi.fileType = FileInfo.BITMAP;
                         }
                         else
-                            logger.error("Unsupported FileType: " + value);
+                            Logger.error("Unsupported FileType: " + value);
 
                     }
                     else if (count>1)
                     {
-                        logger.error("Unsupported FileType: " + value);
+                        Logger.error("Unsupported FileType: " + value);
                         long saveLoc = in.getLongFilePointer();
                         in.seek(value);
                         int bitDepth = getShort();
@@ -1089,7 +1088,7 @@ public class FastTiffDecoder {
         if (count > 1 && ( fi.stripOffsets[(int) count - 1] < fi.stripOffsets[0] ))
         {
             fi.offset = fi.stripOffsets[(int) count - 1];
-            logger.warning("Weird line... " + name);
+            Logger.warning("Weird line... " + name);
         }
 
         //
@@ -1101,7 +1100,7 @@ public class FastTiffDecoder {
         tag = getShort();
         if ( tag != STRIP_BYTE_COUNT )
         {
-            logger.warning("Fast IFD strip parsing failed. Falling back on full parsing.");
+            Logger.warning("Fast IFD strip parsing failed. Falling back on full parsing.");
             return(null);
         }
         fieldType = getShort();
@@ -1163,8 +1162,8 @@ public class FastTiffDecoder {
     }
 
     public SerializableFileInfo[] getTiffInfo() throws IOException {
-        if( logger.isShowDebug() ) {
-              logger.info("# getTiffInfo");
+        if( Logger.isShowDebug() ) {
+              Logger.info("# getTiffInfo");
         }
 
         startTimeTotal = System.currentTimeMillis();
@@ -1198,18 +1197,18 @@ public class FastTiffDecoder {
                 fi = onlyReadStripsFromIFD( relativeStripInfoLocations, fastParsingWorked );
                 if ( ! fastParsingWorked )
                 {
-                    logger.warning(name + ", IFD "+listIFDs.size()+
+                    Logger.warning(name + ", IFD "+listIFDs.size()+
                             ": Fast IFD strip parsing failed! " +
                             "Maybe something wrong with this file?");
                     fi = fullyReadIFD( relativeStripInfoLocations );
                 }
             }
-            if( logger.isShowDebug() ) {
-                  logger.info("IFD " + listIFDs.size() + " at " + ifdOffset);
-                  logger.info("fi.nImages: " + fi.nImages);
-                  logger.info("fi.offset: " + fi.offset);
-                  logger.info("fi.stripLengths.length: " + fi.stripLengths.length);
-                  logger.info("fi.stripOffsets.length: " + fi.stripOffsets.length);
+            if( Logger.isShowDebug() ) {
+                  Logger.info("IFD " + listIFDs.size() + " at " + ifdOffset);
+                  Logger.info("fi.nImages: " + fi.nImages);
+                  Logger.info("fi.offset: " + fi.offset);
+                  Logger.info("fi.stripLengths.length: " + fi.stripLengths.length);
+                  Logger.info("fi.stripOffsets.length: " + fi.stripOffsets.length);
             }
             if (fi != null)
             {

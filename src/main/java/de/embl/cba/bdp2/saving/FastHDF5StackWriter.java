@@ -11,6 +11,7 @@ import ch.systemsx.cisd.hdf5.HDF5FloatStorageFeatures;
 import ch.systemsx.cisd.hdf5.HDF5IntStorageFeatures;
 import ch.systemsx.cisd.hdf5.IHDF5Writer;
 import de.embl.cba.bdp2.loading.files.FileInfos;
+import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import ij.ImagePlus;
@@ -31,11 +32,11 @@ import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.util.Util;
 import net.imglib2.view.Views;
+
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
-import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
 
 public class FastHDF5StackWriter<T extends RealType<T> & NativeType<T>> implements Runnable {
     private final String dataset;
@@ -77,7 +78,7 @@ public class FastHDF5StackWriter<T extends RealType<T> & NativeType<T>> implemen
         RandomAccessibleInterval image = savingSettings.rai;
         for (int c = 0; c < this.numChannels; c++) {
             if (stop.get()) {
-                logger.progress("Stopped saving thread: ", "" + this.current_t);
+                Logger.progress("Stopped saving thread: ", "" + this.current_t);
                 return;
             }
             long[] minInterval = new long[]{
@@ -103,7 +104,7 @@ public class FastHDF5StackWriter<T extends RealType<T> & NativeType<T>> implemen
 
             for (String binning : binnings) {
                 if (stop.get()) {
-                    logger.progress("Stopped saving thread @ merge: ", "" + current_t);
+                    Logger.progress("Stopped saving thread @ merge: ", "" + current_t);
                     return;
                 }
                 String newPath = savingSettings.filePath;
@@ -128,7 +129,7 @@ public class FastHDF5StackWriter<T extends RealType<T> & NativeType<T>> implemen
                 }
             }
             if (!stop.get()) {
-                SaveImgHelper.documentProgress(totalSlices, counter, logger, startTime);
+                SaveImgHelper.documentProgress(totalSlices, counter, startTime);
             }
         }
     }
@@ -138,7 +139,7 @@ public class FastHDF5StackWriter<T extends RealType<T> & NativeType<T>> implemen
         String shape = Arrays.stream(dims)
                 .mapToObj(String::valueOf)
                 .collect(Collectors.joining(", "));
-        logger.info(String.format("Exporting image of shape (%s). Axis order: 'XYZCT'", shape));
+        Logger.info(String.format("Exporting image of shape (%s). Axis order: 'XYZCT'", shape));
 
         try (IHDF5Writer writer = HDF5Factory.open(filename)) {
             if (nativeType instanceof UnsignedByteType) {
@@ -180,7 +181,7 @@ public class FastHDF5StackWriter<T extends RealType<T> & NativeType<T>> implemen
                 for (int y = 0; y < dimY; y++) {
                     if (stop.get()) {
                         savingSettings.saveProjection = false;
-                        logger.progress("Stopped saving thread @ writeHDF5: ", "" + current_t);
+                        Logger.progress("Stopped saving thread @ writeHDF5: ", "" + current_t);
                         return;
                     }
                     rai.setPosition(y, image.dimensionIndex(Axes.Y));
@@ -193,8 +194,8 @@ public class FastHDF5StackWriter<T extends RealType<T> & NativeType<T>> implemen
             // save data
             writeMDArray(writer, flatArr, offset, sliceDims, pixelClass);
         }
-        logger.info("compressionLevel: " + compressionLevel);
-        logger.info("Finished writing the HDF5_STACKS.");
+        Logger.info("compressionLevel: " + compressionLevel);
+        Logger.info("Finished writing the HDF5_STACKS.");
     }
 
     private void writeMDArray(IHDF5Writer writer, Object[] flatArr, long[] offset, long[] sliceDims, Class pixelClass) {

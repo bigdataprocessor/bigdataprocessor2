@@ -32,8 +32,8 @@ package de.embl.cba.bdp2.utils;
 
 import bdv.util.Bdv;
 import bdv.viewer.animate.SimilarityTransformAnimator;
+import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.ui.DisplaySettings;
-import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
@@ -59,7 +59,6 @@ import net.imglib2.util.Util;
 import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
 
-import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -181,7 +180,7 @@ public class Utils {
     {
         for ( long[] entry : arrayList )
         {
-            logger.info( "" + entry[0] + "," + entry[1] + "," + entry[2]);
+            Logger.info( "" + entry[0] + "," + entry[1] + "," + entry[2]);
         }
     }
 
@@ -344,13 +343,13 @@ public class Utils {
 
         if (min < Min)
         {
-            logger.error(""+dimension+" minimum must be >= " + Min + "; please change the value.");
+            Logger.error(""+dimension+" minimum must be >= " + Min + "; please change the value.");
             return false;
         }
 
         if (max > Max)
         {
-            logger.error(""+dimension+" maximum must be <= " + Max + "; please change the value.");
+            Logger.error(""+dimension+" maximum must be <= " + Max + "; please change the value.");
             return false;
         }
 
@@ -418,7 +417,7 @@ public class Utils {
 //            vss = (VirtualStackOfStacks) image.getStack();
 //            return (vss);
 //        } catch (Exception e) {
-//             logger.error("This is only implemented for images opened with the Data Streaming Tools plugin.");
+//             Logger.error("This is only implemented for images opened with the Data Streaming Tools plugin.");
 //            return (null);
 //        }
 //    }
@@ -450,7 +449,7 @@ public class Utils {
         Iterator it = mp.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry)it.next();
-              logger.info("" + pair.getKey() + " = " + pair.getValue());
+              Logger.info("" + pair.getKey() + " = " + pair.getValue());
             it.remove(); // avoids a ConcurrentModificationException
         }
     }
@@ -458,7 +457,7 @@ public class Utils {
 //    public static boolean hasVirtualStackOfStacks(ImagePlus image) {
 //
 //        if( ! (image.getStack() instanceof VirtualStackOfStacks) ) {
-//             logger.error("Wrong image type. " +
+//             Logger.error("Wrong image type. " +
 //                     "This method is only implemented for images opened via " +
 //                     "the Data Streaming Tools plugin.");
 //            return false;
@@ -499,8 +498,8 @@ public class Utils {
         long maxSize = (1L<<31) - 1;
         if( numPixels > maxSize )
         {
-              logger.info("Warning: " + "The size of one requested data cube is " + numPixels + " (larger than 2^31)\n");
-            //logger.error("The size of one requested data cube is "+numPixels +" (larger than 2^31)\n" +
+              Logger.info("Warning: " + "The size of one requested data cube is " + numPixels + " (larger than 2^31)\n");
+            //Logger.error("The size of one requested data cube is "+numPixels +" (larger than 2^31)\n" +
             //        "and can thus not be loaded as one java array into RAM.\n" +
             //        "Please crop a smaller region.");
             //return(false);
@@ -517,7 +516,7 @@ public class Utils {
 
         if( requestedMemoryGB > freeMemoryGB )
         {
-            logger.error("The operation you requested to perform " +
+            Logger.error("The operation you requested to perform " +
                      "might need up to " + requestedMemoryGB + " GB.\n" +
                      "The current free memory is only " + freeMemoryGB + " GB.\n" +
                      "Please consider cropping a smaller region \n" +
@@ -528,7 +527,7 @@ public class Utils {
         else
         {
             if( requestedMemoryGB > 0.1 ) {
-                //logger.info("Memory [GB]: Max=" + maxMemoryGB + "; Free=" + freeMemoryGB + "; Requested=" +
+                //Logger.info("Memory [GB]: Max=" + maxMemoryGB + "; Free=" + freeMemoryGB + "; Requested=" +
                 //        requestedMemoryGB);
             }
 
@@ -675,7 +674,7 @@ public class Utils {
         double yCenter = (ysum / sum) - 1;
         double zCenter = (zsum / sum) - 1;
 
-        //long stopTime = System.currentTimeMillis(); long elapsedTime = stopTime - startTime;  logger.info("center of mass in [ms]: " + elapsedTime);
+        //long stopTime = System.currentTimeMillis(); long elapsedTime = stopTime - startTime;  Logger.info("center of mass in [ms]: " + elapsedTime);
 
         return(new Point3D(xCenter,yCenter,zCenter));
     }
@@ -744,7 +743,7 @@ public class Utils {
         double yCenter = (ysum / sum) - 1;
         double zCenter = (zsum / sum) - 1;
 
-        //long stopTime = System.currentTimeMillis(); long elapsedTime = stopTime - startTime;  logger.info("center of mass in [ms]: " + elapsedTime);
+        //long stopTime = System.currentTimeMillis(); long elapsedTime = stopTime - startTime;  Logger.info("center of mass in [ms]: " + elapsedTime);
 
         return(new Point3D(xCenter,yCenter,zCenter));
     }

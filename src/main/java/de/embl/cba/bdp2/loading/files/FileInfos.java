@@ -13,7 +13,7 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.type.numeric.real.FloatType;
-import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
+import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
@@ -94,7 +94,7 @@ public class FileInfos
         dimensions[ DimensionOrder.T ] = nT;
         if ( unit == null || Objects.equals(unit, "")) unit = "pixel";
 
-        logger.info( this.toString() );
+        Logger.info( this.toString() );
     }
 
     @Override
@@ -173,12 +173,12 @@ public class FileInfos
                     info = ftd.getTiffInfo();
                 }
                 catch (Exception e) {
-                    logger.error("Error parsing: "+ directory + channelFolders[c] + "/" + ctzFileList[c][t][z]);
-                    logger.warning("setInfoFromFile: " + e.toString());
+                    Logger.error("Error parsing: "+ directory + channelFolders[c] + "/" + ctzFileList[c][t][z]);
+                    Logger.warning("setInfoFromFile: " + e.toString());
                 }
 
                 if( info.length != nZ ) {// TODO : Handle exceptions properly --ashis
-                    logger.error("Inconsistent number of z-planes in: "+ directory + channelFolders[c] + "/" + ctzFileList[c][t][z]);
+                    Logger.error("Inconsistent number of z-planes in: "+ directory + channelFolders[c] + "/" + ctzFileList[c][t][z]);
                 }
 
                 // add missing information to first IFD
@@ -219,7 +219,7 @@ public class FileInfos
                     bytesPerPixel = 1;
                 }
                 else{
-                    logger.error( "Unsupported bit depth " + dsTypeString );
+                    Logger.error( "Unsupported bit depth " + dsTypeString );
                 }
 
                 infoCT = new SerializableFileInfo[nZ];
@@ -251,7 +251,7 @@ public class FileInfos
         else
         {
             if( throwError ){// TODO : Handle exceptions properly --ashis
-                logger.error("Error opening: " + directory + channelFolders[c] + "/" + ctzFileList[c][t][z]);
+                Logger.error("Error opening: " + directory + channelFolders[c] + "/" + ctzFileList[c][t][z]);
             }
         }
 

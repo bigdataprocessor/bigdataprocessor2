@@ -3,6 +3,7 @@ package de.embl.cba.bdp2.process;
 import bdv.tools.brightness.SliderPanel;
 import bdv.util.BoundedValue;
 import de.embl.cba.bdp2.Image;
+import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.ui.BdvMenus;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.ImageViewer;
@@ -10,7 +11,7 @@ import de.embl.cba.lazyalgorithm.LazyDownsampler;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
-import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class Binning< T extends RealType< T > & NativeType< T > >
 		ImageViewer newImageViewer = imageViewer.newImageViewer();
 		newImageViewer.show( imageViewer.getImage(), true );
 
-		logger.info( "Image size without binning [GB]: "
+		Logger.info( "Image size without binning [GB]: "
 				+ Utils.getSizeGB( imageViewer.getImage().getRai() ) );
 		newImageViewer.addMenus( new BdvMenus() );
 
@@ -83,7 +84,7 @@ public class Binning< T extends RealType< T > & NativeType< T > >
 
 				imageViewer.show( binned, true );
 
-				logger.info( "Binned view size [GB]: "
+				Logger.info( "Binned view size [GB]: "
 						+ Utils.getSizeGB( binned.getRai() ) );
 			}
 

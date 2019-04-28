@@ -1,11 +1,11 @@
 package de.embl.cba.bdp2.saving;
 
 import de.embl.cba.bdp2.loading.files.FileInfos;
+import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.utils.DimensionOrder;
+import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.imaris.H5DataCubeWriter;
 import de.embl.cba.imaris.ImarisDataSet;
-import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
-import de.embl.cba.bdp2.utils.Utils;
 import ij.ImagePlus;
 import net.imagej.ImgPlus;
 import net.imagej.axis.Axes;
@@ -90,7 +90,7 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
         {
             if (stop.get()) {
                 savingSettings.saveVolume = false;
-                logger.progress("Stopped saving thread: ", "" + this.current_t);
+                Logger.progress("Stopped saving thread: ", "" + this.current_t);
                 return;
             }
 
@@ -117,7 +117,7 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
             if (stop.get()) {
                 savingSettings.saveVolume = false;
                 savingSettings.saveProjection = false;
-                logger.progress("Stopped saving thread: ", "" + current_t);
+                Logger.progress("Stopped saving thread: ", "" + current_t);
                 return;
             }
 
@@ -151,7 +151,7 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
         }
 
         if (!stop.get()) {
-            SaveImgHelper.documentProgress(totalSlices, counter, logger, startTime);
+            SaveImgHelper.documentProgress(totalSlices, counter, startTime);
         }
 
     }

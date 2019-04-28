@@ -1,8 +1,7 @@
 package de.embl.cba.bdp2.tracking;
 
+import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
-
-import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import javafx.geometry.Point3D;
@@ -17,6 +16,7 @@ import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.util.Intervals;
 import net.imglib2.view.Views;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -50,7 +50,7 @@ public class ObjectTracker< T extends RealType<T> & NativeType< T > > {
 
     public Track getTrackingPoints() {
         final String centeringMethod = trackingSettings.trackingMethod;
-        logger.info(centeringMethod);
+        Logger.info(centeringMethod);
         if(TrackingSettings.CENTER_OF_MASS.equalsIgnoreCase(centeringMethod)){
                 return doCenterOfMassTracking();
         }else if(TrackingSettings.CORRELATION.equalsIgnoreCase(centeringMethod)){
@@ -71,7 +71,7 @@ public class ObjectTracker< T extends RealType<T> & NativeType< T > > {
         int iterations = trackingSettings.iterationsCenterOfMass;
         long startTime = System.currentTimeMillis();
         for (int t = tStart; t < timeFrames; ++t) {
-            logger.info("Current time tracked " + t);
+            Logger.info("Current time tracked " + t);
             randomAccess.setPosition(t, DimensionOrder.T );
             double trackingFraction;
             // compute stack center and tracking radii
@@ -91,7 +91,7 @@ public class ObjectTracker< T extends RealType<T> & NativeType< T > > {
             }
             trackingResults.addLocation(t, new Point3D[]{pMin,pMax});
         }
-        logger.info("Time elapsed " +(System.currentTimeMillis() - startTime));
+        Logger.info("Time elapsed " +(System.currentTimeMillis() - startTime));
         return trackingResults;
     }
 
@@ -108,7 +108,7 @@ public class ObjectTracker< T extends RealType<T> & NativeType< T > > {
 
             if (this.interruptTrackingThreads) return null;
 
-            logger.info("Current time tracked " + t);
+            Logger.info("Current time tracked " + t);
 
             long[] range = {(long) pMin.getX(),
                     (long) pMin.getY(),
@@ -150,7 +150,7 @@ public class ObjectTracker< T extends RealType<T> & NativeType< T > > {
 
             trackingResults.addLocation(t+1, new Point3D[]{pMin,pMax});
         }
-        logger.info("Time elapsed " +(System.currentTimeMillis() - startTime));
+        Logger.info("Time elapsed " +(System.currentTimeMillis() - startTime));
         return trackingResults;
     }
 

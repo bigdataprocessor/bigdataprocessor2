@@ -1,5 +1,6 @@
 package de.embl.cba.bdp2.saving;
 
+import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.utils.Utils;
 import ij.IJ;
 import ij.ImagePlus;
@@ -17,9 +18,9 @@ import net.imglib2.view.Views;
 import ome.xml.model.enums.DimensionOrder;
 import ome.xml.model.enums.PixelType;
 import ome.xml.model.primitives.PositiveInteger;
+
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
 
 public class SaveImgAsTIFFStacks implements Runnable {
     private final int t;
@@ -65,7 +66,7 @@ public class SaveImgAsTIFFStacks implements Runnable {
         int totalChannels = Math.toIntExact(savingSettings.rai.dimension( de.embl.cba.bdp2.utils.DimensionOrder.C ));
         for (int c = 0; c < totalChannels; c++) {
             if (stop.get()) {
-                logger.progress("Stopped saving thread: ", "" + t);
+                Logger.progress("Stopped saving thread: ", "" + t);
                 return;
             }
 
@@ -112,7 +113,7 @@ public class SaveImgAsTIFFStacks implements Runnable {
             for (String binning : binnings) {
 
                 if (stop.get()) {
-                    logger.progress("Stopped saving thread: ", "" + t);
+                    Logger.progress("Stopped saving thread: ", "" + t);
                     return;
                 }
 
@@ -141,7 +142,7 @@ public class SaveImgAsTIFFStacks implements Runnable {
 
             }
             if (!stop.get()) {
-                SaveImgHelper.documentProgress(totalCubes, counter, logger, startTime);
+                SaveImgHelper.documentProgress(totalCubes, counter, startTime);
             }
         }
     }
@@ -190,7 +191,7 @@ public class SaveImgAsTIFFStacks implements Runnable {
 
                 for (int z = 0; z < imp.getNSlices(); z++) {
                     if (stop.get()) {
-                        logger.progress("Stopped saving thread: ", "" + t);
+                        Logger.progress("Stopped saving thread: ", "" + t);
                         savingSettings.saveProjection = false;
                         return;
                     }
@@ -208,19 +209,19 @@ public class SaveImgAsTIFFStacks implements Runnable {
                 writer.close();
 
             } catch (Exception e) {
-                logger.error(e.toString());
+                Logger.error(e.toString());
             }
         } else{  // no compression: use ImageJ's FileSaver, as it is faster than BioFormats
             if (stop.get()) {
                 savingSettings.saveProjection = false;
-                logger.progress("Stopped saving thread: ", "" + t);
+                Logger.progress("Stopped saving thread: ", "" + t);
                 return;
             }
             FileSaver fileSaver = new FileSaver(imp);
             String sC = String.format("%1$02d", c);
             String sT = String.format("%1$05d", t);
             String pathCT = path + "--C" + sC + "--T" + sT + ".tif";
-            //logger.info("Saving " + pathCT);
+            //Logger.info("Saving " + pathCT);
             fileSaver.saveAsTiffStack(pathCT);
         }
     }

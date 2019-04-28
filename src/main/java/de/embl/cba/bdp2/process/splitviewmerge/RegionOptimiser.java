@@ -4,7 +4,6 @@ import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.tracking.Trackers;
 import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.view.IntervalView;
@@ -13,6 +12,7 @@ import net.imglib2.view.Views;
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
 
+import static de.embl.cba.bdp2.process.splitviewmerge.SplitImageMerger.getInterval5D;
 import static de.embl.cba.bdp2.utils.DimensionOrder.*;
 
 public class RegionOptimiser
@@ -40,8 +40,8 @@ public class RegionOptimiser
 			double[] voxelSpacing )
 	{
 		ArrayList< FinalInterval > voxelIntervals =
-				SplitViewMergingHelpers.getVoxelntervals5D(
-						rai5D, calibratedCentres2D, calibratedSpan2D, voxelSpacing );
+				SplitViewMergingHelpers.asIntervals(
+						calibratedCentres2D, calibratedSpan2D, voxelSpacing );
 
 		final double[] shift = optimiseCentres2D( rai5D, voxelIntervals );
 
@@ -66,18 +66,20 @@ public class RegionOptimiser
 	private static < R extends RealType< R > & NativeType< R > >
 	double[] optimiseCentres2D(
 			RandomAccessibleInterval< R > rai5D,
-			ArrayList< FinalInterval > voxelIntervals5D )
+			ArrayList< FinalInterval > intervals )
 	{
 		final ArrayList< RandomAccessibleInterval< R > > planes
 				= new ArrayList<>();
 
-		for ( FinalInterval interval : voxelIntervals5D )
+		for ( FinalInterval interval : intervals )
 		{
+			final FinalInterval interval5D = getInterval5D( rai5D, interval );
+
 			final IntervalView< R > crop =
 					Views.zeroMin(
 							Views.interval(
 									rai5D,
-									interval ) );
+									interval5D ) );
 
 			final IntervalView< R > time = Views.hyperSlice( crop, T, 0 );
 			final IntervalView< R > channel = Views.hyperSlice( time, C, 0 );

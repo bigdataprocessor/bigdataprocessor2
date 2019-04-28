@@ -2,6 +2,7 @@ package de.embl.cba.bdp2.saving;
 
 import ch.systemsx.cisd.hdf5.hdf5lib.HDF5Constants;
 import de.embl.cba.bdp2.loading.files.FileInfos;
+import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import ij.ImagePlus;
@@ -23,9 +24,10 @@ import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.util.Util;
 import net.imglib2.view.Views;
+
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
+
 import static ch.systemsx.cisd.hdf5.hdf5lib.HDF5Constants.*;
 import static java.lang.Long.min;
 
@@ -121,7 +123,7 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
         RandomAccessibleInterval image = savingSettings.rai;
         for (int c = 0; c < this.nChannels; c++) {
             if (stop.get()) {
-                logger.progress("Stopped saving thread: ", "" + this.current_t);
+                Logger.progress("Stopped saving thread: ", "" + this.current_t);
                 return;
             }
             // Load
@@ -150,7 +152,7 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
             for (String binning : binnings) {
 
                 if (stop.get()) {
-                    logger.progress("Stopped saving thread @ merge: ", "" + current_t);
+                    Logger.progress("Stopped saving thread @ merge: ", "" + current_t);
                     return;
                 }
                 String newPath = savingSettings.filePath;
@@ -180,7 +182,7 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
 
             }
             if (!stop.get()) {
-                SaveImgHelper.documentProgress(totalSlices, counter, logger, startTime);
+                SaveImgHelper.documentProgress(totalSlices, counter, startTime);
             }
         }
     }
@@ -191,7 +193,7 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
                 min(nRows, 256),
                 min(nCols, 256)
         };
-        logger.info("Export Dimensions in xyczt: " + String.valueOf(nCols) + "x" + String.valueOf(nRows) + "x" + String.valueOf(nChannels) + "x" +
+        Logger.info("Export Dimensions in xyczt: " + String.valueOf(nCols) + "x" + String.valueOf(nRows) + "x" + String.valueOf(nChannels) + "x" +
                 String.valueOf(nFrames) + "x" + String.valueOf(nZ));
 
         try {
@@ -202,29 +204,29 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
 
             T val = imgBinned.firstElement();
             if (val instanceof UnsignedByteType) {
-                logger.info("Writing uint 8.");
+                Logger.info("Writing uint 8.");
                 writeIndividualChannels(imgBinned, H5T_NATIVE_UINT8);
             } else if (val instanceof UnsignedShortType) {
-                logger.info("Writing uint 16.");
+                Logger.info("Writing uint 16.");
                 writeIndividualChannels(imgBinned, H5T_NATIVE_UINT16);
             } else if (val instanceof UnsignedIntType) {
-                logger.info("Writing uint 32.");
+                Logger.info("Writing uint 32.");
                 writeIndividualChannels(imgBinned, H5T_NATIVE_UINT32);
             } else if (val instanceof FloatType) {
-                logger.info("Writing float 32.");
+                Logger.info("Writing float 32.");
                 writeIndividualChannels(imgBinned, H5T_NATIVE_FLOAT);
             } else {
-                logger.error("Type Not handled yet!" + val.getClass());
+                Logger.error("Type Not handled yet!" + val.getClass());
                 throw new IllegalArgumentException("Unsupported Type: " + val.getClass());
             }
         } catch (HDF5Exception err) {
-            logger.error("HDF5_STACKS API error occurred while creating '" + filename + "'." + err.getMessage());
+            Logger.error("HDF5_STACKS API error occurred while creating '" + filename + "'." + err.getMessage());
             throw new RuntimeException(err);
         } catch (Exception err) {
-            logger.error("An unexpected error occurred while creating '" + filename + "'." + err.getMessage());
+            Logger.error("An unexpected error occurred while creating '" + filename + "'." + err.getMessage());
             throw new RuntimeException(err);
         } catch (OutOfMemoryError o) {
-            logger.error("Out of Memory Error while creating '" + filename + "'." + o.getMessage());
+            Logger.error("Out of Memory Error while creating '" + filename + "'." + o.getMessage());
             throw new RuntimeException(o);
         } finally {
             H5.H5Sclose(dataspaceId);
@@ -250,10 +252,10 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
             dataspaceId = H5.H5Screate_simple(RANK, iniDims, maxDims);
             datasetId = H5.H5Dcreate(fileId, dataset, hdf5DataType, dataspaceId, H5P_DEFAULT, dcplId, H5P_DEFAULT);
         } catch (HDF5Exception ex) {
-            logger.error("H5D dataspace creation failed." + ex.getMessage());
+            Logger.error("H5D dataspace creation failed." + ex.getMessage());
             throw new RuntimeException(ex);
         } catch (Exception err) {
-            logger.error("An error occurred at writeIndividualChannels method." + err.getMessage());
+            Logger.error("An error occurred at writeIndividualChannels method." + err.getMessage());
             throw new RuntimeException(err);
         }
 
@@ -285,7 +287,7 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
 
             if (stop.get()) {
                 savingSettings.saveProjection = false;
-                logger.progress("Stopped saving thread @ writeIndividualChannels: ", "" + current_t);
+                Logger.progress("Stopped saving thread @ writeIndividualChannels: ", "" + current_t);
                 return;
             }
 
@@ -293,14 +295,14 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
             long[] start = {z, 0, 0};
             writeHyperslabs(hdf5DataType, pixelSlice, start, iniDims);
         }
-        logger.info("compressionLevel: " + String.valueOf(compressionLevel));
-        logger.info("Finished writing the HDF5_STACKS.");
+        Logger.info("compressionLevel: " + String.valueOf(compressionLevel));
+        Logger.info("Finished writing the HDF5_STACKS.");
     }
 
     private <E> void writeHyperslabs(int hdf5DataType, E[][] pixelsSlice, long[] start, long[] colorIniDims) {
         if (stop.get()) {
             savingSettings.saveProjection = false;
-            logger.progress("Stopped saving thread @ writeHyperslabs: ", "" + current_t);
+            Logger.progress("Stopped saving thread @ writeHyperslabs: ", "" + current_t);
             return;
         }
 
@@ -310,10 +312,10 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
             int memSpace = H5.H5Screate_simple(RANK, colorIniDims, null);
             H5.H5Dwrite(datasetId, hdf5DataType, memSpace, dataspaceId, H5P_DEFAULT, pixelsSlice);
         } catch (HDF5Exception e) {
-            logger.error("Error while writing extended hyperslabs." + e.getMessage());
+            Logger.error("Error while writing extended hyperslabs." + e.getMessage());
             throw new RuntimeException(e);
         } catch (Exception e) {
-            logger.error("An error occurred at writeHyperslabs method." + e.getMessage());
+            Logger.error("An error occurred at writeHyperslabs method." + e.getMessage());
             throw new RuntimeException(e);
         }
 
@@ -329,7 +331,7 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
 
                 if (stop.get()) {
                     savingSettings.saveProjection = false;
-                    logger.progress("Stopped saving thread @ fillStackSlice: ", "" + current_t);
+                    Logger.progress("Stopped saving thread @ fillStackSlice: ", "" + current_t);
                     return;
                 }
 
@@ -350,7 +352,7 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
                 } else if (value instanceof FloatType) {
                     pixelArray[y][x] = (E) (Float.valueOf((((FloatType) value).get())));
                 } else {
-                    logger.error("Type Not handled yet!");
+                    Logger.error("Type Not handled yet!");
                 }
             }
         }

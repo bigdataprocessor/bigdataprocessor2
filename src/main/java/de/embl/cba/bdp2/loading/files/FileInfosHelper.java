@@ -1,8 +1,9 @@
 package de.embl.cba.bdp2.loading.files;
 
 import de.embl.cba.bdp2.loading.FastTiffDecoder;
-import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
+import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.utils.Utils;
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.*;
@@ -27,7 +28,7 @@ public class FileInfosHelper
 
         Matcher matcher;
 
-        logger.info("Importing/creating file information from pre-defined naming scheme.");
+        Logger.info("Importing/creating file information from pre-defined naming scheme.");
         // channels
         matcher = Pattern.compile(".*<C(\\d+)-(\\d+)>.*").matcher(namingPattern);
         if (matcher.matches()) {
@@ -62,7 +63,7 @@ public class FileInfosHelper
             ctzPad[2] = matcher.group(1).length();
         } else {
             // determine number of slices from a file...
-            logger.error("Please provide a z range as well.");
+            Logger.error("Please provide a z range as well.");
             return false;
         }
 
@@ -78,7 +79,7 @@ public class FileInfosHelper
         if (namingPattern.contains("<Z") && namingPattern.contains(".tif")) {
             infoSource.fileType = Utils.FileType.SINGLE_PLANE_TIFF.toString();
         } else {
-            logger.error("Sorry, currently only single tiff planes supported");
+            Logger.error("Sorry, currently only single tiff planes supported");
             return false;
         }
 
@@ -93,7 +94,7 @@ public class FileInfosHelper
                     if (infoSource.fileType.equals(Utils.FileType.SINGLE_PLANE_TIFF.toString())) {
                         fileName = namingPattern.replaceFirst("<Z(\\d+)-(\\d+)>",String.format("%1$0" + ctzPad[2] + "d", z));
                     } else {
-                        logger.error("BigDataProcessor:setMissingInfos:unsupported file type");
+                        Logger.error("BigDataProcessor:setMissingInfos:unsupported file type");
                     }
                     if (hasC) {
                         fileName = fileName.replaceFirst("<C(\\d+)-(\\d+)>",String.format("%1$0" + ctzPad[0] + "d", c));
@@ -114,7 +115,7 @@ public class FileInfosHelper
                             if (infoSource.fileType.equals(Utils.FileType.SINGLE_PLANE_TIFF.toString()))
                                 infoSource.nZ = ctzSize[2];
 
-                            logger.info("Found one file; setting nx,ny,nz and bit-depth from this file: "+ fileName);
+                            Logger.info("Found one file; setting nx,ny,nz and bit-depth from this file: "+ fileName);
                             isObtainedImageDataInfo = true;
                         }
                     }
@@ -122,7 +123,7 @@ public class FileInfosHelper
             }
         }
         if (!isObtainedImageDataInfo) {
-            logger.error("Could not open data set. There needs to be at least one file matching the naming scheme.");
+            Logger.error("Could not open data set. There needs to be at least one file matching the naming scheme.");
         }
 
         return isObtainedImageDataInfo;
@@ -188,7 +189,7 @@ public class FileInfosHelper
             //
             // Check for sub-folders
             //
-            logger.info("checking for sub-folders...");
+            Logger.info("checking for sub-folders...");
             infoSource.channelFolders = getFoldersInFolder(directory);
 
             if ( infoSource.channelFolders != null )
@@ -199,16 +200,16 @@ public class FileInfosHelper
                     fileLists[i] = getFilesInFolder(directory + infoSource.channelFolders[i], filterPattern);
                     if ( fileLists[i] == null )
                     {
-                        logger.info("no files found in folder: " + directory + infoSource.channelFolders[i]);
+                        Logger.info("no files found in folder: " + directory + infoSource.channelFolders[i]);
                         return false;
                     }
                 }
-                logger.info( "found sub-folders => interpreting as channel folders." );
+                Logger.info( "found sub-folders => interpreting as channel folders." );
             }
             else
             {
-                logger.info("no sub-folders found.");
-                logger.info("No sub-folders found; please specify a different options for loading " +
+                Logger.info("no sub-folders found.");
+                Logger.info("No sub-folders found; please specify a different options for loading " +
                         "the channels");
                 return false;
             }
@@ -218,15 +219,15 @@ public class FileInfosHelper
         {   //
             // Get files in main directory
             //
-            logger.info("Searching files in folder: " + directory);
+            Logger.info("Searching files in folder: " + directory);
             fileLists = new String[ 1 ][ ];
             fileLists[ 0 ] = getFilesInFolder( directory, filterPattern );
-            logger.info("Number of files in main folder matching the filter pattern: " + fileLists[0].length );
+            Logger.info("Number of files in main folder matching the filter pattern: " + fileLists[0].length );
 
             if ( fileLists[0] == null || fileLists[0].length == 0 )
             {
                 //IJ.showMessage("No files matching this pattern were found: " + filterPattern);
-                logger.warning("No files matching this pattern were found: " + filterPattern);
+                Logger.warning("No files matching this pattern were found: " + filterPattern);
                 return false;
             }
 
@@ -284,7 +285,7 @@ public class FileInfosHelper
                 if (!(namingScheme.contains("<c>") && namingScheme.contains("<t>")))
                 {
                     //IJ.showMessage("The pattern for multi-channel loading must" + "contain <c> and <t> to match channels and time in the filenames.");
-                    logger.warning("The pattern for multi-channel loading must" + "contain <c> and <t> to match channels and time in the filenames.");
+                    Logger.warning("The pattern for multi-channel loading must" + "contain <c> and <t> to match channels and time in the filenames.");
                     return false;
                 }
 
@@ -357,14 +358,14 @@ public class FileInfosHelper
             }
             else
             {
-                logger.error("Unsupported file type: " + fileLists[0][0]);
+                Logger.error("Unsupported file type: " + fileLists[0][0]);
                 return false;
             }
 
             infoSource.nT = nT;
             infoSource.nC = nC;
 
-            logger.info("File type: " + infoSource.fileType );
+            Logger.info("File type: " + infoSource.fileType );
 
             //
             // asCachedCellImg the final file list
@@ -389,7 +390,7 @@ public class FileInfosHelper
                             c = channels.indexOf(matcherCT.group("C"));
                             t = timepoints.indexOf(matcherCT.group("T"));
                         } catch (Exception e) {
-                            logger.error("The multi-channel loading did not match the filenames.\n" +
+                            Logger.error("The multi-channel loading did not match the filenames.\n" +
                                     "Please change the pattern.\n\n" +
                                     "The Java error message was:\n" +
                                     e.toString());
@@ -533,7 +534,7 @@ public class FileInfosHelper
         if (list == null || list.length == 0)
             return null;
 
-        //logger.info( "Sorting and filtering file list..." );
+        //Logger.info( "Sorting and filtering file list..." );
         list = sortAndFilterFileList( list, filterPattern );
 
         if (list == null) return null;

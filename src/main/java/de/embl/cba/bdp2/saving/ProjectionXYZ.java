@@ -23,12 +23,12 @@ package de.embl.cba.bdp2.saving;
  *
  */
 
+import de.embl.cba.bdp2.logging.Logger;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.measure.Calibration;
 import ij.process.Blitter;
 import ij.process.ImageProcessor;
-import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
 
 public class ProjectionXYZ {
 
@@ -52,10 +52,10 @@ public class ProjectionXYZ {
         this.yscale = calib.pixelHeight;
         this.zscale = calib.pixelDepth;
         if (this.xscale != this.yscale){
-            logger.debug("x and y scale is not same: use only x for calculating z factor.");
+            Logger.debug("x and y scale is not same: use only x for calculating z factor.");
         }
         this.zf = this.zscale / this.xscale;
-        logger.debug("Z factor set to " + Double.toString(this.zf));
+        Logger.debug("Z factor set to " + Double.toString(this.zf));
     }
 
     public ImagePlus createProjection(){
@@ -63,7 +63,7 @@ public class ProjectionXYZ {
         // Get image info and setups
         //ImagePlus img = WindowManager.getCurrentImage();
         if (imp.getImageStackSize() < 2){
-            logger.warning("The image is not a stack: aborted XYZ projection");
+            Logger.warning("The image is not a stack: aborted XYZ projection");
             return null;
         }
         ImageStack stk = imp.getStack();
@@ -71,7 +71,7 @@ public class ProjectionXYZ {
         int x = stk.getWidth();
         int y = stk.getHeight();
         int z = stk.getSize();
-        logger.debug("Z-size:" + Integer.toString(z));
+        Logger.debug("Z-size:" + Integer.toString(z));
         // Create xy Processor with room for xz and yz
         ImageProcessor outxz = stk.getProcessor(1).createProcessor(x,z);
         ImageProcessor outyz = stk.getProcessor(1).createProcessor(z,y);
@@ -95,18 +95,18 @@ public class ProjectionXYZ {
             }
         }
         if (doscale){
-            logger.debug("Z factor used:" + Double.toString(this.zf));
+            Logger.debug("Z factor used:" + Double.toString(this.zf));
             double newzsize = ((double) outxz.getHeight()) * this.zf;
-            logger.debug("...original size:" + Integer.toString(outxz.getHeight()));
-            logger.debug("...new size:" + Double.toString(newzsize));
+            Logger.debug("...original size:" + Integer.toString(outxz.getHeight()));
+            Logger.debug("...new size:" + Double.toString(newzsize));
             outxz.setInterpolationMethod(ImageProcessor.BILINEAR);
             outxz = outxz.resize(outxz.getWidth(), (int) Math.round(newzsize));
 
             outyz.setInterpolationMethod(ImageProcessor.BILINEAR);
-            logger.debug("YZ width Before Scaling: " + Integer.toString(outyz.getWidth()));
+            Logger.debug("YZ width Before Scaling: " + Integer.toString(outyz.getWidth()));
             outyz = outyz.resize((int) Math.round(newzsize), outyz.getHeight());
-            logger.debug("scaled XZ and YZ");
-            logger.debug("YZ width After Scaling: " + Integer.toString(outyz.getWidth()));
+            Logger.debug("scaled XZ and YZ");
+            Logger.debug("YZ width After Scaling: " + Integer.toString(outyz.getWidth()));
         }
         ImageProcessor output = stk.getProcessor(1).
                 createProcessor(x + outyz.getWidth() + FRAME_WIDTH, y + outxz.getHeight() +FRAME_WIDTH);

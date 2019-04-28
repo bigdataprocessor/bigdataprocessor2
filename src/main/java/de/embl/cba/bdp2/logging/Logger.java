@@ -1,76 +1,48 @@
 package de.embl.cba.bdp2.logging;
 
-import java.util.ArrayList;
+import ij.IJ;
 
-public interface Logger {
-
-    /**
-     * whether or not to show debug messages
-     *
-     * @param message
-     */
-    void setShowDebug(boolean showDebug);
+public class Logger
+{
 
 
-    /**
-     * whether or not to show debug messages
-     *
-     * @param message
-     */
-    boolean isShowDebug();
+	public static void log( String msg )
+	{
+		IJ.log( msg );
+	}
 
-    /**
-     * prints messages that are merely for information, such as progress of computations
-     *
-     * @param message
-     */
-    void info(String message);
+	public static void progress( String msg, String progress )
+	{
+		IJ.log( msg + ": " + progress );
+	}
 
+	public static void info( String msg )
+	{
+		IJ.log( msg );
+	}
 
-    /**
-     * prints messages that are merely for information, such as progress of computations
-     *
-     * @param message
-     */
-    void progress(String message, String progress);
+	public static void warning( String msg )
+	{
+		IJ.log( "WARNING: " + msg );
+	}
 
+	public static void debug( String msg )
+	{
+		// IJ.log( msg );
+	}
 
-    /**
-     * prints messages that are merely for information, such as progress of computations
-     *
-     * @param message
-     */
-    void progress(String header,
-                  ArrayList<String> messages,
-                  long startTime,
-                  long counter, long counterMax);
+	public static void error( String msg )
+	{
+		IJ.error( msg );
+	}
 
-    /**
-     * shows important messages that should not be overlooked by the user
-     *
-     * @param message
-     */
-    void error(String message);
+	public static boolean isShowDebug()
+	{
+		return false;
+	}
 
-    /**
-     * shows messages that contain warnings
-     *
-     * @param message
-     */
-    void warning(String message);
-
-    /**
-     * shows messages that contain information for debugging
-     *
-     * @param message
-     */
-    void debug(String message);
-
-    /**
-     * displays a progress wheel
-     *
-     * @param message
-     */
-    void progressWheel(String message);
-
+	public static void progress( String message, Object o, long start, int i, int size )
+	{
+		// TODO
+	}
 }

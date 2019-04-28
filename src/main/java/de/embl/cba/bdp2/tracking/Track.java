@@ -60,7 +60,7 @@ public class Track < R extends RealType< R > & NativeType< R > >    {
 //                    roi.getPolygon().ypoints[0],
 //                    roi.getZPosition()-1);
 //        } else {
-//            logger.error("Please use the point selection tool to mark an object.");
+//            Logger.error("Please use the point selection tool to mark an object.");
 //            return;
 //        }
 

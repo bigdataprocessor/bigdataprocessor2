@@ -1,12 +1,11 @@
 package de.embl.cba.bdp2.tracking;
 
-import bdv.util.*;
+import bdv.util.BdvHandleFrame;
 import de.embl.cba.bdp2.loading.files.FileInfos;
+import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.ui.BdvMenus;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.ui.DisplaySettings;
-
-import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
@@ -121,10 +120,10 @@ public class BigDataTracker< R extends RealType< R > & NativeType< R > > {
         Optional<ObjectTracker> obj =  Optional.ofNullable(objectTracker);
         if(obj.isPresent()){
             trackResults = null;
-            logger.info("Stopping all tracking...");
+            Logger.info("Stopping all tracking...");
             this.objectTracker.interruptTrackingThreads = true;
         }else{
-            logger.info("Cannot stop an unbegun process.");
+            Logger.info("Cannot stop an unbegun process.");
         }
     }
 

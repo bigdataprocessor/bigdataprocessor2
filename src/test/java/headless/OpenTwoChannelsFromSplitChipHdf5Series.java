@@ -3,7 +3,7 @@ package headless;
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.CachedCellImgReader;
 import de.embl.cba.bdp2.loading.files.FileInfos;
-import de.embl.cba.bdp2.process.splitviewmerge.RegionMerger;
+import de.embl.cba.bdp2.process.splitviewmerge.SplitImageMerger;
 import de.embl.cba.bdp2.process.splitviewmerge.RegionOptimiser;
 import de.embl.cba.bdp2.viewers.ImageViewer;
 import de.embl.cba.bdp2.viewers.ViewerUtils;
@@ -50,7 +50,7 @@ public class OpenTwoChannelsFromSplitChipHdf5Series
                         calibratedSpan );
 
         final RandomAccessibleInterval< R > colorRAI
-                = RegionMerger.merge(
+                = SplitImageMerger.merge(
                         image.getRai(), optimisedCentres, calibratedSpan, fileInfos.voxelSpacing );
 
         viewer.show(

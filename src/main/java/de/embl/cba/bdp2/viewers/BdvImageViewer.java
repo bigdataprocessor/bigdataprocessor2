@@ -285,7 +285,7 @@ public class BdvImageViewer< R extends RealType< R > & NativeType< R >>
                 asVolatile( image.getRai() );
 
         if ( volatileRai == null )
-            BigDataProcessorCommand.logger.error( "Could not wrap as volatile!" );
+            BigDataProcessorCommand.Logger.error( "Could not wrap as volatile!" );
         else
             bdvStackSource = BdvFunctions.show(
                         volatileRai,

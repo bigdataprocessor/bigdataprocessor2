@@ -1,5 +1,6 @@
 package de.embl.cba.bdp2.tracking;
 
+import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
@@ -10,7 +11,6 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
-import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -416,7 +416,7 @@ public class BigDataTrackerGUI < R extends RealType< R > & NativeType< R > >
 
 //            TableModel model = bigDataTracker.getTrackTable().getTable().getModel();
 //            if(model == null) {
-//                logger.error("There are no tracks yet.");
+//                Logger.error("There are no tracks yet.");
 //                return;
 //            }
 //            fc = new JFileChooser();
@@ -448,9 +448,9 @@ public class BigDataTrackerGUI < R extends RealType< R > & NativeType< R > >
                     final URI uri = new URI("https://github.com/tischi/imagej-open-stacks-as-virtualstack/issues");
                     Desktop.getDesktop().browse(uri);
                 } catch (URISyntaxException uriEx) {
-                    logger.error(uriEx.toString());
+                    Logger.error(uriEx.toString());
                 } catch (IOException ioEx) {
-                    logger.error(ioEx.toString());
+                    Logger.error(ioEx.toString());
                 }
             } else { /* TODO: error handling */ }
 
@@ -572,7 +572,7 @@ public class BigDataTrackerGUI < R extends RealType< R > & NativeType< R > >
 //
 //        if( imps == null )
 //        {
-//            logger.info("The cropping failed!");
+//            Logger.info("The cropping failed!");
 //        }
 //        else
 //        {

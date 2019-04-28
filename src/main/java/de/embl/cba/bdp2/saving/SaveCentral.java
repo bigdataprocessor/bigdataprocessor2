@@ -1,12 +1,12 @@
 package de.embl.cba.bdp2.saving;
 
 import de.embl.cba.bdp2.loading.files.FileInfos;
+import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.imaris.ImarisDataSet;
 import de.embl.cba.imaris.ImarisUtils;
 import de.embl.cba.imaris.ImarisWriter;
-import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
 import de.embl.cba.bdp2.utils.MonitorThreadPoolStatus;
 import de.embl.cba.bdp2.utils.Utils;
 import ij.ImagePlus;
@@ -199,10 +199,10 @@ public class SaveCentral {
 //                imarisDataSet, savingSettings.parentDirectory,
 //                savingSettings.fileBaseNameIMARIS + ".h5");
 
-        logger.info("Image sizes at different resolutions:");
+        Logger.info("Image sizes at different resolutions:");
         Utils.logArrayList(imarisDataSet.getDimensions());
 
-        logger.info("Image chunking:");
+        Logger.info("Image chunking:");
         Utils.logArrayList(imarisDataSet.getChunks());
         return imarisDataSet;
     }

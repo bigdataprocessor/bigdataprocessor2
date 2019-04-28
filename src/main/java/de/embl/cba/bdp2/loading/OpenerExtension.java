@@ -18,6 +18,7 @@ import ch.systemsx.cisd.hdf5.HDF5DataTypeInformation;
 import ch.systemsx.cisd.hdf5.HDF5Factory;
 import ch.systemsx.cisd.hdf5.IHDF5Reader;
 import de.embl.cba.bdp2.loading.files.SerializableFileInfo;
+import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.utils.Utils;
 import ij.IJ;
 import ij.ImagePlus;
@@ -25,7 +26,6 @@ import ij.ImageStack;
 import ij.io.BitBuffer;
 import ij.io.Opener;
 import javafx.geometry.Point3D;
-import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.RandomAccessFile;
@@ -87,7 +87,7 @@ public class OpenerExtension extends Opener {
         }
         else
         {
-            logger.error("unsupported file type: " + info[0].fileTypeString);
+            Logger.error("unsupported file type: " + info[0].fileTypeString);
         }
 
         return(imp);
@@ -100,7 +100,7 @@ public class OpenerExtension extends Opener {
     {
 
         if (info == null) {
-            logger.error("FileInfo was empty; could not load data.");
+            Logger.error("FileInfo was empty; could not load data.");
             return null;
         }
 
@@ -138,13 +138,13 @@ public class OpenerExtension extends Opener {
         int nx = xe - xs + 1;
         int ny = ye - ys + 1;
 
-        if ( logger.isShowDebug() ) {
-            logger.info("# readDataCubeFromHdf5");
-            logger.info("root directory: " + directory);
-            logger.info("fi.directory: " + fi.directory);
-            logger.info("fi.filename: " + fi.fileName);
-            logger.info("info.length: " + info.length);
-            logger.info("zs,dz,ze,nz,xs,xe,ys,ye: " + zs + "," + dz + "," + ze + "," + nz + "," + xs + "," +
+        if ( Logger.isShowDebug() ) {
+            Logger.info("# readDataCubeFromHdf5");
+            Logger.info("root directory: " + directory);
+            Logger.info("fi.directory: " + fi.directory);
+            Logger.info("fi.filename: " + fi.fileName);
+            Logger.info("info.length: " + info.length);
+            Logger.info("zs,dz,ze,nz,xs,xe,ys,ye: " + zs + "," + dz + "," + ze + "," + nz + "," + xs + "," +
                     xe + "," + ys + "," + ye);
         }
 
@@ -160,7 +160,7 @@ public class OpenerExtension extends Opener {
         long nPixels = (long) nx * ny * nz;
         boolean readInOneGo = true;
         if (nPixels > maxSize) {
-            logger.info("H5 Loader: nPixels > 2^31 => reading plane wise (=> slower!).");
+            Logger.info("H5 Loader: nPixels > 2^31 => reading plane wise (=> slower!).");
             readInOneGo = false;
         }
         allocationTime = System.currentTimeMillis() - allocationTime;
@@ -212,7 +212,7 @@ public class OpenerExtension extends Opener {
             }
             else
             {
-                logger.error("Data type " + dsTypeString + " is currently not supported");
+                Logger.error("Data type " + dsTypeString + " is currently not supported");
                 return ( null );
             }
             readingPixelsTime = System.currentTimeMillis() - readingPixelsTime;
@@ -257,14 +257,14 @@ public class OpenerExtension extends Opener {
 
         totalTime = (System.currentTimeMillis() - totalTime);
 
-        if( logger.isShowDebug() ) {
-            logger.info("h5 allocationTime [ms]: " + allocationTime);
-            logger.info("h5 readingInitTime [ms]: " + readingInitTime);
-            logger.info("h5 readingPixelsTime [ms]: " + readingPixelsTime);
-            logger.info("h5 settingPixelsIntoImageStackTime [ms]: " + settingTime);
-            logger.info("h5 totalTime [ms]: " + totalTime);
-            logger.info("pixels read: " + asFlatArray.length);
-            logger.info("effective reading speed [MB/s]: " + (double) nz * nx * ny * fi.bytesPerPixel / (
+        if( Logger.isShowDebug() ) {
+            Logger.info("h5 allocationTime [ms]: " + allocationTime);
+            Logger.info("h5 readingInitTime [ms]: " + readingInitTime);
+            Logger.info("h5 readingPixelsTime [ms]: " + readingPixelsTime);
+            Logger.info("h5 settingPixelsIntoImageStackTime [ms]: " + settingTime);
+            Logger.info("h5 totalTime [ms]: " + totalTime);
+            Logger.info("pixels read: " + asFlatArray.length);
+            Logger.info("effective reading speed [MB/s]: " + (double) nz * nx * ny * fi.bytesPerPixel / (
                     (totalTime + 0.001) * 1000));
 
         }
@@ -288,13 +288,13 @@ public class OpenerExtension extends Opener {
         int nx = xe - xs + 1;
         int ny = ye - ys + 1;
 
-        if ( logger.isShowDebug() ) {
-            logger.info("# readDataCubeFromHdf5");
-            logger.info("root directory: " + directory);
-            logger.info("fi.directory: " + fi.directory);
-            logger.info("fi.filename: " + fi.fileName);
-            logger.info("info.length: " + info.length);
-            logger.info("zs,dz,ze,nz,xs,xe,ys,ye: " + zs + "," + dz + "," + ze + "," + nz + "," + xs + "," +
+        if ( Logger.isShowDebug() ) {
+            Logger.info("# readDataCubeFromHdf5");
+            Logger.info("root directory: " + directory);
+            Logger.info("fi.directory: " + fi.directory);
+            Logger.info("fi.filename: " + fi.fileName);
+            Logger.info("info.length: " + info.length);
+            Logger.info("zs,dz,ze,nz,xs,xe,ys,ye: " + zs + "," + dz + "," + ze + "," + nz + "," + xs + "," +
                     xe + "," + ys + "," + ye);
         }
 
@@ -310,7 +310,7 @@ public class OpenerExtension extends Opener {
         long nPixels = (long) nx * ny * nz;
         boolean readInOneGo = true;
         if (nPixels > maxSize) {
-            logger.info("H5 Loader: nPixels > 2^31 => reading plane wise (=> slower!).");
+            Logger.info("H5 Loader: nPixels > 2^31 => reading plane wise (=> slower!).");
             readInOneGo = false;
         }
         allocationTime = System.currentTimeMillis() - allocationTime;
@@ -363,7 +363,7 @@ public class OpenerExtension extends Opener {
             }
             else
             {
-                logger.error("Data type " + dsTypeString + " is currently not supported");
+                Logger.error("Data type " + dsTypeString + " is currently not supported");
                 return ( null );
             }
             readingPixelsTime = System.currentTimeMillis() - readingPixelsTime;
@@ -405,14 +405,14 @@ public class OpenerExtension extends Opener {
 
         totalTime = (System.currentTimeMillis() - totalTime);
 
-        if( logger.isShowDebug() ) {
-            logger.info("h5 allocationTime [ms]: " + allocationTime);
-            logger.info("h5 readingInitTime [ms]: " + readingInitTime);
-            logger.info("h5 readingPixelsTime [ms]: " + readingPixelsTime);
-            logger.info("h5 settingPixelsIntoImageStackTime [ms]: " + settingTime);
-            logger.info("h5 totalTime [ms]: " + totalTime);
-            logger.info("pixels read: " + asFlatArray.length);
-            logger.info("effective reading speed [MB/s]: " + (double) nz * nx * ny * fi.bytesPerPixel / (
+        if( Logger.isShowDebug() ) {
+            Logger.info("h5 allocationTime [ms]: " + allocationTime);
+            Logger.info("h5 readingInitTime [ms]: " + readingInitTime);
+            Logger.info("h5 readingPixelsTime [ms]: " + readingPixelsTime);
+            Logger.info("h5 settingPixelsIntoImageStackTime [ms]: " + settingTime);
+            Logger.info("h5 totalTime [ms]: " + totalTime);
+            Logger.info("pixels read: " + asFlatArray.length);
+            Logger.info("effective reading speed [MB/s]: " + (double) nz * nx * ny * fi.bytesPerPixel / (
                     (totalTime + 0.001) * 1000));
 
         }
@@ -439,16 +439,16 @@ public class OpenerExtension extends Opener {
         int nx = xe - xs + 1;
         int ny = ye - ys + 1;
 
-        if( logger.isShowDebug() ) {
-              logger.info("# readDataCubeFromTiff");
-              logger.info("root directory: " + directory);
-              logger.info("info.length: " + info.length);
-              logger.info("fi.directory: " + fi.directory);
-              logger.info("fi.filename: " + fi.fileName);
-              logger.info("fi.compression: " + fi.compression);
-              logger.info("fi.intelByteOrder: " + fi.intelByteOrder);
-              logger.info("fi.bytesPerPixel: " + fi.bytesPerPixel);
-              logger.info("zs,dz,ze,nz,xs,xe,ys,ye: " + zs + "," + dz + "," + ze + "," + nz + "," + xs + "," + xe + "," + ys + "," + ye);
+        if( Logger.isShowDebug() ) {
+              Logger.info("# readDataCubeFromTiff");
+              Logger.info("root directory: " + directory);
+              Logger.info("info.length: " + info.length);
+              Logger.info("fi.directory: " + fi.directory);
+              Logger.info("fi.filename: " + fi.fileName);
+              Logger.info("fi.compression: " + fi.compression);
+              Logger.info("fi.intelByteOrder: " + fi.intelByteOrder);
+              Logger.info("fi.bytesPerPixel: " + fi.bytesPerPixel);
+              Logger.info("zs,dz,ze,nz,xs,xe,ys,ye: " + zs + "," + dz + "," + ze + "," + nz + "," + xs + "," + xe + "," + ys + "," + ye);
         }
 
         totalTime = System.currentTimeMillis();
@@ -474,7 +474,7 @@ public class OpenerExtension extends Opener {
                     for (int iz = 0, z = zs; iz < nz; iz++, z += dz) {
 
                         if (z < 0 || z >= info.length) {
-                            logger.error("z = " + z + " is out of range.");
+                            Logger.error("z = " + z + " is out of range.");
                             return null;
                         }
 
@@ -502,7 +502,7 @@ public class OpenerExtension extends Opener {
 
                         if (z < 0 || z >= info.length)
                         {
-                            logger.error("z = " + z + " is out of range.");
+                            Logger.error("z = " + z + " is out of range.");
                             return null;
                         }
 
@@ -527,13 +527,13 @@ public class OpenerExtension extends Opener {
 
         ImagePlus imp = new ImagePlus("One stream", stack);
 
-        if( logger.isShowDebug() )
+        if( Logger.isShowDebug() )
         {
               int usefulBytesRead = nz*nx*ny*fi.bytesPerPixel;
-              logger.info("readingTime [ms]: " + readingTime);
-              logger.info("effective reading speed [MB/s]: " + usefulBytesRead / ((readingTime + 0.001) * 1000));
-              logger.info("threadInitTime [ms]: " + threadInitTime);
-              logger.info("totalTime [ms]: " + totalTime);
+              Logger.info("readingTime [ms]: " + readingTime);
+              Logger.info("effective reading speed [MB/s]: " + usefulBytesRead / ((readingTime + 0.001) * 1000));
+              Logger.info("threadInitTime [ms]: " + threadInitTime);
+              Logger.info("totalTime [ms]: " + totalTime);
             //info("Processing [ms]: " + processTime);
         }
 
@@ -640,7 +640,7 @@ public class OpenerExtension extends Opener {
 
             if ( fi == null )
             {
-                //logger.info("Missing file; providing pixels with zeros.");
+                //Logger.info("Missing file; providing pixels with zeros.");
                 return; // leave pixels in the stack black
             }
 
@@ -650,12 +650,12 @@ public class OpenerExtension extends Opener {
                 inputStream = new RandomAccessFile(file, "r");
 
                 if (inputStream == null) {
-                    logger.error("Could not open file: " + fi.directory + fi.fileName);
+                    Logger.error("Could not open file: " + fi.directory + fi.fileName);
                     throw new IllegalArgumentException("could not open file");
                 }
 
                 if((fi.compression!=0) && (fi.compression!=1) && (fi.compression!=2) && (fi.compression!=6)) {
-                    logger.error("Tiff compression not implemented: fi.compression = " + fi.compression);
+                    Logger.error("Tiff compression not implemented: fi.compression = " + fi.compression);
                     return;
                 }
 
@@ -709,20 +709,20 @@ public class OpenerExtension extends Opener {
                             System.arraycopy( buffer[ ( z - zs ) / dz ], pos, strip, 0, stripLength );
                         } catch ( Exception e )
                         {
-                            logger.info( "" + e.toString() );
-                            logger.info( "------- s [#] : " + s );
-                            logger.info( "stripLength [bytes] : " + strip.length );
-                            logger.info( "pos [bytes] : " + pos );
-                            logger.info( "pos + stripLength [bytes] : " + ( pos + stripLength ) );
-                            logger.info( "z-zs : " + ( z - zs ) );
-                            logger.info( "z-zs/dz : " + ( z - zs ) / dz );
-                            logger.info( "buffer[z-zs].length : " + buffer[ z - zs ].length );
-                            logger.info( "imWidth [bytes] : " + imByteWidth );
-                            logger.info( "rows per strip [#] : " + rps );
-                            logger.info( "ny [#] : " + ny );
-                            logger.info( "(s - ss) * imByteWidth * rps [bytes] : " + ( ( s - ss ) * imByteWidth *
+                            Logger.info( "" + e.toString() );
+                            Logger.info( "------- s [#] : " + s );
+                            Logger.info( "stripLength [bytes] : " + strip.length );
+                            Logger.info( "pos [bytes] : " + pos );
+                            Logger.info( "pos + stripLength [bytes] : " + ( pos + stripLength ) );
+                            Logger.info( "z-zs : " + ( z - zs ) );
+                            Logger.info( "z-zs/dz : " + ( z - zs ) / dz );
+                            Logger.info( "buffer[z-zs].length : " + buffer[ z - zs ].length );
+                            Logger.info( "imWidth [bytes] : " + imByteWidth );
+                            Logger.info( "rows per strip [#] : " + rps );
+                            Logger.info( "ny [#] : " + ny );
+                            Logger.info( "(s - ss) * imByteWidth * rps [bytes] : " + ( ( s - ss ) * imByteWidth *
                                     rps ) );
-                            logger.info( "unCompressedBuffer.length [bytes] : " + unCompressedBuffer.length );
+                            Logger.info( "unCompressedBuffer.length [bytes] : " + unCompressedBuffer.length );
                         }
 
                         //info("strip.length " + strip.length);
@@ -759,20 +759,20 @@ public class OpenerExtension extends Opener {
                         }
                         catch ( Exception e )
                         {
-                            logger.info( "" + e.toString() );
-                            logger.info( "------- s [#] : " + s );
-                            logger.info( "stripLength [bytes] : " + strip.length );
-                            logger.info( "pos [bytes] : " + pos );
-                            logger.info( "pos + stripLength [bytes] : " + ( pos + compressedStripLength ) );
-                            logger.info( "z-zs : " + ( z - zs ) );
-                            logger.info( "z-zs/dz : " + ( z - zs ) / dz );
-                            logger.info( "buffer[z-zs].length : " + buffer[ z - zs ].length );
-                            logger.info( "imWidth [bytes] : " + imByteWidth );
-                            logger.info( "rows per strip [#] : " + rps );
-                            logger.info( "ny [#] : " + ny );
-                            logger.info( "(s - ss) * imByteWidth * rps [bytes] : " + ( ( s - ss ) * imByteWidth *
+                            Logger.info( "" + e.toString() );
+                            Logger.info( "------- s [#] : " + s );
+                            Logger.info( "stripLength [bytes] : " + strip.length );
+                            Logger.info( "pos [bytes] : " + pos );
+                            Logger.info( "pos + stripLength [bytes] : " + ( pos + compressedStripLength ) );
+                            Logger.info( "z-zs : " + ( z - zs ) );
+                            Logger.info( "z-zs/dz : " + ( z - zs ) / dz );
+                            Logger.info( "buffer[z-zs].length : " + buffer[ z - zs ].length );
+                            Logger.info( "imWidth [bytes] : " + imByteWidth );
+                            Logger.info( "rows per strip [#] : " + rps );
+                            Logger.info( "ny [#] : " + ny );
+                            Logger.info( "(s - ss) * imByteWidth * rps [bytes] : " + ( ( s - ss ) * imByteWidth *
                                     rps ) );
-                            logger.info( "unCompressedBuffer.length [bytes] : " + unCompressedBuffer.length );
+                            Logger.info( "unCompressedBuffer.length [bytes] : " + unCompressedBuffer.length );
                         }
 
 
@@ -789,7 +789,7 @@ public class OpenerExtension extends Opener {
                                 imageBuffer.write(tmpBuffer, 0, rlen);
                             }
                         } catch(DataFormatException e){
-                            logger.error(e.toString());
+                            Logger.error(e.toString());
                         }
                         decompressor.end();
 
@@ -811,7 +811,7 @@ public class OpenerExtension extends Opener {
 
                 } else {
 
-                    logger.error("Tiff compression not implemented: fi.compression = " + fi.compression);
+                    Logger.error("Tiff compression not implemented: fi.compression = " + fi.compression);
                     return;
 
                 }
@@ -834,7 +834,7 @@ public class OpenerExtension extends Opener {
                             imageBuffer.write(tmpBuffer, 0, rlen);
                         }
                     } catch(DataFormatException e){
-                        logger.error(e.toString());
+                        Logger.error(e.toString());
                     }
                     decompressor.end();
 
@@ -849,15 +849,15 @@ public class OpenerExtension extends Opener {
 
                 }
 
-                if( logger.isShowDebug() ) {
-                      logger.info("z: " + z);
-                      logger.info("zs: " + zs);
-                      logger.info("dz: " + dz);
-                      logger.info("(z - zs)/dz: " + (z - zs) / dz);
-                      logger.info("buffer.length : " + buffer.length);
-                      logger.info("buffer[z-zs].length : " + buffer[z - zs].length);
-                      logger.info("imWidth [bytes] : " + imByteWidth);
-                      logger.info("ny [#] : " + ny);
+                if( Logger.isShowDebug() ) {
+                      Logger.info("z: " + z);
+                      Logger.info("zs: " + zs);
+                      Logger.info("dz: " + dz);
+                      Logger.info("(z - zs)/dz: " + (z - zs) / dz);
+                      Logger.info("buffer.length : " + buffer.length);
+                      Logger.info("buffer[z-zs].length : " + buffer[z - zs].length);
+                      Logger.info("imWidth [bytes] : " + imByteWidth);
+                      Logger.info("ny [#] : " + ny);
                 }
 
 
@@ -877,7 +877,7 @@ public class OpenerExtension extends Opener {
             }
             else
             {
-                logger.error("Unsupported bit depth.");
+                Logger.error("Unsupported bit depth.");
                 return;
             }
 
@@ -999,7 +999,7 @@ public class OpenerExtension extends Opener {
                     if (nextSymbol == 2047) { bitsToRead = 12; }
                     if (nextSymbol == 4095) { bitsToRead = 13; }
                     if (nextSymbol == 8191) { bitsToRead = 14; }
-                    if (nextSymbol == 16383) { logger.error("Symbol table of LZW uncompression became too large." +
+                    if (nextSymbol == 16383) { Logger.error("Symbol table of LZW uncompression became too large." +
                             "\nThe next symbol would have been: " + nextSymbol +
                             "\nPlease contact tischitischer@gmail.com"); return null; };
                 }
@@ -1008,18 +1008,18 @@ public class OpenerExtension extends Opener {
 
             totalTimeGlob = (System.nanoTime() - startTimeGlob);
         /*
-        logger.info("total : "+totalTimeGlob/1000);
+        Logger.info("total : "+totalTimeGlob/1000);
         totalTimeGlob = 1000;
-        logger.info("fraction1 : "+(double)totalTime1/totalTimeGlob);
-        logger.info("fraction2 : "+(double)totalTime2/totalTimeGlob);
-        logger.info("fraction3 : "+(double)totalTime3/totalTimeGlob);
-        logger.info("fraction4 : "+(double)totalTime4/totalTimeGlob);
-        logger.info("fraction5 : "+(double)totalTime5/totalTimeGlob);
-        logger.info("fraction6 : "+(double)totalTime6/totalTimeGlob);
-        logger.info("fraction7 : "+(double)totalTime7/totalTimeGlob);
-        logger.info("fraction8 : "+(double)totalTime8/totalTimeGlob);
-        logger.info("fraction9 : "+(double)totalTime9/totalTimeGlob);
-        logger.info("symbolLengthMax "+symbolLengthMax);
+        Logger.info("fraction1 : "+(double)totalTime1/totalTimeGlob);
+        Logger.info("fraction2 : "+(double)totalTime2/totalTimeGlob);
+        Logger.info("fraction3 : "+(double)totalTime3/totalTimeGlob);
+        Logger.info("fraction4 : "+(double)totalTime4/totalTimeGlob);
+        Logger.info("fraction5 : "+(double)totalTime5/totalTimeGlob);
+        Logger.info("fraction6 : "+(double)totalTime6/totalTimeGlob);
+        Logger.info("fraction7 : "+(double)totalTime7/totalTimeGlob);
+        Logger.info("fraction8 : "+(double)totalTime8/totalTimeGlob);
+        Logger.info("fraction9 : "+(double)totalTime9/totalTimeGlob);
+        Logger.info("symbolLengthMax "+symbolLengthMax);
         */
 
             return out;
@@ -1029,7 +1029,7 @@ public class OpenerExtension extends Opener {
             int ip = 0;
             int bs, be;
             if(fi.bytesPerPixel !=2 ) {
-                 logger.error("Unsupported bit depth: " + fi.bytesPerPixel * 8);
+                 Logger.error("Unsupported bit depth: " + fi.bytesPerPixel * 8);
             }
 
             for (int y = ys; y < ys + ny; y++) {
@@ -1100,7 +1100,7 @@ public class OpenerExtension extends Opener {
                 readLength = 0;
                 if(se >= fi.stripLengths.length)
                 {
-                    logger.warning("Strip is out of bounds");
+                    Logger.warning("Strip is out of bounds");
                 }
                 for (int s = ss; s <= se; s++) {
                     readLength += fi.stripLengths[s];
@@ -1122,15 +1122,15 @@ public class OpenerExtension extends Opener {
 
             if ( readLength <= 0 )
             {
-                logger.warning("file type: Tiff");
-                logger.warning("hasStrips: " + hasStrips);
-                logger.warning("read from [bytes]: "+ readStart );
-                logger.warning("read to [bytes]: "+ (readStart + readLength - 1) );
-                logger.warning("ys: " + ys);
-                logger.warning("ye: " + ye);
-                logger.warning("fileInfo.compression: " + fi.compression);
-                logger.warning("fileInfo.height: " + fi.height);
-                logger.error("Error during file reading. See log window for more information");
+                Logger.warning("file type: Tiff");
+                Logger.warning("hasStrips: " + hasStrips);
+                Logger.warning("read from [bytes]: "+ readStart );
+                Logger.warning("read to [bytes]: "+ (readStart + readLength - 1) );
+                Logger.warning("ys: " + ys);
+                Logger.warning("ye: " + ye);
+                Logger.warning("fileInfo.compression: " + fi.compression);
+                Logger.warning("fileInfo.height: " + fi.height);
+                Logger.error("Error during file reading. See log window for more information");
                 return(null);
             }
 
@@ -1145,20 +1145,20 @@ public class OpenerExtension extends Opener {
                 }
                 else
                 {
-                    logger.warning("The requested data exceeds the file length; no data was read.");
-                    logger.warning("file type: Tiff");
-                    logger.warning("hasStrips: " + hasStrips);
-                    logger.warning("file length [bytes]: " + in.length());
-                    logger.warning("attempt to read until [bytes]: "+ (readStart + readLength - 1) );
-                    logger.warning("ys: " + ys);
-                    logger.warning("ye: " + ye);
-                    logger.warning("fileInfo.compression: " + fi.compression);
-                    logger.warning("fileInfo.height: " + fi.height);
+                    Logger.warning("The requested data exceeds the file length; no data was read.");
+                    Logger.warning("file type: Tiff");
+                    Logger.warning("hasStrips: " + hasStrips);
+                    Logger.warning("file length [bytes]: " + in.length());
+                    Logger.warning("attempt to read until [bytes]: "+ (readStart + readLength - 1) );
+                    Logger.warning("ys: " + ys);
+                    Logger.warning("ye: " + ye);
+                    Logger.warning("fileInfo.compression: " + fi.compression);
+                    Logger.warning("fileInfo.height: " + fi.height);
                 }
             }
             catch (Exception e)
             {
-                logger.warning(e.toString());
+                Logger.warning(e.toString());
             }
 
             return buffer;
