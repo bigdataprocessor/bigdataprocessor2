@@ -4,6 +4,7 @@ import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.viewers.ImageViewer;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.interpolation.InterpolatorFactory;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,15 +13,15 @@ import java.util.ArrayList;
 public class ObliqueMenuDialog extends JDialog implements ActionListener {
     private final JCheckBox cbUseYshear = new JCheckBox("");
     private final JCheckBox cbViewLeft = new JCheckBox("");
-    private final JTextField tfCameraPixelsize= new JTextField("6.5", 2);
-    private final JTextField tfMagnification = new JTextField("40",2);
-    private final JTextField tfStepsize = new JTextField("0.707",2);
-    private final JTextField tfObjectiveAngle = new JTextField("45",3);
+    private final JTextField tfCameraPixelsize = new JTextField("6.5", 2);
+    private final JTextField tfMagnification = new JTextField("40", 2);
+    private final JTextField tfStepsize = new JTextField("0.707", 2);
+    private final JTextField tfObjectiveAngle = new JTextField("45", 3);
     private final JComboBox namingSchemeComboBox = new JComboBox(new String[]{
-            "Clamping n-linear","N-linear","Nearest Neighbour"
+            "Clamping n-linear", "N-linear", "Nearest Neighbour"
     });
     private final String ObliqueUpdate = "Update!";
-    private final JButton obliqueUpdate =  new JButton(ObliqueUpdate);
+    private final JButton obliqueUpdate = new JButton(ObliqueUpdate);
     private final ShearingSettings shearingSettings = new ShearingSettings();
     private final ImageViewer imageViewer;
     private final RandomAccessibleInterval originalRAI;
@@ -86,39 +87,33 @@ public class ObliqueMenuDialog extends JDialog implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         getShearingSettings(shearingSettings);
         shearingSettings.useObliqueAngle = true;
-        RandomAccessibleInterval sheared = BigDataProcessor2.shearImage(originalRAI,shearingSettings);
+        RandomAccessibleInterval sheared = BigDataProcessor2.shearImage(originalRAI, shearingSettings);
         imageViewer.show(
                 sheared,
                 "Oblique View",
                 imageViewer.getImage().getVoxelSpacing(),
                 imageViewer.getImage().getVoxelUnit(),
                 true);
-        double[] centerCoordinates = {sheared.min( DimensionOrder.X ) / 2.0,
-                sheared.max( DimensionOrder.Y ) / 2.0,
-                (sheared.max( DimensionOrder.Z ) - sheared.min( DimensionOrder.Z )) / 2.0
-                        + sheared.min( DimensionOrder.Z )};
+        double[] centerCoordinates = {sheared.min(DimensionOrder.X) / 2.0,
+                sheared.max(DimensionOrder.Y) / 2.0,
+                (sheared.max(DimensionOrder.Z) - sheared.min(DimensionOrder.Z)) / 2.0
+                        + sheared.min(DimensionOrder.Z)};
         imageViewer.shiftImageToCenter(centerCoordinates);
     }
 
     public void getShearingSettings(ShearingSettings shearingSettings) {
-        // read into all shearinfo settings into shearingSettings of type Shearingsettings..
-        //if(Math.floorMod( NumberOfTimesCalled ,2)==0) {   // check if UseOBlique is set  otherwise just define a default shearingsetting.
-
-            shearingSettings.magnification = new Double(tfMagnification.getText());
-            shearingSettings.cameraPixelsize = new Double(tfCameraPixelsize.getText());
-            shearingSettings.stepSize = new Double(tfStepsize.getText());
-            shearingSettings.backwardStackAcquisition = cbViewLeft.isSelected();
-            //shearingSettings.viewLeft = cbViewLeft.isSelected();
-            shearingSettings.objectiveAngle = new Double(tfObjectiveAngle.getText());
-            shearingSettings.useYshear = cbUseYshear.isSelected();
-
-            //shearingSettings.shearingFactorX = (-1.0)*shearingSettings.stepSize * shearingSettings.magnification *(1.0/shearingSettings.cameraPixelsize)* sin(shearingSettings.objectiveAngle*PI/180.0);
+        shearingSettings.magnification = new Double(tfMagnification.getText());
+        shearingSettings.cameraPixelsize = new Double(tfCameraPixelsize.getText());
+        shearingSettings.stepSize = new Double(tfStepsize.getText());
+        shearingSettings.backwardStackAcquisition = cbViewLeft.isSelected();
+        shearingSettings.objectiveAngle = new Double(tfObjectiveAngle.getText());
+        shearingSettings.useYshear = cbUseYshear.isSelected();
         // Calculate shearingFactor in X and Y :
-        double shearFactor =  calculateShearFactor(shearingSettings);
+        double shearFactor = calculateShearFactor(shearingSettings);
         if (shearingSettings.useYshear) {
-                shearingSettings.shearingFactorY = -shearFactor;
-                shearingSettings.shearingFactorX = 0.0;
-        }else {
+            shearingSettings.shearingFactorY = -shearFactor;
+            shearingSettings.shearingFactorX = 0.0;
+        } else {
             shearingSettings.shearingFactorX = -shearFactor;
             shearingSettings.shearingFactorY = 0.0;
         }
@@ -126,31 +121,26 @@ public class ObliqueMenuDialog extends JDialog implements ActionListener {
             if (shearingSettings.useYshear) {
                 shearingSettings.shearingFactorY = shearFactor;
                 shearingSettings.shearingFactorX = 0.0;
-            }else {
+            } else {
                 shearingSettings.shearingFactorX = shearFactor;
                 shearingSettings.shearingFactorY = 0.0;
             }
         }
-
         shearingSettings.interpolationFactory = setInterpolatorFactory();
-//        }
-//        else {
-//            shearingSettings = new ShearingSettings();
-//        }
     }
 
-    private double calculateShearFactor(ShearingSettings settings){
-        return settings.stepSize * settings.magnification *(1.0/settings.cameraPixelsize)* Math.sin(settings.objectiveAngle* Math.PI/180.0);
+    private double calculateShearFactor(ShearingSettings settings) {
+        return settings.stepSize * settings.magnification * (1.0 / settings.cameraPixelsize) * Math.sin(settings.objectiveAngle * Math.PI / 180.0);
     }
 
-    private InterpolatorFactory setInterpolatorFactory(){
+    private InterpolatorFactory setInterpolatorFactory() {
         InterpolatorFactory factory;
-        String selectedOption =  (String) namingSchemeComboBox.getSelectedItem();
-        if (java.util.Objects.requireNonNull(selectedOption).equalsIgnoreCase("Clamping n-linear")){
+        String selectedOption = (String) namingSchemeComboBox.getSelectedItem();
+        if (java.util.Objects.requireNonNull(selectedOption).equalsIgnoreCase("Clamping n-linear")) {
             factory = new net.imglib2.interpolation.randomaccess.ClampingNLinearInterpolatorFactory();
-        }else if (selectedOption.equalsIgnoreCase("N-linear")){
+        } else if (selectedOption.equalsIgnoreCase("N-linear")) {
             factory = new net.imglib2.interpolation.randomaccess.NLinearInterpolatorFactory();
-        }else {
+        } else {
             factory = new net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory();
         }
         return factory;

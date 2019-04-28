@@ -8,13 +8,17 @@ public class TestBdvViewer
 	{
 		BigDataProcessor2 bigDataProcessor2 = new BigDataProcessor2();
 
-		String imageDirectory = TestBdvViewer.class.getResource( ""  ).toString();
+		String imageDirectory = TestBdvViewer.class.getResource( "tiff-nc1-nt2"  ).getFile().toString();
 
 		bigDataProcessor2.openFromDirectory(
+<<<<<<< HEAD
 				imageDirectory.toString(),
 				FileInfos.SINGLE_CHANNEL_TIMELAPSE,
+=======
+				imageDirectory,
+				FileInfoConstants.SINGLE_CHANNEL_TIMELAPSE,
+>>>>>>> 2202dde07b585e396be413df004a30ec11a7df68
 				".*",
-				null,
 				true,
 				ViewerUtils.getImageViewer( ViewerUtils.BIG_DATA_VIEWER ) );
 	}

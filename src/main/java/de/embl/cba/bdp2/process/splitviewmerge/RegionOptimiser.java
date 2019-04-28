@@ -1,5 +1,6 @@
 package de.embl.cba.bdp2.process.splitviewmerge;
 
+import de.embl.cba.bdp2.tracking.Trackers;
 import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.display.imagej.ImageJFunctions;
@@ -8,9 +9,9 @@ import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
 
 import java.util.ArrayList;
+import java.util.concurrent.Executors;
 
-import static de.embl.cba.bdp2.utils.DimensionOrder.C;
-import static de.embl.cba.bdp2.utils.DimensionOrder.T;
+import static de.embl.cba.bdp2.utils.DimensionOrder.*;
 
 public class RegionOptimiser
 {
@@ -25,14 +26,13 @@ public class RegionOptimiser
 				SplitViewMergingHelpers.getVoxelntervals5D(
 						rai5D, calibratedCentres2D, calibratedSpan2D, voxelSpacing );
 
-		final ArrayList< double[] > centres2D
-				= optimiseCentres2D( rai5D, voxelIntervals );
+		final double[] shift = optimiseCentres2D( rai5D, voxelIntervals );
 
-		return centres2D;
+		return null;
 	}
 
-	public static < R extends RealType< R > >
-	ArrayList< double[] > optimiseCentres2D(
+	private static < R extends RealType< R > >
+	double[] optimiseCentres2D(
 			RandomAccessibleInterval< R > rai5D,
 			ArrayList< FinalInterval > voxelIntervals5D )
 	{
@@ -49,13 +49,21 @@ public class RegionOptimiser
 
 			final IntervalView< R > time = Views.hyperSlice( crop, T, 0 );
 			final IntervalView< R > channel = Views.hyperSlice( time, C, 0 );
-			final IntervalView< R > plane = Views.hyperSlice( channel, SplitViewMerging.Z, channel.dimension( SplitViewMerging.Z ) / 2 );
+			final IntervalView< R > plane =
+					Views.hyperSlice(
+							channel,
+							Z,
+							channel.dimension( Z ) / 2 );
 
 			ImageJFunctions.show( plane, "" );
 			planes.add( plane );
 		}
 
+		final double[] shift = Trackers.getPhaseCorrelationShift(
+				planes.get( 0 ), planes.get( 1 ),
+				Executors.newFixedThreadPool( 2 ) );
 
-		return null;
+
+		return shift;
 	}
 }

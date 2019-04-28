@@ -17,7 +17,6 @@ public class TestIJ1ImageViewer
 				imageDirectory.toString(),
 				FileInfos.SINGLE_CHANNEL_TIMELAPSE,
 				".*",
-				null,
 				true,
 				ViewerUtils.getImageViewer( ViewerUtils.IJ1_VIEWER ) );
 	}

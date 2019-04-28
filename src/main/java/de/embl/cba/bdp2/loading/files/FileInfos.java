@@ -67,11 +67,17 @@ public class FileInfos
     public FileInfos(
             String directory,
             String loadingScheme,
+            String filterPattern){
+        this(directory,loadingScheme,filterPattern,null);
+    }
+
+    public FileInfos(
+            String directory,
+            String loadingScheme,
             String filterPattern,
             String h5DataSetName){
 
         this.directory = directory;
-
         if ( loadingScheme.contains("<Z") ){// TODO: change below logic somehow (maybe via GUI?)
             FileInfosHelper.setFileSourceInfos(this, directory, loadingScheme );
         }else{
