@@ -37,10 +37,10 @@ public class Trackers
 						Views.zeroMin(currentFrame),
 						Views.zeroMin(nextFrame),
 						2,
-						0,
+						(long) ( 0.5 * currentFrame.dimension( 0 ) * currentFrame.dimension( 1 ) ),
 						true,
 						false,
-						BigDataProcessor2.trackerThreadPool);
+						executorService );
 
 		double[] shift = new double[currentFrame.numDimensions()];
 		shiftPeak.getSubpixelShift().localize(shift);
