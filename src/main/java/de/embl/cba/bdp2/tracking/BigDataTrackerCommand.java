@@ -130,7 +130,7 @@ public class BigDataTrackerCommand < R extends RealType< R > & NativeType< R > >
 
     private void interruptTracking() {
         // Cancel Tracking
-        bigDataTracker.cancelTracking();
+       // bigDataTracker.cancelTracking();
     }
 
     private void showTrackedObject() {

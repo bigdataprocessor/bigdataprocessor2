@@ -10,6 +10,7 @@ import bdv.util.PlaceHolderConverterSetup;
 import bdv.viewer.SourceAndConverter;
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.boundingbox.BoundingBoxDialog;
+import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.ui.BdvMenus;
 import de.embl.cba.bdp2.ui.BigDataProcessorCommand;
 import de.embl.cba.bdp2.ui.DisplaySettings;
@@ -285,7 +286,7 @@ public class BdvImageViewer< R extends RealType< R > & NativeType< R >>
                 asVolatile( image.getRai() );
 
         if ( volatileRai == null )
-            BigDataProcessorCommand.Logger.error( "Could not wrap as volatile!" );
+            Logger.error( "Could not wrap as volatile!" );
         else
             bdvStackSource = BdvFunctions.show(
                         volatileRai,

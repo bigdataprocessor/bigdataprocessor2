@@ -1,8 +1,8 @@
 package de.embl.cba.bdp2.loading.files;
 
+import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.utils.Utils;
 
-import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.Logger;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;

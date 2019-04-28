@@ -10,7 +10,6 @@ import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -35,7 +34,7 @@ public class BigDataTrackerGUI < R extends RealType< R > & NativeType< R > >
     //TrackTablePanel trackTablePanel;
     String[] defaults;
     TrackingSettings< R > trackingSettings = new TrackingSettings< >();
-
+    private int hashcode = this.hashCode();
     String[] texts = {
             //"Region size: x,y,z [pixels]",
             //"Maximal displacement between subsequent frames: x,y,z [pixels]",
@@ -57,7 +56,16 @@ public class BigDataTrackerGUI < R extends RealType< R > & NativeType< R > >
             "View as new stream",
             "Report issue"
     };
-
+    // Buttons
+    //
+    JButton[] buttons = new JButton[buttonActions.length];
+    {
+    for (int i = 0; i < buttons.length; i++) {
+    buttons[i] = new JButton(buttonActions[i]);
+    buttons[i].setActionCommand(buttonActions[i]);
+    buttons[i].addActionListener(this);
+    //buttons[i].setToolTipText(toolTipTexts[iToolTipText]);
+    }}
 
     String[] comboNames = {
             //"Enhance image features",
@@ -68,12 +76,16 @@ public class BigDataTrackerGUI < R extends RealType< R > & NativeType< R > >
     String[][] comboChoices = new String[comboNames.length][];
     String[] channelChoices;
     JTextField[] textFields = new JTextField[texts.length];
-
+    protected final JProgressBar progressBar = new JProgressBar(0, 100);
     JLabel[] labels = new JLabel[texts.length];
+    protected final JLabel MESSAGE = new JLabel("");
+    protected final String MESSAGE_TRACK_INTERRUPTED ="Tracking Interrupted!";
+    protected final String MESSAGE_TRACK_FINISHED ="Tracking Completed!";
+
     private RandomAccessibleInterval image;
     public final ImageViewer imageViewer;
-    public BigDataTrackerGUI( ImageViewer handle )
-    {
+
+    public BigDataTrackerGUI( ImageViewer handle ){
         this.imageViewer= handle;
         this.image = imageViewer.getImage().getRai();
         long nChannels = this.image.dimension(DimensionOrder.C);
@@ -151,17 +163,6 @@ public class BigDataTrackerGUI < R extends RealType< R > & NativeType< R > >
             //textFields[i].setToolTipText(toolTipTexts[iToolTipText]);
             labels[i] = new JLabel(texts[i] + ": ");
             labels[i].setLabelFor(textFields[i]);
-        }
-
-        // Buttons
-        //
-        JButton[] buttons = new JButton[buttonActions.length];
-
-        for (int i = 0; i < buttons.length; i++, iToolTipText++) {
-            buttons[i] = new JButton(buttonActions[i]);
-            buttons[i].setActionCommand(buttonActions[i]);
-            buttons[i].addActionListener(this);
-            //buttons[i].setToolTipText(toolTipTexts[iToolTipText]);
         }
 
         //
@@ -246,11 +247,12 @@ public class BigDataTrackerGUI < R extends RealType< R > & NativeType< R > >
 
         // ObjectTracker button
         panels.add(new JPanel(new FlowLayout(FlowLayout.CENTER)));
-        //buttons[1].setEnabled(false);
         panels.get(iPanel).add(buttons[i++]);
         c.add(panels.get(iPanel++));
+
         // ObjectTracker cancel button
         panels.add(new JPanel(new FlowLayout(FlowLayout.CENTER)));
+        buttons[2].setEnabled(false);
         panels.get(iPanel).add(buttons[i++]);
         c.add(panels.get(iPanel++));
 
@@ -293,6 +295,18 @@ public class BigDataTrackerGUI < R extends RealType< R > & NativeType< R > >
         panels.add(new JPanel());
         panels.get(iPanel).add(buttons[i++]);
         c.add(panels.get(iPanel++));
+
+        panels.add(new JPanel(new FlowLayout(FlowLayout.CENTER)));
+        progressBar.setValue(0);
+        progressBar.setStringPainted(true);
+        progressBar.setVisible(false);
+        panels.get(iPanel).add(progressBar);
+        c.add(panels.get(iPanel++));
+
+        panels.add(new JPanel());
+        panels.get(iPanel).add(MESSAGE);
+        c.add(panels.get(iPanel++));
+
 
         //
         // Show the GUI
@@ -367,7 +381,7 @@ public class BigDataTrackerGUI < R extends RealType< R > & NativeType< R > >
 //
 //        }
             //else if (e.getActionCommand().equals(buttonActions[i++]))
-        }else if (e.getActionCommand().equals("Track selected object")) {
+       }else if (e.getActionCommand().equals("Track selected object")) {
 
             System.out.println(e.getActionCommand());
             // track selected object
@@ -375,7 +389,7 @@ public class BigDataTrackerGUI < R extends RealType< R > & NativeType< R > >
             //
             // configure tracking
             //
-
+           MESSAGE.setText(null);
             trackingSettings.rai = image;
             // TODO: think about below:
             trackingSettings.trackingFactor = 1.0 + 2.0 * maxDisplacement.getX() /
@@ -386,16 +400,23 @@ public class BigDataTrackerGUI < R extends RealType< R > & NativeType< R > >
 
             // do it
             //
+           progressBar.setVisible(true);
+           buttons[1].setEnabled(false);
+           buttons[2].setEnabled(true);
+           pack();
+           trackingSettings.trackId = hashcode++; //Incrementing hascode to generate a different track id everytime.
            BigDataProcessor2.trackerThreadPool.submit(()-> {
+               new TrackingProgressBar(this,trackingSettings.trackId).createGUIandRunMonitor();
                bigDataTracker.trackObject(trackingSettings,imageViewer);
            });
-        }
+       }
         else if ( e.getActionCommand().equals("Stop tracking") ) {
-            System.out.println(e.getActionCommand());
-            // Cancel Tracking
-            //
-            bigDataTracker.cancelTracking();
-
+           bigDataTracker.cancelTracking(trackingSettings.trackId); // Don't submit to thread pool. Let the main thread handle it.
+           progressBar.setVisible(false);
+           buttons[1].setEnabled(true);
+           buttons[2].setEnabled(false);
+           MESSAGE.setText(MESSAGE_TRACK_INTERRUPTED);
+           pack();
         }
 
         else if ( e.getActionCommand().equals("Show table") ) {

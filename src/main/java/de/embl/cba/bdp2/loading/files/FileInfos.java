@@ -4,6 +4,7 @@ import ch.systemsx.cisd.hdf5.HDF5DataSetInformation;
 import ch.systemsx.cisd.hdf5.HDF5Factory;
 import ch.systemsx.cisd.hdf5.IHDF5Reader;
 import de.embl.cba.bdp2.loading.FastTiffDecoder;
+import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.imaris.ImarisUtils;
@@ -13,7 +14,7 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.type.numeric.real.FloatType;
-import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.Logger;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
