@@ -1,6 +1,6 @@
 package de.embl.cba.bdp2.saving;
 
-import de.embl.cba.bdp2.files.FileInfoConstants;
+import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.imaris.H5DataCubeWriter;
 import de.embl.cba.imaris.ImarisDataSet;
@@ -43,7 +43,7 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
     {
         this.nativeType = (T)Util.getTypeFromInterval(savingSettings.rai );
         Img imgTemp = ImgView.wrap(savingSettings.rai,new CellImgFactory<>(nativeType));
-        this.image = new ImgPlus<>(imgTemp, "", FileInfoConstants.AXES_ORDER);
+        this.image = new ImgPlus<>(imgTemp, "", FileInfos.AXES_ORDER);
 
         if (this.image.dimensionIndex(Axes.TIME) >= 0) {
             this.nFrames = Math.toIntExact(image.dimension(this.image.dimensionIndex(Axes.TIME)));

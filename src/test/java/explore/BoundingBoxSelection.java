@@ -8,8 +8,7 @@ import bdv.util.BdvFunctions;
 import bdv.util.ModifiableRealInterval;
 import bdv.viewer.ViewerPanel;
 import de.embl.cba.bdp2.Image;
-import de.embl.cba.bdp2.files.FileInfoConstants;
-import de.embl.cba.bdp2.files.FileInfos;
+import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.loading.CachedCellImgReader;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import de.embl.cba.bdp2.viewers.ViewerUtils;
@@ -103,7 +102,7 @@ public class BoundingBoxSelection
 		String imageDirectory = "/Users/tischer/Desktop/stack_0_channel_0";
 
 		final FileInfos fileInfos = new FileInfos( imageDirectory,
-				FileInfoConstants.SINGLE_CHANNEL_TIMELAPSE,
+				FileInfos.SINGLE_CHANNEL_TIMELAPSE,
 				".*.h5", "Data" );
 
 		fileInfos.voxelSpacing = new double[]{ 0.5, 0.5, 5.0};

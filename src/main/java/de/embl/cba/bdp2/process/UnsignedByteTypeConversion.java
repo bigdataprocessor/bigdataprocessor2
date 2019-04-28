@@ -2,8 +2,10 @@ package de.embl.cba.bdp2.process;
 
 import bdv.tools.brightness.SliderPanelDouble;
 import bdv.util.BoundedValueDouble;
-import de.embl.cba.bdp2.files.FileInfoConstants;
+
 import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
+
+import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.ui.BdvMenus;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.ImageViewer;
@@ -50,7 +52,7 @@ public class UnsignedByteTypeConversion< T extends RealType< T > >
 
 		newImageViewer.show(
 				converted,
-				FileInfoConstants.UNSIGNED_BYTE_VIEW_NAME,
+				FileInfos.UNSIGNED_BYTE_VIEW_NAME,
 				imageViewer.getImage().getVoxelSpacing(),
 				imageViewer.getImage().getVoxelUnit(),
 				true);

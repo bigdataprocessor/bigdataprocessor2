@@ -1,5 +1,4 @@
-import de.embl.cba.bdp2.files.FileInfoConstants;
-import de.embl.cba.bdp2.files.FileInfos;
+import de.embl.cba.bdp2.loading.files.FileInfos;
 import ij.IJ;
 import ij.ImageJ;
 import ij.io.FileInfo;
@@ -25,7 +24,7 @@ public class ImageCalibrationTiffReaderTest
 
 		final FileInfos fileInfos = new FileInfos(
 				file.toString(),
-				FileInfoConstants.SINGLE_CHANNEL_TIMELAPSE,
+				FileInfos.SINGLE_CHANNEL_TIMELAPSE,
 				".*",
 				"" );
 

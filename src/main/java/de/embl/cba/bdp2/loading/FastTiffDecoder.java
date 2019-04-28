@@ -32,7 +32,7 @@
 package de.embl.cba.bdp2.loading;
 
 
-import de.embl.cba.bdp2.files.SerializableFileInfo;
+import de.embl.cba.bdp2.loading.files.SerializableFileInfo;
 import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
 
 import ij.IJ;

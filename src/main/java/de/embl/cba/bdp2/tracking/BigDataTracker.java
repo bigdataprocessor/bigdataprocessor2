@@ -1,10 +1,11 @@
 package de.embl.cba.bdp2.tracking;
 
 import bdv.util.*;
+import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.ui.BdvMenus;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.ui.DisplaySettings;
-import de.embl.cba.bdp2.files.FileInfoConstants;
+
 import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
@@ -61,7 +62,7 @@ public class BigDataTracker {
             ImageViewer newTrackedView =  imageViewer.newImageViewer();
             newTrackedView.show(
                     trackingSettings.rai,
-                    FileInfoConstants.TRACKED_IMAGE_NAME,
+                    FileInfos.TRACKED_IMAGE_NAME,
                     imageViewer.getImage().getVoxelSpacing(),
                     imageViewer.getImage().getVoxelUnit(),
                     false);
@@ -103,7 +104,7 @@ public class BigDataTracker {
             ImageViewer newTrackedView = imageViewer.newImageViewer();
             newTrackedView.show(
                     stackedRAI,
-                    FileInfoConstants.TRACKED_IMAGE_NAME,
+                    FileInfos.TRACKED_IMAGE_NAME,
                     imageViewer.getImage().getVoxelSpacing(),
                     imageViewer.getImage().getVoxelUnit(),
                     false);

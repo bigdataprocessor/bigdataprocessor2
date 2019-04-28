@@ -5,8 +5,7 @@ import bdv.util.BdvOptions;
 import bdv.util.BdvSource;
 import bdv.util.volatiles.VolatileViews;
 import de.embl.cba.bdp2.loading.CachedCellImgReader;
-import de.embl.cba.bdp2.files.FileInfoConstants;
-import de.embl.cba.bdp2.files.FileInfos;
+import de.embl.cba.bdp2.loading.files.FileInfos;
 import net.imglib2.img.Img;
 
 public class TestOpenHDF5WithUI {
@@ -19,7 +18,7 @@ public class TestOpenHDF5WithUI {
         //final String directory = "Y:\\ashis\\2018-07-19_17.34.07\\";
         final String directory = "C:\\Users\\user\\Documents\\UNI_HEIDELBERG\\EMBL_HiwiJob\\fiji-plugin-bdp2\\New Folder\\";
         FileInfos fileInfos = new FileInfos(directory,
-                FileInfoConstants.SINGLE_CHANNEL_TIMELAPSE,
+                FileInfos.SINGLE_CHANNEL_TIMELAPSE,
                 ".*.h5",
                 "Data");
         //FileInfoSource files = new FileInfoSource(directory,"None",".*.h5","Datawrong",true,10);

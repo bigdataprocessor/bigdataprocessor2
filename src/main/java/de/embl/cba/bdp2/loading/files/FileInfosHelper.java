@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.files;
+package de.embl.cba.bdp2.loading.files;
 
 import de.embl.cba.bdp2.loading.FastTiffDecoder;
 import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
@@ -183,7 +183,7 @@ public class FileInfosHelper
 
         int nC = 0, nT = 0, nZ = 0, nX = 0, nY = 0, bitDepth = 16;
 
-        if ( namingScheme.equals( FileInfoConstants.LOAD_CHANNELS_FROM_FOLDERS) )
+        if ( namingScheme.equals( FileInfos.LOAD_CHANNELS_FROM_FOLDERS) )
         {
             //
             // Check for sub-folders
@@ -232,7 +232,7 @@ public class FileInfosHelper
 
         }
 
-        if ( namingScheme.equals( FileInfoConstants.LEICA_SINGLE_TIFF ) ) // isLeicaSinglePlaneTiffFileType( fileLists[ 0 ] ) )
+        if ( namingScheme.equals( FileInfos.LEICA_SINGLE_TIFF ) ) // isLeicaSinglePlaneTiffFileType( fileLists[ 0 ] ) )
         {
 
             infoSource.fileType = Utils.FileType.SINGLE_PLANE_TIFF.toString();
@@ -260,17 +260,17 @@ public class FileInfosHelper
         {
             boolean hasCTPattern = false;
 
-            if ( namingScheme.equals( FileInfoConstants.LOAD_CHANNELS_FROM_FOLDERS) )
+            if ( namingScheme.equals( FileInfos.LOAD_CHANNELS_FROM_FOLDERS) )
             {
                 nC = infoSource.channelFolders.length;
                 nT = fileLists[0].length;
             }
-            else if ( namingScheme.equalsIgnoreCase( FileInfoConstants.SINGLE_CHANNEL_TIMELAPSE ) )
+            else if ( namingScheme.equalsIgnoreCase( FileInfos.SINGLE_CHANNEL_TIMELAPSE ) )
             {
                 nC = 1;
                 nT = fileLists[0].length;
             }
-            else if ( namingScheme.equals( FileInfoConstants.EM_TIFF_SLICES ) )
+            else if ( namingScheme.equals( FileInfos.EM_TIFF_SLICES ) )
             {
                 nC = 1;
                 nT = 1;
@@ -323,7 +323,7 @@ public class FileInfosHelper
             //
             // Create dummy channel folders, if no real ones exist
             //
-            if ( ! namingScheme.equals( FileInfoConstants.LOAD_CHANNELS_FROM_FOLDERS) )
+            if ( ! namingScheme.equals( FileInfos.LOAD_CHANNELS_FROM_FOLDERS) )
             {
                 infoSource.channelFolders = new String[nC];
                 for (int ic = 0; ic < nC; ic++) infoSource.channelFolders[ic] = "";
@@ -337,7 +337,7 @@ public class FileInfosHelper
             {
                 setImageDataInfoFromTiff( infoSource, directory + infoSource.channelFolders[0], fileLists[0][0] );
 
-                if ( namingScheme.equals( FileInfoConstants.EM_TIFF_SLICES ) )
+                if ( namingScheme.equals( FileInfos.EM_TIFF_SLICES ) )
                 {
                     infoSource.fileType = Utils.FileType.SINGLE_PLANE_TIFF.toString();
                     infoSource.nZ = fileLists[ 0 ].length;
@@ -407,7 +407,7 @@ public class FileInfosHelper
             else
             {
 
-                if ( namingScheme.equals( FileInfoConstants.EM_TIFF_SLICES ) )
+                if ( namingScheme.equals( FileInfos.EM_TIFF_SLICES ) )
                 {
                     for ( z = 0; z < infoSource.nZ; z++ )
                     {

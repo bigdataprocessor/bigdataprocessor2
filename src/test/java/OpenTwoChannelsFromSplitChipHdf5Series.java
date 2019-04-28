@@ -1,9 +1,10 @@
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.CachedCellImgReader;
-import de.embl.cba.bdp2.files.FileInfoConstants;
-import de.embl.cba.bdp2.files.FileInfos;
+import de.embl.cba.bdp2.loading.files.FileInfos;
+import de.embl.cba.bdp2.process.splitviewmerge.SplitViewMerging;
 import de.embl.cba.bdp2.viewers.ImageViewer;
 import de.embl.cba.bdp2.viewers.ViewerUtils;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
@@ -24,30 +25,27 @@ public class OpenTwoChannelsFromSplitChipHdf5Series
         String imageDirectory = "/Users/tischer/Desktop/stack_0_channel_0";
 
         final FileInfos fileInfos = new FileInfos( imageDirectory,
-                FileInfoConstants.SINGLE_CHANNEL_TIMELAPSE,
+                FileInfos.SINGLE_CHANNEL_TIMELAPSE,
                 ".*.h5", "Data" );
 
         fileInfos.voxelSpacing = new double[]{ 1.0, 1.0, 10.0};
 
         final Image< R > image = CachedCellImgReader.asImage( fileInfos );
 
-        final ArrayList< long[] > centres = new ArrayList<>();
-        centres.add( new long[]{ 522, 1143 } );
-        centres.add( new long[]{ 1407, 546 } );
-        final long span = 950;
+        final ArrayList< double[] > centres = new ArrayList<>();
+        centres.add( new double[]{ 522, 1143 } );
+        centres.add( new double[]{ 1407, 546 } );
+        final double[] spans = { 950, 950 };
 
+        final RandomAccessibleInterval< R > colorRAI
+                = SplitViewMerging.merge( image.getRai(), centres, spans, fileInfos.voxelSpacing );
 
-        // TODO: make work
-
-//        final RandomAccessibleInterval< R > colorRAI
-//                = SplitViewMerging.merge( image.getRai(), centres, span );
-//
-//        viewer.show(
-//                colorRAI,
-//                image.getName(),
-//                image.getVoxelSpacing(),
-//                image.getVoxelUnit(),
-//                true );
+        viewer.show(
+                colorRAI,
+                image.getName(),
+                image.getVoxelSpacing(),
+                image.getVoxelUnit(),
+                true );
 
     }
 

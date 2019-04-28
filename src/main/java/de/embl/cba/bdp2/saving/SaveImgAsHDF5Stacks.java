@@ -1,7 +1,7 @@
 package de.embl.cba.bdp2.saving;
 
 import ch.systemsx.cisd.hdf5.hdf5lib.HDF5Constants;
-import de.embl.cba.bdp2.files.FileInfoConstants;
+import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import ij.ImagePlus;
@@ -63,7 +63,7 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
     public SaveImgAsHDF5Stacks(String dataset, SavingSettings savingSettings, int t, AtomicInteger counter, long startTime, AtomicBoolean stop) {
         this.nativeType = (T) Util.getTypeFromInterval(savingSettings.rai );
         Img imgTemp = ImgView.wrap(savingSettings.rai, new CellImgFactory<>(nativeType));
-        this.image = new ImgPlus<>(imgTemp, "", FileInfoConstants.AXES_ORDER);
+        this.image = new ImgPlus<>(imgTemp, "", FileInfos.AXES_ORDER);
 
         if (this.image.dimensionIndex(Axes.TIME) >= 0) {
             this.nFrames = Math.toIntExact(image.dimension(this.image.dimensionIndex(Axes.TIME)));
@@ -158,7 +158,7 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
                 // - not for imarisH5 saving format as there will be a resolution pyramid anyway
                 //
                 Img<T> imgBinned = imgChannelTime;
-                ImgPlus<T> impBinned = new ImgPlus<>(imgBinned, "", FileInfoConstants.AXES_ORDER);
+                ImgPlus<T> impBinned = new ImgPlus<>(imgBinned, "", FileInfos.AXES_ORDER);
                 int[] binningA = Utils.delimitedStringToIntegerArray(binning, ",");
                 if (binningA[0] > 1 || binningA[1] > 1 || binningA[2] > 1) {
                     newPath = SaveImgHelper.doBinning(impBinned, binningA, newPath, null);

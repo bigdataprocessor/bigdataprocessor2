@@ -3,6 +3,7 @@ package de.embl.cba.bdp2.boundingbox;
 import bdv.tools.boundingbox.BoxSelectionOptions;
 import bdv.util.Bdv;
 import bdv.util.BdvFunctions;
+import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import net.imglib2.FinalRealInterval;
 import net.imglib2.Interval;
@@ -10,8 +11,6 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.util.Intervals;
 import bdv.tools.boundingbox.TransformedRealBoxSelectionDialog;
-
-import static de.embl.cba.bdp2.files.FileInfoConstants.*;
 
 public class BoundingBoxDialog
 {
@@ -41,7 +40,7 @@ public class BoundingBoxDialog
             max[d] = (int) (rai.max(d) * voxelSpacing[d]);
         }
 
-        long[] size = new long[MAX_ALLOWED_IMAGE_DIMS];
+        long[] size = new long[ FileInfos.MAX_ALLOWED_IMAGE_DIMS];
         rai.dimensions(size);
         int[] center = new int[3];
         int[] width = new int[3];

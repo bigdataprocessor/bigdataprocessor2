@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.files;
+package de.embl.cba.bdp2.loading.files;
 
 import ch.systemsx.cisd.hdf5.HDF5DataSetInformation;
 import ch.systemsx.cisd.hdf5.HDF5DataTypeInformation;
@@ -75,8 +75,8 @@ public class FileInfosHDF5Helper
 //        }
             List<String> hdf5Header = reader.getGroupMembers("/");
             hdf5Header.replaceAll(String::toUpperCase);
-            dataSetExists = Arrays.stream(FileInfoConstants.POSSIBLE_HDF5_DATASETNAMES).parallel().anyMatch(x -> hdf5Header.contains(x.toUpperCase()));
-            List<String> head = Arrays.stream(FileInfoConstants.POSSIBLE_HDF5_DATASETNAMES).parallel().filter(x -> hdf5Header.contains(x.toUpperCase())).collect(Collectors.toList());
+            dataSetExists = Arrays.stream( FileInfos.POSSIBLE_HDF5_DATASETNAMES).parallel().anyMatch( x -> hdf5Header.contains(x.toUpperCase()));
+            List<String> head = Arrays.stream( FileInfos.POSSIBLE_HDF5_DATASETNAMES).parallel().filter( x -> hdf5Header.contains(x.toUpperCase())).collect(Collectors.toList());
             hdf5DataSet.delete(0, hdf5DataSet.length());
             hdf5DataSet.append(head.get(0));
         }

@@ -1,4 +1,4 @@
-import de.embl.cba.bdp2.files.FileInfoConstants;
+import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.viewers.ViewerUtils;
 
@@ -18,7 +18,7 @@ public class OpenTwoChannelsFromSubfoldersTiffSeries
 
         bigDataProcessor2.openFromDirectory(
                 imageDirectory,
-                FileInfoConstants.LOAD_CHANNELS_FROM_FOLDERS,
+                FileInfos.LOAD_CHANNELS_FROM_FOLDERS,
                 ".*",
                 null,
                 true,

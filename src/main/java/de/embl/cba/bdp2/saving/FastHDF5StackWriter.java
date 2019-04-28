@@ -10,7 +10,7 @@ import ch.systemsx.cisd.hdf5.HDF5Factory;
 import ch.systemsx.cisd.hdf5.HDF5FloatStorageFeatures;
 import ch.systemsx.cisd.hdf5.HDF5IntStorageFeatures;
 import ch.systemsx.cisd.hdf5.IHDF5Writer;
-import de.embl.cba.bdp2.files.FileInfoConstants;
+import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import ij.ImagePlus;
@@ -108,7 +108,7 @@ public class FastHDF5StackWriter<T extends RealType<T> & NativeType<T>> implemen
                 }
                 String newPath = savingSettings.filePath;
                 // Binning
-                ImgPlus<T> impBinned = new ImgPlus<>(imgChannelTime, "", FileInfoConstants.AXES_ORDER);
+                ImgPlus<T> impBinned = new ImgPlus<>(imgChannelTime, "", FileInfos.AXES_ORDER);
                 int[] binningA = Utils.delimitedStringToIntegerArray(binning, ",");
                 if (binningA[0] > 1 || binningA[1] > 1 || binningA[2] > 1) {
                     newPath = SaveImgHelper.doBinning(impBinned, binningA, newPath, null);
@@ -280,10 +280,10 @@ public class FastHDF5StackWriter<T extends RealType<T> & NativeType<T>> implemen
         long bSize;
         if (datasetDims[0] > 1) {
             // if z-axis is non-singleton use 32x32x32 chunk size. Change in BLOCK_SIZE_3D if needed.
-            bSize = FileInfoConstants.HDF5_BLOCK_SIZE_3D;
+            bSize = FileInfos.HDF5_BLOCK_SIZE_3D;
         } else {
             // otherwise use 128x128 chunk size
-            bSize = FileInfoConstants.HDF5_BLOCK_SIZE_2D;
+            bSize = FileInfos.HDF5_BLOCK_SIZE_2D;
         }
         int[] result = new int[datasetDims.length];
         for (int i = 0; i < datasetDims.length; i++) {

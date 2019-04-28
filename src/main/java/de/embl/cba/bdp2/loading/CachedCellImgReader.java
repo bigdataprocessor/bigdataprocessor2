@@ -1,7 +1,7 @@
 package de.embl.cba.bdp2.loading;
 
 import de.embl.cba.bdp2.Image;
-import de.embl.cba.bdp2.files.FileInfos;
+import de.embl.cba.bdp2.loading.files.FileInfos;
 import net.imglib2.cache.img.CachedCellImg;
 import net.imglib2.cache.img.DiskCachedCellImgOptions.CacheType;
 import net.imglib2.cache.img.ReadOnlyCachedCellImgFactory;
@@ -10,7 +10,6 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
 import java.io.File;
-import java.util.concurrent.ExecutorService;
 
 import static net.imglib2.cache.img.ReadOnlyCachedCellImgOptions.options;
 

@@ -1,6 +1,6 @@
 package de.embl.cba.bdp2.saving;
 
-import de.embl.cba.bdp2.files.FileInfoConstants;
+import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.imaris.ImarisDataSet;
@@ -55,7 +55,7 @@ public class SaveCentral {
             }
         }
         // Monitor the progress
-        Thread thread = new Thread(() -> MonitorThreadPoolStatus.showProgressAndWaitUntilDone(futures, saveId, "Saved to disk: ", FileInfoConstants.PROGRESS_UPDATE_MILLISECONDS));
+        Thread thread = new Thread(() -> MonitorThreadPoolStatus.showProgressAndWaitUntilDone(futures, saveId, "Saved to disk: ", FileInfos.PROGRESS_UPDATE_MILLISECONDS));
         thread.start();
     }
 
@@ -85,7 +85,7 @@ public class SaveCentral {
                     ));
         }
         // Monitor the progress
-        Thread thread = new Thread(() -> MonitorThreadPoolStatus.showProgressAndWaitUntilDone(futures, saveId, "Saved to disk: ", FileInfoConstants.PROGRESS_UPDATE_MILLISECONDS));
+        Thread thread = new Thread(() -> MonitorThreadPoolStatus.showProgressAndWaitUntilDone(futures, saveId, "Saved to disk: ", FileInfos.PROGRESS_UPDATE_MILLISECONDS));
         thread.start();
     }
 
@@ -115,7 +115,7 @@ public class SaveCentral {
             }
         }
         // Monitor the progress
-        Thread thread = new Thread(() -> MonitorThreadPoolStatus.showProgressAndWaitUntilDone(futures, saveId, "Saved to disk: ", FileInfoConstants.PROGRESS_UPDATE_MILLISECONDS));
+        Thread thread = new Thread(() -> MonitorThreadPoolStatus.showProgressAndWaitUntilDone(futures, saveId, "Saved to disk: ", FileInfos.PROGRESS_UPDATE_MILLISECONDS));
         thread.start();
     }
 
@@ -155,7 +155,7 @@ public class SaveCentral {
             }
         }
         // Monitor the progress
-        Thread thread = new Thread(() -> MonitorThreadPoolStatus.showProgressAndWaitUntilDone(futures, saveId, "Saved to disk: ", FileInfoConstants.PROGRESS_UPDATE_MILLISECONDS));
+        Thread thread = new Thread(() -> MonitorThreadPoolStatus.showProgressAndWaitUntilDone(futures, saveId, "Saved to disk: ", FileInfos.PROGRESS_UPDATE_MILLISECONDS));
         thread.start();
     }
 

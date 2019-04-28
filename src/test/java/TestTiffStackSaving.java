@@ -1,7 +1,6 @@
 import de.embl.cba.bdp2.loading.CachedCellImgReader;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
-import de.embl.cba.bdp2.files.FileInfoConstants;
-import de.embl.cba.bdp2.files.FileInfos;
+import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.saving.SavingSettings;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import de.embl.cba.bdp2.viewers.ImageViewer;
@@ -14,7 +13,7 @@ public class TestTiffStackSaving
     public static void main(String[] args)
     {
         String imageDirectory = "src/test/resources/shear_transform_test";
-        final FileInfos fileInfos = new FileInfos( imageDirectory, FileInfoConstants.SINGLE_CHANNEL_TIMELAPSE,
+        final FileInfos fileInfos = new FileInfos( imageDirectory, FileInfos.SINGLE_CHANNEL_TIMELAPSE,
                 ".*", "");
         CachedCellImg cachedCellImg = CachedCellImgReader.asCachedCellImg( fileInfos );
 

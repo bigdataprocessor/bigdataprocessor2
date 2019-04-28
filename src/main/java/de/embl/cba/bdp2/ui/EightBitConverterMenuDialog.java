@@ -1,6 +1,6 @@
 package de.embl.cba.bdp2.ui;
 
-import de.embl.cba.bdp2.files.FileInfoConstants;
+import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.viewers.ImageViewer;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
@@ -74,7 +74,7 @@ public class EightBitConverterMenuDialog extends JDialog implements ActionListen
         ImageViewer newImageViewer = imageViewer.newImageViewer();
         newImageViewer.show(
                 newRai,
-                FileInfoConstants.UNSIGNED_BYTE_VIEW_NAME,
+                FileInfos.UNSIGNED_BYTE_VIEW_NAME,
                 imageViewer.getImage().getVoxelSpacing(),
                 imageViewer.getImage().getVoxelUnit(),
                 true);

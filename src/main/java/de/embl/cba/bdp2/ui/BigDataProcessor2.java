@@ -2,8 +2,7 @@ package de.embl.cba.bdp2.ui;
 
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.CachedCellImgReader;
-import de.embl.cba.bdp2.files.FileInfoConstants;
-import de.embl.cba.bdp2.files.FileInfos;
+import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.saving.SaveCentral;
 import de.embl.cba.bdp2.saving.SavingSettings;
 import de.embl.cba.bdp2.utils.DimensionOrder;
@@ -86,7 +85,7 @@ public class BigDataProcessor2
         imageViewer.show(
                 new Image(
                         cachedCellImg,
-                        FileInfoConstants.IMAGE_NAME,
+                        FileInfos.IMAGE_NAME,
                         fileInfos.voxelSpacing,
                         fileInfos.unit )
                 , autoContrast );

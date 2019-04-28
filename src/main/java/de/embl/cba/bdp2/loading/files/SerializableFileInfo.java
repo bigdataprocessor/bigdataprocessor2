@@ -28,10 +28,9 @@
  * #L%
  */
 
-package de.embl.cba.bdp2.files;
+package de.embl.cba.bdp2.loading.files;
 
 import ij.io.FileInfo;
-import javafx.geometry.Point3D;
 
 import java.io.Serializable;
 

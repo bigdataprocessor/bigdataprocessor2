@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.files;
+package de.embl.cba.bdp2.loading.files;
 
 import de.embl.cba.bdp2.utils.Utils;
 

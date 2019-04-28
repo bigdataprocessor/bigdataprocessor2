@@ -4,8 +4,8 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
-import de.embl.cba.bdp2.files.FileInfos;
-import de.embl.cba.bdp2.files.SerializableFileInfo;
+import de.embl.cba.bdp2.loading.files.FileInfos;
+import de.embl.cba.bdp2.loading.files.SerializableFileInfo;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import ij.ImagePlus;
 import javafx.geometry.Point3D;
@@ -19,7 +19,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import static de.embl.cba.bdp2.files.FileInfoConstants.*;
 import static de.embl.cba.bdp2.utils.DimensionOrder.Z;
 
 
@@ -95,8 +94,8 @@ public class ImageLoader implements CellLoader {
 
     @Override
     public synchronized void load( final SingleCellArrayImg cell ) {
-        long[] min = new long[ TOTAL_AXES ];
-        long[] max = new long[ TOTAL_AXES ];
+        long[] min = new long[ FileInfos.TOTAL_AXES ];
+        long[] max = new long[ FileInfos.TOTAL_AXES ];
         cell.min(min);
         cell.max(max);
         ImagePlus imagePlus = getDataCube( min, max );

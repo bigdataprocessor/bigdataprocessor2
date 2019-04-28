@@ -1,6 +1,6 @@
 package de.embl.cba.bdp2.ui;
 
-import de.embl.cba.bdp2.files.FileInfoConstants;
+import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.logging.IJLazySwingLogger;
 import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.imaris.ImarisUtils;
@@ -53,17 +53,17 @@ public class BigDataProcessorCommand<T extends RealType<T> & NativeType<T>> impl
 
     @Parameter(label = "Image files scheme",
             choices = {
-                    FileInfoConstants.SINGLE_CHANNEL_TIMELAPSE,
-                    FileInfoConstants.LEICA_SINGLE_TIFF,
-                    FileInfoConstants.LOAD_CHANNELS_FROM_FOLDERS,
-                    FileInfoConstants.EM_TIFF_SLICES,
-                    FileInfoConstants.PATTERN_1,
-                    FileInfoConstants.PATTERN_2,
-                    FileInfoConstants.PATTERN_3,
-                    FileInfoConstants.PATTERN_4,
-                    FileInfoConstants.PATTERN_5,
-                    FileInfoConstants.PATTERN_6})
-    String namingScheme = FileInfoConstants.SINGLE_CHANNEL_TIMELAPSE;
+                    FileInfos.SINGLE_CHANNEL_TIMELAPSE,
+                    FileInfos.LEICA_SINGLE_TIFF,
+                    FileInfos.LOAD_CHANNELS_FROM_FOLDERS,
+                    FileInfos.EM_TIFF_SLICES,
+                    FileInfos.PATTERN_1,
+                    FileInfos.PATTERN_2,
+                    FileInfos.PATTERN_3,
+                    FileInfos.PATTERN_4,
+                    FileInfos.PATTERN_5,
+                    FileInfos.PATTERN_6})
+    String namingScheme = FileInfos.SINGLE_CHANNEL_TIMELAPSE;
 
     @Parameter(label = "Hdf5 data set name",
             choices = {
