@@ -103,7 +103,7 @@ public class FastHDF5StackWriter<T extends RealType<T> & NativeType<T>> implemen
 
             for (String binning : binnings) {
                 if (stop.get()) {
-                    logger.progress("Stopped saving thread @ run: ", "" + current_t);
+                    logger.progress("Stopped saving thread @ merge: ", "" + current_t);
                     return;
                 }
                 String newPath = savingSettings.filePath;

@@ -102,7 +102,7 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
 
         // TODO:
         // - check whether enough RAM is available to execute current thread
-        // - if not, run GC and wait until there is enough
+        // - if not, merge GC and wait until there is enough
         // - estimate 3x more RAM then actually necessary
         // - if waiting takes to long somehoe terminate in a nice way
 
@@ -150,7 +150,7 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
             for (String binning : binnings) {
 
                 if (stop.get()) {
-                    logger.progress("Stopped saving thread @ run: ", "" + current_t);
+                    logger.progress("Stopped saving thread @ merge: ", "" + current_t);
                     return;
                 }
                 String newPath = savingSettings.filePath;

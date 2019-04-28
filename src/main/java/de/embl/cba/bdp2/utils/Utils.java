@@ -576,15 +576,15 @@ public class Utils {
             case "OPEN":
                 impBinned = binner.shrink(imp, binning[0], binning[1], binning[2], binner.MIN);
                 //impBinned = binner.shrink(image, binning[0], binning[1], binning[2], binner.AVERAGE);
-                //IJ.run(impBinned, "Minimum 3D...", "x=1 y=1 z=1");
-                //IJ.run(impBinned, "Maximum 3D...", "x=1 y=1 z=1");
+                //IJ.merge(impBinned, "Minimum 3D...", "x=1 y=1 z=1");
+                //IJ.merge(impBinned, "Maximum 3D...", "x=1 y=1 z=1");
                 impBinned.setTitle("Open_" + title);
                 break;
             case "CLOSE":
                 impBinned = binner.shrink(imp, binning[0], binning[1], binning[2], binner.MAX);
                 //impBinned = binner.shrink(image, binning[0], binning[1], binning[2], binner.AVERAGE);
-                //IJ.run(impBinned, "Maximum 3D...", "x=1 y=1 z=1");
-                //IJ.run(impBinned, "Minimum 3D...", "x=1 y=1 z=1");
+                //IJ.merge(impBinned, "Maximum 3D...", "x=1 y=1 z=1");
+                //IJ.merge(impBinned, "Minimum 3D...", "x=1 y=1 z=1");
                 impBinned.setTitle("Close_" + title);
                 break;
             case "AVERAGE":

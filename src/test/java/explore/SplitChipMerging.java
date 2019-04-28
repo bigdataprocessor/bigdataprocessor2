@@ -4,7 +4,7 @@ import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.files.FileInfoConstants;
 import de.embl.cba.bdp2.files.FileInfos;
 import de.embl.cba.bdp2.loading.CachedCellImgReader;
-import de.embl.cba.bdp2.process.SplitViewMerging;
+import de.embl.cba.bdp2.process.splitviewmerge.SplitViewMerging;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import de.embl.cba.bdp2.viewers.ViewerUtils;
 import net.imglib2.type.NativeType;

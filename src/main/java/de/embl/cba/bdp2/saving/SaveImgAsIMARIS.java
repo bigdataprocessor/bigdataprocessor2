@@ -68,7 +68,7 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
 
         // TODO:
         // - check whether enough RAM is available to execute current thread
-        // - if not, run GC and wait until there is enough
+        // - if not, merge GC and wait until there is enough
         // - estimate 3x more RAM then actually necessary
         // - if waiting takes to long somehow terminate in a nice way
 

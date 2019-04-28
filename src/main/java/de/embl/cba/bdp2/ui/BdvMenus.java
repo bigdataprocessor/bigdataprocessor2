@@ -1,14 +1,13 @@
 package de.embl.cba.bdp2.ui;
 
 import de.embl.cba.bdp2.process.*;
+import de.embl.cba.bdp2.process.splitviewmerge.SplitViewMerging;
 import de.embl.cba.bdp2.tracking.BigDataTrackerGUI;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import de.embl.cba.bdp2.viewers.ImageViewer;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.display.imagej.ImageJFunctions;
-import net.imglib2.type.NativeType;
-import net.imglib2.type.numeric.RealType;
 import net.imglib2.view.Views;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -75,7 +74,7 @@ public class BdvMenus
                 bigDataTrackerGUI.showDialog();
                 /*
                 CommandService commandService = LazyLoadingCommand.uiService.getContext().service(CommandService.class);
-                commandService.run( BigDataTrackerUICommand.class, true, "imageViewer", imageViewer );
+                commandService.merge( BigDataTrackerUICommand.class, true, "imageViewer", imageViewer );
                 */
             });
         }else if(e.getActionCommand().equalsIgnoreCase(

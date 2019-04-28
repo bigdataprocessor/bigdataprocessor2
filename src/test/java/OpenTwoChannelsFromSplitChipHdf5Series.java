@@ -2,10 +2,8 @@ import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.CachedCellImgReader;
 import de.embl.cba.bdp2.files.FileInfoConstants;
 import de.embl.cba.bdp2.files.FileInfos;
-import de.embl.cba.bdp2.loading.SplitViewCombiner;
 import de.embl.cba.bdp2.viewers.ImageViewer;
 import de.embl.cba.bdp2.viewers.ViewerUtils;
-import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
@@ -38,15 +36,18 @@ public class OpenTwoChannelsFromSplitChipHdf5Series
         centres.add( new long[]{ 1407, 546 } );
         final long span = 950;
 
-        final RandomAccessibleInterval< R > colorRAI
-                = SplitViewCombiner.run( image.getRai(), centres, span );
 
-        viewer.show(
-                colorRAI,
-                image.getName(),
-                image.getVoxelSpacing(),
-                image.getVoxelUnit(),
-                true );
+        // TODO: make work
+
+//        final RandomAccessibleInterval< R > colorRAI
+//                = SplitViewMerging.merge( image.getRai(), centres, span );
+//
+//        viewer.show(
+//                colorRAI,
+//                image.getName(),
+//                image.getVoxelSpacing(),
+//                image.getVoxelUnit(),
+//                true );
 
     }
 
