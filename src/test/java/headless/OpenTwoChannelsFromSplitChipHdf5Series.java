@@ -7,6 +7,7 @@ import de.embl.cba.bdp2.process.splitviewmerge.RegionMerger;
 import de.embl.cba.bdp2.process.splitviewmerge.RegionOptimiser;
 import de.embl.cba.bdp2.viewers.ImageViewer;
 import de.embl.cba.bdp2.viewers.ViewerUtils;
+import net.imagej.ImageJ;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -21,6 +22,9 @@ public class OpenTwoChannelsFromSplitChipHdf5Series
 {
     public static < R extends RealType< R > & NativeType< R > > void main( String[] args)
     {
+        final ImageJ imageJ = new ImageJ();
+        imageJ.ui().showUI();
+
         // BigDataProcessor2 bigDataProcessor2 = new BigDataProcessor2();
         final ImageViewer viewer = ViewerUtils
                 .getImageViewer( ViewerUtils.BIG_DATA_VIEWER );
@@ -37,26 +41,28 @@ public class OpenTwoChannelsFromSplitChipHdf5Series
 
         final ArrayList< double[] > centres = new ArrayList<>();
         centres.add( new double[]{ 522.0, 1143.0 } );
-        centres.add( new double[]{ 1407.0, 546.0 } );
-        final double[] spans = { 950.0, 950.0 };
+        centres.add( new double[]{ 522.0 - 30, 1143.0 - 30 } );
+//        centres.add( new double[]{ 1407.0 + 50, 546.0 + 50 } );
+        final double[] spans = { 800, 800 };
 
-        RegionOptimiser.optimiseCentres2D(
-                image.getRai(),
-                centres,
-                spans,
-                fileInfos.voxelSpacing );
+        final ArrayList< double[] > optimisedCentres =
+                RegionOptimiser.optimiseCentres2D(
+                        image.getRai(),
+                        centres,
+                        spans,
+                        fileInfos.voxelSpacing );
 
-//        final RandomAccessibleInterval< R > colorRAI
-//                = RegionMerger.merge(
-//                        image.getRai(), centres, spans, fileInfos.voxelSpacing );
-//
-//
-//        viewer.show(
-//                colorRAI,
-//                image.getName(),
-//                image.getVoxelSpacing(),
-//                image.getVoxelUnit(),
-//                true );
+        final RandomAccessibleInterval< R > colorRAI
+                = RegionMerger.merge(
+                        image.getRai(), optimisedCentres, spans, fileInfos.voxelSpacing );
+
+
+        viewer.show(
+                colorRAI,
+                image.getName(),
+                image.getVoxelSpacing(),
+                image.getVoxelUnit(),
+                true );
 
     }
 

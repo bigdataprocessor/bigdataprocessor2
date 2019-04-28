@@ -1,10 +1,13 @@
 package de.embl.cba.bdp2.tracking;
 
+import bdv.util.BdvFunctions;
+import bdv.util.BdvOptions;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.algorithm.phasecorrelation.PhaseCorrelation2;
 import net.imglib2.algorithm.phasecorrelation.PhaseCorrelationPeak2;
 import net.imglib2.img.cell.CellImgFactory;
+import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.complex.ComplexFloatType;
 import net.imglib2.type.numeric.real.FloatType;
@@ -31,6 +34,9 @@ public class Trackers
 						new ComplexFloatType(),
 						executorService );
 
+
+		ImageJFunctions.show( pcm, "corr" );
+
 		PhaseCorrelationPeak2 shiftPeak =
 				PhaseCorrelation2.getShift(
 						pcm,
@@ -44,7 +50,6 @@ public class Trackers
 
 		double[] shift = new double[currentFrame.numDimensions()];
 		shiftPeak.getSubpixelShift().localize(shift);
-		//System.out.println(Util.printCoordinates(found));
 
 		return shift;
 	}

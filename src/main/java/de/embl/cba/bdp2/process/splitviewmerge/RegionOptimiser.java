@@ -28,7 +28,17 @@ public class RegionOptimiser
 
 		final double[] shift = optimiseCentres2D( rai5D, voxelIntervals );
 
-		return null;
+		final ArrayList< double[] > newCentres = new ArrayList<>();
+		newCentres.add( calibratedCentres2D.get( 0 ) );
+
+		final double[] newCentre = new double[ 2 ];
+		final double[] oldCentre = calibratedCentres2D.get( 1 );
+		for ( int d = 0; d < 2; d++ )
+			newCentre[ d ] = oldCentre[ d ] - shift[ d ] * voxelSpacing[ d ];
+
+		newCentres.add( newCentre );
+
+		return newCentres;
 	}
 
 	private static < R extends RealType< R > >
