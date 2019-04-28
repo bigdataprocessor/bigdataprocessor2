@@ -7,6 +7,8 @@ import de.embl.cba.bdp2.viewers.ImageViewer;
 import javafx.geometry.Point3D;
 import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.type.numeric.RealType;
+
 import static de.embl.cba.bdp2.ui.BigDataProcessorCommand.logger;
 import javax.swing.*;
 import java.awt.*;
@@ -21,7 +23,8 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.stream.LongStream;
 
-public class BigDataTrackerGUI extends JDialog implements ActionListener, FocusListener
+public class BigDataTrackerGUI < T extends RealType<T> >
+        extends JDialog implements ActionListener, FocusListener
 {
     //JFrame frame;
 
@@ -30,7 +33,7 @@ public class BigDataTrackerGUI extends JDialog implements ActionListener, FocusL
     final BigDataTracker bigDataTracker= new BigDataTracker();
     //TrackTablePanel trackTablePanel;
     String[] defaults;
-    TrackingSettings trackingSettings = new TrackingSettings();
+    TrackingSettings< T > trackingSettings = new TrackingSettings< >();
 
     String[] texts = {
             //"Region size: x,y,z [pixels]",

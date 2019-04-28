@@ -1,7 +1,10 @@
+package headless;
+
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.CachedCellImgReader;
 import de.embl.cba.bdp2.loading.files.FileInfos;
-import de.embl.cba.bdp2.process.splitviewmerge.SplitViewMerging;
+import de.embl.cba.bdp2.process.splitviewmerge.RegionMerger;
+import de.embl.cba.bdp2.process.splitviewmerge.RegionOptimiser;
 import de.embl.cba.bdp2.viewers.ImageViewer;
 import de.embl.cba.bdp2.viewers.ViewerUtils;
 import net.imglib2.RandomAccessibleInterval;
@@ -33,19 +36,27 @@ public class OpenTwoChannelsFromSplitChipHdf5Series
         final Image< R > image = CachedCellImgReader.asImage( fileInfos );
 
         final ArrayList< double[] > centres = new ArrayList<>();
-        centres.add( new double[]{ 522, 1143 } );
-        centres.add( new double[]{ 1407, 546 } );
-        final double[] spans = { 950, 950 };
+        centres.add( new double[]{ 522.0, 1143.0 } );
+        centres.add( new double[]{ 1407.0, 546.0 } );
+        final double[] spans = { 950.0, 950.0 };
 
-        final RandomAccessibleInterval< R > colorRAI
-                = SplitViewMerging.merge( image.getRai(), centres, spans, fileInfos.voxelSpacing );
+        RegionOptimiser.optimiseCentres2D(
+                image.getRai(),
+                centres,
+                spans,
+                fileInfos.voxelSpacing );
 
-        viewer.show(
-                colorRAI,
-                image.getName(),
-                image.getVoxelSpacing(),
-                image.getVoxelUnit(),
-                true );
+//        final RandomAccessibleInterval< R > colorRAI
+//                = RegionMerger.merge(
+//                        image.getRai(), centres, spans, fileInfos.voxelSpacing );
+//
+//
+//        viewer.show(
+//                colorRAI,
+//                image.getName(),
+//                image.getVoxelSpacing(),
+//                image.getVoxelUnit(),
+//                true );
 
     }
 

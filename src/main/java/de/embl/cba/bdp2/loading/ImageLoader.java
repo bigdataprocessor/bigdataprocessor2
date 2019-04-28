@@ -31,7 +31,7 @@ public class ImageLoader implements CellLoader {
 
     public ImageLoader( FileInfos infoSource ) {
 
-        // TODO: optimise based on input file format
+        // TODO: optimiseCentres2D based on input file format
         int cellDimX = infoSource.nX;
         int cellDimY = 45;
 

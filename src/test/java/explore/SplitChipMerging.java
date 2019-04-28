@@ -32,7 +32,7 @@ public class SplitChipMerging
 				FileInfos.SINGLE_CHANNEL_TIMELAPSE,
 				".*.h5", "Data" );
 
-		fileInfos.voxelSpacing = new double[]{ 0.5, 0.5, 5.0};
+		fileInfos.voxelSpacing = new double[]{ 0.5, 0.5, 5.0 };
 
 		return CachedCellImgReader.asImage( fileInfos );
 	}

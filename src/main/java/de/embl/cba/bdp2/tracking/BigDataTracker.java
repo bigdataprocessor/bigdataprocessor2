@@ -15,6 +15,7 @@ import javafx.geometry.Point3D;
 import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.ops.parse.token.Real;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Intervals;
@@ -26,11 +27,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.Executors;
 
-public class BigDataTracker {
+public class BigDataTracker< T extends RealType< T > > {
 
     public ArrayList<Track> tracks = new ArrayList<>();
-    public Track trackResults;
-    public TrackingSettings trackingSettings;
+    public Track< T > trackResults;
+    public TrackingSettings< T > trackingSettings;
     private ObjectTracker objectTracker;
 
     public BigDataTracker(){
@@ -51,8 +52,9 @@ public class BigDataTracker {
     // TODO:
     // is the imageViewer needed???
     // separate image from settings
-    public void trackObject( TrackingSettings trackingSettings, ImageViewer imageViewer )
-    {   this.trackingSettings = trackingSettings;
+    public void trackObject( TrackingSettings< T > trackingSettings, ImageViewer imageViewer )
+    {
+        this.trackingSettings = trackingSettings;
         Point3D minInit = trackingSettings.pMin;
         Point3D maXinit = trackingSettings.pMax;
         this.objectTracker = new ObjectTracker(trackingSettings);

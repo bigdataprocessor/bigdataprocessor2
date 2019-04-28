@@ -7,6 +7,7 @@ import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import de.embl.cba.bdp2.viewers.ImageViewer;
 import javafx.geometry.Point3D;
 import net.imglib2.cache.img.CachedCellImg;
+import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 
 public class TestBigDataTracker {
@@ -25,7 +26,7 @@ public class TestBigDataTracker {
         imageViewer.show();
 
         BigDataTracker bdt = new BigDataTracker();
-        TrackingSettings trackingSettings = createTrackingSettings(imageViewer);
+        TrackingSettings< ? > trackingSettings = createTrackingSettings(imageViewer);
         //Test for CROSS_CORRELATION tracking
         trackingSettings.trackingMethod = TrackingSettings.CORRELATION;
         bdt.trackObject(trackingSettings, imageViewer);
@@ -34,9 +35,9 @@ public class TestBigDataTracker {
 //        bdt.trackObject(trackingSettings, imageViewer);
     }
 
-    private static TrackingSettings createTrackingSettings( ImageViewer imageViewer) {
+    private static TrackingSettings< ? > createTrackingSettings( ImageViewer imageViewer) {
         Point3D maxDisplacement = new Point3D(20, 20, 1);
-        TrackingSettings trackingSettings = new TrackingSettings();
+        TrackingSettings< ? > trackingSettings = new TrackingSettings<>();
         trackingSettings.rai = imageViewer.getImage().getRai();
         trackingSettings.maxDisplacement = maxDisplacement;
         trackingSettings.objectSize = new Point3D(200, 200, 10);
