@@ -27,5 +27,6 @@ public class TrackingSettings< T extends RealType< T > & NativeType< T > >
     public int viewFirstNProcessedRegions;
     public String imageFeatureEnhancement;
     public double[] voxelSpacing;
+    public Integer trackId;
 
 }

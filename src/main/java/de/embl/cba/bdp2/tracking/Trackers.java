@@ -41,7 +41,7 @@ public class Trackers
 			Gauss3.gauss( sigmas, Views.extendBorder( input ), blur ) ;
 			RandomAccessibleInterval< R > image = Views.zeroMin( blur );
 			processed.add( image );
-			ImageJFunctions.show( image );
+			//ImageJFunctions.show( image );
 		}
 
 		RandomAccessibleInterval< FloatType > pcm =
@@ -54,7 +54,7 @@ public class Trackers
 						new ComplexFloatType(),
 						executorService );
 
-		ImageJFunctions.show( pcm, "corr" );
+		//ImageJFunctions.show( pcm, "corr" );
 
 
 		PhaseCorrelationPeak2 shiftPeak =
