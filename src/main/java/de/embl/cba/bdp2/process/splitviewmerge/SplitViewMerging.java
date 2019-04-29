@@ -2,8 +2,11 @@ package de.embl.cba.bdp2.process.splitviewmerge;
 
 import bdv.tools.boundingbox.TransformedBox;
 import bdv.tools.boundingbox.TransformedBoxOverlay;
+import bdv.tools.brightness.SliderPanel;
 import bdv.tools.brightness.SliderPanelDouble;
+import bdv.util.BoundedValue;
 import bdv.util.BoundedValueDouble;
+import bdv.util.ModifiableInterval;
 import bdv.util.ModifiableRealInterval;
 import bdv.viewer.ViewerPanel;
 import de.embl.cba.bdp2.Image;
@@ -21,7 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.embl.cba.bdp2.process.splitviewmerge.RegionOptimiser.adjustRealInterval;
+import static de.embl.cba.bdp2.process.splitviewmerge.RegionOptimiser.adjustModifiableInterval;
 
 public class SplitViewMerging < R extends RealType< R > & NativeType< R > >
 {
@@ -30,12 +33,12 @@ public class SplitViewMerging < R extends RealType< R > & NativeType< R > >
 	public static final int Z = 2;
 
 	private final BdvImageViewer< R > viewer;
-	private Map< String, BoundedValueDouble > boundedValues;
-	private ArrayList< SliderPanelDouble > sliderPanels;
+	private Map< String, BoundedValue > boundedValues;
+	private ArrayList< SliderPanel > sliderPanels;
 	private SelectionUpdateListener updateListener;
 	private JPanel panel;
 	private ImageViewer newImageViewer;
-	private ArrayList< ModifiableRealInterval > realIntervals3D;
+	private ArrayList< ModifiableInterval > intervals3D;
 	private Image< R > image;
 
 	public SplitViewMerging( final BdvImageViewer< R > viewer )
@@ -43,16 +46,16 @@ public class SplitViewMerging < R extends RealType< R > & NativeType< R > >
 		this.viewer = viewer;
 		this.image = viewer.getImage();
 
-		initRealIntervals3D();
+		initSelectedRegions();
 		showRegionSelectionDialog();
 	}
 
-	public void initRealIntervals3D( )
+	public void initSelectedRegions( )
 	{
-		realIntervals3D = new ArrayList<>();
+		intervals3D = new ArrayList<>();
 		final int margin = ( int ) ( viewer.getImage().getRai().dimension( 0 ) * 0.01 );
 		for ( int c = 0; c < 2; c++ )
-			realIntervals3D.add( showRegionSelectionOverlay( c, margin ) );
+			intervals3D.add( showRegionSelectionOverlay( c, margin ) );
 	}
 
 
@@ -83,16 +86,21 @@ public class SplitViewMerging < R extends RealType< R > & NativeType< R > >
 
 	private void optimise()
 	{
-		final double[] shift = RegionOptimiser.optimiseRealIntervalCentres2D(
+		final double[] shift = RegionOptimiser.optimiseIntervalCentres2D(
 				image,
-				realIntervals3D );
+				intervals3D );
 
-		adjustRealInterval( shift, realIntervals3D.get( 1 ) );
+		adjustModifiableInterval( shift, intervals3D.get( 1 ) );
 
 		for ( int d = 0; d < 2; d++ )
 		{
-			final double currentValue = boundedValues.get( getCenterName( d, 1 ) ).getCurrentValue();
-			boundedValues.get( getCenterName( d, 1 ) ).setCurrentValue( currentValue - shift[ d ] );
+			final int currentValue = boundedValues
+					.get( getCenterName( d, 1 ) )
+					.getCurrentValue();
+
+			boundedValues
+					.get( getCenterName( d, 1 ) )
+					.setCurrentValue( ( int ) ( currentValue - shift[ d ] ) );
 		}
 	}
 
@@ -101,8 +109,7 @@ public class SplitViewMerging < R extends RealType< R > & NativeType< R > >
 		final RandomAccessibleInterval< R > merge =
 				SplitImageMerger.merge(
 						image.getRai(),
-						realIntervals3D,
-						image.getVoxelSpacing() );
+						intervals3D );
 
 		if ( newImageViewer == null )
 			newImageViewer = viewer.newImageViewer();
@@ -121,17 +128,15 @@ public class SplitViewMerging < R extends RealType< R > & NativeType< R > >
 	{
 		sliderPanels = new ArrayList<>(  );
 		boundedValues = new HashMap<>(  );
-		updateListener = new SelectionUpdateListener( realIntervals3D );
+		updateListener = new SelectionUpdateListener( intervals3D );
 
 		for ( int c = 0; c < 2; c++)
 			for ( int d = 0; d < 2; d++ )
 			{
 				String name = getCenterName( d, c );
-				final double center = getCenter( realIntervals3D.get( c ), d );
-				boundedValues.put( name, new BoundedValueDouble(
-						0.0,
-						getRangeMax( d ),
-						center ) );
+				final int center = getCenter( intervals3D.get( c ), d );
+				boundedValues.put( name,
+						new BoundedValue( 0, getRangeMax( d ), center ) );
 				createPanel( name, boundedValues.get( name ) );
 			}
 
@@ -139,42 +144,40 @@ public class SplitViewMerging < R extends RealType< R > & NativeType< R > >
 		{
 			String name = getSpanName( d );
 			boundedValues.put( name,
-					new BoundedValueDouble(
+					new BoundedValue(
 							0,
 							getRangeMax( d ),
-							getSpan( realIntervals3D.get( 0 ), d ) ) );
+							getSpan( intervals3D.get( 0 ), d ) ) );
 			createPanel( name , boundedValues.get( name ) );
 		}
 	}
 
-	private double getRangeMax( int d )
+	private int getRangeMax( int d )
 	{
-		final double span =
-				viewer.getImage().getRai().dimension( d )
-				* viewer.getImage().getVoxelSpacing()[ d ];
+		final long span =
+				viewer.getImage().getRai().dimension( d );
 
-		return span;
+		return ( int ) span;
 	}
 
-	private double getCenter( ModifiableRealInterval interval, int d )
+	private int getCenter( ModifiableInterval interval, int d )
 	{
-		return ( interval.realMax( d ) - interval.realMin( d ) ) / 2.0
-				+ interval.realMin( d );
+		return ( int ) ( ( interval.max( d ) - interval.min( d ) ) / 2.0 + interval.min( d ) );
 	}
 
-	private double getSpan( ModifiableRealInterval interval, int d )
+	private int getSpan( ModifiableInterval interval, int d )
 	{
-		return ( interval.realMax( d ) - interval.realMin( d ) );
+		return ( int ) interval.dimension( d );
 	}
 
-	private ModifiableRealInterval showRegionSelectionOverlay( int c, int margin )
+	private ModifiableInterval showRegionSelectionOverlay( int c, int margin )
 	{
 		final RandomAccessibleInterval rai = viewer.getImage().getRai();
 
-		final FinalRealInterval interval3D = getInitial3DInterval( rai, c, margin );
+		final FinalInterval interval3D = getInitial3DInterval( rai, c, margin );
 
-		ModifiableRealInterval modifiableRealInterval3D
-				= new ModifiableRealInterval( interval3D );
+		ModifiableInterval modifiableInterval3D
+				= new ModifiableInterval( interval3D );
 
 		final TransformedBoxOverlay transformedBoxOverlay =
 				new TransformedBoxOverlay( new TransformedBox()
@@ -182,13 +185,16 @@ public class SplitViewMerging < R extends RealType< R > & NativeType< R > >
 					@Override
 					public void getTransform( final AffineTransform3D transform )
 					{
-						transform.set( new AffineTransform3D() );
+						viewer.getBdvStackSource()
+								.getSources().get( 0 )
+								.getSpimSource()
+								.getSourceTransform( 0, 0, transform );
 					}
 
 					@Override
 					public Interval getInterval()
 					{
-						return Intervals.largestContainedInterval( modifiableRealInterval3D );
+						return modifiableInterval3D;
 					}
 
 				} );
@@ -201,45 +207,43 @@ public class SplitViewMerging < R extends RealType< R > & NativeType< R > >
 		viewerPanel.getDisplay().addOverlayRenderer(transformedBoxOverlay);
 		viewerPanel.addRenderTransformListener(transformedBoxOverlay);
 
-		return modifiableRealInterval3D;
+		return modifiableInterval3D;
 
 	}
 
-	private FinalRealInterval getInitial3DInterval(
+	private FinalInterval getInitial3DInterval(
 			RandomAccessibleInterval rai,
 			int c,
 			int margin )
 	{
-		final double[] min = new double[ 3 ];
-		final double[] max = new double[ 3 ];
-
-		final double[] voxelSpacing = viewer.getImage().getVoxelSpacing();
-
+		final long[] min = new long[ 3 ];
+		final long[] max = new long[ 3 ];
+		
 		int d = X;
 
 		if ( c == 0 )
 		{
-			min[ d ] = rai.min( d ) * voxelSpacing[ d ] + margin * voxelSpacing[ d ];
-			max[ d ] = rai.max( d ) * voxelSpacing[ d ] / 2 - margin * voxelSpacing[ d ];
+			min[ d ] = rai.min( d ) + margin;
+			max[ d ] = rai.max( d ) / 2 - margin;
 		}
 
 		if ( c == 1 )
 		{
-			min[ d ] = rai.max( d ) * voxelSpacing[ d ] / 2 + margin * voxelSpacing[ d ];
-			max[ d ] = rai.max( d ) * voxelSpacing[ d ] - margin * voxelSpacing[ d ];
+			min[ d ] = rai.max( d ) / 2 + margin;
+			max[ d ] = rai.max( d ) - margin;
 		}
 
 		d = Y;
 
-		min[ d ] = rai.min( d ) * voxelSpacing[ d ] + margin * voxelSpacing[ d ] ;
-		max[ d ] = rai.max( d ) * voxelSpacing[ d ] - margin * voxelSpacing[ d ];
+		min[ d ] = rai.min( d ) + margin ;
+		max[ d ] = rai.max( d ) - margin;
 
 		d = Z;
 
 		min[ d ] = 0;
-		max[ d ] = rai.dimension( d ) * voxelSpacing[ d ];
+		max[ d ] = rai.dimension( d );
 
-		return new FinalRealInterval( min, max );
+		return new FinalInterval( min, max );
 	}
 
 	private void showFrame( JPanel panel )
@@ -260,19 +264,19 @@ public class SplitViewMerging < R extends RealType< R > & NativeType< R > >
 	private String getCenterName( int d, int c )
 	{
 		final String[] xy = { "X", "Y" };
-		return "Channel " + c + ", Centre " + xy[ d ];
+		return "Channel " + c + ", Centre " + xy[ d ] + " [Pixel]";
 	}
 
 	private String getSpanName( int d )
 	{
-		final String[] spanNames = { "Width", "Height" };
+		final String[] spanNames = { "Width [Pixel]", "Height [Pixel]" };
 		return spanNames[ d ];
 	}
 
-	private void createPanel( String name, BoundedValueDouble boundedValue )
+	private void createPanel( String name, BoundedValue boundedValue )
 	{
-		final SliderPanelDouble sliderPanel =
-				new SliderPanelDouble(
+		final SliderPanel sliderPanel =
+				new SliderPanel(
 						name,
 						boundedValue,
 						1 );
@@ -282,11 +286,11 @@ public class SplitViewMerging < R extends RealType< R > & NativeType< R > >
 		panel.add( sliderPanel );
 	}
 
-	class SelectionUpdateListener implements BoundedValueDouble.UpdateListener
+	class SelectionUpdateListener implements BoundedValue.UpdateListener
 	{
-		private final ArrayList< ModifiableRealInterval > intervals;
+		private final ArrayList< ModifiableInterval > intervals;
 
-		public SelectionUpdateListener( ArrayList< ModifiableRealInterval > intervals )
+		public SelectionUpdateListener( ArrayList< ModifiableInterval > intervals )
 		{
 			this.intervals = intervals;
 		}
@@ -304,33 +308,30 @@ public class SplitViewMerging < R extends RealType< R > & NativeType< R > >
 
 		public void updateInterval( int c )
 		{
-			final ModifiableRealInterval interval = intervals.get( c );
-
-			// get the new interval in real units
-			//
-			final double[] min = new double[ 3 ];
-			final double[] max = new double[ 3 ];
+			final ModifiableInterval interval = intervals.get( c );
+			
+			final long[] min = new long[ 3 ];
+			final long[] max = new long[ 3 ];
 
 			for ( int d = 0; d < 2; d++ )
 			{
-				final double centre = boundedValues.get( getCenterName( d, c ) ).getCurrentValue();
-				final double span = boundedValues.get( getSpanName( d ) ).getCurrentValue();
-				min[ d ] = centre - span / 2.0;
-				max[ d ] = centre + span / 2.0;
+				final long centre = boundedValues.get( getCenterName( d, c ) ).getCurrentValue();
+				final long span = boundedValues.get( getSpanName( d ) ).getCurrentValue();
+				min[ d ] = (long) ( centre - span / 2.0 );
+				max[ d ] = (long) ( centre + span / 2.0 );
 			}
 
 			final RandomAccessibleInterval< R > rai = viewer.getImage().getRai();
-			final double[] voxelSpacing = viewer.getImage().getVoxelSpacing();
+			
+			min[ Z ] = rai.min( Z );
+			max[ Z ] = rai.max( Z );
 
-			min[ Z ] = rai.min( Z ) * voxelSpacing[ Z ];
-			max[ Z ] = rai.max( Z ) * voxelSpacing[ Z ];
-
-			interval.set( new FinalRealInterval( min, max ) );
+			interval.set( new FinalInterval( min, max ) );
 		}
 
 		private void updateSliders()
 		{
-			for ( SliderPanelDouble sliderPanel : sliderPanels )
+			for ( SliderPanel sliderPanel : sliderPanels )
 					sliderPanel.update();
 		}
 	}

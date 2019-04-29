@@ -1,12 +1,11 @@
 package de.embl.cba.bdp2.process.splitviewmerge;
 
+import bdv.util.ModifiableInterval;
 import bdv.util.ModifiableRealInterval;
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.tracking.Trackers;
-import net.imglib2.FinalInterval;
-import net.imglib2.FinalRealInterval;
-import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.*;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Intervals;
@@ -110,6 +109,21 @@ public class RegionOptimiser
 		return shift;
 	}
 
+	public static < R extends RealType< R > & NativeType< R > >
+	double[] optimiseIntervalCentres2D(
+			Image< R > image,
+			ArrayList< ModifiableInterval > intervals )
+	{
+
+		final double[] shift = optimiseCentres2D( image.getRai(), intervals );
+
+		Logger.info( "Region Centre Optimiser: Shift [Pixel]: "
+				+ shift[ 0 ] + ", "
+				+ shift[ 1 ] );
+
+		return shift;
+	}
+
 
 	public static < R extends RealType< R > & NativeType< R > > void
 	adjustRealInterval( double[] shift, ModifiableRealInterval interval )
@@ -127,15 +141,31 @@ public class RegionOptimiser
 		interval.set( new FinalRealInterval( min, max ) );
 	}
 
+	public static < R extends RealType< R > & NativeType< R > > void
+	adjustModifiableInterval( double[] shift, ModifiableInterval interval )
+	{
+
+		final long[] min = Intervals.minAsLongArray( interval );
+		final long[] max = Intervals.maxAsLongArray( interval );
+
+		for ( int d = 0; d < 2; d++ )
+		{
+			min[ d ] = ( long ) ( min[ d ] - shift[ d ] );
+			max[ d ] = ( long) ( max[ d ] - shift[ d ] );
+		}
+
+		interval.set( new FinalInterval( min, max ) );
+	}
+
 	private static < R extends RealType< R > & NativeType< R > >
 	double[] optimiseCentres2D(
 			RandomAccessibleInterval< R > rai5D,
-			ArrayList< FinalInterval > intervals )
+			ArrayList< ? extends Interval > intervals )
 	{
 		final ArrayList< RandomAccessibleInterval< R > > planes
 				= new ArrayList<>();
 
-		for ( FinalInterval interval : intervals )
+		for ( Interval interval : intervals )
 		{
 			final FinalInterval interval5D = getInterval5D( rai5D, interval );
 

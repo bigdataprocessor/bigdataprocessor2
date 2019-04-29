@@ -3,6 +3,7 @@ package de.embl.cba.bdp2.process.splitviewmerge;
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.logging.Logger;
 import net.imglib2.FinalInterval;
+import net.imglib2.Interval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealInterval;
 import net.imglib2.type.NativeType;
@@ -31,7 +32,8 @@ public class SplitImageMerger
 
 		final RandomAccessibleInterval< R > merge = merge( image.getRai(), intervals );
 
-		final Image< R > mergeImage = new Image<>( merge, image.getName(), image.getVoxelSpacing(), image.getVoxelUnit() );
+		final Image< R > mergeImage =
+				new Image<>( merge, image.getName(), image.getVoxelSpacing(), image.getVoxelUnit() );
 
 		return mergeImage;
 	}
@@ -57,7 +59,7 @@ public class SplitImageMerger
 	public static < R extends RealType< R > & NativeType< R > >
 	Image< R > merge(
 			Image< R > image,
-			ArrayList< FinalInterval > intervals )
+			ArrayList< ? extends Interval > intervals )
 	{
 		final RandomAccessibleInterval< R > merge = merge( image.getRai(), intervals );
 
@@ -101,14 +103,14 @@ public class SplitImageMerger
 	public static < R extends RealType< R > & NativeType< R > >
 	RandomAccessibleInterval< R > merge(
 			RandomAccessibleInterval< R > raiXYZCT,
-			ArrayList< FinalInterval > intervals )
+			ArrayList< ? extends Interval > intervals )
 	{
 		final ArrayList< RandomAccessibleInterval< R > > crops
 				= new ArrayList<>();
 
-		for ( FinalInterval interval : intervals )
+		for ( Interval interval : intervals )
 		{
-		 	Logger.log( "Split Image Merging Interval [Voxels]: " + interval );
+		 	Logger.log( "Split Image Merging Interval [Pixel]: " + interval );
 
 			final FinalInterval interval5D = getInterval5D( raiXYZCT, interval );
 
@@ -129,7 +131,8 @@ public class SplitImageMerger
 	}
 
 	public static < R extends RealType< R > & NativeType< R > >
-	FinalInterval getInterval5D( RandomAccessibleInterval< R > raiXYZCT, FinalInterval interval )
+	FinalInterval getInterval5D( RandomAccessibleInterval< R > raiXYZCT,
+								 Interval interval )
 	{
 		final long[] min = Intervals.minAsLongArray( raiXYZCT );
 		final long[] max = Intervals.maxAsLongArray( raiXYZCT );
