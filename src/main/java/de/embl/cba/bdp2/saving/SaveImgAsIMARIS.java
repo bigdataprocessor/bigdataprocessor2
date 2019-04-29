@@ -116,7 +116,7 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
 
             if (stop.get()) {
                 savingSettings.saveVolume = false;
-                savingSettings.saveProjection = false;
+                savingSettings.saveProjections = false;
                 Logger.progress("Stopped saving thread: ", "" + current_t);
                 return;
             }
@@ -144,7 +144,7 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
 
             // Save projections
             // TODO: save into one single file
-            if (savingSettings.saveProjection) {
+            if (savingSettings.saveProjections ) {
                 SaveImgAsTIFFStacks.saveAsTiffXYZMaxProjection(
                         imagePlus, c, this.current_t, newPath);
             }

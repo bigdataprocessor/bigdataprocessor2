@@ -175,7 +175,7 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
                 }
                 // Save projections
                 // TODO: save into one single file
-                if (savingSettings.saveProjection) {
+                if (savingSettings.saveProjections ) {
                     ImagePlus imagePlusImage = ImageJFunctions.wrap(newRai, "", null);
                     SaveImgAsTIFFStacks.saveAsTiffXYZMaxProjection(imagePlusImage, c, this.current_t, newPath);
                 }
@@ -286,7 +286,7 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
             }
 
             if (stop.get()) {
-                savingSettings.saveProjection = false;
+                savingSettings.saveProjections = false;
                 Logger.progress("Stopped saving thread @ writeIndividualChannels: ", "" + current_t);
                 return;
             }
@@ -301,7 +301,7 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
 
     private <E> void writeHyperslabs(int hdf5DataType, E[][] pixelsSlice, long[] start, long[] colorIniDims) {
         if (stop.get()) {
-            savingSettings.saveProjection = false;
+            savingSettings.saveProjections = false;
             Logger.progress("Stopped saving thread @ writeHyperslabs: ", "" + current_t);
             return;
         }
@@ -330,7 +330,7 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
                 T value = rai.get();
 
                 if (stop.get()) {
-                    savingSettings.saveProjection = false;
+                    savingSettings.saveProjections = false;
                     Logger.progress("Stopped saving thread @ fillStackSlice: ", "" + current_t);
                     return;
                 }

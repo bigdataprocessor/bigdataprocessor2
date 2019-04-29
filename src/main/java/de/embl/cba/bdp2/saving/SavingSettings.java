@@ -19,13 +19,16 @@ public class SavingSettings {
     public static final String NONE = "None";
     public Integer saveId;
     public boolean saveVolume;
-    public boolean saveProjection;
+    public String filePath;
+
+    public boolean saveProjections;
+    public String projectionsFilePath;
+
     public boolean convertTo8Bit;
     public int mapTo0, mapTo255;
     public boolean convertTo16Bit;
     public boolean gate;
     public int gateMin, gateMax;
-    public String filePath;
     public String fileBaseNameIMARIS;
     public String parentDirectory;
     public FileType fileType;

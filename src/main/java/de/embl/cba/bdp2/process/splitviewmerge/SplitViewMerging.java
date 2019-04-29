@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static de.embl.cba.bdp2.process.splitviewmerge.RegionOptimiser.adjustRealInterval;
+
 public class SplitViewMerging < R extends RealType< R > & NativeType< R > >
 {
 	public static final int X = 0;
@@ -34,15 +36,15 @@ public class SplitViewMerging < R extends RealType< R > & NativeType< R > >
 	private JPanel panel;
 	private ImageViewer newImageViewer;
 	private ArrayList< ModifiableRealInterval > realIntervals3D;
-	private Image< R > inputImage;
+	private Image< R > image;
 
 	public SplitViewMerging( final BdvImageViewer< R > viewer )
 	{
 		this.viewer = viewer;
-		this.inputImage = viewer.getImage();
+		this.image = viewer.getImage();
 
 		initRealIntervals3D();
-		showRegionSelectionDialog( );
+		showRegionSelectionDialog();
 	}
 
 	public void initRealIntervals3D( )
@@ -61,31 +63,55 @@ public class SplitViewMerging < R extends RealType< R > & NativeType< R > >
 
 		addRegionSliders( );
 
-		final JButton showMerge = new JButton( "Show / Update Merge" );
+		final JButton showMerge = new JButton( "Show/Update Merge" );
 		panel.add( showMerge );
 		showMerge.addActionListener( e -> {
-			showMerge( );
+			showOrUpdateMerge( );
 		} );
+
+
+		final JButton optimise = new JButton( "Optimise Region Centres" );
+		panel.add( optimise );
+		optimise.addActionListener( e -> {
+			optimise();
+			showOrUpdateMerge();
+		} );
+
 
 		showFrame( panel );
 	}
 
-	private void showMerge( )
+	private void optimise()
+	{
+		final double[] shift = RegionOptimiser.optimiseRealIntervalCentres2D(
+				image,
+				realIntervals3D );
+
+		adjustRealInterval( shift, realIntervals3D.get( 1 ) );
+
+		for ( int d = 0; d < 2; d++ )
+		{
+			final double currentValue = boundedValues.get( getCenterName( d, 1 ) ).getCurrentValue();
+			boundedValues.get( getCenterName( d, 1 ) ).setCurrentValue( currentValue - shift[ d ] );
+		}
+	}
+
+	private void showOrUpdateMerge( )
 	{
 		final RandomAccessibleInterval< R > merge =
 				SplitImageMerger.merge(
-						inputImage.getRai(),
+						image.getRai(),
 						realIntervals3D,
-						inputImage.getVoxelSpacing() );
+						image.getVoxelSpacing() );
 
 		if ( newImageViewer == null )
 			newImageViewer = viewer.newImageViewer();
 
 		final Image< R > image = new Image<>(
 				merge,
-				inputImage.getName() + "_merge",
-				inputImage.getVoxelSpacing(),
-				inputImage.getVoxelUnit()
+				this.image.getName() + "_merge",
+				this.image.getVoxelSpacing(),
+				this.image.getVoxelUnit()
 		);
 
 		newImageViewer.show( image, true );

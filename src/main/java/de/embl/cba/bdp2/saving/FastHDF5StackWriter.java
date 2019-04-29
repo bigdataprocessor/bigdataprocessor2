@@ -123,7 +123,7 @@ public class FastHDF5StackWriter<T extends RealType<T> & NativeType<T>> implemen
                     writeHDF5(impBinned, newPath);
                 }
                 // Save projections
-                if (savingSettings.saveProjection) {
+                if (savingSettings.saveProjections ) {
                     ImagePlus imagePlusImage = ImageJFunctions.wrap(newRai, "");
                     SaveImgAsTIFFStacks.saveAsTiffXYZMaxProjection(imagePlusImage, c, this.current_t, newPath);
                 }
@@ -180,7 +180,7 @@ public class FastHDF5StackWriter<T extends RealType<T> & NativeType<T>> implemen
                 rai.setPosition(x, image.dimensionIndex(Axes.X));
                 for (int y = 0; y < dimY; y++) {
                     if (stop.get()) {
-                        savingSettings.saveProjection = false;
+                        savingSettings.saveProjections = false;
                         Logger.progress("Stopped saving thread @ writeHDF5: ", "" + current_t);
                         return;
                     }

@@ -17,6 +17,7 @@ import bdv.tools.boundingbox.BoxRealRandomAccessible;
 import bdv.tools.brightness.RealARGBColorConverterSetup;
 import bdv.tools.brightness.SetupAssignments;
 import bdv.tools.transformation.TransformedSource;
+import bdv.util.ModifiableRealInterval;
 import bdv.util.RealRandomAccessibleSource;
 import bdv.viewer.DisplayMode;
 import bdv.viewer.SourceAndConverter;

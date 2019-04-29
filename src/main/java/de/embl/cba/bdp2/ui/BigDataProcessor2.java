@@ -133,7 +133,6 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
         savingSettings.voxelSpacing = image.getVoxelSpacing();
         savingSettings.voxelUnit = image.getVoxelUnit();
         SaveCentral.goSave( savingSettings, saveExecutorService, savingSettings.saveId );
-        Logger.info( "Saving: Finished." );
     }
 
     public static void stopSave(Integer saveId) {

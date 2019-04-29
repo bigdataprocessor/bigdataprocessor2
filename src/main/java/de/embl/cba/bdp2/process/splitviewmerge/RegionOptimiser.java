@@ -1,12 +1,15 @@
 package de.embl.cba.bdp2.process.splitviewmerge;
 
+import bdv.util.ModifiableRealInterval;
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.tracking.Trackers;
 import net.imglib2.FinalInterval;
+import net.imglib2.FinalRealInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.util.Intervals;
 import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
 
@@ -87,6 +90,42 @@ public class RegionOptimiser
 		return newCentres;
 	}
 
+	public static < R extends RealType< R > & NativeType< R > >
+	double[] optimiseRealIntervalCentres2D(
+			Image< R > image,
+			ArrayList< ModifiableRealInterval > realIntervals )
+	{
+		final ArrayList< FinalInterval > intervals =
+				SplitViewMergingHelpers.asIntervals( realIntervals, image.getVoxelSpacing() );
+
+		final double[] shift = optimiseCentres2D( image.getRai(), intervals );
+
+		for ( int d = 0; d < 2; d++ )
+			shift[ d ] *= image.getVoxelSpacing()[ d ];
+
+		Logger.info( "Region Centre Optimiser: Shift [" + image.getVoxelUnit() + "]: "
+				+ shift[ 0 ] + ", "
+				+ shift[ 1 ] );
+
+		return shift;
+	}
+
+
+	public static < R extends RealType< R > & NativeType< R > > void
+	adjustRealInterval( double[] shift, ModifiableRealInterval interval )
+	{
+
+		final double[] min = Intervals.minAsDoubleArray( interval );
+		final double[] max = Intervals.maxAsDoubleArray( interval );
+
+		for ( int d = 0; d < 2; d++ )
+		{
+			min[ d ] = min[ d ] - shift[ d ];
+			max[ d ] = max[ d ] - shift[ d ];
+		}
+
+		interval.set( new FinalRealInterval( min, max ) );
+	}
 
 	private static < R extends RealType< R > & NativeType< R > >
 	double[] optimiseCentres2D(

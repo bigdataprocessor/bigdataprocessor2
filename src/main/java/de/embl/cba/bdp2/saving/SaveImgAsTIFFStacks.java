@@ -2,11 +2,9 @@ package de.embl.cba.bdp2.saving;
 
 import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.utils.Utils;
-import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.io.FileSaver;
-import ij.plugin.Binner;
 import loci.common.services.ServiceFactory;
 import loci.formats.ImageWriter;
 import loci.formats.meta.IMetadata;
@@ -104,9 +102,8 @@ public class SaveImgAsTIFFStacks implements Runnable {
                 saveAsTiff( imp3D, c, t, savingSettings.compression, savingSettings.rowsPerStrip, savingSettings.filePath );
 
             // Save projections
-            // TODO: save into one single file
-            if ( savingSettings.saveProjection )
-                saveAsTiffXYZMaxProjection( imp3D, c, t, savingSettings.filePath );
+            if ( savingSettings.saveProjections )
+                saveAsTiffXYZMaxProjection( imp3D, c, t, savingSettings.projectionsFilePath );
 
         }
 
@@ -161,7 +158,7 @@ public class SaveImgAsTIFFStacks implements Runnable {
                 for (int z = 0; z < imp.getNSlices(); z++) {
                     if (stop.get()) {
                         Logger.progress("Stopped saving thread: ", "" + t);
-                        savingSettings.saveProjection = false;
+                        savingSettings.saveProjections = false;
                         return;
                     }
 
@@ -182,7 +179,7 @@ public class SaveImgAsTIFFStacks implements Runnable {
             }
         } else{  // no compression: use ImageJ's FileSaver, as it is faster than BioFormats
             if (stop.get()) {
-                savingSettings.saveProjection = false;
+                savingSettings.saveProjections = false;
                 Logger.progress("Stopped saving thread: ", "" + t);
                 return;
             }

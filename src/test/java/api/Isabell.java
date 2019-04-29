@@ -76,7 +76,10 @@ public class Isabell
         final SavingSettings savingSettings = SavingSettings.getDefaults();
         savingSettings.fileType = SavingSettings.FileType.TIFF_STACKS;
         savingSettings.nThreads = Runtime.getRuntime().availableProcessors();
-        savingSettings.filePath = "/Users/tischer/Desktop/stack_0_channel_0-output/merge";
+        savingSettings.saveVolume = true;
+        savingSettings.filePath = "/Users/tischer/Desktop/stack_0_channel_0-volumes/volume";
+        savingSettings.saveProjections = true;
+        savingSettings.projectionsFilePath = "/Users/tischer/Desktop/stack_0_channel_0-projections/projection";
         new BigDataProcessor2().saveImage( merge, savingSettings );
 
 
