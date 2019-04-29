@@ -9,7 +9,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 	private final RandomAccessibleInterval< R > rai;
 	private final String name;
 	private final double[] voxelSpacing;
-	private final String voxelUnit;
+	private String voxelUnit;
 
 	public Image( RandomAccessibleInterval< R > rai,
 				  String name,
@@ -35,6 +35,11 @@ public class Image< R extends RealType< R > & NativeType< R > >
 	public String getVoxelUnit()
 	{
 		return voxelUnit;
+	}
+
+	public void setVoxelUnit( String voxelUnit )
+	{
+		this.voxelUnit = voxelUnit;
 	}
 
 	public String getName()

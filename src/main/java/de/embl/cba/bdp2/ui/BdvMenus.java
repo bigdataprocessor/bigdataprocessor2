@@ -45,17 +45,17 @@ public class BdvMenus
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.SAVE_AS_MENU_ITEM )) {
-            BigDataProcessor2.executorService.submit(() -> {
+            BigDataProcessor2.generalThreadPool.submit(() -> {
                 SaveMenuDialog saveMenuDialog = new SaveMenuDialog(imageViewer);
                 saveMenuDialog.setVisible(true);
             });
         }else if (e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.OBLIQUE_MENU_ITEM )) {
-            BigDataProcessor2.executorService.submit(() -> {
+            BigDataProcessor2.generalThreadPool.submit(() -> {
                 ObliqueMenuDialog obliqueMenuDialog = new ObliqueMenuDialog(imageViewer);
                 obliqueMenuDialog.setVisible(true);
             });
         }else if(e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.CROP_MENU_ITEM )){
-        	BigDataProcessor2.executorService.submit(() -> {
+        	BigDataProcessor2.generalThreadPool.submit(() -> {
             	new Cropping<>( imageViewer );
             });
         }else if(e.getActionCommand().equalsIgnoreCase(
@@ -66,10 +66,10 @@ public class BdvMenus
             RandomAccessibleInterval permuted =
                     Views.permute( imageViewer.getImage().getRai(),
                             DimensionOrder.Z, DimensionOrder.C);
-            ImageJFunctions.show(permuted, BigDataProcessor2.executorService);
+            ImageJFunctions.show(permuted, BigDataProcessor2.generalThreadPool);
         }else if(e.getActionCommand().equalsIgnoreCase(
                 UIDisplayConstants.CORRECT_MOTION_MENU_ITEM )){
-           BigDataProcessor2.executorService.submit(() -> {
+           BigDataProcessor2.generalThreadPool.submit(() -> {
                 BigDataTrackerGUI bigDataTrackerGUI = new BigDataTrackerGUI(imageViewer);
                 bigDataTrackerGUI.showDialog();
                 /*
@@ -79,22 +79,22 @@ public class BdvMenus
             });
         }else if(e.getActionCommand().equalsIgnoreCase(
                 UIDisplayConstants.EIGHT_BIT_CONVERSION_MENU_ITEM )){
-            BigDataProcessor2.executorService.submit(() -> {
+            BigDataProcessor2.generalThreadPool.submit(() -> {
                 new UnsignedByteTypeConversion(imageViewer);
             });
         }else if(e.getActionCommand().equalsIgnoreCase(
                 UIDisplayConstants.BINNING_MENU_ITEM )){
-            BigDataProcessor2.executorService.submit(() -> {
+            BigDataProcessor2.generalThreadPool.submit(() -> {
                new Binning<>(imageViewer);
             });
         }else if(e.getActionCommand().equalsIgnoreCase(
             UIDisplayConstants.SPLIT_VIEW_MENU_ITEM )){
-            BigDataProcessor2.executorService.submit(() -> {
+            BigDataProcessor2.generalThreadPool.submit(() -> {
                 new ChromaticShiftCorrection<>( imageViewer );
             });
         }else if(e.getActionCommand().equalsIgnoreCase(
                     UIDisplayConstants.SPLIT_VIEW_MENU_ITEM )){
-                BigDataProcessor2.executorService.submit(() -> {
+                BigDataProcessor2.generalThreadPool.submit(() -> {
                     new SplitViewMerging( ( BdvImageViewer ) imageViewer );
         });
     }

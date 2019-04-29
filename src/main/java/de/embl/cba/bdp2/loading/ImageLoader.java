@@ -62,7 +62,7 @@ public class ImageLoader implements CellLoader {
         po = getOffset( min[ DimensionOrder.X ], min[ DimensionOrder.Y ], z );
         ps = getSize( min, max );
         //TODO: get rid of ImagePlus
-        ImagePlus imagePlus = new OpenerExtension().readDataCube(directory, infos_c_t, 1, po, ps, BigDataProcessor2.executorService);
+        ImagePlus imagePlus = new OpenerExtension().readDataCube(directory, infos_c_t, 1, po, ps, BigDataProcessor2.generalThreadPool);
         return imagePlus;
     }
 

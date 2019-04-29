@@ -8,13 +8,13 @@ import de.embl.cba.bdp2.saving.SavingSettings;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.ImageViewer;
+import de.embl.cba.bdp2.viewers.ViewerUtils;
 import ij.gui.GenericDialog;
 import net.imglib2.FinalInterval;
 import net.imglib2.FinalRealInterval;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealRandomAccessible;
-import net.imglib2.cache.img.CachedCellImg;
 import net.imglib2.converter.Converters;
 import net.imglib2.converter.RealUnsignedByteConverter;
 import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
@@ -29,6 +29,7 @@ import net.imglib2.util.Intervals;
 import net.imglib2.util.Util;
 import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -40,17 +41,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import net.imglib2.interpolation.InterpolatorFactory;
 
-public class BigDataProcessor2
+public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
 {
 
-    public FileInfos fileInfos;
-    public static ExecutorService executorService;  //General thread pool
+    public static ExecutorService generalThreadPool;  //General thread pool
     public static ExecutorService trackerThreadPool; // Thread pool for tracking
-    public int numThreads;
+    public static Map<Integer, Integer> progressTracker = new ConcurrentHashMap<>();
     public static int MAX_THREAD_LIMIT = Runtime.getRuntime().availableProcessors() * 2;
     public static Map<Integer, AtomicBoolean> saveTracker = new ConcurrentHashMap<>();
-    public static Map<Integer, Integer> progressTracker = new ConcurrentHashMap<>();
-
 
     public BigDataProcessor2() {
         //TODO: have separate shutdown for the executorService. It will not shutdown when ui exeService is shut. --ashis (DONE but needs testing)
@@ -58,52 +56,51 @@ public class BigDataProcessor2
         kickOffThreadPack( Runtime.getRuntime().availableProcessors() * 2 );
     }
 
-    public void kickOffThreadPack(int numThreads) {
-        this.numThreads = numThreads;
-        if (executorService != null) return;
-        executorService = Executors.newFixedThreadPool(numThreads);
+    private void kickOffThreadPack(int numThreads) {
+        if ( generalThreadPool != null)
+            generalThreadPool = Executors.newFixedThreadPool(numThreads);
+
+        if ( trackerThreadPool != null)
+            trackerThreadPool = Executors.newFixedThreadPool(numThreads);
     }
 
-    public void openFromDirectory(
+    public Image< R > openImage(
             String directory,
             String loadingScheme,
-            String filterPattern,
-            boolean autoContrast,
-            ImageViewer imageViewer ){
+            String filterPattern )
+    {
         directory = Utils.fixDirectoryFormat( directory );
 
-        this.fileInfos =
+        FileInfos fileInfos =
 				new FileInfos( directory, loadingScheme, filterPattern );
 
-        if ( ! ensureCalibrationUI() ) return;
-
-        CachedCellImg cachedCellImg =
-				CachedCellImgReader.asCachedCellImg( this.fileInfos );
-
-        imageViewer.show(
-                new Image(
-                        cachedCellImg,
-                        FileInfos.IMAGE_NAME,
-                        fileInfos.voxelSpacing,
-                        fileInfos.unit )
-                , autoContrast );
-
-        imageViewer.addMenus(new BdvMenus());
+        final Image< R > image = CachedCellImgReader.loadImage( fileInfos );
+        
+        return image;
+    }
+    
+    public void showImage( Image< R > image )
+    {
+        final ImageViewer viewer = ViewerUtils.getImageViewer( ViewerUtils.BIG_DATA_VIEWER );
+        viewer.show( image, true );
+        viewer.addMenus( new BdvMenus() );
     }
 
-    private boolean ensureCalibrationUI()
+    public boolean showVoxelSpacingDialog( Image< R > image )
     {
+        final double[] voxelSpacing = image.getVoxelSpacing();
+        final String voxelUnit = image.getVoxelUnit();
         final GenericDialog genericDialog = new GenericDialog( "Calibration" );
-        genericDialog.addStringField( "Unit", fileInfos.unit, 12 );
-        genericDialog.addNumericField( "Spacing X", fileInfos.voxelSpacing[ 0 ], 3 );
-        genericDialog.addNumericField( "Spacing Y", fileInfos.voxelSpacing[ 1 ], 3 );
-        genericDialog.addNumericField( "Spacing Z", fileInfos.voxelSpacing[ 2 ], 3 );
+        genericDialog.addStringField( "Unit", voxelUnit, 12 );
+        genericDialog.addNumericField( "Spacing X", voxelSpacing[ 0 ], 3 );
+        genericDialog.addNumericField( "Spacing Y", voxelSpacing[ 1 ], 3 );
+        genericDialog.addNumericField( "Spacing Z", voxelSpacing[ 2 ], 3 );
         genericDialog.showDialog();
         if ( genericDialog.wasCanceled() ) return false;
-        fileInfos.unit = genericDialog.getNextString();
-        fileInfos.voxelSpacing[ 0 ] = genericDialog.getNextNumber();
-        fileInfos.voxelSpacing[ 1 ] = genericDialog.getNextNumber();
-        fileInfos.voxelSpacing[ 2 ] = genericDialog.getNextNumber();
+        image.setVoxelUnit( genericDialog.getNextString() );
+        voxelSpacing[ 0 ] = genericDialog.getNextNumber();
+        voxelSpacing[ 1 ] = genericDialog.getNextNumber();
+        voxelSpacing[ 2 ] = genericDialog.getNextNumber();
         return true;
     }
 

@@ -1,3 +1,4 @@
+import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.viewers.ViewerUtils;
@@ -16,12 +17,10 @@ public class OpenTwoChannelsFromSubfoldersTiffSeries
                 OpenTwoChannelsFromSubfoldersTiffSeries.class
                         .getResource( "/nc2-nt3-calibrated-tiff"  ).getFile();
 
-        bigDataProcessor2.openFromDirectory(
+        final Image image = bigDataProcessor2.openImage(
                 imageDirectory,
                 FileInfos.LOAD_CHANNELS_FROM_FOLDERS,
-                ".*",
-                true,
-                ViewerUtils.getImageViewer( ViewerUtils.BIG_DATA_VIEWER ) );
+                ".*" );
     }
 
 }

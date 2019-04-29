@@ -14,7 +14,7 @@ public class ImageCalibrationTiffReaderTest
 		new ImageJ();
 
 		final File file = new File(
-				TestBdvViewer.class.getResource( "nc1-nt1-calibrated-tiff" ).getFile() );
+				ImageCalibrationTiffReaderTest.class.getResource( "nc1-nt1-calibrated-tiff" ).getFile() );
 
 		IJ.openImage( file.toString() + "/mri-stack.tif" ).show();
 
@@ -32,7 +32,7 @@ public class ImageCalibrationTiffReaderTest
 //
 //		String imageDirectory = TestBdvViewer.class.getResource( "tiff-nc1-nt2"  ).getFile().toString();
 //
-//		bigDataProcessor.openFromDirectory(
+//		bigDataProcessor.openImage(
 //				imageDirectory.toString(),
 //				FileInfoConstants.SINGLE_CHANNEL_TIMELAPSE,
 //				".*",

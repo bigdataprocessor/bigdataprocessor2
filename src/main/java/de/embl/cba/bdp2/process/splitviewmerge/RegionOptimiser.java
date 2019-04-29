@@ -1,6 +1,7 @@
 package de.embl.cba.bdp2.process.splitviewmerge;
 
 import de.embl.cba.bdp2.Image;
+import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.tracking.Trackers;
 import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccessibleInterval;
@@ -24,29 +25,18 @@ public class RegionOptimiser
 			ArrayList< double[] > calibratedCentres2D,
 			double[] calibratedSpan2D )
 	{
-		return optimiseCentres2D(
-				image.getRai(),
-				calibratedCentres2D,
-				calibratedSpan2D,
-				image.getVoxelSpacing()
-		);
-	}
+		final double[] voxelSpacing = image.getVoxelSpacing();
 
-	public static < R extends RealType< R > & NativeType< R > >
-	ArrayList< double[] > optimiseCentres2D(
-			RandomAccessibleInterval< R > rai5D,
-			ArrayList< double[] > calibratedCentres2D,
-			double[] calibratedSpan2D,
-			double[] voxelSpacing )
-	{
-		ArrayList< FinalInterval > voxelIntervals =
+		ArrayList< FinalInterval > intervals =
 				SplitViewMergingHelpers.asIntervals(
 						calibratedCentres2D, calibratedSpan2D, voxelSpacing );
 
-		final double[] shift = optimiseCentres2D( rai5D, voxelIntervals );
+		final double[] shift = optimiseCentres2D( image.getRai(), intervals );
 
-		System.out.println( "Shift [Voxels]: " + shift[ 0 ] + ", " + shift[ 1 ] );
-		System.out.println( "Shift [Calibrated]: "
+		Logger.info( "Region Centre Optimiser: Shift [Voxels]: "
+				+ shift[ 0 ] + ", "
+				+ shift[ 1 ] );
+		Logger.info( "Region Centre Optimiser: Shift ["+ image.getVoxelUnit()+ "]: "
 				+ shift[ 0 ] * voxelSpacing[ 0 ] + ", "
 				+ shift[ 1 ] * voxelSpacing[ 1 ]);
 

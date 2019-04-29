@@ -18,7 +18,7 @@ import java.util.ArrayList;
  * IMPORTANT NOTE: Adjust Max value to 255 in the Big Data Viewer. (Settings>Brightness and Color>Max)
  */
 
-public class OpenTwoChannelsFromSplitChipHdf5Series
+public class SplitChipMerging
 {
     public static < R extends RealType< R > & NativeType< R > > void main( String[] args)
     {

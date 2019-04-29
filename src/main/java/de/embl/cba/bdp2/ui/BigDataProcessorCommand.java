@@ -1,5 +1,6 @@
 package de.embl.cba.bdp2.ui;
 
+import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.viewers.ViewerUtils;
 import net.imagej.DatasetService;
@@ -16,7 +17,7 @@ import org.scijava.ui.UIService;
 import java.io.File;
 
 @Plugin(type = Command.class, menuPath = "Plugins>BigDataTools>BigDataProcessor2", initializer = "init")
-public class BigDataProcessorCommand<T extends RealType<T> & NativeType<T>> implements Command {
+public class BigDataProcessorCommand < R extends RealType< R > & NativeType< R >> implements Command {
     @Parameter
     public static UIService uiService;
 
@@ -62,26 +63,13 @@ public class BigDataProcessorCommand<T extends RealType<T> & NativeType<T>> impl
                     FileInfos.PATTERN_6})
     String namingScheme = FileInfos.SINGLE_CHANNEL_TIMELAPSE;
 
-    @Parameter(label = "Image viewer",
-            choices = {
-                    ViewerUtils.BIG_DATA_VIEWER
-                    //ViewerUtils.IJ1_VIEWER
-            })
-    String imageViewerChoice = ViewerUtils.BIG_DATA_VIEWER;
-
-    @Parameter(label = "Auto Contrast")
-    boolean autoContrast = true;
-
-    private static final BigDataProcessor2 BIG_DATA_CONVERTER = new BigDataProcessor2();
-
     public void run()
     {
-        BIG_DATA_CONVERTER.openFromDirectory(
-                directory.toString(),
-                namingScheme,
-                filterPattern,
-                autoContrast,
-                ViewerUtils.getImageViewer( imageViewerChoice ));
+        final BigDataProcessor2< R > bdp = new BigDataProcessor2< R >();
+
+        final Image< R > image = bdp.openImage( directory.toString(), namingScheme, filterPattern );
+        bdp.showVoxelSpacingDialog( image );
+        bdp.showImage( image );
     }
 
 }

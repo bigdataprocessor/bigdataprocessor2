@@ -147,7 +147,7 @@ public class SaveMenuDialog extends JFrame implements ActionListener {
                 progressBar.setVisible(true);
                 pack();
                 save.setEnabled(false);
-                BigDataProcessor2.executorService.submit(() -> {
+                BigDataProcessor2.generalThreadPool.submit(() -> {
                     savingSettings.saveId = this.hashCode();
                     new ProgressBar(this).createGUIandRunMonitor();
                     BigDataProcessor2.saveImage( imageViewer.getImage(), savingSettings);
