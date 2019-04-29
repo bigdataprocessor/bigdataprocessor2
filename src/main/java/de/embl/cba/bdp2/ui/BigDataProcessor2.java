@@ -126,7 +126,7 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
     public static < R extends RealType< R > & NativeType< R >> void saveImage(
             Image< R > image,
     		SavingSettings savingSettings ) {
-        Logger.info( "Saving: Started." );
+        Logger.info( "Saving: Started..." );
         int nIOThread = Math.max(1, Math.min(savingSettings.nThreads, MAX_THREAD_LIMIT));
         ExecutorService saveExecutorService =  Executors.newFixedThreadPool(nIOThread);
         savingSettings.rai = image.getRai();

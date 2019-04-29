@@ -2,6 +2,8 @@ package de.embl.cba.bdp2.saving;
 
 import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.utils.Utils;
+import de.embl.cba.transforms.utils.Scalings;
+import de.embl.cba.transforms.utils.Transforms;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.io.FileSaver;
@@ -25,17 +27,17 @@ import static de.embl.cba.bdp2.utils.DimensionOrder.*;
 public class SaveImgAsTIFFStacks implements Runnable {
     private final int t;
     private final AtomicInteger counter;
-    private final SavingSettings savingSettings;
+    private final SavingSettings settings;
     private final long startTime;
     private final AtomicBoolean stop;
 
     public SaveImgAsTIFFStacks(int t,
-                               SavingSettings savingSettings,
+                               SavingSettings settings,
                                AtomicInteger counter,
                                final long startTime,
                                AtomicBoolean stop) {
         this.t = t;
-        this.savingSettings = savingSettings;
+        this.settings = settings;
         this.counter = counter;
         this.startTime = startTime;
         this.stop = stop;
@@ -51,7 +53,7 @@ public class SaveImgAsTIFFStacks implements Runnable {
         // - if waiting takes to long somehoe terminate in a nice way
 
         //long freeMemoryInBytes = IJ.maxMemory() - IJ.currentMemory();
-        RandomAccessibleInterval image = savingSettings.rai;
+        RandomAccessibleInterval image = settings.rai;
         final long totalCubes = image.dimension( T ) * image.dimension( C );
 //            long numBytesOfImage = image.dimension(FileInfoConstants.X) *
 //                    image.dimension(FileInfoConstants.Y) *
@@ -63,7 +65,7 @@ public class SaveImgAsTIFFStacks implements Runnable {
 //            if (numBytesOfImage > 1.5 * freeMemoryInBytes) {
 //                // TODO: do something...
 //            }
-        int totalChannels = Math.toIntExact(savingSettings.rai.dimension( C ));
+        int totalChannels = Math.toIntExact( settings.rai.dimension( C ));
 
         for (int c = 0; c < totalChannels; c++)
         {
@@ -88,29 +90,68 @@ public class SaveImgAsTIFFStacks implements Runnable {
                     c,
                     t };
 
-            RandomAccessibleInterval rai3D = Views.interval( image, minInterval, maxInterval );
-
-            ImagePlus imp3D = Utils.wrapToCalibratedImagePlus(
-                    rai3D,
-                    savingSettings.voxelSpacing,
-                    savingSettings.voxelUnit,
-                    "" );
 
             // Save volume
             //
-            if ( savingSettings.saveVolume )
-                saveAsTiff( imp3D, c, t, savingSettings.compression, savingSettings.rowsPerStrip, savingSettings.filePath );
+            if ( settings.saveVolume )
+            {
+                RandomAccessibleInterval rai = Views.interval( image, minInterval, maxInterval );
+                ImagePlus imp = Utils.wrapToCalibratedImagePlus(
+                        rai,
+                        settings.voxelSpacing,
+                        settings.voxelUnit,
+                        "" );
+                saveAsTiff( imp, c, t, settings.compression, settings.rowsPerStrip, settings.filePath );
+            }
+
 
             // Save projections
-            if ( savingSettings.saveProjections )
-                saveAsTiffXYZMaxProjection( imp3D, c, t, savingSettings.projectionsFilePath );
+            if ( settings.saveProjections )
+            {
+                saveProjections( image, c, minInterval, maxInterval );
+            }
 
+            counter.incrementAndGet();
         }
 
         if (!stop.get()) {
             SaveImgHelper.documentProgress(totalCubes, counter, startTime);
         }
 
+    }
+
+    public void saveProjections( RandomAccessibleInterval image, int c, long[] minInterval, long[] maxInterval )
+    {
+        RandomAccessibleInterval rai3D = Views.dropSingletonDimensions( Views.interval( image, minInterval, maxInterval ) );
+
+        final double[] voxelSpacing = getVoxelSpacingCopy();
+
+        if ( settings.isotropicProjectionResampling )
+        {
+            final double[] scalingFactors = Transforms.getScalingFactors( voxelSpacing, settings.isotropicProjectionVoxelSize );
+            rai3D = Scalings.createRescaledArrayImg( rai3D, scalingFactors );
+            for ( int d = 0; d < 3; d++ )
+                voxelSpacing[ d ] /= scalingFactors[ d ];
+        }
+
+        rai3D = Views.addDimension( rai3D,0, 0 );
+        rai3D = Views.addDimension( rai3D,0, 0 );
+
+        ImagePlus imp3D = Utils.wrapToCalibratedImagePlus(
+                rai3D,
+                voxelSpacing,
+                settings.voxelUnit,
+                "" );
+
+        saveAsTiffXYZMaxProjection( imp3D, c, t, settings.projectionsFilePath );
+    }
+
+    public double[] getVoxelSpacingCopy()
+    {
+        final double[] voxelSpacing = new double[ settings.voxelSpacing.length ];
+        for ( int d = 0; d < settings.voxelSpacing.length; d++ )
+            voxelSpacing[ d ] = settings.voxelSpacing[ d ];
+        return voxelSpacing;
     }
 
     private void saveAsTiff(ImagePlus imp, int c, int t, String compression, int rowsPerStrip, String path) {
@@ -158,7 +199,7 @@ public class SaveImgAsTIFFStacks implements Runnable {
                 for (int z = 0; z < imp.getNSlices(); z++) {
                     if (stop.get()) {
                         Logger.progress("Stopped saving thread: ", "" + t);
-                        savingSettings.saveProjections = false;
+                        settings.saveProjections = false;
                         return;
                     }
 
@@ -179,7 +220,7 @@ public class SaveImgAsTIFFStacks implements Runnable {
             }
         } else{  // no compression: use ImageJ's FileSaver, as it is faster than BioFormats
             if (stop.get()) {
-                savingSettings.saveProjections = false;
+                settings.saveProjections = false;
                 Logger.progress("Stopped saving thread: ", "" + t);
                 return;
             }

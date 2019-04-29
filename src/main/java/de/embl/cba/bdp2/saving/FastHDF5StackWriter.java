@@ -127,6 +127,7 @@ public class FastHDF5StackWriter<T extends RealType<T> & NativeType<T>> implemen
                     ImagePlus imagePlusImage = ImageJFunctions.wrap(newRai, "");
                     SaveImgAsTIFFStacks.saveAsTiffXYZMaxProjection(imagePlusImage, c, this.current_t, newPath);
                 }
+                counter.incrementAndGet();
             }
             if (!stop.get()) {
                 SaveImgHelper.documentProgress(totalSlices, counter, startTime);

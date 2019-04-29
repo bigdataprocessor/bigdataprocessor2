@@ -36,6 +36,8 @@ public class SavingSettings {
     public int compressionLevel;
     public int rowsPerStrip;
     public int nThreads;
+    public boolean isotropicProjectionResampling;
+    public double isotropicProjectionVoxelSize;
 
     public enum FileType {
         TIFF_PLANES("Tiff Planes"),
@@ -68,6 +70,9 @@ public class SavingSettings {
         savingSettings.filePath = "src/test/resources/file";
         savingSettings.compression = SavingSettings.NONE;
         savingSettings.saveId = 9999;
+        savingSettings.isotropicProjectionResampling = false;
+        savingSettings.isotropicProjectionVoxelSize = 1.0;
+
         return savingSettings;
     }
 }

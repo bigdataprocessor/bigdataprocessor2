@@ -41,9 +41,8 @@ public class Isabell
                 ".*.h5",
                 "Data" );
 
-        // TODO:
-        // image.setVoxelUnit( );
-        // image.setVoxelSpacing(  );
+        image.setVoxelUnit( "micrometer" );
+        image.setVoxelSpacing( new double[]{0.13, 0.13, 1.04} );
 
 
         /**
@@ -75,10 +74,12 @@ public class Isabell
 
         final SavingSettings savingSettings = SavingSettings.getDefaults();
         savingSettings.fileType = SavingSettings.FileType.TIFF_STACKS;
-        savingSettings.nThreads = Runtime.getRuntime().availableProcessors();
-        savingSettings.saveVolume = true;
+        savingSettings.nThreads = 1; // Runtime.getRuntime().availableProcessors();
+        savingSettings.saveVolume = false;
         savingSettings.filePath = "/Users/tischer/Desktop/stack_0_channel_0-volumes/volume";
         savingSettings.saveProjections = true;
+        savingSettings.isotropicProjectionResampling = true;
+        savingSettings.isotropicProjectionVoxelSize = 0.5;
         savingSettings.projectionsFilePath = "/Users/tischer/Desktop/stack_0_channel_0-projections/projection";
         new BigDataProcessor2().saveImage( merge, savingSettings );
 

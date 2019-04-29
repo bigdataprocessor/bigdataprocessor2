@@ -49,13 +49,11 @@ public class SaveImgHelper
 
     public static void documentProgress(long total, AtomicInteger counter, final long startTime)
     {
-        counter.incrementAndGet();
-
         double minutesSpent = (int) (1.0 * System.currentTimeMillis() - startTime ) / (1000 * 60);
         double minutesPerStack = minutesSpent / counter.get();
         double minutesLeft = (total - counter.get()) * minutesPerStack;
 
-        Logger.progress("Saved file",
+        Logger.progress("Saved frame",
                 "" + counter.get() + "/" + total
                         + "; time (spent, left) [min]: " + (int) minutesSpent + ", " + (int) minutesLeft
                         + "; memory: "

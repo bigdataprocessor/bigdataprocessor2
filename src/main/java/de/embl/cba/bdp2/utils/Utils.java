@@ -265,12 +265,12 @@ public class Utils {
 //    }
 
     public static ImagePlus wrapToCalibratedImagePlus(
-            RandomAccessibleInterval randomAccessibleInterval,
+            RandomAccessibleInterval raiXYZCT,
             double[] voxelSpacing,
             String unit,
             String name )
     {
-        ImagePlus imp = ImageJFunctions.wrap( Views.permute(randomAccessibleInterval, DimensionOrder.Z, DimensionOrder.C),name);
+        ImagePlus imp = ImageJFunctions.wrap( Views.permute(raiXYZCT, DimensionOrder.Z, DimensionOrder.C), name);
 
         final Calibration calibration = new Calibration();
         calibration.setUnit( unit );

@@ -148,6 +148,8 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
                 SaveImgAsTIFFStacks.saveAsTiffXYZMaxProjection(
                         imagePlus, c, this.current_t, newPath);
             }
+
+            counter.incrementAndGet();
         }
 
         if (!stop.get()) {
