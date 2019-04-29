@@ -22,6 +22,8 @@ import ome.xml.model.primitives.PositiveInteger;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static de.embl.cba.bdp2.utils.DimensionOrder.*;
+
 public class SaveImgAsTIFFStacks implements Runnable {
     private final int t;
     private final AtomicInteger counter;
@@ -52,7 +54,7 @@ public class SaveImgAsTIFFStacks implements Runnable {
 
         //long freeMemoryInBytes = IJ.maxMemory() - IJ.currentMemory();
         RandomAccessibleInterval image = savingSettings.rai;
-        final long totalCubes = image.dimension( de.embl.cba.bdp2.utils.DimensionOrder.T ) * image.dimension( de.embl.cba.bdp2.utils.DimensionOrder.C );
+        final long totalCubes = image.dimension( T ) * image.dimension( C );
 //            long numBytesOfImage = image.dimension(FileInfoConstants.X) *
 //                    image.dimension(FileInfoConstants.Y) *
 //                    image.dimension(FileInfoConstants.Z) *
@@ -63,88 +65,55 @@ public class SaveImgAsTIFFStacks implements Runnable {
 //            if (numBytesOfImage > 1.5 * freeMemoryInBytes) {
 //                // TODO: do something...
 //            }
-        int totalChannels = Math.toIntExact(savingSettings.rai.dimension( de.embl.cba.bdp2.utils.DimensionOrder.C ));
-        for (int c = 0; c < totalChannels; c++) {
-            if (stop.get()) {
-                Logger.progress("Stopped saving thread: ", "" + t);
+        int totalChannels = Math.toIntExact(savingSettings.rai.dimension( C ));
+
+        for (int c = 0; c < totalChannels; c++)
+        {
+            if ( stop.get() )
+            {
+                Logger.progress( "Stopped saving thread: ", "" + t );
                 return;
             }
 
-            // Load
-            //   ImagePlus impChannelTime = getDataCube( c );  May be faster???
+
             long[] minInterval = new long[]{
-                    image.min( de.embl.cba.bdp2.utils.DimensionOrder.X ),
-                    image.min( de.embl.cba.bdp2.utils.DimensionOrder.Y ),
-                    image.min( de.embl.cba.bdp2.utils.DimensionOrder.Z ),
+                    image.min( X ),
+                    image.min( Y ),
+                    image.min( Z ),
                     c,
-                    this.t};
+                    t };
+
             long[] maxInterval = new long[]{
-                    image.max( de.embl.cba.bdp2.utils.DimensionOrder.X ),
-                    image.max( de.embl.cba.bdp2.utils.DimensionOrder.Y ),
-                    image.max( de.embl.cba.bdp2.utils.DimensionOrder.Z ),
+                    image.max( X ),
+                    image.max( Y ),
+                    image.max( Z ),
                     c,
-                    this.t};
+                    t };
 
-            RandomAccessibleInterval rai3D = Views.interval(image, minInterval, maxInterval);
-            ImagePlus impChannelTime = Utils.wrapToCalibratedImagePlus( rai3D,
+            RandomAccessibleInterval rai3D = Views.interval( image, minInterval, maxInterval );
+
+            ImagePlus imp3D = Utils.wrapToCalibratedImagePlus(
+                    rai3D,
                     savingSettings.voxelSpacing,
-                    savingSettings.unit,
-                    "cube" );
-            // Gate
+                    savingSettings.voxelUnit,
+                    "" );
+
+            // Save volume
             //
-            if (savingSettings.gate) {
-                gate(impChannelTime, savingSettings.gateMin, savingSettings.gateMax);
-            }
+            if ( savingSettings.saveVolume )
+                saveAsTiff( imp3D, c, t, savingSettings.compression, savingSettings.rowsPerStrip, savingSettings.filePath );
 
-            // Convert
-            //
-            if (savingSettings.convertTo8Bit) {
-                IJ.setMinAndMax(impChannelTime, savingSettings.mapTo0, savingSettings.mapTo255);
-                IJ.run(impChannelTime, "8-bit", "");
-            }
+            // Save projections
+            // TODO: save into one single file
+            if ( savingSettings.saveProjection )
+                saveAsTiffXYZMaxProjection( imp3D, c, t, savingSettings.filePath );
 
-            if (savingSettings.convertTo16Bit) {
-                IJ.run(impChannelTime, "16-bit", "");
-            }
-
-            // Bin, project and save
-            //
-            String[] binnings = savingSettings.bin.split(";");
-            for (String binning : binnings) {
-
-                if (stop.get()) {
-                    Logger.progress("Stopped saving thread: ", "" + t);
-                    return;
-                }
-
-                String newPath = savingSettings.filePath;
-
-                ImagePlus impBinned = impChannelTime;
-                int[] binningA = Utils.delimitedStringToIntegerArray(binning, ",");
-                if (binningA[0] > 1 || binningA[1] > 1 || binningA[2] > 1) {
-                    Binner binner = new Binner();
-                    impBinned = binner.shrink(impChannelTime, binningA[0], binningA[1], binningA[2], Binner.AVERAGE);
-                    newPath = savingSettings.filePath + "--bin-" + binningA[0] + "-" + binningA[1] + "-" + binningA[2];
-                }
-
-
-                // Save volume
-                //
-                if (savingSettings.saveVolume) {
-                    saveAsTiff(impBinned, c, t, savingSettings.compression, savingSettings.rowsPerStrip, newPath);
-
-                }
-                // Save projections
-                // TODO: save into one single file
-                if (savingSettings.saveProjection) {
-                    saveAsTiffXYZMaxProjection(impBinned, c, t, newPath);
-                }
-
-            }
-            if (!stop.get()) {
-                SaveImgHelper.documentProgress(totalCubes, counter, startTime);
-            }
         }
+
+        if (!stop.get()) {
+            SaveImgHelper.documentProgress(totalCubes, counter, startTime);
+        }
+
     }
 
     private void saveAsTiff(ImagePlus imp, int c, int t, String compression, int rowsPerStrip, String path) {

@@ -28,7 +28,7 @@ public class TestTiffPlaneSaving
         defaults.fileType = SavingSettings.FileType.TIFF_PLANES;
         defaults.nThreads = 3;
         defaults.voxelSpacing =imageViewer.getImage().getVoxelSpacing();
-        defaults.unit = imageViewer.getImage().getVoxelUnit();
+        defaults.voxelUnit = imageViewer.getImage().getVoxelUnit();
         new BigDataProcessor2().saveImage( image, defaults );
     }
 

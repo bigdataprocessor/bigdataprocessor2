@@ -123,7 +123,7 @@ public class SaveMenuDialog extends JFrame implements ActionListener {
                 savingSettings.mapTo255 = Integer.parseInt(tfMapTo255.getText());
                 savingSettings.nThreads = Integer.parseInt(tfNThreads.getText());
                 savingSettings.voxelSpacing = imageViewer.getImage().getVoxelSpacing();
-                savingSettings.unit = imageViewer.getImage().getVoxelUnit();
+                savingSettings.voxelUnit = imageViewer.getImage().getVoxelUnit();
                 if (!(fileType.equals(SavingSettings.FileType.TIFF_PLANES ))) {
                     // TODO: implement below for planes
                     savingSettings.convertTo16Bit = cbConvertTo16Bit.isSelected();

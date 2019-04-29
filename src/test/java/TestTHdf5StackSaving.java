@@ -32,7 +32,7 @@ public class TestTHdf5StackSaving
         defaults.fileType = SavingSettings.FileType.HDF5_STACKS;
         defaults.nThreads = 3;
         defaults.voxelSpacing =imageViewer.getImage().getVoxelSpacing();
-        defaults.unit = imageViewer.getImage().getVoxelUnit();
+        defaults.voxelUnit = imageViewer.getImage().getVoxelUnit();
         new BigDataProcessor2().saveImage( imageViewer.getImage(), defaults );
 
     }

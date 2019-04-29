@@ -164,7 +164,7 @@ public class SaveCentral {
         ImagePlus image = Utils.wrapToCalibratedImagePlus(
                 savingSettings.rai,
                 savingSettings.voxelSpacing,
-                savingSettings.unit,
+                savingSettings.voxelUnit,
                 "wrapped");
 
         String[] binnings = savingSettings.bin.split(";");

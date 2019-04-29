@@ -31,7 +31,7 @@ public class TestTHdf5ImarisSaving {
         defaults.fileBaseNameIMARIS = "file";
         defaults.parentDirectory = "src/test/resources/";
         defaults.voxelSpacing = imageViewer.getImage().getVoxelSpacing();
-        defaults.unit = imageViewer.getImage().getVoxelUnit();
+        defaults.voxelUnit = imageViewer.getImage().getVoxelUnit();
         new BigDataProcessor2().saveImage( imageViewer.getImage(), defaults );
 
     }

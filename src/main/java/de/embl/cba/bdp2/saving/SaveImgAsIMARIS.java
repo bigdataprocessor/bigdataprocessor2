@@ -131,7 +131,7 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
                     Utils.wrapToCalibratedImagePlus(
                             imgChannelTime,
                             savingSettings.voxelSpacing,
-                            savingSettings.unit,
+                            savingSettings.voxelUnit,
                         "BinnedWrapped");
 
 

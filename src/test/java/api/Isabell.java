@@ -5,6 +5,7 @@ import de.embl.cba.bdp2.loading.CachedCellImgReader;
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.process.splitviewmerge.RegionOptimiser;
 import de.embl.cba.bdp2.process.splitviewmerge.SplitImageMerger;
+import de.embl.cba.bdp2.saving.SavingSettings;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.viewers.ImageViewer;
 import de.embl.cba.bdp2.viewers.ViewerUtils;
@@ -29,6 +30,11 @@ public class Isabell
 
         final BigDataProcessor2< R > bdp = new BigDataProcessor2<>();
 
+
+        /**
+         * Open Data
+         */
+
         final Image< R > image = bdp.openHdf5Data(
                 "/Users/tischer/Desktop/stack_0_channel_0",
                 FileInfos.SINGLE_CHANNEL_TIMELAPSE,
@@ -38,6 +44,11 @@ public class Isabell
         // TODO:
         // image.setVoxelUnit( );
         // image.setVoxelSpacing(  );
+
+
+        /**
+         * Merge Split
+         */
 
         final ArrayList< long[] > centres = new ArrayList<>();
         centres.add( new long[]{ 522, 1143 } );
@@ -50,9 +61,24 @@ public class Isabell
                         centres,
                         spans );
 
+
         final Image< R > merge = SplitImageMerger.merge( image, optimisedCentres, spans );
 
         bdp.showImage( merge );
+
+
+        // TODO: Shall we bin 3x3 in xy?
+
+        /**
+         * Save as Tiff Stacks
+         */
+
+        final SavingSettings savingSettings = SavingSettings.getDefaults();
+        savingSettings.fileType = SavingSettings.FileType.TIFF_STACKS;
+        savingSettings.nThreads = Runtime.getRuntime().availableProcessors();
+        savingSettings.filePath = "/Users/tischer/Desktop/stack_0_channel_0-output/merge";
+        new BigDataProcessor2().saveImage( merge, savingSettings );
+
 
     }
 
