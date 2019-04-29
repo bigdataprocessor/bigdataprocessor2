@@ -67,7 +67,7 @@ public class BigDataProcessorCommand < R extends RealType< R > & NativeType< R >
     {
         final BigDataProcessor2< R > bdp = new BigDataProcessor2< R >();
 
-        final Image< R > image = bdp.openImage( directory.toString(), namingScheme, filterPattern );
+        final Image< R > image = bdp.openTiffData( directory.toString(), namingScheme, filterPattern );
         bdp.showVoxelSpacingDialog( image );
         bdp.showImage( image );
     }

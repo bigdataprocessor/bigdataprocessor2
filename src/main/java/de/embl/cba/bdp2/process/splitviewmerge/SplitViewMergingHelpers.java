@@ -38,6 +38,7 @@ public class SplitViewMergingHelpers
 		return voxelIntervals;
 	}
 
+
 	public static < R extends RealType< R > >
 	ArrayList< FinalInterval > asIntervals(
 			ArrayList< double[] > centres,
@@ -61,6 +62,28 @@ public class SplitViewMergingHelpers
 				max[ d ] = ( long ) (
 						( centre[ d ] + spans[ d ] / 2.0 )
 								/ voxelSpacing[ d ] );
+			}
+
+			intervals.add( new FinalInterval( min, max ) );
+		}
+
+		return intervals;
+	}
+
+	public static
+	ArrayList< FinalInterval > asIntervals( ArrayList< long[] > centres, long[] spans )
+	{
+		ArrayList< FinalInterval > intervals = new ArrayList<>(  );
+
+		for ( long[] centre : centres )
+		{
+			final long[] min = new long[ centre.length ];
+			final long[] max = new long[ centre.length ];
+
+			for ( int d = 0; d < 2; d++ )
+			{
+				min[ d ] = ( long ) ( ( centre[ d ] - spans[ d ] / 2.0 ) );
+				max[ d ] = ( long ) ( ( centre[ d ] + spans[ d ] / 2.0 ) );
 			}
 
 			intervals.add( new FinalInterval( min, max ) );

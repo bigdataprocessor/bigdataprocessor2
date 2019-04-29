@@ -17,7 +17,7 @@ public class OpenTwoChannelsFromSubfoldersTiffSeries
                 OpenTwoChannelsFromSubfoldersTiffSeries.class
                         .getResource( "/nc2-nt3-calibrated-tiff"  ).getFile();
 
-        final Image image = bigDataProcessor2.openImage(
+        final Image image = bigDataProcessor2.openTiffData(
                 imageDirectory,
                 FileInfos.LOAD_CHANNELS_FROM_FOLDERS,
                 ".*" );

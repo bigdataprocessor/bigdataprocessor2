@@ -17,7 +17,7 @@ public class OpenSingleChannelTiffSeries
                 OpenSingleChannelTiffSeries.class
                         .getResource( "/nc1-nt3-calibrated-tiff"  ).getFile();
 
-        bigDataProcessor2.openImage(
+        bigDataProcessor2.openTiffData(
                 imageDirectory,
                 FileInfos.SINGLE_CHANNEL_TIMELAPSE,
                 ".*" );

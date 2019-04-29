@@ -20,7 +20,7 @@ public class ImageCalibrationBdvVisualisationTest
 
 		String imageDirectory = file.toString();
 
-		final Image image = bigDataProcessor2.openImage(
+		final Image image = bigDataProcessor2.openTiffData(
 				imageDirectory.toString(),
 				FileInfos.SINGLE_CHANNEL_TIMELAPSE,
 				".*" );

@@ -64,7 +64,7 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
             trackerThreadPool = Executors.newFixedThreadPool(numThreads);
     }
 
-    public Image< R > openImage(
+    public Image< R > openTiffData(
             String directory,
             String loadingScheme,
             String filterPattern )
@@ -72,7 +72,24 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
         directory = Utils.fixDirectoryFormat( directory );
 
         FileInfos fileInfos =
-				new FileInfos( directory, loadingScheme, filterPattern );
+                new FileInfos( directory, loadingScheme, filterPattern );
+
+        final Image< R > image = CachedCellImgReader.loadImage( fileInfos );
+
+        return image;
+    }
+
+
+    public Image< R > openHdf5Data(
+            String directory,
+            String loadingScheme,
+            String filterPattern,
+            String dataset )
+    {
+        directory = Utils.fixDirectoryFormat( directory );
+
+        FileInfos fileInfos =
+				new FileInfos( directory, loadingScheme, filterPattern, dataset );
 
         final Image< R > image = CachedCellImgReader.loadImage( fileInfos );
         

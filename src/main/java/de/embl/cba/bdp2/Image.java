@@ -6,9 +6,9 @@ import net.imglib2.type.numeric.RealType;
 
 public class Image< R extends RealType< R > & NativeType< R > >
 {
-	private final RandomAccessibleInterval< R > rai;
-	private final String name;
-	private final double[] voxelSpacing;
+	private RandomAccessibleInterval< R > rai;
+	private String name;
+	private double[] voxelSpacing;
 	private String voxelUnit;
 
 	public Image( RandomAccessibleInterval< R > rai,
@@ -27,9 +27,24 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		return rai;
 	}
 
+	public void setRai( RandomAccessibleInterval< R > rai )
+	{
+		this.rai = rai;
+	}
+
 	public double[] getVoxelSpacing()
 	{
 		return voxelSpacing;
+	}
+
+	public void setName( String name )
+	{
+		this.name = name;
+	}
+
+	public void setVoxelSpacing( double[] voxelSpacing )
+	{
+		this.voxelSpacing = voxelSpacing;
 	}
 
 	public String getVoxelUnit()
