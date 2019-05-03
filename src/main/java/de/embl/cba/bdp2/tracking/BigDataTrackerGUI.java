@@ -81,7 +81,7 @@ public class BigDataTrackerGUI < R extends RealType< R > & NativeType< R > >
     protected final JLabel MESSAGE = new JLabel("");
     protected final String MESSAGE_TRACK_INTERRUPTED ="Tracking Interrupted!";
     protected final String MESSAGE_TRACK_FINISHED ="Tracking Completed!";
-
+    private  AbstractObjectTracker tracker;
     private RandomAccessibleInterval image;
     public final ImageViewer imageViewer;
 
@@ -404,14 +404,25 @@ public class BigDataTrackerGUI < R extends RealType< R > & NativeType< R > >
            buttons[1].setEnabled(false);
            buttons[2].setEnabled(true);
            pack();
-           trackingSettings.trackId = hashcode++; //Incrementing hascode to generate a different track id everytime.
            BigDataProcessor2.trackerThreadPool.submit(()-> {
-               new TrackingProgressBar(this,trackingSettings.trackId).createGUIandRunMonitor();
-               bigDataTracker.trackObject(trackingSettings,imageViewer);
+               this.tracker =  bigDataTracker.trackObject(trackingSettings,imageViewer);
+               this.tracker.setProgressListener( ( current, total ) ->{ //Progress bar
+                   int progress = (int) ((current*100) / total);
+                   progressBar.setValue(progress);
+                   if (progress == 100){
+                       progressBar.setVisible(false);
+                       progressBar.setVisible(false);
+                       buttons[1].setEnabled(true);
+                       if (!MESSAGE_TRACK_INTERRUPTED.equals(MESSAGE.getText())) {
+                           MESSAGE.setText(MESSAGE_TRACK_FINISHED);
+                       }
+                       pack();
+                   }
+               });
            });
        }
         else if ( e.getActionCommand().equals("Stop tracking") ) {
-           bigDataTracker.cancelTracking(trackingSettings.trackId); // Don't submit to thread pool. Let the main thread handle it.
+           tracker.stopTrack(); // Don't submit to thread pool. Let the main thread handle it.
            progressBar.setVisible(false);
            buttons[1].setEnabled(true);
            buttons[2].setEnabled(false);

@@ -24,7 +24,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class ObjectTracker< T extends RealType<T> & NativeType< T > > {
+public class ObjectTracker< T extends RealType<T> & NativeType< T > > extends AbstractObjectTracker{
     private final TrackingSettings< T > trackingSettings;
     private Point3D pMin, pMax;
     private final int width;
@@ -46,10 +46,11 @@ public class ObjectTracker< T extends RealType<T> & NativeType< T > > {
         this.depth = (int) trackingSettings.rai.dimension( DimensionOrder.Z );
         this.channel = trackingSettings.channel;
         this.timeFrames =  trackingSettings.nt ==-1? (int)trackingSettings.rai.dimension( DimensionOrder.T ) : trackingSettings.nt+ trackingSettings.tStart;
-        this.trackId = trackingSettings.trackId;
+        this.trackId  = 9999;
         this.stop = stop;
     }
 
+    @Override
     public Track getTrackingPoints() {
         final String centeringMethod = trackingSettings.trackingMethod;
         Logger.info(centeringMethod);
@@ -60,6 +61,11 @@ public class ObjectTracker< T extends RealType<T> & NativeType< T > > {
         }else{
             return null;
         }
+    }
+
+    @Override
+    public void stopTrack() {
+        stop.set(true);
     }
 
     private Track doCenterOfMassTracking(){
@@ -73,7 +79,7 @@ public class ObjectTracker< T extends RealType<T> & NativeType< T > > {
         int iterations = trackingSettings.iterationsCenterOfMass;
         long startTime = System.currentTimeMillis();
         for (int t = tStart; t < timeFrames; ++t) {
-            BigDataTracker.progressTracker.put(trackId, (t-tStart)*100/(timeFrames-1-tStart));
+            progressListener.progress((t-tStart),(timeFrames-1-tStart));
             Logger.info("Current time tracked " + t);
             randomAccess.setPosition(t, DimensionOrder.T );
             double trackingFraction;
@@ -110,7 +116,7 @@ public class ObjectTracker< T extends RealType<T> & NativeType< T > > {
         long startTime = System.currentTimeMillis();
         trackingResults.addLocation(tStart, new Point3D[]{pMin,pMax});//For the first time stamp.
         for (int t = tStart; t < timeFrames-1; ++t) { // last time stamp not considered here.
-            BigDataTracker.progressTracker.put(trackId, (t-tStart)*100/(timeFrames-2-tStart));
+            progressListener.progress((t-tStart),(timeFrames-2-tStart));
             Logger.info("Current time tracked " + t);
 
             long[] range = {(long) pMin.getX(),
@@ -125,7 +131,6 @@ public class ObjectTracker< T extends RealType<T> & NativeType< T > > {
                     timeFrames-1};
 
             FinalInterval trackedInterval = Intervals.createMinMax(range);
-
             RandomAccessibleInterval<T> rai =
                     Views.interval(
                             Views.extendZero( trackingSettings.rai ) ,
