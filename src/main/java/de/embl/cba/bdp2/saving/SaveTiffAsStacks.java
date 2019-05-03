@@ -3,6 +3,7 @@ package de.embl.cba.bdp2.saving;
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.MonitorThreadPoolStatus;
+import de.embl.cba.bdp2.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,34 +15,36 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class SaveTiffAsStacks extends AbstractImgSaver {
     private SavingSettings savingSettings;
     private ExecutorService es;
-    private Integer saveId;
+    private AtomicBoolean stop;
 
-    public SaveTiffAsStacks(SavingSettings savingSettings, ExecutorService es, Integer saveId) {
+    public SaveTiffAsStacks(SavingSettings savingSettings, ExecutorService es) {
         this.savingSettings = savingSettings;
         this.es = es;
-        this.saveId = saveId;
+        this.stop = new AtomicBoolean(false);
     }
+
+    @Override
     public void startSave() {
         List<Future> futures = new ArrayList<>();
         AtomicInteger counter = new AtomicInteger(0);
-        AtomicBoolean stop = new AtomicBoolean(false);
-        //updateTrackers(saveId, stop);
         final long startTime = System.currentTimeMillis();
         long timeFrames = savingSettings.rai.dimension(DimensionOrder.T);
         for (int t = 0; t < timeFrames; t++) {
             futures.add(
                     es.submit(
-                            new SaveImgAsTIFFStacks(t, savingSettings, counter, startTime,stop)
+                            new SaveImgAsTIFFStacks(t, savingSettings, counter, startTime, stop)
                     ));
         }
-
-
         // Monitor the progress
-        Thread thread =
-                new Thread(() -> MonitorThreadPoolStatus.showProgressAndWaitUntilDone(
-                        futures, saveId, "Saved to disk: ", FileInfos.PROGRESS_UPDATE_MILLISECONDS, progressListener ));
-
+        Thread thread = new Thread(() -> MonitorThreadPoolStatus.showProgressAndWaitUntilDone(
+                        futures, FileInfos.PROGRESS_UPDATE_MILLISECONDS, progressListener ));
 
         thread.start();
+    }
+
+    @Override
+    public void stopSave() {
+        stop.set(true);
+        Utils.shutdownThreadPack(es,TIME_OUT_SECONDS);
     }
 }

@@ -59,11 +59,8 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
     }
 
     private void kickOffThreadPack(int numThreads) {
-        if ( generalThreadPool != null)
+        if ( generalThreadPool == null)
             generalThreadPool = Executors.newFixedThreadPool(numThreads);
-
-        if ( trackerThreadPool != null)
-            trackerThreadPool = Executors.newFixedThreadPool(numThreads);
     }
 
     public Image< R > openTiffData(
@@ -138,13 +135,6 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
         AbstractImgSaver saver = factory.getSaver(savingSettings, saveExecutorService );
         saver.startSave();
         return saver;
-       // SaveCentral.goSave( savingSettings, saveExecutorService, savingSettings.saveId );
-
-    }
-
-    public static void stopSave(Integer saveId) {
-        AtomicBoolean stop = BigDataProcessor2.saveTracker.get(saveId);
-        stop.set(true);
     }
 
     public static <T extends RealType<T> & NativeType<T>>

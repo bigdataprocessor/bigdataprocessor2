@@ -17,7 +17,6 @@ public class SavingSettings {
 
     public static final String LZW = "LZW";
     public static final String NONE = "None";
-    public Integer saveId;
     public boolean saveVolume;
     public String filePath;
 
@@ -69,7 +68,6 @@ public class SavingSettings {
         savingSettings.fileType = FileType.TIFF_PLANES;
         savingSettings.filePath = "src/test/resources/file";
         savingSettings.compression = SavingSettings.NONE;
-        savingSettings.saveId = 9999;
         savingSettings.isotropicProjectionResampling = false;
         savingSettings.isotropicProjectionVoxelSize = 1.0;
 

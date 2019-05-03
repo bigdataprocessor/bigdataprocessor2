@@ -370,7 +370,7 @@ public class Utils {
         if(executorService !=null){
             executorService.shutdown();
             try {
-                if (!executorService.awaitTermination(timeOut, TimeUnit.SECONDS)) { //TODO: confirm time out--ashis
+                if (!executorService.awaitTermination(timeOut, TimeUnit.SECONDS)) {
                     executorService.shutdownNow();
                 }
             } catch (InterruptedException ex) {

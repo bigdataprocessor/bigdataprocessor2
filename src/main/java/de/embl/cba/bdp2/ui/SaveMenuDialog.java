@@ -1,6 +1,5 @@
 package de.embl.cba.bdp2.ui;
 
-import de.embl.cba.bdp2.progress.ProgressListener;
 import de.embl.cba.bdp2.saving.AbstractImgSaver;
 import de.embl.cba.bdp2.saving.SavingSettings;
 import de.embl.cba.bdp2.viewers.ImageViewer;
@@ -43,7 +42,7 @@ public class SaveMenuDialog extends JFrame implements ActionListener {
     private JFileChooser fc;
     protected final JProgressBar progressBar;
     private final ImageViewer imageViewer;
-
+    private AbstractImgSaver saver;
 
     public SaveMenuDialog(ImageViewer imageViewer) {
         this.imageViewer = imageViewer;
@@ -150,23 +149,31 @@ public class SaveMenuDialog extends JFrame implements ActionListener {
                 pack();
                 save.setEnabled(false);
                 BigDataProcessor2.generalThreadPool.submit(() -> {
-                    savingSettings.saveId = this.hashCode();
-                    final AbstractImgSaver saver = BigDataProcessor2.saveImage( imageViewer.getImage(), savingSettings );
-                    saver.setProgressListener( ( current, total ) -> progressBar.setValue( (int) ( current / total * 100 ) ) );
+                    this.saver = BigDataProcessor2.saveImage( imageViewer.getImage(), savingSettings );
+                    saver.setProgressListener( ( current, total ) ->{
+                        int progress = (int) ((current*100) / total);
+                        progressBar.setValue(progress);
+                        if (progress == 100){
+                            progressBar.setVisible(false);
+                            save.setEnabled(true);
+                            progressBar.setValue(0);
+                            if (!MESSAGE_SAVE_INTERRUPTED.equals(MESSAGE.getText())) {
+                                MESSAGE.setText(MESSAGE_SAVE_FINISHED);
+                            }
+                            pack();
+                            saver.stopSave();
+                        }
+                    });
                 });
 
             }
         } else if (e.getActionCommand().equals(STOP_SAVING)) {
-            BigDataProcessor2.stopSave(this.hashCode()); // Don't submit to thread pool. Let the main thread handle it.
+            saver.stopSave(); // Don't submit to thread pool. Let the main thread handle it.
             save.setEnabled(true);
             progressBar.setVisible(false);
             MESSAGE.setText(MESSAGE_SAVE_INTERRUPTED);
             pack();
         }
     }
-     public Integer getSaveId(){
-        return this.hashCode();
-     }
-
 }
 
