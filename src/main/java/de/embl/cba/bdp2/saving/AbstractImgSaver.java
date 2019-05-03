@@ -11,7 +11,8 @@ public abstract class AbstractImgSaver
 		progressListener = l;
 	}
 
-
 	public abstract void startSave();
+
+	public abstract void stopSave();
 
 }

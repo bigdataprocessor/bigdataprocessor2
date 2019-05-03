@@ -39,7 +39,7 @@ public class SaveTiffAsStacks extends AbstractImgSaver {
         // Monitor the progress
         Thread thread =
                 new Thread(() -> MonitorThreadPoolStatus.showProgressAndWaitUntilDone(
-                        futures, saveId, "Saved to disk: ", FileInfos.PROGRESS_UPDATE_MILLISECONDS));
+                        futures, saveId, "Saved to disk: ", FileInfos.PROGRESS_UPDATE_MILLISECONDS, progressListener ));
 
 
         thread.start();

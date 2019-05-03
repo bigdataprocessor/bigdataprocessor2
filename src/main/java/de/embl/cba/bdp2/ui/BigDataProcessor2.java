@@ -4,7 +4,8 @@ import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.CachedCellImgReader;
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.logging.Logger;
-import de.embl.cba.bdp2.saving.SaveCentral;
+import de.embl.cba.bdp2.saving.AbstractImgSaver;
+import de.embl.cba.bdp2.saving.ImgSaverFactory;
 import de.embl.cba.bdp2.saving.SavingSettings;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
@@ -123,16 +124,22 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
     }
 
 
-    public static < R extends RealType< R > & NativeType< R >> void saveImage(
+    public static < R extends RealType< R > & NativeType< R > >
+    AbstractImgSaver saveImage(
             Image< R > image,
     		SavingSettings savingSettings ) {
         Logger.info( "Saving: Started..." );
         int nIOThread = Math.max(1, Math.min(savingSettings.nThreads, MAX_THREAD_LIMIT));
-        ExecutorService saveExecutorService =  Executors.newFixedThreadPool(nIOThread);
+        ExecutorService saveExecutorService = Executors.newFixedThreadPool(nIOThread);
         savingSettings.rai = image.getRai();
         savingSettings.voxelSpacing = image.getVoxelSpacing();
         savingSettings.voxelUnit = image.getVoxelUnit();
-        SaveCentral.goSave( savingSettings, saveExecutorService, savingSettings.saveId );
+        ImgSaverFactory factory = new ImgSaverFactory();
+        AbstractImgSaver saver = factory.getSaver(savingSettings, saveExecutorService );
+        saver.startSave();
+        return saver;
+       // SaveCentral.goSave( savingSettings, saveExecutorService, savingSettings.saveId );
+
     }
 
     public static void stopSave(Integer saveId) {

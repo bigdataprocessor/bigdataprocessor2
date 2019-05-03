@@ -4,7 +4,8 @@ import java.util.concurrent.ExecutorService;
 
 public class ImgSaverFactory  {
 
-    public AbstractImgSaver getSaver(SavingSettings savingSettings, ExecutorService es, Integer saveId){
+    public AbstractImgSaver getSaver(SavingSettings savingSettings, ExecutorService es){
+        int saveId = 0;
         if (savingSettings.fileType.equals( SavingSettings.FileType.TIFF_PLANES )) {
            return new SaveTiffAsPlanes(savingSettings, es, saveId);
         } else if (savingSettings.fileType.equals( SavingSettings.FileType.TIFF_STACKS )) {

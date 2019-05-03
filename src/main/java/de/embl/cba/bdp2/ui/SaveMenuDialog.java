@@ -1,5 +1,7 @@
 package de.embl.cba.bdp2.ui;
 
+import de.embl.cba.bdp2.progress.ProgressListener;
+import de.embl.cba.bdp2.saving.AbstractImgSaver;
 import de.embl.cba.bdp2.saving.SavingSettings;
 import de.embl.cba.bdp2.viewers.ImageViewer;
 import javax.swing.*;
@@ -149,8 +151,8 @@ public class SaveMenuDialog extends JFrame implements ActionListener {
                 save.setEnabled(false);
                 BigDataProcessor2.generalThreadPool.submit(() -> {
                     savingSettings.saveId = this.hashCode();
-                    new ProgressBar(this).createGUIandRunMonitor();
-                    BigDataProcessor2.saveImage( imageViewer.getImage(), savingSettings);
+                    final AbstractImgSaver saver = BigDataProcessor2.saveImage( imageViewer.getImage(), savingSettings );
+                    saver.setProgressListener( ( current, total ) -> progressBar.setValue( (int) ( current / total * 100 ) ) );
                 });
 
             }

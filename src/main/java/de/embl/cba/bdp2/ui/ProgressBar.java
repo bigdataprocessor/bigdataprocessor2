@@ -10,7 +10,7 @@ public class ProgressBar implements PropertyChangeListener {
 
     private final SaveMenuDialog currentInstance;
 
-    public ProgressBar(SaveMenuDialog currentInstance) {
+    public ProgressBar(SaveMenuDialog currentInstance, long total ) {
         this.currentInstance = currentInstance;
     }
 
@@ -40,12 +40,20 @@ public class ProgressBar implements PropertyChangeListener {
             }
             currentInstance.pack();
         }
+
+        public void set
     }
 
+    public void setProgress( long current, long total )
+    {
+        this.setProgress(  );
+
+    }
 
     public void createGUIandRunMonitor() {
         Task task = new Task();
         task.addPropertyChangeListener(this);
+
         task.execute();
     }
 

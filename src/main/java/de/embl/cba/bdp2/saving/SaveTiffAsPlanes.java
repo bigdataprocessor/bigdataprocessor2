@@ -16,7 +16,7 @@ public class SaveTiffAsPlanes extends AbstractImgSaver {
     private ExecutorService es;
     private Integer saveId;
 
-    public SaveTiffAsPlanes (SavingSettings savingSettings, ExecutorService es, Integer saveId) {
+    public SaveTiffAsPlanes( SavingSettings savingSettings, ExecutorService es, Integer saveId ) {
         this.savingSettings = savingSettings;
         this.es = es;
         this.saveId = saveId;
@@ -25,18 +25,40 @@ public class SaveTiffAsPlanes extends AbstractImgSaver {
     public void startSave() {
         AtomicBoolean stop = new AtomicBoolean(false);
         //updateTrackers(saveId, stop);
+
         List<Future> futures = new ArrayList<>();
-        for (int c = 0; c < savingSettings.rai.dimension(DimensionOrder.C); c++) {
-            for (int t = 0; t < savingSettings.rai.dimension(DimensionOrder.T); t++) {
-                for (int z = 0; z < savingSettings.rai.dimension(DimensionOrder.Z); z++) {
+
+        final long numChannels = savingSettings.rai.dimension( DimensionOrder.C );
+        final long numFrames = savingSettings.rai.dimension( DimensionOrder.T );
+        final long numPlanes = savingSettings.rai.dimension( DimensionOrder.Z );
+
+        for ( int c = 0; c < numChannels; c++) {
+            for ( int t = 0; t < numFrames; t++) {
+                for ( int z = 0; z < numPlanes; z++) {
                     futures.add(es.submit(
                             new SaveImgAsTIFFPlanes(c, t, z, savingSettings, stop)
                     ));
                 }
             }
         }
+
         // Monitor the progress
-        Thread thread = new Thread(() -> MonitorThreadPoolStatus.showProgressAndWaitUntilDone(futures, saveId, "Saved to disk: ", FileInfos.PROGRESS_UPDATE_MILLISECONDS));
+        Thread thread = new Thread(() -> MonitorThreadPoolStatus.showProgressAndWaitUntilDone(
+                futures,
+              //  saveId,
+                "Saved to disk: ",
+                FileInfos.PROGRESS_UPDATE_MILLISECONDS,
+                progressListener));
         thread.start();
+
+
     }
+
+    @Override
+    public void stopSave()
+    {
+        // kill all the futures and the
+    }
+
+
 }

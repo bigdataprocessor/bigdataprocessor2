@@ -26,11 +26,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class SaveCentral {
 
-    public static void goSave(SavingSettings savingSettings, ExecutorService es, int saveId) {
+    public static AbstractImgSaver goSave( SavingSettings savingSettings, ExecutorService es, int saveId) {
 
-        ImgSaverFactory factory = new ImgSaverFactory();
-        AbstractImgSaver saver = factory.getSaver(savingSettings, es, saveId);
-        saver.startSave();
+
+
         /*
         if (savingSettings.fileType.equals( SavingSettings.FileType.TIFF_PLANES )) {
             saveTIFFAsPlanes(savingSettings, es, saveId);
@@ -59,7 +58,7 @@ public class SaveCentral {
             }
         }
         // Monitor the progress
-        Thread thread = new Thread(() -> MonitorThreadPoolStatus.showProgressAndWaitUntilDone(futures, saveId, "Saved to disk: ", FileInfos.PROGRESS_UPDATE_MILLISECONDS));
+        Thread thread = new Thread(() -> MonitorThreadPoolStatus.showProgressAndWaitUntilDone(futures, saveId, "Saved to disk: ", FileInfos.PROGRESS_UPDATE_MILLISECONDS, progressListener ));
         thread.start();
     }
 
@@ -93,7 +92,7 @@ public class SaveCentral {
         // Monitor the progress
         Thread thread =
                 new Thread(() -> MonitorThreadPoolStatus.showProgressAndWaitUntilDone(
-                        futures, saveId, "Saved to disk: ", FileInfos.PROGRESS_UPDATE_MILLISECONDS));
+                        futures, saveId, "Saved to disk: ", FileInfos.PROGRESS_UPDATE_MILLISECONDS, progressListener ));
 
 
         thread.start();
@@ -125,7 +124,7 @@ public class SaveCentral {
             }
         }
         // Monitor the progress
-        Thread thread = new Thread(() -> MonitorThreadPoolStatus.showProgressAndWaitUntilDone(futures, saveId, "Saved to disk: ", FileInfos.PROGRESS_UPDATE_MILLISECONDS));
+        Thread thread = new Thread(() -> MonitorThreadPoolStatus.showProgressAndWaitUntilDone(futures, saveId, "Saved to disk: ", FileInfos.PROGRESS_UPDATE_MILLISECONDS, progressListener ));
         thread.start();
     }
 
@@ -165,7 +164,7 @@ public class SaveCentral {
             }
         }
         // Monitor the progress
-        Thread thread = new Thread(() -> MonitorThreadPoolStatus.showProgressAndWaitUntilDone(futures, saveId, "Saved to disk: ", FileInfos.PROGRESS_UPDATE_MILLISECONDS));
+        Thread thread = new Thread(() -> MonitorThreadPoolStatus.showProgressAndWaitUntilDone(futures, saveId, "Saved to disk: ", FileInfos.PROGRESS_UPDATE_MILLISECONDS, progressListener ));
         thread.start();
     }
 
