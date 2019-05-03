@@ -115,7 +115,7 @@ public class SaveImgAsTIFFStacks implements Runnable {
         }
 
         if (!stop.get()) {
-            SaveImgHelper.documentProgress(totalCubes, counter, startTime);
+            SaveImgHelper.documentProgress( totalCubes, counter, startTime);
         }
 
     }

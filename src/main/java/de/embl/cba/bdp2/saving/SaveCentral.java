@@ -26,7 +26,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class SaveCentral {
 
-    // TODO: remove the image from the settings
     public static void goSave(SavingSettings savingSettings, ExecutorService es, int saveId) {
         if (savingSettings.fileType.equals( SavingSettings.FileType.TIFF_PLANES )) {
             saveTIFFAsPlanes(savingSettings, es, saveId);
@@ -46,7 +45,8 @@ public class SaveCentral {
         updateTrackers(saveId, stop);
         List<Future> futures = new ArrayList<>();
         for ( int c = 0; c < savingSettings.rai.dimension(DimensionOrder.C); c++) {
-            for ( int t = 0; t < savingSettings.rai.dimension(DimensionOrder.T); t++) {
+            for ( int t = 0; t < savingSettings.rai.dimension(DimensionOrder.T); t++)
+            {
                 for ( int z = 0; z < savingSettings.rai.dimension(DimensionOrder.Z); z++) {
                     futures.add(es.submit(
                             new SaveImgAsTIFFPlanes(c, t, z, savingSettings, stop)
@@ -84,8 +84,14 @@ public class SaveCentral {
                             new SaveImgAsTIFFStacks(t, savingSettings, counter, startTime,stop)
                     ));
         }
+
+
         // Monitor the progress
-        Thread thread = new Thread(() -> MonitorThreadPoolStatus.showProgressAndWaitUntilDone(futures, saveId, "Saved to disk: ", FileInfos.PROGRESS_UPDATE_MILLISECONDS));
+        Thread thread =
+                new Thread(() -> MonitorThreadPoolStatus.showProgressAndWaitUntilDone(
+                        futures, saveId, "Saved to disk: ", FileInfos.PROGRESS_UPDATE_MILLISECONDS));
+
+
         thread.start();
     }
 
