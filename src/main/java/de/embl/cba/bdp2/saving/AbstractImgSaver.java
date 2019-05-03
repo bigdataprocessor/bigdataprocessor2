@@ -2,7 +2,7 @@ package de.embl.cba.bdp2.saving;
 
 import de.embl.cba.bdp2.progress.ProgressListener;
 
-public class AbstractImgSaver
+public abstract class AbstractImgSaver
 {
 	ProgressListener progressListener;
 
@@ -10,5 +10,8 @@ public class AbstractImgSaver
 	{
 		progressListener = l;
 	}
+
+
+	public abstract void startSave();
 
 }

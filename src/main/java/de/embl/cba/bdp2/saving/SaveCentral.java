@@ -27,6 +27,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class SaveCentral {
 
     public static void goSave(SavingSettings savingSettings, ExecutorService es, int saveId) {
+
+        ImgSaverFactory factory = new ImgSaverFactory();
+        AbstractImgSaver saver = factory.getSaver(savingSettings, es, saveId);
+        saver.startSave();
+        /*
         if (savingSettings.fileType.equals( SavingSettings.FileType.TIFF_PLANES )) {
             saveTIFFAsPlanes(savingSettings, es, saveId);
         } else if (savingSettings.fileType.equals( SavingSettings.FileType.TIFF_STACKS )) {
@@ -35,11 +40,10 @@ public class SaveCentral {
             saveHDFStacks(savingSettings, es, saveId);
         } else if (savingSettings.fileType.equals( SavingSettings.FileType.IMARIS_STACKS )) {
             saveIMARIStacks(savingSettings, es, saveId);
-        }
+        }*/
     }
 
-    private static void saveTIFFAsPlanes(
-            SavingSettings savingSettings, ExecutorService es, Integer saveId )
+    private static void saveTIFFAsPlanes(SavingSettings savingSettings, ExecutorService es, Integer saveId )
     {
         AtomicBoolean stop = new AtomicBoolean(false);
         updateTrackers(saveId, stop);
