@@ -13,14 +13,16 @@ public class MonitorThreadPoolStatus {
                                                      int updateFrequencyMilliseconds,
                                                      ProgressListener progressListener ) {
         Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-        int i = 0;
-        while( i != futures.size() )
+        int numFinishedFutures = 0;
+        while( numFinishedFutures != futures.size() )
         {
-            i = 0;
-            for ( Future f : futures ) {
-                if (f.isDone() ) i++;
-            }
-            progressListener.progress( i, futures.size() );
+            numFinishedFutures = 0;
+            for ( Future f : futures )
+                if (f.isDone() ) numFinishedFutures++;
+
+            if ( progressListener != null )
+                progressListener.progress( numFinishedFutures, futures.size() );
+
             try {
                 Thread.sleep(updateFrequencyMilliseconds);
             } catch(InterruptedException ex) {

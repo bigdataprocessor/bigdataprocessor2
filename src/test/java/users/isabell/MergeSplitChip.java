@@ -1,29 +1,22 @@
-package api;
+package users.isabell;
 
 import de.embl.cba.bdp2.Image;
-import de.embl.cba.bdp2.loading.CachedCellImgReader;
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.process.splitviewmerge.RegionOptimiser;
 import de.embl.cba.bdp2.process.splitviewmerge.SplitImageMerger;
+import de.embl.cba.bdp2.saving.AbstractImgSaver;
 import de.embl.cba.bdp2.saving.SavingSettings;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
-import de.embl.cba.bdp2.viewers.ImageViewer;
-import de.embl.cba.bdp2.viewers.ViewerUtils;
-import net.imagej.ImageJ;
-import net.imglib2.FinalInterval;
-import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
-/**
- * IMPORTANT NOTE: Adjust Max value to 255 in the Big Data Viewer. (Settings>Brightness and Color>Max)
- */
 
-public class Isabell
+public class MergeSplitChip
 {
-    public static < R extends RealType< R > & NativeType< R > > void main( String[] args)
+    public static < R extends RealType< R > & NativeType< R > > void main( String[] args) throws IOException
     {
 //        final ImageJ imageJ = new ImageJ();
 //        imageJ.ui().showUI();
@@ -43,7 +36,6 @@ public class Isabell
 
         image.setVoxelUnit( "micrometer" );
         image.setVoxelSpacing( new double[]{0.13, 0.13, 1.04} );
-
 
         /**
          * Merge Split
@@ -68,20 +60,22 @@ public class Isabell
 
         // TODO: Shall we bin 3x3 in xy?
 
+
         /**
          * Save as Tiff Stacks
          */
 
         final SavingSettings savingSettings = SavingSettings.getDefaults();
         savingSettings.fileType = SavingSettings.FileType.TIFF_STACKS;
-        savingSettings.nThreads = 1; // Runtime.getRuntime().availableProcessors();
-        savingSettings.saveVolume = false;
-        savingSettings.filePath = "/Users/tischer/Desktop/stack_0_channel_0-volumes/volume";
+        savingSettings.nThreads = Runtime.getRuntime().availableProcessors();
+        savingSettings.saveVolumes = true;
+        savingSettings.volumesFilePath = "/Users/tischer/Desktop/stack_0_channel_0-volumes2/volume";
         savingSettings.saveProjections = true;
+        savingSettings.projectionsFilePath = "/Users/tischer/Desktop/stack_0_channel_0-projections2/projection";
         savingSettings.isotropicProjectionResampling = true;
         savingSettings.isotropicProjectionVoxelSize = 0.5;
-        savingSettings.projectionsFilePath = "/Users/tischer/Desktop/stack_0_channel_0-projections/projection";
-        new BigDataProcessor2().saveImage( merge, savingSettings );
+
+        final AbstractImgSaver imgSaver = new BigDataProcessor2().saveImage( merge, savingSettings );
 
 
     }

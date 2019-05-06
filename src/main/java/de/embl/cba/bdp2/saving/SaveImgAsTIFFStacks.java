@@ -93,7 +93,7 @@ public class SaveImgAsTIFFStacks implements Runnable {
 
             // Save volume
             //
-            if ( settings.saveVolume )
+            if ( settings.saveVolumes )
             {
                 RandomAccessibleInterval rai = Views.interval( image, minInterval, maxInterval );
                 ImagePlus imp = Utils.wrapToCalibratedImagePlus(
@@ -101,7 +101,7 @@ public class SaveImgAsTIFFStacks implements Runnable {
                         settings.voxelSpacing,
                         settings.voxelUnit,
                         "" );
-                saveAsTiff( imp, c, t, settings.compression, settings.rowsPerStrip, settings.filePath );
+                saveAsTiff( imp, c, t, settings.compression, settings.rowsPerStrip, settings.volumesFilePath );
             }
 
 

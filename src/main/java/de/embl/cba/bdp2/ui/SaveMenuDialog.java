@@ -117,7 +117,7 @@ public class SaveMenuDialog extends JFrame implements ActionListener {
                 savingSettings.compression = compression;
                 savingSettings.rowsPerStrip = Integer.parseInt(tfRowsPerStrip.getText());
                 savingSettings.bin = tfBinning.getText();
-                savingSettings.saveVolume = cbSaveVolume.isSelected();
+                savingSettings.saveVolumes = cbSaveVolume.isSelected();
                 savingSettings.saveProjections = cbSaveProjection.isSelected();
                 savingSettings.convertTo8Bit = cbConvertTo8Bit.isSelected();
                 savingSettings.mapTo0 = Integer.parseInt(tfMapTo0.getText());
@@ -138,7 +138,7 @@ public class SaveMenuDialog extends JFrame implements ActionListener {
                 //
                 //if( ! Utils.checkMemoryRequirements(imp, Math.min(ioThreads, imp.getNFrames())) ) return;
                 //savingSettings.nThreads = ioThreads;
-                savingSettings.filePath = file.getAbsolutePath();
+                savingSettings.volumesFilePath = file.getAbsolutePath();
                 savingSettings.fileType = fileType;
                 if (fileType.equals(SavingSettings.FileType.IMARIS_STACKS )) {
                     savingSettings.fileBaseNameIMARIS = file.getName();

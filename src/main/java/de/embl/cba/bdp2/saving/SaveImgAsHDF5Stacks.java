@@ -155,7 +155,7 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
                     Logger.progress("Stopped saving thread @ merge: ", "" + current_t);
                     return;
                 }
-                String newPath = savingSettings.filePath;
+                String newPath = savingSettings.volumesFilePath;
                 // Binning
                 // - not for imarisH5 saving format as there will be a resolution pyramid anyway
                 //
@@ -169,7 +169,7 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
                 String sT = String.format("%1$05d", current_t);
                 newPath = newPath + "--C" + sC + "--T" + sT + ".h5";
 
-                if (savingSettings.saveVolume) {
+                if (savingSettings.saveVolumes ) {
                     this.current_c = c;
                     writeHDF5(impBinned, newPath);
                 }

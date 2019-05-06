@@ -36,7 +36,7 @@ public class SaveImgAsTIFFPlanes implements Runnable {
     public void run() {
 
         if (stop.get()) {
-            savingSettings.saveVolume = true;
+            savingSettings.saveVolumes = true;
             return;
         }
         RandomAccessibleInterval imgStack = savingSettings.rai;
@@ -79,7 +79,7 @@ public class SaveImgAsTIFFPlanes implements Runnable {
                 return;
             }
 
-            String newPath = savingSettings.filePath;
+            String newPath = savingSettings.volumesFilePath;
 
             // Binning
             ImagePlus impBinned = (ImagePlus) impCTZ.clone();
@@ -89,7 +89,7 @@ public class SaveImgAsTIFFPlanes implements Runnable {
             if (binningA[0] > 1 || binningA[1] > 1 || binningA[2] > 1) {
                 Binner binner = new Binner();
                 impBinned = binner.shrink(impCTZ, binningA[0], binningA[1], binningA[2], Binner.AVERAGE);
-                newPath = savingSettings.filePath + "--bin-" + binningA[0] + "-" + binningA[1] + "-" + binningA[2];
+                newPath = savingSettings.volumesFilePath + "--bin-" + binningA[0] + "-" + binningA[1] + "-" + binningA[2];
             }
 
             FileSaver fileSaver = new FileSaver(impBinned);

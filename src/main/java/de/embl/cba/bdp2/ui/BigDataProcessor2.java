@@ -132,6 +132,13 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
         savingSettings.voxelSpacing = image.getVoxelSpacing();
         savingSettings.voxelUnit = image.getVoxelUnit();
         ImgSaverFactory factory = new ImgSaverFactory();
+
+        if ( savingSettings.saveVolumes )
+            Utils.createFilePathParentDirectories( savingSettings.volumesFilePath );
+
+        if ( savingSettings.saveProjections )
+            Utils.createFilePathParentDirectories( savingSettings.projectionsFilePath );
+
         AbstractImgSaver saver = factory.getSaver(savingSettings, saveExecutorService );
         saver.startSave();
         return saver;

@@ -89,7 +89,7 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
         for (int c = 0; c < this.nChannels; c++)
         {
             if (stop.get()) {
-                savingSettings.saveVolume = false;
+                savingSettings.saveVolumes = false;
                 Logger.progress("Stopped saving thread: ", "" + this.current_t);
                 return;
             }
@@ -115,13 +115,13 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
             Img<T> imgChannelTime = ImgView.wrap( newRai, new CellImgFactory(nativeType) );
 
             if (stop.get()) {
-                savingSettings.saveVolume = false;
+                savingSettings.saveVolumes = false;
                 savingSettings.saveProjections = false;
                 Logger.progress("Stopped saving thread: ", "" + current_t);
                 return;
             }
 
-            String newPath = savingSettings.filePath;
+            String newPath = savingSettings.volumesFilePath;
 
             String sC = String.format("%1$02d", c);
             String sT = String.format("%1$05d", current_t);
@@ -136,7 +136,7 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
 
 
             // Save volume
-            if (savingSettings.saveVolume) {
+            if (savingSettings.saveVolumes ) {
                 H5DataCubeWriter writer = new H5DataCubeWriter();
                 writer.writeImarisCompatibleResolutionPyramid(
                         imagePlus, imarisDataSetProperties, c, this.current_t);

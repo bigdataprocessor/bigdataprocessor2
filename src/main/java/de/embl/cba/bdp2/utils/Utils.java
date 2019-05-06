@@ -60,6 +60,9 @@ import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -114,6 +117,18 @@ public class Utils {
 
 		sizeGB /= 8.0 * 1000000000L;
 		return sizeGB;
+	}
+
+	public static void createFilePathParentDirectories( String filePath )
+	{
+		try
+		{
+			Files.createDirectories(
+				Paths.get( new File( filePath ).getParent() ) );
+		} catch ( IOException e )
+		{
+            System.err.println( e );
+		}
 	}
 
 //	public static ImagePlus getFullStackFromInfo(int channel, int time, FileInfoSource infoSource){

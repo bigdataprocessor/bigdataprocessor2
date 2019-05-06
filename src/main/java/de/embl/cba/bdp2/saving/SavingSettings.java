@@ -17,8 +17,8 @@ public class SavingSettings {
 
     public static final String LZW = "LZW";
     public static final String NONE = "None";
-    public boolean saveVolume;
-    public String filePath;
+    public boolean saveVolumes;
+    public String volumesFilePath;
 
     public boolean saveProjections;
     public String projectionsFilePath;
@@ -64,9 +64,9 @@ public class SavingSettings {
         savingSettings.bin = "1,1,1";
         savingSettings.voxelSpacing = new double[]{1,1,1};
         savingSettings.voxelUnit = "pixel";
-        savingSettings.saveVolume = true;
+        savingSettings.saveVolumes = true;
         savingSettings.fileType = FileType.TIFF_PLANES;
-        savingSettings.filePath = "src/test/resources/file";
+        savingSettings.volumesFilePath = "src/test/resources/file";
         savingSettings.compression = SavingSettings.NONE;
         savingSettings.isotropicProjectionResampling = false;
         savingSettings.isotropicProjectionVoxelSize = 1.0;
