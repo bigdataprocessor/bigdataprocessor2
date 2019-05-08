@@ -6,6 +6,7 @@ import ch.systemsx.cisd.hdf5.HDF5Factory;
 import ch.systemsx.cisd.hdf5.IHDF5Reader;
 import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.ui.HDF5DatasetDialog;
+import ij.gui.GenericDialog;
 
 import java.util.Arrays;
 import java.util.List;
@@ -20,13 +21,13 @@ public class FileInfosHDF5Helper
             String fileName) {
 
         IHDF5Reader reader = HDF5Factory.openForReading(directory + "/" + fileName);
-        StringBuilder hdf5DataSetSB = new StringBuilder();
 
+        StringBuilder hdf5DataSetSB = new StringBuilder();
         if (imageDataInfo.h5DataSetName != null && !imageDataInfo.h5DataSetName.isEmpty()
                 && !imageDataInfo.h5DataSetName.trim().isEmpty()) {
-            hdf5DataSetSB = new StringBuilder(imageDataInfo.h5DataSetName);
-            if (!hdf5DataSetExists(reader, hdf5DataSetSB)) return;
-        }else {
+            hdf5DataSetSB = new StringBuilder( imageDataInfo.h5DataSetName );
+            if ( ! hdf5DataSetExists(reader, hdf5DataSetSB ) ) return;
+        } else {
             setHDF5DatasetViaUI(reader,hdf5DataSetSB);
         }
         imageDataInfo.h5DataSetName = hdf5DataSetSB.toString();
@@ -64,7 +65,9 @@ public class FileInfosHDF5Helper
         return nBits;
     }
 
-    private static boolean hdf5DataSetExists(IHDF5Reader reader, StringBuilder hdf5DataSet) {
+    private static boolean hdf5DataSetExists(
+            IHDF5Reader reader,
+            StringBuilder hdf5DataSet) {
         String dataSets = "";
         boolean dataSetExists;
         if (reader.object().isDataSet(hdf5DataSet.toString())) {
@@ -87,15 +90,22 @@ public class FileInfosHDF5Helper
     }
 
 
-    private static void setHDF5DatasetViaUI(IHDF5Reader reader, StringBuilder hdf5DataSet) {
+    private static void setHDF5DatasetViaUI( IHDF5Reader reader,
+                                             StringBuilder hdf5DataSet) {
+
         List<String> hdf5Header = reader.getGroupMembers("/");
-        HDF5DatasetDialog chooseDatasetDialog = new HDF5DatasetDialog(hdf5Header,true);
-        chooseDatasetDialog.setLocationRelativeTo(null);
-        chooseDatasetDialog.setVisible(true);
-        if (null != chooseDatasetDialog.getSelectedDataset()){
-            hdf5DataSet.delete(0, hdf5DataSet.length());
-            hdf5DataSet.append(chooseDatasetDialog.getSelectedDataset());
-        }
+
+        final GenericDialog gd = new GenericDialog( "Choose Hdf5 Dataset" );
+
+        gd.addChoice( "Hdf5 Dataset",
+                hdf5Header.toArray(new String[0]),
+                hdf5Header.get( 0 )  );
+
+        gd.showDialog();
+        if( gd.wasCanceled() ) return;
+
+        hdf5DataSet.delete(0, hdf5DataSet.length());
+        hdf5DataSet.append( gd.getNextChoice() );
     }
 
     public static String dsInfoToTypeString(HDF5DataSetInformation dsInfo) {  //TODO : DUPLICATE CODE! Fix it! --ashis

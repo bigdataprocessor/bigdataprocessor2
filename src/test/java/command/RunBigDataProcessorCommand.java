@@ -1,3 +1,5 @@
+package command;
+
 import de.embl.cba.bdp2.ui.BigDataProcessorCommand;
 import net.imagej.ImageJ;
 

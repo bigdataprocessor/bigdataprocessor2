@@ -4,7 +4,7 @@ import de.embl.cba.bdp2.process.splitviewmerge.SplitImageMerger
 import de.embl.cba.bdp2.saving.SavingSettings
 import de.embl.cba.bdp2.ui.BigDataProcessor2
 
-#@File[] (label="Select", style="both") inputDirs
+// #@File[] (label="Select", style="both") inputDirs
 
 print( "Number of dirs = " + inputDirs.size() + "\n" )
 
@@ -39,7 +39,7 @@ for ( i = 0; i < inputDirs.size(); i++ )
     //optimisedCentres = RegionOptimiser.optimiseCentres2D( image, centres, spans )
 
     merge = SplitImageMerger.merge( image, centres, spans )
-    bdp.showImage( merge )
+    //bdp.showImage( merge )
 
     // TODO: Shall we bin 3x3 in xy?
 
@@ -53,7 +53,7 @@ for ( i = 0; i < inputDirs.size(); i++ )
     savingSettings.nThreads = Runtime.getRuntime().availableProcessors()
     savingSettings.saveVolumes = true
     savingSettings.volumesFilePath = inputDirs[ i ].toString() + "-stacks/stack"
-    savingSettings.saveProjections = true
+    savingSettings.saveProjections = false
     savingSettings.projectionsFilePath = inputDirs[ i ].toString() + "-projections/projection"
     savingSettings.isotropicProjectionResampling = true
     savingSettings.isotropicProjectionVoxelSize = 0.5 // micrometer

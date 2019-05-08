@@ -50,7 +50,11 @@ public class SplitImageMerger
 
 		final RandomAccessibleInterval< R > merge = merge( image.getRai(), intervals );
 
-		final Image< R > mergeImage = new Image<>( merge, image.getName(), image.getVoxelSpacing(), image.getVoxelUnit() );
+		final Image< R > mergeImage = new Image<>(
+				merge,
+				image.getName(),
+				image.getVoxelSpacing(),
+				image.getVoxelUnit() );
 
 		return mergeImage;
 	}
