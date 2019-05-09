@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 import static de.embl.cba.bdp2.utils.DimensionOrder.C;
 
-public class SplitImageMerger
+public class SplitViewMerger
 {
 
 	public static < R extends RealType< R > & NativeType< R > >

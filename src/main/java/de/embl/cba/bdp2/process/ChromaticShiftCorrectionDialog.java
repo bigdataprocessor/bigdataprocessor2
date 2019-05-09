@@ -3,10 +3,12 @@ package de.embl.cba.bdp2.process;
 import bdv.tools.brightness.SliderPanel;
 import bdv.util.BoundedValue;
 import de.embl.cba.bdp2.ui.BdvMenus;
+import de.embl.cba.bdp2.ui.DisplaySettings;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.viewers.ImageViewer;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Intervals;
@@ -17,14 +19,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class ChromaticShiftCorrection< T extends RealType< T > & NativeType< T > >
+public class ChromaticShiftCorrectionDialog< T extends RealType< T > & NativeType< T > >
 {
 
 	private final ImageViewer< T > imageViewer;
 	private final RandomAccessibleInterval< T > rai;
 	private ArrayList< BoundedValue > boundedValues;
 	private ArrayList< SliderPanel > sliderPanels;
-	private final ImageViewer newImageViewer;
 	private final long numChannels;
 	private final ArrayList< RandomAccessibleInterval< T > > channelRAIs;
 	private RandomAccessibleInterval< T > correctedRai;
@@ -32,7 +33,7 @@ public class ChromaticShiftCorrection< T extends RealType< T > & NativeType< T >
 	private JPanel panel;
 	private ArrayList< RandomAccessibleInterval< T > > shiftedChannelRAIs;
 
-	public ChromaticShiftCorrection( final ImageViewer< T > imageViewer  )
+	public ChromaticShiftCorrectionDialog( final ImageViewer< T > imageViewer  )
 	{
 		this.imageViewer = imageViewer;
 		this.rai = imageViewer.getImage().getRai();
@@ -41,9 +42,7 @@ public class ChromaticShiftCorrection< T extends RealType< T > & NativeType< T >
 		channelRAIs = getChannelRAIs();
 		shiftedChannelRAIs = channelRAIs;
 		setCorrectedRai();
-
-		newImageViewer = createNewImageViewer( imageViewer );
-
+		showCorrectedRai();
 		showChromaticShiftCorrectionDialog();
 	}
 
@@ -226,12 +225,25 @@ public class ChromaticShiftCorrection< T extends RealType< T > & NativeType< T >
 
 	private void showCorrectedRai()
 	{
-		newImageViewer.show(
+		final AffineTransform3D viewerTransform = imageViewer.getViewerTransform();
+
+		int nChannels = (int) imageViewer.getImage().getRai().dimension( DimensionOrder.C );
+
+		final ArrayList< DisplaySettings > displaySettings = new ArrayList<>();
+		for ( int c = 0; c < nChannels; c++ )
+			displaySettings.add( imageViewer.getDisplaySettings( c ) );
+
+		imageViewer.show(
 				correctedRai,
 				imageViewer.getImage().getName(),
 				imageViewer.getImage().getVoxelSpacing(),
 				imageViewer.getImage().getVoxelUnit(),
-				true );
+				false );
+
+		imageViewer.setViewerTransform( viewerTransform );
+		for ( int c = 0; c < nChannels; c++ )
+			imageViewer.setDisplayRange( displaySettings.get( c ).getMinValue(), displaySettings.get( c ).getMaxValue(), c );
+
 	}
 
 

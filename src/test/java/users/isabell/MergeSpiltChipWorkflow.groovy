@@ -1,6 +1,6 @@
 import de.embl.cba.bdp2.loading.files.FileInfos
-import de.embl.cba.bdp2.process.splitviewmerge.RegionOptimiser
-import de.embl.cba.bdp2.process.splitviewmerge.SplitImageMerger
+import de.embl.cba.bdp2.process.splitviewmerge.SplitViewMerger
+import de.embl.cba.bdp2.progress.ProgressListener
 import de.embl.cba.bdp2.saving.SavingSettings
 import de.embl.cba.bdp2.ui.BigDataProcessor2
 
@@ -38,7 +38,7 @@ for ( i = 0; i < inputDirs.size(); i++ )
 
     //optimisedCentres = RegionOptimiser.optimiseRegions2D( image, centres, spans )
 
-    merge = SplitImageMerger.merge( image, minList, spans )
+    merge = SplitViewMerger.merge( image, minList, spans )
     //bdp.showImage( merge )
 
     // TODO: Shall we bin 3x3 in xy?
@@ -58,6 +58,12 @@ for ( i = 0; i < inputDirs.size(); i++ )
     savingSettings.isotropicProjectionResampling = true
     savingSettings.isotropicProjectionVoxelSize = 0.5 // micrometer
 
-    imgSaver = bdp.saveImage( merge, savingSettings )
+    imgSaver = bdp.saveImage(merge, savingSettings, new ProgressListener()
+            {
+                @Override
+                public void progress(long current, long total) {
+
+                }
+            })
 
 }

@@ -56,7 +56,7 @@ public class BdvMenus
             });
         }else if(e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.CROP_MENU_ITEM )){
         	BigDataProcessor2.generalThreadPool.submit(() -> {
-            	new Cropping<>( imageViewer );
+            	new CroppingDialog<>( imageViewer );
             });
         }else if(e.getActionCommand().equalsIgnoreCase(
                 UIDisplayConstants.IMAGEJ_VIEW_MENU_ITEM )){
@@ -90,7 +90,7 @@ public class BdvMenus
         }else if(e.getActionCommand().equalsIgnoreCase(
             UIDisplayConstants.CHROMATIC_SHIFT_CORRECTION_MENU_ITEM )){
             BigDataProcessor2.generalThreadPool.submit(() -> {
-                new ChromaticShiftCorrection<>( imageViewer );
+                new ChromaticShiftCorrectionDialog<>( imageViewer );
             });
         }else if(e.getActionCommand().equalsIgnoreCase(
                     UIDisplayConstants.SPLIT_VIEW_MENU_ITEM )){

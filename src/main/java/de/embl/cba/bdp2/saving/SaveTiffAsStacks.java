@@ -2,7 +2,7 @@ package de.embl.cba.bdp2.saving;
 
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.utils.DimensionOrder;
-import de.embl.cba.bdp2.utils.MonitorThreadPoolStatus;
+import de.embl.cba.bdp2.progress.Progress;
 import de.embl.cba.bdp2.utils.Utils;
 
 import java.util.ArrayList;
@@ -29,14 +29,18 @@ public class SaveTiffAsStacks extends AbstractImgSaver {
         AtomicInteger counter = new AtomicInteger(0);
         final long startTime = System.currentTimeMillis();
         long timeFrames = savingSettings.rai.dimension(DimensionOrder.T);
+
+
         for (int t = 0; t < timeFrames; t++) {
             futures.add(
                     es.submit(
                             new SaveImgAsTIFFStacks(t, savingSettings, counter, startTime, stop)
                     ));
         }
+
         // Monitor the progress
-        Thread thread = new Thread(() -> MonitorThreadPoolStatus.showProgressAndWaitUntilDone(
+        Thread thread = new Thread(
+                () -> Progress.informProgressListener(
                         futures, FileInfos.PROGRESS_UPDATE_MILLISECONDS, progressListener ));
 
         thread.start();

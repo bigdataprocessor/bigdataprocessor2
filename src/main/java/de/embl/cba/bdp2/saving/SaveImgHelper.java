@@ -53,7 +53,7 @@ public class SaveImgHelper
         double minutesPerStack = minutesSpent / counter.get();
         double minutesLeft = (total - counter.get()) * minutesPerStack;
 
-        Logger.progress("Saved frame",
+        Logger.progress("Saved channel and time-point ",
                 "" + counter.get() + "/" + total
                         + "; time (spent, left) [min]: " + (int) minutesSpent + ", " + (int) minutesLeft
                         + "; memory: "

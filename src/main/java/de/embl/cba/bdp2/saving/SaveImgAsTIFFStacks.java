@@ -31,6 +31,7 @@ public class SaveImgAsTIFFStacks implements Runnable {
     private final long startTime;
     private final AtomicBoolean stop;
 
+    // TODO: feed back to progress listener
     public SaveImgAsTIFFStacks(int t,
                                SavingSettings settings,
                                AtomicInteger counter,
@@ -107,20 +108,18 @@ public class SaveImgAsTIFFStacks implements Runnable {
 
             // Save projections
             if ( settings.saveProjections )
-            {
                 saveProjections( image, c, minInterval, maxInterval );
-            }
 
             counter.incrementAndGet();
-        }
 
-        if (!stop.get()) {
-            SaveImgHelper.documentProgress( totalCubes, counter, startTime);
+            if (!stop.get()) {
+                SaveImgHelper.documentProgress( totalCubes, counter, startTime );
+            }
         }
 
     }
 
-    public void saveProjections( RandomAccessibleInterval image, int c, long[] minInterval, long[] maxInterval )
+    private void saveProjections( RandomAccessibleInterval image, int c, long[] minInterval, long[] maxInterval )
     {
         RandomAccessibleInterval rai3D = Views.dropSingletonDimensions( Views.interval( image, minInterval, maxInterval ) );
 
@@ -146,7 +145,7 @@ public class SaveImgAsTIFFStacks implements Runnable {
         saveAsTiffXYZMaxProjection( imp3D, c, t, settings.projectionsFilePath );
     }
 
-    public double[] getVoxelSpacingCopy()
+    private double[] getVoxelSpacingCopy()
     {
         final double[] voxelSpacing = new double[ settings.voxelSpacing.length ];
         for ( int d = 0; d < settings.voxelSpacing.length; d++ )

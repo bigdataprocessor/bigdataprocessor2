@@ -2,7 +2,7 @@ package de.embl.cba.bdp2.saving;
 
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.utils.DimensionOrder;
-import de.embl.cba.bdp2.utils.MonitorThreadPoolStatus;
+import de.embl.cba.bdp2.progress.Progress;
 import de.embl.cba.bdp2.utils.Utils;
 
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ public class SaveTiffAsPlanes extends AbstractImgSaver {
     private ExecutorService es;
     private AtomicBoolean stop;
 
-    public SaveTiffAsPlanes(SavingSettings savingSettings, ExecutorService es) {
+    public SaveTiffAsPlanes( SavingSettings savingSettings, ExecutorService es ) {
         this.savingSettings = savingSettings;
         this.es = es;
         this.stop = new AtomicBoolean(false);
@@ -39,7 +39,7 @@ public class SaveTiffAsPlanes extends AbstractImgSaver {
             }
         }
         // Monitor the progress
-        Thread thread = new Thread(() -> MonitorThreadPoolStatus.showProgressAndWaitUntilDone(
+        Thread thread = new Thread(() -> Progress.informProgressListener(
                 futures,
                 FileInfos.PROGRESS_UPDATE_MILLISECONDS,
                 progressListener));

@@ -4,7 +4,9 @@ import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.CachedCellImgReader;
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.logging.Logger;
+import de.embl.cba.bdp2.progress.ProgressListener;
 import de.embl.cba.bdp2.saving.AbstractImgSaver;
+import de.embl.cba.bdp2.saving.ImgSaver;
 import de.embl.cba.bdp2.saving.ImgSaverFactory;
 import de.embl.cba.bdp2.saving.SavingSettings;
 import de.embl.cba.bdp2.utils.DimensionOrder;
@@ -122,10 +124,12 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
     }
 
 
+    // Return futures from the image saver
     public static < R extends RealType< R > & NativeType< R > >
-    AbstractImgSaver saveImage(
+    ImgSaver saveImage(
             Image< R > image,
-    		SavingSettings savingSettings ) {
+            SavingSettings savingSettings,
+            ProgressListener progressListener ) {
         Logger.info( "Saving: Started..." );
         int nIOThread = Math.max(1, Math.min(savingSettings.nThreads, MAX_THREAD_LIMIT));
         ExecutorService saveExecutorService = Executors.newFixedThreadPool(nIOThread);
@@ -141,6 +145,7 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
             Utils.createFilePathParentDirectories( savingSettings.projectionsFilePath );
 
         AbstractImgSaver saver = factory.getSaver(savingSettings, saveExecutorService );
+        saver.setProgressListener( progressListener );
         saver.startSave();
         return saver;
     }

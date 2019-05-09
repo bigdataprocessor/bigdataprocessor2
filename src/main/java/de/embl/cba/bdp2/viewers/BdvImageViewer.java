@@ -12,10 +12,10 @@ import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.boundingbox.BoundingBoxDialog;
 import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.ui.BdvMenus;
-import de.embl.cba.bdp2.ui.BigDataProcessorCommand;
 import de.embl.cba.bdp2.ui.DisplaySettings;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.volatiles.VolatileViews;
+import de.embl.cba.bdv.utils.BdvUtils;
 import net.imglib2.Cursor;
 import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccessibleInterval;
@@ -165,10 +165,20 @@ public class BdvImageViewer< R extends RealType< R > & NativeType< R >>
     @Override
     public void setDisplayRange(double min, double max, int channel) {
         final ConverterSetup converterSetup = this.bdvStackSource.getBdvHandle().getSetupAssignments().getConverterSetups().get(channel);
-        this.bdvStackSource.getBdvHandle().getSetupAssignments().removeSetup(converterSetup);
-        converterSetup.setDisplayRange(min, max);
-        this.bdvStackSource.getBdvHandle().getSetupAssignments().addSetup(converterSetup);
+        converterSetup.setDisplayRange( min, max );
+        converterSetup.getSetupId();
 
+    }
+
+
+    public DisplaySettings getDisplaySettings( int channel ) {
+
+        final ConverterSetup converterSetup = this.bdvStackSource.getBdvHandle()
+                .getSetupAssignments()
+                .getConverterSetups()
+                .get(channel);
+
+        return new DisplaySettings( converterSetup.getDisplayRangeMin(), converterSetup.getDisplayRangeMax() );
     }
 
     /**
@@ -177,7 +187,7 @@ public class BdvImageViewer< R extends RealType< R > & NativeType< R >>
      * as a DisplaySettings object of the requested channel.
      */
     @Override
-    public DisplaySettings getDisplaySettings(int channel) {
+    public DisplaySettings getAutoContrastDisplaySettings( int channel) {
         double min, max;
         if ( image != null) {
             RandomAccessibleInterval raiStack = Views.hyperSlice(
@@ -209,7 +219,7 @@ public class BdvImageViewer< R extends RealType< R > & NativeType< R >>
     public void doAutoContrastPerChannel() {
         int nChannels = (int) image.getRai().dimension( DimensionOrder.C);
         for (int channel = 0; channel < nChannels; ++channel) {
-            DisplaySettings setting = getDisplaySettings(channel);
+            DisplaySettings setting = getAutoContrastDisplaySettings(channel);
             setDisplayRange( setting.getMinValue(), setting.getMaxValue(), 0);
             //channel is always 0 (zero) because converterSetup object gets removed and added at the end of bdvSS in setDisplayRange method.
             //Hence current channel is always at position 0 of the bdvSS.
@@ -289,11 +299,11 @@ public class BdvImageViewer< R extends RealType< R > & NativeType< R >>
             Logger.error( "Could not wrap as volatile!" );
         else
             bdvStackSource = BdvFunctions.show(
-                        volatileRai,
-                        image.getName(),
-                        BdvOptions.options().axisOrder( AxisOrder.XYZCT )
-                                .addTo( bdvStackSource )
-                                .sourceTransform( scaling ) );
+                                    volatileRai,
+                                    image.getName(),
+                                    BdvOptions.options().axisOrder( AxisOrder.XYZCT )
+                                            .addTo( bdvStackSource )
+                                            .sourceTransform( scaling ) );
         return bdvStackSource;
     }
 

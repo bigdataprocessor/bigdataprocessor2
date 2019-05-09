@@ -1,7 +1,6 @@
 package de.embl.cba.bdp2.process.splitviewmerge;
 
 import bdv.util.ModifiableInterval;
-import bdv.util.ModifiableRealInterval;
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.tracking.Trackers;
@@ -13,10 +12,9 @@ import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.concurrent.Executors;
 
-import static de.embl.cba.bdp2.process.splitviewmerge.SplitImageMerger.getInterval5D;
+import static de.embl.cba.bdp2.process.splitviewmerge.SplitViewMerger.getInterval5D;
 import static de.embl.cba.bdp2.utils.DimensionOrder.*;
 
 public class RegionOptimiser

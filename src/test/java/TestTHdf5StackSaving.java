@@ -1,4 +1,5 @@
 import de.embl.cba.bdp2.loading.CachedCellImgReader;
+import de.embl.cba.bdp2.progress.ProgressListener;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.saving.SavingSettings;
@@ -33,7 +34,14 @@ public class TestTHdf5StackSaving
         defaults.nThreads = 3;
         defaults.voxelSpacing =imageViewer.getImage().getVoxelSpacing();
         defaults.voxelUnit = imageViewer.getImage().getVoxelUnit();
-        new BigDataProcessor2().saveImage( imageViewer.getImage(), defaults );
+        new BigDataProcessor2().saveImage( imageViewer.getImage(), defaults, new ProgressListener()
+        {
+            @Override
+            public void progress( long current, long total )
+            {
+
+            }
+        } );
 
     }
 

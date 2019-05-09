@@ -2,7 +2,7 @@ package de.embl.cba.bdp2.saving;
 
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.utils.DimensionOrder;
-import de.embl.cba.bdp2.utils.MonitorThreadPoolStatus;
+import de.embl.cba.bdp2.progress.Progress;
 import de.embl.cba.bdp2.utils.Utils;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
@@ -52,7 +52,7 @@ public class SaveHDF5AsStacks extends AbstractImgSaver {
             }
         }
         // Monitor the progress
-        Thread thread = new Thread(() -> MonitorThreadPoolStatus.showProgressAndWaitUntilDone(futures,
+        Thread thread = new Thread(() -> Progress.informProgressListener(futures,
                 FileInfos.PROGRESS_UPDATE_MILLISECONDS, progressListener));
         thread.start();
     }

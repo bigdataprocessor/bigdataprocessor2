@@ -32,8 +32,8 @@ public class UnsignedByteTypeConversion< T extends RealType< T > >
 			return;
 		}
 
-		final double mapTo0 = imageViewer.getDisplaySettings( 0 ).getMinValue();
-		final double mapTo255 = imageViewer.getDisplaySettings( 0 ).getMaxValue();
+		final double mapTo0 = imageViewer.getAutoContrastDisplaySettings( 0 ).getMinValue();
+		final double mapTo255 = imageViewer.getAutoContrastDisplaySettings( 0 ).getMaxValue();
 
 		final RealUnsignedByteConverter< T > converter =
 				new RealUnsignedByteConverter<>(

@@ -3,7 +3,7 @@ package de.embl.cba.bdp2.saving;
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.utils.DimensionOrder;
-import de.embl.cba.bdp2.utils.MonitorThreadPoolStatus;
+import de.embl.cba.bdp2.progress.Progress;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.imaris.ImarisDataSet;
 import de.embl.cba.imaris.ImarisUtils;
@@ -66,7 +66,7 @@ public class SaveImarisAsStacks extends AbstractImgSaver {
             }
         }
         // Monitor the progress
-        Thread thread = new Thread(() -> MonitorThreadPoolStatus.showProgressAndWaitUntilDone(futures,
+        Thread thread = new Thread(() -> Progress.informProgressListener(futures,
                 FileInfos.PROGRESS_UPDATE_MILLISECONDS, progressListener));
         thread.start();
     }

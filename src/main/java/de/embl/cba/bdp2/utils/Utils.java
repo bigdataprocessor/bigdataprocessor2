@@ -131,6 +131,17 @@ public class Utils {
 		}
 	}
 
+    public static void sleepMillis( int millis )
+    {
+        try
+        {
+            Thread.sleep( millis );
+        } catch ( InterruptedException e )
+        {
+            e.printStackTrace();
+        }
+    }
+
 //	public static ImagePlus getFullStackFromInfo(int channel, int time, FileInfoSource infoSource){
 //	    SerializableFileInfo[] infos_c_t = infoSource.getSerializableFileStackInfo(channel,time);
 //        ImagePlus imagePlus;

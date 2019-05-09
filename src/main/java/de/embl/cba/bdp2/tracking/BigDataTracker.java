@@ -112,7 +112,7 @@ public class BigDataTracker< R extends RealType< R > & NativeType< R > > {
                     false);
             newTrackedView.addMenus(new BdvMenus());
             for (int channel=0; channel<nChannels; ++channel){ // TODO: change to method replicateViewerContrast --ashis
-                DisplaySettings setting = imageViewer.getDisplaySettings(channel);
+                DisplaySettings setting = imageViewer.getAutoContrastDisplaySettings(channel);
                 newTrackedView.setDisplayRange(setting.getMinValue(),setting.getMaxValue(),channel);
             }
         }

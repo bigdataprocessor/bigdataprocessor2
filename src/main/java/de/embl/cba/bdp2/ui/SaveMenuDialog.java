@@ -1,6 +1,8 @@
 package de.embl.cba.bdp2.ui;
 
+import de.embl.cba.bdp2.progress.ProgressListener;
 import de.embl.cba.bdp2.saving.AbstractImgSaver;
+import de.embl.cba.bdp2.saving.ImgSaver;
 import de.embl.cba.bdp2.saving.SavingSettings;
 import de.embl.cba.bdp2.viewers.ImageViewer;
 import javax.swing.*;
@@ -42,7 +44,7 @@ public class SaveMenuDialog extends JFrame implements ActionListener {
     private JFileChooser fc;
     protected final JProgressBar progressBar;
     private final ImageViewer imageViewer;
-    private AbstractImgSaver saver;
+    private ImgSaver saver;
 
     public SaveMenuDialog(ImageViewer imageViewer) {
         this.imageViewer = imageViewer;
@@ -149,7 +151,7 @@ public class SaveMenuDialog extends JFrame implements ActionListener {
                 pack();
                 save.setEnabled(false);
                 BigDataProcessor2.generalThreadPool.submit(() -> {
-                    this.saver = BigDataProcessor2.saveImage( imageViewer.getImage(), savingSettings );
+                    this.saver = BigDataProcessor2.saveImage( imageViewer.getImage(), savingSettings, null );
                     saver.setProgressListener( ( current, total ) ->{
                         int progress = (int) ((current*100) / total);
                         progressBar.setValue(progress);

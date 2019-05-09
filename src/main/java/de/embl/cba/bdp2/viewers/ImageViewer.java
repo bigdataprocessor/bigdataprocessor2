@@ -31,7 +31,9 @@ public interface ImageViewer < R extends RealType< R > & NativeType< R > >  {
 
     void setDisplayRange(double min, double max, int channel);
 
-    DisplaySettings getDisplaySettings(int channel);
+    DisplaySettings getAutoContrastDisplaySettings( int channel);
+
+    DisplaySettings getDisplaySettings( int channel);
 
     void replicateViewerContrast(ImageViewer newImageView);
 
