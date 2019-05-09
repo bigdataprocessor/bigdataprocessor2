@@ -7,6 +7,7 @@ import de.embl.cba.bdp2.process.splitviewmerge.SplitImageMerger;
 import de.embl.cba.bdp2.saving.AbstractImgSaver;
 import de.embl.cba.bdp2.saving.SavingSettings;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
+import net.imagej.ImageJ;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
@@ -14,15 +15,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
-public class MergeSplitChip
+public class MergeSplitChipHeadless
 {
     public static < R extends RealType< R > & NativeType< R > > void main( String[] args) throws IOException
     {
-//        final ImageJ imageJ = new ImageJ();
-//        imageJ.ui().showUI();
+        final ImageJ imageJ = new ImageJ();
+        imageJ.ui().showUI();
 
         final BigDataProcessor2< R > bdp = new BigDataProcessor2<>();
-
 
         /**
          * Open Data
@@ -41,25 +41,14 @@ public class MergeSplitChip
          * Merge Split
          */
 
-        final ArrayList< long[] > centres = new ArrayList<>();
-        centres.add( new long[]{ 522, 1143 } );
-        centres.add( new long[]{ 1396, 546 } );
-        final long[] spans = { 900 , 900 };
+        final ArrayList< long[] > minima = new ArrayList<>();
+        minima.add( new long[]{ 22, 643 } );
+        minima.add( new long[]{ 896, 46 } );
+        final long[] span = { 1000 , 1000 };
 
-        final ArrayList< long[] > optimisedCentres =
-                RegionOptimiser.optimiseCentres2D(
-                        image,
-                        centres,
-                        spans );
-
-
-        final Image< R > merge = SplitImageMerger.merge( image, optimisedCentres, spans );
+        final Image< R > merge = SplitImageMerger.merge( image, minima, span );
 
         bdp.showImage( merge );
-
-
-        // TODO: Shall we bin 3x3 in xy?
-
 
         /**
          * Save as Tiff Stacks

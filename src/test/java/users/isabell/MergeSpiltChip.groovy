@@ -31,14 +31,14 @@ for ( i = 0; i < inputDirs.size(); i++ )
      * Merge Split
      */
 
-    final ArrayList< long[] > centres = new ArrayList<>()
-    centres.add( [ 522, 1143 ] as long[] )
-    centres.add( [ 1396, 546 ] as long[] )
-    spans = [ 1000 , 1000 ] as long[]
+    final ArrayList< long[] > minList = new ArrayList<>()
+    minList.add( [ 22, 643 ] as long[] )
+    minList.add( [ 896, 46 ] as long[] )
+    span = [ 1000 , 1000 ] as long[]
 
-    //optimisedCentres = RegionOptimiser.optimiseCentres2D( image, centres, spans )
+    //optimisedCentres = RegionOptimiser.optimiseRegions2D( image, centres, spans )
 
-    merge = SplitImageMerger.merge( image, centres, spans )
+    merge = SplitImageMerger.merge( image, minList, spans )
     //bdp.showImage( merge )
 
     // TODO: Shall we bin 3x3 in xy?

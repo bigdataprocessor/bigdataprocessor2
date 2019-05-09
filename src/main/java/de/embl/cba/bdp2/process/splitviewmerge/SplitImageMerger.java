@@ -22,31 +22,12 @@ public class SplitImageMerger
 	public static < R extends RealType< R > & NativeType< R > >
 	Image< R > merge(
 			Image< R > image,
-			ArrayList< double[] > centres,
-			double[] spans )
-	{
-
-		ArrayList< FinalInterval > intervals =
-				SplitViewMergingHelpers.asIntervals(
-						centres, spans, image.getVoxelSpacing() );
-
-		final RandomAccessibleInterval< R > merge = merge( image.getRai(), intervals );
-
-		final Image< R > mergeImage =
-				new Image<>( merge, image.getName(), image.getVoxelSpacing(), image.getVoxelUnit() );
-
-		return mergeImage;
-	}
-
-	public static < R extends RealType< R > & NativeType< R > >
-	Image< R > merge(
-			Image< R > image,
-			ArrayList< long[] > centres,
+			ArrayList< long[] > mins,
 			long[] spans )
 	{
 
 		ArrayList< FinalInterval > intervals =
-				SplitViewMergingHelpers.asIntervals( centres, spans );
+				SplitViewMergingHelpers.asIntervals( mins, spans );
 
 		final RandomAccessibleInterval< R > merge = merge( image.getRai(), intervals );
 
@@ -67,28 +48,12 @@ public class SplitImageMerger
 	{
 		final RandomAccessibleInterval< R > merge = merge( image.getRai(), intervals );
 
-		final Image< R > mergeImage = ( Image< R > ) new Image<>( merge, image.getName(), image.getVoxelSpacing(), image.getVoxelUnit() );
+		final Image< R > mergeImage = new Image<>( merge, image.getName(), image.getVoxelSpacing(), image.getVoxelUnit() );
 
 		return mergeImage;
 	}
 
 
-	public static < R extends RealType< R > & NativeType< R > >
-	RandomAccessibleInterval< R > merge(
-			RandomAccessibleInterval< R > rai,
-			ArrayList< double[] > centres,
-			double[] spans,
-			double[] voxelSpacing )
-	{
-
-		ArrayList< FinalInterval > intervals =
-				SplitViewMergingHelpers.asIntervals(
-						centres, spans, voxelSpacing );
-
-		final RandomAccessibleInterval< R > merge = merge( rai, intervals );
-
-		return merge;
-	}
 
 	public static < R extends RealType< R > & NativeType< R > >
 	RandomAccessibleInterval< R > merge(

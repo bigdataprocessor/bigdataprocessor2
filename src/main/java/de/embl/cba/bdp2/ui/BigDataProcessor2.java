@@ -95,11 +95,12 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
         return image;
     }
     
-    public void showImage( Image< R > image )
+    public ImageViewer showImage( Image< R > image )
     {
         final ImageViewer viewer = ViewerUtils.getImageViewer( ViewerUtils.BIG_DATA_VIEWER );
         viewer.show( image, true );
         viewer.addMenus( new BdvMenus() );
+        return viewer;
     }
 
     public boolean showVoxelSpacingDialog( Image< R > image )

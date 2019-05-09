@@ -22,100 +22,14 @@ import static de.embl.cba.bdp2.utils.DimensionOrder.*;
 public class RegionOptimiser
 {
 
-	public static < R extends RealType< R > & NativeType< R > >
-	ArrayList< double[] > optimiseCentres2D(
-			Image< R > image,
-			ArrayList< double[] > centres,
-			double[] spans )
-	{
-		final double[] voxelSpacing = image.getVoxelSpacing();
-
-		ArrayList< FinalInterval > intervals =
-				SplitViewMergingHelpers.asIntervals(
-						centres, spans, voxelSpacing );
-
-		final double[] shift = optimiseCentres2D( image.getRai(), intervals );
-
-		Logger.info( "Region Centre Optimiser: Shift [Voxels]: "
-				+ shift[ 0 ] + ", "
-				+ shift[ 1 ] );
-		Logger.info( "Region Centre Optimiser: Shift ["+ image.getVoxelUnit()+ "]: "
-				+ shift[ 0 ] * voxelSpacing[ 0 ] + ", "
-				+ shift[ 1 ] * voxelSpacing[ 1 ]);
-
-		final ArrayList< double[] > newCentres = new ArrayList<>();
-		newCentres.add( centres.get( 0 ) );
-
-		final double[] newCentre = new double[ 2 ];
-		final double[] oldCentre = centres.get( 1 );
-		for ( int d = 0; d < 2; d++ )
-			newCentre[ d ] = oldCentre[ d ] - shift[ d ] * voxelSpacing[ d ];
-
-		newCentres.add( newCentre );
-
-		return newCentres;
-	}
-
 
 	public static < R extends RealType< R > & NativeType< R > >
-	ArrayList< long[] > optimiseCentres2D(
-			Image< R > image,
-			ArrayList< long[] > centres,
-			long[] spans )
-	{
-		ArrayList< FinalInterval > intervals =
-				SplitViewMergingHelpers.asIntervals(
-						centres, spans );
-
-		final double[] shift = optimiseCentres2D( image.getRai(), intervals );
-
-		Logger.info( "Region Centre Optimiser: Shift [Voxels]: "
-				+ shift[ 0 ] + ", "
-				+ shift[ 1 ] );
-
-		final ArrayList< long[] > newCentres = new ArrayList<>();
-		newCentres.add( centres.get( 0 ) );
-
-		final long[] newCentre = new long[ 2 ];
-		final long[] oldCentre = centres.get( 1 );
-		for ( int d = 0; d < 2; d++ )
-			newCentre[ d ] = oldCentre[ d ] - (long) shift[ d ];
-
-		newCentres.add( newCentre );
-
-		for ( long[] centre : newCentres )
-			Logger.info( "Region Centre Optimiser: Centre " + Arrays.toString( centre ) );
-
-		return newCentres;
-	}
-
-	public static < R extends RealType< R > & NativeType< R > >
-	double[] optimiseRealIntervalCentres2D(
-			Image< R > image,
-			ArrayList< ModifiableRealInterval > realIntervals )
-	{
-		final ArrayList< FinalInterval > intervals =
-				SplitViewMergingHelpers.asIntervals( realIntervals, image.getVoxelSpacing() );
-
-		final double[] shift = optimiseCentres2D( image.getRai(), intervals );
-
-		for ( int d = 0; d < 2; d++ )
-			shift[ d ] *= image.getVoxelSpacing()[ d ];
-
-		Logger.info( "Region Centre Optimiser: Shift [" + image.getVoxelUnit() + "]: "
-				+ shift[ 0 ] + ", "
-				+ shift[ 1 ] );
-
-		return shift;
-	}
-
-	public static < R extends RealType< R > & NativeType< R > >
-	double[] optimiseIntervalCentres2D(
+	double[] optimiseIntervals(
 			Image< R > image,
 			ArrayList< ModifiableInterval > intervals )
 	{
 
-		final double[] shift = optimiseCentres2D( image.getRai(), intervals );
+		final double[] shift = optimiseRegions2D( image.getRai(), intervals );
 
 		Logger.info( "Region Centre Optimiser: Shift [Pixel]: "
 				+ shift[ 0 ] + ", "
@@ -125,24 +39,8 @@ public class RegionOptimiser
 	}
 
 
-	public static < R extends RealType< R > & NativeType< R > > void
-	adjustRealInterval( double[] shift, ModifiableRealInterval interval )
-	{
-
-		final double[] min = Intervals.minAsDoubleArray( interval );
-		final double[] max = Intervals.maxAsDoubleArray( interval );
-
-		for ( int d = 0; d < 2; d++ )
-		{
-			min[ d ] = min[ d ] - shift[ d ];
-			max[ d ] = max[ d ] - shift[ d ];
-		}
-
-		interval.set( new FinalRealInterval( min, max ) );
-	}
-
-	public static < R extends RealType< R > & NativeType< R > > void
-	adjustModifiableInterval( double[] shift, ModifiableInterval interval )
+	public static
+	void adjustModifiableInterval( double[] shift, ModifiableInterval interval )
 	{
 
 		final long[] min = Intervals.minAsLongArray( interval );
@@ -158,7 +56,7 @@ public class RegionOptimiser
 	}
 
 	private static < R extends RealType< R > & NativeType< R > >
-	double[] optimiseCentres2D(
+	double[] optimiseRegions2D(
 			RandomAccessibleInterval< R > rai5D,
 			ArrayList< ? extends Interval > intervals )
 	{

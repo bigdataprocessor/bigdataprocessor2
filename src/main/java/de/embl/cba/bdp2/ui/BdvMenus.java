@@ -1,7 +1,7 @@
 package de.embl.cba.bdp2.ui;
 
 import de.embl.cba.bdp2.process.*;
-import de.embl.cba.bdp2.process.splitviewmerge.SplitViewMerging;
+import de.embl.cba.bdp2.process.splitviewmerge.SplitViewMergingDialog;
 import de.embl.cba.bdp2.tracking.BigDataTrackerGUI;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
@@ -95,7 +95,7 @@ public class BdvMenus
         }else if(e.getActionCommand().equalsIgnoreCase(
                     UIDisplayConstants.SPLIT_VIEW_MENU_ITEM )){
                 BigDataProcessor2.generalThreadPool.submit(() -> {
-                    new SplitViewMerging( ( BdvImageViewer ) imageViewer );
+                    new SplitViewMergingDialog( ( BdvImageViewer ) imageViewer );
         });
 
     }

@@ -70,21 +70,17 @@ public class SplitViewMergingHelpers
 		return intervals;
 	}
 
+
 	public static
-	ArrayList< FinalInterval > asIntervals( ArrayList< long[] > centres, long[] spans )
+	ArrayList< FinalInterval > asIntervals( ArrayList< long[] > minList, long[] span )
 	{
 		ArrayList< FinalInterval > intervals = new ArrayList<>(  );
 
-		for ( long[] centre : centres )
+		for ( long[] min : minList )
 		{
-			final long[] min = new long[ centre.length ];
-			final long[] max = new long[ centre.length ];
-
+			final long[] max = new long[ min.length ];
 			for ( int d = 0; d < 2; d++ )
-			{
-				min[ d ] = ( long ) ( ( centre[ d ] - spans[ d ] / 2.0 ) );
-				max[ d ] = ( long ) ( ( centre[ d ] + spans[ d ] / 2.0 ) );
-			}
+				max[ d ] = min[ d ] + span[ d ] - 1;
 
 			intervals.add( new FinalInterval( min, max ) );
 		}
