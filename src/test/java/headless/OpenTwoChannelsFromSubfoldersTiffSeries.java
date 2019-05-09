@@ -1,7 +1,8 @@
+package headless;
+
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
-import de.embl.cba.bdp2.viewers.ViewerUtils;
 
 /**
  * IMPORTANT NOTE: Adjust Max value to 255 in the Big Data Viewer. (Settings>Brightness and Color>Max)
@@ -21,6 +22,9 @@ public class OpenTwoChannelsFromSubfoldersTiffSeries
                 imageDirectory,
                 FileInfos.LOAD_CHANNELS_FROM_FOLDERS,
                 ".*" );
+
+        bigDataProcessor2.showImage( image );
+
     }
 
 }

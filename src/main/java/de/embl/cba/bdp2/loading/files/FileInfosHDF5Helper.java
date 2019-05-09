@@ -89,7 +89,6 @@ public class FileInfosHDF5Helper
         return dataSetExists;
     }
 
-
     private static void setHDF5DatasetViaUI( IHDF5Reader reader,
                                              StringBuilder hdf5DataSet) {
 
@@ -108,7 +107,7 @@ public class FileInfosHDF5Helper
         hdf5DataSet.append( gd.getNextChoice() );
     }
 
-    public static String dsInfoToTypeString(HDF5DataSetInformation dsInfo) {  //TODO : DUPLICATE CODE! Fix it! --ashis
+    public static String dsInfoToTypeString (HDF5DataSetInformation dsInfo ) {  //TODO : DUPLICATE CODE! Fix it! --ashis
         HDF5DataTypeInformation dsType = dsInfo.getTypeInformation();
         String typeText = "";
 

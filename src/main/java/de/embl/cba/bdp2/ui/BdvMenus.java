@@ -88,7 +88,7 @@ public class BdvMenus
                new Binning<>(imageViewer);
             });
         }else if(e.getActionCommand().equalsIgnoreCase(
-            UIDisplayConstants.SPLIT_VIEW_MENU_ITEM )){
+            UIDisplayConstants.CHROMATIC_SHIFT_CORRECTION_MENU_ITEM )){
             BigDataProcessor2.generalThreadPool.submit(() -> {
                 new ChromaticShiftCorrection<>( imageViewer );
             });
@@ -97,6 +97,7 @@ public class BdvMenus
                 BigDataProcessor2.generalThreadPool.submit(() -> {
                     new SplitViewMerging( ( BdvImageViewer ) imageViewer );
         });
+
     }
     }
 }
