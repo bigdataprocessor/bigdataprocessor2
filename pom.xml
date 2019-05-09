@@ -5,12 +5,12 @@
 	<parent>
 		<groupId>org.scijava</groupId>
 		<artifactId>pom-scijava</artifactId>
-		<version>25.0.0</version>
+		<version>26.0.0</version>
 	</parent>
 
 	<groupId>de.embl.cba</groupId>
 	<artifactId>fiji-plugin-bigDataProcessor2</artifactId>
-	<version>0.2.03</version>
+	<version>0.2.04</version>
 
 	<name>Fiji Plugin BigDataProcessor2</name>
 	<description>TODO</description>
@@ -185,16 +185,19 @@
 			<artifactId>guava</artifactId>
 		</dependency>
 
+
+		<!-- CBA -->
+
 		<dependency>
 			<groupId>de.embl.cba</groupId>
 			<artifactId>imaris-writer</artifactId>
-			<version>0.1.0</version>
+			<version>0.1.02</version>
 		</dependency>
 
 		<dependency>
 			<groupId>de.embl.cba</groupId>
 			<artifactId>bdv-utils</artifactId>
-			<version>0.2.07</version>
+			<version>0.2.14</version>
 		</dependency>
 
 		<dependency>
@@ -206,7 +209,7 @@
 		<dependency>
 			<groupId>de.embl.cba</groupId>
 			<artifactId>transforms-utils</artifactId>
-			<version>0.2.00</version>
+			<version>0.2.01</version>
 		</dependency>
 
 
