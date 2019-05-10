@@ -30,6 +30,7 @@ import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
 
 import javax.swing.*;
+import java.util.List;
 
 public class BdvImageViewer< R extends RealType< R > & NativeType< R >>
         implements ImageViewer
@@ -163,11 +164,11 @@ public class BdvImageViewer< R extends RealType< R > & NativeType< R >>
     }
 
     @Override
-    public void setDisplayRange(double min, double max, int channel) {
-        final ConverterSetup converterSetup = this.bdvStackSource.getBdvHandle().getSetupAssignments().getConverterSetups().get(channel);
+    public void setDisplayRange(double min, double max, int channel)
+    {
+        final List< ConverterSetup > converterSetups = this.bdvStackSource.getBdvHandle().getSetupAssignments().getConverterSetups();
+        final ConverterSetup converterSetup = converterSetups.get( channel );
         converterSetup.setDisplayRange( min, max );
-        converterSetup.getSetupId();
-
     }
 
 
@@ -218,11 +219,10 @@ public class BdvImageViewer< R extends RealType< R > & NativeType< R >>
     @Override
     public void doAutoContrastPerChannel() {
         int nChannels = (int) image.getRai().dimension( DimensionOrder.C);
-        for (int channel = 0; channel < nChannels; ++channel) {
+        for (int channel = 0; channel < nChannels; ++channel)
+        {
             DisplaySettings setting = getAutoContrastDisplaySettings(channel);
-            setDisplayRange( setting.getMinValue(), setting.getMaxValue(), 0);
-            //channel is always 0 (zero) because converterSetup object gets removed and added at the end of bdvSS in setDisplayRange method.
-            //Hence current channel is always at position 0 of the bdvSS.
+            setDisplayRange( setting.getMinValue(), setting.getMaxValue(), channel);
         }
     }
 
@@ -247,15 +247,16 @@ public class BdvImageViewer< R extends RealType< R > & NativeType< R >>
         bdvStackSource.getBdvHandle().getViewerPanel().requestRepaint();
     }
 
-    public void replicateViewerContrast(ImageViewer newImageView) {
+    // TODO: remove this function. rather specify "keep contrast" during replacing the image
+    public void replicateViewerContrast( ImageViewer newImageView ) {
         int nChannels =this.getBdvStackSource().getBdvHandle().getSetupAssignments().getConverterSetups().size();
-        for (int channel = 0; channel < nChannels; ++channel) {
+        for (int channel = 0; channel < nChannels; ++channel)
+        {
             ConverterSetup converterSetup = this.getBdvStackSource().getBdvHandle().getSetupAssignments().getConverterSetups().get(channel);
-            if (!(converterSetup instanceof PlaceHolderConverterSetup)) { // PlaceHolderConverterSetup is the Overlay.
-                newImageView.setDisplayRange(converterSetup.getDisplayRangeMin(), converterSetup.getDisplayRangeMax(), 0);
+            if (!(converterSetup instanceof PlaceHolderConverterSetup))
+            { // PlaceHolderConverterSetup is the Overlay.
+                newImageView.setDisplayRange(converterSetup.getDisplayRangeMin(), converterSetup.getDisplayRangeMax(), channel);
             }
-            //channel is always 0 (zero) because converterSetup object gets removed and added at the end of bdvSS in setDisplayRange method.
-            //Hence current channel is always at position 0 of the bdvSS.
         }
     }
 
@@ -285,7 +286,7 @@ public class BdvImageViewer< R extends RealType< R > & NativeType< R >>
         bdvStackSource = addToBdv( image );
         setTransform();
         setColors();
-        addGrayValueOverlay();
+        //addGrayValueOverlay();
     }
 
     private BdvStackSource< Volatile< R > > addToBdv( Image< R > image )
