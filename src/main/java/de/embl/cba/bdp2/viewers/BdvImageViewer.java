@@ -364,14 +364,17 @@ public class BdvImageViewer< R extends RealType< R > & NativeType< R >>
                     = VolatileViews.wrapAsVolatile( rai );
             final Volatile< R > typeFromInterval = Util.getTypeFromInterval( volatileRai );
             return volatileRai;
-        } catch (IllegalArgumentException e)
-		{
-			System.out.println( "Wrap as volatile failed!");
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-
-        return null;
+        catch (IllegalArgumentException e)
+		{
+			System.err.println( "Wrap as volatile failed!");
+            return null;
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     private void addGrayValueOverlay() {

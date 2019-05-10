@@ -39,6 +39,7 @@ import de.embl.cba.bdp2.progress.Progress;
 import de.embl.cba.bdp2.saving.SavingSettings;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.ui.DisplaySettings;
+import de.embl.cba.bdp2.viewers.ImageViewer;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
@@ -156,6 +157,34 @@ public class Utils {
 		bdp.saveImage( merge, savingSettings, progress );
 		Logger.log( "Saving: " + savingSettings.volumesFilePath );
 		Progress.waitUntilDone( progress, 1000 );
+	}
+
+	public static < T extends RealType< T > & NativeType< T > >
+	void showRaiKeepingDisplaySettingsAndTransform(
+			RandomAccessibleInterval< T > rai,
+			ImageViewer< T > imageViewer )
+	{
+		final AffineTransform3D viewerTransform = imageViewer.getViewerTransform();
+
+		int nChannels = (int) imageViewer.getImage().getRai().dimension( DimensionOrder.C );
+		final ArrayList< DisplaySettings > displaySettings = new ArrayList<>();
+		for ( int c = 0; c < nChannels; c++ )
+			displaySettings.add( imageViewer.getDisplaySettings( c ) );
+
+		imageViewer.show(
+				rai,
+				imageViewer.getImage().getName(),
+				imageViewer.getImage().getVoxelSpacing(),
+				imageViewer.getImage().getVoxelUnit(),
+				false );
+
+		imageViewer.setViewerTransform( viewerTransform );
+		for ( int c = 0; c < nChannels; c++ )
+			imageViewer.setDisplayRange(
+					displaySettings.get( c ).getMinValue(),
+					displaySettings.get( c ).getMaxValue(),
+					c );
+
 	}
 
 //	public static ImagePlus getFullStackFromInfo(int channel, int time, FileInfoSource infoSource){

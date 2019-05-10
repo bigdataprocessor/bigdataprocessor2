@@ -221,9 +221,6 @@ public class VolatileViews
 			}
 			else
 			{
-				/**
-				 * Brilliant suggestion from Philipp Hanslovsky!
-				 */
 				Converter< V, Volatile< S > > volatileConverter
 						= (vt, vu) -> {
 					boolean isValid = vt.isValid();
@@ -329,8 +326,10 @@ public class VolatileViews
 
 			return volatileViewData;
 		}
-
-		throw new IllegalArgumentException();
+		else
+		{
+			throw new IllegalArgumentException();
+		}
 	}
 
 	private static < T extends NativeType< T >, V extends Volatile< T > >
