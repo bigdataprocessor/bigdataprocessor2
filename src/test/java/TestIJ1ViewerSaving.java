@@ -23,6 +23,6 @@ public class TestIJ1ViewerSaving
 //      final SavingSettings savingSettings = SavingSettings.getDefaults();
 //		savingSettings.voxelSpacing =imageViewer.getImage().getVoxelSpacing();
 //		savingSettings.unit = imageViewer.getImage().getVoxelUnit();
-//		BigDataProcessor.saveImage( savingSettings, bigDataProcessor.getImageViewer() );
+//		BigDataProcessor.saveImageAndWaitUntilDone( savingSettings, bigDataProcessor.getImageViewer() );
 	}
 }

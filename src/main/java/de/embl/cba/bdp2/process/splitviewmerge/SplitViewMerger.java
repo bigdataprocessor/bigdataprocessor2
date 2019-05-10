@@ -19,6 +19,54 @@ import static de.embl.cba.bdp2.utils.DimensionOrder.C;
 public class SplitViewMerger
 {
 
+	private long[] upperLeftCornerRegionA;
+	private long[] upperLeftCornerRegionB;
+	private long[] regionSpan;
+
+	public SplitViewMerger()
+	{
+
+	}
+
+	public void setUpperLeftCornerRegionA( long... upperLeftCornerRegionA )
+	{
+		this.upperLeftCornerRegionA = upperLeftCornerRegionA;
+	}
+
+	public void setUpperLeftCornerRegionB( long... upperLeftCornerRegionB )
+	{
+		this.upperLeftCornerRegionB = upperLeftCornerRegionB;
+	}
+
+	public void setRegionSpan( long... regionSpan )
+	{
+		this.regionSpan = regionSpan;
+	}
+
+	public < R extends RealType< R > & NativeType< R > >
+	Image< R > mergeRegionsAandB( Image< R > image )
+	{
+
+		final ArrayList< long[] > mins = new ArrayList<>();
+		mins.add( upperLeftCornerRegionA );
+		mins.add( upperLeftCornerRegionB );
+
+
+		ArrayList< FinalInterval > intervals =
+				SplitViewMergingHelpers.asIntervals( mins, regionSpan );
+
+		final RandomAccessibleInterval< R > merge = merge( image.getRai(), intervals );
+
+		final Image< R > mergeImage = new Image<>(
+				merge,
+				image.getName(),
+				image.getVoxelSpacing(),
+				image.getVoxelUnit() );
+
+		return mergeImage;
+	}
+
+
 	public static < R extends RealType< R > & NativeType< R > >
 	Image< R > merge(
 			Image< R > image,

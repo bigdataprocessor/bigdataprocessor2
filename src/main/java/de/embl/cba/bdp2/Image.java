@@ -42,7 +42,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		this.name = name;
 	}
 
-	public void setVoxelSpacing( double[] voxelSpacing )
+	public void setVoxelSpacing( double... voxelSpacing )
 	{
 		this.voxelSpacing = voxelSpacing;
 	}

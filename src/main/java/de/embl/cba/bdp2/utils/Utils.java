@@ -32,7 +32,12 @@ package de.embl.cba.bdp2.utils;
 
 import bdv.util.Bdv;
 import bdv.viewer.animate.SimilarityTransformAnimator;
+import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.logging.Logger;
+import de.embl.cba.bdp2.progress.DefaultProgressListener;
+import de.embl.cba.bdp2.progress.Progress;
+import de.embl.cba.bdp2.saving.SavingSettings;
+import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.ui.DisplaySettings;
 import ij.IJ;
 import ij.ImagePlus;
@@ -141,6 +146,17 @@ public class Utils {
             e.printStackTrace();
         }
     }
+
+	public static < R extends RealType< R > & NativeType< R > > void saveImageAndWaitUntilDone(
+	        BigDataProcessor2< R > bdp,
+            SavingSettings savingSettings,
+            Image< R > merge )
+	{
+		final DefaultProgressListener progress = new DefaultProgressListener();
+		bdp.saveImage( merge, savingSettings, progress );
+		Logger.log( "Saving: " + savingSettings.volumesFilePath );
+		Progress.waitUntilDone( progress, 1000 );
+	}
 
 //	public static ImagePlus getFullStackFromInfo(int channel, int time, FileInfoSource infoSource){
 //	    SerializableFileInfo[] infos_c_t = infoSource.getSerializableFileStackInfo(channel,time);
