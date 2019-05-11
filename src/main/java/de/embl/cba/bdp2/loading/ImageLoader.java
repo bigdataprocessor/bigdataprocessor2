@@ -36,7 +36,7 @@ public class ImageLoader< T extends NativeType< T > > implements CellLoader< T >
 
         // TODO: optimiseRegions2D based on input file format
         int cellDimX = infoSource.nX;
-        int cellDimY = 45; //infoSource.nY;// 45;
+        int cellDimY = infoSource.nY; // 45;
 
         this.cellDims = new int[]{ cellDimX, cellDimY, 1, 1, 1 };
         this.dimensions = infoSource.getDimensions();
@@ -52,7 +52,6 @@ public class ImageLoader< T extends NativeType< T > > implements CellLoader< T >
         };
         serializableFileInfoCache = CacheBuilder.newBuilder().maximumSize( 50 ).build(loader);
     }
-
 
     private SerializableFileInfo getFileInfo( SingleCellArrayImg cell )
     {

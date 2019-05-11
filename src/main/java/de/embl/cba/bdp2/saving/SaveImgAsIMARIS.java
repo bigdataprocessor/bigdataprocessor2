@@ -1,6 +1,5 @@
 package de.embl.cba.bdp2.saving;
 
-import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
@@ -8,11 +7,7 @@ import de.embl.cba.imaris.H5DataCubeWriter;
 import de.embl.cba.imaris.ImarisDataSet;
 import ij.ImagePlus;
 import net.imagej.ImgPlus;
-import net.imagej.axis.Axes;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.img.Img;
-import net.imglib2.img.ImgView;
-import net.imglib2.img.cell.CellImgFactory;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Util;
@@ -22,7 +17,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements Runnable {
-    private int current_t;
+    private int timePoint;
     private final int nFrames;
     private final int nChannels;
     private final ImgPlus<T> image;
@@ -32,34 +27,25 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
     private ImarisDataSet imarisDataSetProperties;
     private final T nativeType;
     private final AtomicBoolean stop;
+    private final RandomAccessibleInterval rai;
 
     public SaveImgAsIMARIS(
             SavingSettings savingSettings,
-            ImarisDataSet imarisDS,
+            ImarisDataSet imarisDataSet,
             int timePoint,
             AtomicInteger counter,
             long startTime,
             AtomicBoolean stop)
     {
-        this.nativeType = (T)Util.getTypeFromInterval(savingSettings.rai );
-        Img imgTemp = ImgView.wrap( savingSettings.rai, new CellImgFactory<>(nativeType));
-        this.image = new ImgPlus<>(imgTemp, "", FileInfos.AXES_ORDER);
-
-        if (this.image.dimensionIndex(Axes.TIME) >= 0) {
-            this.nFrames = Math.toIntExact(image.dimension(this.image.dimensionIndex(Axes.TIME)));
-        } else {
-            this.nFrames = 1;
-        }
-        if (this.image.dimensionIndex(Axes.CHANNEL) >= 0) {
-            this.nChannels = Math.toIntExact(image.dimension(this.image.dimensionIndex(Axes.CHANNEL)));
-        } else {
-            this.nChannels = 1;
-        }
+        rai = savingSettings.rai;
+        this.nativeType = Util.getTypeFromInterval( rai );
+        this.nFrames = Math.toIntExact( rai.dimension( DimensionOrder.T ) );
+        this.nChannels = Math.toIntExact( rai.dimension( DimensionOrder.C ) );
         this.savingSettings = savingSettings;
-        this.current_t = timePoint;
+        this.timePoint = timePoint;
         this.counter = counter;
         this.startTime = startTime;
-        this.imarisDataSetProperties = imarisDS;
+        this.imarisDataSetProperties = imarisDataSet;
         this.stop = stop;
     }
 
@@ -84,16 +70,14 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
 //            // TODO: do something...
 //        }
 
+        long start;
+        final long totalFiles = nFrames * nChannels;
 
-        final long totalSlices = nFrames * nChannels;
-
-        RandomAccessibleInterval< T > rai = savingSettings.rai;
-
-        for (int c = 0; c < this.nChannels; c++)
+        for (int c = 0; c < nChannels; c++)
         {
             if (stop.get()) {
                 savingSettings.saveVolumes = false;
-                Logger.progress("Stopped saving thread: ", "" + this.current_t);
+                Logger.progress("Stopped saving thread: ", "" + this.timePoint );
                 return;
             }
 
@@ -105,37 +89,52 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
                     rai.min( DimensionOrder.Y ),
                     rai.min( DimensionOrder.Z ),
                     c,
-                    this.current_t};
+                    this.timePoint };
             long[] maxInterval = new long[]{
                     rai.max( DimensionOrder.X ),
                     rai.max( DimensionOrder.Y ),
                     rai.max( DimensionOrder.Z ),
                     c,
-                    this.current_t};
+                    this.timePoint };
 
-            RandomAccessibleInterval< T > crop = Views.interval(rai, minInterval, maxInterval);
+            start = System.currentTimeMillis();
+
+            RandomAccessibleInterval< T > oneChannelAndTimePoint =
+                    Views.interval(rai, minInterval, maxInterval);
 
             if (stop.get()) {
                 savingSettings.saveVolumes = false;
                 savingSettings.saveProjections = false;
-                Logger.progress("Stopped saving thread: ", "" + current_t);
+                Logger.progress("Stopped saving thread: ", "" + timePoint );
                 return;
             }
 
+            // TODO: implement native imaris writer
             ImagePlus imagePlus =
                     Utils.wrapToCalibratedImagePlus(
-                            crop,
+                            oneChannelAndTimePoint,
                             savingSettings.voxelSpacing,
                             savingSettings.voxelUnit,
                         "BinnedWrapped");
 
+            System.out.println( "Wrap to ImagePlus [ s ]: " + ( System.currentTimeMillis() - start ) / 1000);
+
+            // force into RAM
+            start = System.currentTimeMillis();
+            final ImagePlus duplicate = imagePlus.duplicate();
+            System.out.println( "Load into RAM [ s ]: " + ( System.currentTimeMillis() - start ) / 1000);
+
+            start = System.currentTimeMillis();
 
             // Save volume
-            if ( savingSettings.saveVolumes ) {
+            if ( savingSettings.saveVolumes )
+            {
                 H5DataCubeWriter writer = new H5DataCubeWriter();
                 writer.writeImarisCompatibleResolutionPyramid(
-                        imagePlus, imarisDataSetProperties, c, this.current_t);
+                        duplicate, imarisDataSetProperties, c, this.timePoint );
             }
+            System.out.println( "Save as Imaris [ s ]: " + ( System.currentTimeMillis() - start ) / 1000);
+
 
             // Save projections
             if (savingSettings.saveProjections ) {
@@ -151,7 +150,7 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
             counter.incrementAndGet();
 
             if (!stop.get())
-                SaveImgHelper.documentProgress( totalSlices, counter, startTime );
+                SaveImgHelper.documentProgress( totalFiles, counter, startTime );
 
 
         }

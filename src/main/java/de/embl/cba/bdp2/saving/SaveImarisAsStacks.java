@@ -38,7 +38,7 @@ public class SaveImarisAsStacks extends AbstractImgSaver {
     public void startSave() {
         List<Future> futures = new ArrayList<>();
         AtomicInteger counter = new AtomicInteger(0);
-        ImarisDataSet imarisDataSetProperties = getImarisDataSet(savingSettings, stop);
+        ImarisDataSet imarisDataSetProperties = getImarisDataSet( savingSettings, stop );
         final long startTime = System.currentTimeMillis();
         long timeFrames = savingSettings.rai.dimension(DimensionOrder.T);
         NativeType imageType = Util.getTypeFromInterval(savingSettings.rai);
