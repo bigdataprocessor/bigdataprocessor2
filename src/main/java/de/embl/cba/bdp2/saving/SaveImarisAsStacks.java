@@ -42,12 +42,19 @@ public class SaveImarisAsStacks extends AbstractImgSaver {
         final long startTime = System.currentTimeMillis();
         long timeFrames = savingSettings.rai.dimension(DimensionOrder.T);
         NativeType imageType = Util.getTypeFromInterval(savingSettings.rai);
+
         for (int t = 0; t < timeFrames; t++) {
-            if (imageType instanceof UnsignedByteType) {
+            if (imageType instanceof UnsignedByteType)
+            {
                 futures.add(es.submit(
-                        new SaveImgAsIMARIS<UnsignedByteType>(savingSettings, imarisDataSetProperties, t, counter, startTime, stop)
+                        new SaveImgAsIMARIS<UnsignedByteType>(
+                                savingSettings,
+                                imarisDataSetProperties,
+                                t, counter, startTime, stop)
                 ));
-            } else if (imageType instanceof UnsignedShortType) {
+            }
+            else if (imageType instanceof UnsignedShortType)
+            {
                 futures.add(
                         es.submit(
                                 new SaveImgAsIMARIS<UnsignedShortType>(
@@ -61,13 +68,18 @@ public class SaveImarisAsStacks extends AbstractImgSaver {
             } else if (imageType instanceof FloatType) {
                 futures.add(
                         es.submit(
-                                new SaveImgAsIMARIS<FloatType>(savingSettings, imarisDataSetProperties, t, counter, startTime, stop)
+                                new SaveImgAsIMARIS<FloatType>(
+                                        savingSettings,
+                                        imarisDataSetProperties,
+                                        t, counter, startTime, stop)
                         ));
             }
         }
         // Monitor the progress
-        Thread thread = new Thread(() -> Progress.informProgressListener(futures,
-                FileInfos.PROGRESS_UPDATE_MILLISECONDS, progressListener));
+        Thread thread = new Thread(() -> Progress.informProgressListener(
+                futures,
+                FileInfos.PROGRESS_UPDATE_MILLISECONDS,
+                progressListener));
         thread.start();
     }
 
@@ -77,44 +89,40 @@ public class SaveImarisAsStacks extends AbstractImgSaver {
         Utils.shutdownThreadPack(es,TIME_OUT_SECONDS);
     }
 
-    private ImarisDataSet getImarisDataSet(SavingSettings savingSettings, AtomicBoolean stop) {
+    private ImarisDataSet getImarisDataSet(SavingSettings settings, AtomicBoolean stop) {
+
+        final String directory = new File( settings.volumesFilePath ).getParent();
+        final String filename = new File( settings.volumesFilePath ).getName();
 
         ImagePlus image = Utils.wrapToCalibratedImagePlus(
-                savingSettings.rai,
-                savingSettings.voxelSpacing,
-                savingSettings.voxelUnit,
+                settings.rai,
+                settings.voxelSpacing,
+                settings.voxelUnit,
                 "wrapped");
 
-        String[] binnings = savingSettings.bin.split(";");
+        String[] binnings = settings.bin.split(";");
         int[] binning = Utils.delimitedStringToIntegerArray(binnings[0], ",");
 
         ImarisDataSet imarisDataSet = new ImarisDataSet(
                 image,
                 binning,
-                savingSettings.parentDirectory,
-                savingSettings.fileBaseNameIMARIS);
+                directory,
+                filename );
 
-        imarisDataSet.setLogger(new de.embl.cba.logging.IJLazySwingLogger());
+        imarisDataSet.setLogger( new de.embl.cba.logging.IJLazySwingLogger() );
 
-        if (stop.get()) {
-            return null;
-        }
+        if (stop.get())  return null;
 
         ImarisWriter.writeHeaderFile(
                 imarisDataSet,
-                savingSettings.parentDirectory,
-                savingSettings.fileBaseNameIMARIS + ".ims"
+                directory,
+                filename + ".ims"
         );
 
-        ArrayList<File> imarisFiles = ImarisUtils.getImarisFiles(savingSettings.parentDirectory);
+        ArrayList<File> imarisFiles = ImarisUtils.getImarisFiles( directory );
         if (imarisFiles.size() > 1) {
             ImarisWriter.writeCombinedHeaderFile(imarisFiles, "meta.ims");
         }
-
-        // TODO: remove below
-//        ImarisWriter.writeHeaderFile(
-//                imarisDataSet, savingSettings.parentDirectory,
-//                savingSettings.fileBaseNameIMARIS + ".h5");
 
         Logger.info("Image sizes at different resolutions:");
         Utils.logArrayList(imarisDataSet.getDimensions());

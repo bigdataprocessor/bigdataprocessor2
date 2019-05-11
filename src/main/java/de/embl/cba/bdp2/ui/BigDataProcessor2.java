@@ -60,9 +60,9 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
         kickOffThreadPack( Runtime.getRuntime().availableProcessors() * 2 );
     }
 
-    private void kickOffThreadPack(int numThreads) {
+    private void kickOffThreadPack( int numThreads ) {
         if ( generalThreadPool == null)
-            generalThreadPool = Executors.newFixedThreadPool(numThreads);
+            generalThreadPool = Executors.newFixedThreadPool( numThreads );
     }
 
     public Image< R > openTiffData(
@@ -129,10 +129,11 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
     ImgSaver saveImage(
             Image< R > image,
             SavingSettings savingSettings,
-            ProgressListener progressListener ) {
+            ProgressListener progressListener )
+    {
         Logger.info( "Saving: Started..." );
-        int nIOThread = Math.max(1, Math.min(savingSettings.nThreads, MAX_THREAD_LIMIT));
-        ExecutorService saveExecutorService = Executors.newFixedThreadPool(nIOThread);
+        int nIOThread = Math.max( 1, Math.min( savingSettings.nThreads, MAX_THREAD_LIMIT));
+        ExecutorService saveExecutorService = Executors.newFixedThreadPool( nIOThread );
         savingSettings.rai = image.getRai();
         savingSettings.voxelSpacing = image.getVoxelSpacing();
         savingSettings.voxelUnit = image.getVoxelUnit();

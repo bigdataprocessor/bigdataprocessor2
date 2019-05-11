@@ -85,7 +85,7 @@ public class BdvMenus
         }else if(e.getActionCommand().equalsIgnoreCase(
                 UIDisplayConstants.BINNING_MENU_ITEM )){
             BigDataProcessor2.generalThreadPool.submit(() -> {
-               new Binning<>(imageViewer);
+               new BinningDialog<>(imageViewer);
             });
         }else if(e.getActionCommand().equalsIgnoreCase(
             UIDisplayConstants.CHROMATIC_SHIFT_CORRECTION_MENU_ITEM )){

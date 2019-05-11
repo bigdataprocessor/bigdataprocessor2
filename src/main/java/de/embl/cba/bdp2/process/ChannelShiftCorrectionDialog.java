@@ -104,7 +104,7 @@ public class ChannelShiftCorrectionDialog < T extends RealType< T > & NativeType
 			final RandomAccessibleInterval< T > correctedRAI =
 					channelShifter.getChannelShiftedRAI( translations );
 
-			Utils.showRaiKeepingDisplaySettingsAndTransform(
+			Utils.showRaiKeepingAllSettings(
 					correctedRAI,
 					imageViewer );
 		}

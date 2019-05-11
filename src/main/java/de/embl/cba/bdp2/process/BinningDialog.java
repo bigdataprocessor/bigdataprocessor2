@@ -7,8 +7,6 @@ import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.ui.BdvMenus;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.ImageViewer;
-import de.embl.cba.lazyalgorithm.LazyDownsampler;
-import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
@@ -16,10 +14,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class Binning< T extends RealType< T > & NativeType< T > >
+public class BinningDialog< T extends RealType< T > & NativeType< T > >
 {
 
-	public Binning( final ImageViewer< T > imageViewer  )
+	public BinningDialog( final ImageViewer< T > imageViewer  )
 	{
 		final Image< T > inputImage = imageViewer.getImage();
 		ImageViewer newImageViewer = imageViewer.newImageViewer();
@@ -30,16 +28,6 @@ public class Binning< T extends RealType< T > & NativeType< T > >
 		newImageViewer.addMenus( new BdvMenus() );
 
 		showBinningAdjustmentDialog( newImageViewer, inputImage );
-	}
-
-	private static double[] getBinnedVoxelSize( long[] span, double[] voxelSpacing )
-	{
-		final double[] newVoxelSize = new double[ voxelSpacing.length ];
-
-		for ( int d = 0; d < 3; d++ )
-			newVoxelSize[ d ] = voxelSpacing[ d ] * ( 2 * span[ d ] + 1 );
-
-		return newVoxelSize;
 	}
 
 	private void showBinningAdjustmentDialog( ImageViewer imageViewer, Image< T > inputImage )
@@ -80,7 +68,7 @@ public class Binning< T extends RealType< T > & NativeType< T > >
 
 				previousSpan = span;
 
-				final Image< T > binned = bin( inputImage, span );
+				final Image< T > binned = Binner.bin( inputImage, span );
 
 				imageViewer.show( binned, true );
 
@@ -124,22 +112,6 @@ public class Binning< T extends RealType< T > & NativeType< T > >
 		frame.setResizable( false );
 		frame.pack();
 		frame.setVisible( true );
-	}
-
-	public static < T extends RealType< T > & NativeType< T > >
-	Image< T > bin( Image< T > inputImage, long[] span )
-	{
-		final RandomAccessibleInterval< T > downSampleView =
-				new LazyDownsampler<>( inputImage.getRai(), span ).getDownsampledView();
-
-		return ( Image< T > ) new Image(
-				downSampleView,
-				inputImage.getName() + "_bin",
-				getBinnedVoxelSize(
-						span,
-						inputImage.getVoxelSpacing() ),
-				inputImage.getVoxelUnit()
-		);
 	}
 
 

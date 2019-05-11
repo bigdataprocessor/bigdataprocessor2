@@ -42,7 +42,7 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
             AtomicBoolean stop)
     {
         this.nativeType = (T)Util.getTypeFromInterval(savingSettings.rai );
-        Img imgTemp = ImgView.wrap(savingSettings.rai,new CellImgFactory<>(nativeType));
+        Img imgTemp = ImgView.wrap( savingSettings.rai, new CellImgFactory<>(nativeType));
         this.image = new ImgPlus<>(imgTemp, "", FileInfos.AXES_ORDER);
 
         if (this.image.dimensionIndex(Axes.TIME) >= 0) {
@@ -84,8 +84,11 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
 //            // TODO: do something...
 //        }
 
+
         final long totalSlices = nFrames * nChannels;
-        RandomAccessibleInterval image = savingSettings.rai;
+
+        RandomAccessibleInterval< T > rai = savingSettings.rai;
+
         for (int c = 0; c < this.nChannels; c++)
         {
             if (stop.get()) {
@@ -98,21 +101,19 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
             //   ImagePlus impChannelTime = getDataCube( c );  May be faster???
 
             long[] minInterval = new long[]{
-                    image.min( DimensionOrder.X ),
-                    image.min( DimensionOrder.Y ),
-                    image.min( DimensionOrder.Z ),
+                    rai.min( DimensionOrder.X ),
+                    rai.min( DimensionOrder.Y ),
+                    rai.min( DimensionOrder.Z ),
                     c,
                     this.current_t};
             long[] maxInterval = new long[]{
-                    image.max( DimensionOrder.X ),
-                    image.max( DimensionOrder.Y ),
-                    image.max( DimensionOrder.Z ),
+                    rai.max( DimensionOrder.X ),
+                    rai.max( DimensionOrder.Y ),
+                    rai.max( DimensionOrder.Z ),
                     c,
                     this.current_t};
 
-            RandomAccessibleInterval newRai = Views.interval(image, minInterval, maxInterval);
-            newRai = SaveImgHelper.convertor( newRai, this.savingSettings );
-            Img<T> imgChannelTime = ImgView.wrap( newRai, new CellImgFactory(nativeType) );
+            RandomAccessibleInterval< T > crop = Views.interval(rai, minInterval, maxInterval);
 
             if (stop.get()) {
                 savingSettings.saveVolumes = false;
@@ -121,40 +122,40 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
                 return;
             }
 
-            String newPath = savingSettings.volumesFilePath;
-
-            String sC = String.format("%1$02d", c);
-            String sT = String.format("%1$05d", current_t);
-            newPath = newPath + "--C" + sC + "--T" + sT + ".h5";
-
             ImagePlus imagePlus =
                     Utils.wrapToCalibratedImagePlus(
-                            imgChannelTime,
+                            crop,
                             savingSettings.voxelSpacing,
                             savingSettings.voxelUnit,
                         "BinnedWrapped");
 
 
             // Save volume
-            if (savingSettings.saveVolumes ) {
+            if ( savingSettings.saveVolumes ) {
                 H5DataCubeWriter writer = new H5DataCubeWriter();
                 writer.writeImarisCompatibleResolutionPyramid(
                         imagePlus, imarisDataSetProperties, c, this.current_t);
             }
 
             // Save projections
-            // TODO: save into one single file
             if (savingSettings.saveProjections ) {
-                SaveImgAsTIFFStacks.saveAsTiffXYZMaxProjection(
-                        imagePlus, c, this.current_t, newPath);
+                // TODO
+//                String projectionPath = savingSettings.projectionsFilePath;
+//                String sC = String.format("%1$02d", c);
+//                String sT = String.format("%1$05d", current_t);
+//                projectionPath = projectionPath + "--C" + sC + "--T" + sT + ".tif";
+//                SaveImgAsTIFFStacks.saveAsTiffXYZMaxProjection(
+//                        imagePlus, c, this.current_t, projectionPath);
             }
 
             counter.incrementAndGet();
+
+            if (!stop.get())
+                SaveImgHelper.documentProgress( totalSlices, counter, startTime );
+
+
         }
 
-        if (!stop.get()) {
-            SaveImgHelper.documentProgress(totalSlices, counter, startTime);
-        }
 
     }
 

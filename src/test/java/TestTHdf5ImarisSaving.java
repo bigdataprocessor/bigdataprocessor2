@@ -33,6 +33,7 @@ public class TestTHdf5ImarisSaving {
         defaults.parentDirectory = "src/test/resources/";
         defaults.voxelSpacing = imageViewer.getImage().getVoxelSpacing();
         defaults.voxelUnit = imageViewer.getImage().getVoxelUnit();
+
         new BigDataProcessor2().saveImage( imageViewer.getImage(), defaults, new ProgressListener()
         {
             @Override

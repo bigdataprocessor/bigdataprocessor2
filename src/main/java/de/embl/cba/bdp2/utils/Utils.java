@@ -160,7 +160,7 @@ public class Utils {
 	}
 
 	public static < T extends RealType< T > & NativeType< T > >
-	void showRaiKeepingDisplaySettingsAndTransform(
+	void showRaiKeepingAllSettings(
 			RandomAccessibleInterval< T > rai,
 			ImageViewer< T > imageViewer )
 	{
@@ -341,7 +341,8 @@ public class Utils {
             String unit,
             String name )
     {
-        ImagePlus imp = ImageJFunctions.wrap( Views.permute(raiXYZCT, DimensionOrder.Z, DimensionOrder.C), name);
+        ImagePlus imp = ImageJFunctions.wrap(
+                Views.permute(raiXYZCT, DimensionOrder.Z, DimensionOrder.C), name);
 
         final Calibration calibration = new Calibration();
         calibration.setUnit( unit );

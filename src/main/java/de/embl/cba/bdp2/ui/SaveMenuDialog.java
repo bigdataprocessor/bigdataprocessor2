@@ -145,27 +145,31 @@ public class SaveMenuDialog extends JFrame implements ActionListener {
                 if (fileType.equals(SavingSettings.FileType.IMARIS_STACKS )) {
                     savingSettings.fileBaseNameIMARIS = file.getName();
                     savingSettings.parentDirectory = file.getParent();
+                    savingSettings.nThreads = 1;
                 }
 
                 progressBar.setVisible(true);
                 pack();
                 save.setEnabled(false);
                 BigDataProcessor2.generalThreadPool.submit(() -> {
-                    this.saver = BigDataProcessor2.saveImage( imageViewer.getImage(), savingSettings, null );
-                    saver.setProgressListener( ( current, total ) ->{
-                        int progress = (int) ((current*100) / total);
-                        progressBar.setValue(progress);
-                        if (progress == 100){
-                            progressBar.setVisible(false);
-                            save.setEnabled(true);
-                            progressBar.setValue(0);
-                            if (!MESSAGE_SAVE_INTERRUPTED.equals(MESSAGE.getText())) {
-                                MESSAGE.setText(MESSAGE_SAVE_FINISHED);
-                            }
-                            pack();
-                            saver.stopSave();
-                        }
-                    });
+                    this.saver = BigDataProcessor2.saveImage(
+                            imageViewer.getImage(),
+                            savingSettings,
+                            ( current, total ) -> {
+                                int progress = (int) ( (current*100) / total );
+                                progressBar.setValue(progress);
+                                if (progress == 100)
+                                {
+                                    progressBar.setVisible(false);
+                                    save.setEnabled(true);
+                                    progressBar.setValue(0);
+                                    if (!MESSAGE_SAVE_INTERRUPTED.equals(MESSAGE.getText())) {
+                                        MESSAGE.setText(MESSAGE_SAVE_FINISHED);
+                                    }
+                                    pack();
+                                    saver.stopSave();
+                                }
+                             });
                 });
 
             }
