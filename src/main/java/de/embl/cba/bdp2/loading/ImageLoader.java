@@ -30,7 +30,7 @@ public class ImageLoader< T extends NativeType< T > > implements CellLoader< T >
     private String directory;
     private long[] dimensions;
     private int[] cellDims;
-    private LoadingCache<List<Integer>, SerializableFileInfo[]> serializableFileInfoCache;
+    private LoadingCache< List< Integer >, SerializableFileInfo[] > serializableFileInfoCache;
 
     public ImageLoader( FileInfos infoSource ) {
 
@@ -43,7 +43,7 @@ public class ImageLoader< T extends NativeType< T > > implements CellLoader< T >
         this.directory = infoSource.directory;
 
         //Google Guava cache
-        CacheLoader<List<Integer>, SerializableFileInfo[]> loader =
+        CacheLoader< List<Integer>, SerializableFileInfo[] > loader =
                 new CacheLoader<List<Integer>, SerializableFileInfo[]>(){
                     @Override
                     public SerializableFileInfo[] load( List<Integer> c_t ){

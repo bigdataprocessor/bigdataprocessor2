@@ -148,7 +148,8 @@ public class Utils {
         }
     }
 
-	public static < R extends RealType< R > & NativeType< R > > void saveImageAndWaitUntilDone(
+	public static < R extends RealType< R > & NativeType< R > >
+    void saveImageAndWaitUntilDone(
 	        BigDataProcessor2< R > bdp,
             SavingSettings savingSettings,
             Image< R > merge )

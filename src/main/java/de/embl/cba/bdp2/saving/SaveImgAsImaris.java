@@ -3,6 +3,7 @@ package de.embl.cba.bdp2.saving;
 import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
+import de.embl.cba.bdp2.volatiles.VolatileViews;
 import de.embl.cba.imaris.H5DataCubeWriter;
 import de.embl.cba.imaris.ImarisDataSet;
 import ij.ImagePlus;
@@ -16,7 +17,7 @@ import net.imglib2.view.Views;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements Runnable {
+public class SaveImgAsImaris<T extends RealType<T> & NativeType<T>> implements Runnable {
     private int timePoint;
     private final int nFrames;
     private final int nChannels;
@@ -27,7 +28,7 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
     private final AtomicBoolean stop;
     private final RandomAccessibleInterval rai;
 
-    public SaveImgAsIMARIS(
+    public SaveImgAsImaris(
             SavingSettings savingSettings,
             ImarisDataSet imarisDataSet,
             int timePoint,
@@ -80,7 +81,7 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
 
             // TODO: This involves both loading and computation and thus
             // could be done in parallel to the writing...
-            final ImagePlus duplicate = getImagePlus( c );
+            final ImagePlus imagePlus = getImagePlus( c );
 
             // Save volume
             if ( savingSettings.saveVolumes )
@@ -88,13 +89,13 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
                 start = System.currentTimeMillis();
                 H5DataCubeWriter writer = new H5DataCubeWriter();
                 writer.writeImarisCompatibleResolutionPyramid(
-                        duplicate, imarisDataSetProperties, c, this.timePoint );
+                        imagePlus, imarisDataSetProperties, c, this.timePoint );
                 System.out.println( "Save data cube as Imaris [ s ]: "
                         + ( System.currentTimeMillis() - start ) / 1000);
             }
 
             // Save projections
-            if (savingSettings.saveProjections ) {
+            if ( savingSettings.saveProjections ) {
                 // TODO
 //                String projectionPath = savingSettings.projectionsFilePath;
 //                String sC = String.format("%1$02d", c);
@@ -130,6 +131,8 @@ public class SaveImgAsIMARIS<T extends RealType<T> & NativeType<T>> implements R
 
         RandomAccessibleInterval< T > oneChannelAndTimePoint =
                 Views.interval(rai, minInterval, maxInterval);
+
+        VolatileViews.wrapAsVolatile( oneChannelAndTimePoint );
 
 
         ImagePlus imagePlus =

@@ -6,6 +6,11 @@ import de.embl.cba.bdp2.process.Binner;
 import de.embl.cba.bdp2.saving.SavingSettings;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.utils.Utils;
+import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.cache.Cache;
+import net.imglib2.cache.img.CachedCellImg;
+import net.imglib2.cache.util.LoaderCacheAsCacheAdapter;
+
 import java.io.File;
 
 public class SaveSingleChanneHdf5SeriesAsImaris
@@ -25,30 +30,33 @@ public class SaveSingleChanneHdf5SeriesAsImaris
                 ".*.h5",
                 "Data" );
 
+        final RandomAccessibleInterval rai = image.getRai();
+
+        final CachedCellImg cachedCellImg = ( CachedCellImg ) rai;
+        final LoaderCacheAsCacheAdapter cache = ( LoaderCacheAsCacheAdapter ) cachedCellImg.getCache();
+
+
         image.setVoxelUnit( "micrometer" );
         image.setVoxelSpacing( 0.13, 0.13, 1.04 );
 
-        //bdp.showImage( image );
+        bdp.showImage( image );
 
-        final Image bin = Binner.bin( image, new long[]{ 1, 1, 1, 0, 0 } );
-
-//        bdp.showImage( bin );
-
-
-        final File out = new File( "/Users/tischer/Desktop/stack_0_channel_0-asImaris-bdp2/im");
-
-        // TODO: change the chunking of the highest resolution!
-
-        final SavingSettings savingSettings = SavingSettings.getDefaults();
-        savingSettings.fileType = SavingSettings.FileType.IMARIS_STACKS;
-        savingSettings.nThreads = 1;
-        savingSettings.isotropicProjectionResampling = true;
-        savingSettings.isotropicProjectionVoxelSize = 0.5;
-        savingSettings.saveProjections = false;
-        savingSettings.saveVolumes = true;
-        savingSettings.volumesFilePath = out.toString();
-
-        Utils.saveImageAndWaitUntilDone( bdp, savingSettings, bin );
+//        final Image bin = Binner.bin( image, new long[]{ 1, 1, 1, 0, 0 } );
+//        //   bdp.showImage( bin );
+//
+//        final File out = new File( "/Users/tischer/Desktop/stack_0_channel_0-asImaris-bdp2/im");
+//
+//
+//        final SavingSettings savingSettings = SavingSettings.getDefaults();
+//        savingSettings.fileType = SavingSettings.FileType.IMARIS_STACKS;
+//        savingSettings.nThreads = 1;
+//        savingSettings.isotropicProjectionResampling = true;
+//        savingSettings.isotropicProjectionVoxelSize = 0.5;
+//        savingSettings.saveProjections = false;
+//        savingSettings.saveVolumes = true;
+//        savingSettings.volumesFilePath = out.toString();
+//
+//        Utils.saveImageAndWaitUntilDone( bdp, savingSettings, bin );
 
     }
 

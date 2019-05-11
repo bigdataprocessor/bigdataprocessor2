@@ -145,7 +145,7 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
         if ( savingSettings.saveProjections )
             Utils.createFilePathParentDirectories( savingSettings.projectionsFilePath );
 
-        AbstractImgSaver saver = factory.getSaver(savingSettings, saveExecutorService );
+        AbstractImgSaver saver = factory.getSaver( savingSettings, saveExecutorService );
         saver.setProgressListener( progressListener );
         saver.startSave();
         return saver;
