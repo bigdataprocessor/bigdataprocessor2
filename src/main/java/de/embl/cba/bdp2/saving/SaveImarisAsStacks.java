@@ -120,9 +120,10 @@ public class SaveImarisAsStacks extends AbstractImgSaver {
         );
 
         ArrayList<File> imarisFiles = ImarisUtils.getImarisFiles( directory );
-        if (imarisFiles.size() > 1) {
+
+        if (imarisFiles.size() > 1)
             ImarisWriter.writeCombinedHeaderFile(imarisFiles, "meta.ims");
-        }
+
 
         Logger.info("Image sizes at different resolutions:");
         Utils.logArrayList(imarisDataSet.getDimensions());

@@ -2,6 +2,7 @@ package benchmark;
 
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
+import de.embl.cba.bdp2.process.Binner;
 import de.embl.cba.bdp2.saving.SavingSettings;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.utils.Utils;
@@ -29,6 +30,11 @@ public class SaveSingleChanneHdf5SeriesAsImaris
 
         //bdp.showImage( image );
 
+        final Image bin = Binner.bin( image, new long[]{ 1, 1, 1, 0, 0 } );
+
+//        bdp.showImage( bin );
+
+
         final File out = new File( "/Users/tischer/Desktop/stack_0_channel_0-asImaris-bdp2/im");
 
         // TODO: change the chunking of the highest resolution!
@@ -42,7 +48,7 @@ public class SaveSingleChanneHdf5SeriesAsImaris
         savingSettings.saveVolumes = true;
         savingSettings.volumesFilePath = out.toString();
 
-        Utils.saveImageAndWaitUntilDone( bdp, savingSettings, image );
+        Utils.saveImageAndWaitUntilDone( bdp, savingSettings, bin );
 
     }
 

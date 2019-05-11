@@ -57,7 +57,7 @@ public class SaveImgHelper
         {
             Logger.progress( "Saved file",
                     "" + counter.get() + "/" + total
-                            + "; time (spent, left, task) [min]: "
+                            + "; time ( spent, left, task ) [ min ]: "
                             + ( int ) minutesSpent
                             + ", " + ( int ) minutesLeft
                             + ", " + ( int ) ( minutesSpent / counter.get() )
@@ -68,7 +68,7 @@ public class SaveImgHelper
         {
             Logger.progress( "Saved file",
                     "" + counter.get() + "/" + total
-                            + "; time (spent, left, task) [sec]: "
+                            + "; time ( spent, left, task ) [ s ]: "
                             + ( int ) ( minutesSpent * 60 )
                             + ", " + ( int ) ( minutesLeft * 60 )
                             + ", " + ( int ) ( minutesSpent * 60 / counter.get() )
