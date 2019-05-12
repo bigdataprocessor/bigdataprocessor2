@@ -55,7 +55,7 @@ public class FileInfos
     public int nX;
     public int nY;
     public int nZ;
-    public String unit;
+    public String voxelUnit;
     public double[] voxelSpacing;
     public String fileType;
     public String h5DataSetName;
@@ -76,7 +76,9 @@ public class FileInfos
             String directory,
             String loadingScheme,
             String filterPattern,
-            String h5DataSetName){
+            String h5DataSetName)
+    {
+        directory = Utils.fixDirectoryFormat( directory );
 
         this.directory = directory;
         if ( loadingScheme.contains("<Z") ){// TODO: change below logic somehow (maybe via GUI?)
@@ -84,7 +86,10 @@ public class FileInfos
         }else{
             this.h5DataSetName = h5DataSetName;
             FileInfosHelper.setFileSourceInfos(
-                    this, directory, loadingScheme, filterPattern );
+                    this,
+                    directory,
+                    loadingScheme,
+                    filterPattern );
         }
         infos = new SerializableFileInfo[nC][nT][nZ];
         dimensions = new long[ 5 ];
@@ -93,7 +98,7 @@ public class FileInfos
         dimensions[ DimensionOrder.Z ] = nZ;
         dimensions[ DimensionOrder.C ] = nC;
         dimensions[ DimensionOrder.T ] = nT;
-        if ( unit == null || Objects.equals(unit, "")) unit = "pixel";
+        if ( voxelUnit == null || Objects.equals( voxelUnit, "")) voxelUnit = "pixel";
 
         Logger.info( this.toString() );
     }

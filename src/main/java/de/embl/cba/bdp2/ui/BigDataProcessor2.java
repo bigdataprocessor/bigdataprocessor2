@@ -87,8 +87,6 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
             String filterPattern,
             String dataset )
     {
-        directory = Utils.fixDirectoryFormat( directory );
-
         FileInfos fileInfos =
 				new FileInfos(
 				        directory,

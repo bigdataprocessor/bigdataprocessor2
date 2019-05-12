@@ -164,7 +164,7 @@ public class FileInfosHelper
                 info[0].pixelHeight,
                 info[0].pixelDepth };
 
-        infoSource.unit = info[0].unit;
+        infoSource.voxelUnit = info[0].unit;
 
     }
 
@@ -189,7 +189,7 @@ public class FileInfosHelper
             //
             // Check for sub-folders
             //
-            Logger.info("checking for sub-folders...");
+            Logger.info("Checking for sub-folders...");
             infoSource.channelFolders = getFoldersInFolder(directory);
 
             if ( infoSource.channelFolders != null )
@@ -197,19 +197,22 @@ public class FileInfosHelper
                 fileLists = new String[infoSource.channelFolders.length][];
                 for (int i = 0; i < infoSource.channelFolders.length; i++)
                 {
-                    fileLists[i] = getFilesInFolder(directory + infoSource.channelFolders[i], filterPattern);
+                    fileLists[i] = getFilesInFolder(
+                            directory + infoSource.channelFolders[i],
+                            filterPattern);
+
                     if ( fileLists[i] == null )
                     {
-                        Logger.info("no files found in folder: " + directory + infoSource.channelFolders[i]);
+                        Logger.error("No files found in folder: " + directory + infoSource.channelFolders[i]);
                         return false;
                     }
                 }
-                Logger.info( "found sub-folders => interpreting as channel folders." );
+                Logger.info( "Found sub-folders => loading channels from sub-folders." );
             }
             else
             {
-                Logger.info("no sub-folders found.");
-                Logger.info("No sub-folders found; please specify a different options for loading " +
+                Logger.error("No sub-folders found; " +
+                        "please specify a different options for loading " +
                         "the channels");
                 return false;
             }
@@ -336,7 +339,8 @@ public class FileInfosHelper
 
             if ( fileLists[0][0].endsWith(".tif") )
             {
-                setImageDataInfoFromTiff( infoSource, directory + infoSource.channelFolders[0], fileLists[0][0] );
+                setImageDataInfoFromTiff( infoSource,
+                        directory + infoSource.channelFolders[0], fileLists[0][0] );
 
                 if ( namingScheme.equals( FileInfos.EM_TIFF_SLICES ) )
                 {
@@ -364,8 +368,6 @@ public class FileInfosHelper
 
             infoSource.nT = nT;
             infoSource.nC = nC;
-
-            Logger.info("File type: " + infoSource.fileType );
 
             //
             // getCachedCellImg the final file list

@@ -2,6 +2,7 @@ package de.embl.cba.bdp2.loading;
 
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
+import de.embl.cba.bdp2.logging.Logger;
 import net.imglib2.cache.img.CachedCellImg;
 import net.imglib2.cache.img.DiskCachedCellImgOptions.CacheType;
 import net.imglib2.cache.img.ReadOnlyCachedCellImgFactory;
@@ -15,6 +16,8 @@ import static net.imglib2.cache.img.ReadOnlyCachedCellImgOptions.options;
 
 public class CachedCellImgReader
 {
+
+    public static final int MAX_ARRAY_LENGTH = Integer.MAX_VALUE - 100;
 
     public static CachedCellImg getCachedCellImg( FileInfos fileInfos )
     {
@@ -47,15 +50,46 @@ public class CachedCellImgReader
                                                   int cellDimY,
                                                   int cellDimZ )
     {
-        ImageLoader loader = new ImageLoader( fileInfos, cellDimX, cellDimY, cellDimZ );
+        final ImageLoader loader = new ImageLoader( fileInfos, cellDimX, cellDimY, cellDimZ );
 
-        CachedCellImg cachedCellImg;
         final ReadOnlyCachedCellImgOptions options = options()
-                .cellDimensions(loader.getCellDims())
+                .cellDimensions( loader.getCellDims() )
                 .cacheType( CacheType.BOUNDED)
                 .maxCacheSize(100).volatileAccesses( true );
 
-        cachedCellImg = new ReadOnlyCachedCellImgFactory().create(
+        final CachedCellImg cachedCellImg = new ReadOnlyCachedCellImgFactory().create(
+                loader.getDimensions(),
+                fileInfos.getType(),
+                loader,
+                options);
+
+        return cachedCellImg;
+    }
+
+    public static CachedCellImg getVolumeCachedCellImg( FileInfos fileInfos )
+    {
+
+        int cellDimX = fileInfos.nX;
+        int cellDimY = fileInfos.nY;
+        int cellDimZ = fileInfos.nZ;
+
+        if ( cellDimX * cellDimY * cellDimZ > MAX_ARRAY_LENGTH )
+        {
+            Logger.info( "Adapting cell size in Z to satisfy java array indexing limit.");
+            Logger.info( "Desired cell size in Z: " + cellDimZ );
+            cellDimZ = MAX_ARRAY_LENGTH / ( cellDimY * cellDimZ );
+            Logger.info( "Adapted cell size in Z: " + cellDimZ );
+        }
+
+
+        final ImageLoader loader = new ImageLoader( fileInfos, cellDimX, cellDimY, cellDimZ );
+
+        final ReadOnlyCachedCellImgOptions options = options()
+                .cellDimensions( loader.getCellDims() )
+                .cacheType( CacheType.BOUNDED)
+                .maxCacheSize(100).volatileAccesses( true );
+
+        final CachedCellImg cachedCellImg = new ReadOnlyCachedCellImgFactory().create(
                 loader.getDimensions(),
                 fileInfos.getType(),
                 loader,
@@ -70,7 +104,7 @@ public class CachedCellImgReader
                 cachedCellImg,
                 new File( fileInfos.directory ).getName(),
                 fileInfos.voxelSpacing,
-                fileInfos.unit
+                fileInfos.voxelUnit
                 );
     }
 }

@@ -5,7 +5,6 @@ import ch.systemsx.cisd.hdf5.HDF5DataTypeInformation;
 import ch.systemsx.cisd.hdf5.HDF5Factory;
 import ch.systemsx.cisd.hdf5.IHDF5Reader;
 import de.embl.cba.bdp2.logging.Logger;
-import de.embl.cba.bdp2.ui.HDF5DatasetDialog;
 import ij.gui.GenericDialog;
 
 import java.util.Arrays;
@@ -46,7 +45,7 @@ public class FileInfosHDF5Helper
 
         // There is no standard way of retrieving voxelSpacings from h5 data....
         imageDataInfo.voxelSpacing = new double[]{1,1,1};
-        imageDataInfo.unit = "micrometer";
+        imageDataInfo.voxelUnit = "micrometer";
 
     }
 

@@ -67,10 +67,10 @@ public class CachedCellImgReplacer
 
 	public RandomAccessibleInterval< T > getReplaced()
 	{
-		return ( RandomAccessibleInterval< T > ) replace();
+		return ( RandomAccessibleInterval< T > ) replace( rai );
 	}
 
-	private RandomAccessible< T > replace()
+	private RandomAccessible< T > replace( RandomAccessible< T > rai )
 	{
 		if ( rai instanceof CachedCellImg )
 		{
@@ -80,7 +80,7 @@ public class CachedCellImgReplacer
 		else if ( rai instanceof IntervalView )
 		{
 			final IntervalView< T > view = ( IntervalView< T > ) rai;
-			final RandomAccessible< T > replace = getReplaced( view.getSource() );
+			final RandomAccessible< T > replace = replace( view.getSource() );
 			final IntervalView intervalView = new IntervalView( replace, view );
 			return intervalView;
 		}
@@ -88,7 +88,7 @@ public class CachedCellImgReplacer
 		{
 			final MixedTransformView< T > view = ( MixedTransformView< T > ) rai;
 
-			final RandomAccessible< T > replace = getReplaced( view.getSource() );
+			final RandomAccessible< T > replace = replace( view.getSource() );
 
 			final MixedTransformView< T > mixedTransformView =
 					new MixedTransformView<>(
@@ -102,7 +102,7 @@ public class CachedCellImgReplacer
 			final SubsampleIntervalView< T > view = ( SubsampleIntervalView< T > ) rai;
 
 			final RandomAccessibleInterval< T > replace =
-					( RandomAccessibleInterval< T > ) getReplaced( view.getSource() );
+					( RandomAccessibleInterval< T > ) replace( view.getSource() );
 
 			final SubsampleIntervalView subsampleIntervalView =
 					new SubsampleIntervalView(
@@ -133,7 +133,7 @@ public class CachedCellImgReplacer
 					= ( ConvertedRandomAccessibleInterval< T, S > ) rai;
 
 			final RandomAccessibleInterval< T > replace =
-					( RandomAccessibleInterval< T > ) getReplaced( view.getSource() );
+					( RandomAccessibleInterval< T > ) replace( view.getSource() );
 
 			final S destinationType = view.getDestinationType();
 
@@ -170,7 +170,7 @@ public class CachedCellImgReplacer
 
 			final List< RandomAccessible< T > > replacedSlices = new ArrayList<>();
 			for ( RandomAccessibleInterval< T > slice : slices )
-				replacedSlices.add( getReplaced( slice ) );
+				replacedSlices.add( replace( slice ) );
 
 			final StackView stackView = new StackView( replacedSlices );
 
@@ -182,7 +182,7 @@ public class CachedCellImgReplacer
 			final RectangleShape2.NeighborhoodsAccessible< T > view =
 					( RectangleShape2.NeighborhoodsAccessible ) rai;
 
-			final RandomAccessible< T > replace = getReplaced( view.getSource() );
+			final RandomAccessible< T > replace = replace( view.getSource() );
 
 			final RectangleShape2.NeighborhoodsAccessible neighborhoodsAccessible
 					= new RectangleShape2.NeighborhoodsAccessible(
@@ -199,7 +199,7 @@ public class CachedCellImgReplacer
 					( ExtendedRandomAccessibleInterval ) rai;
 
 			final RandomAccessibleInterval< T > replace =
-					( RandomAccessibleInterval< T > ) getReplaced( view.getSource() );
+					( RandomAccessibleInterval< T > ) replace( view.getSource() );
 
 			final ExtendedRandomAccessibleInterval extended
 					= new ExtendedRandomAccessibleInterval(
@@ -214,60 +214,5 @@ public class CachedCellImgReplacer
 		}
 	}
 
-	private static < T extends NativeType< T >, V extends Volatile< T > >
-	boolean isNeighborhood( RandomAccessibleInterval< V > vRAI )
-	{
-		final RandomAccess< V > vRandomAccess = vRAI.randomAccess();
 
-		// TODO: make more general
-		if ( vRandomAccess instanceof RectangleNeighborhoodRandomAccess )
-			return true;
-		else
-			return false;
-	}
-
-	@SuppressWarnings( "unchecked" )
-	private static < T extends NativeType< T >, V extends Volatile< T > & NativeType< V >, A > VolatileViewData< T, V > wrapCachedCellImg(
-			final CachedCellImg< T, A > cachedCellImg,
-			SharedQueue queue,
-			CacheHints hints )
-	{
-		final T type = cachedCellImg.createLinkedType();
-		final CellGrid grid = cachedCellImg.getCellGrid();
-		final Cache< Long, Cell< A > > cache = cachedCellImg.getCache();
-
-		final Set< AccessFlags > flags = AccessFlags.ofAccess( cachedCellImg.getAccessType() );
-		if ( !flags.contains( VOLATILE ) )
-			throw new IllegalArgumentException( "underlying " + CachedCellImg.class.getSimpleName() + " must have volatile access type" );
-		final boolean dirty = flags.contains( DIRTY );
-
-		final V vtype = ( V ) VolatileTypeMatcher.getVolatileTypeForType( type );
-		if ( queue == null )
-			queue = new SharedQueue( 1, 1 );
-		if ( hints == null )
-			hints = new CacheHints( LoadingStrategy.VOLATILE, 0, false );
-		@SuppressWarnings( "rawtypes" )
-		final VolatileCachedCellImg< V, ? > img = createVolatileCachedCellImg( grid, vtype, dirty, ( Cache ) cache, queue, hints );
-
-		return new VolatileViewData<>( img, queue, type, vtype );
-	}
-
-	private static < T extends NativeType< T >, A extends VolatileArrayDataAccess< A > > VolatileCachedCellImg< T, A > createVolatileCachedCellImg(
-			final CellGrid grid,
-			final T type,
-			final boolean dirty,
-			final Cache< Long, Cell< A > > cache,
-			final SharedQueue queue,
-			final CacheHints hints )
-	{
-		final CreateInvalid< Long, Cell< A > > createInvalid =
-				CreateInvalidVolatileCell.get( grid, type, dirty );
-
-		final VolatileCache< Long, Cell< A > > volatileCache =
-				new WeakRefVolatileCache<>( cache, queue, createInvalid );
-
-		final VolatileCachedCellImg< T, A > volatileImg =
-				new VolatileCachedCellImg<>( grid, type, hints, volatileCache.unchecked()::get );
-		return volatileImg;
-	}
 }
