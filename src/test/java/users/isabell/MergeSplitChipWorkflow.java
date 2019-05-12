@@ -21,7 +21,6 @@ import java.util.ArrayList;
 
 import static de.embl.cba.bdp2.ui.Utils.selectDirectories;
 
-
 public class MergeSplitChipWorkflow
 {
     public static < R extends RealType< R > & NativeType< R > >
@@ -96,7 +95,10 @@ public class MergeSplitChipWorkflow
                     "Data" );
 
             image.setVoxelUnit( voxelUnit );
-            image.setVoxelSpacing( voxelSpacingMicrometerX, voxelSpacingMicrometerY, voxelSpacingMicrometerZ );
+            image.setVoxelSpacing(
+                    voxelSpacingMicrometerX,
+                    voxelSpacingMicrometerY,
+                    voxelSpacingMicrometerZ );
 
             // merge
             final Image< R > merge = merger.mergeRegionsAandB( image );
