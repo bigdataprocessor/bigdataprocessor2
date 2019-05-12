@@ -9,27 +9,30 @@ import de.embl.cba.bdp2.saving.SavingSettings;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.ImageViewer;
+import javafx.stage.DirectoryChooser;
 import net.imagej.ImageJ;
 import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
+import java.io.File;
 import java.util.ArrayList;
+
+import static de.embl.cba.bdp2.ui.Utils.selectDirectories;
 
 
 public class MergeSplitChipWorkflow
 {
-    public static < R extends RealType< R > & NativeType< R > > void main( String[] args)
+    public static < R extends RealType< R > & NativeType< R > >
+    void main( String[] args )
     {
         final ImageJ imageJ = new ImageJ();
         imageJ.ui().showUI();
 
         final BigDataProcessor2< R > bdp = new BigDataProcessor2<>();
 
-        ArrayList< String > inputDirectories = new ArrayList<>(  );
-        inputDirectories.add( "/Users/tischer/Documents/isabell-schneider-splitchipmerge/stack_0_channel_0" );
-        inputDirectories.add( "/Users/tischer/Documents/isabell-schneider-splitchipmerge/stack_1_channel_0" );
+        final File[] directories = selectDirectories();
 
         final String voxelUnit = "micrometer";
         double voxelSpacingMicrometerX = 0.13;
@@ -51,15 +54,18 @@ public class MergeSplitChipWorkflow
          */
         ArrayList< Interval > croppingIntervals = new ArrayList<>(  );
 
-        for ( String inputDirectory : inputDirectories )
+        for ( File directory : directories )
         {
             final Image< R > image = bdp.openHdf5Image(
-                    inputDirectory,
+                    directory.toString(),
                     FileInfos.SINGLE_CHANNEL_TIMELAPSE,
                     ".*.h5",
                     "Data" );
             image.setVoxelUnit( voxelUnit );
-            image.setVoxelSpacing( voxelSpacingMicrometerX, voxelSpacingMicrometerY, voxelSpacingMicrometerZ );
+            image.setVoxelSpacing(
+                    voxelSpacingMicrometerX,
+                    voxelSpacingMicrometerY,
+                    voxelSpacingMicrometerZ );
 
             final Image< R > merge = merger.mergeRegionsAandB( image );
 
@@ -67,7 +73,7 @@ public class MergeSplitChipWorkflow
 
             final FinalInterval interval = viewer.get5DIntervalFromUser();
 
-            Logger.log( "Data set: " + inputDirectory );
+            Logger.log( "Data set: " + directory );
             Logger.log( "Crop interval: " + interval.toString()   );
             croppingIntervals.add( interval );
         }
@@ -79,12 +85,12 @@ public class MergeSplitChipWorkflow
          * as well as the cropped data, with projections
          *
          */
-        for ( int i = 0; i < inputDirectories.size(); i++ )
+        for ( int i = 0; i < directories.length; i++ )
         {
             // open
-            final String inputDirectory = inputDirectories.get( i );
+            final String directory = directories[ i ].toString();
             final Image< R > image = bdp.openHdf5Image(
-                    inputDirectory,
+                    directory,
                     FileInfos.SINGLE_CHANNEL_TIMELAPSE,
                     ".*.h5",
                     "Data" );
@@ -95,16 +101,17 @@ public class MergeSplitChipWorkflow
             // merge
             final Image< R > merge = merger.mergeRegionsAandB( image );
             savingSettings.saveVolumes = true;
-            savingSettings.volumesFilePath = inputDirectory + "-stacks/stack";
+            savingSettings.volumesFilePath = directory + "-stacks/stack";
             savingSettings.saveProjections = false;
             Utils.saveImageAndWaitUntilDone( bdp, savingSettings, merge );
 
             // crop
             final Image< R > crop = Cropper.crop( merge, croppingIntervals.get( i ) );
             savingSettings.saveVolumes = true;
-            savingSettings.volumesFilePath = inputDirectory + "-crop-stacks/stack";
+            savingSettings.volumesFilePath = directory + "-crop-stacks/stack";
             savingSettings.saveProjections = true;
-            savingSettings.projectionsFilePath = inputDirectory + "-crop-projections/projection";
+            savingSettings.projectionsFilePath =
+                    directory + "-crop-projections/projection";
             Utils.saveImageAndWaitUntilDone( bdp, savingSettings, crop );
 
         }
