@@ -335,7 +335,7 @@ public class Utils {
 //        return nativeType;
 //    }
 
-    public static ImagePlus wrapToCalibratedImagePlus(
+    public static ImagePlus wrap5DRaiToCalibratedImagePlus(
             RandomAccessibleInterval raiXYZCT,
             double[] voxelSpacing,
             String unit,
@@ -343,6 +343,34 @@ public class Utils {
     {
         ImagePlus imp = ImageJFunctions.wrap(
                 Views.permute(raiXYZCT, DimensionOrder.Z, DimensionOrder.C), name);
+
+        final Calibration calibration = new Calibration();
+        calibration.setUnit( unit );
+        calibration.pixelWidth = voxelSpacing[ 0 ];
+        calibration.pixelHeight = voxelSpacing[ 1 ];
+        calibration.pixelDepth = voxelSpacing[ 2 ];
+        imp.setCalibration( calibration );
+
+        return imp;
+    }
+
+
+    public static ImagePlus wrap3DRaiToCalibratedImagePlus(
+            RandomAccessibleInterval raiXYZ,
+            double[] voxelSpacing,
+            String unit,
+            String name )
+    {
+        final IntervalView viewXYZCT =
+                Views.addDimension(
+                        Views.addDimension( raiXYZ,
+                                0, 0 ),
+                        0, 0 );
+
+        final IntervalView viewXYCZT =
+                Views.permute( viewXYZCT, DimensionOrder.Z, DimensionOrder.C );
+
+        ImagePlus imp = ImageJFunctions.wrap( viewXYCZT, name);
 
         final Calibration calibration = new Calibration();
         calibration.setUnit( unit );

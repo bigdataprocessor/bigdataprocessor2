@@ -28,7 +28,7 @@ public class Logger
 
 	public static void debug( String msg )
 	{
-		// IJ.log( msg );
+		IJ.log( "[DEBUG] " + msg );
 	}
 
 	public static void error( String msg )

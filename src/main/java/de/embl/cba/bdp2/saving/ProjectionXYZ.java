@@ -26,6 +26,7 @@ package de.embl.cba.bdp2.saving;
 import de.embl.cba.bdp2.logging.Logger;
 import ij.ImagePlus;
 import ij.ImageStack;
+import ij.io.FileSaver;
 import ij.measure.Calibration;
 import ij.process.Blitter;
 import ij.process.ImageProcessor;
@@ -46,16 +47,30 @@ public class ProjectionXYZ {
         setDoscale(true);
     }
 
+    public static void saveAsTiffXYZMaxProjection(
+            ImagePlus imp, int c, int t, String path ) {
+
+        ProjectionXYZ projectionXYZ = new ProjectionXYZ( imp );
+        projectionXYZ.setDoscale( true );
+        ImagePlus projection = projectionXYZ.createProjection();
+
+        FileSaver fileSaver = new FileSaver(projection);
+        String sC = String.format("%1$02d", c);
+        String sT = String.format("%1$05d", t);
+        String pathCT = path + "--xyz-max-projection" + "--C" + sC + "--T" + sT + ".tif";
+        fileSaver.saveAsTiff(pathCT);
+    }
+
     void getZfactor(){
         Calibration calib = imp.getCalibration();
         this.xscale = calib.pixelWidth;
         this.yscale = calib.pixelHeight;
         this.zscale = calib.pixelDepth;
         if (this.xscale != this.yscale){
-            Logger.debug("x and y scale is not same: use only x for calculating z factor.");
+            //Logger.debug("x and y scale is not same: use only x for calculating z factor.");
         }
         this.zf = this.zscale / this.xscale;
-        Logger.debug("Z factor set to " + Double.toString(this.zf));
+        //Logger.debug("Z factor set to " + Double.toString(this.zf));
     }
 
     public ImagePlus createProjection(){
@@ -71,7 +86,7 @@ public class ProjectionXYZ {
         int x = stk.getWidth();
         int y = stk.getHeight();
         int z = stk.getSize();
-        Logger.debug("Z-size:" + Integer.toString(z));
+        //Logger.debug("Z-size: " + Integer.toString(z));
         // Create xy Processor with room for xz and yz
         ImageProcessor outxz = stk.getProcessor(1).createProcessor(x,z);
         ImageProcessor outyz = stk.getProcessor(1).createProcessor(z,y);
@@ -95,21 +110,23 @@ public class ProjectionXYZ {
             }
         }
         if (doscale){
-            Logger.debug("Z factor used:" + Double.toString(this.zf));
+//            Logger.debug("Z factor used:" + Double.toString(this.zf));
             double newzsize = ((double) outxz.getHeight()) * this.zf;
-            Logger.debug("...original size:" + Integer.toString(outxz.getHeight()));
-            Logger.debug("...new size:" + Double.toString(newzsize));
+//            Logger.debug("...original size:" + Integer.toString(outxz.getHeight()));
+//            Logger.debug("...new size:" + Double.toString(newzsize));
             outxz.setInterpolationMethod(ImageProcessor.BILINEAR);
             outxz = outxz.resize(outxz.getWidth(), (int) Math.round(newzsize));
 
             outyz.setInterpolationMethod(ImageProcessor.BILINEAR);
-            Logger.debug("YZ width Before Scaling: " + Integer.toString(outyz.getWidth()));
+//            Logger.debug("YZ width Before Scaling: " + Integer.toString(outyz.getWidth()));
             outyz = outyz.resize((int) Math.round(newzsize), outyz.getHeight());
-            Logger.debug("scaled XZ and YZ");
-            Logger.debug("YZ width After Scaling: " + Integer.toString(outyz.getWidth()));
+//            Logger.debug("scaled XZ and YZ");
+//            Logger.debug("YZ width After Scaling: " + Integer.toString(outyz.getWidth()));
         }
         ImageProcessor output = stk.getProcessor(1).
-                createProcessor(x + outyz.getWidth() + FRAME_WIDTH, y + outxz.getHeight() +FRAME_WIDTH);
+                createProcessor(
+                        x + outyz.getWidth() + FRAME_WIDTH,
+                        y + outxz.getHeight() +FRAME_WIDTH);
         output.copyBits(outxy, 0, 0, Blitter.COPY);
         output.copyBits(outxz, 0, y + FRAME_WIDTH, Blitter.COPY);
         output.copyBits(outyz, x + FRAME_WIDTH, 0, Blitter.COPY);

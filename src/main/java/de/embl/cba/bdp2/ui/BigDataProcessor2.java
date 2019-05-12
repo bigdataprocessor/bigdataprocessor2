@@ -135,6 +135,7 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
         int nIOThread = Math.max( 1, Math.min( savingSettings.nThreads, MAX_THREAD_LIMIT ));
         ExecutorService saveExecutorService = Executors.newFixedThreadPool( nIOThread );
 
+        Logger.info( "Saving: Configuring volume-wise reader..." );
         final CachedCellImg< R, ? > volumeCachedCellImg
                 = CachedCellImgReader.getVolumeCachedCellImg( image.getFileInfos() );
 
@@ -155,6 +156,7 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
         AbstractImgSaver saver = factory.getSaver( savingSettings, saveExecutorService );
         saver.setProgressListener( progressListener );
         saver.startSave();
+
         return saver;
     }
 

@@ -119,7 +119,9 @@ public class SaveImgAsImaris<T extends RealType<T> & NativeType<T>> implements R
 
     public ImagePlus getImagePlus( int c )
     {
-        long start;
+        // force into RAM
+        long start = System.currentTimeMillis();
+
         long[] minInterval = new long[]{
                 rai.min( DimensionOrder.X ),
                 rai.min( DimensionOrder.Y ),
@@ -133,20 +135,23 @@ public class SaveImgAsImaris<T extends RealType<T> & NativeType<T>> implements R
                 c,
                 this.timePoint };
 
+        // TODO: instead of copying the ImagePlus, one could copy the RAI into an ArrayImg
+        // and while doing so, employ multi-threading
+
         RandomAccessibleInterval< T > oneChannelAndTimePoint =
                 Views.interval(rai, minInterval, maxInterval);
 
         ImagePlus imagePlus =
-                Utils.wrapToCalibratedImagePlus(
+                Utils.wrap3DRaiToCalibratedImagePlus(
                         oneChannelAndTimePoint,
                         savingSettings.voxelSpacing,
                         savingSettings.voxelUnit,
                     "BinnedWrapped");
 
-        // force into RAM
-        start = System.currentTimeMillis();
+
         final ImagePlus duplicate = imagePlus.duplicate();
-        System.out.println( "Load and process data cube [ s ]: "
+
+        Logger.log( "Load and process data cube [ s ]: "
                 + ( System.currentTimeMillis() - start ) / 1000);
 
         return duplicate;

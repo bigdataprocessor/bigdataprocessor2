@@ -1,19 +1,15 @@
 package example;
 
 import de.embl.cba.bdp2.Image;
-import de.embl.cba.bdp2.loading.CachedCellImgReader;
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.process.Binner;
-import de.embl.cba.bdp2.saving.CachedCellImgReplacer;
 import de.embl.cba.bdp2.saving.SavingSettings;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.utils.Utils;
-import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.cache.img.CachedCellImg;
 
 import java.io.File;
 
-public class SaveSingleChanneHdf5SeriesAsImaris
+public class SaveSingleChanneHdf5SeriesAsTiffStacks
 {
 
     public static void main(String[] args)
@@ -21,7 +17,7 @@ public class SaveSingleChanneHdf5SeriesAsImaris
         final BigDataProcessor2 bdp = new BigDataProcessor2();
 
         final String directory =
-                "/Users/tischer/Documents/isabell-schneider-splitchipmerge/stacks_10";
+                "/Users/tischer/Documents/isabell-schneider-splitchipmerge/stack_0_channel_0";
 
         final int numIOThreads = 4; // TODO
 
@@ -43,14 +39,14 @@ public class SaveSingleChanneHdf5SeriesAsImaris
         final Image binnedImage = Binner.bin( image, new long[]{ 1, 1, 1, 0, 0 } );
         //   bdp.showImage( bin );
 
-        final File out = new File( "/Users/tischer/Desktop/stack_0_channel_0-asImaris-bdp2/im");
 
         final SavingSettings savingSettings = SavingSettings.getDefaults();
-        savingSettings.fileType = SavingSettings.FileType.IMARIS_STACKS;
+        savingSettings.fileType = SavingSettings.FileType.TIFF_STACKS;
         savingSettings.nThreads = 1;
-        savingSettings.saveProjections = false;
+        savingSettings.saveProjections = true;
+        savingSettings.volumesFilePath = "/Users/tischer/Desktop/stack_0_channel_0-asTIFF-volumes/im";
         savingSettings.saveVolumes = true;
-        savingSettings.volumesFilePath = out.toString();
+        savingSettings.projectionsFilePath = "/Users/tischer/Desktop/stack_0_channel_0-asTIFF-projections/im";
 
         Utils.saveImageAndWaitUntilDone( bdp, savingSettings, binnedImage );
 

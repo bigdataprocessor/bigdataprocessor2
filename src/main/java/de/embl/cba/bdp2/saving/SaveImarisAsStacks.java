@@ -94,7 +94,7 @@ public class SaveImarisAsStacks extends AbstractImgSaver {
         final String directory = new File( settings.volumesFilePath ).getParent();
         final String filename = new File( settings.volumesFilePath ).getName();
 
-        ImagePlus image = Utils.wrapToCalibratedImagePlus(
+        ImagePlus image = Utils.wrap5DRaiToCalibratedImagePlus(
                 settings.rai,
                 settings.voxelSpacing,
                 settings.voxelUnit,

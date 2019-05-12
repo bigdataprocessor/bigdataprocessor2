@@ -68,8 +68,6 @@ public class SaveSingleChanneHdf5SeriesAsImaris
         final SavingSettings savingSettings = SavingSettings.getDefaults();
         savingSettings.fileType = SavingSettings.FileType.IMARIS_STACKS;
         savingSettings.nThreads = 1;
-        savingSettings.isotropicProjectionResampling = true;
-        savingSettings.isotropicProjectionVoxelSize = 0.5;
         savingSettings.saveProjections = false;
         savingSettings.saveVolumes = true;
         savingSettings.volumesFilePath = out.toString();

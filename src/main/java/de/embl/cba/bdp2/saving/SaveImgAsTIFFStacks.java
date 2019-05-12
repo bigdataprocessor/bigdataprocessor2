@@ -2,8 +2,6 @@ package de.embl.cba.bdp2.saving;
 
 import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.utils.Utils;
-import de.embl.cba.transforms.utils.Scalings;
-import de.embl.cba.transforms.utils.Transforms;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.io.FileSaver;
@@ -14,6 +12,12 @@ import loci.formats.out.TiffWriter;
 import loci.formats.services.OMEXMLService;
 import loci.formats.tiff.IFD;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.loops.LoopBuilder;
+import net.imglib2.type.NativeType;
+import net.imglib2.type.Type;
+import net.imglib2.type.numeric.RealType;
+import net.imglib2.util.Util;
 import net.imglib2.view.Views;
 import ome.xml.model.enums.DimensionOrder;
 import ome.xml.model.enums.PixelType;
@@ -55,8 +59,10 @@ public class SaveImgAsTIFFStacks implements Runnable {
 
         //long freeMemoryInBytes = IJ.maxMemory() - IJ.currentMemory();
         RandomAccessibleInterval image = settings.rai;
+
         final long totalCubes = image.dimension( T ) * image.dimension( C );
-//            long numBytesOfImage = image.dimension(FileInfoConstants.X) *
+
+        //            long numBytesOfImage = image.dimension(FileInfoConstants.X) *
 //                    image.dimension(FileInfoConstants.Y) *
 //                    image.dimension(FileInfoConstants.Z) *
 //                    image.dimension(FileInfoConstants.C) *
@@ -66,6 +72,7 @@ public class SaveImgAsTIFFStacks implements Runnable {
 //            if (numBytesOfImage > 1.5 * freeMemoryInBytes) {
 //                // TODO: do something...
 //            }
+
         int totalChannels = Math.toIntExact( settings.rai.dimension( C ));
 
         for (int c = 0; c < totalChannels; c++)
@@ -76,39 +83,24 @@ public class SaveImgAsTIFFStacks implements Runnable {
                 return;
             }
 
+            // Here the image is loaded and processed
+            // TODO: consider multi-threading!
+            RandomAccessibleInterval raiXYZ = get3DRai( image, c );
 
-            long[] minInterval = new long[]{
-                    image.min( X ),
-                    image.min( Y ),
-                    image.min( Z ),
-                    c,
-                    t };
-
-            long[] maxInterval = new long[]{
-                    image.max( X ),
-                    image.max( Y ),
-                    image.max( Z ),
-                    c,
-                    t };
-
-
-            // Save volume
-            //
             if ( settings.saveVolumes )
             {
-                RandomAccessibleInterval rai = Views.interval( image, minInterval, maxInterval );
-                ImagePlus imp = Utils.wrapToCalibratedImagePlus(
-                        rai,
+                ImagePlus imp = Utils.wrap3DRaiToCalibratedImagePlus(
+                        raiXYZ,
                         settings.voxelSpacing,
                         settings.voxelUnit,
                         "" );
-                saveAsTiff( imp, c, t, settings.compression, settings.rowsPerStrip, settings.volumesFilePath );
+                saveAsTiff( imp, c, t,
+                        settings.compression, settings.rowsPerStrip, settings.volumesFilePath );
             }
 
 
-            // Save projections
             if ( settings.saveProjections )
-                saveProjections( image, c, minInterval, maxInterval );
+                saveProjections( raiXYZ, c );
 
             counter.incrementAndGet();
 
@@ -119,30 +111,81 @@ public class SaveImgAsTIFFStacks implements Runnable {
 
     }
 
-    private void saveProjections( RandomAccessibleInterval image, int c, long[] minInterval, long[] maxInterval )
+    public RandomAccessibleInterval get3DRai( RandomAccessibleInterval image, int c )
     {
-        RandomAccessibleInterval rai3D = Views.dropSingletonDimensions( Views.interval( image, minInterval, maxInterval ) );
+        long start = System.currentTimeMillis();
 
-        final double[] voxelSpacing = getVoxelSpacingCopy();
+        long[] minInterval = new long[]{
+                image.min( X ),
+                image.min( Y ),
+                image.min( Z ),
+                c,
+                t };
 
-        if ( settings.isotropicProjectionResampling )
-        {
-            final double[] scalingFactors = Transforms.getScalingFactors( voxelSpacing, settings.isotropicProjectionVoxelSize );
-            rai3D = Scalings.createRescaledArrayImg( rai3D, scalingFactors );
-            for ( int d = 0; d < 3; d++ )
-                voxelSpacing[ d ] /= scalingFactors[ d ];
-        }
+        long[] maxInterval = new long[]{
+                image.max( X ),
+                image.max( Y ),
+                image.max( Z ),
+                c,
+                t };
 
-        rai3D = Views.addDimension( rai3D,0, 0 );
-        rai3D = Views.addDimension( rai3D,0, 0 );
+        RandomAccessibleInterval raiXYZ =
+                Views.dropSingletonDimensions(
+                        Views.interval( image, minInterval, maxInterval ) );
 
-        ImagePlus imp3D = Utils.wrapToCalibratedImagePlus(
+        // force view into RAM
+        // TODO: Here, multi-threading could be interesting
+        raiXYZ = copyAsArrayImg( raiXYZ );
+
+        Logger.debug( "Load and process data cube [ s ]: "
+                + ( System.currentTimeMillis() - start ) / 1000);
+
+        return raiXYZ;
+    }
+
+    public static < T extends RealType< T > & NativeType< T > >
+    RandomAccessibleInterval< T > copyAsArrayImg( RandomAccessibleInterval< T > orig )
+    {
+        final RandomAccessibleInterval< T > copy =
+                        new ArrayImgFactory( Util.getTypeFromInterval( orig ) ).create( orig );
+
+        LoopBuilder.setImages( copy, orig ).forEachPixel( Type::set );
+
+        return copy;
+    }
+
+    private void saveProjections(
+            RandomAccessibleInterval rai3D,
+            int c )
+    {
+
+        long start = System.currentTimeMillis();
+
+//        if ( settings.isotropicProjectionResampling )
+//        {
+//            final double[] scalingFactors =
+//                    Transforms.getScalingFactors(
+//                            voxelSpacing,
+//                            settings.isotropicProjectionVoxelSize );
+//
+//            rai3D = Scalings.createRescaledArrayImg( rai3D, scalingFactors );
+//
+//            for ( int d = 0; d < 3; d++ )
+//                voxelSpacing[ d ] /= scalingFactors[ d ];
+//        }
+
+
+        ImagePlus imp3D = Utils.wrap3DRaiToCalibratedImagePlus(
                 rai3D,
-                voxelSpacing,
+                settings.voxelSpacing,
                 settings.voxelUnit,
                 "" );
 
-        saveAsTiffXYZMaxProjection( imp3D, c, t, settings.projectionsFilePath );
+        ProjectionXYZ.saveAsTiffXYZMaxProjection( imp3D, c, t, settings.projectionsFilePath );
+
+        Logger.debug( "Computing and saving projections  [ s ]: "
+                + ( System.currentTimeMillis() - start ) / 1000);
+
     }
 
     private double[] getVoxelSpacingCopy()
@@ -153,7 +196,13 @@ public class SaveImgAsTIFFStacks implements Runnable {
         return voxelSpacing;
     }
 
-    private void saveAsTiff(ImagePlus imp, int c, int t, String compression, int rowsPerStrip, String path) {
+    private void saveAsTiff(
+            ImagePlus imp,
+            int c,
+            int t,
+            String compression,
+            int rowsPerStrip,
+            String path) {
 
         if (compression.equals("LZW")) // Use BioFormats
         {
@@ -273,18 +322,6 @@ public class SaveImgAsTIFFStacks implements Runnable {
 
         }
 
-    }
-
-    public static void saveAsTiffXYZMaxProjection(ImagePlus imp, int c, int t, String path) {
-        ProjectionXYZ projectionXYZ = new ProjectionXYZ(imp);
-        projectionXYZ.setDoscale(false);
-        ImagePlus projection = projectionXYZ.createProjection();
-
-        FileSaver fileSaver = new FileSaver(projection);
-        String sC = String.format("%1$02d", c);
-        String sT = String.format("%1$05d", t);
-        String pathCT = path + "--xyz-max-projection" + "--C" + sC + "--T" + sT + ".tif";
-        fileSaver.saveAsTiff(pathCT);
     }
 
 }
