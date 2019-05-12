@@ -3,6 +3,7 @@ package de.embl.cba.bdp2.loading;
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.logging.Logger;
+import de.embl.cba.bdp2.utils.Utils;
 import net.imglib2.cache.img.CachedCellImg;
 import net.imglib2.cache.img.DiskCachedCellImgOptions.CacheType;
 import net.imglib2.cache.img.ReadOnlyCachedCellImgFactory;
@@ -21,8 +22,29 @@ public class CachedCellImgReader
 
     public static CachedCellImg getCachedCellImg( FileInfos fileInfos )
     {
-        // TODO: think about smarter defaults
-        return getCachedCellImg( fileInfos, fileInfos.nX, 20, 1 );
+        // TODO: optimise somehow....
+        final int cellDimY = ( int ) Math.ceil( fileInfos.nY / 10 );
+
+        if ( fileInfos.fileType.equals( Utils.FileType.HDF5.toString() ) )
+        {
+            return getCachedCellImg( fileInfos,
+                    fileInfos.nX, cellDimY, 1 );
+        }
+        else if ( fileInfos.fileType.equals( Utils.FileType.TIFF_STACKS.toString() ) )
+        {
+            return getCachedCellImg( fileInfos,
+                    fileInfos.nX, cellDimY, 1 );
+        }
+        else if ( fileInfos.fileType.equals( Utils.FileType.SINGLE_PLANE_TIFF.toString() ) )
+        {
+            return getCachedCellImg( fileInfos,
+                    fileInfos.nX, cellDimY, 1 );
+        }
+        else
+        {
+            return null;
+        }
+
     }
 
 
@@ -50,12 +72,12 @@ public class CachedCellImgReader
                                                   int cellDimY,
                                                   int cellDimZ )
     {
-        final ImageLoader loader = new ImageLoader( fileInfos, cellDimX, cellDimY, cellDimZ );
+        final ImageLoader loader =
+                new ImageLoader( fileInfos, cellDimX, cellDimY, cellDimZ );
+
 
         final ReadOnlyCachedCellImgOptions options = options()
-                .cellDimensions( loader.getCellDims() )
-                .cacheType( CacheType.BOUNDED)
-                .maxCacheSize(100).volatileAccesses( true );
+                .cellDimensions( loader.getCellDims() );
 
         final CachedCellImg cachedCellImg = new ReadOnlyCachedCellImgFactory().create(
                 loader.getDimensions(),

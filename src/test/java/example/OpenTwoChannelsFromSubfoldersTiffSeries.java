@@ -1,4 +1,4 @@
-package headless;
+package example;
 
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;

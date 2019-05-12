@@ -49,16 +49,19 @@ This is done lazily, i.e. the data on disk is not altered at this stage.
 
 ## Detailed information
 
-**BigDataProcessor2** is an [ImageJ](https://imagej.net) plugin designed for inspection, manipulation and conversion of big data image formats flawlessly even on a basic laptop or a computer.
-The plugin implements a [Lazy Loading design pattern](https://en.wikipedia.org/wiki/Lazy_loading) to seamlessly render Terabyte sized big data image data produced by light-sheet and electron microscopy, without bothering the RAM capacity. 
-The plugin facilitates loading & re-saving of TIF, HDF5 and Imaris HDF5 formats meanwhile allowing the user to shear, crop or bin. *(check out the User Documentation section below to explore what more you can do!)*
+**BigDataProcessor2 (BDP2)**  is an [ImageJ](https://imagej.net) plugin designed for inspection, manipulation and conversion of big data image formats even on a basic laptop or a computer.
+
+BigDataProcessor2 is based on [BigDataViewer](https://imagej.net/BigDataViewer) for rendering and the [ImgLib2](https://imagej.net/ImgLib2) library for image processing. 
+
+BigDataProcessor2 implements a [Lazy Loading design pattern](https://en.wikipedia.org/wiki/Lazy_loading) to render Terabyte sized big data image data produced by light-sheet and electron microscopy, also on laptops with limited RAM. 
+
+The plugin facilitates loading & saving of TIFF, HDF5 and Imaris file formats meanwhile allowing the user to shear, crop or bin. *(check out the User Documentation section below to explore what more you can do!)*
 
 The plugin also encloses **BigDataTracker**, an object tracker tool for the big data images and also allowing to view and save just the tracked regions.
-The BigDataProcessor2 harnesses the power of the popular [BigDataViewer](https://imagej.net/BigDataViewer) to render and [ImgLib2](https://imagej.net/ImgLib2) library for image processing towards an efficient plugin software suitable for everyday use for all microscopy practitioners.
+
 
 ## History
-The BigDataProcessor2 is a new revamped version of the popular **BigDataTools**, a.k.a [BigDataProcessor](https://github.com/embl-cba/fiji-plugin-bigDataProcessor). The BigDataProcessor2 is developed almost from scratch using ImgLib2 framework while preserving crux the BigDataTools. 
-The new plugin uses Big Data Viewer for flexible and efficient rendering however the backward compatibility with ImageJ1 viewer is a work in progress! Keep Posted!
+The BigDataProcessor2 is a new version of the **BigDataTools** plugin, a.k.a [BigDataProcessor](https://github.com/embl-cba/fiji-plugin-bigDataProcessor). BigDataProcessor2 is developed almost from scratch using the ImgLib2 framework.
 
 ## Supported Formats
 
@@ -67,12 +70,6 @@ The new plugin uses Big Data Viewer for flexible and efficient rendering however
 - Multi-stack HDF
 - Multi-stack IMARIS HDF
 
-## Export Options
-
-- Binning
-- 2D Projections of stacks
-- Gating pixels
-- 4D Cropping
  
 ## Installation
 Within ImageJ/Fiji you can install the plugin using the `Help > Update > Manage Update Sites` and select the `EMBL-CBA` site.
@@ -86,5 +83,23 @@ Ashis Ravindran&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
 ashis.r91@gmail.com&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;christian.tischer@embl.de
 
 ## User Documentation
+
+
+## Image viewing
+
+Images are displayed in a slicing mode. The initial view is a slice perpendicular to the z axis (i.e. an xy plane). The currently viewed plane can be changed by the following keyboard shortcuts:
+- **[ Shift X ]** Shows a yz plane
+- **[ Shift Y ]** Shows a xz plane
+- **[ Shift Z ]** Shows a xy plane
+- **[ , ]** or **[ . ]** Change plane slowly
+- **[ Shift , ]** or **[ Shift . ]** Change plane fast
+- You can also drag the mouse while keeping the left mouse button pressed to inspect the data at oblique views.
+
+### Tip 
+
+- Due the way most data are layout on disc, it is faster to inspect the data only using the **[ Shift Y ]** and **[ Shift Z ]** views, as the **[ Shift X ]** view will render much slower.
+
+
+## More 
 
 *Coming soon*

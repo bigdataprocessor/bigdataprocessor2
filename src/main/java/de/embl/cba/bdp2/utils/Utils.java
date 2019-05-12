@@ -52,6 +52,7 @@ import net.imglib2.Cursor;
 import net.imglib2.FinalInterval;
 import net.imglib2.FinalRealInterval;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.cache.util.LoaderCacheAsCacheAdapter;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgView;
 import net.imglib2.img.cell.CellImgFactory;
@@ -158,6 +159,7 @@ public class Utils {
 		bdp.saveImage( merge, savingSettings, progress );
 		Logger.log( "Saving: " + savingSettings.volumesFilePath );
 		Progress.waitUntilDone( progress, 1000 );
+        Logger.log("Saving: Done." );
 	}
 
 	public static < T extends RealType< T > & NativeType< T > >

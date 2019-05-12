@@ -8,7 +8,7 @@ import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.cache.img.CachedCellImg;
 
-public class ReplaceCachedCellImgTwoChannels
+public class ReplaceCachedTwoChannelCellImg
 {
 	public static void main( String[] args )
 	{

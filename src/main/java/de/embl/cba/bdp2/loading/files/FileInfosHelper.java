@@ -229,36 +229,22 @@ public class FileInfosHelper
 
             if ( fileLists[0] == null || fileLists[0].length == 0 )
             {
-                //IJ.showMessage("No files matching this pattern were found: " + filterPattern);
                 Logger.warning("No files matching this pattern were found: " + filterPattern);
                 return false;
             }
 
         }
 
-        if ( namingScheme.equals( FileInfos.LEICA_SINGLE_TIFF ) ) // isLeicaSinglePlaneTiffFileType( fileLists[ 0 ] ) )
+        if ( namingScheme.equals( FileInfos.LEICA_SINGLE_TIFF ) )
         {
-
             infoSource.fileType = Utils.FileType.SINGLE_PLANE_TIFF.toString();
 
-            // generate Leica nC,nT,nZ fileList
-            //
-            String dataDirectory;
-            if ( infoSource.channelFolders == null )
-            {
-                dataDirectory = directory;
-            }
-            else
-            {
-                dataDirectory = directory + infoSource.channelFolders[ 0 ];
-            }
+            String dataDirectory = getFirstChannelDirectory( infoSource, directory );
 
-            boolean success = FileInfosLeicaHelper.initLeicaSinglePlaneTiffData( infoSource, dataDirectory, filterPattern, fileLists[ 0 ], t, z, nC, nZ);
-            if ( ! success )
-            {
-                return false;
-            }
+            boolean success = FileInfosLeicaHelper.initLeicaSinglePlaneTiffData(
+                    infoSource, dataDirectory, filterPattern, fileLists[ 0 ], t, z, nC, nZ);
 
+            if ( ! success ) return false;
         }
         else // tiff stacks or h5 stacks
         {
@@ -436,6 +422,17 @@ public class FileInfosHelper
         }
         return true;
 
+    }
+
+    public static String getFirstChannelDirectory( FileInfos infoSource, String directory )
+    {
+        String dataDirectory;
+        if ( infoSource.channelFolders == null )
+            dataDirectory = directory;
+        else
+            dataDirectory = directory + infoSource.channelFolders[ 0 ];
+
+        return dataDirectory;
     }
 
     private static String[] sortAndFilterFileList(String[] rawlist, String filterPattern)
