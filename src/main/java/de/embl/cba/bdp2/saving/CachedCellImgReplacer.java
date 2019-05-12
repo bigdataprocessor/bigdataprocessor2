@@ -3,6 +3,7 @@ package de.embl.cba.bdp2.saving;
 import bdv.img.cache.CreateInvalidVolatileCell;
 import bdv.img.cache.VolatileCachedCellImg;
 import bdv.util.volatiles.*;
+import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.lazyalgorithm.converter.NeighborhoodAverageConverter;
 import de.embl.cba.lazyalgorithm.converter.VolatileNeighborhoodAverageConverter;
 import de.embl.cba.neighborhood.RectangleShape2;
@@ -48,14 +49,12 @@ import static net.imglib2.img.basictypeaccess.AccessFlags.VOLATILE;
  *
  * @author Christian Tischer
  */
-public class CachedCellImgReplacer < T extends Type< T > & NativeType< T > >
+public class CachedCellImgReplacer
+		< T extends Type< T > & NativeType< T >, S extends Type< S > & NativeType< S > >
 {
-
-
 	private CachedCellImg< T, ? > cachedCellImg;
 
-
-	private RandomAccessibleInterval< T > replace( final RandomAccessible< T > rai )
+	private RandomAccessible< T > replace( final RandomAccessible< T > rai )
 	{
 		if ( rai instanceof CachedCellImg )
 		{
@@ -65,178 +64,116 @@ public class CachedCellImgReplacer < T extends Type< T > & NativeType< T > >
 		else if ( rai instanceof IntervalView )
 		{
 			final IntervalView< T > view = ( IntervalView< T > ) rai;
-			final RandomAccessibleInterval< T > replace = replace( view.getSource() );
-			return new IntervalView( replace, view );
+			final RandomAccessible< T > replace = replace( view.getSource() );
+			final IntervalView intervalView = new IntervalView( replace, view );
+			return intervalView;
 		}
 		else if ( rai instanceof MixedTransformView )
 		{
 			final MixedTransformView< T > view = ( MixedTransformView< T > ) rai;
 
-			final VolatileViewData< T, V > sourceData =
-					wrapAsVolatileViewData( view.getSource(), queue, hints );
+			final RandomAccessible< T > replace = replace( view.getSource() );
 
-			final VolatileViewData< T, V > volatileViewData = new VolatileViewData<>(
-					new MixedTransformView<>( sourceData.getImg(), view.getTransformToSource() ),
-					sourceData.getCacheControl(),
-					sourceData.getType(),
-					sourceData.getVolatileType() );
+			final MixedTransformView< T > mixedTransformView =
+					new MixedTransformView<>(
+							replace,
+							view.getTransformToSource() );
 
-			return volatileViewData;
+			return mixedTransformView;
 		}
 		else if ( rai instanceof SubsampleIntervalView )
 		{
 			final SubsampleIntervalView< T > view = ( SubsampleIntervalView< T > ) rai;
-			final VolatileViewData< T, V > sourceData =
-					wrapAsVolatileViewData( view.getSource(), queue, hints );
 
-			final VolatileViewData< T, V > volatileViewData = new VolatileViewData<>(
-					new SubsampleIntervalView<>(
-							( RandomAccessibleInterval< V > ) sourceData.getImg(),
-							view.getSteps() ),
-						sourceData.getCacheControl(),
-						sourceData.getType(),
-						sourceData.getVolatileType() );
+			final RandomAccessibleInterval< T > replace =
+					( RandomAccessibleInterval< T > ) replace( view.getSource() );
 
-			return volatileViewData;
+			final SubsampleIntervalView subsampleIntervalView =
+					new SubsampleIntervalView(
+							replace,
+							view.getSteps() );
+
+			return subsampleIntervalView;
 		}
 		else if ( rai instanceof SubsampleView ) // TODO: do we need this ?
 		{
-			final SubsampleView< T > view = ( SubsampleView< T > ) rai;
-			final VolatileViewData< T, V > sourceData =
-					wrapAsVolatileViewData( view.getSource(), queue, hints );
-
-			final VolatileViewData< T, V > volatileViewData = new VolatileViewData<>(
-					new SubsampleView<>( sourceData.getImg(), view.getSteps() ),
-						sourceData.getCacheControl(),
-						sourceData.getType(),
-						sourceData.getVolatileType() );
-
-			return volatileViewData;
+			Logger.error( "SubsampleView..." );
+//			final SubsampleView< T > view = ( SubsampleView< T > ) rai;
+//			final VolatileViewData< T, V > sourceData =
+//					wrapAsVolatileViewData( view.getSource(), queue, hints );
+//
+//			final VolatileViewData< T, V > volatileViewData = new VolatileViewData<>(
+//					new SubsampleView<>( sourceData.getImg(), view.getSteps() ),
+//						sourceData.getCacheControl(),
+//						sourceData.getType(),
+//						sourceData.getVolatileType() );
+//
+//			return volatileViewData;
 		}
 		else if ( rai instanceof ConvertedRandomAccessibleInterval )
 		{
 			final ConvertedRandomAccessibleInterval< T, S > view
 					= ( ConvertedRandomAccessibleInterval< T, S > ) rai;
 
-			final VolatileViewData< T, V > vViewData =
-					wrapAsVolatileViewData( view.getSource(), queue, hints );
+			final RandomAccessibleInterval< T > replace =
+					( RandomAccessibleInterval< T > ) replace( view.getSource() );
 
 			final S destinationType = view.getDestinationType();
-
-			final NativeType< ? > volatileDestinationType =
-					VolatileTypeMatcher.getVolatileTypeForType( destinationType );
-
-			final RandomAccessibleInterval< V > vRAI =
-					( RandomAccessibleInterval< V > ) vViewData.getImg();
 
 			final Converter< ? super T, ? super S > converter = view.getConverter();
 
 			if ( converter instanceof NeighborhoodAverageConverter )
 			{
-				final VolatileNeighborhoodAverageConverter< R > vConverter =
-						new VolatileNeighborhoodAverageConverter<>();
-
+				// TODO: remove this if case?
 				final ConvertedRandomAccessibleInterval converted
 						= new ConvertedRandomAccessibleInterval(
-						vRAI,
-						vConverter,
-						volatileDestinationType );
+								replace,
+								converter,
+								destinationType );
 
-				final VolatileViewData volatileViewData = new VolatileViewData(
-						converted,
-						vViewData.getCacheControl(),
-						destinationType,
-						( Volatile ) volatileDestinationType // TODO: can one avoid cast?
-				);
-
-				return volatileViewData;
+				return converted;
 			}
 			else
 			{
-				Converter< V, Volatile< S > > volatileConverter
-						= (vt, vu) -> {
-					boolean isValid = vt.isValid();
-					vu.setValid(isValid);
-					if (isValid) {
-						converter.convert(vt.get(), vu.get());
-					}
-				};
-
 				final ConvertedRandomAccessibleInterval converted
 						= new ConvertedRandomAccessibleInterval(
-						vRAI,
-						volatileConverter,
-						volatileDestinationType );
+								replace,
+								converter,
+								destinationType );
 
-				final VolatileViewData volatileViewData = new VolatileViewData(
-						converted,
-						vViewData.getCacheControl(),
-						destinationType,
-						( Volatile ) volatileDestinationType );
-
-				return volatileViewData;
+				return converted;
 			}
 
 		}
 		else if ( rai instanceof StackView )
 		{
-			final StackView< T > view =
-					( StackView< T > ) rai;
+			final StackView< T > view = ( StackView< T > ) rai;
 
 			final List< RandomAccessibleInterval< T > > slices = view.getSourceSlices();
 
-			final List< VolatileViewData< T, V > > volatileViews = new ArrayList<>();
-			for ( RandomAccessibleInterval< T > sourceSlice : slices )
-			{
-				volatileViews.add(
-						wrapAsVolatileViewData( sourceSlice, queue, hints ));
-			}
+			final List< RandomAccessible< T > > replacedSlices = new ArrayList<>();
+			for ( RandomAccessibleInterval< T > slice : slices )
+				replacedSlices.add( replace( slice ) );
 
-			final List< RandomAccessible< V > > volatileSlices = new ArrayList<>();
-			for ( VolatileViewData< T, V > volatileViewData : volatileViews )
-			{
-				volatileSlices.add( volatileViewData.getImg() );
-			}
+			final StackView stackView = new StackView( replacedSlices );
 
-			/*
-			TODO:
-			It works but it feels wrong just taking the first slice to get the
-			cacheControl, type and volatileType.
-			How to do this properly?
-			 */
-			final VolatileViewData volatileViewData = new VolatileViewData(
-					new StackView( volatileSlices ),
-					volatileViews.get( 0 ).getCacheControl(),
-					volatileViews.get( 0 ).getType(),
-					volatileViews.get( 0 ).getVolatileType() );
-
-			return volatileViewData;
+			return stackView;
 		}
 		else if ( rai instanceof RectangleShape2.NeighborhoodsAccessible )
 		{
-			/*
-			RectangleShape2 is a modified version of the original Rectangle shape:
-			1. it allows for non-cubic rectangles
-			2. it can return its span and factory => can be used here to reconstruct itself.
-			 */
-
 			// TODO: I did not manage to put the typing here
-			final RectangleShape2.NeighborhoodsAccessible view =
+			final RectangleShape2.NeighborhoodsAccessible< T > view =
 					( RectangleShape2.NeighborhoodsAccessible ) rai;
 
-			final VolatileViewData< T, V > sourceData =
-					wrapAsVolatileViewData( view.getSource(), queue, hints );
+			final RandomAccessible< T > replace = replace( view.getSource() );
 
-			final VolatileViewData volatileViewData = new VolatileViewData(
-					new RectangleShape2.NeighborhoodsAccessible(
-							sourceData.getImg(),
+			final RectangleShape2.NeighborhoodsAccessible neighborhoodsAccessible
+					= new RectangleShape2.NeighborhoodsAccessible(
+							replace,
 							view.getSpan(),
-							view.getFactory() ),
-					sourceData.getCacheControl(),
-					sourceData.getType(),
-					sourceData.getVolatileType() );
+							view.getFactory() );
 
-			return volatileViewData;
+			return neighborhoodsAccessible;
 		}
 		else if ( rai instanceof ExtendedRandomAccessibleInterval )
 		{
@@ -244,19 +181,15 @@ public class CachedCellImgReplacer < T extends Type< T > & NativeType< T > >
 			final ExtendedRandomAccessibleInterval view =
 					( ExtendedRandomAccessibleInterval ) rai;
 
-			final VolatileViewData< T, V > sourceData = wrapAsVolatileViewData(
-					view.getSource(), queue, hints );
+			final RandomAccessibleInterval< T > replace =
+					( RandomAccessibleInterval< T > ) replace( view.getSource() );
 
-			final VolatileViewData volatileViewData = new VolatileViewData(
-					new ExtendedRandomAccessibleInterval(
-							// TODO: can we avoid the casting?
-							( RandomAccessibleInterval< V > ) sourceData.getImg(),
-							view.getOutOfBoundsFactory() ),
-					sourceData.getCacheControl(),
-					sourceData.getType(),
-					sourceData.getVolatileType() );
+			final ExtendedRandomAccessibleInterval extended
+					= new ExtendedRandomAccessibleInterval(
+							replace,
+							view.getOutOfBoundsFactory() );
 
-			return volatileViewData;
+			return extended;
 		}
 		else
 		{
