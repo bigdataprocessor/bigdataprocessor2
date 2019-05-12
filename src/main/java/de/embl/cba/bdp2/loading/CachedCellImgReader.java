@@ -90,7 +90,6 @@ public class CachedCellImgReader
 
     public static CachedCellImg getVolumeCachedCellImg( FileInfos fileInfos )
     {
-
         int cellDimX = fileInfos.nX;
         int cellDimY = fileInfos.nY;
         int cellDimZ = fileInfos.nZ;
@@ -103,13 +102,10 @@ public class CachedCellImgReader
             Logger.info( "Adapted cell size in Z: " + cellDimZ );
         }
 
-
         final ImageLoader loader = new ImageLoader( fileInfos, cellDimX, cellDimY, cellDimZ );
 
         final ReadOnlyCachedCellImgOptions options = options()
-                .cellDimensions( loader.getCellDims() )
-                .cacheType( CacheType.BOUNDED)
-                .maxCacheSize(100).volatileAccesses( true );
+                .cellDimensions( loader.getCellDims() );
 
         final CachedCellImg cachedCellImg = new ReadOnlyCachedCellImgFactory().create(
                 loader.getDimensions(),
@@ -126,7 +122,8 @@ public class CachedCellImgReader
                 cachedCellImg,
                 new File( fileInfos.directory ).getName(),
                 fileInfos.voxelSpacing,
-                fileInfos.voxelUnit
+                fileInfos.voxelUnit,
+                fileInfos
                 );
     }
 }

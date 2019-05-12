@@ -1,4 +1,4 @@
-package benchmark;
+package example;
 
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.CachedCellImgReader;
@@ -20,14 +20,14 @@ public class SaveSingleChanneHdf5SeriesAsImaris
     {
         final BigDataProcessor2 bdp = new BigDataProcessor2();
 
-        final String directory = "/Users/tischer/Documents/isabell-schneider-splitchipmerge/stack_0_channel_0";
+        final String directory =
+                "/Users/tischer/Documents/isabell-schneider-splitchipmerge/stacks_10";
 
         final int numIOThreads = 4; // TODO
 
         final String loadingScheme = FileInfos.SINGLE_CHANNEL_TIMELAPSE;
         final String filterPattern = ".*.h5";
         final String dataset = "Data";
-
 
         final Image image = bdp.openHdf5Image(
                 directory,
@@ -40,28 +40,9 @@ public class SaveSingleChanneHdf5SeriesAsImaris
 
         bdp.showImage( image );
 
+
         final Image binnedImage = Binner.bin( image, new long[]{ 1, 1, 1, 0, 0 } );
         //   bdp.showImage( bin );
-
-        FileInfos fileInfos =
-                new FileInfos(
-                        directory,
-                        loadingScheme,
-                        filterPattern,
-                        dataset );
-
-        final CachedCellImg volumeCachedCellImg
-                = CachedCellImgReader.getVolumeCachedCellImg( fileInfos );
-
-        final RandomAccessibleInterval replaced =
-                new CachedCellImgReplacer( binnedImage.getRai(),
-                        volumeCachedCellImg ).get();
-
-        final Image volumeLoaderBinnedImage = new Image<>(
-                replaced,
-                fileInfos.directory,
-                fileInfos.voxelSpacing,
-                fileInfos.voxelUnit );
 
         final File out = new File( "/Users/tischer/Desktop/stack_0_channel_0-asImaris-bdp2/im");
 
@@ -75,8 +56,6 @@ public class SaveSingleChanneHdf5SeriesAsImaris
         savingSettings.volumesFilePath = out.toString();
 
         Utils.saveImageAndWaitUntilDone( bdp, savingSettings, binnedImage );
-
-        Utils.saveImageAndWaitUntilDone( bdp, savingSettings, volumeLoaderBinnedImage );
 
     }
 

@@ -46,22 +46,16 @@ public class SplitViewMerger
 	public < R extends RealType< R > & NativeType< R > >
 	Image< R > mergeRegionsAandB( Image< R > image )
 	{
-
 		final ArrayList< long[] > mins = new ArrayList<>();
 		mins.add( upperLeftCornerRegionA );
 		mins.add( upperLeftCornerRegionB );
-
 
 		ArrayList< FinalInterval > intervals =
 				SplitViewMergingHelpers.asIntervals( mins, regionSpan );
 
 		final RandomAccessibleInterval< R > merge = merge( image.getRai(), intervals );
 
-		final Image< R > mergeImage = new Image<>(
-				merge,
-				image.getName(),
-				image.getVoxelSpacing(),
-				image.getVoxelUnit() );
+		final Image< R > mergeImage = image.newImage( merge );
 
 		return mergeImage;
 	}
@@ -79,11 +73,7 @@ public class SplitViewMerger
 
 		final RandomAccessibleInterval< R > merge = merge( image.getRai(), intervals );
 
-		final Image< R > mergeImage = new Image<>(
-				merge,
-				image.getName(),
-				image.getVoxelSpacing(),
-				image.getVoxelUnit() );
+		final Image< R > mergeImage = image.newImage( merge );
 
 		return mergeImage;
 	}
@@ -96,7 +86,7 @@ public class SplitViewMerger
 	{
 		final RandomAccessibleInterval< R > merge = merge( image.getRai(), intervals );
 
-		final Image< R > mergeImage = new Image<>( merge, image.getName(), image.getVoxelSpacing(), image.getVoxelUnit() );
+		final Image< R > mergeImage = image.newImage( merge );
 
 		return mergeImage;
 	}

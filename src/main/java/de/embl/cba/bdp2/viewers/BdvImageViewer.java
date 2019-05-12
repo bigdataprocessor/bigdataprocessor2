@@ -122,17 +122,6 @@ public class BdvImageViewer< R extends RealType< R > & NativeType< R >>
             doAutoContrastPerChannel();
     }
 
-    @Override
-    public void show(
-            RandomAccessibleInterval rai,
-            String name,
-            double[] voxelSpacing,
-            String voxelUnit,
-            boolean autoContrast )
-    {
-        show( new Image<>( rai, name, voxelSpacing, voxelUnit  ), autoContrast );
-    }
-
     private void removeAllSourcesFromBdv() {
         int nSources = this.bdvStackSource.getBdvHandle().getViewerPanel().getState().getSources().size();
         for (int source = 0; source < nSources; ++source) {

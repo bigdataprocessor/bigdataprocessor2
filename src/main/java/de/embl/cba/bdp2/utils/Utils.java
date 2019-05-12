@@ -169,17 +169,14 @@ public class Utils {
 	{
 		final AffineTransform3D viewerTransform = imageViewer.getViewerTransform();
 
-		int nChannels = (int) imageViewer.getImage().getRai().dimension( DimensionOrder.C );
+        final Image< T > image = imageViewer.getImage();
+
+        int nChannels = (int) image.getRai().dimension( DimensionOrder.C );
 		final ArrayList< DisplaySettings > displaySettings = new ArrayList<>();
 		for ( int c = 0; c < nChannels; c++ )
 			displaySettings.add( imageViewer.getDisplaySettings( c ) );
 
-		imageViewer.show(
-				rai,
-				imageViewer.getImage().getName(),
-				imageViewer.getImage().getVoxelSpacing(),
-				imageViewer.getImage().getVoxelUnit(),
-				false );
+		imageViewer.show( image.newImage( rai ), false );
 
 		imageViewer.setViewerTransform( viewerTransform );
 		for ( int c = 0; c < nChannels; c++ )

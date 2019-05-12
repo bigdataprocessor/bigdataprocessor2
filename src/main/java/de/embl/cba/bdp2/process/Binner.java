@@ -32,7 +32,8 @@ public class Binner
 					getBinnedVoxelSize(
 							span,
 							inputImage.getVoxelSpacing() ),
-				inputImage.getVoxelUnit()
+				inputImage.getVoxelUnit(),
+				inputImage.getFileInfos()
 		);
 	}
 }

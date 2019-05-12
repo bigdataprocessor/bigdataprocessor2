@@ -110,14 +110,9 @@ public class SplitViewMergingDialog< R extends RealType< R > & NativeType< R > >
 		if ( newImageViewer == null )
 			newImageViewer = viewer.newImageViewer();
 
-		final Image< R > image = new Image<>(
-				merge,
-				this.image.getName() + "_merge",
-				this.image.getVoxelSpacing(),
-				this.image.getVoxelUnit()
-		);
+		final Image< R > mergedImage = image.newImage( merge );
 
-		newImageViewer.show( image, true );
+		newImageViewer.show( mergedImage, true );
 	}
 
 	private void addRegionSliders( )

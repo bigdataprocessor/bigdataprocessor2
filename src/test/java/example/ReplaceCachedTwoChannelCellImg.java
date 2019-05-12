@@ -20,7 +20,7 @@ public class ReplaceCachedTwoChannelCellImg
 		final String filterPattern = ".*.h5";
 		final String dataset = "Data";
 
-		final Image image = bdp.openHdf5Data(
+		final Image image = bdp.openHdf5Image(
 				directory,
 				loadingScheme,
 				filterPattern,
@@ -43,6 +43,6 @@ public class ReplaceCachedTwoChannelCellImg
 				fileInfos );
 
 		final RandomAccessibleInterval replaced =
-				new CachedCellImgReplacer( cachedCellImg, cachedCellImg2 ).getReplaced();
+				new CachedCellImgReplacer( cachedCellImg, cachedCellImg2 ).get();
 	}
 }

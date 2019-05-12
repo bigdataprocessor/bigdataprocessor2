@@ -55,7 +55,7 @@ public class MergeSplitChipWorkflow
 
         for ( String inputDirectory : inputDirectories )
         {
-            final Image< R > image = bdp.openHdf5Data(
+            final Image< R > image = bdp.openHdf5Image(
                     inputDirectory,
                     FileInfos.SINGLE_CHANNEL_TIMELAPSE,
                     ".*.h5",
@@ -85,7 +85,7 @@ public class MergeSplitChipWorkflow
         {
             // open
             final String inputDirectory = inputDirectories.get( i );
-            final Image< R > image = bdp.openHdf5Data(
+            final Image< R > image = bdp.openHdf5Image(
                     inputDirectory,
                     FileInfos.SINGLE_CHANNEL_TIMELAPSE,
                     ".*.h5",

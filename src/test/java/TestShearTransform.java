@@ -1,3 +1,4 @@
+import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.CachedCellImgReader;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.ui.ObliqueMenuDialog;
@@ -32,9 +33,8 @@ public class TestShearTransform {
          * (replacing the input image);
          */
         RandomAccessibleInterval sheared = getShearedImage( cachedCellImg, imageViewer );
-        imageViewer.show( sheared, "sheared", imageViewer.getImage().getVoxelSpacing(), imageViewer.getImage().getVoxelUnit(), true );
-        //imageViewer.setDisplayRange( 0, 800, 0 );
-
+        final Image image = imageViewer.getImage();
+        imageViewer.show( image.newImage( sheared ), true );
 
         /**
          * Compute shearing using a 5D Affine Transform.
@@ -51,7 +51,8 @@ public class TestShearTransform {
 
     }
 
-    private static RandomAccessibleInterval getShearedImage( CachedCellImg cachedCellImg, ImageViewer imageViewer )
+    private static RandomAccessibleInterval
+    getShearedImage( CachedCellImg cachedCellImg, ImageViewer imageViewer )
     {
         ShearingSettings shearingSettings = new ShearingSettings();
         ObliqueMenuDialog dialog = new ObliqueMenuDialog(imageViewer);
@@ -59,7 +60,8 @@ public class TestShearTransform {
         return BigDataProcessor2.shearImage( cachedCellImg, shearingSettings );
     }
 
-    private static RandomAccessibleInterval getShearedImage5D( CachedCellImg cachedCellImg, ImageViewer imageViewer )
+    private static RandomAccessibleInterval
+    getShearedImage5D( CachedCellImg cachedCellImg, ImageViewer imageViewer )
     {
         ShearingSettings shearingSettings = new ShearingSettings();
         ObliqueMenuDialog dialog = new ObliqueMenuDialog(imageViewer);

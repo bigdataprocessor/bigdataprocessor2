@@ -1,6 +1,7 @@
 package de.embl.cba.bdp2.tracking;
 
 import bdv.util.BdvHandleFrame;
+import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.ui.BdvMenus;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
@@ -58,13 +59,12 @@ public class BigDataTracker< R extends RealType< R > & NativeType< R > > {
                     this.trackResults = objectTracker.getTrackingPoints();
             if(!stop.get()) {
                 ImageViewer newTrackedView =  imageViewer.newImageViewer();
-                newTrackedView.show(
-                        trackingSettings.rai,
-                        FileInfos.TRACKED_IMAGE_NAME,
-                        imageViewer.getImage().getVoxelSpacing(),
-                        imageViewer.getImage().getVoxelUnit(),
-                        false);
-                imageViewer.replicateViewerContrast(newTrackedView);
+
+                final Image image = imageViewer.getImage();
+
+                newTrackedView.show( image.newImage( trackingSettings.rai ), false );
+
+                imageViewer.replicateViewerContrast( newTrackedView );
 
                 if(newTrackedView instanceof BdvImageViewer) {
                     TrackedAreaBoxOverlay tabo = new TrackedAreaBoxOverlay(this.trackResults,
@@ -104,14 +104,12 @@ public class BigDataTracker< R extends RealType< R > & NativeType< R > > {
             }
             RandomAccessibleInterval stackedRAI = Views.stack(tracks);
             ImageViewer newTrackedView = imageViewer.newImageViewer();
-            newTrackedView.show(
-                    stackedRAI,
-                    FileInfos.TRACKED_IMAGE_NAME,
-                    imageViewer.getImage().getVoxelSpacing(),
-                    imageViewer.getImage().getVoxelUnit(),
-                    false);
+            final Image image = imageViewer.getImage();
+            newTrackedView.show( image.newImage( stackedRAI ), false );
             newTrackedView.addMenus(new BdvMenus());
-            for (int channel=0; channel<nChannels; ++channel){ // TODO: change to method replicateViewerContrast --ashis
+
+            for (int channel=0; channel<nChannels; ++channel)
+            { // TODO: change to method replicateViewerContrast --ashis
                 DisplaySettings setting = imageViewer.getAutoContrastDisplaySettings(channel);
                 newTrackedView.setDisplayRange(setting.getMinValue(),setting.getMaxValue(),channel);
             }

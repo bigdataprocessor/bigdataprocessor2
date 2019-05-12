@@ -15,12 +15,6 @@ public interface ImageViewer < R extends RealType< R > & NativeType< R > >  {
 
     void show( Image< R > image, boolean autoContrast);
 
-    void show( RandomAccessibleInterval< R > rai,
-               String name,
-               double[] voxelSpacing,
-               String voxelUnit,
-               boolean autoContrast);
-
     Image< R > getImage();
 
     ImageViewer newImageViewer();

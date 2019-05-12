@@ -4,14 +4,11 @@ import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.process.Binner;
 import de.embl.cba.bdp2.process.ChannelShifter;
-import de.embl.cba.bdp2.process.Cropper;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.ImageViewer;
-import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.view.Views;
 
 import java.util.ArrayList;
 
@@ -29,7 +26,7 @@ public class CorrectChromaticShiftAndBin
                 CorrectChromaticShiftAndBin.class
                         .getResource( "/nc2-nt3-calibrated-tiff"  ).getFile();
 
-        final Image image = bdp.openTiffData(
+        final Image image = bdp.openTiffImage(
                 imageDirectory,
                 FileInfos.LOAD_CHANNELS_FROM_FOLDERS,
                 ".*" );

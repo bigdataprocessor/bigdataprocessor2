@@ -2,7 +2,6 @@ package de.embl.cba.bdp2.ui;
 
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
-import de.embl.cba.bdp2.viewers.ViewerUtils;
 import net.imagej.DatasetService;
 import net.imagej.ops.OpService;
 import net.imglib2.type.NativeType;
@@ -67,7 +66,7 @@ public class BigDataProcessorCommand < R extends RealType< R > & NativeType< R >
     {
         final BigDataProcessor2< R > bdp = new BigDataProcessor2< R >();
 
-        final Image< R > image = bdp.openTiffData( directory.toString(), namingScheme, filterPattern );
+        final Image< R > image = bdp.openTiffImage( directory.toString(), namingScheme, filterPattern );
         bdp.showVoxelSpacingDialog( image );
         bdp.showImage( image );
     }

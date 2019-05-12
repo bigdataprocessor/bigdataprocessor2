@@ -1,5 +1,6 @@
 package de.embl.cba.bdp2;
 
+import de.embl.cba.bdp2.loading.files.FileInfos;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -10,6 +11,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 	private String name;
 	private double[] voxelSpacing;
 	private String voxelUnit;
+	private FileInfos fileInfos;
 
 	public Image( RandomAccessibleInterval< R > rai,
 				  String name,
@@ -20,6 +22,26 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		this.name = name;
 		this.voxelSpacing = voxelSpacing;
 		this.voxelUnit = voxelUnit;
+	}
+
+	public Image( RandomAccessibleInterval< R > rai,
+				  String name,
+				  double[] voxelSpacing,
+				  String voxelUnit,
+				  FileInfos fileInfos )
+	{
+		this( rai, name, voxelSpacing, voxelUnit );
+		this.fileInfos = fileInfos;
+	}
+
+	public FileInfos getFileInfos()
+	{
+		return fileInfos;
+	}
+
+	public void setFileInfos( FileInfos fileInfos )
+	{
+		this.fileInfos = fileInfos;
 	}
 
 	public RandomAccessibleInterval< R > getRai()
@@ -60,6 +82,11 @@ public class Image< R extends RealType< R > & NativeType< R > >
 	public String getName()
 	{
 		return name;
+	}
+
+	public Image< R > newImage( RandomAccessibleInterval< R > rai )
+	{
+		return new Image<>( rai, getName(), getVoxelSpacing(), getVoxelUnit(), getFileInfos() );
 	}
 
 

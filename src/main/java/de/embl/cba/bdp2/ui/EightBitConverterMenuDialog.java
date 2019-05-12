@@ -1,5 +1,6 @@
 package de.embl.cba.bdp2.ui;
 
+import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.viewers.ImageViewer;
 import net.imglib2.RandomAccessibleInterval;
@@ -68,16 +69,16 @@ public class EightBitConverterMenuDialog extends JDialog implements ActionListen
         int min = Integer.parseInt(mapToZero.getText());
         int max = Integer.parseInt(mapTo255.getText());
         DisplaySettings displaySettings= new DisplaySettings(min,max);
-        RandomAccessibleInterval<UnsignedByteType> newRai =
+        final Image image = imageViewer.getImage();
+
+        RandomAccessibleInterval<UnsignedByteType> unsignedByteTypeRAI =
                 BigDataProcessor2.unsignedByteTypeConverter(
-                        imageViewer.getImage().getRai(),displaySettings );
+                        image.getRai(),displaySettings );
+
         ImageViewer newImageViewer = imageViewer.newImageViewer();
-        newImageViewer.show(
-                newRai,
-                FileInfos.UNSIGNED_BYTE_VIEW_NAME,
-                imageViewer.getImage().getVoxelSpacing(),
-                imageViewer.getImage().getVoxelUnit(),
-                true);
+
+        newImageViewer.show( image.newImage( unsignedByteTypeRAI ), true );
+
         BdvMenus menus = new BdvMenus();
         newImageViewer.addMenus(menus);
         dispose();

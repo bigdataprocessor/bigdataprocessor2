@@ -1,7 +1,6 @@
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
-import de.embl.cba.bdp2.viewers.ViewerUtils;
 import ij.ImageJ;
 
 import java.io.File;
@@ -20,7 +19,7 @@ public class ImageCalibrationBdvVisualisationTest
 
 		String imageDirectory = file.toString();
 
-		final Image image = bigDataProcessor2.openTiffData(
+		final Image image = bigDataProcessor2.openTiffImage(
 				imageDirectory.toString(),
 				FileInfos.SINGLE_CHANNEL_TIMELAPSE,
 				".*" );

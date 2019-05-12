@@ -2,6 +2,7 @@ package de.embl.cba.bdp2.process;
 
 import bdv.tools.brightness.SliderPanelDouble;
 import bdv.util.BoundedValueDouble;
+import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.ui.BdvMenus;
@@ -24,7 +25,8 @@ public class UnsignedByteTypeConversion< T extends RealType< T > >
 	public UnsignedByteTypeConversion( final ImageViewer imageViewer  )
 	{
 
-		final RandomAccessibleInterval rai = imageViewer.getImage().getRai();
+		final Image image = imageViewer.getImage();
+		final RandomAccessibleInterval rai = image.getRai();
 
 		if ( ( Util.getTypeFromInterval( rai ) instanceof UnsignedByteType) )
 		{
@@ -48,12 +50,7 @@ public class UnsignedByteTypeConversion< T extends RealType< T > >
 
 		ImageViewer newImageViewer = imageViewer.newImageViewer();
 
-		newImageViewer.show(
-				converted,
-				FileInfos.UNSIGNED_BYTE_VIEW_NAME,
-				imageViewer.getImage().getVoxelSpacing(),
-				imageViewer.getImage().getVoxelUnit(),
-				true);
+		newImageViewer.show( image.newImage( converted ), true );
 
 		Logger.info( "8-bit view size [GB]: " + Utils.getSizeGB( converted ) );
 

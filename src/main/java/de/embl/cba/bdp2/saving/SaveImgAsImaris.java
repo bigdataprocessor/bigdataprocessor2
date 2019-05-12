@@ -81,7 +81,7 @@ public class SaveImgAsImaris<T extends RealType<T> & NativeType<T>> implements R
 
             // TODO: This involves both loading and computation and thus
             // could be done in parallel to the writing...
-            final ImagePlus imagePlus = getImagePlus( c );
+            ImagePlus imagePlus = getImagePlus( c );
 
             // Save volume
             if ( savingSettings.saveVolumes )
@@ -110,7 +110,11 @@ public class SaveImgAsImaris<T extends RealType<T> & NativeType<T>> implements R
             if (!stop.get())
                 SaveImgHelper.documentProgress( totalFiles, counter, startTime );
 
+            imagePlus = null;
+            System.gc();
         }
+
+
     }
 
     public ImagePlus getImagePlus( int c )
@@ -132,9 +136,6 @@ public class SaveImgAsImaris<T extends RealType<T> & NativeType<T>> implements R
         RandomAccessibleInterval< T > oneChannelAndTimePoint =
                 Views.interval(rai, minInterval, maxInterval);
 
-        VolatileViews.wrapAsVolatile( oneChannelAndTimePoint );
-
-
         ImagePlus imagePlus =
                 Utils.wrapToCalibratedImagePlus(
                         oneChannelAndTimePoint,
@@ -145,7 +146,8 @@ public class SaveImgAsImaris<T extends RealType<T> & NativeType<T>> implements R
         // force into RAM
         start = System.currentTimeMillis();
         final ImagePlus duplicate = imagePlus.duplicate();
-        System.out.println( "Load and process data cube [ s ]: " + ( System.currentTimeMillis() - start ) / 1000);
+        System.out.println( "Load and process data cube [ s ]: "
+                + ( System.currentTimeMillis() - start ) / 1000);
 
         return duplicate;
     }

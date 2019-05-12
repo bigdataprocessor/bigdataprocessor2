@@ -65,7 +65,7 @@ public class CachedCellImgReplacer
 	}
 
 
-	public RandomAccessibleInterval< T > getReplaced()
+	public RandomAccessibleInterval< T > get()
 	{
 		return ( RandomAccessibleInterval< T > ) replace( rai );
 	}

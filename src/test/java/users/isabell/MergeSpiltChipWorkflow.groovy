@@ -18,7 +18,7 @@ for ( i = 0; i < inputDirs.size(); i++ )
      * Open Data
      */
 
-    image = bdp.openHdf5Data(
+    image = bdp.openHdf5Image(
             inputDirs[ i ].toString(),
             FileInfos.SINGLE_CHANNEL_TIMELAPSE,
             ".*.h5",

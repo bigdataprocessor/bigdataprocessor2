@@ -1,5 +1,6 @@
 package de.embl.cba.bdp2.ui;
 
+import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.viewers.ImageViewer;
 import net.imglib2.RandomAccessibleInterval;
@@ -87,13 +88,13 @@ public class ObliqueMenuDialog extends JDialog implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         getShearingSettings(shearingSettings);
         shearingSettings.useObliqueAngle = true;
-        RandomAccessibleInterval sheared = BigDataProcessor2.shearImage(originalRAI, shearingSettings);
-        imageViewer.show(
-                sheared,
-                "Oblique View",
-                imageViewer.getImage().getVoxelSpacing(),
-                imageViewer.getImage().getVoxelUnit(),
-                true);
+        RandomAccessibleInterval sheared =
+                BigDataProcessor2.shearImage( originalRAI, shearingSettings );
+
+        final Image image = imageViewer.getImage();
+
+        imageViewer.show( image.newImage( sheared ), true );
+
         double[] centerCoordinates = {sheared.min(DimensionOrder.X) / 2.0,
                 sheared.max(DimensionOrder.Y) / 2.0,
                 (sheared.max(DimensionOrder.Z) - sheared.min(DimensionOrder.Z)) / 2.0

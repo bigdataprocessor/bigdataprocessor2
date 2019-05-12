@@ -22,7 +22,7 @@ public class MergeSplitChipDialog
 
         final BigDataProcessor2< R > bdp = new BigDataProcessor2<>();
 
-        final Image< R > image = bdp.openHdf5Data(
+        final Image< R > image = bdp.openHdf5Image(
                 "/Users/tischer/Desktop/stack_0_channel_0",
                 FileInfos.SINGLE_CHANNEL_TIMELAPSE,
                 ".*.h5",

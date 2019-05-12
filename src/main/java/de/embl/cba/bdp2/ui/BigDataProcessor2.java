@@ -5,10 +5,7 @@ import de.embl.cba.bdp2.loading.CachedCellImgReader;
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.progress.ProgressListener;
-import de.embl.cba.bdp2.saving.AbstractImgSaver;
-import de.embl.cba.bdp2.saving.ImgSaver;
-import de.embl.cba.bdp2.saving.ImgSaverFactory;
-import de.embl.cba.bdp2.saving.SavingSettings;
+import de.embl.cba.bdp2.saving.*;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.ImageViewer;
@@ -19,6 +16,7 @@ import net.imglib2.FinalRealInterval;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealRandomAccessible;
+import net.imglib2.cache.img.CachedCellImg;
 import net.imglib2.converter.Converters;
 import net.imglib2.converter.RealUnsignedByteConverter;
 import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
@@ -65,7 +63,7 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
             generalThreadPool = Executors.newFixedThreadPool( numThreads );
     }
 
-    public Image< R > openTiffData(
+    public Image< R > openTiffImage(
             String directory,
             String loadingScheme,
             String filterPattern )
@@ -81,7 +79,7 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
     }
 
 
-    public Image< R > openHdf5Data(
+    public Image< R > openHdf5Image(
             String directory,
             String loadingScheme,
             String filterPattern,
@@ -134,9 +132,16 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
             ProgressListener progressListener )
     {
         Logger.info( "Saving: Started..." );
-        int nIOThread = Math.max( 1, Math.min( savingSettings.nThreads, MAX_THREAD_LIMIT));
+        int nIOThread = Math.max( 1, Math.min( savingSettings.nThreads, MAX_THREAD_LIMIT ));
         ExecutorService saveExecutorService = Executors.newFixedThreadPool( nIOThread );
-        savingSettings.rai = image.getRai();
+
+        final CachedCellImg< R, ? > volumeCachedCellImg
+                = CachedCellImgReader.getVolumeCachedCellImg( image.getFileInfos() );
+
+        final RandomAccessibleInterval< R > volumeLoadedRAI =
+                new CachedCellImgReplacer( image.getRai(), volumeCachedCellImg ).get();
+
+        savingSettings.rai = volumeLoadedRAI;
         savingSettings.voxelSpacing = image.getVoxelSpacing();
         savingSettings.voxelUnit = image.getVoxelUnit();
         ImgSaverFactory factory = new ImgSaverFactory();
