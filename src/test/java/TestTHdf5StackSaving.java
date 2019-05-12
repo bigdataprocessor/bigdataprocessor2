@@ -16,7 +16,7 @@ public class TestTHdf5StackSaving
         String imageDirectory = "src/test/resources/shear_transform_test";
         final FileInfos fileInfos = new FileInfos( imageDirectory, FileInfos.SINGLE_CHANNEL_TIMELAPSE,
                 ".*", "");
-        CachedCellImg cachedCellImg = CachedCellImgReader.asCachedCellImg( fileInfos );
+        CachedCellImg cachedCellImg = CachedCellImgReader.getCachedCellImg( fileInfos );
 
         ImageViewer imageViewer = new BdvImageViewer<UnsignedShortType>(
                 cachedCellImg,

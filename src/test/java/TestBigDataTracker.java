@@ -7,7 +7,6 @@ import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import de.embl.cba.bdp2.viewers.ImageViewer;
 import javafx.geometry.Point3D;
 import net.imglib2.cache.img.CachedCellImg;
-import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 
 public class TestBigDataTracker {
@@ -17,7 +16,7 @@ public class TestBigDataTracker {
         String imageDirectory = "src/test/resources/tiff-nc2-nt3-tracking/";
         final FileInfos fileInfos = new FileInfos(imageDirectory, FileInfos.LOAD_CHANNELS_FROM_FOLDERS,
                 ".*", "");
-        CachedCellImg cachedCellImg = CachedCellImgReader.asCachedCellImg( fileInfos );
+        CachedCellImg cachedCellImg = CachedCellImgReader.getCachedCellImg( fileInfos );
         ImageViewer imageViewer = new BdvImageViewer<UnsignedShortType>(
                 cachedCellImg,
                 "input",

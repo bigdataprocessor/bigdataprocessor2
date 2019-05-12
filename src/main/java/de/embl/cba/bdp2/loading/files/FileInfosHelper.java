@@ -368,7 +368,7 @@ public class FileInfosHelper
             Logger.info("File type: " + infoSource.fileType );
 
             //
-            // asCachedCellImg the final file list
+            // getCachedCellImg the final file list
             //
 
             infoSource.ctzFileList = new String[ infoSource.nC ][ infoSource.nT ][ infoSource.nZ ];

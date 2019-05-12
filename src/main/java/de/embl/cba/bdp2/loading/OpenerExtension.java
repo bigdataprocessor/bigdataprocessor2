@@ -1297,7 +1297,7 @@ public class OpenerExtension extends Opener {
                                 + "Assuming element size of 1 x 1 x 1 um^3");
                     }
 
-                    // in first call asCachedCellImg hyperstack
+                    // in first call getCachedCellImg hyperstack
                     //
                     if (image == null) {
                         rank = dsInfo.getRank();

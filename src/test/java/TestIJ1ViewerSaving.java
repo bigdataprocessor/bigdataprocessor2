@@ -10,7 +10,7 @@ public class TestIJ1ViewerSaving
 //
 //		final FileInfoSource fileInfoSource = new FileInfoSource(imageDirectory, FileInfoConstants.SINGLE_CHANNEL_TIMELAPSE,
 //				".*", "");
-//		CachedCellImg cachedCellImg = CachedCellImageCreator.asCachedCellImg(fileInfoSource, null);
+//		CachedCellImg cachedCellImg = CachedCellImageCreator.getCachedCellImg(fileInfoSource, null);
 
 //		ImageViewer imageViewer = new IJ1ImageViewer<UnsignedShortType>(
 //				cachedCellImg,

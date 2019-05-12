@@ -5,7 +5,6 @@ import bdv.img.cache.VolatileCachedCellImg;
 import bdv.util.volatiles.*;
 import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.lazyalgorithm.converter.NeighborhoodAverageConverter;
-import de.embl.cba.lazyalgorithm.converter.VolatileNeighborhoodAverageConverter;
 import de.embl.cba.neighborhood.RectangleShape2;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
@@ -52,9 +51,26 @@ import static net.imglib2.img.basictypeaccess.AccessFlags.VOLATILE;
 public class CachedCellImgReplacer
 		< T extends Type< T > & NativeType< T >, S extends Type< S > & NativeType< S > >
 {
-	private CachedCellImg< T, ? > cachedCellImg;
 
-	private RandomAccessible< T > replace( final RandomAccessible< T > rai )
+
+	private final RandomAccessible< T > rai;
+	private final CachedCellImg< T, ? > cachedCellImg;
+
+
+	public CachedCellImgReplacer( final RandomAccessible< T > rai,
+								  final CachedCellImg< T, ? > cachedCellImg )
+	{
+		this.rai = rai;
+		this.cachedCellImg = cachedCellImg;
+	}
+
+
+	public RandomAccessibleInterval< T > getReplaced()
+	{
+		return ( RandomAccessibleInterval< T > ) replace();
+	}
+
+	private RandomAccessible< T > replace()
 	{
 		if ( rai instanceof CachedCellImg )
 		{
@@ -64,7 +80,7 @@ public class CachedCellImgReplacer
 		else if ( rai instanceof IntervalView )
 		{
 			final IntervalView< T > view = ( IntervalView< T > ) rai;
-			final RandomAccessible< T > replace = replace( view.getSource() );
+			final RandomAccessible< T > replace = getReplaced( view.getSource() );
 			final IntervalView intervalView = new IntervalView( replace, view );
 			return intervalView;
 		}
@@ -72,7 +88,7 @@ public class CachedCellImgReplacer
 		{
 			final MixedTransformView< T > view = ( MixedTransformView< T > ) rai;
 
-			final RandomAccessible< T > replace = replace( view.getSource() );
+			final RandomAccessible< T > replace = getReplaced( view.getSource() );
 
 			final MixedTransformView< T > mixedTransformView =
 					new MixedTransformView<>(
@@ -86,7 +102,7 @@ public class CachedCellImgReplacer
 			final SubsampleIntervalView< T > view = ( SubsampleIntervalView< T > ) rai;
 
 			final RandomAccessibleInterval< T > replace =
-					( RandomAccessibleInterval< T > ) replace( view.getSource() );
+					( RandomAccessibleInterval< T > ) getReplaced( view.getSource() );
 
 			final SubsampleIntervalView subsampleIntervalView =
 					new SubsampleIntervalView(
@@ -98,6 +114,7 @@ public class CachedCellImgReplacer
 		else if ( rai instanceof SubsampleView ) // TODO: do we need this ?
 		{
 			Logger.error( "SubsampleView..." );
+			return null;
 //			final SubsampleView< T > view = ( SubsampleView< T > ) rai;
 //			final VolatileViewData< T, V > sourceData =
 //					wrapAsVolatileViewData( view.getSource(), queue, hints );
@@ -116,7 +133,7 @@ public class CachedCellImgReplacer
 					= ( ConvertedRandomAccessibleInterval< T, S > ) rai;
 
 			final RandomAccessibleInterval< T > replace =
-					( RandomAccessibleInterval< T > ) replace( view.getSource() );
+					( RandomAccessibleInterval< T > ) getReplaced( view.getSource() );
 
 			final S destinationType = view.getDestinationType();
 
@@ -153,7 +170,7 @@ public class CachedCellImgReplacer
 
 			final List< RandomAccessible< T > > replacedSlices = new ArrayList<>();
 			for ( RandomAccessibleInterval< T > slice : slices )
-				replacedSlices.add( replace( slice ) );
+				replacedSlices.add( getReplaced( slice ) );
 
 			final StackView stackView = new StackView( replacedSlices );
 
@@ -165,7 +182,7 @@ public class CachedCellImgReplacer
 			final RectangleShape2.NeighborhoodsAccessible< T > view =
 					( RectangleShape2.NeighborhoodsAccessible ) rai;
 
-			final RandomAccessible< T > replace = replace( view.getSource() );
+			final RandomAccessible< T > replace = getReplaced( view.getSource() );
 
 			final RectangleShape2.NeighborhoodsAccessible neighborhoodsAccessible
 					= new RectangleShape2.NeighborhoodsAccessible(
@@ -182,7 +199,7 @@ public class CachedCellImgReplacer
 					( ExtendedRandomAccessibleInterval ) rai;
 
 			final RandomAccessibleInterval< T > replace =
-					( RandomAccessibleInterval< T > ) replace( view.getSource() );
+					( RandomAccessibleInterval< T > ) getReplaced( view.getSource() );
 
 			final ExtendedRandomAccessibleInterval extended
 					= new ExtendedRandomAccessibleInterval(

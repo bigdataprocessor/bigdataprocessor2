@@ -12,7 +12,7 @@ public class TestTiffPlateLoader {
         final String directory = "src\\test\\resources\\tiff-nc2-nt2\\";
         final FileInfos fileInfos = new FileInfos(directory, FileInfos.LOAD_CHANNELS_FROM_FOLDERS,".*","");
 
-        Img myImg = new CachedCellImgReader().asCachedCellImg( fileInfos );
+        Img myImg = new CachedCellImgReader().getCachedCellImg( fileInfos );
         //ImgOpener imgOpener = new ImgOpener();
         //Img vsa = ( Img) imgOpener.openImgs( directory+fileName ).get( 0 );
 

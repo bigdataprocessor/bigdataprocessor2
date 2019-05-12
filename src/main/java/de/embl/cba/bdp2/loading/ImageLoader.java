@@ -15,7 +15,6 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.type.numeric.real.FloatType;
-import org.mozilla.javascript.tools.debugger.Dim;
 
 import java.io.File;
 import java.util.Arrays;
@@ -32,13 +31,9 @@ public class ImageLoader< T extends NativeType< T > > implements CellLoader< T >
     private int[] cellDims;
     private LoadingCache< List< Integer >, SerializableFileInfo[] > serializableFileInfoCache;
 
-    public ImageLoader( FileInfos infoSource ) {
+    public ImageLoader( FileInfos infoSource, int cellDimX, int cellDimY, int cellDimZ ) {
 
-        // TODO: optimiseRegions2D based on input file format
-        int cellDimX = infoSource.nX;
-        int cellDimY = infoSource.nY; // 45;
-
-        this.cellDims = new int[]{ cellDimX, cellDimY, 1, 1, 1 };
+        this.cellDims = new int[]{ cellDimX, cellDimY, cellDimZ, 1, 1 };
         this.dimensions = infoSource.getDimensions();
         this.directory = infoSource.directory;
 

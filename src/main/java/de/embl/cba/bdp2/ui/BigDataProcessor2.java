@@ -90,7 +90,11 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
         directory = Utils.fixDirectoryFormat( directory );
 
         FileInfos fileInfos =
-				new FileInfos( directory, loadingScheme, filterPattern, dataset );
+				new FileInfos(
+				        directory,
+                        loadingScheme,
+                        filterPattern,
+                        dataset );
 
         final Image< R > image = CachedCellImgReader.loadImage( fileInfos );
         

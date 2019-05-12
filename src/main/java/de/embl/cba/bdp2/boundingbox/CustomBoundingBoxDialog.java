@@ -77,7 +77,7 @@ public class CustomBoundingBoxDialog extends JFrame {
         //super(owner, title, false);
         super( title);
 
-        // asCachedCellImg a procedural RealRandomAccessible that will render the bounding box
+        // getCachedCellImg a procedural RealRandomAccessible that will render the bounding box
         final UnsignedShortType insideValue = new UnsignedShortType(1000); // inside the box pixel value is 1000
         final UnsignedShortType outsideValue = new UnsignedShortType(0); // outside is 0
 
@@ -88,7 +88,7 @@ public class CustomBoundingBoxDialog extends JFrame {
                 insideValue,
                 outsideValue );
 
-        // asCachedCellImg a bdv.viewer.Source providing data from the bbox RealRandomAccessible
+        // getCachedCellImg a bdv.viewer.Source providing data from the bbox RealRandomAccessible
         final RealRandomAccessibleSource<UnsignedShortType> boxSource =
                 new RealRandomAccessibleSource<UnsignedShortType>(
                         boxRealRandomAccessible,
@@ -103,15 +103,15 @@ public class CustomBoundingBoxDialog extends JFrame {
         final RealARGBColorConverter<UnsignedShortType> converter = new RealARGBColorConverter.Imp1<>(0, 3000);
         converter.setColor(new ARGBType(0x00994499)); // set bounding box color to magenta
 
-        // asCachedCellImg a ConverterSetup (can be used by the brightness dialog to adjust the converter settings)
+        // getCachedCellImg a ConverterSetup (can be used by the brightness dialog to adjust the converter settings)
         boxConverterSetup = new RealARGBColorConverterSetup(boxSetupId, converter);
         boxConverterSetup.setViewer(viewer);
 
-        // asCachedCellImg a SourceAndConverter (can be added to the viewer for display)
+        // getCachedCellImg a SourceAndConverter (can be added to the viewer for display)
         final TransformedSource<UnsignedShortType> ts = new TransformedSource<>(boxSource);
         boxSourceAndConverter = new SourceAndConverter<>(ts, converter);
 
-        // asCachedCellImg an Overlay to show 3D wireframe box
+        // getCachedCellImg an Overlay to show 3D wireframe box
         boxOverlay = new TransformedBoxOverlay(new TransformedBox() {
             @Override
             public void getTransform(final AffineTransform3D transform) {
@@ -124,7 +124,7 @@ public class CustomBoundingBoxDialog extends JFrame {
             }
         });
 
-        // asCachedCellImg a JPanel with sliders to modify the bounding box realInterval (boxRealRandomAccessible.getInterval())
+        // getCachedCellImg a JPanel with sliders to modify the bounding box realInterval (boxRealRandomAccessible.getInterval())
         boxSelectionPanel = new CustomBoxSelectionPanel(
                 selectionBox( viewer ),
                 rangeInterval,
