@@ -7,8 +7,6 @@ import de.embl.cba.bdp2.saving.SavingSettings;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.utils.Utils;
 
-import java.io.File;
-
 public class SaveSingleChanneHdf5SeriesAsTiffStacks
 {
 
@@ -18,8 +16,6 @@ public class SaveSingleChanneHdf5SeriesAsTiffStacks
 
         final String directory =
                 "/Users/tischer/Documents/isabell-schneider-splitchipmerge/stack_0_channel_0";
-
-        final int numIOThreads = 4; // TODO
 
         final String loadingScheme = FileInfos.SINGLE_CHANNEL_TIMELAPSE;
         final String filterPattern = ".*.h5";
@@ -42,7 +38,8 @@ public class SaveSingleChanneHdf5SeriesAsTiffStacks
 
         final SavingSettings savingSettings = SavingSettings.getDefaults();
         savingSettings.fileType = SavingSettings.FileType.TIFF_STACKS;
-        savingSettings.nThreads = 1;
+        savingSettings.numIOThreads = 1;
+        savingSettings.numProcessingThreads = 4;
         savingSettings.saveProjections = true;
         savingSettings.volumesFilePath = "/Users/tischer/Desktop/stack_0_channel_0-asTIFF-volumes/im";
         savingSettings.saveVolumes = true;

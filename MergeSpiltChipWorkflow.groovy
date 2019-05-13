@@ -25,7 +25,7 @@ double voxelSpacingMicrometerZ = 1.04;
 
 final SavingSettings savingSettings = SavingSettings.getDefaults();
 savingSettings.fileType = SavingSettings.FileType.TIFF_STACKS;
-savingSettings.nThreads = Runtime.getRuntime().availableProcessors();
+savingSettings.numIOThreads = Runtime.getRuntime().availableProcessors();
 
 final SplitViewMerger merger = new SplitViewMerger();
 merger.setUpperLeftCornerRegionA( 22, 643 );

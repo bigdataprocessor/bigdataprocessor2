@@ -34,9 +34,10 @@ public class SavingSettings {
     public String compression;
     public int compressionLevel;
     public int rowsPerStrip;
-    public int nThreads;
+    public int numIOThreads = 1;
+    public int numProcessingThreads = 1;
 
-    public enum FileType {
+	public enum FileType {
         TIFF_PLANES("Tiff Planes"),
         TIFF_STACKS("Tiff Volumes"),
         HDF5_STACKS("Hdf5 Volumes"),

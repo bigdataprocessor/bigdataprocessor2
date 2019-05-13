@@ -4,11 +4,11 @@ import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import ij.ImagePlus;
-import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.*;
+import net.imglib2.algorithm.util.Grids;
 import net.imglib2.img.AbstractImg;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.cell.CellImgFactory;
-import net.imglib2.loops.LoopBuilder;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.RealType;
@@ -20,59 +20,13 @@ import static de.embl.cba.bdp2.utils.DimensionOrder.*;
 
 public abstract class Processor
 {
-	public static < R extends RealType< R > & NativeType< R > >
-	ImagePlus getProcessedDataCubeAsImagePlus(
-			RandomAccessibleInterval< R > rai,
-			int c,
-			int t,
-			double[] voxelSpacing,
-			String voxelUnit )
-	{
-
-		long start = System.currentTimeMillis();
-
-		long[] minInterval = new long[]{
-				rai.min( DimensionOrder.X ),
-				rai.min( DimensionOrder.Y ),
-				rai.min( DimensionOrder.Z ),
-				c,
-				t };
-
-		long[] maxInterval = new long[]{
-				rai.max( DimensionOrder.X ),
-				rai.max( DimensionOrder.Y ),
-				rai.max( DimensionOrder.Z ),
-				c,
-				t };
-
-		// TODO: instead of copying the ImagePlus, one could copyVolumeRAI the RAI
-		// and while doing so, employ multi-threading
-
-		RandomAccessibleInterval< R > oneChannelAndTimePoint =
-				Views.interval( rai, minInterval, maxInterval);
-
-
-		ImagePlus imagePlus =
-				Utils.wrap3DRaiToCalibratedImagePlus(
-						oneChannelAndTimePoint,
-						voxelSpacing,
-						voxelUnit,
-					"");
-
-
-		final ImagePlus duplicate = imagePlus.duplicate();
-
-		Logger.log( "Load and process data cube [ s ]: "
-				+ ( System.currentTimeMillis() - start ) / 1000);
-
-		return duplicate;
-	}
 
 	public static < R extends RealType< R > & NativeType< R > >
-	RandomAccessibleInterval< R > get3DRai(
+	RandomAccessibleInterval< R > getVolumeRai(
 			RandomAccessibleInterval< R > image,
 			int c,
-			int t )
+			int t,
+			int numThreads )
 	{
 		long start = System.currentTimeMillis();
 
@@ -94,11 +48,9 @@ public abstract class Processor
 				Views.dropSingletonDimensions(
 						Views.interval( image, minInterval, maxInterval ) );
 
-		// force view into RAM
-		// TODO: Here, multi-threading could be interesting
-		raiXYZ = copyVolumeRAI( raiXYZ );
+		raiXYZ = copyVolumeRAI( raiXYZ, numThreads );
 
-		Logger.debug( "Load and process data cube [ s ]: "
+		Logger.debug( "Produce processed data cube [ s ]: "
 				+ ( System.currentTimeMillis() - start ) / 1000);
 
 		return raiXYZ;
@@ -110,12 +62,18 @@ public abstract class Processor
 	 * cascade of views.
 	 *
 	 * @param volume
+	 * @param numThreads
 	 * @param <R>
 	 * @return
 	 */
 	public static < R extends RealType< R > & NativeType< R > >
-	RandomAccessibleInterval< R > copyVolumeRAI( RandomAccessibleInterval< R > volume )
+	RandomAccessibleInterval< R > copyVolumeRAI( RandomAccessibleInterval< R > volume,
+												 int numThreads )
 	{
+		final int dimensionX = ( int ) volume.dimension( 0 );
+		final int dimensionY = ( int ) volume.dimension( 1 );
+		final int dimensionZ = ( int ) volume.dimension( 2 );
+
 		final long numElements =
 				AbstractImg.numElements( Intervals.dimensionsAsLongArray( volume ) );
 
@@ -131,15 +89,47 @@ public abstract class Processor
 			int nz = (int) ( numElements / ( volume.dimension( 0  ) * volume.dimension( 1 ) ) );
 
 			final int[] cellSize = {
-					( int ) volume.dimension( 0 ),
-					( int ) volume.dimension( 1 ),
+					dimensionX,
+					dimensionY,
 					nz };
 
 			copy = new CellImgFactory( Util.getTypeFromInterval( volume ), cellSize ).create( volume );
 		}
 
-		LoopBuilder.setImages( copy, volume ).forEachPixel( Type::set );
+		// LoopBuilder.setImages( copy, volume ).forEachPixel( Type::set );
+
+		final int[] blockSize = {
+				dimensionX,
+				dimensionY,
+				( int ) Math.ceil( dimensionZ / numThreads ) };
+
+		Grids.collectAllContainedIntervals( Intervals.dimensionsAsLongArray( volume ) , blockSize )
+		.parallelStream().forEach( interval -> copy( volume, Views.interval( copy, interval )));
 
 		return copy;
 	}
+
+
+	public static < T extends Type< T > > void copy( final RandomAccessible< T > source,
+													 final IterableInterval< T > target )
+	{
+		// create a cursor that automatically localizes itself on every move
+		Cursor< T > targetCursor = target.localizingCursor();
+		RandomAccess< T > sourceRandomAccess = source.randomAccess();
+
+		// iterate over the input cursor
+		while ( targetCursor.hasNext() )
+		{
+			// move input cursor forward
+			targetCursor.fwd();
+
+			// set the output cursor to the position of the input cursor
+			sourceRandomAccess.setPosition( targetCursor );
+
+			// set the value of this pixel of the output image, every Type supports T.set( T type )
+			targetCursor.get().set( sourceRandomAccess.get() );
+		}
+
+	}
+
 }

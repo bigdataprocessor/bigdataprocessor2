@@ -1,7 +1,5 @@
 package de.embl.cba.bdp2.ui;
 
-import de.embl.cba.bdp2.progress.ProgressListener;
-import de.embl.cba.bdp2.saving.AbstractImgSaver;
 import de.embl.cba.bdp2.saving.ImgSaver;
 import de.embl.cba.bdp2.saving.SavingSettings;
 import de.embl.cba.bdp2.viewers.ImageViewer;
@@ -20,7 +18,10 @@ public class SaveMenuDialog extends JFrame implements ActionListener {
     private final JCheckBox cbGating = new JCheckBox("Gate");
     private final JTextField tfBinning = new JTextField("1,1,1", 10);
     private final JTextField tfRowsPerStrip = new JTextField("10", 3);
-    private final JTextField tfNThreads = new JTextField("1", 2);
+    private final JTextField tfNumIOThreads = new JTextField("1", 2);
+    private final JTextField tfNumProcessingThreads = new JTextField(
+            "" + Runtime.getRuntime().availableProcessors(), 2);
+
     private final JTextField tfMapTo255 = new JTextField("65535", 5);
     private final JTextField tfMapTo0 = new JTextField("0", 5);
     private final JTextField tfGateMin = new JTextField("0", 5);
@@ -73,7 +74,12 @@ public class SaveMenuDialog extends JFrame implements ActionListener {
 
         panels.add(new JPanel());
         panels.get(j).add(new JLabel("I/O Threads"));
-        panels.get(j).add(tfNThreads);
+        panels.get(j).add( tfNumIOThreads );
+        mainPanels.get(k).add(panels.get(j++));
+
+        panels.add(new JPanel());
+        panels.get(j).add(new JLabel("Processing Threads"));
+        panels.get(j).add( tfNumProcessingThreads );
         mainPanels.get(k).add(panels.get(j++));
 
         panels.add(new JPanel());
@@ -119,9 +125,7 @@ public class SaveMenuDialog extends JFrame implements ActionListener {
                     SavingSettings savingSettings = new SavingSettings();
                     String compression = SavingSettings.NONE;
                     if ( cbLZW.isSelected() )
-                    {
                         compression = SavingSettings.LZW;
-                    }
                     savingSettings.compression = compression;
                     savingSettings.rowsPerStrip = Integer.parseInt( tfRowsPerStrip.getText() );
                     savingSettings.bin = tfBinning.getText();
@@ -130,9 +134,12 @@ public class SaveMenuDialog extends JFrame implements ActionListener {
                     savingSettings.convertTo8Bit = cbConvertTo8Bit.isSelected();
                     savingSettings.mapTo0 = Integer.parseInt( tfMapTo0.getText() );
                     savingSettings.mapTo255 = Integer.parseInt( tfMapTo255.getText() );
-                    savingSettings.nThreads = Integer.parseInt( tfNThreads.getText() );
+                    savingSettings.numIOThreads = Integer.parseInt( tfNumIOThreads.getText() );
+                    savingSettings.numProcessingThreads =
+                            Integer.parseInt( tfNumProcessingThreads.getText() );
                     savingSettings.voxelSpacing = imageViewer.getImage().getVoxelSpacing();
                     savingSettings.voxelUnit = imageViewer.getImage().getVoxelUnit();
+
                     if ( !( fileType.equals( SavingSettings.FileType.TIFF_PLANES ) ) )
                     {
                         // TODO: implement below for planes
@@ -153,7 +160,7 @@ public class SaveMenuDialog extends JFrame implements ActionListener {
                     {
                         savingSettings.fileBaseNameIMARIS = file.getName();
                         savingSettings.parentDirectory = file.getParent();
-                        savingSettings.nThreads = 1;
+                        savingSettings.numIOThreads = 1;
                     }
 
                     progressBar.setVisible( true );

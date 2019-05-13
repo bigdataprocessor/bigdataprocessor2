@@ -132,7 +132,7 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
             ProgressListener progressListener )
     {
         Logger.info( "Saving: Started..." );
-        int nIOThread = Math.max( 1, Math.min( savingSettings.nThreads, MAX_THREAD_LIMIT ));
+        int nIOThread = Math.max( 1, Math.min( savingSettings.numIOThreads, MAX_THREAD_LIMIT ));
         ExecutorService saveExecutorService = Executors.newFixedThreadPool( nIOThread );
 
         Logger.info( "Saving: Configuring volume-wise reader..." );

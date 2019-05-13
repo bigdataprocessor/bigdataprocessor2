@@ -13,6 +13,8 @@ import loci.formats.out.TiffWriter;
 import loci.formats.services.OMEXMLService;
 import loci.formats.tiff.IFD;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.RealType;
 import ome.xml.model.enums.DimensionOrder;
 import ome.xml.model.enums.PixelType;
 import ome.xml.model.primitives.PositiveInteger;
@@ -22,7 +24,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static de.embl.cba.bdp2.utils.DimensionOrder.*;
 
-public class SaveImgAsTIFFStacks implements Runnable {
+public class SaveImgAsTIFFStacks < R extends RealType< R > & NativeType< R > > implements Runnable {
     private final int t;
     private final AtomicInteger counter;
     private final SavingSettings settings;
@@ -77,9 +79,11 @@ public class SaveImgAsTIFFStacks implements Runnable {
                 return;
             }
 
-            // Here the image is loaded and processed
-            // TODO: consider multi-threading!
-            RandomAccessibleInterval raiXYZ = Processor.get3DRai( image, c, t );
+            RandomAccessibleInterval< R > raiXYZ =
+                    Processor.getVolumeRai(
+                            image,
+                            c, t,
+                            settings.numProcessingThreads );
 
             if ( settings.saveVolumes )
             {
@@ -88,6 +92,7 @@ public class SaveImgAsTIFFStacks implements Runnable {
                         settings.voxelSpacing,
                         settings.voxelUnit,
                         "" );
+
                 saveAsTiff( imp, c, t,
                         settings.compression, settings.rowsPerStrip, settings.volumesFilePath );
             }

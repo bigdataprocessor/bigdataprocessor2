@@ -31,7 +31,7 @@ public class TestTiffStackSaving
          */
         final SavingSettings defaults = SavingSettings.getDefaults();
         defaults.fileType = SavingSettings.FileType.TIFF_STACKS;
-        defaults.nThreads = 3;
+        defaults.numIOThreads = 3;
         defaults.voxelSpacing = imageViewer.getImage().getVoxelSpacing();
         defaults.voxelUnit = imageViewer.getImage().getVoxelUnit();
         new BigDataProcessor2().saveImage( imageViewer.getImage(), defaults, new ProgressListener()

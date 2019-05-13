@@ -1,15 +1,11 @@
 package example;
 
 import de.embl.cba.bdp2.Image;
-import de.embl.cba.bdp2.loading.CachedCellImgReader;
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.process.Binner;
-import de.embl.cba.bdp2.saving.CachedCellImgReplacer;
 import de.embl.cba.bdp2.saving.SavingSettings;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.utils.Utils;
-import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.cache.img.CachedCellImg;
 
 import java.io.File;
 
@@ -22,8 +18,6 @@ public class SaveSingleChanneHdf5SeriesAsImaris
 
         final String directory =
                 "/Users/tischer/Documents/isabell-schneider-splitchipmerge/stacks_10";
-
-        final int numIOThreads = 4; // TODO
 
         final String loadingScheme = FileInfos.SINGLE_CHANNEL_TIMELAPSE;
         final String filterPattern = ".*.h5";
@@ -47,7 +41,8 @@ public class SaveSingleChanneHdf5SeriesAsImaris
 
         final SavingSettings savingSettings = SavingSettings.getDefaults();
         savingSettings.fileType = SavingSettings.FileType.IMARIS_STACKS;
-        savingSettings.nThreads = 1;
+        savingSettings.numIOThreads = 1;
+        savingSettings.numProcessingThreads = 4;
         savingSettings.saveProjections = false;
         savingSettings.saveVolumes = true;
         savingSettings.volumesFilePath = out.toString();
