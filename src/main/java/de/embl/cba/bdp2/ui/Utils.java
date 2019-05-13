@@ -5,6 +5,7 @@ import java.io.File;
 
 public class Utils
 {
+
 	public static File[] selectDirectories() {
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setMultiSelectionEnabled(true);

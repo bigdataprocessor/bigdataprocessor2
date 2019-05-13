@@ -217,7 +217,7 @@ public class OpenerExtension extends Opener {
             }
             readingPixelsTime = System.currentTimeMillis() - readingPixelsTime;
 
-            // copy pixels plane-wise into stack
+            // copyVolumeRAI pixels plane-wise into stack
             settingTime = System.currentTimeMillis();
             asFlatArray = block.getAsFlatArray();
             for (int z = zs; z <= ze; z++) {
@@ -368,7 +368,7 @@ public class OpenerExtension extends Opener {
             }
             readingPixelsTime = System.currentTimeMillis() - readingPixelsTime;
 
-            // copy pixels plane-wise into stack
+            // copyVolumeRAI pixels plane-wise into stack
             settingTime = System.currentTimeMillis();
             asFlatArray = block.getAsFlatArray();
             for (int z = zs; z <= ze; z++) {
@@ -1362,7 +1362,7 @@ public class OpenerExtension extends Opener {
                         IJ.log("Data set has " + dsInfo.getNumberOfElements() + " elements (more than 2^31). Reading in " + nLoadBlocks + " blocks with maximum of " + levelsPerReadOperation + " levels");
                     }
 
-                    // load data and copy slices to hyperstack
+                    // load data and copyVolumeRAI slices to hyperstack
                     //
                     int sliceSize = nCols * nRows;
                     for( int block = 0; block < nLoadBlocks; ++block) {

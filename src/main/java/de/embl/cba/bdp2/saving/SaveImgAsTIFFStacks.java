@@ -1,6 +1,7 @@
 package de.embl.cba.bdp2.saving;
 
 import de.embl.cba.bdp2.logging.Logger;
+import de.embl.cba.bdp2.process.Processor;
 import de.embl.cba.bdp2.utils.Utils;
 import ij.ImagePlus;
 import ij.ImageStack;
@@ -12,13 +13,6 @@ import loci.formats.out.TiffWriter;
 import loci.formats.services.OMEXMLService;
 import loci.formats.tiff.IFD;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.loops.LoopBuilder;
-import net.imglib2.type.NativeType;
-import net.imglib2.type.Type;
-import net.imglib2.type.numeric.RealType;
-import net.imglib2.util.Util;
-import net.imglib2.view.Views;
 import ome.xml.model.enums.DimensionOrder;
 import ome.xml.model.enums.PixelType;
 import ome.xml.model.primitives.PositiveInteger;
@@ -85,7 +79,7 @@ public class SaveImgAsTIFFStacks implements Runnable {
 
             // Here the image is loaded and processed
             // TODO: consider multi-threading!
-            RandomAccessibleInterval raiXYZ = get3DRai( image, c );
+            RandomAccessibleInterval raiXYZ = Processor.get3DRai( image, c, t );
 
             if ( settings.saveVolumes )
             {
@@ -109,49 +103,6 @@ public class SaveImgAsTIFFStacks implements Runnable {
             }
         }
 
-    }
-
-    public RandomAccessibleInterval get3DRai( RandomAccessibleInterval image, int c )
-    {
-        long start = System.currentTimeMillis();
-
-        long[] minInterval = new long[]{
-                image.min( X ),
-                image.min( Y ),
-                image.min( Z ),
-                c,
-                t };
-
-        long[] maxInterval = new long[]{
-                image.max( X ),
-                image.max( Y ),
-                image.max( Z ),
-                c,
-                t };
-
-        RandomAccessibleInterval raiXYZ =
-                Views.dropSingletonDimensions(
-                        Views.interval( image, minInterval, maxInterval ) );
-
-        // force view into RAM
-        // TODO: Here, multi-threading could be interesting
-        raiXYZ = copyAsArrayImg( raiXYZ );
-
-        Logger.debug( "Load and process data cube [ s ]: "
-                + ( System.currentTimeMillis() - start ) / 1000);
-
-        return raiXYZ;
-    }
-
-    public static < T extends RealType< T > & NativeType< T > >
-    RandomAccessibleInterval< T > copyAsArrayImg( RandomAccessibleInterval< T > orig )
-    {
-        final RandomAccessibleInterval< T > copy =
-                        new ArrayImgFactory( Util.getTypeFromInterval( orig ) ).create( orig );
-
-        LoopBuilder.setImages( copy, orig ).forEachPixel( Type::set );
-
-        return copy;
     }
 
     private void saveProjections(

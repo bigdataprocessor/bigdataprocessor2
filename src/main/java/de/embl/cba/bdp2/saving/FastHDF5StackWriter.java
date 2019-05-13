@@ -176,7 +176,7 @@ public class FastHDF5StackWriter<T extends RealType<T> & NativeType<T>> implemen
             }
             // init MD-array
             Object[] flatArr = new Object[dimY * dimX];
-            // copy data XY slice
+            // copyVolumeRAI data XY slice
             for (int x = 0; x < dimX; x++) {
                 rai.setPosition(x, image.dimensionIndex(Axes.X));
                 for (int y = 0; y < dimY; y++) {

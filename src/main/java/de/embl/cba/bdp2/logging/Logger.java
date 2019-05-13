@@ -2,9 +2,11 @@ package de.embl.cba.bdp2.logging;
 
 import ij.IJ;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 public class Logger
 {
-
+	public static AtomicBoolean debug = new AtomicBoolean( true );
 
 	public static void log( String msg )
 	{
@@ -28,7 +30,8 @@ public class Logger
 
 	public static void debug( String msg )
 	{
-		IJ.log( "[DEBUG] " + msg );
+		if ( debug.get() )
+			IJ.log( "[DEBUG] " + msg );
 	}
 
 	public static void error( String msg )

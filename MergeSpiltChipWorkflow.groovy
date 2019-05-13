@@ -1,4 +1,4 @@
-//#@File[] (label="Select", style="both") directories
+#@File[] (label="Select", style="both") directories
 
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
@@ -11,6 +11,10 @@ import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.ImageViewer;
 import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
+import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.RealType;
+import java.io.File;
+import java.util.ArrayList;
 
 final BigDataProcessor2 bdp = new BigDataProcessor2<>();
 

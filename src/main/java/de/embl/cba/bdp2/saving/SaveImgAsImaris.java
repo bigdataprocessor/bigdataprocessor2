@@ -1,24 +1,22 @@
 package de.embl.cba.bdp2.saving;
 
 import de.embl.cba.bdp2.logging.Logger;
+import de.embl.cba.bdp2.process.Processor;
 import de.embl.cba.bdp2.utils.DimensionOrder;
-import de.embl.cba.bdp2.utils.Utils;
-import de.embl.cba.bdp2.volatiles.VolatileViews;
 import de.embl.cba.imaris.H5DataCubeWriter;
 import de.embl.cba.imaris.ImarisDataSet;
 import ij.ImagePlus;
-import net.imagej.ImgPlus;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
-import net.imglib2.util.Util;
-import net.imglib2.view.Views;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static de.embl.cba.bdp2.saving.ProjectionXYZ.saveAsTiffXYZMaxProjection;
+
 public class SaveImgAsImaris<T extends RealType<T> & NativeType<T>> implements Runnable {
-    private int timePoint;
+    private int t;
     private final int nFrames;
     private final int nChannels;
     private AtomicInteger counter;
@@ -31,7 +29,7 @@ public class SaveImgAsImaris<T extends RealType<T> & NativeType<T>> implements R
     public SaveImgAsImaris(
             SavingSettings savingSettings,
             ImarisDataSet imarisDataSet,
-            int timePoint,
+            int t,
             AtomicInteger counter,
             long startTime,
             AtomicBoolean stop)
@@ -40,7 +38,7 @@ public class SaveImgAsImaris<T extends RealType<T> & NativeType<T>> implements R
         this.nFrames = Math.toIntExact( rai.dimension( DimensionOrder.T ) );
         this.nChannels = Math.toIntExact( rai.dimension( DimensionOrder.C ) );
         this.savingSettings = savingSettings;
-        this.timePoint = timePoint;
+        this.t = t;
         this.counter = counter;
         this.startTime = startTime;
         this.imarisDataSetProperties = imarisDataSet;
@@ -75,13 +73,17 @@ public class SaveImgAsImaris<T extends RealType<T> & NativeType<T>> implements R
         {
             if ( stop.get() ) {
                 savingSettings.saveVolumes = false;
-                Logger.progress("Stopped saving thread: ", "" + this.timePoint );
+                Logger.progress("Stopped saving thread: ", "" + this.t );
                 return;
             }
 
             // TODO: This involves both loading and computation and thus
             // could be done in parallel to the writing...
-            ImagePlus imagePlus = getImagePlus( c );
+
+            ImagePlus imagePlus = Processor.getProcessedDataCubeAsImagePlus(
+                    rai,  c, t,
+                    savingSettings.voxelSpacing,
+                    savingSettings.voxelUnit );
 
             // Save volume
             if ( savingSettings.saveVolumes )
@@ -89,21 +91,14 @@ public class SaveImgAsImaris<T extends RealType<T> & NativeType<T>> implements R
                 start = System.currentTimeMillis();
                 H5DataCubeWriter writer = new H5DataCubeWriter();
                 writer.writeImarisCompatibleResolutionPyramid(
-                        imagePlus, imarisDataSetProperties, c, this.timePoint );
-                System.out.println( "Save data cube as Imaris [ s ]: "
+                        imagePlus, imarisDataSetProperties, c, this.t );
+                Logger.debug( "Save data cube as Imaris [ s ]: "
                         + ( System.currentTimeMillis() - start ) / 1000);
             }
 
             // Save projections
-            if ( savingSettings.saveProjections ) {
-                // TODO
-//                String projectionPath = savingSettings.projectionsFilePath;
-//                String sC = String.format("%1$02d", c);
-//                String sT = String.format("%1$05d", current_t);
-//                projectionPath = projectionPath + "--C" + sC + "--T" + sT + ".tif";
-//                SaveImgAsTIFFStacks.saveAsTiffXYZMaxProjection(
-//                        imagePlus, c, this.current_t, projectionPath);
-            }
+            if ( savingSettings.saveProjections )
+                saveAsTiffXYZMaxProjection( imagePlus, c, t, getProjectionPath( c ) );
 
             counter.incrementAndGet();
 
@@ -117,44 +112,13 @@ public class SaveImgAsImaris<T extends RealType<T> & NativeType<T>> implements R
 
     }
 
-    public ImagePlus getImagePlus( int c )
+    public String getProjectionPath( int c )
     {
-        // force into RAM
-        long start = System.currentTimeMillis();
-
-        long[] minInterval = new long[]{
-                rai.min( DimensionOrder.X ),
-                rai.min( DimensionOrder.Y ),
-                rai.min( DimensionOrder.Z ),
-                c,
-                this.timePoint };
-        long[] maxInterval = new long[]{
-                rai.max( DimensionOrder.X ),
-                rai.max( DimensionOrder.Y ),
-                rai.max( DimensionOrder.Z ),
-                c,
-                this.timePoint };
-
-        // TODO: instead of copying the ImagePlus, one could copy the RAI into an ArrayImg
-        // and while doing so, employ multi-threading
-
-        RandomAccessibleInterval< T > oneChannelAndTimePoint =
-                Views.interval(rai, minInterval, maxInterval);
-
-        ImagePlus imagePlus =
-                Utils.wrap3DRaiToCalibratedImagePlus(
-                        oneChannelAndTimePoint,
-                        savingSettings.voxelSpacing,
-                        savingSettings.voxelUnit,
-                    "BinnedWrapped");
-
-
-        final ImagePlus duplicate = imagePlus.duplicate();
-
-        Logger.log( "Load and process data cube [ s ]: "
-                + ( System.currentTimeMillis() - start ) / 1000);
-
-        return duplicate;
+        String projectionPath = savingSettings.projectionsFilePath;
+        String sC = String.format("%1$02d", c);
+        String sT = String.format("%1$05d", t);
+        projectionPath = projectionPath + "--C" + sC + "--T" + sT + ".tif";
+        return projectionPath;
     }
 
 

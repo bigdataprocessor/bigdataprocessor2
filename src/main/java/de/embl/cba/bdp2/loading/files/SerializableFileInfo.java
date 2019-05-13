@@ -71,7 +71,7 @@ public class SerializableFileInfo implements Cloneable, Serializable {
     public int gapBetweenImages;
     public String info;
 
-    // add to copy:
+    // add to copyVolumeRAI:
     public int calibrationFunction;
     public String valueUnit;
     public double[] coefficients;

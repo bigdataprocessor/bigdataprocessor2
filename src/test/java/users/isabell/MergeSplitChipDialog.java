@@ -10,12 +10,10 @@ import net.imagej.ImageJ;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
-import java.io.IOException;
-
-
 public class MergeSplitChipDialog
 {
-    public static < R extends RealType< R > & NativeType< R > > void main( String[] args) throws IOException
+    public static < R extends RealType< R > & NativeType< R > >
+    void main( String[] args )
     {
         final ImageJ imageJ = new ImageJ();
         imageJ.ui().showUI();

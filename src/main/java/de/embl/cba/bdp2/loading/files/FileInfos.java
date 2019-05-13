@@ -78,6 +78,9 @@ public class FileInfos
             String filterPattern,
             String h5DataSetName)
     {
+        Logger.info( "" );
+        Logger.info( "" );
+        Logger.info( "Configuring file loading from: " + directory );
         directory = Utils.fixDirectoryFormat( directory );
 
         this.directory = directory;
@@ -196,7 +199,7 @@ public class FileInfos
 
                 infoCT = new SerializableFileInfo[nZ];
                 for ( int z2 = 0; z2 < nZ; z2++ ) {
-                    infoCT[z2] = new SerializableFileInfo( info[0] ); // copy constructor
+                    infoCT[z2] = new SerializableFileInfo( info[0] ); // copyVolumeRAI constructor
                     // adapt information related to where the data is stored in this plane
                     infoCT[z2].offset = info[z2].offset;
                     infoCT[z2].stripLengths = info[z2].stripLengths;
