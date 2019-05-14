@@ -32,7 +32,7 @@ public class ImageCalibrationTiffReaderTest
 //
 //		String imageDirectory = TestBdvViewer.class.getResource( "tiff-nc1-nt2"  ).getFile().toString();
 //
-//		bigDataProcessor.openTiffImage(
+//		bigDataProcessor.openImage(
 //				imageDirectory.toString(),
 //				FileInfoConstants.SINGLE_CHANNEL_TIMELAPSE,
 //				".*",

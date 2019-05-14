@@ -16,7 +16,7 @@ public class OpenSingleChannelHdf5Series
 
         String imageDirectory = "/Users/tischer/Documents/isabell-schneider-splitchipmerge/two_channels/stack_0_channel_0";
 
-        final Image image = bigDataProcessor2.openTiffImage(
+        final Image image = bigDataProcessor2.openImage(
                 imageDirectory,
                 FileInfos.SINGLE_CHANNEL_TIMELAPSE,
                 ".*" );

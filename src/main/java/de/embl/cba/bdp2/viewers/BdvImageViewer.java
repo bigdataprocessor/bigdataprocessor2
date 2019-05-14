@@ -38,6 +38,9 @@ public class BdvImageViewer< R extends RealType< R > & NativeType< R > >
     public BdvImageViewer( Image< R > image )
     {
         this.image = image;
+        show();
+        doAutoContrastPerChannel();
+        this.addMenus( new BdvMenus() );
     }
 
     public BdvImageViewer( RandomAccessibleInterval< R > rai,
@@ -75,11 +78,6 @@ public class BdvImageViewer< R extends RealType< R > & NativeType< R > >
         return interval;
     }
 
-    public BdvImageViewer newImageViewer( Image< R > image ) {
-        return new BdvImageViewer< >( image );
-    }
-
-    
     public Image< R > getImage() {
         return image;
     }
@@ -109,7 +107,7 @@ public class BdvImageViewer< R extends RealType< R > & NativeType< R > >
         showImage( image );
 
         bdvHandle.getViewerPanel().setCurrentViewerTransform( viewerTransform );
-        applyDisplaySettings( displaySettings );
+        setDisplaySettings( displaySettings );
     }
 
     public BdvImageViewer< R > showImageInNewWindow( Image< R > image )
@@ -118,15 +116,14 @@ public class BdvImageViewer< R extends RealType< R > & NativeType< R > >
         final List< DisplaySettings > displaySettings = getDisplaySettings();
 
         final BdvImageViewer< R > bdvImageViewer = new BdvImageViewer<>( image );
-        bdvImageViewer.show();
 
         bdvImageViewer.getBdvHandle().getViewerPanel().setCurrentViewerTransform( viewerTransform );
-        bdvImageViewer.applyDisplaySettings( displaySettings );
+        bdvImageViewer.setDisplaySettings( displaySettings );
 
         return bdvImageViewer;
     }
 
-    public void applyDisplaySettings( List< DisplaySettings > displaySettings )
+    public void setDisplaySettings( List< DisplaySettings > displaySettings )
     {
         final int numChannels = displaySettings.size();
         for ( int c = 0; c < numChannels; c++ )
@@ -155,11 +152,14 @@ public class BdvImageViewer< R extends RealType< R > & NativeType< R > >
     }
 
     public void addMenus( BdvMenus menus ) {
+
         menus.setImageViewer(this);
-        for (JMenu menu : menus.getMenus()) {
+        for ( JMenu menu : menus.getMenus() )
+        {
             ((BdvHandleFrame) this.bdvStackSource.getBdvHandle())
                     .getBigDataViewer().getViewerFrame().getJMenuBar().add((menu));
         }
+
         ((BdvHandleFrame) this.bdvStackSource.getBdvHandle())
                 .getBigDataViewer().getViewerFrame().getJMenuBar().updateUI();
     }

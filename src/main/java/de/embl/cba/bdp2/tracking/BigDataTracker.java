@@ -97,21 +97,10 @@ public class BigDataTracker< R extends RealType< R > & NativeType< R > > {
                 RandomAccessibleInterval timeRemovedRAI = Views.zeroMin(Views.hyperSlice(trackedRegion,4, entry.getKey()));
                 tracks.add(timeRemovedRAI);
             }
-            RandomAccessibleInterval stackedRAI = Views.stack(tracks);
-           BdvImageViewer newTrackedView = imageViewer.newImageViewer();
-            final Image image = imageViewer.getImage();
-            newTrackedView.show(
-                    image.newImage( stackedRAI ),
-                    false,
-                    true,
-                    true );
-            newTrackedView.addMenus(new BdvMenus());
 
-            for (int channel=0; channel<nChannels; ++channel)
-            { // TODO: change to method replicateViewerContrast --ashis
-                DisplaySettings setting = imageViewer.getAutoContrastDisplaySettings(channel);
-                newTrackedView.setDisplayRange(setting.getDisplayRangeMin(),setting.getDisplayRangeMax(),channel);
-            }
+            RandomAccessibleInterval stackedRAI = Views.stack(tracks);
+            imageViewer.showImageInNewWindow( imageViewer.getImage().newImage( stackedRAI ) );
+
         }
     }
 }

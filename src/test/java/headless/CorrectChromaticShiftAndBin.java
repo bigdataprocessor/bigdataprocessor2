@@ -5,7 +5,6 @@ import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.process.Binner;
 import de.embl.cba.bdp2.process.ChannelShifter;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
-import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
@@ -26,7 +25,7 @@ public class CorrectChromaticShiftAndBin
                 CorrectChromaticShiftAndBin.class
                         .getResource( "/nc2-nt3-calibrated-tiff"  ).getFile();
 
-        final Image image = bdp.openTiffImage(
+        final Image image = bdp.openImage(
                 imageDirectory,
                 FileInfos.LOAD_CHANNELS_FROM_FOLDERS,
                 ".*" );
@@ -41,12 +40,11 @@ public class CorrectChromaticShiftAndBin
 
         final RandomAccessibleInterval shiftedRAI = shifter.getChannelShiftedRAI( shifts );
 
-        Utils.showRaiKeepingAllSettings( shiftedRAI, imageViewer );
-
+        imageViewer.replaceImage( image.newImage( shiftedRAI ) );
 
         final Image bin = Binner.bin( imageViewer.getImage(), new long[]{ 1, 1, 0, 0, 0 } );
 
-        //imageViewer.replaceImage( bin, true );
+        imageViewer.replaceImage( bin );
 
         final RandomAccess randomAccess = bin.getRai().randomAccess();
 

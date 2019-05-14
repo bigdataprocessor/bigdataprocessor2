@@ -64,7 +64,8 @@ public class EightBitConverterMenuDialog extends JDialog implements ActionListen
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent e)
+    {
         int min = Integer.parseInt(mapToZero.getText());
         int max = Integer.parseInt(mapTo255.getText());
 
@@ -77,12 +78,8 @@ public class EightBitConverterMenuDialog extends JDialog implements ActionListen
                 BigDataProcessor2.unsignedByteTypeConverter(
                         image.getRai(), displaySettings );
 
-        BdvImageViewer newImageViewer = imageViewer.newImageViewer(
-                image.newImage( unsignedByteTypeRAI ) );
-        newImageViewer.show();
+        imageViewer.replaceImage( image.newImage( unsignedByteTypeRAI ) );
 
-        BdvMenus menus = new BdvMenus();
-        newImageViewer.addMenus(menus);
         dispose();
     }
 }

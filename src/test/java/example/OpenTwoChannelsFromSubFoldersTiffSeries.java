@@ -14,7 +14,7 @@ public class OpenTwoChannelsFromSubFoldersTiffSeries
                 OpenTwoChannelsFromSubFoldersTiffSeries.class
                         .getResource( "/nc2-nt3-calibrated-tiff"  ).getFile();
 
-        final Image image = bdp.openTiffImage(
+        final Image image = bdp.openImage(
                 imageDirectory,
                 FileInfos.LOAD_CHANNELS_FROM_FOLDERS,
                 ".*" );

@@ -2,35 +2,17 @@ package de.embl.cba.bdp2.ui;
 
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
-import net.imagej.DatasetService;
-import net.imagej.ops.OpService;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
-import org.scijava.app.StatusService;
 import org.scijava.command.Command;
-import org.scijava.log.LogService;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
-import org.scijava.ui.UIService;
 
 import java.io.File;
 
 @Plugin(type = Command.class, menuPath = "Plugins>BigDataTools>BigDataProcessor2", initializer = "init")
-public class BigDataProcessorCommand < R extends RealType< R > & NativeType< R >> implements Command {
-    @Parameter
-    public static UIService uiService;
-
-    @Parameter
-    public DatasetService datasetService;
-
-    @Parameter
-    public LogService logService;
-
-    @Parameter
-    public OpService opService;
-
-    @Parameter
-    public StatusService statusService;
+public class BigDataProcessorCommand < R extends RealType< R > & NativeType< R >>
+        implements Command {
 
     @Parameter(label = "Image data directory", style = "directory")
     File directory;
@@ -66,9 +48,12 @@ public class BigDataProcessorCommand < R extends RealType< R > & NativeType< R >
     {
         final BigDataProcessor2< R > bdp = new BigDataProcessor2< R >();
 
-        final Image< R > image = bdp.openTiffImage( directory.toString(), namingScheme, filterPattern );
+        final Image< R > image =
+                bdp.openImage( directory.toString(), namingScheme, filterPattern );
+
         bdp.showVoxelSpacingDialog( image );
         bdp.showImage( image );
+
     }
 
 }

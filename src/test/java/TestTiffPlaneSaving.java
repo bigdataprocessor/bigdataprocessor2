@@ -18,8 +18,8 @@ public class TestTiffPlaneSaving
                 ".*", "");
         final Image image = CachedCellImgReader.loadImage( fileInfos );
 
-       BdvImageViewer imageViewer = new BdvImageViewer<UnsignedShortType>( image );
-        imageViewer.show();
+        BdvImageViewer imageViewer = new BdvImageViewer<UnsignedShortType>( image );
+
         imageViewer.setDisplayRange( 0, 800, 0 );
 
         /**

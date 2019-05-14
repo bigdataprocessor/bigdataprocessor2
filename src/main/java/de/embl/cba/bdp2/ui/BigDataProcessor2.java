@@ -9,7 +9,6 @@ import de.embl.cba.bdp2.saving.*;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
-import de.embl.cba.bdp2.viewers.ViewerUtils;
 import ij.gui.GenericDialog;
 import net.imglib2.*;
 import net.imglib2.cache.img.CachedCellImg;
@@ -58,13 +57,11 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
             generalThreadPool = Executors.newFixedThreadPool( numThreads );
     }
 
-    public Image< R > openTiffImage(
+    public Image< R > openImage(
             String directory,
             String loadingScheme,
             String filterPattern )
     {
-        directory = Utils.fixDirectoryFormat( directory );
-
         FileInfos fileInfos =
                 new FileInfos( directory, loadingScheme, filterPattern );
 
@@ -94,9 +91,8 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
     
     public BdvImageViewer showImage( Image< R > image )
     {
-        final BdvImageViewer viewer = ViewerUtils.getImageViewer( ViewerUtils.BIG_DATA_VIEWER );
-        viewer.replaceImage( image );
-        viewer.addMenus( new BdvMenus() );
+        final BdvImageViewer viewer = new BdvImageViewer( image );
+
         return viewer;
     }
 

@@ -8,10 +8,9 @@ import bdv.util.BdvFunctions;
 import bdv.util.ModifiableRealInterval;
 import bdv.viewer.ViewerPanel;
 import de.embl.cba.bdp2.Image;
-import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.loading.CachedCellImgReader;
+import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
-import de.embl.cba.bdp2.viewers.ViewerUtils;
 import net.imglib2.FinalRealInterval;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessibleInterval;
@@ -28,7 +27,6 @@ public class BoundingBoxSelection
 
 		final Image< R > image = openImage();
 		final BdvImageViewer< R > viewer = new BdvImageViewer<>( image );
-		viewer.show();
 
 		final RandomAccessibleInterval rai = viewer.getImage().getRai();
 		final double[] min = new double[ 3 ];
