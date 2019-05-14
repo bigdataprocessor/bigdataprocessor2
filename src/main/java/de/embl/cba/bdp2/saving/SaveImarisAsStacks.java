@@ -47,7 +47,7 @@ public class SaveImarisAsStacks extends AbstractImgSaver {
             if (imageType instanceof UnsignedByteType)
             {
                 futures.add(es.submit(
-                        new SaveImgAsImaris<UnsignedByteType>(
+                        new SaveImgAsImarisVolumes<UnsignedByteType>(
                                 savingSettings,
                                 imarisDataSetProperties,
                                 t, counter, startTime, stop)
@@ -57,7 +57,7 @@ public class SaveImarisAsStacks extends AbstractImgSaver {
             {
                 futures.add(
                         es.submit(
-                                new SaveImgAsImaris<UnsignedShortType>(
+                                new SaveImgAsImarisVolumes<UnsignedShortType>(
                                         savingSettings,
                                         imarisDataSetProperties,
                                         t,
@@ -68,7 +68,7 @@ public class SaveImarisAsStacks extends AbstractImgSaver {
             } else if (imageType instanceof FloatType) {
                 futures.add(
                         es.submit(
-                                new SaveImgAsImaris<FloatType>(
+                                new SaveImgAsImarisVolumes<FloatType>(
                                         savingSettings,
                                         imarisDataSetProperties,
                                         t, counter, startTime, stop)

@@ -19,15 +19,15 @@ public class BinningDialog< T extends RealType< T > & NativeType< T > >
 
 	public BinningDialog( final ImageViewer< T > imageViewer  )
 	{
-		final Image< T > inputImage = imageViewer.getImage();
-		ImageViewer newImageViewer = imageViewer.newImageViewer();
-		newImageViewer.show( imageViewer.getImage(), true );
+//		final Image< T > inputImage = imageViewer.getImage();
+//		ImageViewer newImageViewer = imageViewer.newImageViewer();
+//		newImageViewer.show( imageViewer.getImage(), true );
+//		newImageViewer.addMenus( new BdvMenus() );
 
 		Logger.info( "Image size without binning [GB]: "
 				+ Utils.getSizeGB( imageViewer.getImage().getRai() ) );
-		newImageViewer.addMenus( new BdvMenus() );
 
-		showBinningAdjustmentDialog( newImageViewer, inputImage );
+		showBinningAdjustmentDialog( imageViewer, imageViewer.getImage() );
 	}
 
 	private void showBinningAdjustmentDialog( ImageViewer imageViewer, Image< T > inputImage )

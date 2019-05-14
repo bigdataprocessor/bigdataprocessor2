@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static de.embl.cba.bdp2.saving.ProjectionXYZ.saveAsTiffXYZMaxProjection;
 
-public class SaveImgAsImaris < R extends RealType< R > & NativeType< R >> implements Runnable {
+public class SaveImgAsImarisVolumes< R extends RealType< R > & NativeType< R >> implements Runnable {
     private int t;
     private final int nFrames;
     private final int nChannels;
@@ -27,7 +27,7 @@ public class SaveImgAsImaris < R extends RealType< R > & NativeType< R >> implem
     private final AtomicBoolean stop;
     private final RandomAccessibleInterval rai;
 
-    public SaveImgAsImaris(
+    public SaveImgAsImarisVolumes(
             SavingSettings settings,
             ImarisDataSet imarisDataSet,
             int t,

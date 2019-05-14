@@ -21,19 +21,19 @@ public class Binner
 	}
 
 	public static < T extends RealType< T > & NativeType< T > >
-	Image< T > bin( Image< T > inputImage, long[] span )
+	Image< T > bin( Image< T > inputImage, long[] radii )
 	{
 		final RandomAccessibleInterval< T > downSampleView =
-				new LazyDownsampler<>( inputImage.getRai(), span ).getDownsampledView();
+				new LazyDownsampler<>( inputImage.getRai(), radii ).getDownsampledView();
 
 		return ( Image< T > ) new Image(
-				downSampleView,
-				inputImage.getName() + "_bin",
+					downSampleView,
+					inputImage.getName(),
 					getBinnedVoxelSize(
-							span,
+							radii,
 							inputImage.getVoxelSpacing() ),
-				inputImage.getVoxelUnit(),
-				inputImage.getFileInfos()
+					inputImage.getVoxelUnit(),
+					inputImage.getFileInfos()
 		);
 	}
 }

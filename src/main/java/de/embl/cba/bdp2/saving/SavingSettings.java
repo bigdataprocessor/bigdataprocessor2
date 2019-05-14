@@ -41,7 +41,7 @@ public class SavingSettings {
         TIFF_PLANES("Tiff Planes"),
         TIFF_STACKS("Tiff Volumes"),
         HDF5_STACKS("Hdf5 Volumes"),
-        IMARIS_STACKS("Partitioned Imaris");
+        IMARIS_STACKS("Imaris Volumes");
 
         private final String text;
         FileType(String s) {

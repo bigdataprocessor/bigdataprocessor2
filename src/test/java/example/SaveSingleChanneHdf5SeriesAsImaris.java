@@ -17,7 +17,7 @@ public class SaveSingleChanneHdf5SeriesAsImaris
         final BigDataProcessor2 bdp = new BigDataProcessor2();
 
         final String directory =
-                "/Users/tischer/Documents/isabell-schneider-splitchipmerge/stacks_10";
+                "/Users/tischer/Documents/isabell-schneider-splitchipmerge/stack_0_channel_0";
 
         final String loadingScheme = FileInfos.SINGLE_CHANNEL_TIMELAPSE;
         final String filterPattern = ".*.h5";
@@ -37,15 +37,16 @@ public class SaveSingleChanneHdf5SeriesAsImaris
         final Image binnedImage = Binner.bin( image, new long[]{ 1, 1, 1, 0, 0 } );
         //   bdp.showImage( bin );
 
-        final File out = new File( "/Users/tischer/Desktop/stack_0_channel_0-asImaris-bdp2/im");
-
         final SavingSettings savingSettings = SavingSettings.getDefaults();
         savingSettings.fileType = SavingSettings.FileType.IMARIS_STACKS;
         savingSettings.numIOThreads = 1;
         savingSettings.numProcessingThreads = 4;
-        savingSettings.saveProjections = false;
         savingSettings.saveVolumes = true;
-        savingSettings.volumesFilePath = out.toString();
+        savingSettings.volumesFilePath = "/Users/tischer/Desktop/stack_0_channel_0-imaris-volumes/volume";
+        savingSettings.saveProjections = true;
+        savingSettings.projectionsFilePath = "/Users/tischer/Desktop/stack_0_channel_0-imaris-projections/projection";
+
+
 
         Utils.saveImageAndWaitUntilDone( bdp, savingSettings, binnedImage );
 
