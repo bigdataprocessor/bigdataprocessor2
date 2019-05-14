@@ -2,8 +2,9 @@ package de.embl.cba.bdp2.process;
 
 import bdv.tools.brightness.SliderPanel;
 import bdv.util.BoundedValue;
+import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.utils.Utils;
-import de.embl.cba.bdp2.viewers.ImageViewer;
+import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 public class ChannelShiftCorrectionDialog < T extends RealType< T > & NativeType< T > >
 {
 
-	private final ImageViewer< T > imageViewer;
+	private final BdvImageViewer< T > imageViewer;
 	private ArrayList< BoundedValue > boundedValues;
 	private ArrayList< SliderPanel > sliderPanels;
 	private ChromaticShiftUpdateListener updateListener;
@@ -23,7 +24,7 @@ public class ChannelShiftCorrectionDialog < T extends RealType< T > & NativeType
 	private final ChannelShifter channelShifter;
 	private final long numChannels;
 
-	public ChannelShiftCorrectionDialog( final ImageViewer< T > imageViewer  )
+	public ChannelShiftCorrectionDialog( final BdvImageViewer< T > imageViewer  )
 	{
 		this.imageViewer = imageViewer;
 
@@ -104,9 +105,7 @@ public class ChannelShiftCorrectionDialog < T extends RealType< T > & NativeType
 			final RandomAccessibleInterval< T > correctedRAI =
 					channelShifter.getChannelShiftedRAI( translations );
 
-			Utils.showRaiKeepingAllSettings(
-					correctedRAI,
-					imageViewer );
+			imageViewer.replaceImage( imageViewer.getImage().newImage( correctedRAI ) );
 		}
 
 		private boolean isTranslationsChanged( ArrayList< long[] > translations )

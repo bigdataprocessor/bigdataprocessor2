@@ -8,8 +8,9 @@ import bdv.util.ModifiableInterval;
 import bdv.viewer.ViewerPanel;
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
-import de.embl.cba.bdp2.viewers.ImageViewer;
-import net.imglib2.*;
+import net.imglib2.FinalInterval;
+import net.imglib2.Interval;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -33,7 +34,7 @@ public class SplitViewMergingDialog< R extends RealType< R > & NativeType< R > >
 	private ArrayList< SliderPanel > sliderPanels;
 	private SelectionUpdateListener updateListener;
 	private JPanel panel;
-	private ImageViewer newImageViewer;
+	private BdvImageViewer newImageViewer;
 	private ArrayList< ModifiableInterval > intervals3D;
 	private Image< R > image;
 
@@ -62,7 +63,7 @@ public class SplitViewMergingDialog< R extends RealType< R > & NativeType< R > >
 
 		addRegionSliders();
 
-		final JButton showMerge = new JButton( "Show/Update Merge" );
+		final JButton showMerge = new JButton( "Show Merge" );
 		panel.add( showMerge );
 		showMerge.addActionListener( e -> {
 			showOrUpdateMerge( );
@@ -107,12 +108,8 @@ public class SplitViewMergingDialog< R extends RealType< R > & NativeType< R > >
 						image.getRai(),
 						intervals3D );
 
-		if ( newImageViewer == null )
-			newImageViewer = viewer.newImageViewer();
-
 		final Image< R > mergedImage = image.newImage( merge );
-
-		newImageViewer.show( mergedImage, true );
+		viewer.showImageInNewWindow( mergedImage );
 	}
 
 	private void addRegionSliders( )

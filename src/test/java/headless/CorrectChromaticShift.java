@@ -4,7 +4,7 @@ import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.process.ChannelShiftCorrectionDialog;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
-import de.embl.cba.bdp2.viewers.ImageViewer;
+import de.embl.cba.bdp2.viewers.BdvImageViewer;
 
 /**
  * IMPORTANT NOTE: Adjust Max value to 255 in the Big Data Viewer. (Settings>Brightness and Color>Max)
@@ -25,7 +25,7 @@ public class CorrectChromaticShift
                 FileInfos.LOAD_CHANNELS_FROM_FOLDERS,
                 ".*" );
 
-        final ImageViewer imageViewer = bdp.showImage( image );
+        final BdvImageViewer imageViewer = bdp.showImage( image );
 
         new ChannelShiftCorrectionDialog<>( imageViewer );
 

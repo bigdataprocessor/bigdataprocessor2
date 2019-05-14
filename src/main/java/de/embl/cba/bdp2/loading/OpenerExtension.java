@@ -1464,7 +1464,7 @@ public class OpenerExtension extends Opener {
             }
 
             image.setC(1);
-            image.show();
+            image.replaceImage();
             return image;
         }
 

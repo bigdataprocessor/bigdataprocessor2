@@ -13,7 +13,7 @@ import net.imglib2.type.numeric.RealType;
 
 import javax.swing.*;
 
-public class IJ1ImageViewer<T extends RealType<T> & NativeType<T> > implements ImageViewer {
+public class IJ1ImageViewer<T extends RealType<T> & NativeType<T> > implementsBdvImageViewer {
 
     private ImagePlus imp;
     private RandomAccessibleInterval rai;
@@ -52,7 +52,7 @@ public class IJ1ImageViewer<T extends RealType<T> & NativeType<T> > implements I
     }
 
     @Override
-    public ImageViewer newImageViewer(RandomAccessibleInterval rai, String streamName) {
+    public BdvImageViewer newImageViewer(RandomAccessibleInterval rai, String streamName) {
         return null;
     }
 
@@ -84,7 +84,7 @@ public class IJ1ImageViewer<T extends RealType<T> & NativeType<T> > implements I
     }
 
     @Override
-    public void replicateViewerContrast(ImageViewer newImageView) {
+    public void replicateViewerContrast( BdvImageViewer newImageView) {
 
     }
 

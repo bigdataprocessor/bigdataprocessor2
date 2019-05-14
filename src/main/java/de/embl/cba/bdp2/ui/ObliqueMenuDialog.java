@@ -2,7 +2,7 @@ package de.embl.cba.bdp2.ui;
 
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.utils.DimensionOrder;
-import de.embl.cba.bdp2.viewers.ImageViewer;
+import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.interpolation.InterpolatorFactory;
 
@@ -24,10 +24,10 @@ public class ObliqueMenuDialog extends JDialog implements ActionListener {
     private final String ObliqueUpdate = "Update!";
     private final JButton obliqueUpdate = new JButton(ObliqueUpdate);
     private final ShearingSettings shearingSettings = new ShearingSettings();
-    private final ImageViewer imageViewer;
+    private final BdvImageViewer imageViewer;
     private final RandomAccessibleInterval originalRAI;
 
-    public ObliqueMenuDialog(ImageViewer imageViewer) {
+    public ObliqueMenuDialog( BdvImageViewer imageViewer) {
         this.imageViewer = imageViewer;
         this.originalRAI = imageViewer.getImage().getRai();
         JTabbedPane menu = new JTabbedPane();
@@ -91,9 +91,7 @@ public class ObliqueMenuDialog extends JDialog implements ActionListener {
         RandomAccessibleInterval sheared =
                 BigDataProcessor2.shearImage( originalRAI, shearingSettings );
 
-        final Image image = imageViewer.getImage();
-
-        imageViewer.show( image.newImage( sheared ), true );
+        imageViewer.replaceImage( imageViewer.getImage().newImage( sheared ) );
 
         double[] centerCoordinates = {sheared.min(DimensionOrder.X) / 2.0,
                 sheared.max(DimensionOrder.Y) / 2.0,

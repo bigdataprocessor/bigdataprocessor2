@@ -6,7 +6,7 @@ import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.ui.BdvMenus;
 import de.embl.cba.bdp2.utils.Utils;
-import de.embl.cba.bdp2.viewers.ImageViewer;
+import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
@@ -17,20 +17,20 @@ import java.util.ArrayList;
 public class BinningDialog< T extends RealType< T > & NativeType< T > >
 {
 
-	public BinningDialog( final ImageViewer< T > imageViewer  )
+	public BinningDialog( final BdvImageViewer< T > imageViewer  )
 	{
 //		final Image< T > inputImage = imageViewer.getImage();
 //		ImageViewer newImageViewer = imageViewer.newImageViewer();
-//		newImageViewer.show( imageViewer.getImage(), true );
+//		newImageViewer.replaceImage( imageViewer.getImage(), true );
 //		newImageViewer.addMenus( new BdvMenus() );
 
-		Logger.info( "Image size without binning [GB]: "
+		Logger.info( "Image size [GB]: "
 				+ Utils.getSizeGB( imageViewer.getImage().getRai() ) );
 
 		showBinningAdjustmentDialog( imageViewer, imageViewer.getImage() );
 	}
 
-	private void showBinningAdjustmentDialog( ImageViewer imageViewer, Image< T > inputImage )
+	private void showBinningAdjustmentDialog(BdvImageViewer imageViewer, Image< T > inputImage )
 	{
 		final JFrame frame = new JFrame( "Binning" );
 		frame.setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
@@ -70,7 +70,7 @@ public class BinningDialog< T extends RealType< T > & NativeType< T > >
 
 				final Image< T > binned = Binner.bin( inputImage, span );
 
-				imageViewer.show( binned, true );
+				imageViewer.replaceImage( binned );
 
 				Logger.info( "Binned view size [GB]: "
 						+ Utils.getSizeGB( binned.getRai() ) );

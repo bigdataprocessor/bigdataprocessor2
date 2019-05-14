@@ -6,7 +6,7 @@ import de.embl.cba.bdp2.process.Binner;
 import de.embl.cba.bdp2.process.ChannelShifter;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.utils.Utils;
-import de.embl.cba.bdp2.viewers.ImageViewer;
+import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 
@@ -31,7 +31,7 @@ public class CorrectChromaticShiftAndBin
                 FileInfos.LOAD_CHANNELS_FROM_FOLDERS,
                 ".*" );
 
-        final ImageViewer imageViewer = bdp.showImage( image );
+        final BdvImageViewer imageViewer = bdp.showImage( image );
 
         final ChannelShifter shifter = new ChannelShifter<>( image.getRai() );
 
@@ -46,7 +46,7 @@ public class CorrectChromaticShiftAndBin
 
         final Image bin = Binner.bin( imageViewer.getImage(), new long[]{ 1, 1, 0, 0, 0 } );
 
-        //imageViewer.show( bin, true );
+        //imageViewer.replaceImage( bin, true );
 
         final RandomAccess randomAccess = bin.getRai().randomAccess();
 

@@ -2,14 +2,13 @@ package de.embl.cba.bdp2.tracking;
 
 import bdv.util.BdvHandleFrame;
 import de.embl.cba.bdp2.Image;
-import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.ui.BdvMenus;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.ui.DisplaySettings;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
-import de.embl.cba.bdp2.viewers.ImageViewer;
+import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import javafx.geometry.Point3D;
 import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccessible;
@@ -48,7 +47,7 @@ public class BigDataTracker< R extends RealType< R > & NativeType< R > > {
     // TODO:
     // is the imageViewer needed???
     // separate image from settings
-    public AbstractObjectTracker trackObject( TrackingSettings< R > trackingSettings, ImageViewer imageViewer )
+    public AbstractObjectTracker trackObject( TrackingSettings< R > trackingSettings,BdvImageViewer imageViewer )
     {
         this.trackingSettings = trackingSettings;
         Point3D minInit = trackingSettings.pMin;
@@ -58,18 +57,14 @@ public class BigDataTracker< R extends RealType< R > & NativeType< R > > {
         BigDataProcessor2.trackerThreadPool.submit(()-> {
                     this.trackResults = objectTracker.getTrackingPoints();
             if(!stop.get()) {
-                ImageViewer newTrackedView =  imageViewer.newImageViewer();
 
-                final Image image = imageViewer.getImage();
-
-                newTrackedView.show( image.newImage( trackingSettings.rai ), false );
-
-                imageViewer.replicateViewerContrast( newTrackedView );
+                final BdvImageViewer newTrackedView = imageViewer.showImageInNewWindow(
+                        imageViewer.getImage().newImage( trackingSettings.rai ) );
 
                 if(newTrackedView instanceof BdvImageViewer) {
                     TrackedAreaBoxOverlay tabo = new TrackedAreaBoxOverlay(this.trackResults,
-                            ((BdvHandleFrame) ((BdvImageViewer) newTrackedView).getBdvStackSource().getBdvHandle()).getBigDataViewer().getViewer(),
-                            ((BdvHandleFrame) ((BdvImageViewer) newTrackedView).getBdvStackSource().getBdvHandle()).getBigDataViewer().getSetupAssignments(), 9991,
+                            ((BdvHandleFrame) (newTrackedView).getBdvStackSource().getBdvHandle()).getBigDataViewer().getViewer(),
+                            ((BdvHandleFrame) (newTrackedView).getBdvStackSource().getBdvHandle()).getBigDataViewer().getSetupAssignments(), 9991,
                             Intervals.createMinMax((long) minInit.getX(), (long) minInit.getY(), (long) minInit.getZ(), (long) maXinit.getX(), (long) maXinit.getY(), (long) maXinit.getZ()));
                 }
             }else{
@@ -80,7 +75,7 @@ public class BigDataTracker< R extends RealType< R > & NativeType< R > > {
     }
 
     public< T extends RealType< T > & NativeType< T >> void showTrackedObjects(
-            ImageViewer imageViewer)
+           BdvImageViewer imageViewer)
     {
         if(trackResults!=null) {
             List<RandomAccessibleInterval<T>> tracks = new ArrayList<>();
@@ -103,15 +98,19 @@ public class BigDataTracker< R extends RealType< R > & NativeType< R > > {
                 tracks.add(timeRemovedRAI);
             }
             RandomAccessibleInterval stackedRAI = Views.stack(tracks);
-            ImageViewer newTrackedView = imageViewer.newImageViewer();
+           BdvImageViewer newTrackedView = imageViewer.newImageViewer();
             final Image image = imageViewer.getImage();
-            newTrackedView.show( image.newImage( stackedRAI ), false );
+            newTrackedView.show(
+                    image.newImage( stackedRAI ),
+                    false,
+                    true,
+                    true );
             newTrackedView.addMenus(new BdvMenus());
 
             for (int channel=0; channel<nChannels; ++channel)
             { // TODO: change to method replicateViewerContrast --ashis
                 DisplaySettings setting = imageViewer.getAutoContrastDisplaySettings(channel);
-                newTrackedView.setDisplayRange(setting.getMinValue(),setting.getMaxValue(),channel);
+                newTrackedView.setDisplayRange(setting.getDisplayRangeMin(),setting.getDisplayRangeMax(),channel);
             }
         }
     }

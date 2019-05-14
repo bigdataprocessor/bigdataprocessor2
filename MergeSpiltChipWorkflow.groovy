@@ -8,7 +8,7 @@ import de.embl.cba.bdp2.process.splitviewmerge.SplitViewMerger;
 import de.embl.cba.bdp2.saving.SavingSettings;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.utils.Utils;
-import de.embl.cba.bdp2.viewers.ImageViewer;
+import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
 import net.imglib2.type.NativeType;
@@ -53,7 +53,7 @@ for ( File directory : directories )
 
     final Image merge = merger.mergeRegionsAandB( image );
 
-    final ImageViewer viewer = bdp.showImage( merge );
+    final BdvImageViewer viewer = bdp.showImage( merge );
 
     final FinalInterval interval = viewer.get5DIntervalFromUser();
 

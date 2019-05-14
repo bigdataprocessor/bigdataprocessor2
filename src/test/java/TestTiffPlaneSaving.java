@@ -5,7 +5,7 @@ import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.saving.SavingSettings;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
-import de.embl.cba.bdp2.viewers.ImageViewer;
+import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 
 public class TestTiffPlaneSaving
@@ -18,7 +18,7 @@ public class TestTiffPlaneSaving
                 ".*", "");
         final Image image = CachedCellImgReader.loadImage( fileInfos );
 
-        ImageViewer imageViewer = new BdvImageViewer<UnsignedShortType>( image );
+       BdvImageViewer imageViewer = new BdvImageViewer<UnsignedShortType>( image );
         imageViewer.show();
         imageViewer.setDisplayRange( 0, 800, 0 );
 

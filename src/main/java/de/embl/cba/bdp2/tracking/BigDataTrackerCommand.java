@@ -5,7 +5,7 @@ import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
-import de.embl.cba.bdp2.viewers.ImageViewer;
+import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import javafx.geometry.Point3D;
 import net.imagej.ImageJ;
 import net.imglib2.FinalInterval;
@@ -75,7 +75,7 @@ public class BigDataTrackerCommand < R extends RealType< R > & NativeType< R > >
     private Image image;
 
     @Parameter(visibility = ItemVisibility.INVISIBLE)
-    public ImageViewer imageViewer = null;
+    public BdvImageViewer imageViewer = null;
 
 
     @Override
@@ -151,11 +151,11 @@ public class BigDataTrackerCommand < R extends RealType< R > & NativeType< R > >
     }
 
     public static void main(final String... args) throws Exception {
-        // Test using Dummy ImageViewer
+        // Test using DummyBdvImageViewer
         final ImageJ ij = new ImageJ();
         ij.launch(args);
         double [] voxelSpacing = new double[]{0,0};
-        ImageViewer img = new BdvImageViewer( null, "dummy", voxelSpacing, "pixel" );
+       BdvImageViewer img = new BdvImageViewer( null, "dummy", voxelSpacing, "pixel" );
         ij.command().run(BigDataTrackerCommand.class, true, "imageViewer", img);
     }
 }

@@ -135,7 +135,7 @@ public class ProjectionXYZ {
         xyzimp.setCalibration(calib.copy());
         return xyzimp;
     }
-    //   xyzimp.show();
+    //   xyzimp.replaceImage();
 
     /**
      * @param doscale the doscale to set

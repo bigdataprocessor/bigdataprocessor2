@@ -17,7 +17,7 @@ public class TestIJ1ViewerSaving
 //				"input",
 //				new double[]{1.0, 1.0, 1.0},
 //				"pixel");
-//		imageViewer.show();
+//		imageViewer.replaceImage();
 //		imageViewer.setDisplayRange(0, 800, 0);
 
 //      final SavingSettings savingSettings = SavingSettings.getDefaults();

@@ -27,12 +27,8 @@ public class BoundingBoxSelection
 	{
 
 		final Image< R > image = openImage();
-
-		final BdvImageViewer< R > viewer = ( BdvImageViewer< R > ) ViewerUtils
-				.getImageViewer( ViewerUtils.BIG_DATA_VIEWER );
-
-		viewer.show( image, true );
-
+		final BdvImageViewer< R > viewer = new BdvImageViewer<>( image );
+		viewer.show();
 
 		final RandomAccessibleInterval rai = viewer.getImage().getRai();
 		final double[] min = new double[ 3 ];
@@ -73,7 +69,7 @@ public class BoundingBoxSelection
 		viewerPanel.getDisplay().addOverlayRenderer(transformedBoxOverlay);
 		viewerPanel.addRenderTransformListener(transformedBoxOverlay);
 
-		// show two independent boxes which are fully adjustable.
+		// replaceImage two independent boxes which are fully adjustable.
 //		new Thread( () -> showBox( viewer, interval, "Channel 0" ) ).start();
 //		new Thread( () -> showBox( viewer, interval, "Channel 1" ) ).start();
 

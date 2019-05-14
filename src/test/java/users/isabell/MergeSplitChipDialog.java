@@ -5,7 +5,7 @@ import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.process.splitviewmerge.SplitViewMergingDialog;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
-import de.embl.cba.bdp2.viewers.ImageViewer;
+import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imagej.ImageJ;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -29,7 +29,7 @@ public class MergeSplitChipDialog
         image.setVoxelUnit( "micrometer" );
         image.setVoxelSpacing( new double[]{0.13, 0.13, 1.04} );
 
-        final ImageViewer viewer = bdp.showImage( image );
+        final BdvImageViewer viewer = bdp.showImage( image );
         new SplitViewMergingDialog( ( BdvImageViewer ) viewer );
 
 

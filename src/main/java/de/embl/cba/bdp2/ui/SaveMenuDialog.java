@@ -2,7 +2,7 @@ package de.embl.cba.bdp2.ui;
 
 import de.embl.cba.bdp2.saving.ImgSaver;
 import de.embl.cba.bdp2.saving.SavingSettings;
-import de.embl.cba.bdp2.viewers.ImageViewer;
+import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -44,10 +44,10 @@ public class SaveMenuDialog extends JFrame implements ActionListener {
     protected final String MESSAGE_SAVE_FINISHED ="Saving Completed!";
     private JFileChooser fc;
     protected final JProgressBar progressBar;
-    private final ImageViewer imageViewer;
+    private final BdvImageViewer imageViewer;
     private ImgSaver saver;
 
-    public SaveMenuDialog(ImageViewer imageViewer) {
+    public SaveMenuDialog( BdvImageViewer imageViewer) {
         this.imageViewer = imageViewer;
         JTabbedPane menu = new JTabbedPane();
         ArrayList<JPanel> mainPanels = new ArrayList<>();

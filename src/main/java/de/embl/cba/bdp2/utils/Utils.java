@@ -39,7 +39,6 @@ import de.embl.cba.bdp2.progress.Progress;
 import de.embl.cba.bdp2.saving.SavingSettings;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.ui.DisplaySettings;
-import de.embl.cba.bdp2.viewers.ImageViewer;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
@@ -52,7 +51,6 @@ import net.imglib2.Cursor;
 import net.imglib2.FinalInterval;
 import net.imglib2.FinalRealInterval;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.cache.util.LoaderCacheAsCacheAdapter;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgView;
 import net.imglib2.img.cell.CellImgFactory;
@@ -161,41 +159,6 @@ public class Utils {
 		Progress.waitUntilDone( progress, 1000 );
         Logger.log("Saving: Done." );
 	}
-
-	public static < T extends RealType< T > & NativeType< T > >
-	void showRaiKeepingAllSettings(
-			RandomAccessibleInterval< T > rai,
-			ImageViewer< T > imageViewer )
-	{
-		final AffineTransform3D viewerTransform = imageViewer.getViewerTransform();
-
-        final Image< T > image = imageViewer.getImage();
-
-        int nChannels = (int) image.getRai().dimension( DimensionOrder.C );
-		final ArrayList< DisplaySettings > displaySettings = new ArrayList<>();
-		for ( int c = 0; c < nChannels; c++ )
-			displaySettings.add( imageViewer.getDisplaySettings( c ) );
-
-		imageViewer.show( image.newImage( rai ), false );
-
-		imageViewer.setViewerTransform( viewerTransform );
-		for ( int c = 0; c < nChannels; c++ )
-			imageViewer.setDisplayRange(
-					displaySettings.get( c ).getMinValue(),
-					displaySettings.get( c ).getMaxValue(),
-					c );
-
-	}
-
-//	public static ImagePlus getFullStackFromInfo(int channel, int time, FileInfoSource infoSource){
-//	    SerializableFileInfo[] infos_c_t = infoSource.getSerializableFileStackInfo(channel,time);
-//        ImagePlus imagePlus;
-//        Point3D po, ps;
-//        po = new Point3D(0,0, infos_c_t.length);
-//        ps = new Point3D( infos_c_t[0].width, infos_c_t[0].height, 1);
-//        imagePlus = new OpenerExtension().readDataCube("src/test....", infos_c_t, infos_c_t.length, po, ps, 1);
-//        return imagePlus;
-//    }
 
 	public enum FileType {
         HDF5("Hdf5"),
@@ -316,7 +279,7 @@ public class Utils {
             if ( value < min ) min = value;
             if ( value > max ) max = value;
         }
-        return new DisplaySettings(min,max);
+        return new DisplaySettings( min, max, null );
     }
 
 //    public static NativeType getNativeTypeFromRAI(RandomAccessibleInterval rai){ Method already exists in Imglib2 Util.getTypeFromInterval
@@ -653,7 +616,7 @@ public class Utils {
 //            dataCube = getDataCube( image, region5D );
 //        }
 //
-//        //dataCube.show();
+//        //dataCube.replaceImage();
 //
 //        return( dataCube );
 //    }

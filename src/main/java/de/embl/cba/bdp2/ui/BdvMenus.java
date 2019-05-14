@@ -5,7 +5,7 @@ import de.embl.cba.bdp2.process.splitviewmerge.SplitViewMergingDialog;
 import de.embl.cba.bdp2.tracking.BigDataTrackerGUI;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
-import de.embl.cba.bdp2.viewers.ImageViewer;
+import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.view.Views;
@@ -21,7 +21,7 @@ public class BdvMenus
     private final SaveSelectMenu saveSelectMenu;
     private final OthersMenu othersMenu;
     private final ProcessMenu processMenu;
-    private ImageViewer imageViewer;
+    private BdvImageViewer imageViewer;
 
     public BdvMenus(){
         saveSelectMenu = new SaveSelectMenu(this);
@@ -29,7 +29,7 @@ public class BdvMenus
         processMenu = new ProcessMenu(this);
     }
 
-    public void setImageViewer(ImageViewer viewer){
+    public void setImageViewer( BdvImageViewer viewer ){
         this.imageViewer = viewer;
     }
 

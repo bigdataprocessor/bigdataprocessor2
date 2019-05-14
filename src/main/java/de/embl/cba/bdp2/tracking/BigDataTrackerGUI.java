@@ -4,7 +4,7 @@ import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
-import de.embl.cba.bdp2.viewers.ImageViewer;
+import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import javafx.geometry.Point3D;
 import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccessibleInterval;
@@ -83,9 +83,9 @@ public class BigDataTrackerGUI < R extends RealType< R > & NativeType< R > >
     protected final String MESSAGE_TRACK_FINISHED ="Tracking Completed!";
     private  AbstractObjectTracker tracker;
     private RandomAccessibleInterval image;
-    public final ImageViewer imageViewer;
+    public final BdvImageViewer imageViewer;
 
-    public BigDataTrackerGUI( ImageViewer handle ){
+    public BigDataTrackerGUI(BdvImageViewer handle ){
         this.imageViewer= handle;
         this.image = imageViewer.getImage().getRai();
         long nChannels = this.image.dimension(DimensionOrder.C);
@@ -610,7 +610,7 @@ public class BigDataTrackerGUI < R extends RealType< R > & NativeType< R > >
 //        {
 //            for (ImagePlus imp : imps)
 //            {
-//                Utils.show(imp);
+//                Utils.replaceImage(imp);
 //            }
 //        }
 //    }

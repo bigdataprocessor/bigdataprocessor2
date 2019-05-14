@@ -4,7 +4,7 @@ import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.saving.SavingSettings;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
-import de.embl.cba.bdp2.viewers.ImageViewer;
+import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.cache.img.CachedCellImg;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 
@@ -16,7 +16,7 @@ public class TestTHdf5ImarisSaving {
                 ".*", "");
         CachedCellImg cachedCellImg = CachedCellImgReader.getCachedCellImg( fileInfos );
 
-        ImageViewer imageViewer = new BdvImageViewer<UnsignedShortType>(
+       BdvImageViewer imageViewer = new BdvImageViewer<UnsignedShortType>(
                 cachedCellImg,
                 "input",
                 new double[]{1.0, 1.0, 1.0},

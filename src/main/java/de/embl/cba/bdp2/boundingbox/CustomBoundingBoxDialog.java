@@ -111,7 +111,7 @@ public class CustomBoundingBoxDialog extends JFrame {
         final TransformedSource<UnsignedShortType> ts = new TransformedSource<>(boxSource);
         boxSourceAndConverter = new SourceAndConverter<>(ts, converter);
 
-        // getCachedCellImg an Overlay to show 3D wireframe box
+        // getCachedCellImg an Overlay to replaceImage 3D wireframe box
         boxOverlay = new TransformedBoxOverlay(new TransformedBox() {
             @Override
             public void getTransform(final AffineTransform3D transform) {

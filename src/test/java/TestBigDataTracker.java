@@ -4,7 +4,7 @@ import de.embl.cba.bdp2.tracking.BigDataTracker;
 import de.embl.cba.bdp2.tracking.TrackingSettings;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
-import de.embl.cba.bdp2.viewers.ImageViewer;
+import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import javafx.geometry.Point3D;
 import net.imglib2.cache.img.CachedCellImg;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
@@ -17,7 +17,8 @@ public class TestBigDataTracker {
         final FileInfos fileInfos = new FileInfos(imageDirectory, FileInfos.LOAD_CHANNELS_FROM_FOLDERS,
                 ".*", "");
         CachedCellImg cachedCellImg = CachedCellImgReader.getCachedCellImg( fileInfos );
-        ImageViewer imageViewer = new BdvImageViewer<UnsignedShortType>(
+
+        BdvImageViewer imageViewer = new BdvImageViewer< UnsignedShortType >(
                 cachedCellImg,
                 "input",
                 new double[]{1.0, 1.0, 1.0},
@@ -34,7 +35,7 @@ public class TestBigDataTracker {
 //        bdt.trackObject(trackingSettings, imageViewer);
     }
 
-    private static TrackingSettings< ? > createTrackingSettings( ImageViewer imageViewer) {
+    private static TrackingSettings< ? > createTrackingSettings(BdvImageViewer imageViewer) {
         Point3D maxDisplacement = new Point3D(20, 20, 1);
         TrackingSettings< ? > trackingSettings = new TrackingSettings<>();
         trackingSettings.rai = imageViewer.getImage().getRai();

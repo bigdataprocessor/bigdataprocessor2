@@ -3,11 +3,10 @@ package de.embl.cba.bdp2.process;
 import bdv.tools.brightness.SliderPanelDouble;
 import bdv.util.BoundedValueDouble;
 import de.embl.cba.bdp2.Image;
-import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.ui.BdvMenus;
 import de.embl.cba.bdp2.utils.Utils;
-import de.embl.cba.bdp2.viewers.ImageViewer;
+import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import ij.IJ;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.Converters;
@@ -22,7 +21,7 @@ import java.awt.*;
 public class UnsignedByteTypeConversion< T extends RealType< T > >
 {
 
-	public UnsignedByteTypeConversion( final ImageViewer imageViewer  )
+	public UnsignedByteTypeConversion( final BdvImageViewer imageViewer  )
 	{
 
 		final Image image = imageViewer.getImage();
@@ -34,8 +33,10 @@ public class UnsignedByteTypeConversion< T extends RealType< T > >
 			return;
 		}
 
-		final double mapTo0 = imageViewer.getAutoContrastDisplaySettings( 0 ).getMinValue();
-		final double mapTo255 = imageViewer.getAutoContrastDisplaySettings( 0 ).getMaxValue();
+		final double mapTo0 =
+				imageViewer.getAutoContrastDisplaySettings( 0 ).getDisplayRangeMin();
+		final double mapTo255 =
+				imageViewer.getAutoContrastDisplaySettings( 0 ).getDisplayRangeMax();
 
 		final RealUnsignedByteConverter< T > converter =
 				new RealUnsignedByteConverter<>(
@@ -48,15 +49,10 @@ public class UnsignedByteTypeConversion< T extends RealType< T > >
 					converter,
 					new UnsignedByteType() );
 
-		ImageViewer newImageViewer = imageViewer.newImageViewer();
-
-		newImageViewer.show( image.newImage( converted ), true );
+		imageViewer.replaceImage( image.newImage( converted ) );
 
 		Logger.info( "8-bit view size [GB]: " + Utils.getSizeGB( converted ) );
-
-		newImageViewer.addMenus( new BdvMenus() );
-
-		showConversionAdjustmentDialog( converter, mapTo0, mapTo255, newImageViewer );
+		showConversionAdjustmentDialog( converter, mapTo0, mapTo255, imageViewer );
 
 	}
 
@@ -64,7 +60,7 @@ public class UnsignedByteTypeConversion< T extends RealType< T > >
 			RealUnsignedByteConverter< T > converter,
 			double currentMin,
 			double currentMax,
-			ImageViewer imageViewer)
+			BdvImageViewer imageViewer)
 	{
 		final double rangeMin = 0;
 		final double rangeMax = 65535;

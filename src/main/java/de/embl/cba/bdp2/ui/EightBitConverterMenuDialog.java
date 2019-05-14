@@ -1,8 +1,7 @@
 package de.embl.cba.bdp2.ui;
 
 import de.embl.cba.bdp2.Image;
-import de.embl.cba.bdp2.loading.files.FileInfos;
-import de.embl.cba.bdp2.viewers.ImageViewer;
+import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.util.Util;
@@ -19,10 +18,10 @@ public class EightBitConverterMenuDialog extends JDialog implements ActionListen
     private final String CONVERT_BUTTON_LABEL = "Convert";
     private final JButton convertButton =  new JButton(CONVERT_BUTTON_LABEL);
     private final JLabel warning = new JLabel("Image is already 8- bit");
-    private final ImageViewer imageViewer;
+    private final BdvImageViewer imageViewer;
     private static final String DIALOG_NAME = "8-Bit Converter";
 
-    public EightBitConverterMenuDialog(ImageViewer imageViewer){
+    public EightBitConverterMenuDialog( BdvImageViewer imageViewer){
         this.imageViewer = imageViewer;
         JTabbedPane menu = new JTabbedPane();
         ArrayList<JPanel> mainPanels = new ArrayList<>();
@@ -68,16 +67,19 @@ public class EightBitConverterMenuDialog extends JDialog implements ActionListen
     public void actionPerformed(ActionEvent e) {
         int min = Integer.parseInt(mapToZero.getText());
         int max = Integer.parseInt(mapTo255.getText());
-        DisplaySettings displaySettings= new DisplaySettings(min,max);
+
+        DisplaySettings displaySettings =
+                new DisplaySettings( min, max, null );
+
         final Image image = imageViewer.getImage();
 
-        RandomAccessibleInterval<UnsignedByteType> unsignedByteTypeRAI =
+        RandomAccessibleInterval< UnsignedByteType > unsignedByteTypeRAI =
                 BigDataProcessor2.unsignedByteTypeConverter(
-                        image.getRai(),displaySettings );
+                        image.getRai(), displaySettings );
 
-        ImageViewer newImageViewer = imageViewer.newImageViewer();
-
-        newImageViewer.show( image.newImage( unsignedByteTypeRAI ), true );
+        BdvImageViewer newImageViewer = imageViewer.newImageViewer(
+                image.newImage( unsignedByteTypeRAI ) );
+        newImageViewer.show();
 
         BdvMenus menus = new BdvMenus();
         newImageViewer.addMenus(menus);

@@ -8,17 +8,14 @@ import de.embl.cba.bdp2.progress.ProgressListener;
 import de.embl.cba.bdp2.saving.*;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
-import de.embl.cba.bdp2.viewers.ImageViewer;
+import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import de.embl.cba.bdp2.viewers.ViewerUtils;
 import ij.gui.GenericDialog;
-import net.imglib2.FinalInterval;
-import net.imglib2.FinalRealInterval;
-import net.imglib2.Interval;
-import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.RealRandomAccessible;
+import net.imglib2.*;
 import net.imglib2.cache.img.CachedCellImg;
 import net.imglib2.converter.Converters;
 import net.imglib2.converter.RealUnsignedByteConverter;
+import net.imglib2.interpolation.InterpolatorFactory;
 import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
 import net.imglib2.realtransform.AffineRandomAccessible;
 import net.imglib2.realtransform.AffineTransform;
@@ -40,8 +37,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RecursiveTask;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import net.imglib2.interpolation.InterpolatorFactory;
 
 public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
 {
@@ -97,10 +92,10 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
         return image;
     }
     
-    public ImageViewer showImage( Image< R > image )
+    public BdvImageViewer showImage( Image< R > image )
     {
-        final ImageViewer viewer = ViewerUtils.getImageViewer( ViewerUtils.BIG_DATA_VIEWER );
-        viewer.show( image, true );
+        final BdvImageViewer viewer = ViewerUtils.getImageViewer( ViewerUtils.BIG_DATA_VIEWER );
+        viewer.replaceImage( image );
         viewer.addMenus( new BdvMenus() );
         return viewer;
     }
@@ -276,8 +271,8 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
             newRai = Converters.convert(
                     rai,
                     new RealUnsignedByteConverter<T>(
-                            displaySettings.getMinValue(),
-                            displaySettings.getMaxValue()),
+                            displaySettings.getDisplayRangeMin(),
+                            displaySettings.getDisplayRangeMax()),
                     new UnsignedByteType());
         }else{
             newRai = rai;
