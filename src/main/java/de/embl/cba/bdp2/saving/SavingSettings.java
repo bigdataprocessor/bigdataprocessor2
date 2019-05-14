@@ -28,7 +28,6 @@ public class SavingSettings {
     public boolean convertTo16Bit;
     public boolean gate;
     public int gateMin, gateMax;
-    public String fileBaseNameIMARIS;
     public String parentDirectory;
     public FileType fileType;
     public String compression;

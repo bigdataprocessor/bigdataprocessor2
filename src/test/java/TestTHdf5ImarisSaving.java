@@ -29,8 +29,7 @@ public class TestTHdf5ImarisSaving {
          */
         final SavingSettings defaults = SavingSettings.getDefaults();
         defaults.fileType = SavingSettings.FileType.IMARIS_STACKS;
-        defaults.fileBaseNameIMARIS = "file";
-        defaults.parentDirectory = "src/test/resources/";
+
         defaults.voxelSpacing = imageViewer.getImage().getVoxelSpacing();
         defaults.voxelUnit = imageViewer.getImage().getVoxelUnit();
 

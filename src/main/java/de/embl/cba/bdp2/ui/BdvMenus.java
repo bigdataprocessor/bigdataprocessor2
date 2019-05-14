@@ -1,10 +1,10 @@
 package de.embl.cba.bdp2.ui;
 
+import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.process.*;
 import de.embl.cba.bdp2.process.splitviewmerge.SplitViewMergingDialog;
 import de.embl.cba.bdp2.tracking.BigDataTrackerGUI;
 import de.embl.cba.bdp2.utils.DimensionOrder;
-import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.display.imagej.ImageJFunctions;
@@ -93,11 +93,19 @@ public class BdvMenus
                 new ChannelShiftCorrectionDialog<>( imageViewer );
             });
         }else if(e.getActionCommand().equalsIgnoreCase(
-                    UIDisplayConstants.SPLIT_VIEW_MENU_ITEM )){
+                    UIDisplayConstants.SPLIT_VIEW_MENU_ITEM ))
+        {
                 BigDataProcessor2.generalThreadPool.submit(() -> {
                     new SplitViewMergingDialog( ( BdvImageViewer ) imageViewer );
-        });
+                });
+        }
+        else if(e.getActionCommand().equalsIgnoreCase(
+                UIDisplayConstants.CONFIGURE_LOGGING_MENU_ITEM ))
+        {
+            BigDataProcessor2.generalThreadPool.submit(() -> {
+                Logger.showLoggingLevelDialog();
+            });
+        }
+    }
 
-    }
-    }
 }

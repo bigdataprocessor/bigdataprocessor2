@@ -1,39 +1,40 @@
 package de.embl.cba.bdp2.ui;
 
+import de.embl.cba.bdp2.progress.ProgressListener;
 import de.embl.cba.bdp2.saving.ImgSaver;
 import de.embl.cba.bdp2.saving.SavingSettings;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import ij.IJ;
+import ij.gui.GenericDialog;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 
-public class SaveMenuDialog extends JFrame implements ActionListener {
-    private final JCheckBox cbLZW = new JCheckBox("LZW Compression (Tiff)");
-    private final JCheckBox cbSaveVolume = new JCheckBox("Save Volume data");
-    private final JCheckBox cbSaveProjection = new JCheckBox("Save Projections");
-    private final JCheckBox cbConvertTo8Bit = new JCheckBox("8-bit Conversion");
-    private final JCheckBox cbConvertTo16Bit = new JCheckBox("16-bit Conversion");
-    private final JCheckBox cbGating = new JCheckBox("Gate");
-    private final JTextField tfBinning = new JTextField("1,1,1", 10);
-    private final JTextField tfRowsPerStrip = new JTextField("10", 3);
-    private final JTextField tfNumIOThreads = new JTextField("1", 2);
-    private final JTextField tfNumProcessingThreads = new JTextField(
-            "" + Runtime.getRuntime().availableProcessors(), 2);
+public class SaveMenuDialog extends JFrame implements ActionListener
+{
 
-    private final JTextField tfMapTo255 = new JTextField("65535", 5);
-    private final JTextField tfMapTo0 = new JTextField("0", 5);
-    private final JTextField tfGateMin = new JTextField("0", 5);
-    private final JTextField tfGateMax = new JTextField("255", 5);
+    public static final int AVAILABLE_PROCESSORS = Runtime.getRuntime().availableProcessors();
+    private static int numIOThreads = (int) Math.ceil( Math.sqrt( AVAILABLE_PROCESSORS ) + 1 );
+    private static int numProcessingThreads = (int) Math.ceil( Math.sqrt( AVAILABLE_PROCESSORS ) + 1 );
 
-    @SuppressWarnings("unchecked")
+    private static final JCheckBox cbLZW = new JCheckBox("LZW Compression (Tiff)");
+    private static final JCheckBox cbSaveVolume = new JCheckBox("Save Volume data");
+    private static final JCheckBox cbSaveProjection = new JCheckBox("Save Projections");
+    private static final JTextField tfRowsPerStrip = new JTextField("10", 3);
+    private static final JTextField tfNumIOThreads = new JTextField("" + numIOThreads, 2);
+    private static final JTextField tfNumProcessingThreads = new JTextField( "" + numProcessingThreads, 2);
+    private static final JTextField tfVolumesFilePath = new JTextField("", 50);
+    private static final JTextField tfProjectionsFilePath = new JTextField("", 50);
+
     private final
     JComboBox comboFileTypeForSaving = new JComboBox(new SavingSettings.FileType[]{
-            SavingSettings.FileType.TIFF_PLANES,
             SavingSettings.FileType.TIFF_STACKS,
             SavingSettings.FileType.HDF5_STACKS,
-            SavingSettings.FileType.IMARIS_STACKS });
+            SavingSettings.FileType.IMARIS_STACKS,
+            SavingSettings.FileType.TIFF_PLANES });
 
     private final String SAVE = "Save";
     protected final JButton save = new JButton(SAVE);
@@ -42,7 +43,6 @@ public class SaveMenuDialog extends JFrame implements ActionListener {
     protected final JLabel MESSAGE = new JLabel("");
     protected final String MESSAGE_SAVE_INTERRUPTED ="Saving Interrupted!";
     protected final String MESSAGE_SAVE_FINISHED ="Saving Completed!";
-    private JFileChooser fc;
     protected final JProgressBar progressBar;
     private final BdvImageViewer imageViewer;
     private ImgSaver saver;
@@ -63,7 +63,20 @@ public class SaveMenuDialog extends JFrame implements ActionListener {
 
         panels.add(new JPanel());
         panels.get(j).add(cbSaveVolume);
+        panels.get(j).add(tfVolumesFilePath);
+        final JButton volumesPathSelectionButton = new JButton( "Folder" );
+        volumesPathSelectionButton.addActionListener( e ->
+            tfVolumesFilePath.setText( IJ.getDirectory( "Volumes" ) ) );
+        panels.get(j).add(volumesPathSelectionButton);
+        mainPanels.get(k).add(panels.get(j++));
+
+        panels.add(new JPanel());
         panels.get(j).add(cbSaveProjection);
+        panels.get(j).add(tfProjectionsFilePath);
+        final JButton projectionsPathSelectionButton = new JButton( "Folder" );
+        projectionsPathSelectionButton.addActionListener( e ->
+                tfProjectionsFilePath.setText( IJ.getDirectory( "Projections" ) ) );
+        panels.get(j).add(projectionsPathSelectionButton);
         mainPanels.get(k).add(panels.get(j++));
 
         panels.add(new JPanel());
@@ -115,89 +128,95 @@ public class SaveMenuDialog extends JFrame implements ActionListener {
 
             if ( e.getActionCommand().equals( SAVE ) )
             {
-                MESSAGE.setText( null );
-                SavingSettings.FileType fileType = ( SavingSettings.FileType ) comboFileTypeForSaving.getSelectedItem();
-                fc = new JFileChooser( System.getProperty( "user.dir" ) );
-                int returnVal = fc.showSaveDialog( SaveMenuDialog.this );
-                if ( returnVal == JFileChooser.APPROVE_OPTION )
-                {
-                    final File file = fc.getSelectedFile();
-                    SavingSettings savingSettings = new SavingSettings();
-                    String compression = SavingSettings.NONE;
-                    if ( cbLZW.isSelected() )
-                        compression = SavingSettings.LZW;
-                    savingSettings.compression = compression;
-                    savingSettings.rowsPerStrip = Integer.parseInt( tfRowsPerStrip.getText() );
-                    savingSettings.bin = tfBinning.getText();
-                    savingSettings.saveVolumes = cbSaveVolume.isSelected();
-                    savingSettings.saveProjections = cbSaveProjection.isSelected();
-                    savingSettings.convertTo8Bit = cbConvertTo8Bit.isSelected();
-                    savingSettings.mapTo0 = Integer.parseInt( tfMapTo0.getText() );
-                    savingSettings.mapTo255 = Integer.parseInt( tfMapTo255.getText() );
-                    savingSettings.numIOThreads = Integer.parseInt( tfNumIOThreads.getText() );
-                    savingSettings.numProcessingThreads =
-                            Integer.parseInt( tfNumProcessingThreads.getText() );
-                    savingSettings.voxelSpacing = imageViewer.getImage().getVoxelSpacing();
-                    savingSettings.voxelUnit = imageViewer.getImage().getVoxelUnit();
-
-                    if ( !( fileType.equals( SavingSettings.FileType.TIFF_PLANES ) ) )
-                    {
-                        // TODO: implement below for planes
-                        savingSettings.convertTo16Bit = cbConvertTo16Bit.isSelected();
-                        savingSettings.gate = cbGating.isSelected();
-                        savingSettings.gateMin = Integer.parseInt( tfGateMin.getText() );
-                        savingSettings.gateMax = Integer.parseInt( tfGateMax.getText() );
-                    }
-
-                    //final int ioThreads = new Integer(tfIOThreads.getText());//TODO: implement below
-                    // Check that there is enough memory to hold the data in RAM while saving
-                    //
-                    //if( ! Utils.checkMemoryRequirements(imp, Math.min(ioThreads, imp.getNFrames())) ) return;
-                    //savingSettings.nThreads = ioThreads;
-                    savingSettings.volumesFilePath = file.getAbsolutePath();
-                    savingSettings.fileType = fileType;
-                    if ( fileType.equals( SavingSettings.FileType.IMARIS_STACKS ) )
-                    {
-                        savingSettings.fileBaseNameIMARIS = file.getName();
-                        savingSettings.parentDirectory = file.getParent();
-                        savingSettings.numIOThreads = 1;
-                    }
-
-                    progressBar.setVisible( true );
-                    pack();
-                    save.setEnabled( false );
-                    BigDataProcessor2.generalThreadPool.submit( () -> {
-                        this.saver = BigDataProcessor2.saveImage(
-                                imageViewer.getImage(),
-                                savingSettings,
-                                ( current, total ) -> {
-                                    int progress = ( int ) ( ( current * 100 ) / total );
-                                    progressBar.setValue( progress );
-                                    if ( progress >= 100 )
-                                    {
-                                        progressBar.setVisible( false );
-                                        save.setEnabled( true );
-                                        progressBar.setValue( 0 );
-                                        if ( !MESSAGE_SAVE_INTERRUPTED.equals( MESSAGE.getText() ) )
-                                        {
-                                            MESSAGE.setText( MESSAGE_SAVE_FINISHED );
-                                        }
-                                        pack();
-                                        saver.stopSave();
-                                    }
-                                } );
-                    } );
-
-                }
-            } else if ( e.getActionCommand().equals( STOP_SAVING ) )
+                save();
+            }
+            else if ( e.getActionCommand().equals( STOP_SAVING ) )
             {
-                saver.stopSave(); // Don't submit to thread pool. Let the main thread handle it.
-                save.setEnabled( true );
-                progressBar.setVisible( false );
-                MESSAGE.setText( MESSAGE_SAVE_INTERRUPTED );
-                pack();
+                stopSave();
             }
         });
+    }
+
+    public void stopSave()
+    {
+        saver.stopSave(); // Don't submit to thread pool. Let the main thread handle it.
+        save.setEnabled( true );
+        progressBar.setVisible( false );
+        MESSAGE.setText( MESSAGE_SAVE_INTERRUPTED );
+        pack();
+    }
+
+    public void save()
+    {
+        MESSAGE.setText( null );
+        SavingSettings savingSettings = getSavingSettings();
+        startSaving( savingSettings );
+    }
+
+    public void startSaving( SavingSettings savingSettings )
+    {
+        progressBar.setVisible( true );
+        pack();
+        save.setEnabled( false );
+        BigDataProcessor2.generalThreadPool.submit( () -> {
+            this.saver = BigDataProcessor2.saveImage(
+                    imageViewer.getImage(),
+                    savingSettings,
+                    getSavingProgressListener() );
+        } );
+    }
+
+    public SavingSettings getSavingSettings()
+    {
+        SavingSettings savingSettings = new SavingSettings();
+
+        SavingSettings.FileType fileType
+                = ( SavingSettings.FileType ) comboFileTypeForSaving.getSelectedItem();
+        savingSettings.fileType = fileType;
+
+        String compression = SavingSettings.NONE;
+        if ( cbLZW.isSelected() )
+            compression = SavingSettings.LZW;
+        savingSettings.compression = compression;
+        savingSettings.rowsPerStrip = Integer.parseInt( tfRowsPerStrip.getText() );
+
+        savingSettings.saveVolumes = cbSaveVolume.isSelected();
+        savingSettings.volumesFilePath = tfVolumesFilePath.getText() + File.separator + "volume";
+
+        savingSettings.saveProjections = cbSaveProjection.isSelected();
+        savingSettings.projectionsFilePath = tfProjectionsFilePath.getText() + File.separator + "projection";
+
+        numIOThreads = Integer.parseInt( tfNumIOThreads.getText() );
+        savingSettings.numIOThreads = numIOThreads;
+
+        numProcessingThreads = Integer.parseInt( tfNumProcessingThreads.getText() );
+        savingSettings.numProcessingThreads = numProcessingThreads;
+
+        savingSettings.voxelSpacing = imageViewer.getImage().getVoxelSpacing();
+        savingSettings.voxelUnit = imageViewer.getImage().getVoxelUnit();
+
+
+        return savingSettings;
+    }
+
+    public ProgressListener getSavingProgressListener()
+    {
+        return ( current, total ) -> {
+            int progress = ( int ) ( ( current * 100 ) / total );
+            progressBar.setValue( progress );
+            if ( progress >= 100 )
+            {
+                progressBar.setVisible( false );
+                save.setEnabled( true );
+                progressBar.setValue( 0 );
+
+//                if ( ! MESSAGE_SAVE_INTERRUPTED.equals( MESSAGE.getText() ) )
+//                    MESSAGE.setText( MESSAGE_SAVE_FINISHED );
+
+                pack();
+                saver.stopSave();
+            }
+        };
     }
 }
 

@@ -17,5 +17,7 @@ public class UIDisplayConstants {
     public static final String BINNING_MENU_ITEM = "Bin...";
     public static final String CHROMATIC_SHIFT_CORRECTION_MENU_ITEM = "Correct Chromatic Shift... ";
     public static final String SPLIT_VIEW_MENU_ITEM = "Merge Split View...";
+    public static final String CONFIGURE_LOGGING_MENU_ITEM = "Configure Logging...";
+
 
 }

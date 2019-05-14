@@ -5,12 +5,19 @@ import javax.swing.JMenuItem;
 
 public class OthersMenu extends JMenu {
 
-    private final JMenuItem imageJViewerItem;
 
-    public OthersMenu(BdvMenus actionListener) {
-        setText(UIDisplayConstants.MISC_MENU );
-        imageJViewerItem = new JMenuItem(UIDisplayConstants.IMAGEJ_VIEW_MENU_ITEM );
-        add(imageJViewerItem);
+    public OthersMenu( BdvMenus actionListener ) {
+        setText( UIDisplayConstants.MISC_MENU );
+
+        final JMenuItem imageJViewerItem
+                = new JMenuItem( UIDisplayConstants.IMAGEJ_VIEW_MENU_ITEM );
+        add( imageJViewerItem );
         imageJViewerItem.addActionListener(actionListener);
+
+        final JMenuItem configureLogging =
+                new JMenuItem( UIDisplayConstants.CONFIGURE_LOGGING_MENU_ITEM );
+        configureLogging.addActionListener( actionListener );
+        add( configureLogging );
+
     }
 }
