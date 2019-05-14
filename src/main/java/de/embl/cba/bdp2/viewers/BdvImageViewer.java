@@ -1,6 +1,8 @@
 package de.embl.cba.bdp2.viewers;
 
 import bdv.tools.brightness.ConverterSetup;
+import bdv.tools.brightness.MinMaxGroup;
+import bdv.tools.brightness.SetupAssignments;
 import bdv.util.*;
 import bdv.viewer.SourceAndConverter;
 import de.embl.cba.bdp2.Image;
@@ -25,6 +27,7 @@ import net.imglib2.view.Views;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class BdvImageViewer< R extends RealType< R > & NativeType< R > >
@@ -169,8 +172,13 @@ public class BdvImageViewer< R extends RealType< R > & NativeType< R > >
     {
         final List< ConverterSetup > converterSetups =
                 this.bdvStackSource.getBdvHandle().getSetupAssignments().getConverterSetups();
+
         final ConverterSetup converterSetup = converterSetups.get( channel );
         converterSetup.setDisplayRange( min, max );
+
+        final MinMaxGroup minMaxGroup = getBdvHandle().getSetupAssignments().getMinMaxGroup( converterSetup );
+        minMaxGroup.getMinBoundedValue().setCurrentValue( min );
+        minMaxGroup.getMaxBoundedValue().setCurrentValue( max );
     }
 
     
