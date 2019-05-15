@@ -30,7 +30,7 @@ public class MergeSplitChipWorkflow
 
         final BigDataProcessor2< R > bdp = new BigDataProcessor2<>();
 
-        final File[] directories = selectDirectories();
+        final ArrayList< File > directories = selectDirectories();
 
         final String voxelUnit = "micrometer";
         double voxelSpacingMicrometerX = 0.13;
@@ -68,7 +68,7 @@ public class MergeSplitChipWorkflow
 
             final BdvImageViewer viewer = bdp.showImage( merge );
 
-            final FinalInterval interval = viewer.get5DIntervalFromUser();
+            final FinalInterval interval = viewer.get5DIntervalFromUser( false );
 
             Logger.log( "Data set: " + directory );
             Logger.log( "Crop interval: " + interval.toString()   );
@@ -82,10 +82,10 @@ public class MergeSplitChipWorkflow
          * as well as the cropped data, with projections
          *
          */
-        for ( int i = 0; i < directories.length; i++ )
+        for ( int i = 0; i < directories.size(); i++ )
         {
             // open
-            final String directory = directories[ i ].toString();
+            final String directory = directories.get( i ).toString();
             final Image< R > image = bdp.openHdf5Image(
                     directory,
                     FileInfos.SINGLE_CHANNEL_TIMELAPSE,

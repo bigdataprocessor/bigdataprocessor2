@@ -13,7 +13,7 @@ public class CroppingDialog< T extends RealType< T > & NativeType< T > >
 	public CroppingDialog( BdvImageViewer< T > viewer )
 	{
 		Logger.info( "\nCropping..." );
-		FinalInterval interval = viewer.get5DIntervalFromUser();
+		FinalInterval interval = viewer.get5DIntervalFromUser( true );
 		final Image< T > image = viewer.getImage();
 
 		if ( interval != null )

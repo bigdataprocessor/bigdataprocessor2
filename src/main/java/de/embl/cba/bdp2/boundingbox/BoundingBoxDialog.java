@@ -1,20 +1,25 @@
 package de.embl.cba.bdp2.boundingbox;
 
 import bdv.tools.boundingbox.BoxSelectionOptions;
+import bdv.tools.boundingbox.TransformedBoxSelectionDialog;
 import bdv.util.Bdv;
 import bdv.util.BdvFunctions;
+import bdv.util.BdvHandle;
+import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.utils.DimensionOrder;
-import net.imglib2.FinalRealInterval;
-import net.imglib2.Interval;
-import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.*;
 import net.imglib2.realtransform.AffineTransform3D;
+import net.imglib2.realtransform.Scale;
+import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Intervals;
 import bdv.tools.boundingbox.TransformedRealBoxSelectionDialog;
 
-public class BoundingBoxDialog
+public class BoundingBoxDialog < R extends RealType< R > & NativeType< R > >
 {
 
+    private final Image< R > image;
     private Bdv bdv;
     public static final int X = 0;
     public static final int Y = 1;
@@ -26,59 +31,96 @@ public class BoundingBoxDialog
     private Interval rangeInterval;
     private int[] min;
     private int[] max;
+    private boolean selectionIsCalibrated;
 
 
-    public BoundingBoxDialog( Bdv bdv )
+    public BoundingBoxDialog( BdvHandle bdvHandle, Image< R > image )
     {
-        this.bdv = bdv;
+        this.bdv = bdvHandle;
+        this.image = image;
     }
 
-    public void showCalibratedUnitsBox( RandomAccessibleInterval rai, double[] voxelSpacing, String voxelUnit ) {
+    public FinalInterval getVoxelUnits5DInterval()
+    {
+        final RandomAccessibleInterval< R > rai = image.getRai();
 
-        setInitialSelectionAndRange( rai, voxelSpacing );
+        double[] voxelSpacing;
+        if ( selectionIsCalibrated )
+            voxelSpacing = image.getVoxelSpacing();
+        else
+            voxelSpacing = new double[]{ 1, 1, 1 };
 
-        final TransformedRealBoxSelectionDialog.Result result = showBox( voxelUnit );
+        long[] minMax = {
+                (long) ( selectedMin[ X ] / voxelSpacing[ DimensionOrder.X] ),
+                (long) ( selectedMin[ Y ] / voxelSpacing[ DimensionOrder.Y] ),
+                (long) ( selectedMin[ Z ] / voxelSpacing[ DimensionOrder.Z] ),
+                rai.min( DimensionOrder.C),
+                (long) selectedMin[ T ],
+                (long) ( selectedMax[ X ] / voxelSpacing[ DimensionOrder.X] ),
+                (long) ( selectedMax[ Y ] / voxelSpacing[ DimensionOrder.Y] ),
+                (long) ( selectedMax[ Z ] / voxelSpacing[ DimensionOrder.Z] ),
+                rai.max( DimensionOrder.C),
+                (long)  selectedMax[ T ]};
+
+        return Intervals.createMinMax(minMax);
+    }
+
+    public FinalInterval getVoxelUnitsSelectionInterval( )
+    {
+        FinalInterval interval;
+        if ( selectedMax != null && selectedMin != null ) {
+            interval = getVoxelUnits5DInterval();
+        }else{
+            interval =  null;
+        }
+        return interval;
+    }
+
+    public void showCalibratedUnitsBox() {
+
+        setInitialSelectionAndRange( image.getRai(), image.getVoxelSpacing() );
+
+        final TransformedRealBoxSelectionDialog.Result result = showRealBox( image.getVoxelUnit() );
 
         if ( result.isValid() )
         {
-            FinalRealInterval finalRealInterval = (FinalRealInterval) result.getInterval();
-            selectedMax = new double[4];
-            selectedMin = new double[4];
-
-            for (int d = 0; d < finalRealInterval.numDimensions(); ++d)
-            {
-                selectedMin[d] = finalRealInterval.realMin(d);
-                selectedMax[d] = finalRealInterval.realMax(d);
-            }
-
-            selectedMin[T] = result.getMinTimepoint();
-            selectedMax[T] = result.getMaxTimepoint();
+            collectSelection( result.getInterval(), result.getMinTimepoint(), result.getMaxTimepoint() );
+            selectionIsCalibrated = true;
         }
     }
 
+    public void showVoxelUnitsBox() {
 
-    public void showVoxelUnitsBox( RandomAccessibleInterval rai ) {
+        setInitialSelectionAndRange( image.getRai(), new double[]{1,1,1} );
 
-        setInitialSelectionAndRange( rai, new double[]{1,1,1} );
+        final TransformedBoxSelectionDialog.Result result = showBox( );
 
-        final TransformedRealBoxSelectionDialog.Result result = showBox( null );
-
-        if (result.isValid())
+        if ( result.isValid() )
         {
-            FinalRealInterval finalRealInterval = (FinalRealInterval) result.getInterval();
-            this.selectedMax = new int[4];
-            this.selectedMin = new int[4];
-
-            for (int d = 0; d < finalRealInterval.numDimensions(); ++d) {
-                selectedMin[d] = (int) finalRealInterval.realMin(d);
-                selectedMax[d] = (int) finalRealInterval.realMax(d);
-            }
-            selectedMin[T] = result.getMinTimepoint();
-            selectedMax[T] = result.getMaxTimepoint();
+            collectSelection( result.getInterval(), result.getMinTimepoint(), result.getMaxTimepoint() );
+            selectionIsCalibrated = false;
         }
+
     }
 
-    public TransformedRealBoxSelectionDialog.Result showBox( String voxelUnit )
+    private void collectSelection( RealInterval interval, int minTimepoint, int maxTimepoint )
+    {
+        selectedMax = new double[4];
+        selectedMin = new double[4];
+
+        for (int d = 0; d < interval.numDimensions(); ++d)
+        {
+            selectedMin[d] = interval.realMin(d);
+            selectedMax[d] = interval.realMax(d);
+        }
+
+        selectedMin[T] = minTimepoint;
+        selectedMax[T] = maxTimepoint;
+    }
+
+
+
+    public TransformedRealBoxSelectionDialog.Result showRealBox( String voxelUnit )
     {
         final AffineTransform3D boxTransform = new AffineTransform3D();
 
@@ -93,6 +135,26 @@ public class BoundingBoxDialog
                         .selectTimepointRange( min[ T ], max[ T ] )
         );
     }
+
+    public TransformedBoxSelectionDialog.Result showBox( )
+    {
+        final AffineTransform3D boxTransform = new AffineTransform3D();
+        boxTransform.set( image.getVoxelSpacing()[0], 0,0  );
+        boxTransform.set( image.getVoxelSpacing()[1], 1,1  );
+        boxTransform.set( image.getVoxelSpacing()[2], 2,2  );
+
+        return BdvFunctions.selectBox(
+                bdv,
+                boxTransform,
+                initialInterval,
+                rangeInterval,
+                BoxSelectionOptions.options()
+                        .title( getBoxTitle( null ) )
+                        .initialTimepointRange( min[ T ], max[ T ] )
+                        .selectTimepointRange( min[ T ], max[ T ] )
+        );
+    }
+
 
     public String getBoxTitle( String voxelUnit )
     {

@@ -68,8 +68,8 @@ public class BoundingBoxSelection
 		viewerPanel.addRenderTransformListener(transformedBoxOverlay);
 
 		// replaceImage two independent boxes which are fully adjustable.
-//		new Thread( () -> showBox( viewer, interval, "Channel 0" ) ).start();
-//		new Thread( () -> showBox( viewer, interval, "Channel 1" ) ).start();
+//		new Thread( () -> showRealBox( viewer, interval, "Channel 0" ) ).start();
+//		new Thread( () -> showRealBox( viewer, interval, "Channel 1" ) ).start();
 
 	}
 

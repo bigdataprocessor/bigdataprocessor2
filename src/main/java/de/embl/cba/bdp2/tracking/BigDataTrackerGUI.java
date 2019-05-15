@@ -347,7 +347,7 @@ public class BigDataTrackerGUI < R extends RealType< R > & NativeType< R > >
             System.out.println(e.getActionCommand());
            BigDataProcessor2.trackerThreadPool.submit(()-> {
                System.out.println(e.getActionCommand());
-               FinalInterval interval = imageViewer.get5DIntervalFromUser();
+               FinalInterval interval = imageViewer.get5DIntervalFromUser( true );
                trackingSettings.pMin = new Point3D((int)interval.min( DimensionOrder.X ),
                                                    (int)interval.min( DimensionOrder.Y ),
                                                    (int)interval.min( DimensionOrder.Z ));
