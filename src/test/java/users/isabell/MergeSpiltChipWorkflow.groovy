@@ -1,4 +1,4 @@
-//#@File[] (label="Select", style="both") directories
+#@File[] (label="Select", style="both") directories
 
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
@@ -19,9 +19,18 @@ double voxelSpacingMicrometerX = 0.13;
 double voxelSpacingMicrometerY = 0.13;
 double voxelSpacingMicrometerZ = 1.04;
 
+
+int numberOfProcessors = Runtime.getRuntime().availableProcessors();
+Logger.log( "Number of processors: " + numberOfProcessors );
+
 final SavingSettings savingSettings = SavingSettings.getDefaults();
 savingSettings.fileType = SavingSettings.FileType.TIFF_STACKS;
-savingSettings.numIOThreads = Runtime.getRuntime().availableProcessors();
+savingSettings.numIOThreads = Math.sqrt( numberOfProcessors ) + 1;
+savingSettings.numProcessingThreads = Math.sqrt( numberOfProcessors ) + 1;
+
+Logger.log( "Number of IO threads: " + savingSettings.numIOThreads );
+Logger.log( "Number of processing threads: " + savingSettings.numProcessingThreadsIOThreads );
+
 
 final SplitViewMerger merger = new SplitViewMerger();
 merger.setUpperLeftCornerRegionA( 22, 643 );
@@ -51,7 +60,7 @@ for ( File directory : directories )
 
     final BdvImageViewer viewer = bdp.showImage( merge );
 
-    final FinalInterval interval = viewer.get5DIntervalFromUser();
+    final FinalInterval interval = viewer.get5DIntervalFromUser( false );
 
     Logger.log( "Data set: " + directory );
     Logger.log( "Crop interval: " + interval.toString()   );

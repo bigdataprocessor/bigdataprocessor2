@@ -160,9 +160,9 @@ public class BoundingBoxDialog < R extends RealType< R > & NativeType< R > >
     {
         String title = "Select box";
         if ( voxelUnit != null )
-            title += "[ " + voxelUnit + " ]";
+            title += " [ " + voxelUnit + " ]";
         else
-            title += "[ voxels ]";
+            title += " [ Voxels ]";
         return title;
     }
 
