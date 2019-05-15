@@ -7,6 +7,9 @@ import net.imglib2.RandomAccessibleInterval;
  */
 public class SavingSettings {
 
+    public static final int AVAILABLE_PROCESSORS = Runtime.getRuntime().availableProcessors();
+
+
     // TODO: remove the image itself from the settings
     public RandomAccessibleInterval rai;
     public double[] voxelSpacing;
@@ -66,6 +69,9 @@ public class SavingSettings {
         savingSettings.fileType = FileType.TIFF_PLANES;
         savingSettings.volumesFilePath = "src/test/resources/file";
         savingSettings.compression = SavingSettings.NONE;
+        savingSettings.numProcessingThreads = (int) Math.ceil( Math.sqrt( AVAILABLE_PROCESSORS ) + 1 );
+        savingSettings.numIOThreads = savingSettings.numProcessingThreads;
+
 
         return savingSettings;
     }

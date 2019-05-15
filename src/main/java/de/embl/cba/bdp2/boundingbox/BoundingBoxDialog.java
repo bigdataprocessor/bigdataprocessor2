@@ -20,16 +20,92 @@ public class BoundingBoxDialog
     public static final int Y = 1;
     public static final int Z = 2;
     public static final int T = 3;
-    public int[] selectedMin; // TODO: double?
-    public int[] selectedMax; // TODO: double?
+    public double[] selectedMin;
+    public double[] selectedMax;
+    private Interval initialInterval;
+    private Interval rangeInterval;
+    private int[] min;
+    private int[] max;
 
 
-    public BoundingBoxDialog( Bdv bdv ) {
+    public BoundingBoxDialog( Bdv bdv )
+    {
         this.bdv = bdv;
     }
 
-    public void show(RandomAccessibleInterval rai, double[] voxelSpacing) {
-        final int[] min, max;
+    public void showCalibratedUnitsBox( RandomAccessibleInterval rai, double[] voxelSpacing, String voxelUnit ) {
+
+        setInitialSelectionAndRange( rai, voxelSpacing );
+
+        final TransformedRealBoxSelectionDialog.Result result = showBox( voxelUnit );
+
+        if ( result.isValid() )
+        {
+            FinalRealInterval finalRealInterval = (FinalRealInterval) result.getInterval();
+            selectedMax = new double[4];
+            selectedMin = new double[4];
+
+            for (int d = 0; d < finalRealInterval.numDimensions(); ++d)
+            {
+                selectedMin[d] = finalRealInterval.realMin(d);
+                selectedMax[d] = finalRealInterval.realMax(d);
+            }
+
+            selectedMin[T] = result.getMinTimepoint();
+            selectedMax[T] = result.getMaxTimepoint();
+        }
+    }
+
+
+    public void showVoxelUnitsBox( RandomAccessibleInterval rai ) {
+
+        setInitialSelectionAndRange( rai, new double[]{1,1,1} );
+
+        final TransformedRealBoxSelectionDialog.Result result = showBox( null );
+
+        if (result.isValid())
+        {
+            FinalRealInterval finalRealInterval = (FinalRealInterval) result.getInterval();
+            this.selectedMax = new int[4];
+            this.selectedMin = new int[4];
+
+            for (int d = 0; d < finalRealInterval.numDimensions(); ++d) {
+                selectedMin[d] = (int) finalRealInterval.realMin(d);
+                selectedMax[d] = (int) finalRealInterval.realMax(d);
+            }
+            selectedMin[T] = result.getMinTimepoint();
+            selectedMax[T] = result.getMaxTimepoint();
+        }
+    }
+
+    public TransformedRealBoxSelectionDialog.Result showBox( String voxelUnit )
+    {
+        final AffineTransform3D boxTransform = new AffineTransform3D();
+
+        return BdvFunctions.selectRealBox(
+                bdv,
+                boxTransform,
+                initialInterval,
+                rangeInterval,
+                BoxSelectionOptions.options()
+                        .title( getBoxTitle( voxelUnit ) )
+                        .initialTimepointRange( min[ T ], max[ T ] )
+                        .selectTimepointRange( min[ T ], max[ T ] )
+        );
+    }
+
+    public String getBoxTitle( String voxelUnit )
+    {
+        String title = "Select box";
+        if ( voxelUnit != null )
+            title += "[ " + voxelUnit + " ]";
+        else
+            title += "[ voxels ]";
+        return title;
+    }
+
+    public void setInitialSelectionAndRange( RandomAccessibleInterval rai, double[] voxelSpacing )
+    {
         min = new int[4];
         min[T] = (int) rai.min( DimensionOrder.T);
         max = new int[4];
@@ -45,50 +121,35 @@ public class BoundingBoxDialog
         int[] center = new int[3];
         int[] width = new int[3];
         int[] initialBBSize = new int[3];
-        for (int d = 0; d < 3; d++) {
-            width[d] = (max[d] - min[d]);
-            center[d] = (int) ((min[d] + width[d] / 2.0));
+
+        for (int d = 0; d < 3; d++)
+        {
+            width[d] = ( max[d] - min[d]);
+            center[d] = (int) (( min[d] + width[d] / 2.0));
             initialBBSize[d] = width[d] / 4;
         }
 
-        if (initialBBSize[Z] < 1) { // Check if Z goes below 1
+        if ( initialBBSize[Z] < 1 )
+        { // Check if Z goes below 1
             initialBBSize[Z] = 1;
         }
-        int[] minBB = new int[]{center[X] - initialBBSize[X] / 2, center[Y] - initialBBSize[Y] / 2, center[Z] - initialBBSize[Z] / 2}; //Positioning the new BB at the center of the image.
-        int[] maxBB = new int[]{center[X] + initialBBSize[X] / 2, center[Y] + initialBBSize[Y] / 2, center[Z] + initialBBSize[Z] / 2}; //Positioning the new BB at the center of the image.
 
-        final Interval initialInterval, rangeInterval;
-        initialInterval = Intervals.createMinMax(minBB[X], minBB[Y], minBB[Z],
-                maxBB[X], maxBB[Y], maxBB[Z]); // the initially selected bounding box
+        int[] minBB = new int[]{
+                center[X] - initialBBSize[X] / 2,
+                center[Y] - initialBBSize[Y] / 2,
+                center[Z] - initialBBSize[Z] / 2};
 
-        rangeInterval = Intervals.createMinMax(min[X], min[Y], min[Z],
-                max[X], max[Y], max[Z]);// the range (bounding box of possible bounding boxes)
+        int[] maxBB = new int[]{
+                center[X] + initialBBSize[X] / 2,
+                center[Y] + initialBBSize[Y] / 2,
+                center[Z] + initialBBSize[Z] / 2};
 
-        final AffineTransform3D boxTransform = new AffineTransform3D();
+        initialInterval = Intervals.createMinMax(
+                minBB[X], minBB[Y], minBB[Z],
+                maxBB[X], maxBB[Y], maxBB[Z]);
 
-        // TODO: Sometimes get stuck here
-        final TransformedRealBoxSelectionDialog.Result result = BdvFunctions.selectRealBox(
-                bdv,
-                boxTransform,
-                initialInterval,
-                rangeInterval,
-                BoxSelectionOptions.options()
-                        .title("Select box")
-                        .initialTimepointRange(min[T], max[T])
-                        .selectTimepointRange(min[T], max[T])
-        );
-
-        if (result.isValid()) {
-            FinalRealInterval finalRealInterval = (FinalRealInterval) result.getInterval();
-            this.selectedMax = new int[4];
-            this.selectedMin = new int[4];
-
-            for (int d = 0; d < finalRealInterval.numDimensions(); ++d) {
-                selectedMin[d] = (int) finalRealInterval.realMin(d);
-                selectedMax[d] = (int) finalRealInterval.realMax(d);
-            }
-            selectedMin[T] = result.getMinTimepoint();
-            selectedMax[T] = result.getMaxTimepoint();
-        }
+        rangeInterval = Intervals.createMinMax(
+                min[X], min[Y], min[Z],
+                max[X], max[Y], max[Z]);
     }
 }

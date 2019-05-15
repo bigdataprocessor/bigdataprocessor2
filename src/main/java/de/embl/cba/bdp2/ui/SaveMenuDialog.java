@@ -16,16 +16,15 @@ import java.util.ArrayList;
 public class SaveMenuDialog extends JFrame implements ActionListener
 {
 
-    public static final int AVAILABLE_PROCESSORS = Runtime.getRuntime().availableProcessors();
-    private static int numIOThreads = (int) Math.ceil( Math.sqrt( AVAILABLE_PROCESSORS ) + 1 );
-    private static int numProcessingThreads = (int) Math.ceil( Math.sqrt( AVAILABLE_PROCESSORS ) + 1 );
+
+    private static SavingSettings defaults = SavingSettings.getDefaults();
 
     private static final JCheckBox cbLZW = new JCheckBox("LZW Compression (Tiff)");
     private static final JCheckBox cbSaveVolume = new JCheckBox("Save Volume data");
     private static final JCheckBox cbSaveProjection = new JCheckBox("Save Projections");
     private static final JTextField tfRowsPerStrip = new JTextField("10", 3);
-    private static final JTextField tfNumIOThreads = new JTextField("" + numIOThreads, 2);
-    private static final JTextField tfNumProcessingThreads = new JTextField( "" + numProcessingThreads, 2);
+    private static final JTextField tfNumIOThreads = new JTextField("" + defaults.numIOThreads, 2);
+    private static final JTextField tfNumProcessingThreads = new JTextField( "" + defaults.numProcessingThreads, 2);
     private static final JTextField tfVolumesFilePath = new JTextField("", 50);
     private static final JTextField tfProjectionsFilePath = new JTextField("", 50);
 
@@ -185,12 +184,8 @@ public class SaveMenuDialog extends JFrame implements ActionListener
 
         savingSettings.saveProjections = cbSaveProjection.isSelected();
         savingSettings.projectionsFilePath = tfProjectionsFilePath.getText() + File.separator + "projection";
-
-        numIOThreads = Integer.parseInt( tfNumIOThreads.getText() );
-        savingSettings.numIOThreads = numIOThreads;
-
-        numProcessingThreads = Integer.parseInt( tfNumProcessingThreads.getText() );
-        savingSettings.numProcessingThreads = numProcessingThreads;
+        savingSettings.numIOThreads = Integer.parseInt( tfNumIOThreads.getText() );
+        savingSettings.numProcessingThreads = Integer.parseInt( tfNumProcessingThreads.getText() );
 
         savingSettings.voxelSpacing = imageViewer.getImage().getVoxelSpacing();
         savingSettings.voxelUnit = imageViewer.getImage().getVoxelUnit();

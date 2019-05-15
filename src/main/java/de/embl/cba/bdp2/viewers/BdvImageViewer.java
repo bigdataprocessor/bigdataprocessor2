@@ -2,7 +2,6 @@ package de.embl.cba.bdp2.viewers;
 
 import bdv.tools.brightness.ConverterSetup;
 import bdv.tools.brightness.MinMaxGroup;
-import bdv.tools.brightness.SetupAssignments;
 import bdv.util.*;
 import bdv.viewer.SourceAndConverter;
 import de.embl.cba.bdp2.Image;
@@ -27,7 +26,6 @@ import net.imglib2.view.Views;
 
 import javax.swing.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 public class BdvImageViewer< R extends RealType< R > & NativeType< R > >
@@ -54,24 +52,25 @@ public class BdvImageViewer< R extends RealType< R > & NativeType< R > >
         this.image = new Image<>( rai, name, voxelSpacing, voxelUnit  );
     }
 
-    public FinalInterval get5DIntervalFromUser() {
-        BoundingBoxDialog showBB = new BoundingBoxDialog(this.bdvStackSource.getBdvHandle());
+    public FinalInterval get5DIntervalFromUser( boolean calibratedSelection )
+    {
+        BoundingBoxDialog showBB = new BoundingBoxDialog( bdvHandle );
+
         final double[] voxelSpacing = image.getVoxelSpacing();
         final RandomAccessibleInterval< R > rai = image.getRai();
-        showBB.show( rai, voxelSpacing );
+        showBB.showVoxelUnitsBox( rai, voxelSpacing );
 
-        // TODO: refactor this into a BoundingBox class
         FinalInterval interval;
         if (showBB.selectedMax != null && showBB.selectedMin != null) {
             long[] minMax = {
-                    (long) (showBB.selectedMin[BoundingBoxDialog.X] / voxelSpacing[ DimensionOrder.X]),
-                    (long) (showBB.selectedMin[BoundingBoxDialog.Y] / voxelSpacing[ DimensionOrder.Y]),
-                    (long) (showBB.selectedMin[BoundingBoxDialog.Z] / voxelSpacing[ DimensionOrder.Z]),
+                    (long) ( showBB.selectedMin[BoundingBoxDialog.X] / voxelSpacing[ DimensionOrder.X] ),
+                    (long) ( showBB.selectedMin[BoundingBoxDialog.Y] / voxelSpacing[ DimensionOrder.Y] ),
+                    (long) ( showBB.selectedMin[BoundingBoxDialog.Z] / voxelSpacing[ DimensionOrder.Z] ),
                     rai.min( DimensionOrder.C),
                     showBB.selectedMin[BoundingBoxDialog.T],
-                    (long) (showBB.selectedMax[BoundingBoxDialog.X] / voxelSpacing[ DimensionOrder.X]),
-                    (long) (showBB.selectedMax[BoundingBoxDialog.Y] / voxelSpacing[ DimensionOrder.Y]),
-                    (long) (showBB.selectedMax[BoundingBoxDialog.Z] / voxelSpacing[ DimensionOrder.Z]),
+                    (long) ( showBB.selectedMax[BoundingBoxDialog.X] / voxelSpacing[ DimensionOrder.X] ),
+                    (long) ( showBB.selectedMax[BoundingBoxDialog.Y] / voxelSpacing[ DimensionOrder.Y] ),
+                    (long) ( showBB.selectedMax[BoundingBoxDialog.Z] / voxelSpacing[ DimensionOrder.Z] ),
                     rai.max( DimensionOrder.C),
                     showBB.selectedMax[BoundingBoxDialog.T]};
             interval= Intervals.createMinMax(minMax);

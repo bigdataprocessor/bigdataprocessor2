@@ -46,7 +46,6 @@ public class MergeSplitChipWorkflow
         merger.setUpperLeftCornerRegionB( 896, 46 );
         merger.setRegionSpan( 1000, 1000 );
 
-
         /*
          * Get cropping intervals from user
          */
