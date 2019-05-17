@@ -67,7 +67,7 @@ public class BinningDialog< T extends RealType< T > & NativeType< T > >
 
 				previousSpan = span;
 
-				final Image< T > binned = Binner.bin( inputImage, asRadii( span );
+				final Image< T > binned = Binner.bin( inputImage, asRadii( span ) );
 
 				imageViewer.replaceImage( binned );
 
