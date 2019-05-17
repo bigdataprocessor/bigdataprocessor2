@@ -1,4 +1,4 @@
-#@File[] (label="Select", style="both") directories
+// #@File[] (label="Select", style="both") directories
 
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
@@ -29,7 +29,7 @@ savingSettings.numIOThreads = Math.sqrt( numberOfProcessors ) + 1;
 savingSettings.numProcessingThreads = Math.sqrt( numberOfProcessors ) + 1;
 
 Logger.log( "Number of IO threads: " + savingSettings.numIOThreads );
-Logger.log( "Number of processing threads: " + savingSettings.numProcessingThreadsIOThreads );
+Logger.log( "Number of processing threads: " + savingSettings.numProcessingThreads );
 
 
 final SplitViewMerger merger = new SplitViewMerger();

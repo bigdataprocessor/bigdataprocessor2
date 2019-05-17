@@ -89,17 +89,25 @@
 
 
 	<repositories>
-		<!-- NB: for SciJava dependencies -->
+
 		<repository>
 			<id>imagej.public</id>
 			<url>https://maven.imagej.net/content/groups/public</url>
 		</repository>
+
 		<repository>
 			<id>bintray-tischi-snapshots</id>
 			<name>bintray</name>
 			<url>https://dl.bintray.com/tischi/snapshots</url>
 		</repository>
+
+		<repository>
+			<id>clij</id>
+			<url>http://dl.bintray.com/haesleinhuepf/clij</url>
+		</repository>
+
 	</repositories>
+
 
 	<dependencies>
 
@@ -212,7 +220,11 @@
 			<version>0.2.01</version>
 		</dependency>
 
-
+		<dependency>
+			<groupId>net.haesleinhuepf</groupId>
+			<artifactId>clij_</artifactId>
+			<version>0.20.0</version>
+		</dependency>
 
 	</dependencies>
 

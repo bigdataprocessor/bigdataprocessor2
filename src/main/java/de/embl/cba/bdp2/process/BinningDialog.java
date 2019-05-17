@@ -4,7 +4,6 @@ import bdv.tools.brightness.SliderPanel;
 import bdv.util.BoundedValue;
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.logging.Logger;
-import de.embl.cba.bdp2.ui.BdvMenus;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.type.NativeType;
@@ -68,11 +67,14 @@ public class BinningDialog< T extends RealType< T > & NativeType< T > >
 
 				previousSpan = span;
 
-				final Image< T > binned = Binner.bin( inputImage, span );
+				final Image< T > binned = Binner.bin( inputImage, asRadii( span );
 
 				imageViewer.replaceImage( binned );
 
-				Logger.info( "Binned view size [GB]: "
+				Logger.info( "Binned ( "
+						+ span[ 0 ] + " , "
+						+ span[ 1 ] + " , "
+						+ span[ 2 ] + " ) view size [GB]: "
 						+ Utils.getSizeGB( binned.getRai() ) );
 			}
 
@@ -87,11 +89,20 @@ public class BinningDialog< T extends RealType< T > & NativeType< T > >
 				return false;
 			}
 
+
+			private long[] asRadii( long[] span )
+			{
+				final long[] radii = new long[ 5 ];
+				for ( int d = 0; d < 3; d++ )
+					radii[ d ] = ( span[ d ] - 1 ) / 2;
+				return radii;
+			}
+
 			private long[] getNewSpan()
 			{
 				final long[] span = new long[ 5 ];
 				for ( int d = 0; d < 3; d++ )
-					span[ d ] = ( boundedValues.get( d ).getCurrentValue() - 1 ) / 2;
+					span[ d ] = boundedValues.get( d ).getCurrentValue() ;
 				return span;
 			}
 		}
