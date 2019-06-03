@@ -38,16 +38,21 @@ public class TestSaveSingleChannelTiffSeriesAsTiffStacks
         savingSettings.numProcessingThreads = 4;
         savingSettings.saveProjections = true;
         savingSettings.volumesFilePath =
-                "/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-saving-output/nc1-nt3-calibrated-tiff-volumes/volume";
+                "/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-output/nc1-nt3-calibrated-tiff-volumes/volume";
         savingSettings.saveVolumes = true;
         savingSettings.projectionsFilePath =
-                "/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-saving-output/nc1-nt3-calibrated-tiff-projections/projection";
+                "/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-output/nc1-nt3-calibrated-tiff-projections/projection";
+
+        final File testVolumeFile = new File( savingSettings.volumesFilePath + "--C00--T00000.tif" );
+        if ( testVolumeFile.exists() ) testVolumeFile.delete();
+
+        final File testProjectionsFile = new File( savingSettings.projectionsFilePath + "--xyz-max-projection--C00--T00002.tif" );
+        if ( testProjectionsFile.exists() ) testProjectionsFile.delete();
 
         Utils.saveImageAndWaitUntilDone( bdp, savingSettings, image );
 
-        File file = new File(savingSettings.volumesFilePath );
-        assertTrue( file.exists() );
-
+        assertTrue( testVolumeFile.exists() );
+        assertTrue( testProjectionsFile.exists() );
     }
 
 }

@@ -9,6 +9,8 @@ import de.embl.cba.bdp2.loading.files.SerializableFileInfo;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import ij.ImagePlus;
+import ij.ImageStack;
+import ij.process.ImageProcessor;
 import javafx.geometry.Point3D;
 import net.imglib2.cache.img.CellLoader;
 import net.imglib2.cache.img.SingleCellArrayImg;
@@ -65,15 +67,17 @@ public class ImageLoader< T extends NativeType< T > > implements CellLoader< T >
 
     public ImagePlus getDataCube( long[] min,  long[] max )
     {
-        int z = Math.toIntExact( max[ Z ]);
         int channel = Math.toIntExact( max[ DimensionOrder.C ]);
         int time = Math.toIntExact( max[ DimensionOrder.T ]);
         List<Integer> c_t = Arrays.asList(channel,time);
         SerializableFileInfo[] infos_c_t = getFileInfoStack(c_t);
-        SerializableFileInfo fileInfo = infos_c_t[z];
-        Point3D po, ps;
-        po = getOffset( min[ DimensionOrder.X ], min[ DimensionOrder.Y ], z );
-        ps = getSize( min, max );
+
+//        po = getOffset( min[ DimensionOrder.X ], min[ DimensionOrder.Y ], z );
+//        ps = getSize( min, max );
+
+        Point3D po = getOffset( min );
+        Point3D ps = getSize( min, max );
+
         //TODO: get rid of ImagePlus
         ImagePlus imagePlus = new OpenerExtension().readDataCube(
                 directory,
@@ -86,6 +90,13 @@ public class ImageLoader< T extends NativeType< T > > implements CellLoader< T >
         return imagePlus;
     }
 
+    private Point3D getOffset( long[] min )
+    {
+        Point3D po;
+        po = new Point3D( min[ 0 ], min[ 1 ], min[ 2 ] );
+        return po;
+    }
+
     private Point3D getOffset( long minX, long minY, int z )
     {
         Point3D po;
@@ -95,10 +106,10 @@ public class ImageLoader< T extends NativeType< T > > implements CellLoader< T >
 
     private Point3D getSize( long[] min, long[] max )
     {
-        Point3D ps;
         long sX = max[ DimensionOrder.X  ] - min[ DimensionOrder.X ] + 1;
         long sY = max[ DimensionOrder.Y  ] - min[ DimensionOrder.Y ] + 1;
-        ps = new Point3D( sX, sY, 1);
+        long sZ = max[ DimensionOrder.Z  ] - min[ DimensionOrder.Z ] + 1;
+        Point3D ps = new Point3D( sX, sY, sZ );
         return ps;
     }
 
@@ -121,10 +132,18 @@ public class ImageLoader< T extends NativeType< T > > implements CellLoader< T >
 
         if ( cell.firstElement() instanceof UnsignedByteType )
         {
-            ImagePlus imagePlus = getDataCube( min, max );
-            final byte[] impData = (byte[]) imagePlus.getProcessor().getPixels();
+            // TODO: Clean up by not putting into Imp in the first place!
             final byte[] cellData = (byte[]) cell.getStorageArray();
-            System.arraycopy( impData, 0, cellData, 0, cellData.length );
+            int destPos = 0;
+            ImagePlus imagePlus = getDataCube( min, max );
+            final ImageStack stack = imagePlus.getStack();
+            for ( int i = 0; i < stack.size(); i++ )
+            {
+                final ImageProcessor processor = stack.getProcessor( i + 1 );
+                final byte[] impData = (byte[]) processor.getPixels();
+                System.arraycopy( impData, 0, cellData, destPos, impData.length );
+                destPos += impData.length;
+            }
         }
         else if ( cell.firstElement() instanceof UnsignedShortType )
         {

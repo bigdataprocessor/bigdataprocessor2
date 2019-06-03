@@ -14,6 +14,8 @@ import net.imglib2.*;
 import net.imglib2.cache.img.CachedCellImg;
 import net.imglib2.converter.Converters;
 import net.imglib2.converter.RealUnsignedByteConverter;
+import net.imglib2.img.cell.Cell;
+import net.imglib2.img.cell.CellRandomAccess;
 import net.imglib2.interpolation.InterpolatorFactory;
 import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
 import net.imglib2.realtransform.AffineRandomAccessible;
