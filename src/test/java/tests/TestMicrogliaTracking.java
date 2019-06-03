@@ -16,6 +16,8 @@ public class TestMicrogliaTracking
     public static void main(String[] args)
     {
 
+        // TODO!
+
         String imageDirectory = "src/test/resources/tiff-nc2-nt3-tracking/";
 
         final FileInfos fileInfos = new FileInfos(imageDirectory, FileInfos.LOAD_CHANNELS_FROM_FOLDERS,

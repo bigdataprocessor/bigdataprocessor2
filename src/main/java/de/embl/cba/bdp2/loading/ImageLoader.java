@@ -158,10 +158,18 @@ public class ImageLoader< T extends NativeType< T > > implements CellLoader< T >
             }
             else
             {
+                // TODO: Clean up by not putting into Imp in the first place!
+                final short[] cellData = (short[]) cell.getStorageArray();
+                int destPos = 0;
                 ImagePlus imagePlus = getDataCube( min, max );
-                final short[] impData = ( short[] ) imagePlus.getProcessor().getPixels();
-                final short[] cellData = ( short[] ) cell.getStorageArray();
-                System.arraycopy( impData, 0, cellData, 0, cellData.length );
+                final ImageStack stack = imagePlus.getStack();
+                for ( int i = 0; i < stack.size(); i++ )
+                {
+                    final ImageProcessor processor = stack.getProcessor( i + 1 );
+                    final short[] impData = (short[]) processor.getPixels();
+                    System.arraycopy( impData, 0, cellData, destPos, impData.length );
+                    destPos += impData.length;
+                }
             }
         }
         else if (cell.firstElement() instanceof FloatType)
