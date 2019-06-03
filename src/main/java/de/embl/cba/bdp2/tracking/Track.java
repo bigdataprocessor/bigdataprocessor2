@@ -49,7 +49,7 @@ public class Track < R extends RealType< R > & NativeType< R > >    {
     Point3D trackStart;
     int trackID;
 
-    Track( TrackingSettings< R > trackingSettings, int id) {
+    Track( TrackingSettings< R > trackingSettings, int id ) {
 
         this.trackingSettings = trackingSettings;
 
