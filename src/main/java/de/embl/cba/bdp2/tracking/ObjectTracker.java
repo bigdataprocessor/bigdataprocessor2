@@ -37,7 +37,7 @@ public class ObjectTracker< T extends RealType<T> & NativeType< T > > extends Ab
     private int gateGateIntensityMax;
     private AtomicBoolean stop;
 
-    public ObjectTracker(TrackingSettings< T > trackingSettings, AtomicBoolean stop) {
+    public ObjectTracker( TrackingSettings< T > trackingSettings, AtomicBoolean stop ) {
         this.trackingSettings = trackingSettings;
         this.pMin = trackingSettings.pMin;
         this.pMax = trackingSettings.pMax;
@@ -45,7 +45,8 @@ public class ObjectTracker< T extends RealType<T> & NativeType< T > > extends Ab
         this.height = (int) trackingSettings.rai.dimension( DimensionOrder.Y );
         this.depth = (int) trackingSettings.rai.dimension( DimensionOrder.Z );
         this.channel = trackingSettings.channel;
-        this.timeFrames =  trackingSettings.nt ==-1? (int)trackingSettings.rai.dimension( DimensionOrder.T ) : trackingSettings.nt+ trackingSettings.tStart;
+        this.timeFrames =  trackingSettings.nt ==-1 ?
+                (int)trackingSettings.rai.dimension( DimensionOrder.T ) : trackingSettings.nt+ trackingSettings.tStart;
         this.trackId  = 9999;
         this.stop = stop;
     }
@@ -54,7 +55,7 @@ public class ObjectTracker< T extends RealType<T> & NativeType< T > > extends Ab
     public Track getTrackingPoints() {
         final String centeringMethod = trackingSettings.trackingMethod;
         Logger.info(centeringMethod);
-        if(TrackingSettings.CENTER_OF_MASS.equalsIgnoreCase(centeringMethod)){
+        if( TrackingSettings.CENTER_OF_MASS.equalsIgnoreCase(centeringMethod) ){
                 return doCenterOfMassTracking();
         }else if(TrackingSettings.CORRELATION.equalsIgnoreCase(centeringMethod)){
                 return doPhaseCorrelation();
@@ -140,8 +141,8 @@ public class ObjectTracker< T extends RealType<T> & NativeType< T > > extends Ab
                             Views.extendZero( trackingSettings.rai ) ,
                             trackedInterval );
 
-            RandomAccessibleInterval<T> currentFrame = Views.hyperSlice(rai,4,t);
-            RandomAccessibleInterval<T> nextFrame = Views.hyperSlice(rai,4,t+1);
+            RandomAccessibleInterval<T> currentFrame = Views.hyperSlice( rai, 4, t);
+            RandomAccessibleInterval<T> nextFrame = Views.hyperSlice( rai, 4, t + 1);
             if (this.stop.get()) {
                 break;
             }
