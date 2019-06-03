@@ -69,7 +69,7 @@ public class FileInfos
             String directory,
             String loadingScheme,
             String filterPattern){
-        this(directory,loadingScheme,filterPattern,null);
+        this( directory, loadingScheme, filterPattern, null);
     }
 
     public FileInfos(

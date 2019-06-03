@@ -79,7 +79,6 @@ public abstract class Processor
 
 		RandomAccessibleInterval< R > copy;
 
-
 		if ( numElements < Integer.MAX_VALUE - 1 )
 		{
 			copy = new ArrayImgFactory( Util.getTypeFromInterval( volume ) ).create( volume );
@@ -103,8 +102,10 @@ public abstract class Processor
 				dimensionY,
 				( int ) Math.ceil( dimensionZ / numThreads ) };
 
-		Grids.collectAllContainedIntervals( Intervals.dimensionsAsLongArray( volume ) , blockSize )
-		.parallelStream().forEach( interval -> copy( volume, Views.interval( copy, interval )));
+		Grids.collectAllContainedIntervals(
+				Intervals.dimensionsAsLongArray( volume ) , blockSize )
+		.parallelStream().forEach(
+				interval -> copy( volume, Views.interval( copy, interval )));
 
 		return copy;
 	}

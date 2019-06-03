@@ -91,7 +91,10 @@ public class ObjectTracker< T extends RealType<T> & NativeType< T > > extends Ab
                 // a portion of the data, which is trackingFactor times larger than the object size
                 // below formula makes the region in which the center of mass is compute go from 1 to 1/trackingfactor
                 trackingFraction = 1.0 - Math.pow(1.0*(i+1)/iterations,1.0/4.0)*(1.0-1.0/trackingFactor);
-                pCentroid = computeCenterOfMass(randomAccess, pMin.subtract(trackingSettings.maxDisplacement), pMax.add(trackingSettings.maxDisplacement), gateIntensity);
+                pCentroid = computeCenterOfMass(
+                        randomAccess,
+                        pMin.subtract(trackingSettings.maxDisplacement),
+                        pMax.add(trackingSettings.maxDisplacement), gateIntensity);
                 if (stop.get()) {
                     break;
                 }
@@ -108,7 +111,8 @@ public class ObjectTracker< T extends RealType<T> & NativeType< T > > extends Ab
     }
 
 
-    private Track doPhaseCorrelation() {
+    private Track doPhaseCorrelation()
+    {
         Track trackingResults = new Track(this.trackingSettings, trackId);
         boolean gateIntensity = isIntensityGated(trackingSettings.intensityGate);
         Point3D pShift;

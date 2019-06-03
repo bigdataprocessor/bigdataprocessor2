@@ -46,7 +46,7 @@ public class BigDataProcessorCommand < R extends RealType< R > & NativeType< R >
 
     public void run()
     {
-        final BigDataProcessor2< R > bdp = new BigDataProcessor2< R >();
+        final BigDataProcessor2< R > bdp = new BigDataProcessor2< >();
 
         final Image< R > image =
                 bdp.openImage( directory.toString(), namingScheme, filterPattern );

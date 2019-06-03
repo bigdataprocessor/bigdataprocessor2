@@ -289,9 +289,8 @@ public class FileInfosHelper
 
                 Pattern patternCT = Pattern.compile( namingScheme );
 
-                for (String fileName : fileLists[0])
+                for ( String fileName : fileLists[0] )
                 {
-
                     Matcher matcherCT = patternCT.matcher(fileName);
                     if (matcherCT.matches())
                     {
@@ -301,11 +300,11 @@ public class FileInfosHelper
 
                 }
                 // convert HashLists to sorted Lists
-                channels = new ArrayList<String>(channelsHS);
+                channels = new ArrayList< >( channelsHS );
                 Collections.sort( channels );
                 nC = channels.size();
 
-                timepoints = new ArrayList<String>(timepointsHS);
+                timepoints = new ArrayList< >( timepointsHS );
                 Collections.sort(timepoints);
                 nT = timepoints.size();
             }
@@ -395,13 +394,10 @@ public class FileInfosHelper
             }
             else
             {
-
                 if ( namingScheme.equals( FileInfos.EM_TIFF_SLICES ) )
                 {
                     for ( z = 0; z < infoSource.nZ; z++ )
-                    {
                         infoSource.ctzFileList[ 0 ][ 0 ][ z ] = fileLists[ 0 ][ z ];
-                    }
                 }
                 else
                 {
@@ -420,6 +416,7 @@ public class FileInfosHelper
             }
 
         }
+
         return true;
 
     }

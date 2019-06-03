@@ -118,18 +118,19 @@ public class BdvImageViewer< R extends RealType< R > & NativeType< R > >
     }
 
     private void removeAllSourcesFromBdv() {
-        int nSources = this.bdvStackSource.getBdvHandle().getViewerPanel().getState().getSources().size();
+        int nSources = bdvHandle.getViewerPanel().getState().getSources().size();
         for (int source = 0; source < nSources; ++source) {
-            SourceAndConverter scnv = this.bdvStackSource.getBdvHandle().getViewerPanel().getState().getSources().get(0);
-            this.bdvStackSource.getBdvHandle().getViewerPanel().removeSource(scnv.getSpimSource());
+            SourceAndConverter scnv = bdvHandle.getViewerPanel().getState().getSources().get(0);
+            bdvHandle.getViewerPanel().removeSource(scnv.getSpimSource());
             //source is always 0 (zero) because SourceAndConverter object gets removed from bdvSS.
             //Hence source is always at position 0 of the bdvSS.
         }
 
         int nChannels = bdvHandle.getSetupAssignments().getConverterSetups().size();
         for (int channel = 0; channel < nChannels; ++channel) {
-            ConverterSetup converterSetup = bdvHandle.getSetupAssignments().getConverterSetups().get(0);
-            this.bdvStackSource.getBdvHandle().getSetupAssignments().removeSetup(converterSetup);
+            ConverterSetup converterSetup =
+                    bdvHandle.getSetupAssignments().getConverterSetups().get(0);
+            bdvHandle.getSetupAssignments().removeSetup(converterSetup);
             //channel is always 0 (zero) because converterSetup object gets removed from bdvSS.
             //Hence current channel is always at position 0 of the bdvSS.
         }
@@ -157,7 +158,8 @@ public class BdvImageViewer< R extends RealType< R > & NativeType< R > >
         final ConverterSetup converterSetup = converterSetups.get( channel );
         converterSetup.setDisplayRange( min, max );
 
-        final MinMaxGroup minMaxGroup = getBdvHandle().getSetupAssignments().getMinMaxGroup( converterSetup );
+        final MinMaxGroup minMaxGroup =
+                getBdvHandle().getSetupAssignments().getMinMaxGroup( converterSetup );
         minMaxGroup.getMinBoundedValue().setCurrentValue( min );
         minMaxGroup.getMaxBoundedValue().setCurrentValue( max );
     }
@@ -187,7 +189,7 @@ public class BdvImageViewer< R extends RealType< R > & NativeType< R > >
      * as a DisplaySettings object of the requested channel.
      */
     
-    public DisplaySettings getAutoContrastDisplaySettings( int channel) {
+    public DisplaySettings getAutoContrastDisplaySettings( int channel ) {
         double min, max;
         if ( image != null) {
             RandomAccessibleInterval raiStack = Views.hyperSlice(
@@ -195,10 +197,12 @@ public class BdvImageViewer< R extends RealType< R > & NativeType< R > >
                     DimensionOrder.C,
                     channel);
             final long stackCenter = (raiStack.max( DimensionOrder.Z) - raiStack.min( DimensionOrder.Z)) / 2 + raiStack.min( DimensionOrder.Z);
+
             IntervalView< R > ts = Views.hyperSlice(
                     raiStack,
                     DimensionOrder.Z,
                     stackCenter);
+
             Cursor< R > cursor = Views.iterable(ts).cursor();
             min = Double.MAX_VALUE;
             max = -Double.MAX_VALUE;
@@ -216,14 +220,15 @@ public class BdvImageViewer< R extends RealType< R > & NativeType< R > >
     }
 
 
-
-    
     public void doAutoContrastPerChannel() {
         int nChannels = (int) image.getRai().dimension( DimensionOrder.C);
         for (int channel = 0; channel < nChannels; ++channel)
         {
-            DisplaySettings setting = getAutoContrastDisplaySettings(channel);
-            setDisplayRange( setting.getDisplayRangeMin(), setting.getDisplayRangeMax(), channel);
+            DisplaySettings setting = getAutoContrastDisplaySettings( channel );
+            setDisplayRange(
+                    setting.getDisplayRangeMin(),
+                    setting.getDisplayRangeMax(),
+                    channel);
         }
     }
 

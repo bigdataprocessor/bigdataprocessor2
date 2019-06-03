@@ -7,6 +7,7 @@ import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.loading.files.SerializableFileInfo;
 import de.embl.cba.bdp2.utils.DimensionOrder;
+import de.embl.cba.bdp2.utils.Utils;
 import ij.ImagePlus;
 import javafx.geometry.Point3D;
 import net.imglib2.cache.img.CellLoader;
@@ -30,19 +31,21 @@ public class ImageLoader< T extends NativeType< T > > implements CellLoader< T >
     private long[] dimensions;
     private int[] cellDims;
     private LoadingCache< List< Integer >, SerializableFileInfo[] > serializableFileInfoCache;
+    private final String fileType;
 
-    public ImageLoader( FileInfos infoSource, int cellDimX, int cellDimY, int cellDimZ ) {
+    public ImageLoader( FileInfos fileInfos, int cellDimX, int cellDimY, int cellDimZ ) {
 
         this.cellDims = new int[]{ cellDimX, cellDimY, cellDimZ, 1, 1 };
-        this.dimensions = infoSource.getDimensions();
-        this.directory = infoSource.directory;
+        this.dimensions = fileInfos.getDimensions();
+        this.directory = fileInfos.directory;
+        fileType = fileInfos.fileType;
 
         //Google Guava cache
         CacheLoader< List<Integer>, SerializableFileInfo[] > loader =
                 new CacheLoader<List<Integer>, SerializableFileInfo[]>(){
                     @Override
                     public SerializableFileInfo[] load( List<Integer> c_t ){
-                        return infoSource.getSerializableFileStackInfo( c_t.get(0), c_t.get(1) );
+                        return fileInfos.getSerializableFileStackInfo( c_t.get(0), c_t.get(1) );
                     }
         };
         serializableFileInfoCache = CacheBuilder.newBuilder().maximumSize( 50 ).build(loader);
@@ -113,25 +116,37 @@ public class ImageLoader< T extends NativeType< T > > implements CellLoader< T >
     public synchronized void load( final SingleCellArrayImg< T, ? > cell ) {
         long[] min = new long[ FileInfos.TOTAL_AXES ];
         long[] max = new long[ FileInfos.TOTAL_AXES ];
-        cell.min(min);
-        cell.max(max);
-        if (cell.firstElement() instanceof UnsignedByteType) {
+        cell.min( min );
+        cell.max( max );
+
+        if ( cell.firstElement() instanceof UnsignedByteType )
+        {
             ImagePlus imagePlus = getDataCube( min, max );
             final byte[] impData = (byte[]) imagePlus.getProcessor().getPixels();
             final byte[] cellData = (byte[]) cell.getStorageArray();
-            System.arraycopy(impData, 0, cellData, 0, cellData.length);
+            System.arraycopy( impData, 0, cellData, 0, cellData.length );
         }
-        else if (cell.firstElement() instanceof UnsignedShortType)
+        else if ( cell.firstElement() instanceof UnsignedShortType )
         {
-            final SerializableFileInfo fileInfo = getFileInfo( cell );
-
-            Hdf5DataCubeReader.read16bitDataCubeIntoArray(
-                    cell,
-                    (short[]) cell.getStorageArray(),
-                    getFilePath( fileInfo ),
-                    fileInfo.h5DataSet );
-
-        } else if (cell.firstElement() instanceof FloatType) {
+            if ( fileType.equals( Utils.FileType.HDF5.toString() ) )
+            {
+                final SerializableFileInfo fileInfo = getFileInfo( cell );
+                Hdf5DataCubeReader.read16bitDataCubeIntoArray(
+                        cell,
+                        ( short[] ) cell.getStorageArray(),
+                        getFilePath( fileInfo ),
+                        fileInfo.h5DataSet );
+            }
+            else
+            {
+                ImagePlus imagePlus = getDataCube( min, max );
+                final short[] impData = ( short[] ) imagePlus.getProcessor().getPixels();
+                final short[] cellData = ( short[] ) cell.getStorageArray();
+                System.arraycopy( impData, 0, cellData, 0, cellData.length );
+            }
+        }
+        else if (cell.firstElement() instanceof FloatType)
+        {
             ImagePlus imagePlus = getDataCube( min, max );
             final float[] impData = (float[]) imagePlus.getProcessor().getPixels();
             final float[] cellData = (float[]) cell.getStorageArray();
