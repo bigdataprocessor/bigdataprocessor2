@@ -80,7 +80,7 @@ public class SaveMenuDialog extends JFrame implements ActionListener
 
         panels.add(new JPanel());
         panels.get(j).add(cbLZW);
-        panels.get(j).add(new JLabel("Tiff Strip Chunks [ny]"));
+        panels.get(j).add(new JLabel("Rows per Strip [ny]"));
         panels.get(j).add(tfRowsPerStrip);
         mainPanels.get(k).add(panels.get(j++));
 

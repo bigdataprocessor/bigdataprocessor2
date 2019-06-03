@@ -80,7 +80,7 @@ public class SaveImgAsImarisVolumes< R extends RealType< R > & NativeType< R >> 
 
 
             final RandomAccessibleInterval< R > volumeRai
-                    = Processor.getVolumeRai(
+                    = new Processor().getVolumeRai(
                             rai, c, t, settings.numProcessingThreads );
 
             ImagePlus imagePlus =

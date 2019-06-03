@@ -75,14 +75,14 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
             String directory,
             String loadingScheme,
             String filterPattern,
-            String dataset )
+            String hdf5DatasetName )
     {
         FileInfos fileInfos =
 				new FileInfos(
 				        directory,
                         loadingScheme,
                         filterPattern,
-                        dataset );
+                        hdf5DatasetName );
 
         final Image< R > image = CachedCellImgReader.loadImage( fileInfos );
         

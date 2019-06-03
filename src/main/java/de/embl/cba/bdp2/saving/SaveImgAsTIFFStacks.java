@@ -80,7 +80,7 @@ public class SaveImgAsTIFFStacks < R extends RealType< R > & NativeType< R > > i
             }
 
             RandomAccessibleInterval< R > raiXYZ =
-                    Processor.getVolumeRai(
+                    new Processor().getVolumeRai(
                             image,
                             c, t,
                             settings.numProcessingThreads );

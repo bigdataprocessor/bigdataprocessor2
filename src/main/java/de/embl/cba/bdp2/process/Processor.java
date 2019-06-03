@@ -18,10 +18,10 @@ import net.imglib2.view.Views;
 
 import static de.embl.cba.bdp2.utils.DimensionOrder.*;
 
-public abstract class Processor
+public class Processor
 {
 
-	public static < R extends RealType< R > & NativeType< R > >
+	public < R extends RealType< R > & NativeType< R > >
 	RandomAccessibleInterval< R > getVolumeRai(
 			RandomAccessibleInterval< R > image,
 			int c,
@@ -66,7 +66,7 @@ public abstract class Processor
 	 * @param <R>
 	 * @return
 	 */
-	public static < R extends RealType< R > & NativeType< R > >
+	private < R extends RealType< R > & NativeType< R > >
 	RandomAccessibleInterval< R > copyVolumeRAI( RandomAccessibleInterval< R > volume,
 												 int numThreads )
 	{
@@ -79,9 +79,11 @@ public abstract class Processor
 
 		RandomAccessibleInterval< R > copy;
 
+		R type = getType( volume );
+
 		if ( numElements < Integer.MAX_VALUE - 1 )
 		{
-			copy = new ArrayImgFactory( Util.getTypeFromInterval( volume ) ).create( volume );
+			copy = new ArrayImgFactory( type ).create( volume );
 		}
 		else
 		{
@@ -92,7 +94,7 @@ public abstract class Processor
 					dimensionY,
 					nz };
 
-			copy = new CellImgFactory( Util.getTypeFromInterval( volume ), cellSize ).create( volume );
+			copy = new CellImgFactory( type, cellSize ).create( volume );
 		}
 
 		// LoopBuilder.setImages( copy, volume ).forEachPixel( Type::set );
@@ -110,8 +112,22 @@ public abstract class Processor
 		return copy;
 	}
 
+	private < R extends RealType< R > & NativeType< R > > R getType( RandomAccessibleInterval< R > volume )
+	{
+		R type = null;
+		try
+		{
+			type = Util.getTypeFromInterval( volume );
+		}
+		catch ( Exception e )
+		{
+			System.err.println( e );
+		}
+		return type;
+	}
 
-	public static < T extends Type< T > > void copy( final RandomAccessible< T > source,
+
+	private < T extends Type< T > > void copy( final RandomAccessible< T > source,
 													 final IterableInterval< T > target )
 	{
 		// create a cursor that automatically localizes itself on every move

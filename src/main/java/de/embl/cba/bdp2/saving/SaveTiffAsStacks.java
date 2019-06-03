@@ -17,7 +17,7 @@ public class SaveTiffAsStacks extends AbstractImgSaver {
     private ExecutorService es;
     private AtomicBoolean stop;
 
-    public SaveTiffAsStacks(SavingSettings savingSettings, ExecutorService es) {
+    public SaveTiffAsStacks( SavingSettings savingSettings, ExecutorService es ) {
         this.savingSettings = savingSettings;
         this.es = es;
         this.stop = new AtomicBoolean(false);
@@ -29,7 +29,6 @@ public class SaveTiffAsStacks extends AbstractImgSaver {
         AtomicInteger counter = new AtomicInteger(0);
         final long startTime = System.currentTimeMillis();
         long timeFrames = savingSettings.rai.dimension(DimensionOrder.T);
-
 
         for (int t = 0; t < timeFrames; t++) {
             futures.add(
