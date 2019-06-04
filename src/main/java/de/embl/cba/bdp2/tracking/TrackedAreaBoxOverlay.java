@@ -41,7 +41,7 @@ import bdv.viewer.DisplayMode;
 import bdv.viewer.SourceAndConverter;
 import bdv.viewer.ViewerPanel;
 import bdv.viewer.VisibilityAndGrouping;
-import javafx.geometry.Point3D;
+import de.embl.cba.bdp2.utils.Point3D;
 import net.imglib2.Interval;
 import net.imglib2.display.RealARGBColorConverter;
 import net.imglib2.realtransform.AffineTransform3D;

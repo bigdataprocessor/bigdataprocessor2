@@ -3,14 +3,16 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>org.scijava</groupId>
-		<artifactId>pom-scijava</artifactId>
-		<version>26.0.0</version>
+		<groupId>de.embl.cba</groupId>
+		<artifactId>pom-embl-cba</artifactId>
+		<version>0.3.01</version>
+		<relativePath>../pom-embl-cba</relativePath>
 	</parent>
 
 	<groupId>de.embl.cba</groupId>
 	<artifactId>fiji-plugin-bigDataProcessor2</artifactId>
 	<version>0.2.11</version>
+	<url>https://github.com/tischi/fiji-plugin-bigDataProcessor2</url>
 
 	<name>Fiji Plugin BigDataProcessor2</name>
 	<description>TODO</description>
@@ -97,7 +99,6 @@
 
 		<repository>
 			<id>bintray-tischi-snapshots</id>
-			<name>bintray</name>
 			<url>https://dl.bintray.com/tischi/snapshots</url>
 		</repository>
 
@@ -106,15 +107,20 @@
 			<url>http://dl.bintray.com/haesleinhuepf/clij</url>
 		</repository>
 
+		<repository>
+			<id>bintray-image-transform-converters-image-transform-converters</id>
+			<url>https://dl.bintray.com/image-transform-converters/image-transform-converters</url>
+		</repository>
+
 	</repositories>
 
 
 	<dependencies>
 
-		<dependency>
-			<groupId>cisd</groupId>
-			<artifactId>jhdf5</artifactId>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>cisd</groupId>-->
+<!--			<artifactId>jhdf5</artifactId>-->
+<!--		</dependency>-->
 
 		<dependency>
 			<groupId>sc.fiji</groupId>
@@ -173,10 +179,10 @@
 			<artifactId>formats-gpl</artifactId>
 		</dependency>
 
-		<dependency>
-			<groupId>ome</groupId>
-			<artifactId>bio-formats_plugins</artifactId>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>ome</groupId>-->
+<!--			<artifactId>bio-formats_plugins</artifactId>-->
+<!--		</dependency>-->
 
 		<dependency>
 			<groupId>net.imagej</groupId>
@@ -193,37 +199,33 @@
 			<artifactId>guava</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>net.haesleinhuepf</groupId>
+			<artifactId>clij_</artifactId>
+			<version>0.20.0</version>
+		</dependency>
+
 
 		<!-- CBA -->
 
 		<dependency>
 			<groupId>de.embl.cba</groupId>
 			<artifactId>imaris-writer</artifactId>
-			<version>0.1.02</version>
 		</dependency>
 
 		<dependency>
 			<groupId>de.embl.cba</groupId>
 			<artifactId>bdv-utils</artifactId>
-			<version>0.2.14</version>
 		</dependency>
 
 		<dependency>
 			<groupId>de.embl.cba</groupId>
 			<artifactId>imglib2-lazy-algorithm</artifactId>
-			<version>0.1.03</version>
 		</dependency>
 
 		<dependency>
 			<groupId>de.embl.cba</groupId>
 			<artifactId>transforms-utils</artifactId>
-			<version>0.2.01</version>
-		</dependency>
-
-		<dependency>
-			<groupId>net.haesleinhuepf</groupId>
-			<artifactId>clij_</artifactId>
-			<version>0.20.0</version>
 		</dependency>
 
 	</dependencies>

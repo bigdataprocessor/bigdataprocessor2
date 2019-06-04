@@ -46,7 +46,7 @@ import ij.measure.Calibration;
 import ij.plugin.Binner;
 import ij.plugin.Duplicator;
 import ij.process.ImageProcessor;
-import javafx.geometry.Point3D;
+import de.embl.cba.bdp2.utils.Point3D;
 import net.imglib2.Cursor;
 import net.imglib2.FinalInterval;
 import net.imglib2.FinalRealInterval;

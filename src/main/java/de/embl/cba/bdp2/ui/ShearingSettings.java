@@ -1,6 +1,6 @@
 package de.embl.cba.bdp2.ui;
 
-import javafx.geometry.Point3D;
+import de.embl.cba.bdp2.utils.Point3D;
 import net.imglib2.interpolation.InterpolatorFactory;
 
 public class ShearingSettings {

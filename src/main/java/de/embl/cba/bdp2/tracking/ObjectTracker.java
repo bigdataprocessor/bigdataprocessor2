@@ -4,7 +4,7 @@ import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
-import javafx.geometry.Point3D;
+import de.embl.cba.bdp2.utils.Point3D;
 import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;

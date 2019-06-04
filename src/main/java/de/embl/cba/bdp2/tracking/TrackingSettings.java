@@ -1,6 +1,6 @@
 package de.embl.cba.bdp2.tracking;
 
-import javafx.geometry.Point3D;
+import de.embl.cba.bdp2.utils.Point3D;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;

@@ -11,7 +11,7 @@ import de.embl.cba.bdp2.utils.Utils;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.process.ImageProcessor;
-import javafx.geometry.Point3D;
+import de.embl.cba.bdp2.utils.Point3D;
 import net.imglib2.cache.img.CellLoader;
 import net.imglib2.cache.img.SingleCellArrayImg;
 import net.imglib2.type.NativeType;

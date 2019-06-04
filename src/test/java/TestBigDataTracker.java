@@ -5,7 +5,7 @@ import de.embl.cba.bdp2.tracking.TrackingSettings;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
-import javafx.geometry.Point3D;
+import de.embl.cba.bdp2.utils.Point3D;
 import net.imglib2.cache.img.CachedCellImg;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 

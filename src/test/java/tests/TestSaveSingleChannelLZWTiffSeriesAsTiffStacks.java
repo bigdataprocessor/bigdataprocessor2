@@ -1,4 +1,4 @@
-package explore;
+package tests;
 
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
@@ -13,8 +13,8 @@ import static junit.framework.TestCase.assertTrue;
 
 public class TestSaveSingleChannelLZWTiffSeriesAsTiffStacks
 {
-    @Test
-    public static void main(String[] args)
+//    @Test
+    public void main(String[] args)
     {
         final BigDataProcessor2 bdp = new BigDataProcessor2();
 

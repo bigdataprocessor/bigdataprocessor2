@@ -25,7 +25,7 @@ import ij.ImagePlus;
 import ij.ImageStack;
 import ij.io.BitBuffer;
 import ij.io.Opener;
-import javafx.geometry.Point3D;
+import de.embl.cba.bdp2.utils.Point3D;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.RandomAccessFile;
