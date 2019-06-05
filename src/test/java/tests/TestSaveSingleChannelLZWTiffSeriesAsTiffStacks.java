@@ -13,45 +13,44 @@ import static junit.framework.TestCase.assertTrue;
 
 public class TestSaveSingleChannelLZWTiffSeriesAsTiffStacks
 {
-//    @Test
-    public void main(String[] args)
+    @Test
+    public void test( )
     {
         final BigDataProcessor2 bdp = new BigDataProcessor2();
 
         final String directory =
-                "/Volumes/cba/exchange/bdp2/test-data/microglia-tracking-00";
+                "/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-data/nc1-nt3-calibrated-tiff-lzw";
 
         final String loadingScheme = FileInfos.SINGLE_CHANNEL_TIMELAPSE;
-        final String filterPattern = ".*.tif";
+        final String filterPattern = ".*.ome.tif";
 
         final Image image = bdp.openImage(
                 directory,
                 loadingScheme,
                 filterPattern );
 
-        bdp.showImage( image );
+        // bdp.showImage( image );
 
         final SavingSettings savingSettings = SavingSettings.getDefaults();
         savingSettings.fileType = SavingSettings.FileType.TIFF_STACKS;
         savingSettings.numIOThreads = 1;
         savingSettings.numProcessingThreads = 4;
-        savingSettings.saveProjections = true;
-        savingSettings.volumesFilePath =
-                "/Volumes/cba/exchange/bdp2/test-data/microglia-tracking-00-volumes/volume";
+        savingSettings.saveProjections = false;
         savingSettings.saveVolumes = true;
-        savingSettings.projectionsFilePath =
-                "//Volumes/cba/exchange/bdp2/test-data/microglia-tracking-00-projections/projection";
+        savingSettings.volumesFilePath =
+                "/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-output/nc1-nt3-calibrated-tiff-volumes/volume";
 
         final File testVolumeFile = new File( savingSettings.volumesFilePath + "--C00--T00000.tif" );
         if ( testVolumeFile.exists() ) testVolumeFile.delete();
 
-        final File testProjectionsFile = new File( savingSettings.projectionsFilePath + "--xyz-max-projection--C00--T00002.tif" );
-        if ( testProjectionsFile.exists() ) testProjectionsFile.delete();
-
         Utils.saveImageAndWaitUntilDone( bdp, savingSettings, image );
 
         assertTrue( testVolumeFile.exists() );
-        assertTrue( testProjectionsFile.exists() );
+    }
+
+    public static void main( String[] args )
+    {
+        new TestSaveSingleChannelLZWTiffSeriesAsTiffStacks().test();
     }
 
 }

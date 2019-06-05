@@ -11,7 +11,7 @@
 
 	<groupId>de.embl.cba</groupId>
 	<artifactId>fiji-plugin-bigDataProcessor2</artifactId>
-	<version>0.2.11</version>
+	<version>0.2.12</version>
 	<url>https://github.com/tischi/fiji-plugin-bigDataProcessor2</url>
 
 	<name>Fiji Plugin BigDataProcessor2</name>
@@ -87,8 +87,23 @@
 		<license.copyrightOwners>EMBL</license.copyrightOwners>
 		<scijava.app.directory>/Applications/Fiji.app/</scijava.app.directory>
 		<enforcer.skip>true</enforcer.skip>
+		<bioformats.version>6.1.0-m2</bioformats.version>
 	</properties>
 
+
+<!--	<plugin>-->
+<!--	<configuration>-->
+<!--		<rules>-->
+<!--			<requireReleaseDeps>-->
+<!--				<message>No Snapshots Allowed!</message>-->
+<!--				<excludes>-->
+<!--					<exclude>sc.fiji:bigdataviewer-vistools</exclude>-->
+<!--				</excludes>-->
+<!--			</requireReleaseDeps>-->
+<!--		</rules>-->
+<!--		<fail>true</fail>-->
+<!--	</configuration>-->
+<!--	</plugin>-->
 
 	<repositories>
 
@@ -167,16 +182,25 @@
 		<dependency>
 			<groupId>ome</groupId>
 			<artifactId>formats-api</artifactId>
+			<version>${bioformats.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>ome</groupId>
 			<artifactId>formats-bsd</artifactId>
+			<version>${bioformats.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>ome</groupId>
 			<artifactId>formats-gpl</artifactId>
+			<version>${bioformats.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.openmicroscopy</groupId>
+			<artifactId>ome-common</artifactId>
+			<version>6.0.1</version>
 		</dependency>
 
 <!--		<dependency>-->

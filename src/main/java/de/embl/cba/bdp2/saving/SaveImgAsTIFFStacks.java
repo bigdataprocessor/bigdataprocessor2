@@ -7,6 +7,7 @@ import ij.ImagePlus;
 import ij.ImageStack;
 import ij.io.FileSaver;
 import loci.common.services.ServiceFactory;
+import loci.formats.IFormatWriter;
 import loci.formats.ImageWriter;
 import loci.formats.meta.IMetadata;
 import loci.formats.out.TiffWriter;
@@ -160,7 +161,7 @@ public class SaveImgAsTIFFStacks < R extends RealType< R > & NativeType< R > > i
             int rowsPerStrip,
             String path) {
 
-        if (compression.equals("LZW")) // Use BioFormats
+        if ( compression.equals("LZW") ) // Use BioFormats
         {
 
             String sC = String.format("%1$02d", c);
@@ -168,37 +169,38 @@ public class SaveImgAsTIFFStacks < R extends RealType< R > & NativeType< R > > i
             String pathCT = path + "--C" + sC + "--T" + sT + ".ome.tif";
 
             try {
+
                 ServiceFactory factory = new ServiceFactory();
                 OMEXMLService service = factory.getInstance(OMEXMLService.class);
-                IMetadata omexml = service.createOMEXMLMetadata();
-                omexml.setImageID("Image:0", 0);
-                omexml.setPixelsID("Pixels:0", 0);
-                omexml.setPixelsBinDataBigEndian(Boolean.TRUE, 0, 0);
-                omexml.setPixelsDimensionOrder(DimensionOrder.XYZCT, 0);
+                IMetadata meta = service.createOMEXMLMetadata();
+                meta.setImageID("Image:0", 0);
+                meta.setPixelsID("Pixels:0", 0);
+                meta.setPixelsBinDataBigEndian(Boolean.TRUE, 0, 0);
+                meta.setPixelsDimensionOrder(DimensionOrder.XYZCT, 0);
                 if (imp.getBytesPerPixel() == 2) {
-                    omexml.setPixelsType(PixelType.UINT16, 0);
+                    meta.setPixelsType(PixelType.UINT16, 0);
                 } else if (imp.getBytesPerPixel() == 1) {
-                    omexml.setPixelsType(PixelType.UINT8, 0);
+                    meta.setPixelsType(PixelType.UINT8, 0);
                 }
-                omexml.setPixelsSizeX(new PositiveInteger(imp.getWidth()), 0);
-                omexml.setPixelsSizeY(new PositiveInteger(imp.getHeight()), 0);
-                omexml.setPixelsSizeZ(new PositiveInteger(imp.getNSlices()), 0);
-                omexml.setPixelsSizeC(new PositiveInteger(1), 0);
-                omexml.setPixelsSizeT(new PositiveInteger(1), 0);
+                meta.setPixelsSizeX(new PositiveInteger(imp.getWidth()), 0);
+                meta.setPixelsSizeY(new PositiveInteger(imp.getHeight()), 0);
+                meta.setPixelsSizeZ(new PositiveInteger(imp.getNSlices()), 0);
+                meta.setPixelsSizeC(new PositiveInteger(1), 0);
+                meta.setPixelsSizeT(new PositiveInteger(1), 0);
 
                 int channel = 0;
-                omexml.setChannelID("Channel:0:" + channel, 0, channel);
-                omexml.setChannelSamplesPerPixel(new PositiveInteger(1), 0, channel);
+                meta.setChannelID("Channel:0:" + channel, 0, channel);
+                meta.setChannelSamplesPerPixel(new PositiveInteger(1), 0, channel);
 
                 ImageWriter writer = new ImageWriter();
-                writer.setCompression(TiffWriter.COMPRESSION_LZW);
-                writer.setValidBitsPerPixel(imp.getBytesPerPixel() * 8);
-                writer.setMetadataRetrieve(omexml);
-                writer.setId(pathCT);
-                writer.setWriteSequentially(true); // ? is this necessary
+                writer.setValidBitsPerPixel( imp.getBytesPerPixel() * 8 );
+                writer.setMetadataRetrieve( meta );
+                writer.setId( pathCT );
+                writer.setWriteSequentially( true ); // ? is this necessary
+                writer.setCompression( TiffWriter.COMPRESSION_LZW );
                 TiffWriter tiffWriter = (TiffWriter) writer.getWriter();
-                long[] rowsPerStripArray = new long[1];
-                rowsPerStripArray[0] = rowsPerStrip;
+
+                long[] rowsPerStripArray = new long[]{ rowsPerStrip };
 
                 for (int z = 0; z < imp.getNSlices(); z++) {
                     if (stop.get()) {
@@ -207,14 +209,20 @@ public class SaveImgAsTIFFStacks < R extends RealType< R > & NativeType< R > > i
                         return;
                     }
 
+//                    // save using planes
+//                    if (imp.getBytesPerPixel() == 2) {
+//                        writer.saveBytes( z, ShortToByteBigEndian((short[]) imp.getStack().getProcessor(z + 1).getPixels() ) );
+//                    } else if (imp.getBytesPerPixel() == 1) {
+//                        writer.saveBytes( z, (byte[]) (imp.getStack().getProcessor(z + 1).getPixels() ) );
+//                    }
+
+                    // save using strips
                     IFD ifd = new IFD();
-                    ifd.put(IFD.ROWS_PER_STRIP, rowsPerStripArray);
-                    //tiffWriter.saveBytes(z, Bytes.fromShorts((short[])image.getStack().getProcessor(z+1).getPixels(), false), ifd);
+                    ifd.put( IFD.ROWS_PER_STRIP, rowsPerStripArray );
                     if (imp.getBytesPerPixel() == 2) {
                         tiffWriter.saveBytes(z, ShortToByteBigEndian((short[]) imp.getStack().getProcessor(z + 1).getPixels()), ifd);
                     } else if (imp.getBytesPerPixel() == 1) {
                         tiffWriter.saveBytes(z, (byte[]) (imp.getStack().getProcessor(z + 1).getPixels()), ifd);
-
                     }
                 }
                 writer.close();

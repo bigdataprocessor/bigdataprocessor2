@@ -489,7 +489,8 @@ public class OpenerExtension extends Opener {
                     }
 
                     // wait until all z-planes are read
-                    for (Future future : futures) {
+                    for (Future future : futures)
+                    {
                         future.get();
                     }
                     futures = null;
@@ -660,12 +661,14 @@ public class OpenerExtension extends Opener {
                 }
 
                 //startTime = System.currentTimeMillis();
-                buffer[(z-zs)/dz] = readCroppedPlaneFromTiff(fi, inputStream, ys, ye);
+                buffer[ (z - zs) / dz ] = readCroppedPlaneFromTiff( fi, inputStream, ys, ye );
                 //readingTime += (System.currentTimeMillis() - startTime);
                 inputStream.close();
 
-            } catch (Exception e) {
-                IJ.handleException(e);
+            }
+            catch (Exception e)
+            {
+                IJ.handleException( e );
             }
 
             boolean hasStrips = false;
@@ -676,7 +679,7 @@ public class OpenerExtension extends Opener {
 
 
 
-            if(hasStrips) {
+            if( hasStrips ) {
 
                 // check what we have read
                 int rps = fi.rowsPerStrip;
@@ -1078,7 +1081,7 @@ public class OpenerExtension extends Opener {
             }
         }
 
-        private byte[] readCroppedPlaneFromTiff(SerializableFileInfo fi, RandomAccessFile in, int ys, int ye)
+        private byte[] readCroppedPlaneFromTiff( SerializableFileInfo fi, RandomAccessFile in, int ys, int ye )
         {
             boolean hasStrips = false;
             int readLength;
@@ -1086,32 +1089,28 @@ public class OpenerExtension extends Opener {
             byte[] buffer;
 
             if (fi.stripOffsets != null && fi.stripOffsets.length > 1)
-            {
                 hasStrips = true;
-            }
 
-            if (hasStrips) {
+            if ( hasStrips ) {
                 // convert rows to strips
                 int rps = fi.rowsPerStrip;
                 int ss = (int) (1.0*ys/rps);
                 int se = (int) (1.0*ye/rps);
-                readStart = fi.stripOffsets[ss];
+                readStart = fi.stripOffsets[ ss ];
 
                 readLength = 0;
                 if(se >= fi.stripLengths.length)
-                {
                     Logger.warning("Strip is out of bounds");
-                }
-                for (int s = ss; s <= se; s++) {
+
+                for (int s = ss; s <= se; s++)
                     readLength += fi.stripLengths[s];
-                }
             }
             else
             {  // none or one strip
-                if(fi.compression == ZIP) {
+                if( fi.compression == ZIP ) {
                     // read all data
                     readStart = fi.offset;
-                    readLength = (int)fi.stripLengths[0];
+                    readLength = (int) fi.stripLengths[0];
                 } else {
                     // read subset
                     // convert rows to bytes
@@ -1140,8 +1139,8 @@ public class OpenerExtension extends Opener {
             {
                 if ( readStart + readLength - 1 <= in.length() )
                 {
-                    in.seek(readStart); // TODO: is this really slow??
-                    in.readFully(buffer);
+                    in.seek( readStart ); // TODO: is this really slow??
+                    in.readFully( buffer );
                 }
                 else
                 {
