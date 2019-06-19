@@ -35,7 +35,7 @@ public class TestCorrectChromaticShiftAndBin
                 FileInfos.LOAD_CHANNELS_FROM_FOLDERS,
                 ".*" );
 
-        //final BdvImageViewer imageViewer = bdp.showImage( image );
+        // final BdvImageViewer imageViewer = bdp.showImage( image );
 
         final ChannelShifter shifter = new ChannelShifter<>( image.getRai() );
 
@@ -54,6 +54,8 @@ public class TestCorrectChromaticShiftAndBin
         // imageViewer.replaceImage( bin );
 
         final RandomAccess randomAccess = bin.getRai().randomAccess();
+
+        // bdp.showImage( bin );
 
         assertTrue( ! ( randomAccess == null ) );
 
