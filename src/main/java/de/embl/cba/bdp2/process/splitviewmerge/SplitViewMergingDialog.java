@@ -104,9 +104,10 @@ public class SplitViewMergingDialog< R extends RealType< R > & NativeType< R > >
 	private void showOrUpdateMerge( )
 	{
 		final RandomAccessibleInterval< R > merge =
-				SplitViewMerger.merge(
+				SplitViewMerger.mergeIntervalsXYZ(
 						image.getRai(),
-						intervals3D );
+						intervals3D,
+						0 );
 
 		final Image< R > mergedImage = image.newImage( merge );
 		viewer.showImageInNewWindow( mergedImage );

@@ -41,6 +41,7 @@ merger.setRegionSpan( 1000, 1000 );
 /*
  * Get cropping intervals from user
  */
+
 ArrayList< Interval > croppingIntervals = new ArrayList<>(  );
 
 for ( File directory : directories )

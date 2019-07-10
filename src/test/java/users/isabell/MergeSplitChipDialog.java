@@ -30,9 +30,7 @@ public class MergeSplitChipDialog
         image.setVoxelSpacing( new double[]{0.13, 0.13, 1.04} );
 
         final BdvImageViewer viewer = bdp.showImage( image );
-        new SplitViewMergingDialog( ( BdvImageViewer ) viewer );
-
-
+        new SplitViewMergingDialog( viewer );
     }
 
 }

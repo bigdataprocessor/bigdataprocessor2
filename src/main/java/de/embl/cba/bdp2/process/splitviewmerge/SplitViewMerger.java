@@ -5,7 +5,6 @@ import de.embl.cba.bdp2.logging.Logger;
 import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.RealInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Intervals;
@@ -18,42 +17,26 @@ import static de.embl.cba.bdp2.utils.DimensionOrder.C;
 
 public class SplitViewMerger
 {
-
-	private long[] upperLeftCornerRegionA;
-	private long[] upperLeftCornerRegionB;
-	private long[] regionSpan;
+	private ArrayList< FinalInterval > intervalsXYC;
 
 	public SplitViewMerger()
 	{
-
+		intervalsXYC = new ArrayList<>(  );
 	}
 
-	public void setUpperLeftCornerRegionA( long... upperLeftCornerRegionA )
-	{
-		this.upperLeftCornerRegionA = upperLeftCornerRegionA;
-	}
 
-	public void setUpperLeftCornerRegionB( long... upperLeftCornerRegionB )
+	public void addIntervalXYC( long minX, long minY, long sizeX, long sizeY, long channel )
 	{
-		this.upperLeftCornerRegionB = upperLeftCornerRegionB;
-	}
-
-	public void setRegionSpan( long... regionSpan )
-	{
-		this.regionSpan = regionSpan;
+		intervalsXYC.add( SplitViewMergingHelpers.asIntervalXYC(
+				new long[]{ minX, minY },
+				new long[]{ sizeX, sizeY },
+				channel ) );
 	}
 
 	public < R extends RealType< R > & NativeType< R > >
-	Image< R > mergeRegionsAandB( Image< R > image )
+	Image< R > mergeIntervalXYC( Image< R > image )
 	{
-		final ArrayList< long[] > mins = new ArrayList<>();
-		mins.add( upperLeftCornerRegionA );
-		mins.add( upperLeftCornerRegionB );
-
-		ArrayList< FinalInterval > intervals =
-				SplitViewMergingHelpers.asIntervals( mins, regionSpan );
-
-		final RandomAccessibleInterval< R > merge = merge( image.getRai(), intervals );
+		final RandomAccessibleInterval< R > merge = mergeIntervalsXYC( image.getRai(), intervalsXYC );
 
 		final Image< R > mergeImage = image.newImage( merge );
 
@@ -62,53 +45,39 @@ public class SplitViewMerger
 
 
 	public static < R extends RealType< R > & NativeType< R > >
-	Image< R > merge(
-			Image< R > image,
-			ArrayList< long[] > mins,
-			long[] spans )
+	RandomAccessibleInterval< R > mergeIntervalsXYZ(
+			RandomAccessibleInterval< R > raiXYZCT,
+			ArrayList< ? extends Interval > intervalsXYZ,
+			int channel )
 	{
+		final ArrayList< RandomAccessibleInterval< R > > crops
+				= new ArrayList<>();
 
-		ArrayList< FinalInterval > intervals =
-				SplitViewMergingHelpers.asIntervals( mins, spans );
+		for ( Interval intervalXYZ : intervalsXYZ )
+		{
+		 	Logger.log( "Split Image Merging Interval [X, Y, Z]: " + intervalXYZ );
 
-		final RandomAccessibleInterval< R > merge = merge( image.getRai(), intervals );
+			final FinalInterval interval5D = intervalXYZasXYZCT( raiXYZCT, intervalXYZ );
 
-		final Image< R > mergeImage = image.newImage( merge );
+			final IntervalView crop =
+					Views.zeroMin(
+							Views.interval(
+									raiXYZCT,
+									interval5D ) );
 
-		return mergeImage;
+			crops.add( Views.hyperSlice( crop, C, channel ) );
+		}
+
+		final RandomAccessibleInterval< R > merged = Views.stack( crops );
+
+		final IntervalView< R > permute = Views.permute( merged, 3, 4 );
+
+		return permute;
 	}
 
 
 	public static < R extends RealType< R > & NativeType< R > >
-	Image< R > merge(
-			Image< R > image,
-			ArrayList< ? extends Interval > intervals )
-	{
-		final RandomAccessibleInterval< R > merge = merge( image.getRai(), intervals );
-
-		final Image< R > mergeImage = image.newImage( merge );
-
-		return mergeImage;
-	}
-
-
-
-	public static < R extends RealType< R > & NativeType< R > >
-	RandomAccessibleInterval< R > merge(
-			RandomAccessibleInterval< R > rai,
-			ArrayList< ? extends RealInterval > realIntervals,
-			double[] voxelSpacing )
-	{
-		ArrayList< FinalInterval > intervals =
-				SplitViewMergingHelpers.asIntervals( realIntervals, voxelSpacing );
-
-		final RandomAccessibleInterval< R > merge = merge( rai, intervals );
-
-		return merge;
-	}
-
-	public static < R extends RealType< R > & NativeType< R > >
-	RandomAccessibleInterval< R > merge(
+	RandomAccessibleInterval< R > mergeIntervalsXYC(
 			RandomAccessibleInterval< R > raiXYZCT,
 			ArrayList< ? extends Interval > intervals )
 	{
@@ -117,17 +86,17 @@ public class SplitViewMerger
 
 		for ( Interval interval : intervals )
 		{
-		 	Logger.log( "Split Image Merging Interval [Pixel]: " + interval );
+			Logger.log( "Split Image Merging Interval [X, Y, C]: " + interval );
 
-			final FinalInterval interval5D = getInterval5D( raiXYZCT, interval );
+			final FinalInterval intervalXYZCT = intervalXYCasXYZCT( raiXYZCT, interval );
 
 			final IntervalView crop =
 					Views.zeroMin(
 							Views.interval(
 									raiXYZCT,
-									interval5D ) );
+									intervalXYZCT ) );
 
-			crops.add( Views.hyperSlice( crop, C, 0 ) );
+			crops.add( Views.hyperSlice( crop, C, intervalXYZCT.min( C ) ) );
 		}
 
 		final RandomAccessibleInterval< R > merged = Views.stack( crops );
@@ -138,8 +107,8 @@ public class SplitViewMerger
 	}
 
 	public static < R extends RealType< R > & NativeType< R > >
-	FinalInterval getInterval5D( RandomAccessibleInterval< R > raiXYZCT,
-								 Interval interval )
+	FinalInterval intervalXYZasXYZCT( RandomAccessibleInterval< R > raiXYZCT,
+									  Interval interval )
 	{
 		final long[] min = Intervals.minAsLongArray( raiXYZCT );
 		final long[] max = Intervals.maxAsLongArray( raiXYZCT );
@@ -149,6 +118,27 @@ public class SplitViewMerger
 			min[ d ] = interval.min( d );
 			max[ d ] = interval.max( d );
 		}
+
+		return new FinalInterval( min, max );
+	}
+
+	public static < R extends RealType< R > & NativeType< R > >
+	FinalInterval intervalXYCasXYZCT( RandomAccessibleInterval< R > raiXYZCT,
+									  Interval interval )
+	{
+		final long[] min = Intervals.minAsLongArray( raiXYZCT );
+		final long[] max = Intervals.maxAsLongArray( raiXYZCT );
+
+		// XY
+		for ( int d = 0; d < 2; d++ )
+		{
+			min[ d ] = interval.min( d );
+			max[ d ] = interval.max( d );
+		}
+
+		// C
+		min[ 3 ] = interval.min( 2 );
+		max[ 3 ] = interval.max( 2 );
 
 		return new FinalInterval( min, max );
 	}
