@@ -79,16 +79,16 @@ public class SplitViewMerger
 	public static < R extends RealType< R > & NativeType< R > >
 	RandomAccessibleInterval< R > mergeIntervalsXYC(
 			RandomAccessibleInterval< R > raiXYZCT,
-			ArrayList< ? extends Interval > intervals )
+			ArrayList< ? extends Interval > intervalsXYC )
 	{
 		final ArrayList< RandomAccessibleInterval< R > > crops
 				= new ArrayList<>();
 
-		for ( Interval interval : intervals )
+		for ( Interval interval : intervalsXYC )
 		{
-			Logger.log( "Split Image Merging Interval [X, Y, C]: " + interval );
-
 			final FinalInterval intervalXYZCT = intervalXYCasXYZCT( raiXYZCT, interval );
+
+			Logger.log( "Split Image Merging Interval [X, Y, Z, C, T]: " + intervalXYZCT );
 
 			final IntervalView crop =
 					Views.zeroMin(
@@ -96,7 +96,8 @@ public class SplitViewMerger
 									raiXYZCT,
 									intervalXYZCT ) );
 
-			crops.add( Views.hyperSlice( crop, C, intervalXYZCT.min( C ) ) );
+			// NOTE: below it is always channel 0, because of above Views.zeroMin
+			crops.add( Views.hyperSlice( crop, C, 0 ) );
 		}
 
 		final RandomAccessibleInterval< R > merged = Views.stack( crops );
