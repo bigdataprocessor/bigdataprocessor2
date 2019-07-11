@@ -31,7 +31,7 @@ public class TestRegionMerging
 		merger.addIntervalXYC( 86, 5, sizeXY, sizeXY, 0 );
 		merger.addIntervalXYC( 1, 65, sizeXY, sizeXY, 0 );
 
-		final Image< R > merged = merger.mergeIntervalXYC( image );
+		final Image< R > merged = merger.mergeIntervalsXYC( image );
 		merged.setName( "two-channels" );
 
 		assertTrue( merged.getRai().min( DimensionOrder.C ) == 0 );
@@ -58,7 +58,7 @@ public class TestRegionMerging
 		merger.addIntervalXYC( 12, 110, sizeXY, sizeXY, 0 );
 		merger.addIntervalXYC( 131, 30, sizeXY, sizeXY, 1 );
 
-		final Image< R > merged = merger.mergeIntervalXYC( image );
+		final Image< R > merged = merger.mergeIntervalsXYC( image );
 		merged.setName( "three-channels" );
 
 		bdp.showImage( merged );

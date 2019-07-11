@@ -59,7 +59,7 @@ public class SaveImgAsTIFFStacks < R extends RealType< R > & NativeType< R > > i
 
         final long totalCubes = image.dimension( T ) * image.dimension( C );
 
-        //            long numBytesOfImage = image.dimension(FileInfoConstants.X) *
+//        long numBytesOfImage = image.dimension(FileInfoConstants.X) *
 //                    image.dimension(FileInfoConstants.Y) *
 //                    image.dimension(FileInfoConstants.Z) *
 //                    image.dimension(FileInfoConstants.C) *
@@ -79,6 +79,8 @@ public class SaveImgAsTIFFStacks < R extends RealType< R > & NativeType< R > > i
                 Logger.progress( "Stopped saving thread: ", "" + t );
                 return;
             }
+
+            System.out.println( "Saving started: Frame " + t + ", Channel " + c );
 
             RandomAccessibleInterval< R > raiXYZ =
                     new Processor().getVolumeRai(
@@ -104,9 +106,12 @@ public class SaveImgAsTIFFStacks < R extends RealType< R > & NativeType< R > > i
 
             counter.incrementAndGet();
 
-            if (!stop.get()) {
+            if ( ! stop.get() ) {
                 SaveImgHelper.documentProgress( totalCubes, counter, startTime );
             }
+
+            System.out.println( "Saving finished: Frame " + t + ", Channel " + c );
+
         }
 
     }

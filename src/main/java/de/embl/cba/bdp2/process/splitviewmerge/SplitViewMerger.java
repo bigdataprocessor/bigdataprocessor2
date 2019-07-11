@@ -34,7 +34,7 @@ public class SplitViewMerger
 	}
 
 	public < R extends RealType< R > & NativeType< R > >
-	Image< R > mergeIntervalXYC( Image< R > image )
+	Image< R > mergeIntervalsXYC( Image< R > image )
 	{
 		final RandomAccessibleInterval< R > merge = mergeIntervalsXYC( image.getRai(), intervalsXYC );
 
