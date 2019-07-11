@@ -19,6 +19,9 @@ public class Progress
 
         Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
         int numFinishedFutures = 0;
+
+        boolean error = false;
+
         while( numFinishedFutures != futures.size() )
         {
             numFinishedFutures = 0;
@@ -33,16 +36,26 @@ public class Progress
                     {
                         e.printStackTrace();
                         numFinishedFutures = futures.size();
+                        error = true;
                         break;
                     }
                     catch ( ExecutionException e )
                     {
                         e.printStackTrace();
                         numFinishedFutures = futures.size();
+                        error = true;
                         break;
                     }
                     numFinishedFutures++;
                 }
+            }
+
+            if ( error )
+            {
+                Logger.error( "There was an error in one of the threads.\n" +
+                        "Please see the Console for more details.\n" +
+                        "In case of an out-of-memory error, please increase the RAM and/or " +
+                        "reduce the number of threads.");
             }
 
             if ( progressListener != null )
