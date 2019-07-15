@@ -33,7 +33,9 @@ package de.embl.cba.bdp2.utils;
 import bdv.util.Bdv;
 import bdv.viewer.animate.SimilarityTransformAnimator;
 import de.embl.cba.bdp2.Image;
+import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.logging.Logger;
+import de.embl.cba.bdp2.process.splitviewmerge.SplitViewMerger;
 import de.embl.cba.bdp2.progress.DefaultProgressListener;
 import de.embl.cba.bdp2.progress.Progress;
 import de.embl.cba.bdp2.saving.SavingSettings;
@@ -158,6 +160,34 @@ public class Utils {
 		Logger.log( "Saving: " + savingSettings.volumesFilePath );
 		Progress.waitUntilDone( progress, 1000 );
         Logger.log("Saving: Done." );
+	}
+
+	public static < R extends RealType< R > & NativeType< R > >
+    Image< R > openMergedImageFromLuxendoChannelFolders(
+			BigDataProcessor2< R > bdp,
+			String voxelUnit,
+			double voxelSpacingMicrometerX,
+			double voxelSpacingMicrometerY,
+			double voxelSpacingMicrometerZ,
+			SplitViewMerger merger,
+			File directory )
+	{
+		final String subFolderPattern = directory.getName().replace( "channel_0", "channel_.*" );
+		final String parentFolder = directory.getParent();
+
+		final Image< R > image = bdp.openHdf5Image(
+				parentFolder,
+				FileInfos.LOAD_CHANNELS_FROM_FOLDERS,
+				subFolderPattern + File.separator + ".*.h5",
+				"Data" );
+
+		image.setVoxelUnit( voxelUnit );
+		image.setVoxelSpacing(
+				voxelSpacingMicrometerX,
+				voxelSpacingMicrometerY,
+				voxelSpacingMicrometerZ );
+
+		return merger.mergeIntervalsXYC( image );
 	}
 
 	public enum FileType {

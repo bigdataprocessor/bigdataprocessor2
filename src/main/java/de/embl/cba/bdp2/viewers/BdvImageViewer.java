@@ -48,6 +48,11 @@ public class BdvImageViewer< R extends RealType< R > & NativeType< R > >
         this.image = new Image<>( rai, name, voxelSpacing, voxelUnit  );
     }
 
+    public void close()
+    {
+        bdvHandle.close();
+    }
+
     public FinalInterval get5DIntervalFromUser( boolean calibratedSelection )
     {
         BoundingBoxDialog boundingBoxDialog = new BoundingBoxDialog( bdvHandle, image );
@@ -198,7 +203,8 @@ public class BdvImageViewer< R extends RealType< R > & NativeType< R > >
                     Views.hyperSlice( image.getRai(), DimensionOrder.T, 0),
                     DimensionOrder.C,
                     channel);
-            final long stackCenter = (raiXYZ.max( DimensionOrder.Z) - raiXYZ.min( DimensionOrder.Z)) / 2 + raiXYZ.min( DimensionOrder.Z);
+            final long stackCenter = (raiXYZ.max( DimensionOrder.Z) - raiXYZ.min( DimensionOrder.Z))
+                    / 2 + raiXYZ.min( DimensionOrder.Z);
 
             IntervalView< R > raiXY = Views.hyperSlice(
                     raiXYZ,
