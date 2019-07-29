@@ -8,6 +8,7 @@ import de.embl.cba.imaris.H5DataCubeWriter;
 import de.embl.cba.imaris.ImarisDataSet;
 import ij.ImagePlus;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.img.array.ArrayImg;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
@@ -16,7 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static de.embl.cba.bdp2.saving.ProjectionXYZ.saveAsTiffXYZMaxProjection;
 
-public class SaveImgAsImarisVolumes< R extends RealType< R > & NativeType< R >> implements Runnable {
+public class SaveFrameAsImarisVolumes< R extends RealType< R > & NativeType< R >> implements Runnable {
     private int t;
     private final int nFrames;
     private final int nChannels;
@@ -27,7 +28,7 @@ public class SaveImgAsImarisVolumes< R extends RealType< R > & NativeType< R >> 
     private final AtomicBoolean stop;
     private final RandomAccessibleInterval rai;
 
-    public SaveImgAsImarisVolumes(
+    public SaveFrameAsImarisVolumes(
             SavingSettings settings,
             ImarisDataSet imarisDataSet,
             int t,
@@ -95,15 +96,20 @@ public class SaveImgAsImarisVolumes< R extends RealType< R > & NativeType< R >> 
             {
                 start = System.currentTimeMillis();
                 H5DataCubeWriter writer = new H5DataCubeWriter();
+
                 writer.writeImarisCompatibleResolutionPyramid(
-                        imagePlus, imarisDataSetProperties, c, this.t );
+                        imagePlus,
+                        imarisDataSetProperties,
+                        c,
+                        t );
+
                 Logger.debug( "Save data cube as Imaris [ s ]: "
                         + ( System.currentTimeMillis() - start ) / 1000);
             }
 
             // Save projections
             if ( settings.saveProjections )
-                saveAsTiffXYZMaxProjection( imagePlus, c, t, getProjectionPath( c ) );
+                saveAsTiffXYZMaxProjection( imagePlus, c, t, settings.projectionsFilePath );
 
             counter.incrementAndGet();
 
@@ -116,15 +122,5 @@ public class SaveImgAsImarisVolumes< R extends RealType< R > & NativeType< R >> 
 
 
     }
-
-    public String getProjectionPath( int c )
-    {
-        String projectionPath = settings.projectionsFilePath;
-        String sC = String.format("%1$02d", c);
-        String sT = String.format("%1$05d", t);
-        projectionPath = projectionPath + "--C" + sC + "--T" + sT + ".tif";
-        return projectionPath;
-    }
-
 
 }

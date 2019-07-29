@@ -33,7 +33,7 @@ public class SaveTiffAsPlanes extends AbstractImgSaver {
             for (int t = 0; t < numFrames; t++) {
                 for (int z = 0; z < numPlanes; z++) {
                     futures.add(es.submit(
-                            new SaveImgAsTIFFPlanes(c, t, z, savingSettings, stop)
+                            new SaveFrameAsTIFFPlanes(c, t, z, savingSettings, stop)
                     ));
                 }
             }

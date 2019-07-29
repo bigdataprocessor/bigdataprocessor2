@@ -47,7 +47,7 @@ public class SaveImarisAsStacks extends AbstractImgSaver {
             if (imageType instanceof UnsignedByteType)
             {
                 futures.add(es.submit(
-                        new SaveImgAsImarisVolumes<UnsignedByteType>(
+                        new SaveFrameAsImarisVolumes<UnsignedByteType>(
                                 savingSettings,
                                 imarisDataSetProperties,
                                 t, counter, startTime, stop)
@@ -57,18 +57,15 @@ public class SaveImarisAsStacks extends AbstractImgSaver {
             {
                 futures.add(
                         es.submit(
-                                new SaveImgAsImarisVolumes<UnsignedShortType>(
+                                new SaveFrameAsImarisVolumes<UnsignedShortType>(
                                         savingSettings,
                                         imarisDataSetProperties,
-                                        t,
-                                        counter,
-                                        startTime,
-                                        stop)
+                                        t, counter, startTime, stop)
                         ));
             } else if (imageType instanceof FloatType) {
                 futures.add(
                         es.submit(
-                                new SaveImgAsImarisVolumes<FloatType>(
+                                new SaveFrameAsImarisVolumes<FloatType>(
                                         savingSettings,
                                         imarisDataSetProperties,
                                         t, counter, startTime, stop)
@@ -86,10 +83,10 @@ public class SaveImarisAsStacks extends AbstractImgSaver {
     @Override
     public void stopSave() {
         this.stop.set(true);
-        Utils.shutdownThreadPack(es,TIME_OUT_SECONDS);
+        Utils.shutdownThreadPack( es, TIME_OUT_SECONDS );
     }
 
-    private ImarisDataSet getImarisDataSet(SavingSettings settings, AtomicBoolean stop) {
+    private ImarisDataSet getImarisDataSet( SavingSettings settings, AtomicBoolean stop ) {
 
         final String directory = new File( settings.volumesFilePath ).getParent();
         final String filename = new File( settings.volumesFilePath ).getName();
@@ -100,8 +97,7 @@ public class SaveImarisAsStacks extends AbstractImgSaver {
                 settings.voxelUnit,
                 "wrapped");
 
-        String[] binnings = settings.bin.split(";");
-        int[] binning = Utils.delimitedStringToIntegerArray(binnings[0], ",");
+        int[] binning = new int[]{1,1,1};
 
         ImarisDataSet imarisDataSet = new ImarisDataSet(
                 image,

@@ -31,7 +31,7 @@ public class SaveMenuDialog extends JFrame implements ActionListener
     private final
     JComboBox comboFileTypeForSaving = new JComboBox(new SavingSettings.FileType[]{
             SavingSettings.FileType.TIFF_STACKS,
-            SavingSettings.FileType.HDF5_STACKS,
+//            SavingSettings.FileType.HDF5_STACKS, //TODO: implement
             SavingSettings.FileType.IMARIS_STACKS,
             SavingSettings.FileType.TIFF_PLANES });
 

@@ -25,7 +25,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static de.embl.cba.bdp2.utils.DimensionOrder.*;
 
-public class SaveImgAsTIFFStacks < R extends RealType< R > & NativeType< R > > implements Runnable {
+public class SaveFrameAsTIFFStacks< R extends RealType< R > & NativeType< R > > implements Runnable {
     private final int t;
     private final AtomicInteger counter;
     private final SavingSettings settings;
@@ -33,11 +33,11 @@ public class SaveImgAsTIFFStacks < R extends RealType< R > & NativeType< R > > i
     private final AtomicBoolean stop;
 
     // TODO: feed back to progress listener
-    public SaveImgAsTIFFStacks(int t,
-                               SavingSettings settings,
-                               AtomicInteger counter,
-                               final long startTime,
-                               AtomicBoolean stop) {
+    public SaveFrameAsTIFFStacks( int t,
+                                  SavingSettings settings,
+                                  AtomicInteger counter,
+                                  final long startTime,
+                                  AtomicBoolean stop) {
         this.t = t;
         this.settings = settings;
         this.counter = counter;

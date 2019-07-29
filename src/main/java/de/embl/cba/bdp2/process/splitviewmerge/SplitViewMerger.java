@@ -25,7 +25,7 @@ public class SplitViewMerger
 	}
 
 
-	public void addIntervalXYC( long minX, long minY, long sizeX, long sizeY, long channel )
+	public void addIntervalXYC( int minX, int minY, int sizeX, int sizeY, int channel )
 	{
 		intervalsXYC.add( SplitViewMergingHelpers.asIntervalXYC(
 				new long[]{ minX, minY },

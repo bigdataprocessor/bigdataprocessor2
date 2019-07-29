@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 import static de.embl.cba.bdp2.ui.Utils.selectDirectories;
 
-public class MergeSplitChipWorkflowTwoChannels
+public class MergeSplitChipWorkflowMultiChannel
 {
     public static < R extends RealType< R > & NativeType< R > >
     void main( String[] args )
@@ -34,14 +34,16 @@ public class MergeSplitChipWorkflowTwoChannels
 
 //        directories.clear();
 //        directories.add( new File( "/Users/tischer/Desktop/isabell/stack_10_channel_0" ) );
-//        directories.add( new File( "/Volumes/cba/exchange/Isabell_Schneider/3-Color/stack_11_channel_0" ) );
+        //directories.add( new File( "/Volumes/cba/exchange/Isabell_Schneider/3-Color/stack_11_channel_0" ) );
+//		directories.add( new File( "/Volumes/cba/exchange/Isabell_Schneider/stack_0_channel_0/") );
+
 
         final String voxelUnit = "micrometer";
         double voxelSpacingMicrometerX = 0.13;
         double voxelSpacingMicrometerY = 0.13;
         double voxelSpacingMicrometerZ = 1.04;
 
-        boolean saveRawOnly = false;
+        boolean doCrop = true;
 
         final SavingSettings savingSettings = SavingSettings.getDefaults();
         savingSettings.fileType = SavingSettings.FileType.TIFF_STACKS;
@@ -50,14 +52,14 @@ public class MergeSplitChipWorkflowTwoChannels
         final SplitViewMerger merger = new SplitViewMerger();
         merger.addIntervalXYC( 896, 46, 1000, 1000, 0 );
         merger.addIntervalXYC( 22, 643, 1000, 1000, 0 );
-        merger.addIntervalXYC( 896, 46, 1000, 1000, 1 );
+//        merger.addIntervalXYC( 896, 46, 1000, 1000, 1 );
 
         /*
          * Get cropping intervals from user
          */
         ArrayList< Interval > croppingIntervals = new ArrayList<>(  );
 
-        if ( ! saveRawOnly )
+        if ( doCrop )
         {
             for ( File directory : directories )
             {
@@ -112,7 +114,7 @@ public class MergeSplitChipWorkflowTwoChannels
             savingSettings.numIOThreads = 3;
             Utils.saveImageAndWaitUntilDone( bdp, savingSettings, merge );
 
-            if ( ! saveRawOnly )
+            if ( doCrop )
             {
                 // crop & save cropped volume
                 final Image< R > crop = Cropper.crop( merge, croppingIntervals.get( i ) );

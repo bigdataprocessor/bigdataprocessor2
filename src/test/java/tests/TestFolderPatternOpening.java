@@ -13,7 +13,7 @@ import static junit.framework.Assert.assertTrue;
 
 public class TestFolderPatternOpening
 {
-	@Test
+	// TODO: make a proper test
 	public < R extends RealType< R > & NativeType< R > > void openSubfoldersWithFolderPattern()
 	{
 

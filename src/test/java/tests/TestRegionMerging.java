@@ -37,6 +37,8 @@ public class TestRegionMerging
 		assertTrue( merged.getRai().min( DimensionOrder.C ) == 0 );
 		assertTrue( merged.getRai().max( DimensionOrder.C ) == 1 );
 		assertTrue( merged.getRai().dimension( DimensionOrder.X ) == sizeXY );
+
+		System.out.println("Done.");
 	}
 
 	@Test
@@ -66,12 +68,15 @@ public class TestRegionMerging
 		assertTrue( merged.getRai().min( DimensionOrder.C ) == 0 );
 		assertTrue( merged.getRai().max( DimensionOrder.C ) == 2 );
 		assertTrue( merged.getRai().dimension( DimensionOrder.X ) == sizeXY );
+
+		System.out.println("Done.");
+
 	}
 
 
 	public static void main( String[] args )
 	{
-//		new TestRegionMerging().mergeTwoRegionsFromOneChannel();
+		new TestRegionMerging().mergeTwoRegionsFromOneChannel();
 		new TestRegionMerging().mergeThreeRegionsFromTwoChannels();
 	}
 }

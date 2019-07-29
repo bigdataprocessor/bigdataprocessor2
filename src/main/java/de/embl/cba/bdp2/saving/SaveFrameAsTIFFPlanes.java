@@ -12,7 +12,7 @@ import net.imglib2.view.Views;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class SaveImgAsTIFFPlanes implements Runnable {
+public class SaveFrameAsTIFFPlanes implements Runnable {
 
     private final int c;
     private final int t;
@@ -20,11 +20,11 @@ public class SaveImgAsTIFFPlanes implements Runnable {
     private final SavingSettings savingSettings;
     private final AtomicBoolean stop;
 
-    public SaveImgAsTIFFPlanes(int c,
-                               int t,
-                               int z,
-                               SavingSettings savingSettings,
-                               AtomicBoolean stop) {
+    public SaveFrameAsTIFFPlanes( int c,
+                                  int t,
+                                  int z,
+                                  SavingSettings savingSettings,
+                                  AtomicBoolean stop) {
         this.c = c;
         this.z = z;
         this.t = t;

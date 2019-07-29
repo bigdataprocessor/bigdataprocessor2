@@ -35,7 +35,7 @@ public class SaveTiffAsStacks extends AbstractImgSaver {
         {
             futures.add(
                     es.submit(
-                            new SaveImgAsTIFFStacks(t, savingSettings, counter, startTime, stop)
+                            new SaveFrameAsTIFFStacks(t, savingSettings, counter, startTime, stop)
                     ));
         }
 

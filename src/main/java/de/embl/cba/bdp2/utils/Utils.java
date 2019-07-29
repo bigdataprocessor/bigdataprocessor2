@@ -335,7 +335,7 @@ public class Utils {
             String name )
     {
         ImagePlus imp = ImageJFunctions.wrap(
-                Views.permute(raiXYZCT, DimensionOrder.Z, DimensionOrder.C), name);
+                Views.permute( raiXYZCT, DimensionOrder.Z, DimensionOrder.C ), name);
 
         final Calibration calibration = new Calibration();
         calibration.setUnit( unit );
