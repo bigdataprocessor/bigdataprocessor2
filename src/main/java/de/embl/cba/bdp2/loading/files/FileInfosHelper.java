@@ -193,20 +193,18 @@ public class FileInfosHelper
 
             infoSource.channelFolders = getFoldersInFolder( directory, getFolderFilter( filterPattern ) );
 
-
-
             if ( infoSource.channelFolders != null )
             {
                 fileLists = new String[infoSource.channelFolders.length][];
                 for (int i = 0; i < infoSource.channelFolders.length; i++)
                 {
                     fileLists[i] = getFilesInFolder(
-                            directory + infoSource.channelFolders[i],
+                            directory + infoSource.channelFolders[ i ],
                             getFileFilter( filterPattern ));
 
                     if ( fileLists[i] == null )
                     {
-                        Logger.error("No files found in folder: " + directory + infoSource.channelFolders[i]);
+                        Logger.error("No files found in folder: " + directory + infoSource.channelFolders[ i ]);
                         return false;
                     }
                 }
@@ -429,7 +427,7 @@ public class FileInfosHelper
         String filter;
         if ( filterPattern != null )
         {
-            final String[] split = filterPattern.split( "/" );
+            final String[] split = filterPattern.split( Pattern.quote( File.separator ) );
             if ( split.length > 1 )
                 filter = split[ 0 ];
             else
@@ -447,7 +445,7 @@ public class FileInfosHelper
         String filter;
         if ( filterPattern != null )
         {
-            final String[] split = filterPattern.split( "/" );
+            final String[] split = filterPattern.split( Pattern.quote( File.separator )  );
             if ( split.length > 1 )
                 filter = split[ 1 ];
             else

@@ -32,10 +32,10 @@ public class MergeSplitChipWorkflowMultiChannel
 
         final ArrayList< File > directories = selectDirectories();
 
-//        directories.clear();
+        directories.clear();
 //        directories.add( new File( "/Users/tischer/Desktop/isabell/stack_10_channel_0" ) );
         //directories.add( new File( "/Volumes/cba/exchange/Isabell_Schneider/3-Color/stack_11_channel_0" ) );
-//		directories.add( new File( "/Volumes/cba/exchange/Isabell_Schneider/stack_0_channel_0/") );
+		directories.add( new File( "/Volumes/cba/exchange/Isabell_Schneider/stack_0_channel_0/") );
 
 
         final String voxelUnit = "micrometer";
