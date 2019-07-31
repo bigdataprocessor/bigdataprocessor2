@@ -1,14 +1,13 @@
 package de.embl.cba.bdp2.saving;
 
 import de.embl.cba.bdp2.logging.Logger;
-import de.embl.cba.bdp2.process.Processor;
+import de.embl.cba.bdp2.process.Duplicator;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.imaris.H5DataCubeWriter;
 import de.embl.cba.imaris.ImarisDataSet;
 import ij.ImagePlus;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.img.array.ArrayImg;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
@@ -81,7 +80,7 @@ public class SaveFrameAsImarisVolumes< R extends RealType< R > & NativeType< R >
 
 
             final RandomAccessibleInterval< R > volumeRai
-                    = new Processor().getVolumeRai(
+                    = new Duplicator().copyVolumeFromImage(
                             rai, c, t, settings.numProcessingThreads );
 
             ImagePlus imagePlus =

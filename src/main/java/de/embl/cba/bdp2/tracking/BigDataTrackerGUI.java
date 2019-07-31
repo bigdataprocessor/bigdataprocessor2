@@ -99,7 +99,7 @@ public class BigDataTrackerGUI < R extends RealType< R > & NativeType< R > >
         }
         //comboChoices[0] = imageFilters;
         comboChoices[0] = new String[]{TrackingSettings.CENTER_OF_MASS,
-                TrackingSettings.CORRELATION };
+                TrackingSettings.PHASE_CORRELATION };
         comboChoices[1] = channelChoices;
 
         trackingSettings.trackingMethod = TrackingSettings.CENTER_OF_MASS;

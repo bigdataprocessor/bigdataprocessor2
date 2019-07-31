@@ -1,13 +1,12 @@
 package de.embl.cba.bdp2.saving;
 
 import de.embl.cba.bdp2.logging.Logger;
-import de.embl.cba.bdp2.process.Processor;
+import de.embl.cba.bdp2.process.Duplicator;
 import de.embl.cba.bdp2.utils.Utils;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.io.FileSaver;
 import loci.common.services.ServiceFactory;
-import loci.formats.IFormatWriter;
 import loci.formats.ImageWriter;
 import loci.formats.meta.IMetadata;
 import loci.formats.out.TiffWriter;
@@ -83,7 +82,7 @@ public class SaveFrameAsTIFFStacks< R extends RealType< R > & NativeType< R > > 
             System.out.println( "Saving started: Frame " + t + ", Channel " + c );
 
             RandomAccessibleInterval< R > raiXYZ =
-                    new Processor().getVolumeRai(
+                    new Duplicator().copyVolumeFromImage(
                             image,
                             c, t,
                             settings.numProcessingThreads );

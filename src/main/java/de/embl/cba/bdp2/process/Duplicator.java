@@ -18,11 +18,10 @@ import net.imglib2.view.Views;
 
 import static de.embl.cba.bdp2.utils.DimensionOrder.*;
 
-public class Processor
+public class Duplicator  // TODO: better name?!
 {
-
 	public < R extends RealType< R > & NativeType< R > >
-	RandomAccessibleInterval< R > getVolumeRai(
+	RandomAccessibleInterval< R > copyVolumeFromImage(
 			RandomAccessibleInterval< R > image,
 			int c,
 			int t,
@@ -146,6 +145,7 @@ public class Processor
 			// set the value of this pixel of the output image, every Type supports T.set( T type )
 			targetCursor.get().set( sourceRandomAccess.get() );
 		}
+
 
 	}
 

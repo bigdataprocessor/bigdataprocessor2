@@ -5,7 +5,6 @@ import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
-import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import de.embl.cba.bdp2.utils.Point3D;
 import net.imagej.ImageJ;
 import net.imglib2.FinalInterval;
@@ -44,7 +43,7 @@ public class BigDataTrackerCommand < R extends RealType< R > & NativeType< R > >
     @Parameter(label = "Intensity Gating [min,max]")
     private String gate = "-1,-1"; //default value
 
-    @Parameter(label = "Tracking Method", choices = {TrackingSettings.CENTER_OF_MASS, TrackingSettings.CORRELATION })
+    @Parameter(label = "Tracking Method", choices = {TrackingSettings.CENTER_OF_MASS, TrackingSettings.PHASE_CORRELATION })
     String trackMethod = TrackingSettings.CENTER_OF_MASS; //default value
 
     @Parameter(label = "Track Selected Object", callback = "doTracking")

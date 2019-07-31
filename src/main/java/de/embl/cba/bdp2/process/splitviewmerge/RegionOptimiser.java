@@ -3,7 +3,7 @@ package de.embl.cba.bdp2.process.splitviewmerge;
 import bdv.util.ModifiableInterval;
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.logging.Logger;
-import de.embl.cba.bdp2.tracking.Trackers;
+import de.embl.cba.bdp2.tracking.PhaseCorrelationTranslationComputer;
 import net.imglib2.*;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -82,7 +82,7 @@ public class RegionOptimiser
 			planes.add( plane );
 		}
 
-		final double[] shift = Trackers.getPhaseCorrelationShift(
+		final double[] shift = PhaseCorrelationTranslationComputer.computeShift(
 				planes.get( 0 ), planes.get( 1 ),
 				Executors.newFixedThreadPool( 2 ) );
 
