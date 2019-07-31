@@ -4,7 +4,7 @@ import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
-import javafx.geometry.Point3D;
+import de.embl.cba.bdp2.utils.Point3D;
 import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
@@ -24,8 +24,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class ObjectTracker< T extends RealType<T> & NativeType< T > > extends AbstractObjectTracker{
-    private final TrackingSettings< T > trackingSettings;
+public class ObjectTracker < R extends RealType< R > & NativeType< R > > extends AbstractObjectTracker{
+    private final TrackingSettings< R > trackingSettings;
     private Point3D pMin, pMax;
     private final int width;
     private final int height;
@@ -37,7 +37,7 @@ public class ObjectTracker< T extends RealType<T> & NativeType< T > > extends Ab
     private int gateGateIntensityMax;
     private AtomicBoolean stop;
 
-    public ObjectTracker( TrackingSettings< T > trackingSettings, AtomicBoolean stop ) {
+    public ObjectTracker( TrackingSettings< R > trackingSettings, AtomicBoolean stop ) {
         this.trackingSettings = trackingSettings;
         this.pMin = trackingSettings.pMin;
         this.pMax = trackingSettings.pMax;
@@ -52,16 +52,14 @@ public class ObjectTracker< T extends RealType<T> & NativeType< T > > extends Ab
     }
 
     @Override
-    public Track getTrackingPoints() {
-        final String centeringMethod = trackingSettings.trackingMethod;
-        Logger.info(centeringMethod);
-        if( TrackingSettings.CENTER_OF_MASS.equalsIgnoreCase(centeringMethod) ){
+    public Track computeTrack()
+    {
+        if( TrackingSettings.CENTER_OF_MASS.equalsIgnoreCase( trackingSettings.trackingMethod ) )
                 return doCenterOfMassTracking();
-        }else if(TrackingSettings.CORRELATION.equalsIgnoreCase(centeringMethod)){
-                return doPhaseCorrelation();
-        }else{
+        else if(  TrackingSettings.PHASE_CORRELATION.equalsIgnoreCase( trackingSettings.trackingMethod ) )
+                return doPhaseCorrelationTracking();
+        else
             return null;
-        }
     }
 
     @Override
@@ -71,10 +69,10 @@ public class ObjectTracker< T extends RealType<T> & NativeType< T > > extends Ab
 
     private Track doCenterOfMassTracking(){
         final Point3D boxDim = pMax.subtract(pMin);
-        RandomAccess<T> randomAccess = trackingSettings.rai.randomAccess();
+        RandomAccess< R > randomAccess = trackingSettings.rai.randomAccess();
         int tStart = trackingSettings.tStart;
         Point3D pCentroid;
-        Track trackingResults = new Track(this.trackingSettings, trackId);
+        Track trackingResults = new Track( this.trackingSettings, trackId) ;
         boolean gateIntensity = isIntensityGated(trackingSettings.intensityGate);
         double trackingFactor = trackingSettings.trackingFactor;
         int iterations = trackingSettings.iterationsCenterOfMass;
@@ -112,16 +110,19 @@ public class ObjectTracker< T extends RealType<T> & NativeType< T > > extends Ab
     }
 
 
-    private Track doPhaseCorrelation()
+    private Track doPhaseCorrelationTracking()
     {
-        Track trackingResults = new Track(this.trackingSettings, trackId);
-        boolean gateIntensity = isIntensityGated(trackingSettings.intensityGate);
+        Track trackingResults = new Track( this.trackingSettings, trackId );
+        boolean gateIntensity = isIntensityGated( trackingSettings.intensityGate );
         Point3D pShift;
         int tStart = trackingSettings.tStart;
         long startTime = System.currentTimeMillis();
         trackingResults.addLocation(tStart, new Point3D[]{pMin,pMax});//For the first time stamp.
-        for (int t = tStart; t < timeFrames-1; ++t) { // last time stamp not considered here.
+        for (int t = tStart; t < timeFrames-1; ++t)
+        { // last time stamp not considered here.
+
             progressListener.progress((t-tStart),(timeFrames-2-tStart));
+
             Logger.info("Current time tracked " + t);
 
             long[] range = {(long) pMin.getX(),
@@ -136,13 +137,13 @@ public class ObjectTracker< T extends RealType<T> & NativeType< T > > extends Ab
                     timeFrames-1};
 
             FinalInterval trackedInterval = Intervals.createMinMax(range);
-            RandomAccessibleInterval<T> rai =
+            RandomAccessibleInterval< R > rai =
                     Views.interval(
                             Views.extendZero( trackingSettings.rai ) ,
                             trackedInterval );
 
-            RandomAccessibleInterval<T> currentFrame = Views.hyperSlice( rai, 4, t);
-            RandomAccessibleInterval<T> nextFrame = Views.hyperSlice( rai, 4, t + 1);
+            RandomAccessibleInterval< R > currentFrame = Views.hyperSlice( rai, 4, t);
+            RandomAccessibleInterval< R > nextFrame = Views.hyperSlice( rai, 4, t + 1);
             if (this.stop.get()) {
                 break;
             }
@@ -153,7 +154,10 @@ public class ObjectTracker< T extends RealType<T> & NativeType< T > > extends Ab
                 // process( currentFrame, nextFrame );
             }
 
-            final double[] shift = Trackers.getPhaseCorrelationShift( currentFrame, nextFrame, BigDataProcessor2.trackerThreadPool );
+            final double[] shift = PhaseCorrelationTranslationComputer.computeShift(
+                    currentFrame,
+                    nextFrame,
+                    BigDataProcessor2.trackerThreadPool );
 
             if ( shift == null ) break;
 
@@ -174,8 +178,8 @@ public class ObjectTracker< T extends RealType<T> & NativeType< T > > extends Ab
     }
 
     private void process(
-            RandomAccessibleInterval< T > currentFrame,
-            RandomAccessibleInterval< T > nextFrame )
+            RandomAccessibleInterval< R > currentFrame,
+            RandomAccessibleInterval< R > nextFrame )
     {
         Future future1 = BigDataProcessor2.trackerThreadPool.submit(() -> doIntensityGating( Utils.getCellImgFromInterval(currentFrame)));
         Future future2 = BigDataProcessor2.trackerThreadPool.submit(() -> doIntensityGating(Utils.getCellImgFromInterval(nextFrame)));

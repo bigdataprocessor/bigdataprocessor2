@@ -4,8 +4,7 @@ import de.embl.cba.bdp2.tracking.BigDataTracker;
 import de.embl.cba.bdp2.tracking.TrackingSettings;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
-import de.embl.cba.bdp2.viewers.BdvImageViewer;
-import javafx.geometry.Point3D;
+import de.embl.cba.bdp2.utils.Point3D;
 import net.imglib2.cache.img.CachedCellImg;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 
@@ -28,7 +27,7 @@ public class TestBigDataTracker {
         BigDataTracker bdt = new BigDataTracker();
         TrackingSettings< ? > trackingSettings = createTrackingSettings(imageViewer);
         //Test for CROSS_CORRELATION tracking
-        trackingSettings.trackingMethod = TrackingSettings.CORRELATION;
+        trackingSettings.trackingMethod = TrackingSettings.PHASE_CORRELATION;
         bdt.trackObject(trackingSettings, imageViewer);
         //Test for CENTER of MASS tracking
 //        trackingSettings.trackingMethod = TrackingSettings.CENTER_OF_MASS;

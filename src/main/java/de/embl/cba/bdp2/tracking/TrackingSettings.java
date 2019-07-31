@@ -1,16 +1,17 @@
 package de.embl.cba.bdp2.tracking;
 
-import javafx.geometry.Point3D;
-import net.imglib2.RandomAccessibleInterval;
+import de.embl.cba.bdp2.Image;
+import de.embl.cba.bdp2.utils.Point3D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
-public class TrackingSettings< T extends RealType< T > & NativeType< T > >
+public class TrackingSettings < R extends RealType< R > & NativeType< R > >
 {
 
     public static final String CENTER_OF_MASS = "Center of Mass";
-    public static final String CORRELATION = "Correlation";
-    public RandomAccessibleInterval< T > rai;
+    public static final String PHASE_CORRELATION = "Phase Correlation";
+
+    public Image< R > image;
     public String trackingMethod;
     public Point3D objectSize;
     public Point3D maxDisplacement;

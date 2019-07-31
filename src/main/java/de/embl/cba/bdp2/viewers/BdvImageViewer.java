@@ -48,6 +48,11 @@ public class BdvImageViewer< R extends RealType< R > & NativeType< R > >
         this.image = new Image<>( rai, name, voxelSpacing, voxelUnit  );
     }
 
+    public void close()
+    {
+        bdvHandle.close();
+    }
+
     public FinalInterval get5DIntervalFromUser( boolean calibratedSelection )
     {
         BoundingBoxDialog boundingBoxDialog = new BoundingBoxDialog( bdvHandle, image );
@@ -191,28 +196,35 @@ public class BdvImageViewer< R extends RealType< R > & NativeType< R > >
     
     public DisplaySettings getAutoContrastDisplaySettings( int channel ) {
         double min, max;
-        if ( image != null) {
-            RandomAccessibleInterval raiStack = Views.hyperSlice(
+
+        if ( image != null)
+        {
+            RandomAccessibleInterval raiXYZ = Views.hyperSlice(
                     Views.hyperSlice( image.getRai(), DimensionOrder.T, 0),
                     DimensionOrder.C,
                     channel);
-            final long stackCenter = (raiStack.max( DimensionOrder.Z) - raiStack.min( DimensionOrder.Z)) / 2 + raiStack.min( DimensionOrder.Z);
+            final long stackCenter = (raiXYZ.max( DimensionOrder.Z) - raiXYZ.min( DimensionOrder.Z))
+                    / 2 + raiXYZ.min( DimensionOrder.Z);
 
-            IntervalView< R > ts = Views.hyperSlice(
-                    raiStack,
+            IntervalView< R > raiXY = Views.hyperSlice(
+                    raiXYZ,
                     DimensionOrder.Z,
                     stackCenter);
 
-            Cursor< R > cursor = Views.iterable(ts).cursor();
+            Cursor< R > cursor = Views.iterable( raiXY ).cursor();
             min = Double.MAX_VALUE;
             max = -Double.MAX_VALUE;
             double value;
-            while (cursor.hasNext()) {
+            while ( cursor.hasNext() )
+            {
                 value = cursor.next().getRealDouble();
                 if (value < min) min = value;
                 if (value > max) max = value;
             }
-        } else {
+
+        }
+        else
+        {
             max = 0;
             min = 0;
         }

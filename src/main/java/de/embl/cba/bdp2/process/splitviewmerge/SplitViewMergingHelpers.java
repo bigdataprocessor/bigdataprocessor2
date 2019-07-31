@@ -87,4 +87,22 @@ public class SplitViewMergingHelpers
 
 		return intervals;
 	}
+
+	public static FinalInterval asIntervalXYC( long[] minXY, long[] spanXY, long channel )
+	{
+		long[] min = new long[ 3 ];
+		long[] max = new long[ 3 ];
+
+		for ( int d = 0; d < 2; d++ )
+		{
+			min[ d ] = minXY[ d ];
+			max[ d ] = minXY[ d ] + spanXY[ d ] - 1;
+		}
+
+		min[ 2 ] = channel;
+		max[ 2 ] = channel;
+
+		return new FinalInterval( min, max );
+	}
+
 }

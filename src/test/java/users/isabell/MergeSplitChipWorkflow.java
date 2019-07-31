@@ -42,9 +42,9 @@ public class MergeSplitChipWorkflow
         savingSettings.numIOThreads = Runtime.getRuntime().availableProcessors();
 
         final SplitViewMerger merger = new SplitViewMerger();
-        merger.setUpperLeftCornerRegionA( 22, 643 );
-        merger.setUpperLeftCornerRegionB( 896, 46 );
-        merger.setRegionSpan( 1000, 1000 );
+        merger.addIntervalXYC( 86, 5, 1000, 1000, 0 );
+        merger.addIntervalXYC( 1, 65, 1000, 1000, 0 );
+
 
         /*
          * Get cropping intervals from user
@@ -64,15 +64,15 @@ public class MergeSplitChipWorkflow
                     voxelSpacingMicrometerY,
                     voxelSpacingMicrometerZ );
 
-            final Image< R > merge = merger.mergeRegionsAandB( image );
+//            final Image< R > merge = merger.mergeRegionsAandB( image );
 
-            final BdvImageViewer viewer = bdp.showImage( merge );
-
-            final FinalInterval interval = viewer.get5DIntervalFromUser( false );
-
-            Logger.log( "Data set: " + directory );
-            Logger.log( "Crop interval: " + interval.toString()   );
-            croppingIntervals.add( interval );
+//            final BdvImageViewer viewer = bdp.showImage( merge );
+//
+//            final FinalInterval interval = viewer.get5DIntervalFromUser( false );
+//
+//            Logger.log( "Data set: " + directory );
+//            Logger.log( "Crop interval: " + interval.toString()   );
+//            croppingIntervals.add( interval );
         }
 
 
@@ -98,21 +98,21 @@ public class MergeSplitChipWorkflow
                     voxelSpacingMicrometerY,
                     voxelSpacingMicrometerZ );
 
-            // merge
-            final Image< R > merge = merger.mergeRegionsAandB( image );
-            savingSettings.saveVolumes = true;
-            savingSettings.volumesFilePath = directory + "-stacks/stack";
-            savingSettings.saveProjections = false;
-            Utils.saveImageAndWaitUntilDone( bdp, savingSettings, merge );
-
-            // crop
-            final Image< R > crop = Cropper.crop( merge, croppingIntervals.get( i ) );
-            savingSettings.saveVolumes = true;
-            savingSettings.volumesFilePath = directory + "-crop-stacks/stack";
-            savingSettings.saveProjections = true;
-            savingSettings.projectionsFilePath =
-                    directory + "-crop-projections/projection";
-            Utils.saveImageAndWaitUntilDone( bdp, savingSettings, crop );
+//            // merge
+//            final Image< R > merge = merger.mergeRegionsAandB( image );
+//            savingSettings.saveVolumes = true;
+//            savingSettings.volumesFilePath = directory + "-stacks/stack";
+//            savingSettings.saveProjections = false;
+//            Utils.saveImageAndWaitUntilDone( bdp, savingSettings, merge );
+//
+//            // crop
+//            final Image< R > crop = Cropper.crop( merge, croppingIntervals.get( i ) );
+//            savingSettings.saveVolumes = true;
+//            savingSettings.volumesFilePath = directory + "-crop-stacks/stack";
+//            savingSettings.saveProjections = true;
+//            savingSettings.projectionsFilePath =
+//                    directory + "-crop-projections/projection";
+//            Utils.saveImageAndWaitUntilDone( bdp, savingSettings, crop );
 
         }
 

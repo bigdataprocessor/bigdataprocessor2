@@ -1,15 +1,11 @@
 package de.embl.cba.bdp2.tracking;
 
 import bdv.util.BdvHandleFrame;
-import de.embl.cba.bdp2.Image;
-import de.embl.cba.bdp2.ui.BdvMenus;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
-import de.embl.cba.bdp2.ui.DisplaySettings;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
-import de.embl.cba.bdp2.viewers.BdvImageViewer;
-import javafx.geometry.Point3D;
+import de.embl.cba.bdp2.utils.Point3D;
 import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
@@ -30,7 +26,7 @@ public class BigDataTracker< R extends RealType< R > & NativeType< R > > {
     public TrackingSettings< R > trackingSettings;
 
     public BigDataTracker(){
-        kickOffThreadPack(Runtime.getRuntime().availableProcessors()*2); //TODO: decide if this n threads is ok --ashis
+        kickOffThreadPack(Runtime.getRuntime().availableProcessors() * 2); //TODO: decide if this n threads is ok --ashis
     }
 
     public void kickOffThreadPack(int numThreads){
@@ -47,15 +43,15 @@ public class BigDataTracker< R extends RealType< R > & NativeType< R > > {
     // TODO:
     // is the imageViewer needed???
     // separate image from settings
-    public AbstractObjectTracker trackObject( TrackingSettings< R > trackingSettings,BdvImageViewer imageViewer )
+    public AbstractObjectTracker trackObject( TrackingSettings< R > trackingSettings, BdvImageViewer imageViewer )
     {
         this.trackingSettings = trackingSettings;
         Point3D minInit = trackingSettings.pMin;
         Point3D maXinit = trackingSettings.pMax;
         AtomicBoolean stop = new AtomicBoolean(false);
-        AbstractObjectTracker objectTracker = new ObjectTracker(trackingSettings,stop);
+        AbstractObjectTracker objectTracker = new ObjectTracker( trackingSettings, stop );
         BigDataProcessor2.trackerThreadPool.submit(()-> {
-                    this.trackResults = objectTracker.getTrackingPoints();
+                    this.trackResults = objectTracker.computeTrack();
             if(!stop.get()) {
 
                 final BdvImageViewer newTrackedView = imageViewer.showImageInNewWindow(

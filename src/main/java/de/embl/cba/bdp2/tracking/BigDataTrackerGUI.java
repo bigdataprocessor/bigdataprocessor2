@@ -5,7 +5,7 @@ import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
-import javafx.geometry.Point3D;
+import de.embl.cba.bdp2.utils.Point3D;
 import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;
@@ -99,7 +99,7 @@ public class BigDataTrackerGUI < R extends RealType< R > & NativeType< R > >
         }
         //comboChoices[0] = imageFilters;
         comboChoices[0] = new String[]{TrackingSettings.CENTER_OF_MASS,
-                TrackingSettings.CORRELATION };
+                TrackingSettings.PHASE_CORRELATION };
         comboChoices[1] = channelChoices;
 
         trackingSettings.trackingMethod = TrackingSettings.CENTER_OF_MASS;

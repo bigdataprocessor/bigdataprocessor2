@@ -31,7 +31,7 @@ public class SaveMenuDialog extends JFrame implements ActionListener
     private final
     JComboBox comboFileTypeForSaving = new JComboBox(new SavingSettings.FileType[]{
             SavingSettings.FileType.TIFF_STACKS,
-            SavingSettings.FileType.HDF5_STACKS,
+//            SavingSettings.FileType.HDF5_STACKS, //TODO: implement
             SavingSettings.FileType.IMARIS_STACKS,
             SavingSettings.FileType.TIFF_PLANES });
 
@@ -80,7 +80,7 @@ public class SaveMenuDialog extends JFrame implements ActionListener
 
         panels.add(new JPanel());
         panels.get(j).add(cbLZW);
-        panels.get(j).add(new JLabel("Tiff Strip Chunks [ny]"));
+        panels.get(j).add(new JLabel("Rows per Strip [ny]"));
         panels.get(j).add(tfRowsPerStrip);
         mainPanels.get(k).add(panels.get(j++));
 

@@ -41,7 +41,7 @@ import bdv.viewer.DisplayMode;
 import bdv.viewer.SourceAndConverter;
 import bdv.viewer.ViewerPanel;
 import bdv.viewer.VisibilityAndGrouping;
-import javafx.geometry.Point3D;
+import de.embl.cba.bdp2.utils.Point3D;
 import net.imglib2.Interval;
 import net.imglib2.display.RealARGBColorConverter;
 import net.imglib2.realtransform.AffineTransform3D;
@@ -109,7 +109,8 @@ public class TrackedAreaBoxOverlay
         };
 
         // set up a converter from the source type (UnsignedShortType in this case) to ARGBType
-        final RealARGBColorConverter<UnsignedShortType> converter = new RealARGBColorConverter.Imp1<>(0, 3000);
+        final RealARGBColorConverter<UnsignedShortType> converter = RealARGBColorConverter.create(
+                new UnsignedShortType( ) ,0, 3000);
         //converter.setColor( new ARGBType( 0x00994499 ) ); // set bounding box color to magenta
         converter.setColor(new ARGBType(0x7AA7D5)); // set bounding box color to ...
 

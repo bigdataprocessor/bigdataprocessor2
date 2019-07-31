@@ -190,7 +190,8 @@ public class FileInfosHelper
             // Check for sub-folders
             //
             Logger.info("Checking for sub-folders...");
-            infoSource.channelFolders = getFoldersInFolder(directory);
+
+            infoSource.channelFolders = getFoldersInFolder( directory, getFolderFilter( filterPattern ) );
 
             if ( infoSource.channelFolders != null )
             {
@@ -198,12 +199,12 @@ public class FileInfosHelper
                 for (int i = 0; i < infoSource.channelFolders.length; i++)
                 {
                     fileLists[i] = getFilesInFolder(
-                            directory + infoSource.channelFolders[i],
-                            filterPattern);
+                            directory + infoSource.channelFolders[ i ],
+                            getFileFilter( filterPattern ));
 
                     if ( fileLists[i] == null )
                     {
-                        Logger.error("No files found in folder: " + directory + infoSource.channelFolders[i]);
+                        Logger.error("No files found in folder: " + directory + infoSource.channelFolders[ i ]);
                         return false;
                     }
                 }
@@ -421,6 +422,42 @@ public class FileInfosHelper
 
     }
 
+    public static String getFolderFilter( String filterPattern )
+    {
+        String filter;
+        if ( filterPattern != null )
+        {
+            final String[] split = filterPattern.split( Pattern.quote( File.separator ) );
+            if ( split.length > 1 )
+                filter = split[ 0 ];
+            else
+                filter = ".*";
+        }
+        else
+        {
+            filter = ".*";
+        }
+        return filter;
+    }
+
+    public static String getFileFilter( String filterPattern )
+    {
+        String filter;
+        if ( filterPattern != null )
+        {
+            final String[] split = filterPattern.split( Pattern.quote( File.separator )  );
+            if ( split.length > 1 )
+                filter = split[ 1 ];
+            else
+                filter = split[ 0 ];
+        }
+        else
+        {
+            filter = ".*";
+        }
+        return filter;
+    }
+
     public static String getFirstChannelDirectory( FileInfos infoSource, String directory )
     {
         String dataDirectory;
@@ -538,19 +575,29 @@ public class FileInfosHelper
         else return ( list );
     }
 
-    private static String[] getFoldersInFolder(String directory)
+    private static String[] getFoldersInFolder( String directory, String folderFilter )
     {
         //info("# getFoldersInFolder: " + directory);
 
-        String[] list = new File(directory).list(new FilenameFilter() {
+        String[] list = new File(directory).list(new FilenameFilter()
+        {
             @Override
             public boolean accept(File current, String name)
             {
-                return new File(current, name).isDirectory();
+                boolean isValid = true;
+                isValid &= new File(current, name).isDirectory();
+
+                Pattern.compile(folderFilter).matcher(name);
+                isValid &= Pattern.compile(folderFilter).matcher(name).matches();
+
+                return isValid;
             }
         });
+
         if (list == null || list.length == 0)
             return null;
+
+        Arrays.sort( list );
 
         return (list);
 

@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
 	<parent>
-		<groupId>org.scijava</groupId>
-		<artifactId>pom-scijava</artifactId>
-		<version>26.0.0</version>
+		<groupId>de.embl.cba</groupId>
+		<artifactId>pom-embl-cba</artifactId>
+		<version>0.3.6</version>
+		<relativePath>../pom-embl-cba</relativePath>
 	</parent>
-
 	<groupId>de.embl.cba</groupId>
 	<artifactId>fiji-plugin-bigDataProcessor2</artifactId>
-	<version>0.2.10</version>
-
+	<version>0.2.15</version>
+	<url>https://github.com/tischi/fiji-plugin-bigDataProcessor2</url>
 	<name>Fiji Plugin BigDataProcessor2</name>
 	<description>TODO</description>
 	<inceptionYear>2018</inceptionYear>
@@ -25,7 +24,6 @@
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
-
 	<developers>
 		<developer>
 			<id>tischi</id>
@@ -56,15 +54,12 @@
 			<name>TODO</name>
 		</contributor>
 	</contributors>
-
 	<mailingLists>
 		<mailingList>
 			<name>ImageJ Forum</name>
 			<archive>http://forum.imagej.net/</archive>
 		</mailingList>
 	</mailingLists>
-
-
 	<scm>
 		<connection>scm:git:git@github.com:tischi/fiji-plugin-bigDataProcessor2</connection>
 		<developerConnection>scm:git:git@github.com:tischi/fiji-plugin-bigDataProcessor2</developerConnection>
@@ -78,155 +73,144 @@
 	<ciManagement>
 		<system>None</system>
 	</ciManagement>
-
 	<properties>
 		<package-name>de.embl.cba.bdp2</package-name>
 		<license.licenseName>bsd_2</license.licenseName>
 		<license.copyrightOwners>EMBL</license.copyrightOwners>
 		<scijava.app.directory>/Applications/Fiji.app/</scijava.app.directory>
 		<enforcer.skip>true</enforcer.skip>
+		<bioformats.version>6.1.0-m2</bioformats.version>
 	</properties>
-
-
+	<!--	<plugin>-->
+	<!--	<configuration>-->
+	<!--		<rules>-->
+	<!--			<requireReleaseDeps>-->
+	<!--				<message>No Snapshots Allowed!</message>-->
+	<!--				<excludes>-->
+	<!--					<exclude>sc.fiji:bigdataviewer-vistools</exclude>-->
+	<!--				</excludes>-->
+	<!--			</requireReleaseDeps>-->
+	<!--		</rules>-->
+	<!--		<fail>true</fail>-->
+	<!--	</configuration>-->
+	<!--	</plugin>-->
 	<repositories>
-
 		<repository>
 			<id>imagej.public</id>
 			<url>https://maven.imagej.net/content/groups/public</url>
 		</repository>
-
 		<repository>
 			<id>bintray-tischi-snapshots</id>
-			<name>bintray</name>
 			<url>https://dl.bintray.com/tischi/snapshots</url>
 		</repository>
-
 		<repository>
 			<id>clij</id>
 			<url>http://dl.bintray.com/haesleinhuepf/clij</url>
 		</repository>
-
+		<repository>
+			<id>bintray-image-transform-converters-image-transform-converters</id>
+			<url>https://dl.bintray.com/image-transform-converters/image-transform-converters</url>
+		</repository>
 	</repositories>
-
-
 	<dependencies>
-
+		<!--		<dependency>-->
+		<!--			<groupId>cisd</groupId>-->
+		<!--			<artifactId>jhdf5</artifactId>-->
+		<!--		</dependency>-->
 		<dependency>
-			<groupId>cisd</groupId>
-			<artifactId>jhdf5</artifactId>
+			<groupId>net.imglib2</groupId>
+			<artifactId>imglib2</artifactId>
+			<version>5.8.0</version>
 		</dependency>
-
-		<dependency>
-			<groupId>sc.fiji</groupId>
-			<artifactId>bigdataviewer-core</artifactId>
-			<version>6.0.0</version>
-		</dependency>
-
 		<dependency>
 			<groupId>sc.fiji</groupId>
 			<artifactId>bigdataviewer_fiji</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>net.imagej</groupId>
 			<artifactId>imagej-legacy</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>net.imagej</groupId>
 			<artifactId>imagej</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>net.imagej</groupId>
 			<artifactId>imagej-common</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>net.imagej</groupId>
 			<artifactId>ij</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>net.imglib2</groupId>
 			<artifactId>imglib2-cache</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>sc.fiji</groupId>
 			<artifactId>bigdataviewer-vistools</artifactId>
-			<version>1.0.0-beta-14-SNAPSHOT</version>
 		</dependency>
-
+		<dependency>
+			<groupId>sc.fiji</groupId>
+			<artifactId>bigdataviewer-core</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>ome</groupId>
 			<artifactId>formats-api</artifactId>
+			<version>${bioformats.version}</version>
 		</dependency>
-
 		<dependency>
 			<groupId>ome</groupId>
 			<artifactId>formats-bsd</artifactId>
+			<version>${bioformats.version}</version>
 		</dependency>
-
 		<dependency>
 			<groupId>ome</groupId>
 			<artifactId>formats-gpl</artifactId>
+			<version>${bioformats.version}</version>
 		</dependency>
-
 		<dependency>
-			<groupId>ome</groupId>
-			<artifactId>bio-formats_plugins</artifactId>
+			<groupId>org.openmicroscopy</groupId>
+			<artifactId>ome-common</artifactId>
+			<version>6.0.1</version>
 		</dependency>
-
+		<!--		<dependency>-->
+		<!--			<groupId>ome</groupId>-->
+		<!--			<artifactId>bio-formats_plugins</artifactId>-->
+		<!--		</dependency>-->
 		<dependency>
 			<groupId>net.imagej</groupId>
 			<artifactId>imagej-plugins-commands</artifactId>
 		</dependency>
-
-        <dependency>
-            <groupId>net.preibisch</groupId>
-            <artifactId>BigStitcher</artifactId>
-        </dependency>
-
+		<dependency>
+			<groupId>net.preibisch</groupId>
+			<artifactId>BigStitcher</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 		</dependency>
-
-
-		<!-- CBA -->
-
-		<dependency>
-			<groupId>de.embl.cba</groupId>
-			<artifactId>imaris-writer</artifactId>
-			<version>0.1.02</version>
-		</dependency>
-
-		<dependency>
-			<groupId>de.embl.cba</groupId>
-			<artifactId>bdv-utils</artifactId>
-			<version>0.2.14</version>
-		</dependency>
-
-		<dependency>
-			<groupId>de.embl.cba</groupId>
-			<artifactId>imglib2-lazy-algorithm</artifactId>
-			<version>0.1.03</version>
-		</dependency>
-
-		<dependency>
-			<groupId>de.embl.cba</groupId>
-			<artifactId>transforms-utils</artifactId>
-			<version>0.2.01</version>
-		</dependency>
-
 		<dependency>
 			<groupId>net.haesleinhuepf</groupId>
 			<artifactId>clij_</artifactId>
 			<version>0.20.0</version>
 		</dependency>
-
+		<!-- CBA -->
+		<dependency>
+			<groupId>de.embl.cba</groupId>
+			<artifactId>imaris-writer</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>de.embl.cba</groupId>
+			<artifactId>bdv-utils</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>de.embl.cba</groupId>
+			<artifactId>imglib2-lazy-algorithm</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>de.embl.cba</groupId>
+			<artifactId>transforms-utils</artifactId>
+		</dependency>
 	</dependencies>
-
 </project>
-

@@ -3,7 +3,7 @@ package de.embl.cba.bdp2.process.splitviewmerge;
 import bdv.util.ModifiableInterval;
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.logging.Logger;
-import de.embl.cba.bdp2.tracking.Trackers;
+import de.embl.cba.bdp2.tracking.PhaseCorrelationTranslationComputer;
 import net.imglib2.*;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -14,7 +14,7 @@ import net.imglib2.view.Views;
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
 
-import static de.embl.cba.bdp2.process.splitviewmerge.SplitViewMerger.getInterval5D;
+import static de.embl.cba.bdp2.process.splitviewmerge.SplitViewMerger.intervalXYZasXYZCT;
 import static de.embl.cba.bdp2.utils.DimensionOrder.*;
 
 public class RegionOptimiser
@@ -63,7 +63,7 @@ public class RegionOptimiser
 
 		for ( Interval interval : intervals )
 		{
-			final FinalInterval interval5D = getInterval5D( rai5D, interval );
+			final FinalInterval interval5D = intervalXYZasXYZCT( rai5D, interval );
 
 			final IntervalView< R > crop =
 					Views.zeroMin(
@@ -82,7 +82,7 @@ public class RegionOptimiser
 			planes.add( plane );
 		}
 
-		final double[] shift = Trackers.getPhaseCorrelationShift(
+		final double[] shift = PhaseCorrelationTranslationComputer.computeShift(
 				planes.get( 0 ), planes.get( 1 ),
 				Executors.newFixedThreadPool( 2 ) );
 

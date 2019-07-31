@@ -17,7 +17,7 @@ public class SaveTiffAsStacks extends AbstractImgSaver {
     private ExecutorService es;
     private AtomicBoolean stop;
 
-    public SaveTiffAsStacks(SavingSettings savingSettings, ExecutorService es) {
+    public SaveTiffAsStacks( SavingSettings savingSettings, ExecutorService es ) {
         this.savingSettings = savingSettings;
         this.es = es;
         this.stop = new AtomicBoolean(false);
@@ -26,22 +26,25 @@ public class SaveTiffAsStacks extends AbstractImgSaver {
     @Override
     public void startSave() {
         List<Future> futures = new ArrayList<>();
-        AtomicInteger counter = new AtomicInteger(0);
+
+        AtomicInteger counter = new AtomicInteger( 0 );
         final long startTime = System.currentTimeMillis();
-        long timeFrames = savingSettings.rai.dimension(DimensionOrder.T);
 
-
-        for (int t = 0; t < timeFrames; t++) {
+        long timeFrames = savingSettings.rai.dimension( DimensionOrder.T );
+        for (int t = 0; t < timeFrames; t++)
+        {
             futures.add(
                     es.submit(
-                            new SaveImgAsTIFFStacks(t, savingSettings, counter, startTime, stop)
+                            new SaveFrameAsTIFFStacks(t, savingSettings, counter, startTime, stop)
                     ));
         }
 
-        // Monitor the progress
+        // Inform progress listener about progress in terms of finished time-points (i.e. futures)
         Thread thread = new Thread(
                 () -> Progress.informProgressListener(
-                        futures, FileInfos.PROGRESS_UPDATE_MILLISECONDS, progressListener ));
+                        futures,
+                        FileInfos.PROGRESS_UPDATE_MILLISECONDS,
+                        progressListener ));
 
         thread.start();
     }
