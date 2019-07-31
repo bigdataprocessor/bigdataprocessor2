@@ -45,29 +45,29 @@ public class BigDataTracker< R extends RealType< R > & NativeType< R > > {
     // separate image from settings
     public AbstractObjectTracker trackObject( TrackingSettings< R > trackingSettings, BdvImageViewer imageViewer )
     {
-        this.trackingSettings = trackingSettings;
-        Point3D minInit = trackingSettings.pMin;
-        Point3D maXinit = trackingSettings.pMax;
-        AtomicBoolean stop = new AtomicBoolean(false);
-        AbstractObjectTracker objectTracker = new ObjectTracker( trackingSettings, stop );
-        BigDataProcessor2.trackerThreadPool.submit(()-> {
-                    this.trackResults = objectTracker.computeTrack();
-            if(!stop.get()) {
-
-                final BdvImageViewer newTrackedView = imageViewer.showImageInNewWindow(
-                        imageViewer.getImage().newImage( trackingSettings.rai ) );
-
-                if(newTrackedView instanceof BdvImageViewer) {
-                    TrackedAreaBoxOverlay tabo = new TrackedAreaBoxOverlay(this.trackResults,
-                            ((BdvHandleFrame) (newTrackedView).getBdvStackSource().getBdvHandle()).getBigDataViewer().getViewer(),
-                            ((BdvHandleFrame) (newTrackedView).getBdvStackSource().getBdvHandle()).getBigDataViewer().getSetupAssignments(), 9991,
-                            Intervals.createMinMax((long) minInit.getX(), (long) minInit.getY(), (long) minInit.getZ(), (long) maXinit.getX(), (long) maXinit.getY(), (long) maXinit.getZ()));
-                }
-            }else{
-                this.trackResults = null; // Qualifying trackResults for garbage collection.
-            }
-        });
-        return objectTracker;
+//        this.trackingSettings = trackingSettings;
+//        Point3D minInit = trackingSettings.pMin;
+//        Point3D maXinit = trackingSettings.pMax;
+//        AtomicBoolean stop = new AtomicBoolean(false);
+//        AbstractObjectTracker objectTracker = new ObjectTracker( trackingSettings, stop );
+//        BigDataProcessor2.trackerThreadPool.submit(()-> {
+//                    this.trackResults = objectTracker.computeTrack();
+//            if(!stop.get()) {
+//
+//                final BdvImageViewer newTrackedView = imageViewer.showImageInNewWindow(
+//                        imageViewer.getImage().newImage( trackingSettings.rai ) );
+//
+//                if(newTrackedView instanceof BdvImageViewer) {
+//                    TrackedAreaBoxOverlay tabo = new TrackedAreaBoxOverlay(this.trackResults,
+//                            ((BdvHandleFrame) (newTrackedView).getBdvStackSource().getBdvHandle()).getBigDataViewer().getViewer(),
+//                            ((BdvHandleFrame) (newTrackedView).getBdvStackSource().getBdvHandle()).getBigDataViewer().getSetupAssignments(), 9991,
+//                            Intervals.createMinMax((long) minInit.getX(), (long) minInit.getY(), (long) minInit.getZ(), (long) maXinit.getX(), (long) maXinit.getY(), (long) maXinit.getZ()));
+//                }
+//            }else{
+//                this.trackResults = null; // Qualifying trackResults for garbage collection.
+//            }
+//        });
+        return null;
     }
 
     public< T extends RealType< T > & NativeType< T >> void showTrackedObjects(

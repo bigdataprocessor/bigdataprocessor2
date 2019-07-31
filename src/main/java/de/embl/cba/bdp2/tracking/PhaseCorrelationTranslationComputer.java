@@ -9,12 +9,8 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.complex.ComplexFloatType;
 import net.imglib2.type.numeric.real.FloatType;
-import net.imglib2.view.Views;
-
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
-
-import static de.embl.cba.transforms.utils.ImageCreators.createEmptyArrayImg;
 
 public class PhaseCorrelationTranslationComputer
 {
