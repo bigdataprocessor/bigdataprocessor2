@@ -56,8 +56,11 @@ public class TestMicrogliaTracking
 
         new TrackDisplayBehaviour( viewer.getBdvHandle(), tracker.getTrack() );
 
+    }
 
-
+    public static void main( String[] args )
+    {
+        new TestMicrogliaTracking().trackUsingPhaseCorrelation();
     }
 
 }

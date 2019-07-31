@@ -7,7 +7,6 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
 import java.util.Arrays;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class StaticVolumePhaseCorrelationTracker < R extends RealType< R > & NativeType< R > >
@@ -21,9 +20,9 @@ public class StaticVolumePhaseCorrelationTracker < R extends RealType< R > & Nat
 	{
 		public long[] volumeDimensions; // voxels
 		public long[] centerStartingPosition;
-		public long[] timeInterval;
-		public long channel;
-		public int numThreads;
+		public long[] timeInterval = new long[]{ 0, 1 };
+		public long channel = 0;
+		public int numThreads = 1;
 	}
 
 	public StaticVolumePhaseCorrelationTracker( Image< R > image,
@@ -33,17 +32,22 @@ public class StaticVolumePhaseCorrelationTracker < R extends RealType< R > & Nat
 		this.image = image;
 		this.settings = settings;
 		this.id = id;
+		track = new Track( id );
+		track.setVoxelSpacing( image.getVoxelSpacing() );
 	}
 
 	public void track()
 	{
-		track = new Track( id );
-		track.setVoxelSpacing( image.getVoxelSpacing() );
+		track.setPosition( settings.timeInterval[ 0 ], settings.centerStartingPosition );
 
 		for ( long t = settings.timeInterval[ 0 ]; t < settings.timeInterval[ 1 ]; t++ )
 		{
+
+			// TODO: make method to crop subvolume from image: Duplicator.copyVolumeFromRai
+
 			final RandomAccessibleInterval< R > rai0 =
 					Duplicator.copyVolumeFromRai( image.getRai(), settings.channel, t, settings.numThreads );
+
 			final RandomAccessibleInterval< R > rai1 =
 					Duplicator.copyVolumeFromRai( image.getRai(), settings.channel, t + 1, settings.numThreads );
 
@@ -53,8 +57,22 @@ public class StaticVolumePhaseCorrelationTracker < R extends RealType< R > & Nat
 					Executors.newFixedThreadPool( settings.numThreads ) );
 
 			System.out.println( t + " -> " + ( t + 1 ) + ": " + Arrays.toString( shift ) );
+
+			final long[] shiftedPosition = getShiftedPosition( shift, track.getPosition( t ) );
+
+			track.setPosition( t + 1, shiftedPosition );
 		}
 
+	}
+
+	private long[] getShiftedPosition( double[] shift, long[] position )
+	{
+		final long[] shiftedPosition = new long[ position.length];
+
+		for ( int d = 0; d < position.length; d++ )
+			shiftedPosition[ d ] = position[ d ] + (long) shift[ d ];
+
+		return shiftedPosition;
 	}
 
 	public Track getTrack()
