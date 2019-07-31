@@ -82,7 +82,7 @@ public class SaveFrameAsTIFFStacks< R extends RealType< R > & NativeType< R > > 
             System.out.println( "Saving started: Frame " + t + ", Channel " + c );
 
             RandomAccessibleInterval< R > raiXYZ =
-                    new Duplicator().copyVolumeFromImage(
+                    new Duplicator().copyVolumeFromRai(
                             image,
                             c, t,
                             settings.numProcessingThreads );

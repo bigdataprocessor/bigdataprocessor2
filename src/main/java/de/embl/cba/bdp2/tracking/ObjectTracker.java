@@ -52,7 +52,7 @@ public class ObjectTracker < R extends RealType< R > & NativeType< R > > extends
     }
 
     @Override
-    public Track computeTrack()
+    public OldTrack computeTrack()
     {
         if( TrackingSettings.CENTER_OF_MASS.equalsIgnoreCase( trackingSettings.trackingMethod ) )
                 return doCenterOfMassTracking();
@@ -67,12 +67,12 @@ public class ObjectTracker < R extends RealType< R > & NativeType< R > > extends
         stop.set(true);
     }
 
-    private Track doCenterOfMassTracking(){
+    private OldTrack doCenterOfMassTracking(){
         final Point3D boxDim = pMax.subtract(pMin);
         RandomAccess< R > randomAccess = trackingSettings.rai.randomAccess();
         int tStart = trackingSettings.tStart;
         Point3D pCentroid;
-        Track trackingResults = new Track( this.trackingSettings, trackId) ;
+        OldTrack trackingResults = new OldTrack( this.trackingSettings, trackId) ;
         boolean gateIntensity = isIntensityGated(trackingSettings.intensityGate);
         double trackingFactor = trackingSettings.trackingFactor;
         int iterations = trackingSettings.iterationsCenterOfMass;
@@ -110,9 +110,9 @@ public class ObjectTracker < R extends RealType< R > & NativeType< R > > extends
     }
 
 
-    private Track doPhaseCorrelationTracking()
+    private OldTrack doPhaseCorrelationTracking()
     {
-        Track trackingResults = new Track( this.trackingSettings, trackId );
+        OldTrack trackingResults = new OldTrack( this.trackingSettings, trackId );
         boolean gateIntensity = isIntensityGated( trackingSettings.intensityGate );
         Point3D pShift;
         int tStart = trackingSettings.tStart;

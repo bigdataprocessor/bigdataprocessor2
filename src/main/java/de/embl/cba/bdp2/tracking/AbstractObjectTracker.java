@@ -9,7 +9,7 @@ public abstract class AbstractObjectTracker {
     {
         progressListener = l;
     }
-    public abstract Track computeTrack();
+    public abstract OldTrack computeTrack();
     public abstract void stopTrack();
 
 }

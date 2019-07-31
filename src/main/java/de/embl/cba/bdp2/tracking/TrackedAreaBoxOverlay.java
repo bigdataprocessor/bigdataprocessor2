@@ -58,10 +58,10 @@ public class TrackedAreaBoxOverlay
     private final TransformedBoxOverlay boxOverlay;
     private boolean repaint;
     private int time=-1;
-    private Track trackingResults;
+    private OldTrack trackingResults;
 
     public TrackedAreaBoxOverlay(
-            Track trackingResults,
+            OldTrack trackingResults,
             final ViewerPanel viewer,
             final SetupAssignments setupAssignments,
             final int boxSetupId,
@@ -70,7 +70,7 @@ public class TrackedAreaBoxOverlay
     }
 
     public TrackedAreaBoxOverlay(
-            Track trackingResults,
+            OldTrack trackingResults,
             final ViewerPanel viewer,
             final SetupAssignments setupAssignments,
             final int boxSetupId,

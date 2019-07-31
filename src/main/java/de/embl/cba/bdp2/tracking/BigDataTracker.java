@@ -1,6 +1,5 @@
 package de.embl.cba.bdp2.tracking;
 
-import bdv.util.BdvHandleFrame;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
@@ -18,11 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class BigDataTracker< R extends RealType< R > & NativeType< R > > {
 
-    public Track< R > trackResults;
+    public OldTrack< R > oldTrackResults;
     public TrackingSettings< R > trackingSettings;
 
     public BigDataTracker(){
@@ -73,10 +71,10 @@ public class BigDataTracker< R extends RealType< R > & NativeType< R > > {
     public< T extends RealType< T > & NativeType< T >> void showTrackedObjects(
            BdvImageViewer imageViewer)
     {
-        if(trackResults!=null) {
+        if( oldTrackResults !=null) {
             List<RandomAccessibleInterval<T>> tracks = new ArrayList<>();
             int nChannels = (int) trackingSettings.rai.dimension( DimensionOrder.C );
-            for (Map.Entry<Integer, Point3D[]> entry : this.trackResults.locations.entrySet()) {
+            for (Map.Entry<Integer, Point3D[]> entry : this.oldTrackResults.locations.entrySet()) {
                 Point3D[] pMinMax = entry.getValue();
                 long[] range = {(long) pMinMax[0].getX(),
                                 (long) pMinMax[0].getY(),

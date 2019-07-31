@@ -52,7 +52,7 @@ public class CorrelationTracker< T extends RealType<T> & NativeType< T > > exten
     }
 
     @Override
-    public Track getTrackingPoints() {
+    public OldTrack getTrackingPoints() {
         final String centeringMethod = trackingSettings.trackingMethod;
         Logger.info(centeringMethod);
         if( TrackingSettings.CENTER_OF_MASS.equalsIgnoreCase(centeringMethod) ){
@@ -69,12 +69,12 @@ public class CorrelationTracker< T extends RealType<T> & NativeType< T > > exten
         stop.set(true);
     }
 
-    private Track doCenterOfMassTracking(){
+    private OldTrack doCenterOfMassTracking(){
         final Point3D boxDim = pMax.subtract(pMin);
         RandomAccess<T> randomAccess = trackingSettings.rai.randomAccess();
         int tStart = trackingSettings.tStart;
         Point3D pCentroid;
-        Track trackingResults = new Track(this.trackingSettings, trackId);
+        OldTrack trackingResults = new OldTrack(this.trackingSettings, trackId);
         boolean gateIntensity = isIntensityGated(trackingSettings.intensityGate);
         double trackingFactor = trackingSettings.trackingFactor;
         int iterations = trackingSettings.iterationsCenterOfMass;
@@ -112,9 +112,9 @@ public class CorrelationTracker< T extends RealType<T> & NativeType< T > > exten
     }
 
 
-    private Track doPhaseCorrelation()
+    private OldTrack doPhaseCorrelation()
     {
-        Track trackingResults = new Track(this.trackingSettings, trackId);
+        OldTrack trackingResults = new OldTrack(this.trackingSettings, trackId);
         boolean gateIntensity = isIntensityGated(trackingSettings.intensityGate);
         Point3D pShift;
         int tStart = trackingSettings.tStart;

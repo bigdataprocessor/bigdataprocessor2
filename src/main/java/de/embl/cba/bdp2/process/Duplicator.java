@@ -20,11 +20,11 @@ import static de.embl.cba.bdp2.utils.DimensionOrder.*;
 
 public class Duplicator  // TODO: better name?!
 {
-	public < R extends RealType< R > & NativeType< R > >
-	RandomAccessibleInterval< R > copyVolumeFromImage(
+	public static < R extends RealType< R > & NativeType< R > >
+	RandomAccessibleInterval< R > copyVolumeFromRai(
 			RandomAccessibleInterval< R > image,
-			int c,
-			int t,
+			long c,
+			long t,
 			int numThreads )
 	{
 		long start = System.currentTimeMillis();
@@ -65,7 +65,7 @@ public class Duplicator  // TODO: better name?!
 	 * @param <R>
 	 * @return
 	 */
-	private < R extends RealType< R > & NativeType< R > >
+	private static < R extends RealType< R > & NativeType< R > >
 	RandomAccessibleInterval< R > copyVolumeRAI( RandomAccessibleInterval< R > volume,
 												 int numThreads )
 	{
@@ -111,7 +111,7 @@ public class Duplicator  // TODO: better name?!
 		return copy;
 	}
 
-	private < R extends RealType< R > & NativeType< R > > R getType( RandomAccessibleInterval< R > volume )
+	private static < R extends RealType< R > & NativeType< R > > R getType( RandomAccessibleInterval< R > volume )
 	{
 		R type = null;
 		try
@@ -126,7 +126,7 @@ public class Duplicator  // TODO: better name?!
 	}
 
 
-	private < T extends Type< T > > void copy( final RandomAccessible< T > source,
+	private static < T extends Type< T > > void copy( final RandomAccessible< T > source,
 													 final IterableInterval< T > target )
 	{
 		// create a cursor that automatically localizes itself on every move

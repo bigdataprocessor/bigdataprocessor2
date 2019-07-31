@@ -32,7 +32,7 @@ public class CorrelationTrackerOld implements Runnable
     private int channel;
     private int nt;
     private int dt;
-    private Track track;
+    private OldTrack oldTrack;
     private long elapsedReadingTime;
     private long startTime;
     private long elapsedProcessingTime;
@@ -83,7 +83,7 @@ public class CorrelationTrackerOld implements Runnable
         Point3D shift;
         Point3D regionSize;
 
-        track = new Track( trackingSettings, trackId );
+        oldTrack = new OldTrack( trackingSettings, trackId );
         tStart = trackingSettings.trackStartROI.getImage().getT() - 1;
         channel = trackingSettings.channel;
         nt = trackingSettings.nt;
@@ -98,9 +98,9 @@ public class CorrelationTrackerOld implements Runnable
         TrackTable trackTable = adaptiveCrop.getTrackTable();
         ImagePlus inputImage = trackingSettings.imp;
 
-        regionSize = getRegionSize( track, inputImage );
+        regionSize = getRegionSize( oldTrack, inputImage );
         p0center = pStart;
-        publishResult(inputImage, track, trackTable, logger, p0center, tStart, nt, dt, elapsedReadingTime, elapsedProcessingTime );
+        publishResult(inputImage, oldTrack, trackTable, logger, p0center, tStart, nt, dt, elapsedReadingTime, elapsedProcessingTime );
 
         finish = false;
         int tMax = tStart + nt - 1;
@@ -143,7 +143,7 @@ public class CorrelationTrackerOld implements Runnable
 
             if( adaptiveCrop.interruptTrackingThreads )
             {
-                logger.info("Tracking of track " + track.getID() + " interrupted.");
+                logger.info("Tracking of track " + oldTrack.getID() + " interrupted.");
                 return;
             }
 
@@ -156,10 +156,10 @@ public class CorrelationTrackerOld implements Runnable
     {
         for ( int tUpdate = tPrevious + 1; tUpdate <= tCurrent; ++tUpdate )
 		{
-			Point3D pPrevious = track.getPosition( tPrevious );
+			Point3D pPrevious = oldTrack.getPosition( tPrevious );
 			double interpolation = (double) (tUpdate - tPrevious) / (double) (tCurrent - tPrevious);
 			Point3D pUpdate = pPrevious.add( pShift.multiply( interpolation ) );
-			publishResult( imp, track, trackTable, logger, pUpdate, tUpdate, nt, dt, elapsedReadingTime, elapsedProcessingTime );
+			publishResult( imp, oldTrack, trackTable, logger, pUpdate, tUpdate, nt, dt, elapsedReadingTime, elapsedProcessingTime );
 		}
     }
 
@@ -234,37 +234,37 @@ public class CorrelationTrackerOld implements Runnable
     }
 
 
-    private Point3D getRegionSize( Track track, ImagePlus imp )
+    private Point3D getRegionSize( OldTrack oldTrack, ImagePlus imp )
     {
-        Point3D regionSize = track.getObjectSize();
+        Point3D regionSize = oldTrack.getObjectSize();
 
         regionSize = correctFor2D( regionSize, imp, 1 );
 
         return regionSize;
     }
 
-    private void publishResult(ImagePlus imp, Track track, TrackTable trackTable, Logger logger, Point3D location,
-                               int t, int nt, int dt,
-                               long elapsedReadingTime, long elapsedProcessingTime)
+    private void publishResult( ImagePlus imp, OldTrack oldTrack, TrackTable trackTable, Logger logger, Point3D location,
+								int t, int nt, int dt,
+								long elapsedReadingTime, long elapsedProcessingTime)
     {
 
-        track.addLocation(t, location);
+        oldTrack.addLocation(t, location);
 
         // store one-based values in table
         trackTable.addRow(new Object[]{
-                String.format("%1$04d", track.getID()) + "_" + String.format("%1$05d", t+1),
+                String.format("%1$04d", oldTrack.getID()) + "_" + String.format("%1$05d", t+1),
                 String.format("%.2f", (float) location.getX() ),
                 String.format("%.2f", (float) location.getY() ),
                 String.format("%.2f", (float) location.getZ() + 1.0 ),
                 String.format("%1$04d", t + 1),
-                String.format("%1$04d", track.getID() )
+                String.format("%1$04d", oldTrack.getID() )
         });
 
-        adaptiveCrop.addLocationToOverlay(track, t);
+        adaptiveCrop.addLocationToOverlay( oldTrack, t);
 
-        logger.progress( "Track: " + track.getID(),
+        logger.progress( "Track: " + oldTrack.getID(),
                 "; Image: " + imp.getTitle() +
-                        "; Frame: " + ( t - track.getTmin() + 1 ) + "/" + nt +
+                        "; Frame: " + ( t - oldTrack.getTmin() + 1 ) + "/" + nt +
                         "; Reading [ms] = " + elapsedReadingTime +
                         "; Processing [ms] = " + elapsedProcessingTime );
 
