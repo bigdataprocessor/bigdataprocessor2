@@ -22,7 +22,7 @@ public class StaticVolumePhaseCorrelationTracker < R extends RealType< R > & Nat
 	public static class Settings
 	{
 		public long[] volumeDimensions; // voxels
-		public long[] centerStartingPosition;
+		public double[] initialPosition;
 		public long[] timeInterval = new long[]{ 0, 1 };
 		public long channel = 0;
 		public int numThreads = 1;
@@ -35,18 +35,18 @@ public class StaticVolumePhaseCorrelationTracker < R extends RealType< R > & Nat
 		this.image = image;
 		this.settings = settings;
 		this.id = id;
-		this.numDimensions = settings.centerStartingPosition.length;
+		this.numDimensions = settings.initialPosition.length;
 		track = new Track( id );
 		track.setVoxelSpacing( image.getVoxelSpacing() );
 	}
 
 	public void track()
 	{
-		track.setPosition( settings.timeInterval[ 0 ], settings.centerStartingPosition );
+		track.setPosition( settings.timeInterval[ 0 ], settings.initialPosition );
 
 		for ( long t = settings.timeInterval[ 0 ]; t < settings.timeInterval[ 1 ]; t++ )
 		{
-			final long[] position = track.getPosition( t );
+			final long[] position = track.getLongPosition( t );
 
 			Logger.log( "Track: " + track.getId() +
 					"; t = " + t +
@@ -74,9 +74,7 @@ public class StaticVolumePhaseCorrelationTracker < R extends RealType< R > & Nat
 
 			System.out.println( t + " -> " + ( t + 1 ) + ": " + Arrays.toString( shift ) );
 
-			final long[] shiftedPosition = getShiftedPosition( shift, position );
-
-
+			final double[] shiftedPosition = getShiftedPosition( shift, position );
 
 			track.setPosition( t + 1, shiftedPosition );
 		}
@@ -96,9 +94,9 @@ public class StaticVolumePhaseCorrelationTracker < R extends RealType< R > & Nat
 		return new FinalInterval( min, max );
 	}
 
-	private long[] getShiftedPosition( double[] shift, long[] position )
+	private double[] getShiftedPosition( double[] shift, long[] position )
 	{
-		final long[] shiftedPosition = new long[ position.length];
+		final double[] shiftedPosition = new double[ position.length];
 
 		for ( int d = 0; d < position.length; d++ )
 			shiftedPosition[ d ] = position[ d ] + (long) shift[ d ];

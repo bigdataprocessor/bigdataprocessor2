@@ -1,6 +1,7 @@
 package de.embl.cba.bdp2.tracking;
 
 import de.embl.cba.bdp2.Image;
+import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.process.VolumeExtractions;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdv.utils.objects3d.ThresholdFloodFill;
@@ -12,6 +13,7 @@ import net.imglib2.type.logic.BitType;
 import net.imglib2.type.numeric.RealType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ThresholdFloodFillOverlapTracker< R extends RealType< R > & NativeType< R > >
 {
@@ -59,11 +61,14 @@ public class ThresholdFloodFillOverlapTracker< R extends RealType< R > & NativeT
 
 			long[] seed = getSeed( t );
 
+//			Logger.log( "Seed: " + Arrays.toString( seed ) );
+
 			fill.run( seed );
 
 			final RandomAccessibleInterval< BitType > mask = fill.getMask();
 
-			Utils.showVolumeInImageJ1( mask, "mask " + t );
+			if ( t == 10 )
+				Utils.showVolumeInImageJ1( mask, "mask " + t );
 
 			positions = fill.getPositions();
 
@@ -81,12 +86,22 @@ public class ThresholdFloodFillOverlapTracker< R extends RealType< R > & NativeT
 
 	}
 
+	/**
+	 * TODO: Be more clever here to avoid looping through the new image twice?
+	 * Maybe this can be combined with the actual flood fill procedure?
+	 * For example, each position that is above the threshold could be the source of a parallel flood fill
+	 *
+	 * @param t
+	 * @return
+	 */
 	private long[] getSeed( long t )
 	{
-		long[] seed = track.getLongPosition( t );
-
 		if ( t > settings.timeInterval[ 0 ] )
 		{
+			double max = - Double.MAX_VALUE;
+			double value;
+			long[] seed = new long[ numDimensions ];
+
 			final RandomAccessibleInterval< R > volume = VolumeExtractions.getVolumeView( image.getRai(), settings.channel, t );
 
 			final RandomAccess< R > access = volume.randomAccess();
@@ -94,15 +109,23 @@ public class ThresholdFloodFillOverlapTracker< R extends RealType< R > & NativeT
 			for ( long[] position : positions )
 			{
 				access.setPosition( position );
-				if ( access.get().getRealDouble() >= settings.threshold )
+				value = access.get().getRealDouble();
+				if ( value >= settings.threshold )
 				{
-					seed = position;
-					break;
+					if ( value > max )
+					{
+						max = value;
+						seed = position;
+					}
 				}
 			}
-		}
 
-		return seed;
+			return seed;
+		}
+		else
+		{
+			return track.getLongPosition( t );
+		}
 	}
 
 	private double[] computeCentroid( ArrayList< long[] > positions )

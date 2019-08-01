@@ -38,9 +38,9 @@ public class TestMicrogliaTracking
         ThresholdFloodFillOverlapTracker.Settings settings = new ThresholdFloodFillOverlapTracker.Settings();
 
 //        settings.centerStartingPosition = new long[]{ 65, 44, 25 };
-        settings.startingPosition = new long[]{ 168, 62, 42 };
+        settings.startingPosition = new double[]{ 168, 62, 42 };
         settings.channel = 0;
-        settings.timeInterval = new long[]{ 0, 2 };
+        settings.timeInterval = new long[]{ 0, image.getRai().dimension( 4 ) - 1 };
         settings.threshold = 20;
 
         final ThresholdFloodFillOverlapTracker tracker =
@@ -86,7 +86,7 @@ public class TestMicrogliaTracking
         StaticVolumePhaseCorrelationTracker.Settings settings = new StaticVolumePhaseCorrelationTracker.Settings();
 
 //        settings.centerStartingPosition = new long[]{ 65, 44, 25 };
-        settings.centerStartingPosition = new long[]{ 168, 62, 42 };
+        settings.initialPosition = new double[]{ 168, 62, 42 };
         settings.channel = 0;
         settings.timeInterval = new long[]{ 0, 50 };
         settings.volumeDimensions = new long[]{ 30, 30, 15 };
