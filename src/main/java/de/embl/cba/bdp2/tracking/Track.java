@@ -76,4 +76,25 @@ public class Track
 	{
 		return timeToPosition.values().iterator().next().length;
 	}
+
+	public long tMin()
+	{
+		long tMin = Long.MAX_VALUE;
+		for ( long t : timeToPosition.keySet() )
+			if ( t < tMin ) tMin = t;
+
+		return tMin;
+	}
+
+	public long tMax()
+	{
+		long tMax = Long.MIN_VALUE;
+		for ( long t : timeToPosition.keySet() )
+			if ( t > tMax ) tMax = t;
+
+		return tMax;
+	}
+
+
+
 }

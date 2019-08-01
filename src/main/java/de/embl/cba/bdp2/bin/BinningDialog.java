@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.process;
+package de.embl.cba.bdp2.bin;
 
 import bdv.tools.brightness.SliderPanel;
 import bdv.util.BoundedValue;

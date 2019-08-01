@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.process;
+package de.embl.cba.bdp2.crop;
 
 import de.embl.cba.bdp2.Image;
 import net.imglib2.Interval;

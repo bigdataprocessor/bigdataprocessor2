@@ -2,10 +2,7 @@ package tests;
 
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
-import de.embl.cba.bdp2.tracking.StaticVolumePhaseCorrelationTracker;
-import de.embl.cba.bdp2.tracking.ThresholdFloodFillOverlapTracker;
-import de.embl.cba.bdp2.tracking.TrackDisplayBehaviour;
-import de.embl.cba.bdp2.tracking.TrackingIO;
+import de.embl.cba.bdp2.tracking.*;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import ij.IJ;
@@ -26,7 +23,6 @@ public class TestMicrogliaTracking
     @Test
     public < R extends RealType< R > & NativeType< R > > void thresholdFloodFillTracking( ) throws IOException
     {
-
         final BigDataProcessor2< R > bdp = new BigDataProcessor2<>();
 
         String imageDirectory = "/Users/tischer/Documents/fiji-plugin-bigDataTools2/" +
@@ -74,6 +70,50 @@ public class TestMicrogliaTracking
         TrackingIO.saveTrack( new File( "/Users/tischer/Documents/fiji-plugin-bigDataTools2/" +
                 "src/test/resources/test-data/microglia-tracking-nt123/track-thresholdFloodFillTracking.csv" ),
                 tracker.getTrack() );
+
+        final Image< R > trackViewImage = TrackViews.applyTrack( image, tracker.getTrack() );
+
+        new BdvImageViewer<>( trackViewImage );
+    }
+
+
+    @Test
+    public < R extends RealType< R > & NativeType< R > > void trackView( )
+    {
+
+        final BigDataProcessor2< R > bdp = new BigDataProcessor2<>();
+
+        String imageDirectory = "/Users/tischer/Documents/fiji-plugin-bigDataTools2/" +
+                "src/test/resources/test-data/microglia-tracking-nt123/volumes";
+
+        final Image< R > image = bdp.openImage(
+                imageDirectory,
+                FileInfos.SINGLE_CHANNEL_TIMELAPSE,
+                ".*" );
+
+        image.setVoxelUnit( "pixel" );
+        image.setVoxelSpacing( 1.0, 1.0, 1.0 );
+
+        final BdvImageViewer viewer = bdp.showImage( image );
+        viewer.setDisplayRange( 0, 150, 0 );
+
+        ThresholdFloodFillOverlapTracker.Settings settings = new ThresholdFloodFillOverlapTracker.Settings();
+
+        settings.initialPositionCalibrated = new double[]{ 168, 62, 42 };
+        settings.channel = 0;
+        settings.timeInterval = new long[]{ 0, 10 };
+        settings.threshold = 20;
+        settings.trackId = "Track001";
+
+        final ThresholdFloodFillOverlapTracker tracker =
+                new ThresholdFloodFillOverlapTracker< R >( image, settings );
+
+        tracker.track();
+        new TrackDisplayBehaviour( viewer.getBdvHandle(), tracker.getTrack() );
+
+        final Image< R > trackViewImage = TrackViews.applyTrack( image, tracker.getTrack() );
+
+        new BdvImageViewer<>( trackViewImage );
     }
 
 
@@ -130,7 +170,8 @@ public class TestMicrogliaTracking
         final ImageJ imageJ = new ImageJ();
         imageJ.ui().showUI();
 //        new TestMicrogliaTracking().trackUsingPhaseCorrelation();
-        new TestMicrogliaTracking().thresholdFloodFillTracking();
+//        new TestMicrogliaTracking().thresholdFloodFillTracking();
+        new TestMicrogliaTracking().trackView();
     }
 
 }

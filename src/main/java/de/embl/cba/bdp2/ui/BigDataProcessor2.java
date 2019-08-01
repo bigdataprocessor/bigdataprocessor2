@@ -39,6 +39,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.RecursiveTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+
+
+// TODO: currently this is more of a helpers class....and the "BdvViewer" is the actual processor...
 public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
 {
 
@@ -153,13 +156,15 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
         return saver;
     }
 
+
+    // TODO: move to Shearing but still have convenience access from here
     public static <T extends RealType<T> & NativeType<T>>
-    RandomAccessibleInterval shearImage(RandomAccessibleInterval rai, ShearingSettings shearingSettings)
+    RandomAccessibleInterval shearImage( RandomAccessibleInterval rai, ShearingSettings shearingSettings )
     {
         System.out.println("Shear Factor X " + shearingSettings.shearingFactorX);
         System.out.println("Shear Factor Y " + shearingSettings.shearingFactorY);
 
-        List<RandomAccessibleInterval<T>> timeTracks = new ArrayList<>();
+        List< RandomAccessibleInterval< T > > timeTracks = new ArrayList<>();
         int nTimeFrames = (int) rai.dimension( DimensionOrder.T );
         int nChannels = (int) rai.dimension( DimensionOrder.C );
         System.out.println("Shear Factor X " + shearingSettings.shearingFactorX);

@@ -2,10 +2,9 @@ package tests;
 
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
-import de.embl.cba.bdp2.process.Binner;
+import de.embl.cba.bdp2.bin.Binner;
 import de.embl.cba.bdp2.process.ChannelShifter;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
-import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import org.junit.Test;

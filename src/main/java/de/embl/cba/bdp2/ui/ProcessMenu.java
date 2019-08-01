@@ -17,7 +17,7 @@ public class ProcessMenu extends JMenu {
         addMenuItem( UIDisplayConstants.EIGHT_BIT_CONVERSION_MENU_ITEM );
         addMenuItem( UIDisplayConstants.CHROMATIC_SHIFT_CORRECTION_MENU_ITEM );
         addMenuItem( UIDisplayConstants.SPLIT_VIEW_MENU_ITEM );
-        addMenuItem( UIDisplayConstants.CORRECT_MOTION_MENU_ITEM );
+        addMenuItem( UIDisplayConstants.MOTION_CORRECTED_VIEW_MENU_ITEM );
     }
 
     private void addMenuItem( String name )

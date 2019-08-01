@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.process;
+package de.embl.cba.bdp2.bin;
 
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.lazyalgorithm.LazyDownsampler;

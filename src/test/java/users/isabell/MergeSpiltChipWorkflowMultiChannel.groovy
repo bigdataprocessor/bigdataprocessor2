@@ -2,20 +2,14 @@
 
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.logging.Logger;
-import de.embl.cba.bdp2.process.Cropper;
+import de.embl.cba.bdp2.crop.Cropper;
 import de.embl.cba.bdp2.process.splitviewmerge.SplitViewMerger;
 import de.embl.cba.bdp2.saving.SavingSettings;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.utils.Utils;
-import de.embl.cba.bdp2.viewers.BdvImageViewer;
-import net.imagej.ImageJ;
+import de.embl.cba.bdp2.viewers.BdvImageViewer
 import net.imglib2.FinalInterval;
-import net.imglib2.Interval;
-import net.imglib2.type.NativeType;
-import net.imglib2.type.numeric.RealType;
-
-import java.io.File;
-import java.util.ArrayList;
+import net.imglib2.Interval
 
 final BigDataProcessor2 bdp = new BigDataProcessor2<>();
 

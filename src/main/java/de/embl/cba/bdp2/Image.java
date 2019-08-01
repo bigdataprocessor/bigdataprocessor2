@@ -1,6 +1,7 @@
 package de.embl.cba.bdp2;
 
 import de.embl.cba.bdp2.loading.files.FileInfos;
+import de.embl.cba.bdp2.utils.DimensionOrder;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -89,5 +90,13 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		return new Image<>( rai, getName(), getVoxelSpacing(), getVoxelUnit(), getFileInfos() );
 	}
 
+	public long numTimePoints()
+	{
+		return rai.dimension( DimensionOrder.T );
+	}
 
+	public long numChannels()
+	{
+		return rai.dimension( DimensionOrder.C );
+	}
 }

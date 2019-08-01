@@ -3,6 +3,7 @@ package de.embl.cba.bdp2.tracking;
 import bdv.util.BdvHandle;
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.process.VolumeExtractions;
+import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import de.embl.cba.bdv.utils.BdvUtils;
 import de.embl.cba.bdv.utils.objects3d.ThresholdFloodFill;
 import ij.gui.NonBlockingGenericDialog;
@@ -47,17 +48,19 @@ public class ThresholdFloodFillOverlapTracker< R extends RealType< R > & NativeT
 		track.setVoxelSpacing( image.getVoxelSpacing() );
 	}
 
-	public static < R extends RealType< R > & NativeType< R > > void trackObjectDialog( BdvHandle bdv, Image< R > image )
+	public static < R extends RealType< R > & NativeType< R > > void trackObjectDialog(
+			BdvImageViewer< R > bdvImageViewer )
 	{
 		Settings settings = new Settings();
 
-		BdvUtils.getGlobalMouseCoordinates( bdv ).localize( settings.initialPositionCalibrated );
+		BdvUtils.getGlobalMouseCoordinates( bdvImageViewer.getBdvHandle() ).localize( settings.initialPositionCalibrated );
 
 		final NonBlockingGenericDialog gd = new NonBlockingGenericDialog( "Tracking settings" );
 		gd.addStringField( "Track ID", "Track_000" );
 		gd.addNumericField( "Channel ", 0, 0 );
-		gd.addNumericField( "First time point ", bdv.getViewerPanel().getState().getCurrentTimepoint(), 0 );
-		gd.addNumericField( "Last time point ",  image.getRai().dimension( 4 ) - 1 , 0 );
+		gd.addNumericField( "First time point ", bdvImageViewer.getBdvHandle()
+				.getViewerPanel().getState().getCurrentTimepoint(), 0 );
+		gd.addNumericField( "Last time point ",  bdvImageViewer.getImage().getRai().dimension( 4 ) - 1 , 0 );
 		gd.addNumericField( "Threshold ", 10 , 0 );
 		gd.showDialog();
 		if ( gd.wasCanceled() ) return;
@@ -67,11 +70,17 @@ public class ThresholdFloodFillOverlapTracker< R extends RealType< R > & NativeT
 		settings.threshold = gd.getNextNumber();
 
 		final ThresholdFloodFillOverlapTracker tracker =
-				new ThresholdFloodFillOverlapTracker< R >( image, settings );
+				new ThresholdFloodFillOverlapTracker< R >( bdvImageViewer.getImage(), settings );
 
 		new Thread( () -> tracker.track() ).start();
 
-		new TrackDisplayBehaviour( bdv, tracker.getTrack() );
+		new TrackDisplayBehaviour( bdvImageViewer.getBdvHandle(), tracker.getTrack() );
+
+		bdvImageViewer.addTrack( tracker.getTrack() );
+
+
+
+
 	}
 
 	public void track()

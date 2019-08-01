@@ -1,5 +1,7 @@
 package de.embl.cba.bdp2.ui;
 
+import de.embl.cba.bdp2.bin.BinningDialog;
+import de.embl.cba.bdp2.crop.CroppingDialog;
 import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.process.*;
 import de.embl.cba.bdp2.process.splitviewmerge.SplitViewMergingDialog;
@@ -54,6 +56,11 @@ public class BdvMenus
                 ObliqueMenuDialog obliqueMenuDialog = new ObliqueMenuDialog(imageViewer);
                 obliqueMenuDialog.setVisible(true);
             });
+        }else if (e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.MOTION_CORRECTED_VIEW_MENU_ITEM )) {
+            BigDataProcessor2.generalThreadPool.submit(() -> {
+                ObliqueMenuDialog obliqueMenuDialog = new ObliqueMenuDialog( imageViewer );
+                obliqueMenuDialog.setVisible(true);
+            });
         }else if(e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.CROP_MENU_ITEM )){
         	BigDataProcessor2.generalThreadPool.submit(() -> {
             	new CroppingDialog<>( imageViewer );
@@ -68,7 +75,7 @@ public class BdvMenus
                             DimensionOrder.Z, DimensionOrder.C);
             ImageJFunctions.show(permuted, BigDataProcessor2.generalThreadPool);
         }else if(e.getActionCommand().equalsIgnoreCase(
-                UIDisplayConstants.CORRECT_MOTION_MENU_ITEM )){
+                UIDisplayConstants.MOTION_CORRECTED_VIEW_MENU_ITEM )){
            BigDataProcessor2.generalThreadPool.submit(() -> {
                 BigDataTrackerGUI bigDataTrackerGUI = new BigDataTrackerGUI(imageViewer);
                 bigDataTrackerGUI.showDialog();

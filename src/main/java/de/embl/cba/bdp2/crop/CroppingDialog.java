@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.process;
+package de.embl.cba.bdp2.crop;
 
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.logging.Logger;
@@ -25,7 +25,5 @@ public class CroppingDialog< T extends RealType< T > & NativeType< T > >
 
 			Logger.info( "Cropped view size [GB]: " + Utils.getSizeGB( cropped.getRai() ) );
 		}
-
 	}
-
 }

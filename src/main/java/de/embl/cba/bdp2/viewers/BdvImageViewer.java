@@ -9,6 +9,7 @@ import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.boundingbox.BoundingBoxDialog;
 import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.tracking.ThresholdFloodFillOverlapTracker;
+import de.embl.cba.bdp2.tracking.Track;
 import de.embl.cba.bdp2.ui.BdvMenus;
 import de.embl.cba.bdp2.ui.DisplaySettings;
 import de.embl.cba.bdp2.utils.DimensionOrder;
@@ -27,33 +28,43 @@ import org.scijava.ui.behaviour.util.Behaviours;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
 {
-
     private Image< R > image;
     private BdvStackSource< Volatile< R > > bdvStackSource;
     private BdvGrayValuesOverlay overlay;
     private BdvHandle bdvHandle;
+    private Map< String, Track > tracks;
 
     public BdvImageViewer( Image< R > image )
     {
         this.image = image;
         show();
         doAutoContrastPerChannel();
+
+        // TODO: somehow it is not logical that this is part of the "Viewer" rather than the "Processor"....
         this.addMenus( new BdvMenus() );
         this.installBehaviours( );
     }
-
 
     private void installBehaviours()
     {
         Behaviours behaviours = new Behaviours( new InputTriggerConfig() );
         behaviours.install( bdvHandle.getTriggerbindings(), "behaviours" );
 
+        installTrackingBehaviour( behaviours );
+    }
+
+    private void installTrackingBehaviour( Behaviours behaviours )
+    {
+        tracks = new HashMap<>(  );
+
         behaviours.behaviour( ( ClickBehaviour ) ( x, y ) ->
-                ( new Thread( () -> ThresholdFloodFillOverlapTracker.trackObjectDialog( bdvHandle, image ) )).start(),
+                ( new Thread( () -> ThresholdFloodFillOverlapTracker.trackObjectDialog( this ) )).start(),
                 "Track object", "ctrl T"  ) ;
     }
 
@@ -439,5 +450,15 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
 //                "GrayOverlay",
 //                BdvOptions.options().addTo(bdvSS));
 
+    }
+
+    public void addTrack( Track track )
+    {
+        tracks.put( track.getId(), track );
+    }
+
+    public Map< String, Track > getTracks()
+    {
+        return tracks;
     }
 }
