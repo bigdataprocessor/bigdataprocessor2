@@ -21,8 +21,38 @@ import java.util.List;
 
 import static de.embl.cba.bdp2.utils.DimensionOrder.*;
 
-public class Duplicator  // TODO: better name?!
+public class VolumeExtractions  // TODO: better name?!
 {
+
+	public static < R extends RealType< R > & NativeType< R > >
+	RandomAccessibleInterval< R > getVolumeView(
+			RandomAccessibleInterval< R > image,
+			long c,
+			long t )
+	{
+		long start = System.currentTimeMillis();
+
+		long[] minInterval = new long[]{
+				image.min( X ),
+				image.min( Y ),
+				image.min( Z ),
+				c,
+				t };
+
+		long[] maxInterval = new long[]{
+				image.max( X ),
+				image.max( Y ),
+				image.max( Z ),
+				c,
+				t };
+
+		RandomAccessibleInterval raiXYZ =
+				Views.dropSingletonDimensions(
+						Views.interval( image, minInterval, maxInterval ) );
+
+		return raiXYZ;
+	}
+
 	public static < R extends RealType< R > & NativeType< R > >
 	RandomAccessibleInterval< R > getNonVolatileVolumeCopy(
 			RandomAccessibleInterval< R > image,

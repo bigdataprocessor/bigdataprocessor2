@@ -1,8 +1,8 @@
 package de.embl.cba.bdp2.tracking;
 
 import de.embl.cba.bdp2.Image;
-import de.embl.cba.bdp2.process.Duplicator;
-import de.embl.cba.bdp2.utils.Utils;
+import de.embl.cba.bdp2.logging.Logger;
+import de.embl.cba.bdp2.process.VolumeExtractions;
 import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;
@@ -48,29 +48,35 @@ public class StaticVolumePhaseCorrelationTracker < R extends RealType< R > & Nat
 		{
 			final long[] position = track.getPosition( t );
 
+			Logger.log( "Track: " + track.getId() +
+					"; t = " + t +
+					"; pos = " + Arrays.toString( track.getCalibratedPosition( t ) ) ) ;
+
 			System.out.println( "Position [pixels]: " + Arrays.toString( position ) );
 			System.out.println( "Position [calibrated]: " + Arrays.toString( track.getCalibratedPosition( t ) ) );
 
 			final FinalInterval volume = getVolume( position );
 
 			final RandomAccessibleInterval< R > rai0 =
-					Duplicator.getNonVolatileVolumeCopy( image.getRai(), volume, settings.channel, t, settings.numThreads );
+					VolumeExtractions.getNonVolatileVolumeCopy( image.getRai(), volume, settings.channel, t, settings.numThreads );
 
 //			 Utils.showVolumeInImageJ1( rai0, "Time-point " + t );
 
 			final RandomAccessibleInterval< R > rai1 =
-					Duplicator.getNonVolatileVolumeCopy( image.getRai(), volume, settings.channel, t + 1, settings.numThreads );
+					VolumeExtractions.getNonVolatileVolumeCopy( image.getRai(), volume, settings.channel, t + 1, settings.numThreads );
 
 //			Utils.showVolumeInImageJ1( rai1, "Time-point " + ( t + 1 ) );
 
 			final double[] shift = PhaseCorrelationTranslationComputer.computeShift(
-					rai0,
 					rai1,
+					rai0,
 					Executors.newFixedThreadPool( settings.numThreads ) );
 
 			System.out.println( t + " -> " + ( t + 1 ) + ": " + Arrays.toString( shift ) );
 
 			final long[] shiftedPosition = getShiftedPosition( shift, position );
+
+
 
 			track.setPosition( t + 1, shiftedPosition );
 		}

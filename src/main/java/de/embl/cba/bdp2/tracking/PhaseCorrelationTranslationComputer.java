@@ -65,7 +65,7 @@ public class PhaseCorrelationTranslationComputer
 
 		double[] shift = new double[ input0.numDimensions() ];
 
-		shiftPeak.getSubpixelShift().localize(shift);
+		shiftPeak.getSubpixelShift().localize( shift );
 
 		return shift;
 	}

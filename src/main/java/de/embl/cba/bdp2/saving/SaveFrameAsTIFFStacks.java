@@ -1,7 +1,7 @@
 package de.embl.cba.bdp2.saving;
 
 import de.embl.cba.bdp2.logging.Logger;
-import de.embl.cba.bdp2.process.Duplicator;
+import de.embl.cba.bdp2.process.VolumeExtractions;
 import de.embl.cba.bdp2.utils.Utils;
 import ij.ImagePlus;
 import ij.ImageStack;
@@ -82,7 +82,7 @@ public class SaveFrameAsTIFFStacks< R extends RealType< R > & NativeType< R > > 
             System.out.println( "Saving started: Frame " + t + ", Channel " + c );
 
             RandomAccessibleInterval< R > raiXYZ =
-                    new Duplicator().getNonVolatileVolumeCopy(
+                    new VolumeExtractions().getNonVolatileVolumeCopy(
                             image,
                             c, t,
                             settings.numProcessingThreads );

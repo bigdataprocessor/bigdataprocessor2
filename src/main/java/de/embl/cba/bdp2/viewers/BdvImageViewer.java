@@ -3,6 +3,7 @@ package de.embl.cba.bdp2.viewers;
 import bdv.tools.brightness.ConverterSetup;
 import bdv.tools.brightness.MinMaxGroup;
 import bdv.util.*;
+import bdv.viewer.Interpolation;
 import bdv.viewer.SourceAndConverter;
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.boundingbox.BoundingBoxDialog;
@@ -316,6 +317,7 @@ public class BdvImageViewer< R extends RealType< R > & NativeType< R > >
         this.image = image;
         bdvStackSource = addToBdv( image );
         bdvHandle = bdvStackSource.getBdvHandle();
+        bdvHandle.getViewerPanel().setInterpolation( Interpolation.NLINEAR );
         setTransform();
         setAutoColors();
     }

@@ -1,17 +1,18 @@
 package de.embl.cba.bdp2.tracking;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class Track
 {
 	private final String id;
 	private double[] voxelSpacings;
-	private HashMap< Long, long[] > timeToPosition;
+	private HashMap< Long, double[] > timeToPosition;
 
 	public Track( String id )
 	{
 		this.id = id;
-		timeToPosition = new HashMap<>();
+		timeToPosition = new HashMap< Long, double[] >();
 	}
 
 	public void setVoxelSpacing( double[] voxelSpacings )
@@ -28,7 +29,7 @@ public class Track
 	{
 		if ( timeToPosition.containsKey( t ) )
 		{
-			final long[] position = timeToPosition.get( t );
+			final double[] position = timeToPosition.get( t );
 			return calibrate( position );
 		}
 		else
@@ -37,7 +38,7 @@ public class Track
 		}
 	}
 
-	private double[] calibrate( long[] position )
+	private double[] calibrate( double[] position )
 	{
 		double[] calibratedPosition = new double[ position.length ];
 		for ( int d = 0; d < position.length; d++ )
@@ -45,13 +46,20 @@ public class Track
 		return calibratedPosition;
 	}
 
-	public void setPosition( long t, long[] position )
+	public void setPosition( long t, double[] position )
 	{
 		timeToPosition.put( t, position );
 	}
 
-	public long[] getPosition( long t )
+	public double[] getPosition( long t )
 	{
 		return timeToPosition.get( t );
 	}
+
+	public long[] getLongPosition( long t )
+	{
+		return Arrays.stream(  timeToPosition.get( t ) ).mapToLong( x -> (long) x  ).toArray();
+	}
+
+
 }
