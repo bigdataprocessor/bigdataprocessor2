@@ -2,7 +2,6 @@ package tests;
 
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
-import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.tracking.StaticVolumePhaseCorrelationTracker;
 import de.embl.cba.bdp2.tracking.ThresholdFloodFillOverlapTracker;
 import de.embl.cba.bdp2.tracking.TrackDisplayBehaviour;
@@ -46,13 +45,14 @@ public class TestMicrogliaTracking
 
         ThresholdFloodFillOverlapTracker.Settings settings = new ThresholdFloodFillOverlapTracker.Settings();
 
-        settings.startingPosition = new double[]{ 168, 62, 42 };
+        settings.initialPositionCalibrated = new double[]{ 168, 62, 42 };
         settings.channel = 0;
         settings.timeInterval = new long[]{ 0, image.getRai().dimension( 4 ) - 1 };
         settings.threshold = 20;
+        settings.trackId = "Track001";
 
         final ThresholdFloodFillOverlapTracker tracker =
-                new ThresholdFloodFillOverlapTracker< R >( image, settings, "Track01" );
+                new ThresholdFloodFillOverlapTracker< R >( image, settings );
 
         new Thread( new Runnable()
         {

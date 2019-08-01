@@ -28,7 +28,6 @@ public class TrackDisplayBehaviour
 			} )).start();
 
 		}, "Move backward along track" + track.getId(), "ctrl N"  ) ;
-
 	}
 
 	private void moveToTrackPosition( BdvHandle bdv, Track track, int t )
@@ -37,7 +36,7 @@ public class TrackDisplayBehaviour
 
 		if ( position == null )
 		{
-			Logger.log( "Track " + track.getId() + ": Time-point" + t + ": Position not (yet) available." );
+			Logger.log( "Track: " + track.getId() + ": Time point: " + t + " => Position not (yet) available." );
 			return;
 		}
 

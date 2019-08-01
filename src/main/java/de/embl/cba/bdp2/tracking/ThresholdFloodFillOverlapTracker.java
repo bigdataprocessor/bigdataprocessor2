@@ -1,57 +1,84 @@
 package de.embl.cba.bdp2.tracking;
 
+import bdv.util.BdvHandle;
 import de.embl.cba.bdp2.Image;
-import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.process.VolumeExtractions;
-import de.embl.cba.bdp2.utils.Utils;
+import de.embl.cba.bdv.utils.BdvUtils;
 import de.embl.cba.bdv.utils.objects3d.ThresholdFloodFill;
+import ij.gui.NonBlockingGenericDialog;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.RealPoint;
 import net.imglib2.algorithm.neighborhood.RectangleShape;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.logic.BitType;
 import net.imglib2.type.numeric.RealType;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class ThresholdFloodFillOverlapTracker< R extends RealType< R > & NativeType< R > >
 {
 	private final Image< R > image;
 	private final Settings settings;
-	private final String id;
 	private Track track;
 	private int numDimensions;
 	private ArrayList< long[] > positions;
 	private boolean isRunning;
 
+
 	public static class Settings
 	{
-		public double[] startingPosition;
+		public double[] initialPositionCalibrated = new double[ 3 ];
 		public long[] timeInterval = new long[]{ 0, 1 };
 		public long channel = 0;
 		public long maxNumObjectElements = 100 * 100 * 100;
-		public int numThreads = 1;
+		public int numThreads = 1; // TODO: multithreaded?
 		public double threshold = 0.0;
+		public String trackId;
 	}
 
 	public ThresholdFloodFillOverlapTracker( Image< R > image,
-											 Settings settings,
-											 String id )
+											 Settings settings )
 	{
 		this.image = image;
 		this.settings = settings;
-		this.id = id;
-		this.numDimensions = settings.startingPosition.length;
-		track = new Track( id );
+		this.numDimensions = settings.initialPositionCalibrated.length;
+		track = new Track( settings.trackId );
 		track.setVoxelSpacing( image.getVoxelSpacing() );
+	}
+
+	public static < R extends RealType< R > & NativeType< R > > void trackObjectDialog( BdvHandle bdv, Image< R > image )
+	{
+		Settings settings = new Settings();
+
+		BdvUtils.getGlobalMouseCoordinates( bdv ).localize( settings.initialPositionCalibrated );
+
+		final NonBlockingGenericDialog gd = new NonBlockingGenericDialog( "Tracking settings" );
+		gd.addStringField( "Track ID", "Track_000" );
+		gd.addNumericField( "Channel ", 0, 0 );
+		gd.addNumericField( "First time point ", bdv.getViewerPanel().getState().getCurrentTimepoint(), 0 );
+		gd.addNumericField( "Last time point ",  image.getRai().dimension( 4 ) - 1 , 0 );
+		gd.addNumericField( "Threshold ", 10 , 0 );
+		gd.showDialog();
+		if ( gd.wasCanceled() ) return;
+		settings.trackId = gd.getNextString();
+		settings.channel = (long) gd.getNextNumber();
+		settings.timeInterval = new long[]{ (long) gd.getNextNumber(), (long) gd.getNextNumber() };
+		settings.threshold = gd.getNextNumber();
+
+		final ThresholdFloodFillOverlapTracker tracker =
+				new ThresholdFloodFillOverlapTracker< R >( image, settings );
+
+		new Thread( () -> tracker.track() ).start();
+
+		new TrackDisplayBehaviour( bdv, tracker.getTrack() );
 	}
 
 	public void track()
 	{
 		isRunning = true;
 
-		track.setPosition( settings.timeInterval[ 0 ], settings.startingPosition );
+		track.setPosition( settings.timeInterval[ 0 ], settings.initialPositionCalibrated );
 
 		for ( long t = settings.timeInterval[ 0 ]; t < settings.timeInterval[ 1 ]; t++ )
 		{

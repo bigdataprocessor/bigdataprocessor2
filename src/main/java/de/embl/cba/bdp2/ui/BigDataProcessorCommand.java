@@ -54,6 +54,7 @@ public class BigDataProcessorCommand < R extends RealType< R > & NativeType< R >
         bdp.showVoxelSpacingDialog( image );
         bdp.showImage( image );
 
+
     }
 
 }

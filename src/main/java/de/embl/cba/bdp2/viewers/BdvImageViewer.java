@@ -8,6 +8,7 @@ import bdv.viewer.SourceAndConverter;
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.boundingbox.BoundingBoxDialog;
 import de.embl.cba.bdp2.logging.Logger;
+import de.embl.cba.bdp2.tracking.ThresholdFloodFillOverlapTracker;
 import de.embl.cba.bdp2.ui.BdvMenus;
 import de.embl.cba.bdp2.ui.DisplaySettings;
 import de.embl.cba.bdp2.utils.DimensionOrder;
@@ -20,12 +21,15 @@ import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Util;
 import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
+import org.scijava.ui.behaviour.ClickBehaviour;
+import org.scijava.ui.behaviour.io.InputTriggerConfig;
+import org.scijava.ui.behaviour.util.Behaviours;
 
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BdvImageViewer< R extends RealType< R > & NativeType< R > >
+public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
 {
 
     private Image< R > image;
@@ -39,6 +43,18 @@ public class BdvImageViewer< R extends RealType< R > & NativeType< R > >
         show();
         doAutoContrastPerChannel();
         this.addMenus( new BdvMenus() );
+        this.installBehaviours( );
+    }
+
+
+    private void installBehaviours()
+    {
+        Behaviours behaviours = new Behaviours( new InputTriggerConfig() );
+        behaviours.install( bdvHandle.getTriggerbindings(), "behaviours" );
+
+        behaviours.behaviour( ( ClickBehaviour ) ( x, y ) ->
+                ( new Thread( () -> ThresholdFloodFillOverlapTracker.trackObjectDialog( bdvHandle, image ) )).start(),
+                "Track object", "ctrl T"  ) ;
     }
 
     public BdvImageViewer( RandomAccessibleInterval< R > rai,
