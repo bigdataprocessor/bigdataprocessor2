@@ -23,6 +23,7 @@ public class ThresholdFloodFillOverlapTracker< R extends RealType< R > & NativeT
 	private Track track;
 	private int numDimensions;
 	private ArrayList< long[] > positions;
+	private boolean isRunning;
 
 	public static class Settings
 	{
@@ -48,6 +49,8 @@ public class ThresholdFloodFillOverlapTracker< R extends RealType< R > & NativeT
 
 	public void track()
 	{
+		isRunning = true;
+
 		track.setPosition( settings.timeInterval[ 0 ], settings.startingPosition );
 
 		for ( long t = settings.timeInterval[ 0 ]; t < settings.timeInterval[ 1 ]; t++ )
@@ -67,8 +70,8 @@ public class ThresholdFloodFillOverlapTracker< R extends RealType< R > & NativeT
 
 			final RandomAccessibleInterval< BitType > mask = fill.getMask();
 
-			if ( t == 10 )
-				Utils.showVolumeInImageJ1( mask, "mask " + t );
+//			if ( t == 10 )
+//				Utils.showVolumeInImageJ1( mask, "mask " + t );
 
 			positions = fill.getPositions();
 
@@ -81,8 +84,9 @@ public class ThresholdFloodFillOverlapTracker< R extends RealType< R > & NativeT
 			track.setPosition( t, centroid );
 
 			TrackingUtils.logTrackPosition( track, t );
-
 		}
+
+		isRunning = false;
 
 	}
 
@@ -142,20 +146,16 @@ public class ThresholdFloodFillOverlapTracker< R extends RealType< R > & NativeT
 		return centroid;
 	}
 
-
-	private long[] getShiftedPosition( double[] shift, long[] position )
-	{
-		final long[] shiftedPosition = new long[ position.length];
-
-		for ( int d = 0; d < position.length; d++ )
-			shiftedPosition[ d ] = position[ d ] + (long) shift[ d ];
-
-		return shiftedPosition;
-	}
-
 	public Track getTrack()
 	{
 		return track;
 	}
+
+	public boolean isFinished()
+	{
+		return ! isRunning ;
+	}
+
+
 
 }

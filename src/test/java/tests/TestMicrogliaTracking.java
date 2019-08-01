@@ -2,27 +2,36 @@ package tests;
 
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
+import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.tracking.StaticVolumePhaseCorrelationTracker;
 import de.embl.cba.bdp2.tracking.ThresholdFloodFillOverlapTracker;
 import de.embl.cba.bdp2.tracking.TrackDisplayBehaviour;
+import de.embl.cba.bdp2.tracking.TrackingIO;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import ij.IJ;
 import net.imagej.ImageJ;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.junit.Test;
 
+import java.io.File;
+import java.io.IOException;
+
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+
 public class TestMicrogliaTracking
 {
 
     @Test
-    public < R extends RealType< R > & NativeType< R > > void thresholdFloodFillTracking( )
+    public < R extends RealType< R > & NativeType< R > > void thresholdFloodFillTracking( ) throws IOException
     {
 
         final BigDataProcessor2< R > bdp = new BigDataProcessor2<>();
 
         String imageDirectory = "/Users/tischer/Documents/fiji-plugin-bigDataTools2/" +
-                "src/test/resources/test-data/microglia-tracking-long/volumes";
+                "src/test/resources/test-data/microglia-tracking-nt123/volumes";
 
         final Image< R > image = bdp.openImage(
                 imageDirectory,
@@ -37,7 +46,6 @@ public class TestMicrogliaTracking
 
         ThresholdFloodFillOverlapTracker.Settings settings = new ThresholdFloodFillOverlapTracker.Settings();
 
-//        settings.centerStartingPosition = new long[]{ 65, 44, 25 };
         settings.startingPosition = new double[]{ 168, 62, 42 };
         settings.channel = 0;
         settings.timeInterval = new long[]{ 0, image.getRai().dimension( 4 ) - 1 };
@@ -57,6 +65,15 @@ public class TestMicrogliaTracking
 
         new TrackDisplayBehaviour( viewer.getBdvHandle(), tracker.getTrack() );
 
+        while( ! tracker.isFinished() )
+            IJ.wait(100 );
+
+        assertArrayEquals( new double[]{ 111.31,73.90,24.29 }, tracker.getTrack().getCalibratedPosition( 53 ), 1.0 );
+        assertArrayEquals( new double[]{ 38.27,36.69,20.81 }, tracker.getTrack().getCalibratedPosition( 120 ), 1.0 );
+
+        TrackingIO.saveTrack( new File( "/Users/tischer/Documents/fiji-plugin-bigDataTools2/" +
+                "src/test/resources/test-data/microglia-tracking-nt123/track-thresholdFloodFillTracking.csv" ),
+                tracker.getTrack() );
     }
 
 
@@ -88,7 +105,7 @@ public class TestMicrogliaTracking
 //        settings.centerStartingPosition = new long[]{ 65, 44, 25 };
         settings.initialPosition = new double[]{ 168, 62, 42 };
         settings.channel = 0;
-        settings.timeInterval = new long[]{ 0, 50 };
+        settings.timeInterval = new long[]{ 0, 2 };
         settings.volumeDimensions = new long[]{ 30, 30, 15 };
 
         final StaticVolumePhaseCorrelationTracker tracker =
@@ -108,7 +125,7 @@ public class TestMicrogliaTracking
     }
 
 
-    public static void main( String[] args )
+    public static void main( String[] args ) throws IOException
     {
         final ImageJ imageJ = new ImageJ();
         imageJ.ui().showUI();

@@ -29,7 +29,6 @@ public class TrackDisplayBehaviour
 
 		}, "Move backward along track" + track.getId(), "ctrl N"  ) ;
 
-
 	}
 
 	private void moveToTrackPosition( BdvHandle bdv, Track track, int t )
@@ -42,6 +41,6 @@ public class TrackDisplayBehaviour
 			return;
 		}
 
-		BdvUtils.moveToPosition( bdv, position, t, 500 );
+		BdvUtils.moveToPosition( bdv, position, t, 200 );
 	}
 }

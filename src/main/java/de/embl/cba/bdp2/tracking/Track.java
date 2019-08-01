@@ -2,6 +2,7 @@ package de.embl.cba.bdp2.tracking;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Set;
 
 public class Track
 {
@@ -58,8 +59,21 @@ public class Track
 
 	public long[] getLongPosition( long t )
 	{
-		return Arrays.stream(  timeToPosition.get( t ) ).mapToLong( x -> (long) x  ).toArray();
+		return Arrays.stream(  timeToPosition.get( t ) ).mapToLong( x -> Math.round( x ) ).toArray();
 	}
 
+	public HashMap< Long, double[] > getTimeToPositionMap()
+	{
+		return timeToPosition;
+	}
 
+	public Set< Long > getTimePoints()
+	{
+		return timeToPosition.keySet();
+	}
+
+	public int numDimensions()
+	{
+		return timeToPosition.values().iterator().next().length;
+	}
 }
