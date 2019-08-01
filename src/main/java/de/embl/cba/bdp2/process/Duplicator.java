@@ -14,14 +14,17 @@ import net.imglib2.type.Type;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Intervals;
 import net.imglib2.util.Util;
+import net.imglib2.view.ExtendedRandomAccessibleInterval;
 import net.imglib2.view.Views;
+
+import java.util.List;
 
 import static de.embl.cba.bdp2.utils.DimensionOrder.*;
 
 public class Duplicator  // TODO: better name?!
 {
 	public static < R extends RealType< R > & NativeType< R > >
-	RandomAccessibleInterval< R > copyVolumeFromRai(
+	RandomAccessibleInterval< R > getNonVolatileVolumeCopy(
 			RandomAccessibleInterval< R > image,
 			long c,
 			long t,
@@ -46,6 +49,46 @@ public class Duplicator  // TODO: better name?!
 		RandomAccessibleInterval raiXYZ =
 				Views.dropSingletonDimensions(
 						Views.interval( image, minInterval, maxInterval ) );
+
+		raiXYZ = copyVolumeRAI( raiXYZ, numThreads );
+
+		Logger.debug( "Produce processed data cube [ s ]: "
+				+ ( System.currentTimeMillis() - start ) / 1000);
+
+		return raiXYZ;
+	}
+
+	public static < R extends RealType< R > & NativeType< R > >
+	RandomAccessibleInterval< R > getNonVolatileVolumeCopy(
+			RandomAccessibleInterval< R > rai,
+			FinalInterval volume,
+			long c,
+			long t,
+			int numThreads )
+	{
+		long start = System.currentTimeMillis();
+
+		long[] minInterval = new long[]{
+				volume.min( X ),
+				volume.min( Y ),
+				volume.min( Z ),
+				c,
+				t };
+
+		long[] maxInterval = new long[]{
+				volume.max( X ),
+				volume.max( Y ),
+				volume.max( Z ),
+				c,
+				t };
+
+		// Accommodate cases where the asked-for volume is out-of-bounds
+		RandomAccessible< R > extended = Views.extendBorder( rai );
+
+		RandomAccessibleInterval raiXYZ =
+				Views.zeroMin(
+						Views.dropSingletonDimensions(
+								Views.interval( extended, minInterval, maxInterval ) ) );
 
 		raiXYZ = copyVolumeRAI( raiXYZ, numThreads );
 
@@ -103,10 +146,11 @@ public class Duplicator  // TODO: better name?!
 				dimensionY,
 				( int ) Math.ceil( dimensionZ / numThreads ) };
 
-		Grids.collectAllContainedIntervals(
-				Intervals.dimensionsAsLongArray( volume ) , blockSize )
-		.parallelStream().forEach(
-				interval -> copy( volume, Views.interval( copy, interval )));
+		final List< Interval > intervals = Grids.collectAllContainedIntervals(
+				Intervals.dimensionsAsLongArray( volume ), blockSize );
+
+		intervals.parallelStream().forEach(
+				interval -> copy( volume, Views.interval( copy, interval ) ) );
 
 		return copy;
 	}
@@ -126,8 +170,9 @@ public class Duplicator  // TODO: better name?!
 	}
 
 
-	private static < T extends Type< T > > void copy( final RandomAccessible< T > source,
-													 final IterableInterval< T > target )
+	private static < T extends Type< T > > void copy(
+			final RandomAccessible< T > source,
+			final IterableInterval< T > target )
 	{
 		// create a cursor that automatically localizes itself on every move
 		Cursor< T > targetCursor = target.localizingCursor();

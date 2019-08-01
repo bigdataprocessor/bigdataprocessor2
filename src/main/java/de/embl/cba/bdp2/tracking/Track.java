@@ -24,10 +24,17 @@ public class Track
 		return id;
 	}
 
-	public double[] getCalibratedPosition( int t )
+	public double[] getCalibratedPosition( long t )
 	{
-		final long[] position = timeToPosition.get( t );
-		return calibrate( position );
+		if ( timeToPosition.containsKey( t ) )
+		{
+			final long[] position = timeToPosition.get( t );
+			return calibrate( position );
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 	private double[] calibrate( long[] position )

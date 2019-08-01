@@ -80,7 +80,7 @@ public class SaveFrameAsImarisVolumes< R extends RealType< R > & NativeType< R >
 
 
             final RandomAccessibleInterval< R > volumeRai
-                    = new Duplicator().copyVolumeFromRai(
+                    = new Duplicator().getNonVolatileVolumeCopy(
                             rai, c, t, settings.numProcessingThreads );
 
             ImagePlus imagePlus =

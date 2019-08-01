@@ -2,6 +2,8 @@ package de.embl.cba.bdp2.tracking;
 
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.process.Duplicator;
+import de.embl.cba.bdp2.utils.Utils;
+import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -15,6 +17,7 @@ public class StaticVolumePhaseCorrelationTracker < R extends RealType< R > & Nat
 	private final Settings settings;
 	private final String id;
 	private Track track;
+	private int numDimensions;
 
 	public static class Settings
 	{
@@ -32,6 +35,7 @@ public class StaticVolumePhaseCorrelationTracker < R extends RealType< R > & Nat
 		this.image = image;
 		this.settings = settings;
 		this.id = id;
+		this.numDimensions = settings.centerStartingPosition.length;
 		track = new Track( id );
 		track.setVoxelSpacing( image.getVoxelSpacing() );
 	}
@@ -42,14 +46,22 @@ public class StaticVolumePhaseCorrelationTracker < R extends RealType< R > & Nat
 
 		for ( long t = settings.timeInterval[ 0 ]; t < settings.timeInterval[ 1 ]; t++ )
 		{
+			final long[] position = track.getPosition( t );
 
-			// TODO: make method to crop subvolume from image: Duplicator.copyVolumeFromRai
+			System.out.println( "Position [pixels]: " + Arrays.toString( position ) );
+			System.out.println( "Position [calibrated]: " + Arrays.toString( track.getCalibratedPosition( t ) ) );
+
+			final FinalInterval volume = getVolume( position );
 
 			final RandomAccessibleInterval< R > rai0 =
-					Duplicator.copyVolumeFromRai( image.getRai(), settings.channel, t, settings.numThreads );
+					Duplicator.getNonVolatileVolumeCopy( image.getRai(), volume, settings.channel, t, settings.numThreads );
+
+//			 Utils.showVolumeInImageJ1( rai0, "Time-point " + t );
 
 			final RandomAccessibleInterval< R > rai1 =
-					Duplicator.copyVolumeFromRai( image.getRai(), settings.channel, t + 1, settings.numThreads );
+					Duplicator.getNonVolatileVolumeCopy( image.getRai(), volume, settings.channel, t + 1, settings.numThreads );
+
+//			Utils.showVolumeInImageJ1( rai1, "Time-point " + ( t + 1 ) );
 
 			final double[] shift = PhaseCorrelationTranslationComputer.computeShift(
 					rai0,
@@ -58,11 +70,24 @@ public class StaticVolumePhaseCorrelationTracker < R extends RealType< R > & Nat
 
 			System.out.println( t + " -> " + ( t + 1 ) + ": " + Arrays.toString( shift ) );
 
-			final long[] shiftedPosition = getShiftedPosition( shift, track.getPosition( t ) );
+			final long[] shiftedPosition = getShiftedPosition( shift, position );
 
 			track.setPosition( t + 1, shiftedPosition );
 		}
 
+	}
+
+	private FinalInterval getVolume( long[] position )
+	{
+		long[] min = new long[ numDimensions ];
+		long[] max = new long[ numDimensions ];
+		for ( int d = 0; d < numDimensions; d++ )
+		{
+			min[ d ] = position[ d ] - settings.volumeDimensions[ d ] / 2;
+			max[ d ] = position[ d ] + settings.volumeDimensions[ d ] / 2;
+		}
+
+		return new FinalInterval( min, max );
 	}
 
 	private long[] getShiftedPosition( double[] shift, long[] position )

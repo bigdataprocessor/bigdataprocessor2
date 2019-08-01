@@ -6,6 +6,7 @@ import de.embl.cba.bdp2.tracking.StaticVolumePhaseCorrelationTracker;
 import de.embl.cba.bdp2.tracking.TrackDisplayBehaviour;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import net.imagej.ImageJ;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.junit.Test;
@@ -39,7 +40,7 @@ public class TestMicrogliaTracking
 
         settings.centerStartingPosition = new long[]{ 168, 60, 43 };
         settings.channel = 0;
-        settings.timeInterval = new long[]{ 0, 5};
+        settings.timeInterval = new long[]{ 5, 6 };
         settings.volumeDimensions = new long[]{ 50, 50, 25 };
 
         final StaticVolumePhaseCorrelationTracker tracker =
@@ -60,6 +61,8 @@ public class TestMicrogliaTracking
 
     public static void main( String[] args )
     {
+        final ImageJ imageJ = new ImageJ();
+        imageJ.ui().showUI();
         new TestMicrogliaTracking().trackUsingPhaseCorrelation();
     }
 

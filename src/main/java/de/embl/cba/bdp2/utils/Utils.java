@@ -190,6 +190,16 @@ public class Utils {
 		return merger.mergeIntervalsXYC( image );
 	}
 
+	public static < R extends RealType< R > & NativeType< R > >
+	void showVolumeInImageJ1( RandomAccessibleInterval< R > rai, String title )
+	{
+		final RandomAccessibleInterval< R > permute = Views.permute(
+				Views.addDimension( rai, 0, 0 ),
+				2, 3 );
+
+		ImageJFunctions.wrap( permute, title ).show();
+	}
+
 	public enum FileType {
         HDF5("Hdf5"),
         HDF5_IMARIS_BDV("Partitioned Imaris"),

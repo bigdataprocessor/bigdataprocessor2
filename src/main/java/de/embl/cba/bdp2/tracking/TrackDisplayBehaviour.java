@@ -16,23 +16,32 @@ public class TrackDisplayBehaviour
 
 		behaviours.behaviour( ( ClickBehaviour ) ( x, y ) -> {
 			(new Thread( () -> {
-
-				final int nextTimePoint = bdv.getViewerPanel().getState().getCurrentTimepoint() + 1;
-
-				double[] position = track.getCalibratedPosition( nextTimePoint );
-
-				if ( position == null )
-				{
-					Logger.log( "Track " + track.getId() + ": Time-point" + nextTimePoint + ": Position not (yet) available."  );
-					return;
-				}
-
-				BdvUtils.moveToPosition( bdv, position, nextTimePoint, 500 );
-
+				moveToTrackPosition( bdv, track, bdv.getViewerPanel().getState().getCurrentTimepoint() + 1 );
 			} )).start();
 
-		}, "Move forward along track" + track.getId(), "ctrl N"  ) ;
+		}, "Move forward along track" + track.getId(), "ctrl M"  ) ;
 
 
+		behaviours.behaviour( ( ClickBehaviour ) ( x, y ) -> {
+			(new Thread( () -> {
+				moveToTrackPosition( bdv, track, bdv.getViewerPanel().getState().getCurrentTimepoint() - 1 );
+			} )).start();
+
+		}, "Move backward along track" + track.getId(), "ctrl N"  ) ;
+
+
+	}
+
+	private void moveToTrackPosition( BdvHandle bdv, Track track, int t )
+	{
+		double[] position = track.getCalibratedPosition( t );
+
+		if ( position == null )
+		{
+			Logger.log( "Track " + track.getId() + ": Time-point" + t + ": Position not (yet) available." );
+			return;
+		}
+
+		BdvUtils.moveToPosition( bdv, position, t, 500 );
 	}
 }
