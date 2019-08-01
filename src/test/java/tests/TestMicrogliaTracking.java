@@ -5,6 +5,7 @@ import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.tracking.*;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import de.embl.cba.bdv.utils.BdvUtils;
 import ij.IJ;
 import net.imagej.ImageJ;
 import net.imglib2.type.NativeType;
@@ -113,7 +114,9 @@ public class TestMicrogliaTracking
 
         final Image< R > trackViewImage = TrackViews.applyTrack( image, tracker.getTrack() );
 
-        new BdvImageViewer<>( trackViewImage );
+        final BdvImageViewer< R > newViewer = new BdvImageViewer<>( trackViewImage );
+        newViewer.setDisplaySettings( viewer.getDisplaySettings() );
+        BdvUtils.moveToPosition( newViewer.getBdvHandle(), new double[]{0,0,0}, 0, 100);
     }
 
 

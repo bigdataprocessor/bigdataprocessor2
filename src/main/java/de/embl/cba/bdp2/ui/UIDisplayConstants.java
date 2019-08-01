@@ -10,14 +10,13 @@ public class UIDisplayConstants {
     // Menu items
     public static final String SAVE_AS_MENU_ITEM = "Save As...";
     public static final String IMAGEJ_VIEW_MENU_ITEM = "Show in ImageJ Viewer";
-    public static final String MOTION_CORRECTED_VIEW_MENU_ITEM = "Motion Corrected View...";
-    public static final String OBLIQUE_MENU_ITEM = "Straightened Oblique View...";
+    public static final String MOTION_CORRECTED_VIEW_MENU_ITEM = "Correct Motion...";
+    public static final String OBLIQUE_MENU_ITEM = "Shear...";
     public static final String CROP_MENU_ITEM = "Crop...";
-    public static final String EIGHT_BIT_CONVERSION_MENU_ITEM = "Convert to 8-bit...";
+    public static final String EIGHT_BIT_CONVERSION_MENU_ITEM = "8-bit...";
     public static final String BINNING_MENU_ITEM = "Bin...";
     public static final String CHROMATIC_SHIFT_CORRECTION_MENU_ITEM = "Correct Chromatic Shift... ";
-    public static final String SPLIT_VIEW_MENU_ITEM = "Merge Split View...";
+    public static final String SPLIT_VIEW_MENU_ITEM = "Regions as Channels...";
     public static final String CONFIGURE_LOGGING_MENU_ITEM = "Configure Logging...";
-
 
 }
