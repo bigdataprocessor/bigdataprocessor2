@@ -18,5 +18,6 @@ public class UIDisplayConstants {
     public static final String CHROMATIC_SHIFT_CORRECTION_MENU_ITEM = "Correct Chromatic Shift... ";
     public static final String SPLIT_VIEW_MENU_ITEM = "Regions as Channels...";
     public static final String CONFIGURE_LOGGING_MENU_ITEM = "Configure Logging...";
+    public static final String VIEW_In_3D_VIEWER = "3D Viewer..."; // TODO
 
 }

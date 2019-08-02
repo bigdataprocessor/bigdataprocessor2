@@ -8,6 +8,7 @@ import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.imaris.ImarisUtils;
+import ij.io.FileInfo;
 import net.imagej.axis.Axes;
 import net.imagej.axis.AxisType;
 import net.imglib2.type.NativeType;
@@ -64,6 +65,8 @@ public class FileInfos
     public final String directory;
     public double max_pixel_val;
     public double min_pixel_val;
+    public int compression;
+    public int numTiffStrips;
 
     public FileInfos(
             String directory,
@@ -85,19 +88,21 @@ public class FileInfos
         directory = Utils.fixDirectoryFormat( directory );
 
         this.directory = directory;
+
         if ( loadingScheme.contains("<Z") )
         {
-            FileInfosHelper.setFileSourceInfos(this, directory, loadingScheme );
+            FileInfosHelper.setFileInfos(this, directory, loadingScheme );
         }
         else
         {
             this.h5DataSetName = h5DataSetName;
-            FileInfosHelper.setFileSourceInfos(
+            FileInfosHelper.setFileInfos(
                     this,
                     directory,
                     loadingScheme,
                     filterPattern );
         }
+
         infos = new SerializableFileInfo[nC][nT][nZ];
         dimensions = new long[ 5 ];
         dimensions[ DimensionOrder.X ] = nX;
@@ -105,6 +110,7 @@ public class FileInfos
         dimensions[ DimensionOrder.Z ] = nZ;
         dimensions[ DimensionOrder.C ] = nC;
         dimensions[ DimensionOrder.T ] = nT;
+
         if ( voxelUnit == null || Objects.equals( voxelUnit, "")) voxelUnit = "pixel";
 
         Logger.info( this.toString() );
@@ -117,6 +123,11 @@ public class FileInfos
         info += "Folder: " + directory + "\n";
         info += "FileType: " + fileType + "\n";
         info += "BitDepth: " + bitDepth + "\n";
+        if ( fileType.toLowerCase().contains( "tif" ) )
+        {
+            info += "Tiff Compression: " + getCompressionString() + "\n";
+            info += "Tiff Strips: " + numTiffStrips + "\n";
+        }
         info += "nX: " + nX + "\n";
         info += "nY: " + nY + "\n";
         info += "nZ: " + nZ + "\n";
@@ -125,6 +136,19 @@ public class FileInfos
         info += "GB: " + getSizeInGB() + "\n";
 
         return info;
+    }
+
+    private String getCompressionString()
+    {
+        String compressionString;
+        switch ( compression )
+        {
+            case FileInfo.ZIP: compressionString = "ZIP"; break;
+            case FileInfo.LZW: compressionString = "LZW"; break;
+
+            default: compressionString = "None";
+        }
+        return compressionString;
     }
 
     private double getSizeInGB()

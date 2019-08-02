@@ -20,6 +20,7 @@ public class BigDataProcessorCommand < R extends RealType< R > & NativeType< R >
     @Parameter(label = "Subset files using regular expression",
             choices = {
                     ".*",
+                    ".*.tif",
                     ".*--C.*",
                     ".*Left.*",
                     ".*Right.*",

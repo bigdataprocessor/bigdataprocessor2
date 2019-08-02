@@ -12,10 +12,11 @@ import java.util.regex.Pattern;
 public class FileInfosLeicaHelper
 {
 
-    public static boolean initLeicaSinglePlaneTiffData( FileInfos imageDataInfo, String directory, String filterPattern, String[] fileList, int t, int z, int nC, int nZ)
+    public static boolean initLeicaSinglePlaneTiffData(
+            FileInfos imageDataInfo, String directory, String filterPattern, String[] fileList, int nC, int nZ )
     {
         int nT;
-        int c;
+        int z,t,c;
         imageDataInfo.fileType = Utils.FileType.SINGLE_PLANE_TIFF.toString();
 
         //
@@ -163,7 +164,7 @@ public class FileInfosLeicaHelper
         //
 
         imageDataInfo.channelFolders = new String[nC];
-        for (int ic = 0; ic < nC; ic++) imageDataInfo.channelFolders[ic] = "";
+        for ( c = 0; c < nC; c++ ) imageDataInfo.channelFolders[c] = "";
 
         //
         // sort into the final file list
@@ -178,7 +179,6 @@ public class FileInfosLeicaHelper
 
             for ( String fileName : fileList )
             {
-
                 if ( patternFileID.matcher(fileName).matches() )
                 {
 
@@ -228,7 +228,7 @@ public class FileInfosLeicaHelper
             }
         }
 
-        FileInfosHelper.setImageDataInfoFromTiff(imageDataInfo, directory, imageDataInfo.ctzFileList[0][0][0]);
+        FileInfosHelper.setImageMetadataFromTiff(imageDataInfo, directory, imageDataInfo.ctzFileList[0][0][0]);
         imageDataInfo.nZ = nZ;
         imageDataInfo.nC = nC;
         imageDataInfo.nT = nT;

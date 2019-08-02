@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 public class FileInfosHelper
 {
 
-    public static boolean setFileSourceInfos(
+    public static boolean setFileInfos(
             FileInfos infoSource,
             String directory,
             String namingPattern)
@@ -110,7 +110,7 @@ public class FileInfosHelper
                         File f = new File(directory + infoSource.channelFolders[c - ctzMin[0]] + "/" + fileName);
 
                         if (f.exists() && !f.isDirectory()) {
-                            setImageDataInfoFromTiff(infoSource,directory + infoSource.channelFolders[c - ctzMin[0]],fileName);
+                            setImageMetadataFromTiff(infoSource,directory + infoSource.channelFolders[c - ctzMin[0]],fileName);
 
                             if (infoSource.fileType.equals(Utils.FileType.SINGLE_PLANE_TIFF.toString()))
                                 infoSource.nZ = ctzSize[2];
@@ -129,12 +129,13 @@ public class FileInfosHelper
         return isObtainedImageDataInfo;
     }
 
-    public static void setImageDataInfoFromTiff(
-            FileInfos infoSource,
+    public static void setImageMetadataFromTiff(
+            FileInfos fileInfos,
             String directory,
             String fileName)
     {
         SerializableFileInfo[] info;
+
         try
         {
             FastTiffDecoder ftd = new FastTiffDecoder(directory, fileName);
@@ -147,42 +148,241 @@ public class FileInfosHelper
 
         if ( info[0].nImages > 1 )
         {
-            infoSource.nZ = info[0].nImages;
+            fileInfos.nZ = info[0].nImages;
             info[0].nImages = 1;
         }
         else
         {
-            infoSource.nZ = info.length;
+            fileInfos.nZ = info.length;
         }
 
-        infoSource.nX = info[0].width;
-        infoSource.nY = info[0].height;
-        infoSource.bitDepth = info[0].bytesPerPixel * 8;
+        fileInfos.nX = info[0].width;
+        fileInfos.nY = info[0].height;
+        fileInfos.bitDepth = info[0].bytesPerPixel * 8;
+        fileInfos.compression =  info[0].compression;
+        fileInfos.numTiffStrips = info[0].stripLengths.length;
 
-        infoSource.voxelSpacing = new double[]{
+        fileInfos.voxelSpacing = new double[]{
                 info[0].pixelWidth,
                 info[0].pixelHeight,
                 info[0].pixelDepth };
 
-        infoSource.voxelUnit = info[0].unit;
+        fileInfos.voxelUnit = info[0].unit;
 
     }
 
 
-    public static boolean setFileSourceInfos(
-            FileInfos infoSource,
+    public static void setFileInfos(
+            FileInfos fileInfos,
             String directory,
             String namingScheme,
-            String filterPattern) { //previously, setAllInfosByParsingFilesAndFolders
+            String filterPattern)
+    {
 
+        String[][] fileLists = getFilesInFolders( fileInfos, directory, namingScheme, filterPattern );
+
+        if ( fileLists == null )
+        {
+            Logger.error( "Error during file parsing..." );
+            return;
+        }
+
+        if ( namingScheme.equals( FileInfos.LEICA_SINGLE_TIFF ) )
+        {
+            fileInfos.fileType = Utils.FileType.SINGLE_PLANE_TIFF.toString();
+
+            String dataDirectory = getFirstChannelDirectory( fileInfos, directory );
+
+            FileInfosLeicaHelper.initLeicaSinglePlaneTiffData(
+                    fileInfos, dataDirectory, filterPattern, fileLists[ 0 ], fileInfos.nC, fileInfos.nZ);
+
+        }
+        else // tiff or h5
+        {
+            setFileInfos( fileInfos, namingScheme, fileLists );
+
+            fixChannelFolders( fileInfos, namingScheme );
+
+            setImageMetadata( fileInfos, directory + fileInfos.channelFolders[ 0 ], namingScheme, fileLists[ 0 ] );
+        }
+
+    }
+
+    private static void setImageMetadata( FileInfos fileInfos, String directory, String namingScheme, String[] fileList )
+    {
+        if ( fileList[0].endsWith(".tif") )
+        {
+            setImageMetadataFromTiff(
+                    fileInfos,
+                    directory,
+                    fileList[0] );
+
+            if ( namingScheme.equals( FileInfos.EM_TIFF_SLICES ) )
+            {
+                fileInfos.fileType = Utils.FileType.SINGLE_PLANE_TIFF.toString();
+                fileInfos.nZ = fileList.length;
+            }
+            else
+            {
+                fileInfos.fileType = Utils.FileType.TIFF_STACKS.toString();
+            }
+        }
+        else if ( fileList[0].endsWith(".h5") )
+        {
+            FileInfosHDF5Helper.setImageDataInfoFromH5(
+                    fileInfos,
+                    directory,
+                    fileList[0]);
+            fileInfos.fileType = Utils.FileType.HDF5.toString();
+        }
+        else
+        {
+            Logger.error("Unsupported file type: " + fileList[0]);
+        }
+    }
+
+    private static void fixChannelFolders( FileInfos fileInfos, String namingScheme )
+    {
+        //
+        // Create dummy channel folders, if no real ones exist
+        //
+        if ( ! namingScheme.equals( FileInfos.LOAD_CHANNELS_FROM_FOLDERS) )
+        {
+            fileInfos.channelFolders = new String[ fileInfos.nC ];
+            for ( int c = 0; c < fileInfos.nC; c++) fileInfos.channelFolders[ c ] = "";
+        }
+    }
+
+    private static void setFileInfos( FileInfos fileInfos, String namingScheme, String[][] fileLists )
+    {
+        if ( namingScheme.equals( FileInfos.LOAD_CHANNELS_FROM_FOLDERS) )
+        {
+            fileInfos.nC = fileInfos.channelFolders.length;
+            fileInfos.nT = fileLists[0].length;
+            populateFileList( fileInfos, namingScheme, fileLists );
+
+        }
+        else if ( namingScheme.equalsIgnoreCase( FileInfos.SINGLE_CHANNEL_TIMELAPSE ) )
+        {
+            fileInfos.nC = 1;
+            fileInfos.nT = fileLists[0].length;
+            populateFileList( fileInfos, namingScheme, fileLists );
+
+        }
+        else if ( namingScheme.equals( FileInfos.EM_TIFF_SLICES ) )
+        {
+            fileInfos.nC = 1;
+            fileInfos.nT = 1;
+            fileInfos.fileType = Utils.FileType.SINGLE_PLANE_TIFF.toString();
+            populateFileList( fileInfos, namingScheme, fileLists );
+        }
+        else
+        {
+            if ( ! (namingScheme.contains("<c>") && namingScheme.contains("<t>") ) )
+            {
+                Logger.warning("The pattern for multi-channel loading must"
+                        + "contain <c> and <t> to match channels and time in the filenames.");
+                fileInfos = null;
+            }
+
+            // replace shortcuts by actual regexp
+            String namingSchemeRegExp = namingScheme.replace("<c>", "(?<C>.*)");
+            namingSchemeRegExp = namingSchemeRegExp.replace("<t>", "(?<T>.*)");
+
+            fileInfos.channelFolders = new String[]{""};
+
+            HashSet<String> channelsHS = new HashSet();
+            HashSet<String> timepointsHS = new HashSet();
+
+            Pattern patternCT = Pattern.compile( namingSchemeRegExp );
+
+            for ( String fileName : fileLists[0] )
+            {
+                Matcher matcherCT = patternCT.matcher(fileName);
+                if (matcherCT.matches())
+                {
+                    channelsHS.add(matcherCT.group("C"));
+                    timepointsHS.add(matcherCT.group("T"));
+                }
+            }
+
+            // convert HashLists to sorted Lists
+            List< String > channels = new ArrayList< >( channelsHS );
+            Collections.sort( channels );
+            fileInfos.nC = channels.size();
+
+            List< String > timepoints = new ArrayList< >( timepointsHS );
+            Collections.sort(timepoints);
+            fileInfos.nT = timepoints.size();
+
+            populateFileInfosFromChannelTimePattern( fileInfos, namingSchemeRegExp, fileLists[ 0 ], channels, timepoints );
+        }
+
+    }
+
+    private static void populateFileList(
+            FileInfos fileInfos,
+            String namingScheme,
+            String[][] fileLists )
+    {
+        fileInfos.ctzFileList = new String[ fileInfos.nC ][ fileInfos.nT ][ fileInfos.nZ ];
+
+        if ( namingScheme.equals( FileInfos.EM_TIFF_SLICES ) )
+        {
+            for ( int z = 0; z < fileInfos.nZ; z++ )
+                fileInfos.ctzFileList[ 0 ][ 0 ][ z ] = fileLists[ 0 ][ z ];
+        }
+        else
+        {
+            for ( int c = 0; c < fileInfos.nC; c++ )
+                for ( int t = 0; t < fileInfos.nT; t++ )
+                    for ( int z = 0; z < fileInfos.nZ; z++ )
+                        // all z with same file-name, because it is stacks
+                        fileInfos.ctzFileList[ c ][ t ][ z ] = fileLists[ c ][ t ];
+        }
+    }
+
+    private static void populateFileInfosFromChannelTimePattern(
+            FileInfos fileInfos,
+            String namingScheme,
+            String[] fileList,
+            List< String > channels,
+            List< String > timepoints )
+    {
+        // no sub-folders
+        // channel and t determined by pattern matching
+
+        Pattern patternCT = Pattern.compile( namingScheme );
+
+        for ( String fileName : fileList )
+        {
+
+            Matcher matcherCT = patternCT.matcher( fileName );
+            if (matcherCT.matches()) {
+                try {
+                    int c = channels.indexOf( matcherCT.group("C") );
+                    int t = timepoints.indexOf( matcherCT.group("T") );
+                    for ( int z = 0; z < fileInfos.nZ; z++) {
+                        fileInfos.ctzFileList[c][t][z] = fileName; // all z with same file-name, because it is stacks
+                    }
+                }
+                catch (Exception e)
+                {
+                    Logger.error("The multi-channel loading did not match the filenames.\n" +
+                            "Please change the pattern.\n\n" +
+                            "The Java error message was:\n" +
+                            e.toString());
+                    fileInfos = null;
+                }
+
+            }
+
+        }
+    }
+
+    private static String[][] getFilesInFolders( FileInfos infoSource, String directory, String namingScheme, String filterPattern )
+    {
         String[][] fileLists;
-        int t = 0, z = 0, c = 0;
-        String fileType = "not determined";
-        SerializableFileInfo[] info;
-        SerializableFileInfo fi0;
-        List<String> channels = null, timepoints = null;
-
-        int nC = 0, nT = 0, nZ = 0, nX = 0, nY = 0, bitDepth = 16;
 
         if ( namingScheme.equals( FileInfos.LOAD_CHANNELS_FROM_FOLDERS) )
         {
@@ -205,7 +405,8 @@ public class FileInfosHelper
                     if ( fileLists[i] == null )
                     {
                         Logger.error("No files found in folder: " + directory + infoSource.channelFolders[ i ]);
-                        return false;
+                        fileLists = null;
+                        break;
                     }
                 }
                 Logger.info( "Found sub-folders => loading channels from sub-folders." );
@@ -215,7 +416,7 @@ public class FileInfosHelper
                 Logger.error("No sub-folders found; " +
                         "please specify a different options for loading " +
                         "the channels");
-                return false;
+                fileLists = null;
             }
 
         }
@@ -231,195 +432,11 @@ public class FileInfosHelper
             if ( fileLists[0] == null || fileLists[0].length == 0 )
             {
                 Logger.warning("No files matching this pattern were found: " + filterPattern);
-                return false;
+                fileLists = null;
             }
 
         }
-
-        if ( namingScheme.equals( FileInfos.LEICA_SINGLE_TIFF ) )
-        {
-            infoSource.fileType = Utils.FileType.SINGLE_PLANE_TIFF.toString();
-
-            String dataDirectory = getFirstChannelDirectory( infoSource, directory );
-
-            boolean success = FileInfosLeicaHelper.initLeicaSinglePlaneTiffData(
-                    infoSource, dataDirectory, filterPattern, fileLists[ 0 ], t, z, nC, nZ);
-
-            if ( ! success ) return false;
-        }
-        else // tiff stacks or h5 stacks
-        {
-            boolean hasCTPattern = false;
-
-            if ( namingScheme.equals( FileInfos.LOAD_CHANNELS_FROM_FOLDERS) )
-            {
-                nC = infoSource.channelFolders.length;
-                nT = fileLists[0].length;
-            }
-            else if ( namingScheme.equalsIgnoreCase( FileInfos.SINGLE_CHANNEL_TIMELAPSE ) )
-            {
-                nC = 1;
-                nT = fileLists[0].length;
-            }
-            else if ( namingScheme.equals( FileInfos.EM_TIFF_SLICES ) )
-            {
-                nC = 1;
-                nT = 1;
-                infoSource.fileType = Utils.FileType.SINGLE_PLANE_TIFF.toString();
-            }
-            else
-            {
-
-                hasCTPattern = true;
-
-                if (!(namingScheme.contains("<c>") && namingScheme.contains("<t>")))
-                {
-                    //IJ.showMessage("The pattern for multi-channel loading must" + "contain <c> and <t> to match channels and time in the filenames.");
-                    Logger.warning("The pattern for multi-channel loading must" + "contain <c> and <t> to match channels and time in the filenames.");
-                    return false;
-                }
-
-                // replace shortcuts by actual regexp
-                namingScheme = namingScheme.replace("<c>", "(?<C>.*)");
-                namingScheme = namingScheme.replace("<t>", "(?<T>.*)");
-
-                infoSource.channelFolders = new String[]{""};
-
-                HashSet<String> channelsHS = new HashSet();
-                HashSet<String> timepointsHS = new HashSet();
-
-                Pattern patternCT = Pattern.compile( namingScheme );
-
-                for ( String fileName : fileLists[0] )
-                {
-                    Matcher matcherCT = patternCT.matcher(fileName);
-                    if (matcherCT.matches())
-                    {
-                        channelsHS.add(matcherCT.group("C"));
-                        timepointsHS.add(matcherCT.group("T"));
-                    }
-
-                }
-                // convert HashLists to sorted Lists
-                channels = new ArrayList< >( channelsHS );
-                Collections.sort( channels );
-                nC = channels.size();
-
-                timepoints = new ArrayList< >( timepointsHS );
-                Collections.sort(timepoints);
-                nT = timepoints.size();
-            }
-
-            //
-            // Create dummy channel folders, if no real ones exist
-            //
-            if ( ! namingScheme.equals( FileInfos.LOAD_CHANNELS_FROM_FOLDERS) )
-            {
-                infoSource.channelFolders = new String[nC];
-                for (int ic = 0; ic < nC; ic++) infoSource.channelFolders[ic] = "";
-            }
-
-
-            // read nX,nY,nZ and bitdepth from first image
-            //
-
-            if ( fileLists[0][0].endsWith(".tif") )
-            {
-                setImageDataInfoFromTiff( infoSource,
-                        directory + infoSource.channelFolders[0], fileLists[0][0] );
-
-                if ( namingScheme.equals( FileInfos.EM_TIFF_SLICES ) )
-                {
-                    infoSource.fileType = Utils.FileType.SINGLE_PLANE_TIFF.toString();
-                    infoSource.nZ = fileLists[ 0 ].length;
-                }
-                else
-                {
-                    infoSource.fileType = Utils.FileType.TIFF_STACKS.toString();
-                }
-            }
-            else if ( fileLists[0][0].endsWith(".h5") )
-            {
-                FileInfosHDF5Helper.setImageDataInfoFromH5(
-                        infoSource,
-                        directory + infoSource.channelFolders[0],
-                        fileLists[0][0]);
-                infoSource.fileType = Utils.FileType.HDF5.toString();
-            }
-            else
-            {
-                Logger.error("Unsupported file type: " + fileLists[0][0]);
-                return false;
-            }
-
-            infoSource.nT = nT;
-            infoSource.nC = nC;
-
-            //
-            // getCachedCellImg the final file list
-            //
-
-            infoSource.ctzFileList = new String[ infoSource.nC ][ infoSource.nT ][ infoSource.nZ ];
-
-            if ( hasCTPattern )
-            {
-
-                // no sub-folders
-                // channel and t determined by pattern matching
-
-                Pattern patternCT = Pattern.compile( namingScheme );
-
-                for ( String fileName : fileLists[0] )
-                {
-
-                    Matcher matcherCT = patternCT.matcher( fileName );
-                    if (matcherCT.matches()) {
-                        try {
-                            c = channels.indexOf(matcherCT.group("C"));
-                            t = timepoints.indexOf(matcherCT.group("T"));
-                        } catch (Exception e) {
-                            Logger.error("The multi-channel loading did not match the filenames.\n" +
-                                    "Please change the pattern.\n\n" +
-                                    "The Java error message was:\n" +
-                                    e.toString());
-                            return false;
-                        }
-
-                        for (z = 0; z < infoSource.nZ; z++) {
-                            infoSource.ctzFileList[c][t][z] = fileName; // all z with same file-name, because it is stacks
-                        }
-                    }
-
-                }
-
-            }
-            else
-            {
-                if ( namingScheme.equals( FileInfos.EM_TIFF_SLICES ) )
-                {
-                    for ( z = 0; z < infoSource.nZ; z++ )
-                        infoSource.ctzFileList[ 0 ][ 0 ][ z ] = fileLists[ 0 ][ z ];
-                }
-                else
-                {
-                    for ( c = 0; c < infoSource.nC; c++ )
-                    {
-                        for ( t = 0; t < infoSource.nT; t++ )
-                        {
-                            for ( z = 0; z < infoSource.nZ; z++ )
-                            {
-                                infoSource.ctzFileList[ c ][ t ][ z ] = fileLists[ c ][ t ]; // all z with same file-name, because it is stacks
-                            }
-                        }
-                    }
-                }
-
-            }
-
-        }
-
-        return true;
-
+        return fileLists;
     }
 
     public static String getFolderFilter( String filterPattern )
