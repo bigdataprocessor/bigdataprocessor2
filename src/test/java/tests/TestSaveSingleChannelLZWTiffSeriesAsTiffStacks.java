@@ -4,7 +4,6 @@ import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.saving.SavingSettings;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
-import de.embl.cba.bdp2.utils.Utils;
 import org.junit.Test;
 
 import java.io.File;
@@ -43,7 +42,7 @@ public class TestSaveSingleChannelLZWTiffSeriesAsTiffStacks
         final File testVolumeFile = new File( savingSettings.volumesFilePath + "--C00--T00000.tif" );
         if ( testVolumeFile.exists() ) testVolumeFile.delete();
 
-        Utils.saveImageAndWaitUntilDone( bdp, savingSettings, image );
+        BigDataProcessor2.saveImageAndWaitUntilDone( savingSettings, image );
 
         assertTrue( testVolumeFile.exists() );
     }

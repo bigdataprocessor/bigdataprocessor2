@@ -4,8 +4,6 @@ import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.saving.SavingSettings;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
-import de.embl.cba.bdp2.utils.Utils;
-import org.junit.Test;
 
 import java.io.File;
 
@@ -50,7 +48,7 @@ public class TestSaveLargeSingleChannelH5AsImarisVolumes
 
 //        if ( testProjectionsFile.exists() ) testProjectionsFile.delete();
 
-        Utils.saveImageAndWaitUntilDone( bdp, savingSettings, image );
+        BigDataProcessor2.saveImageAndWaitUntilDone( savingSettings, image );
 
         assertTrue( testVolumeFile.exists() );
 

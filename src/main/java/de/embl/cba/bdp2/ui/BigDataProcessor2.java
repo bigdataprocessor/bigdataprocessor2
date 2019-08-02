@@ -1,9 +1,13 @@
 package de.embl.cba.bdp2.ui;
 
 import de.embl.cba.bdp2.Image;
+import de.embl.cba.bdp2.convert.UnsignedByteTypeConversion;
+import de.embl.cba.bdp2.crop.Cropper;
 import de.embl.cba.bdp2.loading.CachedCellImgReader;
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.logging.Logger;
+import de.embl.cba.bdp2.progress.DefaultProgressListener;
+import de.embl.cba.bdp2.progress.Progress;
 import de.embl.cba.bdp2.progress.ProgressListener;
 import de.embl.cba.bdp2.saving.*;
 import de.embl.cba.bdp2.utils.DimensionOrder;
@@ -57,6 +61,18 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
         kickOffThreadPack( Runtime.getRuntime().availableProcessors() * 2 );
     }
 
+    public static < R extends RealType< R > & NativeType< R > >
+    void saveImageAndWaitUntilDone(
+            SavingSettings savingSettings,
+            Image< R > merge )
+    {
+        final DefaultProgressListener progress = new DefaultProgressListener();
+        saveImage( merge, savingSettings, progress );
+        Logger.log( "Saving: " + savingSettings.volumesFilePath );
+        Progress.waitUntilDone( progress, 1000 );
+        Logger.log("Saving: Done." );
+    }
+
     private void kickOffThreadPack( int numThreads ) {
         if ( generalThreadPool == null)
             generalThreadPool = Executors.newFixedThreadPool( numThreads );
@@ -75,6 +91,12 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
         return image;
     }
 
+
+    public static < T extends RealType< T > & NativeType< T > >
+    Image< T > crop( Image< T > image, Interval interval )
+    {
+        return Cropper.crop( image, interval  );
+    }
 
     public Image< R > openHdf5Image(
             String directory,
@@ -131,14 +153,24 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
         int nIOThread = Math.max( 1, Math.min( savingSettings.numIOThreads, MAX_THREAD_LIMIT ));
         ExecutorService saveExecutorService = Executors.newFixedThreadPool( nIOThread );
 
-        Logger.info( "Saving: Configuring volume reader..." );
-        final CachedCellImg< R, ? > volumeCachedCellImg
-                = CachedCellImgReader.getVolumeCachedCellImg( image.getFileInfos() );
+        if ( ! savingSettings.fileType.equals( SavingSettings.FileType.TIFF_PLANES ) )
+        {
+            // TODO: this makes no sense for cropped images => only fully load the cropped region!
+            // TODO: this makes no sense for image where the input data is Tiff planes
+            Logger.info( "Saving: Configuring whole volume reader..." );
 
-        final RandomAccessibleInterval< R > volumeLoadedRAI =
-                new CachedCellImgReplacer( image.getRai(), volumeCachedCellImg ).get();
+            // TODO: The cell dimensions should be such that only the cropped region is loaded in one go, not the whole image!
+            final CachedCellImg< R, ? > volumeCachedCellImg
+                    = CachedCellImgReader.getVolumeCachedCellImg( image.getFileInfos() );
+            final RandomAccessibleInterval< R > volumeLoadedRAI =
+                    new CachedCellImgReplacer( image.getRai(), volumeCachedCellImg ).get();
+            savingSettings.rai = volumeLoadedRAI;
+        }
+        else
+        {
+            savingSettings.rai = image.getRai();
+        }
 
-        savingSettings.rai = volumeLoadedRAI;
         savingSettings.voxelSpacing = image.getVoxelSpacing();
         savingSettings.voxelUnit = image.getVoxelUnit();
         ImgSaverFactory factory = new ImgSaverFactory();
@@ -154,6 +186,13 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
         saver.startSave();
 
         return saver;
+    }
+
+
+    public static < R extends RealType< R > & NativeType< R > >
+    Image< R > convert( Image< R > image, double mapTo0, double mapTo255 )
+    {
+        return UnsignedByteTypeConversion.convert( image, mapTo0, mapTo255 );
     }
 
 

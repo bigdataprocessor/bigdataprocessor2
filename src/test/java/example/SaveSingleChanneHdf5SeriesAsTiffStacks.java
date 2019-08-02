@@ -5,7 +5,6 @@ import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.bin.Binner;
 import de.embl.cba.bdp2.saving.SavingSettings;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
-import de.embl.cba.bdp2.utils.Utils;
 
 public class SaveSingleChanneHdf5SeriesAsTiffStacks
 {
@@ -45,7 +44,7 @@ public class SaveSingleChanneHdf5SeriesAsTiffStacks
         savingSettings.saveVolumes = true;
         savingSettings.projectionsFilePath = "/Users/tischer/Desktop/stack_0_channel_0-asTIFF-projections/im";
 
-        Utils.saveImageAndWaitUntilDone( bdp, savingSettings, binnedImage );
+        BigDataProcessor2.saveImageAndWaitUntilDone( savingSettings, binnedImage );
 
     }
 

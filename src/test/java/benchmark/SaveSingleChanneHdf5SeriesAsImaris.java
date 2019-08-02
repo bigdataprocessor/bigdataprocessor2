@@ -7,7 +7,6 @@ import de.embl.cba.bdp2.bin.Binner;
 import de.embl.cba.bdp2.saving.CachedCellImgReplacer;
 import de.embl.cba.bdp2.saving.SavingSettings;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
-import de.embl.cba.bdp2.utils.Utils;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.cache.img.CachedCellImg;
 
@@ -72,9 +71,9 @@ public class SaveSingleChanneHdf5SeriesAsImaris
         savingSettings.saveVolumes = true;
         savingSettings.volumesFilePath = out.toString();
 
-        Utils.saveImageAndWaitUntilDone( bdp, savingSettings, binnedImage );
+        BigDataProcessor2.saveImageAndWaitUntilDone( savingSettings, binnedImage );
 
-        Utils.saveImageAndWaitUntilDone( bdp, savingSettings, volumeLoaderBinnedImage );
+        BigDataProcessor2.saveImageAndWaitUntilDone( savingSettings, volumeLoaderBinnedImage );
 
     }
 

@@ -1,16 +1,16 @@
-package de.embl.cba.bdp2.process;
+package de.embl.cba.bdp2.convert;
 
 import bdv.tools.brightness.SliderPanelDouble;
 import bdv.util.BoundedValueDouble;
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.logging.Logger;
-import de.embl.cba.bdp2.ui.BdvMenus;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import ij.IJ;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.Converters;
 import net.imglib2.converter.RealUnsignedByteConverter;
+import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.util.Util;
@@ -18,12 +18,10 @@ import net.imglib2.util.Util;
 import javax.swing.*;
 import java.awt.*;
 
-public class UnsignedByteTypeConversion< T extends RealType< T > >
+public class UnsignedByteTypeConversion < R extends RealType< R > & NativeType< R > >
 {
-
 	public UnsignedByteTypeConversion( final BdvImageViewer imageViewer  )
 	{
-
 		final Image image = imageViewer.getImage();
 		final RandomAccessibleInterval rai = image.getRai();
 
@@ -38,26 +36,33 @@ public class UnsignedByteTypeConversion< T extends RealType< T > >
 		final double mapTo255 =
 				imageViewer.getAutoContrastDisplaySettings( 0 ).getDisplayRangeMax();
 
-		final RealUnsignedByteConverter< T > converter =
+		final RealUnsignedByteConverter< R > converter =
 				new RealUnsignedByteConverter<>(
 						mapTo0,
 						mapTo255 );
 
-		final RandomAccessibleInterval converted =
+		final RandomAccessibleInterval< R > convertedRai =
 				Converters.convert(
 					rai,
 					converter,
 					new UnsignedByteType() );
 
-		imageViewer.replaceImage( image.newImage( converted ) );
+		final Image< R > convertedImage = image.newImage( convertedRai );
 
-		Logger.info( "8-bit view size [GB]: " + Utils.getSizeGB( converted ) );
+
+		imageViewer.replaceImage( convertedImage );
+
+		for ( int c = 0; c < imageViewer.getImage().numChannels(); c++ )
+			imageViewer.setDisplayRange( 0, 255, c );
+
+		Logger.info( "8-bit view size [GB]: " + Utils.getSizeGB( convertedRai ) );
+
 		showConversionAdjustmentDialog( converter, mapTo0, mapTo255, imageViewer );
 
 	}
 
 	private void showConversionAdjustmentDialog(
-			RealUnsignedByteConverter< T > converter,
+			RealUnsignedByteConverter< R > converter,
 			double currentMin,
 			double currentMax,
 			BdvImageViewer imageViewer)
@@ -115,8 +120,25 @@ public class UnsignedByteTypeConversion< T extends RealType< T > >
 		frame.setResizable( false );
 		frame.pack();
 		frame.setVisible( true );
-
 	}
 
+	public static < R extends RealType< R > & NativeType< R > >
+	Image< R > convert( Image< R > image, double mapTo0, double mapTo255 )
+	{
+		final RealUnsignedByteConverter converter =
+				new RealUnsignedByteConverter<>(
+						mapTo0,
+						mapTo255 );
+
+		final RandomAccessibleInterval< R > convertedRai =
+				Converters.convert(
+						image.getRai(),
+						converter,
+						new UnsignedByteType() );
+
+		final Image< R > convertedImage = image.newImage( convertedRai );
+
+		return convertedImage;
+	}
 
 }

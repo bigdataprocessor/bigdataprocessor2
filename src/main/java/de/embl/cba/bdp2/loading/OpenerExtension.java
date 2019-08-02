@@ -73,7 +73,7 @@ public class OpenerExtension extends Opener {
 
         ImagePlus imp = null;
 
-        if(info[zs].fileTypeString.equals(Utils.FileType.TIFF_STACKS.toString()))
+        if( info[ zs ].fileTypeString.equals(Utils.FileType.TIFF_STACKS.toString() ) )
         {
             imp = readDataCubeFromTiff(directory, info, executorService, zs, ze, nz, dz, xs, xe, ys, ye);
         }

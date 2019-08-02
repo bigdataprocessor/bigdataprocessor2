@@ -5,7 +5,6 @@ import de.embl.cba.bdp2.saving.ImgSaver;
 import de.embl.cba.bdp2.saving.SavingSettings;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import ij.IJ;
-import ij.gui.GenericDialog;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -19,9 +18,10 @@ public class SaveMenuDialog extends JFrame implements ActionListener
 
     private static SavingSettings defaults = SavingSettings.getDefaults();
 
-    private static final JCheckBox cbLZW = new JCheckBox("LZW Compression (Tiff)");
     private static final JCheckBox cbSaveVolume = new JCheckBox("Save Volume data");
-    private static final JCheckBox cbSaveProjection = new JCheckBox("Save Projections");
+    private static final JComboBox comboCompression = new JComboBox( new String[]{
+            SavingSettings.COMPRESSION_ZLIB, SavingSettings.COMPRESSION_LZW
+    } );private static final JCheckBox cbSaveProjection = new JCheckBox("Save Projections");
     private static final JTextField tfRowsPerStrip = new JTextField("10", 3);
     private static final JTextField tfNumIOThreads = new JTextField("" + defaults.numIOThreads, 2);
     private static final JTextField tfNumProcessingThreads = new JTextField( "" + defaults.numProcessingThreads, 2);
@@ -79,9 +79,10 @@ public class SaveMenuDialog extends JFrame implements ActionListener
         mainPanels.get(k).add(panels.get(j++));
 
         panels.add(new JPanel());
-        panels.get(j).add(cbLZW);
-        panels.get(j).add(new JLabel("Rows per Strip [ny]"));
-        panels.get(j).add(tfRowsPerStrip);
+        panels.get(j).add(new JLabel( "Tiff Compression" ));
+        panels.get(j).add( comboCompression );
+        //panels.get(j).add(new JLabel("Rows per Strip [ny]"));
+        //panels.get(j).add(tfRowsPerStrip);
         mainPanels.get(k).add(panels.get(j++));
 
         panels.add(new JPanel());
@@ -173,10 +174,7 @@ public class SaveMenuDialog extends JFrame implements ActionListener
                 = ( SavingSettings.FileType ) comboFileTypeForSaving.getSelectedItem();
         savingSettings.fileType = fileType;
 
-        String compression = SavingSettings.NONE;
-        if ( cbLZW.isSelected() )
-            compression = SavingSettings.LZW;
-        savingSettings.compression = compression;
+        savingSettings.compression = ( String ) comboCompression.getSelectedItem();
         savingSettings.rowsPerStrip = Integer.parseInt( tfRowsPerStrip.getText() );
 
         savingSettings.saveVolumes = cbSaveVolume.isSelected();

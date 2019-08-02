@@ -149,20 +149,7 @@ public class Utils {
         }
     }
 
-	public static < R extends RealType< R > & NativeType< R > >
-    void saveImageAndWaitUntilDone(
-	        BigDataProcessor2< R > bdp,
-            SavingSettings savingSettings,
-            Image< R > merge )
-	{
-		final DefaultProgressListener progress = new DefaultProgressListener();
-		bdp.saveImage( merge, savingSettings, progress );
-		Logger.log( "Saving: " + savingSettings.volumesFilePath );
-		Progress.waitUntilDone( progress, 1000 );
-        Logger.log("Saving: Done." );
-	}
-
-	public static < R extends RealType< R > & NativeType< R > >
+    public static < R extends RealType< R > & NativeType< R > >
     Image< R > openMergedImageFromLuxendoChannelFolders(
 			BigDataProcessor2< R > bdp,
 			String voxelUnit,

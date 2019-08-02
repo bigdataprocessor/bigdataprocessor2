@@ -224,7 +224,7 @@ public class SaveFrameAsTIFFStacks< R extends RealType< R > & NativeType< R > > 
                     IFD ifd = new IFD();
                     ifd.put( IFD.ROWS_PER_STRIP, rowsPerStripArray );
                     if (imp.getBytesPerPixel() == 2) {
-                        tiffWriter.saveBytes(z, ShortToByteBigEndian((short[]) imp.getStack().getProcessor(z + 1).getPixels()), ifd);
+                        tiffWriter.saveBytes(z, SavingUtils.ShortToByteBigEndian((short[]) imp.getStack().getProcessor(z + 1).getPixels()), ifd);
                     } else if (imp.getBytesPerPixel() == 1) {
                         tiffWriter.saveBytes(z, (byte[]) (imp.getStack().getProcessor(z + 1).getPixels()), ifd);
                     }
@@ -247,25 +247,6 @@ public class SaveFrameAsTIFFStacks< R extends RealType< R > & NativeType< R > > 
             //Logger.info("Saving " + pathCT);
             fileSaver.saveAsTiffStack(pathCT);
         }
-    }
-
-    private static byte[] ShortToByteBigEndian(short[] input) { //TODO: May be this can goto a new SaveHelper class
-        int short_index, byte_index;
-        int iterations = input.length;
-
-        byte[] buffer = new byte[input.length * 2];
-
-        short_index = byte_index = 0;
-
-        for (/*NOP*/; short_index != iterations; /*NOP*/) {
-            // Big Endian: store higher byte first
-            buffer[byte_index] = (byte) ((input[short_index] & 0xFF00) >> 8);
-            buffer[byte_index + 1] = (byte) (input[short_index] & 0x00FF);
-
-            ++short_index;
-            byte_index += 2;
-        }
-        return buffer;
     }
 
     private static void gate(ImagePlus imp, int min, int max) //TODO: May be this can goto a new SaveHelper class

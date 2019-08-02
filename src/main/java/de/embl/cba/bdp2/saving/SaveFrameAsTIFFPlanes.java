@@ -1,16 +1,23 @@
 package de.embl.cba.bdp2.saving;
 
+import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.utils.DimensionOrder;
-import de.embl.cba.bdp2.utils.Utils;
-import ij.IJ;
 import ij.ImagePlus;
 import ij.io.FileSaver;
-import ij.plugin.Binner;
+import loci.common.services.ServiceFactory;
+import loci.formats.ImageWriter;
+import loci.formats.meta.IMetadata;
+import loci.formats.out.TiffWriter;
+import loci.formats.services.OMEXMLService;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.view.Views;
+import ome.xml.model.enums.PixelType;
+import ome.xml.model.primitives.PositiveInteger;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import static de.embl.cba.bdp2.saving.SavingUtils.ShortToByteBigEndian;
 
 public class SaveFrameAsTIFFPlanes implements Runnable {
 
@@ -35,76 +42,144 @@ public class SaveFrameAsTIFFPlanes implements Runnable {
     @Override
     public void run() {
 
-        if (stop.get()) {
+        if ( stop.get() )
+        {
             savingSettings.saveVolumes = true;
             return;
         }
-        RandomAccessibleInterval imgStack = savingSettings.rai;
+
+        RandomAccessibleInterval rai = savingSettings.rai;
+
         long[] minInterval = new long[]{
-                imgStack.min( DimensionOrder.X ),
-                imgStack.min( DimensionOrder.Y ),
-                z,
-                c,
-                t};
-        long[] maxInterval = new long[]{
-                imgStack.max( DimensionOrder.X ),
-                imgStack.max( DimensionOrder.Y ),
+                rai.min( DimensionOrder.X ),
+                rai.min( DimensionOrder.Y ),
                 z,
                 c,
                 t};
 
-        RandomAccessibleInterval newRai = Views.interval(imgStack, minInterval, maxInterval);
+        long[] maxInterval = new long[]{
+                rai.max( DimensionOrder.X ),
+                rai.max( DimensionOrder.Y ),
+                z,
+                c,
+                t};
+
+        RandomAccessibleInterval raiXY =
+                Views.dropSingletonDimensions(
+                    Views.interval( rai, minInterval, maxInterval ) );
 
         @SuppressWarnings("unchecked")
-        ImagePlus impCTZ = ImageJFunctions.wrap( newRai, "slice");
-        impCTZ.setDimensions(1, 1, 1);
+        ImagePlus imp = ImageJFunctions.wrap( raiXY, "slice");
+        imp.setDimensions(1, 1, 1);
 
-        // Convert
-        //
-        if (savingSettings.convertTo8Bit) {
-            IJ.setMinAndMax(impCTZ, savingSettings.mapTo0, savingSettings.mapTo255);
-            IJ.run(impCTZ, "8-bit", "");
+        final long nC = rai.dimension( DimensionOrder.C );
+        final long nT = rai.dimension( DimensionOrder.T );
+
+        if ( ! savingSettings.compression.equals( SavingSettings.COMPRESSION_NONE) )
+        {
+            saveCompressed( imp, nC, nT, savingSettings.compression );
+        }
+        else
+        {
+            FileSaver fileSaver = new FileSaver( imp );
+            fileSaver.saveAsTiff( getPath( false, nC, nT ) );
         }
 
-        if (savingSettings.convertTo16Bit) {
-            IJ.run(impCTZ, "16-bit", "");
+    }
+
+    private void saveCompressed( ImagePlus imp, long nC, long nT, String compression )
+    {
+        try
+        {
+            ServiceFactory factory = new ServiceFactory();
+            OMEXMLService service = factory.getInstance( OMEXMLService.class );
+            IMetadata meta = service.createOMEXMLMetadata();
+            meta.setImageID( "Image:0", 0 );
+            meta.setPixelsID( "Pixels:0", 0 );
+            meta.setPixelsBinDataBigEndian( Boolean.TRUE, 0, 0 );
+            meta.setPixelsDimensionOrder( ome.xml.model.enums.DimensionOrder.XYZCT, 0 );
+
+            if ( imp.getBytesPerPixel() == 2 )
+                meta.setPixelsType( PixelType.UINT16, 0 );
+            else if ( imp.getBytesPerPixel() == 1 )
+                meta.setPixelsType( PixelType.UINT8, 0 );
+
+            meta.setPixelsSizeX( new PositiveInteger( imp.getWidth() ), 0 );
+            meta.setPixelsSizeY( new PositiveInteger( imp.getHeight() ), 0 );
+            meta.setPixelsSizeZ( new PositiveInteger( imp.getNSlices() ), 0 );
+            meta.setPixelsSizeC( new PositiveInteger( 1 ), 0 );
+            meta.setPixelsSizeT( new PositiveInteger( 1 ), 0 );
+
+            int channel = 0;
+            meta.setChannelID( "Channel:0:" + channel, 0, channel );
+            meta.setChannelSamplesPerPixel( new PositiveInteger( 1 ), 0, channel );
+
+            ImageWriter writer = new ImageWriter();
+            writer.setValidBitsPerPixel( imp.getBytesPerPixel() * 8 );
+            writer.setMetadataRetrieve( meta );
+            writer.setId( getPath( true, nC, nT ) );
+            writer.setWriteSequentially( true ); // ? is this necessary
+
+            if ( compression.equals( SavingSettings.COMPRESSION_LZW ) )
+                writer.setCompression( TiffWriter.COMPRESSION_ZLIB );
+            else if ( compression.equals( SavingSettings.COMPRESSION_ZLIB ) )
+                writer.setCompression( TiffWriter.COMPRESSION_ZLIB );
+
+            // save using planes
+            if (imp.getBytesPerPixel() == 2)
+                writer.saveBytes( 0, ShortToByteBigEndian((short[]) imp.getStack().getProcessor(1).getPixels() ) );
+            else if (imp.getBytesPerPixel() == 1)
+                writer.saveBytes( 0, (byte[]) (imp.getStack().getProcessor(1).getPixels() ) );
+
+            //
+                // save using strips
+//                long[] rowsPerStripArray = new long[]{ rowsPerStrip };
+//                TiffWriter tiffWriter = ( TiffWriter ) writer.getWriter();
+
+//                    IFD ifd = new IFD();
+//                    ifd.put( IFD.ROWS_PER_STRIP, rowsPerStripArray );
+//                    if ( imp.getBytesPerPixel() == 2 )
+//                    {
+//                        tiffWriter.saveBytes( z, ShortToByteBigEndian( ( short[] ) imp.getStack().getProcessor( z + 1 ).getPixels() ), ifd );
+//                    } else if ( imp.getBytesPerPixel() == 1 )
+//                    {
+//                        tiffWriter.saveBytes( z, ( byte[] ) ( imp.getStack().getProcessor( z + 1 ).getPixels() ), ifd );
+//                    }
+
+            writer.close();
+
         }
-        // Bin and save
-        //
-        String[] binnings = savingSettings.bin.split(";");
-
-        for (String binning : binnings) {
-
-            if (stop.get()) {
-                return;
-            }
-
-            String newPath = savingSettings.volumesFilePath;
-
-            // Binning
-            ImagePlus impBinned = (ImagePlus) impCTZ.clone();
-
-            int[] binningA = Utils.delimitedStringToIntegerArray(binning, ",");
-
-            if (binningA[0] > 1 || binningA[1] > 1 || binningA[2] > 1) {
-                Binner binner = new Binner();
-                impBinned = binner.shrink(impCTZ, binningA[0], binningA[1], binningA[2], Binner.AVERAGE);
-                newPath = savingSettings.volumesFilePath + "--bin-" + binningA[0] + "-" + binningA[1] + "-" + binningA[2];
-            }
-
-            FileSaver fileSaver = new FileSaver(impBinned);
-
-            String sC = String.format("%1$02d", c);
-            String sT = String.format("%1$05d", t);
-            String sZ = String.format("%1$05d", z);
-            String pathCTZ;
-
-            if (imgStack.dimension( DimensionOrder.C ) > 1 || imgStack.dimension( DimensionOrder.T ) > 1) {
-                pathCTZ = newPath + "--C" + sC + "--T" + sT + "--Z" + sZ + ".tif";
-            } else {
-                pathCTZ = newPath + "--Z" + sZ + ".tif";
-            }
-            fileSaver.saveAsTiff(pathCTZ);
+        catch ( Exception e )
+        {
+            Logger.error( e.toString() );
         }
+    }
+
+    private String getPath( boolean isOME, long nC, long nT )
+    {
+        String sC = String.format("%1$02d", c);
+        String sT = String.format("%1$05d", t);
+        String sZ = String.format("%1$05d", z);
+
+        String pathCTZ;
+
+        String extension = getExtension( isOME );
+
+        if ( nC > 1 || nT > 1 )
+            pathCTZ = savingSettings.volumesFilePath + "--C" + sC + "--T" + sT + "--Z" + sZ + extension;
+        else
+            pathCTZ = savingSettings.volumesFilePath + "--Z" + sZ + extension;
+
+        return pathCTZ;
+    }
+
+    private String getExtension( boolean isOME )
+    {
+        String extension;
+        if ( isOME )
+            extension = ".ome.tif";
+        else
+            extension = ".tif";
+        return extension;
     }
 }

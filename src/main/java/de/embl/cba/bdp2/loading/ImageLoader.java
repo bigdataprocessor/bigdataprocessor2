@@ -50,7 +50,7 @@ public class ImageLoader< T extends NativeType< T > > implements CellLoader< T >
                         return fileInfos.getSerializableFileStackInfo( c_t.get(0), c_t.get(1) );
                     }
         };
-        serializableFileInfoCache = CacheBuilder.newBuilder().maximumSize( 50 ).build(loader);
+        serializableFileInfoCache = CacheBuilder.newBuilder().maximumSize( 50 ).build( loader );
     }
 
     private SerializableFileInfo getFileInfo( SingleCellArrayImg cell )

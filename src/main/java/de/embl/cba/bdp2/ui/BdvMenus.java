@@ -1,6 +1,7 @@
 package de.embl.cba.bdp2.ui;
 
 import de.embl.cba.bdp2.bin.BinningDialog;
+import de.embl.cba.bdp2.convert.UnsignedByteTypeConversion;
 import de.embl.cba.bdp2.crop.CroppingDialog;
 import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.process.*;

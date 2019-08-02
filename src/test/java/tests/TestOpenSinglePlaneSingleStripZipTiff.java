@@ -3,12 +3,11 @@ package tests;
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
-import net.imagej.ImageJ;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.junit.Test;
 
-public class TestOpenSinglePlaneSingleStripTiff
+public class TestOpenSinglePlaneSingleStripZipTiff
 {
 	// TODO: optimise speed
 
@@ -30,6 +29,6 @@ public class TestOpenSinglePlaneSingleStripTiff
 
 	public static void main( String[] args )
 	{
-		new TestOpenSinglePlaneSingleStripTiff().open();
+		new TestOpenSinglePlaneSingleStripZipTiff().open();
 	}
 }

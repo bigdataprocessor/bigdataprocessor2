@@ -4,7 +4,6 @@ import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.saving.SavingSettings;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
-import de.embl.cba.bdp2.utils.Utils;
 import org.junit.Test;
 
 import java.io.File;
@@ -37,7 +36,7 @@ public class TestSaveSingleChannelTiffSeriesAsLZWTiffStacks
         savingSettings.numProcessingThreads = 4;
         savingSettings.saveProjections = false;
         savingSettings.saveVolumes = true;
-        savingSettings.compression = SavingSettings.LZW;
+        savingSettings.compression = SavingSettings.COMPRESSION_LZW;
         savingSettings.rowsPerStrip = 1000; // just whole plane
         savingSettings.volumesFilePath =
                 "/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-output/nc1-nt3-calibrated-tiff-lzw/volume";
@@ -45,7 +44,7 @@ public class TestSaveSingleChannelTiffSeriesAsLZWTiffStacks
         final File testVolumeFile = new File( savingSettings.volumesFilePath + "--C00--T00000.ome.tif" );
         if ( testVolumeFile.exists() ) testVolumeFile.delete();
 
-        Utils.saveImageAndWaitUntilDone( bdp, savingSettings, image );
+        BigDataProcessor2.saveImageAndWaitUntilDone( savingSettings, image );
 
         assertTrue( testVolumeFile.exists() );
     }

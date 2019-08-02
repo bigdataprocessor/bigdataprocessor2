@@ -112,7 +112,7 @@ public class MergeSplitChipWorkflowMultiChannel
             savingSettings.volumesFilePath = outputDirectoryStump + "-stacks/stack";
             savingSettings.saveProjections = false;
             savingSettings.numIOThreads = 3;
-            Utils.saveImageAndWaitUntilDone( bdp, savingSettings, merge );
+            BigDataProcessor2.saveImageAndWaitUntilDone( savingSettings, merge );
 
             if ( doCrop )
             {
@@ -123,7 +123,7 @@ public class MergeSplitChipWorkflowMultiChannel
                 savingSettings.saveProjections = true;
                 savingSettings.projectionsFilePath =
                         outputDirectoryStump + "-crop-projections/projection";
-                Utils.saveImageAndWaitUntilDone( bdp, savingSettings, crop );
+                BigDataProcessor2.saveImageAndWaitUntilDone( savingSettings, crop );
             }
         }
 

@@ -187,14 +187,14 @@ public class FileInfosHelper
             return;
         }
 
-        if ( namingScheme.equals( FileInfos.LEICA_SINGLE_TIFF ) )
+        if ( namingScheme.equals( FileInfos.LEICA_LIGHT_SHEET_TIFF ) )
         {
             fileInfos.fileType = Utils.FileType.SINGLE_PLANE_TIFF.toString();
 
             String dataDirectory = getFirstChannelDirectory( fileInfos, directory );
 
             FileInfosLeicaHelper.initLeicaSinglePlaneTiffData(
-                    fileInfos, dataDirectory, filterPattern, fileLists[ 0 ], fileInfos.nC, fileInfos.nZ);
+                    fileInfos, dataDirectory, filterPattern, fileLists[ 0 ], fileInfos.nC, fileInfos.nZ );
 
         }
         else // tiff or h5
@@ -217,7 +217,7 @@ public class FileInfosHelper
                     directory,
                     fileList[0] );
 
-            if ( namingScheme.equals( FileInfos.EM_TIFF_SLICES ) )
+            if ( namingScheme.equals( FileInfos.TIFF_SLICES ) )
             {
                 fileInfos.fileType = Utils.FileType.SINGLE_PLANE_TIFF.toString();
                 fileInfos.nZ = fileList.length;
@@ -269,10 +269,11 @@ public class FileInfosHelper
             populateFileList( fileInfos, namingScheme, fileLists );
 
         }
-        else if ( namingScheme.equals( FileInfos.EM_TIFF_SLICES ) )
+        else if ( namingScheme.equals( FileInfos.TIFF_SLICES ) )
         {
             fileInfos.nC = 1;
             fileInfos.nT = 1;
+            fileInfos.nZ = fileLists[ 0 ].length;
             fileInfos.fileType = Utils.FileType.SINGLE_PLANE_TIFF.toString();
             populateFileList( fileInfos, namingScheme, fileLists );
         }
@@ -327,7 +328,7 @@ public class FileInfosHelper
     {
         fileInfos.ctzFileList = new String[ fileInfos.nC ][ fileInfos.nT ][ fileInfos.nZ ];
 
-        if ( namingScheme.equals( FileInfos.EM_TIFF_SLICES ) )
+        if ( namingScheme.equals( FileInfos.TIFF_SLICES ) )
         {
             for ( int z = 0; z < fileInfos.nZ; z++ )
                 fileInfos.ctzFileList[ 0 ][ 0 ][ z ] = fileLists[ 0 ][ z ];

@@ -34,9 +34,9 @@ public class BigDataProcessorCommand < R extends RealType< R > & NativeType< R >
     @Parameter(label = "Image files scheme",
             choices = {
                     FileInfos.SINGLE_CHANNEL_TIMELAPSE,
-                    FileInfos.LEICA_SINGLE_TIFF,
+                    FileInfos.LEICA_LIGHT_SHEET_TIFF,
                     FileInfos.LOAD_CHANNELS_FROM_FOLDERS,
-                    FileInfos.EM_TIFF_SLICES,
+                    FileInfos.TIFF_SLICES,
                     FileInfos.PATTERN_1,
                     FileInfos.PATTERN_2,
                     FileInfos.PATTERN_3,

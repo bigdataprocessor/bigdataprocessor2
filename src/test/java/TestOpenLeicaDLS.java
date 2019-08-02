@@ -14,7 +14,7 @@ public class TestOpenLeicaDLS
     public static void main(String[] args)
     {
         final String directory = "src\\test\\resources\\leicaDLS\\";
-        FileInfos fileInfos = new FileInfos(directory, FileInfos.LEICA_SINGLE_TIFF,".*","");
+        FileInfos fileInfos = new FileInfos(directory, FileInfos.LEICA_LIGHT_SHEET_TIFF,".*","");
         System.out.println( fileInfos.nT);
         System.out.println( fileInfos.nC);
         System.out.println( fileInfos.nZ);

@@ -18,8 +18,10 @@ public class SavingSettings {
     // TODO: also remove the binning
     public String bin;
 
-    public static final String LZW = "LZW";
-    public static final String NONE = "None";
+
+    public static final String COMPRESSION_LZW = "LZW";
+    public static final String COMPRESSION_ZLIB = "ZLIB";
+    public static final String COMPRESSION_NONE = "None";
     public boolean saveVolumes;
     public String volumesFilePath;
 
@@ -68,7 +70,7 @@ public class SavingSettings {
         savingSettings.saveVolumes = true;
         savingSettings.fileType = FileType.TIFF_PLANES;
         savingSettings.volumesFilePath = "src/test/resources/file";
-        savingSettings.compression = SavingSettings.NONE;
+        savingSettings.compression = SavingSettings.COMPRESSION_NONE;
         savingSettings.numProcessingThreads = (int) Math.ceil( Math.sqrt( AVAILABLE_PROCESSORS ) + 1 );
         savingSettings.numIOThreads = savingSettings.numProcessingThreads;
 

@@ -75,7 +75,6 @@ public class CachedCellImgReader
         final ImageLoader loader =
                 new ImageLoader( fileInfos, cellDimX, cellDimY, cellDimZ );
 
-
         final ReadOnlyCachedCellImgOptions options = options()
                 .cellDimensions( loader.getCellDims() );
 
