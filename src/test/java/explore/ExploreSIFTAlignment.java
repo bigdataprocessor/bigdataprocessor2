@@ -226,13 +226,22 @@ public class ExploreSIFTAlignment < R extends RealType< R > & NativeType< R > >
 
 		final Mapping mapping = new InverseTransformMapping< AbstractAffineModel2D< ? > >( model );
 
+		ip1 = ip2;
+		fs1.clear();
+		fs1.addAll( fs2 );
+
+		boolean moving = true;
+
 		for ( int i = 1; i < stack.getSize(); ++i )
 		{
-			ip1 = ip2;
-			ip2 = stack.getProcessor( i + 1 );
+			if ( moving )
+			{
+				ip1 = ip2;
+				fs1.clear();
+				fs1.addAll( fs2 );
+			}
 
-			fs1.clear();
-			fs1.addAll( fs2 );
+			ip2 = stack.getProcessor( i + 1 );
 			fs2.clear();
 
 			start_time = System.currentTimeMillis();
@@ -275,7 +284,6 @@ public class ExploreSIFTAlignment < R extends RealType< R > & NativeType< R > >
 
 			final Vector< PointMatch > inliers = new Vector< PointMatch >();
 
-			// TODO Implement other models for choice
 			AbstractAffineModel2D< ? > currentModel;
 			switch ( p.modelIndex )
 			{
@@ -310,6 +318,7 @@ public class ExploreSIFTAlignment < R extends RealType< R > & NativeType< R > >
 				modelFound = false;
 				System.err.println( e.getMessage() );
 			}
+
 			if ( modelFound )
 			{
 				if ( p.showInfo )
@@ -353,6 +362,7 @@ public class ExploreSIFTAlignment < R extends RealType< R > & NativeType< R > >
 				mapping.map( originalSlice, alignedSlice );
 
 			stackAligned.addSlice( null, alignedSlice );
+
 			if ( p.showInfo )
 			{
 				ImageProcessor tmp;
@@ -373,6 +383,7 @@ public class ExploreSIFTAlignment < R extends RealType< R > & NativeType< R > >
 				impInfo.setSlice( currentSlice );
 				impInfo.updateAndDraw();
 			}
+
 			impAligned.setStack( "Aligned " + stackAligned.getSize() + " of " + stack.getSize(), stackAligned );
 			final int currentSlice = impAligned.getSlice();
 			impAligned.setSlice( stack.getSize() );

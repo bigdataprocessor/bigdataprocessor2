@@ -8,13 +8,14 @@ import bdv.util.BdvHandle;
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.utils.DimensionOrder;
+import de.embl.cba.bdv.utils.BdvUtils;
 import net.imglib2.*;
 import net.imglib2.realtransform.AffineTransform3D;
-import net.imglib2.realtransform.Scale;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Intervals;
 import bdv.tools.boundingbox.TransformedRealBoxSelectionDialog;
+import org.mozilla.javascript.tools.debugger.Dim;
 
 public class BoundingBoxDialog < R extends RealType< R > & NativeType< R > >
 {
@@ -78,7 +79,7 @@ public class BoundingBoxDialog < R extends RealType< R > & NativeType< R > >
 
     public void showCalibratedUnitsBox() {
 
-        setInitialSelectionAndRange( image.getRai(), image.getVoxelSpacing() );
+        setInitialSelectionAndRange( image, true );
 
         final TransformedRealBoxSelectionDialog.Result result = showRealBox( image.getVoxelUnit() );
 
@@ -91,7 +92,7 @@ public class BoundingBoxDialog < R extends RealType< R > & NativeType< R > >
 
     public void showVoxelUnitsBox() {
 
-        setInitialSelectionAndRange( image.getRai(), new double[]{1,1,1} );
+        setInitialSelectionAndRange( image, false );
 
         final TransformedBoxSelectionDialog.Result result = showBox( );
 
@@ -166,52 +167,73 @@ public class BoundingBoxDialog < R extends RealType< R > & NativeType< R > >
         return title;
     }
 
-    public void setInitialSelectionAndRange( RandomAccessibleInterval rai, double[] voxelSpacing )
+    public void setInitialSelectionAndRange( Image< R > image, boolean calibrated )
     {
-        min = new int[4];
-        min[T] = (int) rai.min( DimensionOrder.T);
-        max = new int[4];
-        max[T] = (int) rai.max( DimensionOrder.T);
+        setRangeInterval( image, calibrated );
+        setInitialInterval();
 
-        for (int d = 0; d < 3; d++) {
-            min[d] = (int) (rai.min(d) * voxelSpacing[d]);
-            max[d] = (int) (rai.max(d) * voxelSpacing[d]);
-        }
+    }
 
-        long[] size = new long[ FileInfos.MAX_ALLOWED_IMAGE_DIMS];
-        rai.dimensions(size);
-        int[] center = new int[3];
-        int[] width = new int[3];
-        int[] initialBBSize = new int[3];
+    private void setInitialInterval()
+    {
+        final FinalRealInterval viewerBoundingInterval = BdvUtils.getViewerGlobalBoundingInterval( bdv );
+        int[] initialCenter = new int[ 3 ];
+        int[] initialSize = new int[ 3 ];
 
         for (int d = 0; d < 3; d++)
         {
-            width[d] = ( max[d] - min[d]);
-            center[d] = (int) (( min[d] + width[d] / 2.0));
-            initialBBSize[d] = width[d] / 4;
+            initialCenter[ d ] = (int) ( ( viewerBoundingInterval.realMax( d ) + viewerBoundingInterval.realMin( d ) ) / 2.0 );
+            initialSize[ d ] = (int) ( ( viewerBoundingInterval.realMax( d ) - viewerBoundingInterval.realMin( d ) ) / 2.0 );
         }
 
-        if ( initialBBSize[Z] < 1 )
-        { // Check if Z goes below 1
-            initialBBSize[Z] = 1;
-        }
+        initialSize[ DimensionOrder.Z ] = 10; // TODO: what does make sense here?
 
         int[] minBB = new int[]{
-                center[X] - initialBBSize[X] / 2,
-                center[Y] - initialBBSize[Y] / 2,
-                center[Z] - initialBBSize[Z] / 2};
+                initialCenter[X] - initialSize[X] / 2,
+                initialCenter[Y] - initialSize[Y] / 2,
+                initialCenter[Z] - initialSize[Z] / 2 };
 
         int[] maxBB = new int[]{
-                center[X] + initialBBSize[X] / 2,
-                center[Y] + initialBBSize[Y] / 2,
-                center[Z] + initialBBSize[Z] / 2};
+                initialCenter[X] + initialSize[X] / 2,
+                initialCenter[Y] + initialSize[Y] / 2,
+                initialCenter[Z] + initialSize[Z] / 2 };
 
         initialInterval = Intervals.createMinMax(
                 minBB[X], minBB[Y], minBB[Z],
                 maxBB[X], maxBB[Y], maxBB[Z]);
+    }
+
+    private void setRangeInterval( Image< R > image, boolean calibrated )
+    {
+        min = new int[ 4 ];
+        max = new int[ 4 ];
+
+        setRangeXYZ( image, calibrated );
+        setRangeT( image );
 
         rangeInterval = Intervals.createMinMax(
                 min[X], min[Y], min[Z],
                 max[X], max[Y], max[Z]);
+    }
+
+    private void setRangeT( Image< R > image )
+    {
+        min[T] = (int) image.getRai().min( DimensionOrder.T );
+        max[T] = (int) image.getRai().max( DimensionOrder.T );
+    }
+
+    private void setRangeXYZ( Image< R > image, boolean calibrated )
+    {
+        for (int d = 0; d < 3; d++)
+        {
+            min[ d ] = (int) ( image.getRai().min( d ) );
+            max[ d ] = (int) ( image.getRai().max( d ) );
+
+            if ( calibrated )
+            {
+                min[ d ] *= image.getVoxelSpacing()[ d ];
+                max[ d ] *= image.getVoxelSpacing()[ d ];
+            }
+        }
     }
 }
