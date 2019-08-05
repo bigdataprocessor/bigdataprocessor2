@@ -200,22 +200,18 @@ public class FileInfosHelper
         else // tiff or h5
         {
             setFileInfos( fileInfos, namingScheme, fileLists );
-
-            fixChannelFolders( fileInfos, namingScheme );
-
-            setImageMetadata( fileInfos, directory + fileInfos.channelFolders[ 0 ], namingScheme, fileLists[ 0 ] );
         }
 
     }
 
-    private static void setImageMetadata( FileInfos fileInfos, String directory, String namingScheme, String[] fileList )
+    private static void  setImageMetadata( FileInfos fileInfos, String directory, String namingScheme, String[] fileList )
     {
-        if ( fileList[0].endsWith(".tif") )
+        if ( fileList[ 0 ].endsWith(".tif") )
         {
             setImageMetadataFromTiff(
                     fileInfos,
                     directory,
-                    fileList[0] );
+                    fileList[ 0 ] );
 
             if ( namingScheme.equals( FileInfos.TIFF_SLICES ) )
             {
@@ -255,26 +251,31 @@ public class FileInfosHelper
 
     private static void setFileInfos( FileInfos fileInfos, String namingScheme, String[][] fileLists )
     {
-        if ( namingScheme.equals( FileInfos.LOAD_CHANNELS_FROM_FOLDERS) )
+        if ( namingScheme.equals( FileInfos.LOAD_CHANNELS_FROM_FOLDERS )
+            || namingScheme.equalsIgnoreCase( FileInfos.SINGLE_CHANNEL_TIMELAPSE )
+            || namingScheme.equals( FileInfos.TIFF_SLICES ) )
         {
-            fileInfos.nC = fileInfos.channelFolders.length;
-            fileInfos.nT = fileLists[0].length;
-            populateFileList( fileInfos, namingScheme, fileLists );
+            if ( namingScheme.equals( FileInfos.LOAD_CHANNELS_FROM_FOLDERS ) )
+            {
+                fileInfos.nC = fileInfos.channelFolders.length;
+                fileInfos.nT = fileLists[ 0 ].length;
+            }
+            else if ( namingScheme.equalsIgnoreCase( FileInfos.SINGLE_CHANNEL_TIMELAPSE ) )
+            {
+                fileInfos.nC = 1;
+                fileInfos.nT = fileLists[ 0 ].length;
 
-        }
-        else if ( namingScheme.equalsIgnoreCase( FileInfos.SINGLE_CHANNEL_TIMELAPSE ) )
-        {
-            fileInfos.nC = 1;
-            fileInfos.nT = fileLists[0].length;
-            populateFileList( fileInfos, namingScheme, fileLists );
+            }
+            else if ( namingScheme.equals( FileInfos.TIFF_SLICES ) )
+            {
+                fileInfos.nC = 1;
+                fileInfos.nT = 1;
+                fileInfos.nZ = fileLists[ 0 ].length;
+                fileInfos.fileType = Utils.FileType.SINGLE_PLANE_TIFF.toString();
+            }
 
-        }
-        else if ( namingScheme.equals( FileInfos.TIFF_SLICES ) )
-        {
-            fileInfos.nC = 1;
-            fileInfos.nT = 1;
-            fileInfos.nZ = fileLists[ 0 ].length;
-            fileInfos.fileType = Utils.FileType.SINGLE_PLANE_TIFF.toString();
+            fixChannelFolders( fileInfos, namingScheme );
+            setImageMetadata( fileInfos, fileInfos.directory + fileInfos.channelFolders[ 0 ], namingScheme, fileLists[ 0 ] );
             populateFileList( fileInfos, namingScheme, fileLists );
         }
         else

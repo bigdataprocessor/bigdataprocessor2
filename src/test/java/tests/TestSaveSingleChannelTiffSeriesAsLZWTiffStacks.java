@@ -28,8 +28,8 @@ public class TestSaveSingleChannelTiffSeriesAsLZWTiffStacks
                 loadingScheme,
                 filterPattern );
 
-        // bdp.showImage( image );
-
+//        bdp.showImage( image );
+//
         final SavingSettings savingSettings = SavingSettings.getDefaults();
         savingSettings.fileType = SavingSettings.FileType.TIFF_STACKS;
         savingSettings.numIOThreads = 1;
