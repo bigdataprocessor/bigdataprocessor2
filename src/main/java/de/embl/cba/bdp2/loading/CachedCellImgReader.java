@@ -24,6 +24,7 @@ public class CachedCellImgReader
     {
         // TODO: optimise somehow....
         final int cellDimY = ( int ) Math.ceil( fileInfos.nY / 10 );
+//        final int cellDimY = fileInfos.nY;
 
         if ( fileInfos.fileType.equals( Utils.FileType.HDF5.toString() ) )
         {

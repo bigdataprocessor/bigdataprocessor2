@@ -233,8 +233,11 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
                     Views.hyperSlice( image.getRai(), DimensionOrder.T, 0),
                     DimensionOrder.C,
                     channel);
-            final long stackCenter = (raiXYZ.max( DimensionOrder.Z) - raiXYZ.min( DimensionOrder.Z))
-                    / 2 + raiXYZ.min( DimensionOrder.Z);
+
+
+            final long stackCenter =
+                    (long) Math.ceil( ( raiXYZ.max( DimensionOrder.Z ) - raiXYZ.min( DimensionOrder.Z ) ) / 2.0 )
+                            + raiXYZ.min( DimensionOrder.Z ) + 1;
 
             IntervalView< R > raiXY = Views.hyperSlice(
                     raiXYZ,
@@ -258,19 +261,23 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
             max = 0;
             min = 0;
         }
+
         return new DisplaySettings( min, max, null );
     }
 
 
-    public void doAutoContrastPerChannel() {
+    public void doAutoContrastPerChannel()
+    {
         int nChannels = (int) image.getRai().dimension( DimensionOrder.C);
+
         for (int channel = 0; channel < nChannels; ++channel)
         {
             DisplaySettings setting = getAutoContrastDisplaySettings( channel );
+
             setDisplayRange(
                     setting.getDisplayRangeMin(),
                     setting.getDisplayRangeMax(),
-                    channel);
+                    channel );
         }
     }
 
@@ -346,8 +353,8 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
         this.image = image;
         bdvStackSource = addToBdv( image );
         bdvHandle = bdvStackSource.getBdvHandle();
-        bdvHandle.getViewerPanel().setInterpolation( Interpolation.NLINEAR );
-        setTransform();
+        //bdvHandle.getViewerPanel().setInterpolation( Interpolation.NLINEAR );
+        //setTransform();
         setAutoColors();
     }
 
