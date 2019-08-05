@@ -130,7 +130,7 @@ public class ImageLoader< T extends NativeType< T > > implements CellLoader< T >
         cell.min( min );
         cell.max( max );
 
-        System.out.println( "Start: " + Arrays.toString( min ) );
+//        System.out.println( "Start: " + Arrays.toString( min ) );
 
         if ( cell.firstElement() instanceof UnsignedByteType )
         {
@@ -182,7 +182,7 @@ public class ImageLoader< T extends NativeType< T > > implements CellLoader< T >
             System.arraycopy(impData, 0, cellData, 0, cellData.length);
         }
 
-        System.out.println( "End: " + Arrays.toString( min ) );
+//        System.out.println( "End: " + Arrays.toString( min ) );
 
     }
 
