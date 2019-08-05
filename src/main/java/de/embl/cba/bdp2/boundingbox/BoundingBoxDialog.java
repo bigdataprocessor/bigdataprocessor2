@@ -79,7 +79,7 @@ public class BoundingBoxDialog < R extends RealType< R > & NativeType< R > >
 
     public void showCalibratedUnitsBox() {
 
-        setInitialSelectionAndRange( image, true );
+        setInitialSelectionAndRange( true );
 
         final TransformedRealBoxSelectionDialog.Result result = showRealBox( image.getVoxelUnit() );
 
@@ -92,7 +92,7 @@ public class BoundingBoxDialog < R extends RealType< R > & NativeType< R > >
 
     public void showVoxelUnitsBox() {
 
-        setInitialSelectionAndRange( image, false );
+        setInitialSelectionAndRange( false );
 
         final TransformedBoxSelectionDialog.Result result = showBox( );
 
@@ -167,14 +167,13 @@ public class BoundingBoxDialog < R extends RealType< R > & NativeType< R > >
         return title;
     }
 
-    public void setInitialSelectionAndRange( Image< R > image, boolean calibrated )
+    private void setInitialSelectionAndRange( boolean calibrated )
     {
-        setRangeInterval( image, calibrated );
-        setInitialInterval();
-
+        setRangeInterval( calibrated );
+        setInitialInterval( calibrated );
     }
 
-    private void setInitialInterval()
+    private void setInitialInterval( boolean calibrated )
     {
         final FinalRealInterval viewerBoundingInterval = BdvUtils.getViewerGlobalBoundingInterval( bdv );
         int[] initialCenter = new int[ 3 ];
@@ -184,26 +183,37 @@ public class BoundingBoxDialog < R extends RealType< R > & NativeType< R > >
         {
             initialCenter[ d ] = (int) ( ( viewerBoundingInterval.realMax( d ) + viewerBoundingInterval.realMin( d ) ) / 2.0 );
             initialSize[ d ] = (int) ( ( viewerBoundingInterval.realMax( d ) - viewerBoundingInterval.realMin( d ) ) / 2.0 );
+
+            if ( calibrated )
+            {
+                initialCenter[ d ] /= image.getVoxelSpacing()[ d ];
+                initialSize[ d ] /= image.getVoxelSpacing()[ d ];
+            }
+
         }
 
-        initialSize[ DimensionOrder.Z ] = 10; // TODO: what does make sense here?
+        // TODO: improve this: take whole range in the smaller direction (up or down..)
+        initialSize[ DimensionOrder.Z ] = (int) image.getRai().dimension( DimensionOrder.Z ) / 10;
+        if ( calibrated )
+            initialSize[ DimensionOrder.Z ] = (int) ( initialSize[ DimensionOrder.Z ] * image.getVoxelSpacing()[ DimensionOrder.Z ] );
+
 
         int[] minBB = new int[]{
-                initialCenter[X] - initialSize[X] / 2,
-                initialCenter[Y] - initialSize[Y] / 2,
-                initialCenter[Z] - initialSize[Z] / 2 };
+                initialCenter[ X ] - initialSize[ X ] / 2,
+                initialCenter[ Y ] - initialSize[ Y ] / 2,
+                initialCenter[ Z ] - initialSize[ Z ] / 2 };
 
         int[] maxBB = new int[]{
-                initialCenter[X] + initialSize[X] / 2,
-                initialCenter[Y] + initialSize[Y] / 2,
-                initialCenter[Z] + initialSize[Z] / 2 };
+                initialCenter[ X ] + initialSize[ X ] / 2,
+                initialCenter[ Y ] + initialSize[ Y ] / 2,
+                initialCenter[ Z ] + initialSize[ Z ] / 2 };
 
         initialInterval = Intervals.createMinMax(
                 minBB[X], minBB[Y], minBB[Z],
                 maxBB[X], maxBB[Y], maxBB[Z]);
     }
 
-    private void setRangeInterval( Image< R > image, boolean calibrated )
+    private void setRangeInterval( boolean calibrated )
     {
         min = new int[ 4 ];
         max = new int[ 4 ];
