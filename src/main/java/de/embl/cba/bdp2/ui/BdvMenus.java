@@ -6,6 +6,7 @@ import de.embl.cba.bdp2.crop.CroppingDialog;
 import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.process.*;
 import de.embl.cba.bdp2.process.splitviewmerge.SplitViewMergingDialog;
+import de.embl.cba.bdp2.tracking.ApplyTrackDialog;
 import de.embl.cba.bdp2.tracking.BigDataTrackerGUI;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
@@ -57,10 +58,13 @@ public class BdvMenus
                 ObliqueMenuDialog obliqueMenuDialog = new ObliqueMenuDialog(imageViewer);
                 obliqueMenuDialog.setVisible(true);
             });
-        }else if (e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.MOTION_CORRECTED_VIEW_MENU_ITEM )) {
+        }else if (e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.APPLY_TRACK_MENU_ITEM )) {
             BigDataProcessor2.generalThreadPool.submit(() -> {
-                ObliqueMenuDialog obliqueMenuDialog = new ObliqueMenuDialog( imageViewer );
-                obliqueMenuDialog.setVisible(true);
+                ApplyTrackDialog applyTrackDialog = new ApplyTrackDialog( imageViewer );
+            });
+        }else if (e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.REGISTER_STACK_WITH_SIFT_MENU_ITEM )) {
+            BigDataProcessor2.generalThreadPool.submit(() -> {
+                // TODO
             });
         }else if(e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.CROP_MENU_ITEM )){
         	BigDataProcessor2.generalThreadPool.submit(() -> {
@@ -75,16 +79,6 @@ public class BdvMenus
                     Views.permute( imageViewer.getImage().getRai(),
                             DimensionOrder.Z, DimensionOrder.C);
             ImageJFunctions.show(permuted, BigDataProcessor2.generalThreadPool);
-        }else if(e.getActionCommand().equalsIgnoreCase(
-                UIDisplayConstants.MOTION_CORRECTED_VIEW_MENU_ITEM )){
-           BigDataProcessor2.generalThreadPool.submit(() -> {
-                BigDataTrackerGUI bigDataTrackerGUI = new BigDataTrackerGUI(imageViewer);
-                bigDataTrackerGUI.showDialog();
-                /*
-                CommandService commandService = LazyLoadingCommand.uiService.getContext().service(CommandService.class);
-                commandService.merge( BigDataTrackerUICommand.class, true, "imageViewer", imageViewer );
-                */
-            });
         }else if(e.getActionCommand().equalsIgnoreCase(
                 UIDisplayConstants.EIGHT_BIT_CONVERSION_MENU_ITEM )){
             BigDataProcessor2.generalThreadPool.submit(() -> {

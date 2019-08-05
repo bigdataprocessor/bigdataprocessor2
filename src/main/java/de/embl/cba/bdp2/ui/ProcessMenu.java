@@ -17,14 +17,33 @@ public class ProcessMenu extends JMenu {
         addMenuItem( UIDisplayConstants.EIGHT_BIT_CONVERSION_MENU_ITEM );
         addMenuItem( UIDisplayConstants.CHROMATIC_SHIFT_CORRECTION_MENU_ITEM );
         addMenuItem( UIDisplayConstants.SPLIT_VIEW_MENU_ITEM );
-        addMenuItem( UIDisplayConstants.MOTION_CORRECTED_VIEW_MENU_ITEM );
+
+        final JMenu correctMotionMenu = addMenu( UIDisplayConstants.CORRECT_MOTION_MENU_ITEM );
+        addMenuItem( correctMotionMenu, UIDisplayConstants.APPLY_TRACK_MENU_ITEM );
+        addMenuItem( correctMotionMenu, UIDisplayConstants.REGISTER_STACK_WITH_SIFT_MENU_ITEM );
     }
 
-    private void addMenuItem( String name )
+    private JMenu addMenu( String name )
+    {
+        final JMenu correctMotionMenu = new JMenu( name );
+        this.add( correctMotionMenu );
+        return correctMotionMenu;
+    }
+
+    private JMenuItem addMenuItem( String name )
     {
         JMenuItem jMenuItem = new JMenuItem( name );
-        add( jMenuItem );
         jMenuItem.addActionListener( bdvMenus );
+        this.add( jMenuItem );
+        return jMenuItem;
+    }
+
+    private JMenuItem addMenuItem( JMenu jMenu, String name )
+    {
+        JMenuItem jMenuItem = new JMenuItem( name );
+        jMenuItem.addActionListener( bdvMenus );
+        jMenu.add( jMenuItem );
+        return jMenuItem;
     }
 
 

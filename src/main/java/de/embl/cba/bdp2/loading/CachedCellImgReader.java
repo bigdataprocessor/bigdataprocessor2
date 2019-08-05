@@ -78,11 +78,12 @@ public class CachedCellImgReader
         final ReadOnlyCachedCellImgOptions options = options()
                 .cellDimensions( loader.getCellDims() );
 
-        final CachedCellImg cachedCellImg = new ReadOnlyCachedCellImgFactory().create(
-                loader.getDimensions(),
-                fileInfos.getType(),
-                loader,
-                options);
+        final CachedCellImg cachedCellImg =
+                new ReadOnlyCachedCellImgFactory().create(
+                    loader.getDimensions(),
+                    fileInfos.getType(),
+                    loader,
+                    options);
 
         return cachedCellImg;
     }
@@ -101,7 +102,11 @@ public class CachedCellImgReader
             Logger.info( "Adapted cell size in Z: " + cellDimZ );
         }
 
-        final ImageLoader loader = new ImageLoader( fileInfos, cellDimX, cellDimY, cellDimZ );
+        final ImageLoader loader = new ImageLoader(
+                fileInfos,
+                cellDimX,
+                cellDimY,
+                cellDimZ );
 
         final ReadOnlyCachedCellImgOptions options = options()
                 .cellDimensions( loader.getCellDims() );

@@ -10,9 +10,9 @@ import net.imglib2.type.numeric.RealType;
 
 import java.util.Map;
 
-public class TrackedViewDialog< T extends RealType< T > & NativeType< T > >
+public class ApplyTrackDialog< T extends RealType< T > & NativeType< T > >
 {
-	public TrackedViewDialog( BdvImageViewer< T > viewer )
+	public ApplyTrackDialog( BdvImageViewer< T > viewer )
 	{
 
 		final Map< String, Track > tracks = viewer.getTracks();

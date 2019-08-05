@@ -124,11 +124,13 @@ public class ImageLoader< T extends NativeType< T > > implements CellLoader< T >
     }
 
     @Override
-    public synchronized void load( final SingleCellArrayImg< T, ? > cell ) {
+    public void load( final SingleCellArrayImg< T, ? > cell ) {
         long[] min = new long[ FileInfos.TOTAL_AXES ];
         long[] max = new long[ FileInfos.TOTAL_AXES ];
         cell.min( min );
         cell.max( max );
+
+        System.out.println( "Start: " + Arrays.toString( min ) );
 
         if ( cell.firstElement() instanceof UnsignedByteType )
         {
@@ -179,6 +181,9 @@ public class ImageLoader< T extends NativeType< T > > implements CellLoader< T >
             final float[] cellData = (float[]) cell.getStorageArray();
             System.arraycopy(impData, 0, cellData, 0, cellData.length);
         }
+
+        System.out.println( "End: " + Arrays.toString( min ) );
+
     }
 
     public String getFilePath( SerializableFileInfo fileInfo )

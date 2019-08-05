@@ -7,7 +7,7 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.junit.Test;
 
-public class TestOpenSinglePlaneSingleStripZipTiff
+public class TestOpenSingleStripZipTiffPlanes
 {
 	// TODO: optimise speed
 
@@ -29,6 +29,6 @@ public class TestOpenSinglePlaneSingleStripZipTiff
 
 	public static void main( String[] args )
 	{
-		new TestOpenSinglePlaneSingleStripZipTiff().open();
+		new TestOpenSingleStripZipTiffPlanes().open();
 	}
 }

@@ -14,7 +14,6 @@ import static junit.framework.Assert.assertTrue;
 public class ProcessEM
 {
 
-	// TODO: make test with smaller data set
 	public < R extends RealType< R > & NativeType< R > > void invertEM()
 	{
 		final BigDataProcessor2< R > bdp = new BigDataProcessor2<>();
@@ -26,33 +25,39 @@ public class ProcessEM
 
 		bdp.showImage( image );
 
-		final Image< R > crop = BigDataProcessor2.crop( image, new FinalInterval(
-				new long[]{ 1500, 3600, 880, 0, 0 },
-				new long[]{ 4050, 4800, 910, 0, 0 }
-		) );
+		boolean process = false;
 
-		final Image< R > convert = BigDataProcessor2.convert( crop, 65535, 0 );
+		if ( process )
+		{
 
-		final SavingSettings savingSettings = SavingSettings.getDefaults();
-		savingSettings.fileType = SavingSettings.FileType.TIFF_PLANES;
-		savingSettings.numIOThreads = 4;
-		savingSettings.numProcessingThreads = 4;
-		savingSettings.saveProjections = false;
-		savingSettings.saveVolumes = true;
-		savingSettings.compression = SavingSettings.COMPRESSION_NONE;
-		savingSettings.rowsPerStrip = 50;
-		savingSettings.volumesFilePath =
-				"/Users/tischer/Desktop/giulia/plane";
+			final Image< R > crop = BigDataProcessor2.crop( image, new FinalInterval(
+					new long[]{ 1500, 3600, 880, 0, 0 },
+					new long[]{ 4050, 4800, 910, 0, 0 }
+			) );
 
-		//final File testVolumeFile = new File( savingSettings.volumesFilePath + "--C00--T00000.ome.tif" );
-		//if ( testVolumeFile.exists() ) testVolumeFile.delete();
+			final Image< R > convert = BigDataProcessor2.convert( crop, 65535, 0 );
 
-		//BigDataProcessor2.saveImageAndWaitUntilDone( savingSettings, crop );
+			final SavingSettings savingSettings = SavingSettings.getDefaults();
+			savingSettings.fileType = SavingSettings.FileType.TIFF_PLANES;
+			savingSettings.numIOThreads = 4;
+			savingSettings.numProcessingThreads = 4;
+			savingSettings.saveProjections = false;
+			savingSettings.saveVolumes = true;
+			savingSettings.compression = SavingSettings.COMPRESSION_NONE;
+			savingSettings.rowsPerStrip = 50;
+			savingSettings.volumesFilePath =
+					"/Users/tischer/Desktop/giulia/plane";
 
-		savingSettings.volumesFilePath =
-				"/Users/tischer/Desktop/giulia-zlib/plane";
-		savingSettings.compression = SavingSettings.COMPRESSION_LZW;
-		BigDataProcessor2.saveImageAndWaitUntilDone( savingSettings, convert );
+			//final File testVolumeFile = new File( savingSettings.volumesFilePath + "--C00--T00000.ome.tif" );
+			//if ( testVolumeFile.exists() ) testVolumeFile.delete();
+
+			//BigDataProcessor2.saveImageAndWaitUntilDone( savingSettings, crop );
+
+			savingSettings.volumesFilePath =
+					"/Users/tischer/Desktop/giulia-zlib/plane";
+			savingSettings.compression = SavingSettings.COMPRESSION_LZW;
+			BigDataProcessor2.saveImageAndWaitUntilDone( savingSettings, convert );
+		}
 
 		System.out.println("Done.");
 	}

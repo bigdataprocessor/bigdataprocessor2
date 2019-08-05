@@ -8,6 +8,9 @@ import net.imglib2.type.numeric.RealType;
 
 public class Image< R extends RealType< R > & NativeType< R > >
 {
+	// TODO: keep track of the dimensions
+	//  of the image in the voxel space of the fileInfos
+
 	private RandomAccessibleInterval< R > rai;
 	private String name;
 	private double[] voxelSpacing;

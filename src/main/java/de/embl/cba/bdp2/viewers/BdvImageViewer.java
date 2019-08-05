@@ -14,6 +14,7 @@ import de.embl.cba.bdp2.ui.BdvMenus;
 import de.embl.cba.bdp2.ui.DisplaySettings;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.volatiles.VolatileViews;
+import net.imagej.legacy.LegacyCommandline;
 import net.imglib2.*;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
@@ -39,6 +40,7 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
     private BdvGrayValuesOverlay overlay;
     private BdvHandle bdvHandle;
     private Map< String, Track > tracks;
+    private int numRenderingThreads = Runtime.getRuntime().availableProcessors(); // TODO
 
     public BdvImageViewer( Image< R > image )
     {
@@ -46,7 +48,7 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
         show();
         doAutoContrastPerChannel();
 
-        // TODO: somehow it is not logical that this is part of the "Viewer" rather than the "Processor"....
+        // TODO: not logical that this is part of the "Viewer" rather than the "Processor"....
         this.addMenus( new BdvMenus() );
         this.installBehaviours( );
     }
@@ -364,7 +366,8 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
                                     image.getName(),
                                     BdvOptions.options().axisOrder( AxisOrder.XYZCT )
                                             .addTo( bdvHandle )
-                                            .sourceTransform( scaling ) );
+                                            .sourceTransform( scaling )
+                                            .numRenderingThreads( numRenderingThreads ) );
 
         return bdvStackSource;
     }
