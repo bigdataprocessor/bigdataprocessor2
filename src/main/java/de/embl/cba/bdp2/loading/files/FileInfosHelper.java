@@ -280,7 +280,7 @@ public class FileInfosHelper
         }
         else
         {
-            if ( ! (namingScheme.contains("<c>") && namingScheme.contains("<t>") ) )
+            if ( ! ( namingScheme.contains("<c>") && namingScheme.contains("<t>") ) )
             {
                 Logger.warning("The pattern for multi-channel loading must"
                         + "contain <c> and <t> to match channels and time in the filenames.");
@@ -315,8 +315,10 @@ public class FileInfosHelper
 
             List< String > timepoints = new ArrayList< >( timepointsHS );
             Collections.sort(timepoints);
-            fileInfos.nT = timepoints.size();
+            fileInfos.nT = timepoints.size() ;
 
+            fixChannelFolders( fileInfos, namingScheme );
+            setImageMetadata( fileInfos, fileInfos.directory + fileInfos.channelFolders[ 0 ], namingScheme, fileLists[ 0 ] );
             populateFileInfosFromChannelTimePattern( fileInfos, namingSchemeRegExp, fileLists[ 0 ], channels, timepoints );
         }
 
@@ -351,6 +353,8 @@ public class FileInfosHelper
             List< String > channels,
             List< String > timepoints )
     {
+        fileInfos.ctzFileList = new String[ fileInfos.nC ][ fileInfos.nT ][ fileInfos.nZ ];
+
         // no sub-folders
         // channel and t determined by pattern matching
 
@@ -358,9 +362,8 @@ public class FileInfosHelper
 
         for ( String fileName : fileList )
         {
-
             Matcher matcherCT = patternCT.matcher( fileName );
-            if (matcherCT.matches()) {
+            if ( matcherCT.matches() ) {
                 try {
                     int c = channels.indexOf( matcherCT.group("C") );
                     int t = timepoints.indexOf( matcherCT.group("T") );
@@ -376,9 +379,7 @@ public class FileInfosHelper
                             e.toString());
                     fileInfos = null;
                 }
-
             }
-
         }
     }
 

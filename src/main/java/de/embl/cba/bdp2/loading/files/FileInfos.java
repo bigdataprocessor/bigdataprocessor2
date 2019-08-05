@@ -123,6 +123,7 @@ public class FileInfos
         info += "Folder: " + directory + "\n";
         info += "FileType: " + fileType + "\n";
         info += "BitDepth: " + bitDepth + "\n";
+
         if ( fileType.toLowerCase().contains( "tif" ) )
         {
             info += "Tiff Compression: " + getCompressionString() + "\n";

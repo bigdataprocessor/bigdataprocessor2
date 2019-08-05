@@ -76,7 +76,7 @@ public class TestRegionMerging
 
 	public static void main( String[] args )
 	{
-		new TestRegionMerging().mergeTwoRegionsFromOneChannel();
+//		new TestRegionMerging().mergeTwoRegionsFromOneChannel();
 		new TestRegionMerging().mergeThreeRegionsFromTwoChannels();
 	}
 }
