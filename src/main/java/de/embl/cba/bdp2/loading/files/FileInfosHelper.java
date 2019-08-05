@@ -169,6 +169,8 @@ public class FileInfosHelper
 
         fileInfos.voxelUnit = info[0].unit;
 
+        if ( fileInfos.voxelUnit != null )
+            fileInfos.voxelUnit = fileInfos.voxelUnit.trim();
     }
 
 
@@ -354,9 +356,6 @@ public class FileInfosHelper
             List< String > timepoints )
     {
         fileInfos.ctzFileList = new String[ fileInfos.nC ][ fileInfos.nT ][ fileInfos.nZ ];
-
-        // no sub-folders
-        // channel and t determined by pattern matching
 
         Pattern patternCT = Pattern.compile( namingScheme );
 
