@@ -1,9 +1,6 @@
 package de.embl.cba.bdp2.sift;
 
-import ij.IJ;
 import ij.process.ImageProcessor;
-import mpicbg.ij.InverseTransformMapping;
-import mpicbg.ij.Mapping;
 import mpicbg.ij.SIFT;
 import mpicbg.imagefeatures.Feature;
 import mpicbg.imagefeatures.FloatArray2DSIFT;
@@ -16,7 +13,6 @@ import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Intervals;
 import net.imglib2.view.Views;
 
-import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.util.*;
 import java.util.List;
@@ -26,8 +22,9 @@ public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > >
 {
 	private final RandomAccessibleInterval< R > rai3d;
 	private final long referenceSlice;
-	private final Map< Long, AffineTransform2D > sliceToTransform;
+	private final Map< Long, AffineTransform2D > sliceToLocalTransform;
 	private final Map< Long, List< Feature > > sliceToFeatures;
+	private final Map< Long, AffineTransform2D > sliceToGlobalTransform;
 
 	private int sliceDimension;
 	private final int numThreads;
@@ -73,32 +70,39 @@ public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > >
 		this.rai3d = rai3d;
 		this.referenceSlice = referenceSlice;
 		this.numThreads = numThreads;
-		this.sliceToTransform = new HashMap< >( );
 		this.sliceDimension = 2;
 		this.sliceToFeatures = new ConcurrentHashMap<>( );
+		this.sliceToLocalTransform = new HashMap< >( );
+		this.sliceToGlobalTransform = new HashMap< >( );
+
+
+		sliceToLocalTransform.put( referenceSlice, new AffineTransform2D() );
 	}
 
 	public AffineTransform2D getTransform( long slice )
 	{
-		if ( ! sliceToTransform.containsKey( slice ) )
+		if ( ! sliceToLocalTransform.containsKey( slice ) )
 		{
 			computeMissingFeatures( slice );
 			computeMissingTransforms( slice );
 		}
 
-		return sliceToTransform.get( slice );
+		// TODO: concatenate the transformations
+
+
+		return sliceToGlobalTransform.get( slice );
 	}
 
-	private void computeMissingTransforms( long requestedSlice )
+	private void computeMissingTransforms( final long requestedSlice )
 	{
 		final ExecutorService executorService = Executors.newFixedThreadPool( numThreads );
 		final ArrayList< Future > futures = new ArrayList<>();
 
 		final int step = getStep( requestedSlice );
 
-		for ( long slice = referenceSlice; slice != requestedSlice ; slice += step )
+		for ( long slice = referenceSlice + step; slice != ( requestedSlice + step ) ; slice += step )
 		{
-			if ( sliceToTransform.containsKey( slice ) ) continue;
+			if ( sliceToLocalTransform.containsKey( slice ) ) continue;
 
 			final long featureSlice = slice;
 
@@ -106,8 +110,8 @@ public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > >
 
 				final Vector< PointMatch > candidates =
 						FloatArray2DSIFT.createMatches(
-								sliceToFeatures.get( featureSlice + step ),
-								sliceToFeatures.get( featureSlice ),
+								sliceToFeatures.get( featureSlice  ),
+								sliceToFeatures.get( featureSlice - step),
 								1.5f,
 								null,
 								Float.MAX_VALUE, p.rod );
@@ -133,24 +137,32 @@ public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > >
 				}
 
 				if ( modelFound )
-				{
-					final AffineTransform affine = model.createAffine();
-					final double[] array = new double[ 6 ];
-					affine.getMatrix( array );
-					final AffineTransform2D affineTransform2D = new AffineTransform2D();
-					affineTransform2D.set( array );
-					sliceToTransform.put( featureSlice, affineTransform2D );
-				}
+					sliceToLocalTransform.put( featureSlice, getAffineTransform2D( model ) );
 				else
-				{
-					sliceToTransform.put( featureSlice, null );
-				}
+					sliceToLocalTransform.put( featureSlice, null );
 			} ) );
 
 		}
 
 		collectFutures( executorService, futures );
 
+	}
+
+	private AffineTransform2D getAffineTransform2D( AbstractAffineModel2D< ? > model )
+	{
+		final AffineTransform affine = model.createAffine();
+		final double[] array = new double[ 6 ];
+		affine.getMatrix( array );
+		final AffineTransform2D affineTransform2D = new AffineTransform2D();
+		affineTransform2D.set(
+				array[ 0 ],
+				array[ 1 ],
+				array[ 4 ],
+				array[ 2 ],
+				array[ 3 ],
+				array[ 5 ]);
+
+		return affineTransform2D;
 	}
 
 	private AbstractAffineModel2D< ? > getAbstractAffineModel2D()
@@ -194,14 +206,14 @@ public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > >
 		executorService.shutdown();
 	}
 
-	private void computeMissingFeatures( long requestedSlice )
+	private void computeMissingFeatures( final long requestedSlice )
 	{
 		final ExecutorService executorService = Executors.newFixedThreadPool( numThreads );
 		final ArrayList< Future > futures = new ArrayList<>();
 
-		int step = getStep( requestedSlice );
+		final int step = getStep( requestedSlice );
 
-		for ( long slice = referenceSlice; slice != requestedSlice ; slice += step )
+		for ( long slice = referenceSlice; slice != ( requestedSlice + step ) ; slice += step )
 		{
 			if ( sliceToFeatures.containsKey( slice ) ) continue;
 
