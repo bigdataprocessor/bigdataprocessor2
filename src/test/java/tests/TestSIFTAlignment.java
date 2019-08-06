@@ -9,10 +9,12 @@ import net.imagej.ImageJ;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
+import org.junit.Test;
 
 public class TestSIFTAlignment < R extends RealType< R > & NativeType< R > >
 {
 
+	@Test
 	public void testSIFTFeatureComputation()
 	{
 		new ImageJ().ui().showUI();
@@ -26,7 +28,7 @@ public class TestSIFTAlignment < R extends RealType< R > & NativeType< R > >
 
 		final RandomAccessibleInterval< R > volumeView = VolumeExtractions.getVolumeView( image.getRai(), 0, 0 );
 
-		final SliceRegistrationSIFT< R > sift = new SliceRegistrationSIFT<>( volumeView, 20 );
+		final SliceRegistrationSIFT< R > sift = new SliceRegistrationSIFT<>( volumeView, 20, 4 );
 
 		sift.getTransform( 30 );
 	}

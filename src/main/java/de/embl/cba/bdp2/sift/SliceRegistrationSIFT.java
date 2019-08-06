@@ -1,9 +1,13 @@
 package de.embl.cba.bdp2.sift;
 
+import ij.IJ;
 import ij.process.ImageProcessor;
+import mpicbg.ij.InverseTransformMapping;
+import mpicbg.ij.Mapping;
 import mpicbg.ij.SIFT;
 import mpicbg.imagefeatures.Feature;
 import mpicbg.imagefeatures.FloatArray2DSIFT;
+import mpicbg.models.*;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.realtransform.AffineTransform2D;
@@ -12,10 +16,10 @@ import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Intervals;
 import net.imglib2.view.Views;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.*;
 
 public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > >
@@ -26,7 +30,7 @@ public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > >
 	private final Map< Long, List< Feature > > sliceToFeatures;
 
 	private int sliceDimension;
-	private int numThreads;
+	private final int numThreads;
 
 
 	static private class Param
@@ -64,10 +68,11 @@ public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > >
 	final static Param p = new Param();
 
 
-	public SliceRegistrationSIFT( RandomAccessibleInterval< R > rai3d, long referenceSlice )
+	public SliceRegistrationSIFT( RandomAccessibleInterval< R > rai3d, long referenceSlice, int numThreads )
 	{
 		this.rai3d = rai3d;
 		this.referenceSlice = referenceSlice;
+		this.numThreads = numThreads;
 		this.sliceToTransform = new HashMap< >( );
 		this.sliceDimension = 2;
 		this.sliceToFeatures = new ConcurrentHashMap<>( );
@@ -76,19 +81,123 @@ public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > >
 	public AffineTransform2D getTransform( long slice )
 	{
 		if ( ! sliceToTransform.containsKey( slice ) )
-			computeTransform( slice );
+		{
+			computeMissingFeatures( slice );
+			computeMissingTransforms( slice );
+		}
 
 		return sliceToTransform.get( slice );
 	}
 
-	private void computeTransform( long requestedSlice )
+	private void computeMissingTransforms( long requestedSlice )
 	{
-
 		final ExecutorService executorService = Executors.newFixedThreadPool( numThreads );
 		final ArrayList< Future > futures = new ArrayList<>();
 
-		final FloatArray2DSIFT sift = new FloatArray2DSIFT( p.sift );
-		final SIFT ijSIFT = new SIFT( sift );
+		final int step = getStep( requestedSlice );
+
+		for ( long slice = referenceSlice; slice != requestedSlice ; slice += step )
+		{
+			if ( sliceToTransform.containsKey( slice ) ) continue;
+
+			final long featureSlice = slice;
+
+			futures.add( executorService.submit( () -> {
+
+				final Vector< PointMatch > candidates =
+						FloatArray2DSIFT.createMatches(
+								sliceToFeatures.get( featureSlice + step ),
+								sliceToFeatures.get( featureSlice ),
+								1.5f,
+								null,
+								Float.MAX_VALUE, p.rod );
+
+				final Vector< PointMatch > inliers = new Vector< PointMatch >();
+
+				AbstractAffineModel2D< ? > model = getAbstractAffineModel2D();
+
+				boolean modelFound;
+				try
+				{
+					modelFound = model.filterRansac(
+							candidates,
+							inliers,
+							1000,
+							p.maxEpsilon,
+							p.minInlierRatio );
+				}
+				catch ( final Exception e )
+				{
+					modelFound = false;
+					System.err.println( e.getMessage() );
+				}
+
+				if ( modelFound )
+				{
+					final AffineTransform affine = model.createAffine();
+					final double[] array = new double[ 6 ];
+					affine.getMatrix( array );
+					final AffineTransform2D affineTransform2D = new AffineTransform2D();
+					affineTransform2D.set( array );
+					sliceToTransform.put( featureSlice, affineTransform2D );
+				}
+				else
+				{
+					sliceToTransform.put( featureSlice, null );
+				}
+			} ) );
+
+		}
+
+		collectFutures( executorService, futures );
+
+	}
+
+	private AbstractAffineModel2D< ? > getAbstractAffineModel2D()
+	{
+		AbstractAffineModel2D< ? > currentModel;
+		switch ( p.modelIndex )
+		{
+			case 0:
+				currentModel = new TranslationModel2D();
+				break;
+			case 1:
+				currentModel = new RigidModel2D();
+				break;
+			case 2:
+				currentModel = new SimilarityModel2D();
+				break;
+			case 3:
+				currentModel = new AffineModel2D();
+				break;
+			default:
+				currentModel = null;
+		}
+		return currentModel;
+	}
+
+	private void collectFutures( ExecutorService executorService, ArrayList< Future > futures )
+	{
+		for ( Future future : futures )
+		{
+			try
+			{
+				future.get();
+			} catch ( InterruptedException e )
+			{
+				e.printStackTrace();
+			} catch ( ExecutionException e )
+			{
+				e.printStackTrace();
+			}
+		}
+		executorService.shutdown();
+	}
+
+	private void computeMissingFeatures( long requestedSlice )
+	{
+		final ExecutorService executorService = Executors.newFixedThreadPool( numThreads );
+		final ArrayList< Future > futures = new ArrayList<>();
 
 		int step = getStep( requestedSlice );
 
@@ -106,6 +215,8 @@ public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > >
 					long start_time = System.currentTimeMillis();
 					final ImageProcessor ip = getImageProcessor( featureSlice );
 					final ArrayList< Feature > features = new ArrayList<>();
+					final FloatArray2DSIFT sift = new FloatArray2DSIFT( p.sift );
+					final SIFT ijSIFT = new SIFT( sift );
 					ijSIFT.extractFeatures( ip, features );
 					System.out.println( "Processing SIFT of slice: " + featureSlice + " took "
 							+ ( System.currentTimeMillis() - start_time ) + "ms; "
@@ -115,21 +226,7 @@ public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > >
 			} ) );
 		}
 
-		for ( Future future : futures )
-		{
-			try
-			{
-				future.get();
-			} catch ( InterruptedException e )
-			{
-				e.printStackTrace();
-			} catch ( ExecutionException e )
-			{
-				e.printStackTrace();
-			}
-		}
-
-
+		collectFutures( executorService, futures );
 	}
 
 	private ImageProcessor getImageProcessor( long featureSlice )
