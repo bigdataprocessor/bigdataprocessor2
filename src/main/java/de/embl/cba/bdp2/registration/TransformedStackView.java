@@ -7,6 +7,7 @@ import net.imglib2.realtransform.RealViews;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.view.IntervalView;
+import net.imglib2.view.StackView;
 import net.imglib2.view.Views;
 
 import java.util.List;
@@ -22,9 +23,21 @@ public class TransformedStackView< R extends RealType< R > & NativeType< R > >
 	public TransformedStackView( List< RandomAccessibleInterval< R > > hyperslices,
 								 HypersliceTransformProvider transformProvider )
 	{
-		super( hyperslices.size() + 1 );
+		super( hyperslices.get( 0 ).numDimensions() + 1 );
+		setInterval( hyperslices );
 		this.hyperslices = hyperslices;
 		this.transformProvider = transformProvider;
+	}
+
+	private void setInterval( List< RandomAccessibleInterval< R > > hyperslices )
+	{
+		for ( int d = 0; d < n - 1; ++d )
+		{
+			min[ d ] = hyperslices.get( 0 ).min( d );
+			max[ d ] = hyperslices.get( 0 ).max( d );
+		}
+		min[ n - 1 ] = 0;
+		max[ n - 1 ] = hyperslices.size() - 1;
 	}
 
 	@Override
@@ -66,7 +79,6 @@ public class TransformedStackView< R extends RealType< R > & NativeType< R > >
 		private boolean sliceReady;
 
 
-
 		public TransformedRandomAccess(
 				List< RandomAccessibleInterval< R > > hyperslices,
 				HypersliceTransformProvider transformProvider,
@@ -75,7 +87,9 @@ public class TransformedStackView< R extends RealType< R > & NativeType< R > >
 			this.interval = interval;
 			numDimensions = hyperslices.get( 0 ).numDimensions() + 1;
 			numSliceDimensions = numDimensions - 1;
+
 			sliceIndex = 0;
+			sliceAccess = hyperslices.get( 0 ).randomAccess();
 
 			sliceToAccess = new ConcurrentHashMap<>(  );
 

@@ -70,7 +70,7 @@ public class BdvMenus
                 final FinalRealInterval interval = BdvUtils.getViewerGlobalBoundingInterval( imageViewer.getBdvHandle() );
 
                 final double currentSlice = interval.realMax( DimensionOrder.Z ) / imageViewer.getImage().getVoxelSpacing()[ DimensionOrder.Z ];
-                final Image alignedImage = SIFTAlignedViews.siftAlignImage(
+                final Image alignedImage = SIFTAlignedViews.siftAlignFirstVolume(
                         imageViewer.getImage(),
                         (long) currentSlice );
                 imageViewer.showImageInNewWindow( alignedImage );

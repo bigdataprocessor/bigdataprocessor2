@@ -18,15 +18,20 @@ import java.util.ArrayList;
 public class SIFTAlignedViews
 {
 	public static < R extends RealType< R > & NativeType< R > >
-	Image< R > siftAlignImage( Image< R > image, long referenceSlice )
+	Image< R > siftAlignFirstVolume( Image< R > image, long referenceSlice )
 	{
+
 		final RandomAccessibleInterval< R > volumeView =
 				IntervalImageViews.getVolumeView( image.getRai(), 0, 0 );
 
+		referenceSlice = referenceSlice - volumeView.min( 2 );
+
+		final ArrayList< RandomAccessibleInterval< R > > hyperslices = getSlices( image );
+
 		final SliceRegistrationSIFT< R > sift =
-				new SliceRegistrationSIFT<>( volumeView, referenceSlice, 6 );
-		sift.computeTransformsUntilSlice( volumeView.min( 2 ) );
-		sift.computeTransformsUntilSlice( volumeView.max( 2 ) );
+				new SliceRegistrationSIFT( hyperslices, referenceSlice, 6 );
+		sift.computeTransformsUntilSlice( 0 );
+		sift.computeTransformsUntilSlice( hyperslices.size() - 1 );
 
 		final ArrayList< RandomAccessibleInterval< R > > slices = new ArrayList<>();
 
@@ -46,17 +51,41 @@ public class SIFTAlignedViews
 		}
 
 		RandomAccessibleInterval< R > stackView = new StackView<>( slices );
-		stackView = Views.addDimension( stackView, 0, 0 );
-		stackView = Views.addDimension( stackView, 0, 0 );
 
-		final Image< R > alignedImage = image.newImage( stackView );
+		final Image< R > alignedImage = image.newImage( volumeTo5D( stackView ) );
 		alignedImage.setName( "aligned" );
 
 		return alignedImage;
 	}
 
 	public static < R extends RealType< R > & NativeType< R > >
-	Image< R > lazySIFTAlignVolume( Image< R > image, long referenceSlice )
+	Image< R > lazySIFTAlignFirstVolume( Image< R > image, long referenceSlice )
+	{
+		referenceSlice = referenceSlice - image.getRai().min( 2 );
+
+		final ArrayList< RandomAccessibleInterval< R > > hyperslices = getSlices( image );
+
+		final SliceRegistrationSIFT< R > registration =
+				new SliceRegistrationSIFT<>( hyperslices, referenceSlice, 6 );
+
+		RandomAccessibleInterval< R > registered = new TransformedStackView( hyperslices, registration );
+
+		final Image< R > alignedImage = image.newImage( volumeTo5D( registered ) );
+
+		alignedImage.setName( "lazy aligned" );
+
+		return alignedImage;
+	}
+
+	private static < R extends RealType< R > & NativeType< R > >
+	RandomAccessibleInterval<R> volumeTo5D( RandomAccessibleInterval< R > rai )
+	{
+		rai = Views.addDimension( rai, 0, 0 );
+		rai = Views.addDimension( rai, 0, 0 );
+		return rai;
+	}
+
+	private static < R extends RealType< R > & NativeType< R > > ArrayList< RandomAccessibleInterval< R > > getSlices( Image< R > image )
 	{
 		final ArrayList< RandomAccessibleInterval< R > > hyperslices = new ArrayList<>();
 
@@ -65,15 +94,6 @@ public class SIFTAlignedViews
 			final RandomAccessibleInterval< R > sliceView = IntervalImageViews.getSliceView( image.getRai(), slice, 0, 0 );
 			hyperslices.add( sliceView );
 		}
-
-		final SliceRegistrationSIFT< R > registration = ( SliceRegistrationSIFT< R > )
-				new SliceRegistrationSIFT<>( hyperslices, referenceSlice, 6 );
-
-		RandomAccessibleInterval< R > registered = new TransformedStackView( hyperslices, registration );
-
-		final Image< R > alignedImage = image.newImage( lazyAlignedRai3D );
-		alignedImage.setName( "lazy aligned" );
-
-		return alignedImage;
+		return hyperslices;
 	}
 }

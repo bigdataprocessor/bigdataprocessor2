@@ -24,7 +24,7 @@ public class TestSIFTAlignment < R extends RealType< R > & NativeType< R > >
 				FileInfos.TIFF_SLICES,
 				".*.tif" );
 
-		final Image< R > alignedImage = SIFTAlignedViews.siftAlignImage( image, 20 );
+		final Image< R > alignedImage = SIFTAlignedViews.siftAlignFirstVolume( image, 20 );
 
 		bdp.showImage( alignedImage );
 
@@ -43,20 +43,16 @@ public class TestSIFTAlignment < R extends RealType< R > & NativeType< R > >
 				".*.tif" );
 
 
-		final Image< R > alignedImage = SIFTAlignedViews.lazySIFTAlignVolume( image, 20 );
+		final Image< R > alignedImage = SIFTAlignedViews.lazySIFTAlignFirstVolume( image, 20 );
 
 		bdp.showImage( alignedImage );
 
 	}
 
-
-
-
 	public static void main( String[] args )
 	{
-		new TestSIFTAlignment().nonVolatileSIFT();
+		//new TestSIFTAlignment().nonVolatileSIFT();
 		new TestSIFTAlignment().volatileSIFT();
-
 	}
 
 }

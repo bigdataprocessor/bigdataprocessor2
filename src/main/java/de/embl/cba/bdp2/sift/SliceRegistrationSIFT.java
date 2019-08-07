@@ -8,11 +8,10 @@ import mpicbg.imagefeatures.FloatArray2DSIFT;
 import mpicbg.models.*;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.display.imagej.ImageJFunctions;
+import net.imglib2.realtransform.AffineGet;
 import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
-import net.imglib2.util.Intervals;
-import net.imglib2.view.Views;
 
 import java.awt.geom.AffineTransform;
 import java.util.*;
@@ -23,7 +22,7 @@ public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > >
 {
 	private final List< RandomAccessibleInterval< R > > hyperslices;
 	private final long referenceSlice;
-	private final Map< Long, net.imglib2.realtransform.AffineTransform > sliceToLocalTransform;
+	private final Map< Long, AffineGet > sliceToLocalTransform;
 	private final Map< Long, Boolean > sliceToLocalTransformIsBeingComputed;
 
 	private final Map< Long, List< Feature > > sliceToFeatures;
@@ -148,7 +147,7 @@ public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > >
 				// TODO: handle sliceToLocalTransform.get() == null, use previous....
 
 				final net.imglib2.realtransform.AffineTransform previousGlobal = sliceToGlobalTransform.get( slice - step ).copy();
-				final net.imglib2.realtransform.AffineTransform currentLocal = sliceToLocalTransform.get( slice ).copy();
+				final AffineGet currentLocal = sliceToLocalTransform.get( slice ).copy();
 				final net.imglib2.realtransform.AffineTransform currentGlobal = previousGlobal.preConcatenate( currentLocal );
 				sliceToGlobalTransform.put( slice, currentGlobal );
 
@@ -199,12 +198,12 @@ public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > >
 		}
 
 		if ( modelFound )
-			sliceToLocalTransform.put( finalSlice, getAffineTransform2D( model ) );
+			sliceToLocalTransform.put( finalSlice, getAffineTransform( model ) );
 		else
 			sliceToLocalTransform.put( finalSlice, null );
 	}
 
-	private AffineTransform2D getAffineTransform2D( AbstractAffineModel2D< ? > model )
+	private AffineGet getAffineTransform( AbstractAffineModel2D< ? > model )
 	{
 		final AffineTransform affine = model.createAffine();
 		final double[] array = new double[ 6 ];
