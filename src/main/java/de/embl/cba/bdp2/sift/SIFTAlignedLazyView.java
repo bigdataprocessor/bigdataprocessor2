@@ -1,105 +1,136 @@
 package de.embl.cba.bdp2.sift;
 
 import net.imglib2.*;
+import net.imglib2.interpolation.randomaccess.NLinearInterpolatorFactory;
+import net.imglib2.realtransform.RealViews;
+import net.imglib2.type.NativeType;
+import net.imglib2.type.Type;
+import net.imglib2.type.numeric.RealType;
+import net.imglib2.view.IntervalView;
+import net.imglib2.view.Views;
 
-public class SIFTAlignedLazyView< T > extends AbstractInterval implements RandomAccessibleInterval< T >, View
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+public class SIFTAlignedLazyView < R extends RealType< R > & NativeType< R > >
+		extends AbstractInterval implements RandomAccessibleInterval< R >, View
 {
-	public SIFTAlignedLazyView( RandomAccessibleInterval< T > rai3D )
+	private final long referenceSlice;
+	private final RandomAccessibleInterval< R > rai3D;
+	protected final int numThreads;
+
+	public SIFTAlignedLazyView( RandomAccessibleInterval< R > rai3D,
+								long referenceSlice,
+								int numThreads )
 	{
 		super( rai3D.numDimensions() );
+
+		this.referenceSlice = referenceSlice;
+		this.rai3D = rai3D;
+		this.numThreads = numThreads;
 	}
 
 	@Override
-	public RandomAccess< T > randomAccess()
+	public RandomAccess< R > randomAccess()
 	{
-		return null;
+		return new SIFTAlignedRandomAccess( rai3D, referenceSlice, null, numThreads );
 	}
 
 	@Override
-	public RandomAccess< T > randomAccess( Interval interval )
+	public RandomAccess< R > randomAccess( Interval interval )
 	{
-		return null;
+		return new SIFTAlignedRandomAccess( rai3D, referenceSlice, interval, numThreads );
 	}
 
 
-	public static final class SIFTAlignedRandomAccess< T > implements RandomAccess< T >
+	public static final class SIFTAlignedRandomAccess < R extends RealType< R > & NativeType< R > >
+			implements RandomAccess< R >
 	{
-		private final int n;
+		private final int numDimensions;
 
-		private final int sliceDimension;
+		private final int numSliceDimensions;
+		private final RandomAccessibleInterval< R > inputRai3D;
 
 		private int sliceIndex;
+
+		private final long referenceSlice;
 
 		private final long[] tmpLong;
 
 		private final int[] tmpInt;
 
-		private RandomAccess< T > sliceAccess;
+		private RandomAccess< R > sliceAccess;
 
-		private RandomAccessibleInterval< T >[] slices;
 		private Interval interval;
+		private Map< Long, RandomAccess< R > > sliceToAccess;
+		private final SliceRegistrationSIFT< R > sift;
+		private boolean sliceReady;
 
-		public SIFTAlignedRandomAccess( final RandomAccessibleInterval< T >[] slices )
-		{
-			this( slices, null );
-		}
-
-		@SuppressWarnings( "unchecked" )
 		public SIFTAlignedRandomAccess(
-				final RandomAccessibleInterval< T >[] slices,
-				final Interval interval )
+				final RandomAccessibleInterval< R > rai3D,
+				long referenceSlice,
+				final Interval interval,
+				int numThreads )
 		{
-			this.slices = slices;
+			this.referenceSlice = referenceSlice;
+			this.inputRai3D = rai3D;
 			this.interval = interval;
-			n = slices[ 0 ].numDimensions() + 1;
-			sliceDimension = n - 1;
+			numDimensions = rai3D.numDimensions();
+			numSliceDimensions = numDimensions - 1;
 			sliceIndex = 0;
-			tmpLong = new long[ sliceDimension ];
-			tmpInt = new int[ sliceDimension ];
+
+			sliceToAccess = new ConcurrentHashMap<>(  );
+
+			tmpLong = new long[ numSliceDimensions ];
+			tmpInt = new int[ numSliceDimensions ];
+
+			sift = new SliceRegistrationSIFT<>( rai3D, referenceSlice, numThreads );
+			sift.computeAllTransforms();
+
 		}
 
 		@Override
 		public void localize( final int[] position )
 		{
-			for ( int d = 0; d < sliceDimension; ++d )
+			for ( int d = 0; d < numSliceDimensions; ++d )
 				position[ d ] = sliceAccess.getIntPosition( d );
-			position[ sliceDimension ] = sliceIndex;
+			position[ numSliceDimensions ] = sliceIndex;
 		}
 
 		@Override
 		public void localize( final long[] position )
 		{
-			for ( int d = 0; d < sliceDimension; ++d )
+			for ( int d = 0; d < numSliceDimensions; ++d )
 				position[ d ] = sliceAccess.getLongPosition( d );
-			position[ sliceDimension ] = sliceIndex;
+			position[ numSliceDimensions ] = sliceIndex;
 		}
 
 		@Override
 		public int getIntPosition( final int d )
 		{
-			return ( d < sliceDimension ) ? sliceAccess.getIntPosition( d ) : sliceIndex;
+			return ( d < numSliceDimensions ) ? sliceAccess.getIntPosition( d ) : sliceIndex;
 		}
 
 		@Override
 		public long getLongPosition( final int d )
 		{
-			return ( d < sliceDimension ) ? sliceAccess.getLongPosition( d ) : sliceIndex;
+			return ( d < numSliceDimensions ) ? sliceAccess.getLongPosition( d ) : sliceIndex;
 		}
 
 		@Override
 		public void localize( final float[] position )
 		{
-			for ( int d = 0; d < sliceDimension; ++d )
+			for ( int d = 0; d < numSliceDimensions; ++d )
 				position[ d ] = sliceAccess.getLongPosition( d );
-			position[ sliceDimension ] = sliceIndex;
+			position[ numSliceDimensions ] = sliceIndex;
 		}
 
 		@Override
 		public void localize( final double[] position )
 		{
-			for ( int d = 0; d < sliceDimension; ++d )
+			for ( int d = 0; d < numSliceDimensions; ++d )
 				position[ d ] = sliceAccess.getLongPosition( d );
-			position[ sliceDimension ] = sliceIndex;
+			position[ numSliceDimensions ] = sliceIndex;
 		}
 
 		@Override
@@ -117,163 +148,189 @@ public class SIFTAlignedLazyView< T > extends AbstractInterval implements Random
 		@Override
 		public int numDimensions()
 		{
-			return n;
+			return numDimensions;
 		}
 
 		@Override
 		public void fwd( final int d )
 		{
-			if ( d < sliceDimension )
+			if ( d < numSliceDimensions )
 				sliceAccess.fwd( d );
 			else
-				setSliceIndex( sliceIndex + 1 );
+				setSliceAccess( sliceIndex + 1 );
 		}
 
 		@Override
 		public void bck( final int d )
 		{
-			if ( d < sliceDimension )
+			if ( d < numSliceDimensions )
 				sliceAccess.bck( d );
 			else
-				setSliceIndex( sliceIndex - 1 );
+				setSliceAccess( sliceIndex - 1 );
 		}
 
 		@Override
 		public void move( final int distance, final int d )
 		{
-			if ( d < sliceDimension )
+			if ( d < numSliceDimensions )
 				sliceAccess.move( distance, d );
 			else
-				setSliceIndex( sliceIndex + distance );
+				setSliceAccess( sliceIndex + distance );
 		}
 
 		@Override
 		public void move( final long distance, final int d )
 		{
-			if ( d < sliceDimension )
+			if ( d < numSliceDimensions )
 				sliceAccess.move( distance, d );
 			else
-				setSliceIndex( sliceIndex + ( int ) distance );
+				setSliceAccess( sliceIndex + ( int ) distance );
 		}
 
 		@Override
 		public void move( final Localizable distance )
 		{
-			for ( int d = 0; d < sliceDimension; ++d )
+			for ( int d = 0; d < numSliceDimensions; ++d )
 				sliceAccess.move( distance.getLongPosition( d ), d );
-			setSliceIndex( sliceIndex + distance.getIntPosition( sliceDimension ) );
+			setSliceAccess( sliceIndex + distance.getIntPosition( numSliceDimensions ) );
 		}
 
 		@Override
 		public void move( final int[] distance )
 		{
-			for ( int d = 0; d < sliceDimension; ++d )
+			for ( int d = 0; d < numSliceDimensions; ++d )
 				sliceAccess.move( distance[ d ], d );
-			setSliceIndex( sliceIndex + distance[ sliceDimension ] );
+			setSliceAccess( sliceIndex + distance[ numSliceDimensions ] );
 		}
 
 		@Override
 		public void move( final long[] distance )
 		{
-			for ( int d = 0; d < sliceDimension; ++d )
+			for ( int d = 0; d < numSliceDimensions; ++d )
 				sliceAccess.move( distance[ d ], d );
-			setSliceIndex( sliceIndex + ( int ) distance[ sliceDimension ] );
+			setSliceAccess( sliceIndex + ( int ) distance[ numSliceDimensions ] );
 		}
 
 		@Override
 		public void setPosition( final Localizable position )
 		{
-			for ( int d = 0; d < sliceDimension; ++d )
+			for ( int d = 0; d < numSliceDimensions; ++d )
 				tmpLong[ d ] = position.getLongPosition( d );
 			sliceAccess.setPosition( tmpLong );
-			setSliceIndex( position.getIntPosition( sliceDimension ) );
+			setSliceAccess( position.getIntPosition( numSliceDimensions ) );
 		}
 
 		@Override
 		public void setPosition( final int[] position )
 		{
-			System.arraycopy( position, 0, tmpInt, 0, sliceDimension );
+			System.arraycopy( position, 0, tmpInt, 0, numSliceDimensions );
 			sliceAccess.setPosition( tmpInt );
-			setSliceIndex( position[ sliceDimension ] );
+			setSliceAccess( position[ numSliceDimensions ] );
 		}
 
 		@Override
 		public void setPosition( final long[] position )
 		{
-			System.arraycopy( position, 0, tmpLong, 0, sliceDimension );
+			System.arraycopy( position, 0, tmpLong, 0, numSliceDimensions );
 			sliceAccess.setPosition( tmpLong );
-			setSlice( position[ sliceDimension ] );
+			setSlice( position[ numSliceDimensions ] );
 		}
 
 		@Override
 		public void setPosition( final int position, final int d )
 		{
-			if ( d < sliceDimension )
+			if ( d < numSliceDimensions )
 				sliceAccess.setPosition( position, d );
 			else
-				setSliceIndex( position );
+				setSliceAccess( position );
 		}
 
 		@Override
 		public void setPosition( final long position, final int d )
 		{
-			if ( d < sliceDimension )
+			if ( d < numSliceDimensions )
 				sliceAccess.setPosition( position, d );
 			else
 				setSlice( position );
 		}
 
-		private void setSliceIndex( final int i )
+		private void setSliceAccess( final long sliceIndex )
 		{
-//
-//			final long[] smin = new long[ sliceDimension ];
-//			final long[] smax = new long[ sliceDimension ];
-//			for ( int d = 0; d < sliceDimension; ++d )
-//			{
-//				smin[ d ] = interval.min( d );
-//				smax[ d ] = interval.max( d );
-//			}
-//			final Interval sliceInterval = new FinalInterval( smin, smax );
-//			for ( int i = 0; i < slices.length; ++i )
-//				sliceAccesses[ i ] = slices[ i ].randomAccess( sliceInterval );
-//
-//			if ( i != sliceIndex )
-//			{
-//				sliceIndex = i;
-//
-//				if ( sliceIndex >= 0 && sliceIndex < sliceAccesses.length )
-//				{
-//					sliceAccesses[ sliceIndex ].setPosition( sliceAccess );
-//					sliceAccess = sliceAccesses[ sliceIndex ];
-//
-//					final IntervalView< T > interval =
-//							Views.interval( slices[ i ], new long[]{ 0, 0, 0 }, new long[]{ 10, 10, 10 } );
-//
-//					sliceAccess = interval.randomAccess();
-//
-//				}
-//			}
+			// TODO: handle the interval case!
+
+			if ( sliceToAccess.containsKey( sliceIndex ) )
+			{
+				setTransformedAccess( sliceIndex );
+				return;
+			}
+
+			final RandomAccessibleInterval< R > sliceView = Views.interval(
+					inputRai3D,
+					new long[]{ inputRai3D.min( 0 ), inputRai3D.min( 1 ), sliceIndex },
+					new long[]{ inputRai3D.max( 0 ), inputRai3D.max( 1 ), sliceIndex }
+			);
+
+			if ( sift.getGlobalTransform( sliceIndex ) == null )
+			{
+				sliceReady = false;
+				sliceAccess = sliceView.randomAccess(); // TODO: does this make sense?
+				return;
+			}
+
+			final IntervalView transformed = getTransformedView( sliceIndex, sliceView );
+
+			sliceToAccess.put( sliceIndex, transformed.randomAccess() );
+
+			setTransformedAccess( sliceIndex );
+
+		}
+
+		private void setTransformedAccess( long sliceIndex )
+		{
+			sliceAccess = sliceToAccess.get( sliceIndex );
+			sliceReady = true;
+		}
+
+		private IntervalView getTransformedView( long sliceIndex, RandomAccessibleInterval< R > sliceView )
+		{
+			RealRandomAccessible rra =
+						Views.interpolate( Views.extendZero( sliceView ), new NLinearInterpolatorFactory<>() );
+
+			return Views.interval(
+						Views.raster(
+								RealViews.transform( rra, sift.getGlobalTransform( sliceIndex ) )
+						), sliceView );
 		}
 
 		private void setSlice( final long i )
 		{
-			setSliceIndex( ( int ) i );
+			setSliceAccess( i );
 		}
 
 		@Override
-		public T get()
+		public R get()
 		{
-			return sliceAccess.get();
+			if ( sliceReady )
+			{
+				return sliceAccess.get();
+			}
+			else
+			{
+				final R r = sliceAccess.get();
+				r.setZero();
+				// TODO: make use of Volatile here!
+				return r;
+			}
 		}
 
 		@Override
-		public SIFTAlignedLazyView.SIFTAlignedRandomAccess< T > copy()
+		public SIFTAlignedLazyView.SIFTAlignedRandomAccess< R > copy()
 		{
 			return this; // TODO
 		}
 
 		@Override
-		public SIFTAlignedLazyView.SIFTAlignedRandomAccess< T > copyRandomAccess()
+		public SIFTAlignedLazyView.SIFTAlignedRandomAccess< R > copyRandomAccess()
 		{
 			return copy();
 		}

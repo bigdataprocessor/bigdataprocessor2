@@ -31,6 +31,7 @@ public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > >
 	private int sliceDimension;
 	private final int numThreads;
 
+
 	static private class Param
 	{
 		final public FloatArray2DSIFT.Param sift = new FloatArray2DSIFT.Param();
@@ -72,7 +73,6 @@ public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > >
 		this.referenceSlice = referenceSlice;
 		this.numThreads = numThreads;
 
-
 		sliceDimension = 2;
 		sliceToFeatures = new ConcurrentHashMap<>( );
 
@@ -87,11 +87,17 @@ public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > >
 
 	public void computeTransformsUntilSlice( long slice )
 	{
-		if ( ! sliceToLocalTransform.containsKey( slice ) )
-		{
-			new Thread( () -> computeMissingFeatures( slice ) ).start();
-			computeMissingTransforms( slice );
-		}
+		new Thread( () -> computeSIFTFeatures( slice, numThreads ) ).start();
+		computeTransforms( slice, numThreads );
+	}
+
+	public void computeAllTransforms( )
+	{
+		new Thread( () -> computeSIFTFeatures( rai3d.min( 2 ), numThreads ) ).start();
+		computeTransforms( rai3d.min( 2 ), numThreads );
+
+		new Thread( () -> computeSIFTFeatures( rai3d.max( 2 ), numThreads ) ).start();
+		computeTransforms( rai3d.max( 2 ), numThreads );
 	}
 
 	public AffineTransform2D getGlobalTransform( long slice )
@@ -102,7 +108,7 @@ public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > >
 			return null;
 	}
 
-	private void computeMissingTransforms( final long requestedSlice )
+	private void computeTransforms( final long requestedSlice, int numThreads )
 	{
 		final ExecutorService executorService = Executors.newFixedThreadPool( numThreads );
 		final ArrayList< Future > futures = new ArrayList<>();
@@ -248,7 +254,7 @@ public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > >
 		executorService.shutdown();
 	}
 
-	private void computeMissingFeatures( final long requestedSlice )
+	private void computeSIFTFeatures( final long requestedSlice, int numThreads )
 	{
 		final ExecutorService executorService = Executors.newFixedThreadPool( numThreads );
 		final ArrayList< Future > futures = new ArrayList<>();
