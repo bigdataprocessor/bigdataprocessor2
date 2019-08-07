@@ -1,0 +1,56 @@
+package de.embl.cba.bdp2.sift;
+
+import de.embl.cba.bdp2.Image;
+import de.embl.cba.bdp2.process.IntervalImageViews;
+import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.RealRandomAccessible;
+import net.imglib2.interpolation.randomaccess.NLinearInterpolatorFactory;
+import net.imglib2.realtransform.RealViews;
+import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.RealType;
+import net.imglib2.view.IntervalView;
+import net.imglib2.view.StackView;
+import net.imglib2.view.Views;
+
+import java.util.ArrayList;
+
+public class SIFTAlignedView
+{
+	public static < R extends RealType< R > & NativeType< R > >
+	Image< R > computeSIFTAlignedImage( Image< R > image, long referenceSlice )
+	{
+		final RandomAccessibleInterval< R > volumeView =
+				IntervalImageViews.getVolumeView( image.getRai(), 0, 0 );
+
+		final SliceRegistrationSIFT< R > sift =
+				new SliceRegistrationSIFT<>( volumeView, referenceSlice, 6 );
+		sift.computeTransformsUntilSlice( volumeView.min( 2 ) );
+		sift.computeTransformsUntilSlice( volumeView.max( 2 ) );
+
+		final ArrayList< RandomAccessibleInterval< R > > slices = new ArrayList<>();
+
+		for ( int slice = 0; slice < volumeView.dimension( 2 ); slice++ )
+		{
+			final RandomAccessibleInterval< R > sliceView = IntervalImageViews.getSliceView( image.getRai(), slice, 0, 0 );
+
+			RealRandomAccessible rra =
+					Views.interpolate( Views.extendZero( sliceView ), new NLinearInterpolatorFactory<>() );
+
+			final IntervalView transformed = Views.interval(
+					Views.raster(
+							RealViews.transform( rra, sift.getGlobalTransform( slice ) )
+					), sliceView );
+
+			slices.add( transformed );
+		}
+
+		RandomAccessibleInterval< R > stackView = new StackView<>( slices );
+		stackView = Views.addDimension( stackView, 0, 0 );
+		stackView = Views.addDimension( stackView, 0, 0 );
+
+		final Image< R > alignedImage = image.newImage( stackView );
+		alignedImage.setName( "aligned" );
+
+		return alignedImage;
+	}
+}

@@ -12,7 +12,7 @@ public class UIDisplayConstants {
     public static final String IMAGEJ_VIEW_MENU_ITEM = "Show in ImageJ Viewer";
     public static final String CORRECT_MOTION_MENU_ITEM = "Correct Motion...";
     public static final String APPLY_TRACK_MENU_ITEM = "Apply Track...";
-    public static final String REGISTER_STACK_WITH_SIFT_MENU_ITEM = "Register Stack with SIFT...";
+    public static final String REGISTER_STACK_WITH_SIFT_MENU_ITEM = "Align Volume with SIFT...";
     public static final String OBLIQUE_MENU_ITEM = "Shear...";
     public static final String CROP_MENU_ITEM = "Crop...";
     public static final String EIGHT_BIT_CONVERSION_MENU_ITEM = "8-bit...";

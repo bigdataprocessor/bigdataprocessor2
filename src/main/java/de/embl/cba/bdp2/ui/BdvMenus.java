@@ -1,15 +1,20 @@
 package de.embl.cba.bdp2.ui;
 
+import bdv.util.BdvFunctions;
+import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.bin.BinningDialog;
 import de.embl.cba.bdp2.convert.UnsignedByteTypeConversion;
 import de.embl.cba.bdp2.crop.CroppingDialog;
 import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.process.*;
 import de.embl.cba.bdp2.process.splitviewmerge.SplitViewMergingDialog;
+import de.embl.cba.bdp2.sift.SIFTAlignedView;
 import de.embl.cba.bdp2.tracking.ApplyTrackDialog;
 import de.embl.cba.bdp2.tracking.BigDataTrackerGUI;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import de.embl.cba.bdv.utils.BdvUtils;
+import net.imglib2.FinalRealInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.view.Views;
@@ -64,12 +69,19 @@ public class BdvMenus
             });
         }else if (e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.REGISTER_STACK_WITH_SIFT_MENU_ITEM )) {
             BigDataProcessor2.generalThreadPool.submit(() -> {
-                // TODO
+                final FinalRealInterval interval = BdvUtils.getViewerGlobalBoundingInterval( imageViewer.getBdvHandle() );
+
+                final double currentSlice = interval.realMax( DimensionOrder.Z ) / imageViewer.getImage().getVoxelSpacing()[ DimensionOrder.Z ];
+                final Image alignedImage = SIFTAlignedView.computeSIFTAlignedImage(
+                        imageViewer.getImage(),
+                        (long) currentSlice );
+                imageViewer.showImageInNewWindow( alignedImage );
             });
         }else if(e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.CROP_MENU_ITEM )){
         	BigDataProcessor2.generalThreadPool.submit(() -> {
             	new CroppingDialog<>( imageViewer );
             });
+
         }else if(e.getActionCommand().equalsIgnoreCase(
                 UIDisplayConstants.IMAGEJ_VIEW_MENU_ITEM )){
             // TODO: improve this:

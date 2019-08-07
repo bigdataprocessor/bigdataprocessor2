@@ -11,7 +11,7 @@ import net.imglib2.type.numeric.RealType;
 
 import static junit.framework.Assert.assertTrue;
 
-public class ProcessEM
+public class ProcessEMfromServer
 {
 
 	public < R extends RealType< R > & NativeType< R > > void invertEM()
@@ -66,6 +66,6 @@ public class ProcessEM
 	public static void main( String[] args )
 	{
 		new ImageJ().ui().showUI();
-		new ProcessEM().invertEM();
+		new ProcessEMfromServer().invertEM();
 	}
 }

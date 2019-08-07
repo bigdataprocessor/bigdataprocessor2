@@ -138,6 +138,7 @@ public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > >
 				final AffineTransform2D currentGlobal = previousGlobal.preConcatenate( currentLocal );
 				sliceToGlobalTransform.put( slice, currentGlobal );
 
+				System.out.println( "Transformation ready for slice: " + slice );
 				if ( slice == requestedSlice )
 				{
 					finished = true;

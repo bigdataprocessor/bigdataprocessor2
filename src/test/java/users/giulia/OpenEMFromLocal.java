@@ -1,19 +1,16 @@
-package tests;
+package users.giulia;
 
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
-import de.embl.cba.bdp2.sift.SIFTAlignedView;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import net.imagej.ImageJ;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
-import org.junit.Test;
 
-public class TestSIFTAlignment < R extends RealType< R > & NativeType< R > >
+public class OpenEMFromLocal
 {
 
-	@Test
-	public void testSIFTFeatureComputation()
+	public < R extends RealType< R > & NativeType< R > > void view()
 	{
 		new ImageJ().ui().showUI();
 
@@ -24,15 +21,14 @@ public class TestSIFTAlignment < R extends RealType< R > & NativeType< R > >
 				FileInfos.TIFF_SLICES,
 				".*.tif" );
 
-		final Image< R > alignedImage = SIFTAlignedView.computeSIFTAlignedImage( image, 20 );
+		bdp.showImage( image );
 
-		bdp.showImage( alignedImage );
-
+		System.out.println("Done.");
 	}
+
 
 	public static void main( String[] args )
 	{
-		new TestSIFTAlignment().testSIFTFeatureComputation();
+		new OpenEMFromLocal().view();
 	}
-
 }

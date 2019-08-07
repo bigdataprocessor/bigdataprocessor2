@@ -1,6 +1,7 @@
 package de.embl.cba.bdp2.ui;
 
 import de.embl.cba.bdp2.Image;
+import de.embl.cba.bdp2.bin.Binner;
 import de.embl.cba.bdp2.convert.UnsignedByteTypeConversion;
 import de.embl.cba.bdp2.crop.Cropper;
 import de.embl.cba.bdp2.loading.CachedCellImgReader;
@@ -71,6 +72,11 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
         Logger.log( "Saving: " + savingSettings.volumesFilePath );
         Progress.waitUntilDone( progress, 1000 );
         Logger.log("Saving: Done." );
+    }
+
+    public static < R extends RealType< R > & NativeType< R > > Image< R > bin( Image<R> image, long[] radii )
+    {
+        return Binner.bin( image, radii );
     }
 
     private void kickOffThreadPack( int numThreads ) {
