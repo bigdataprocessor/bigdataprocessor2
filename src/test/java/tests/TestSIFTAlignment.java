@@ -11,7 +11,6 @@ import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.view.StackView;
-import net.imglib2.view.Views;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -37,17 +36,17 @@ public class TestSIFTAlignment < R extends RealType< R > & NativeType< R > >
 		final SliceRegistrationSIFT< R > sift =
 				new SliceRegistrationSIFT<>( volumeView, 20, 4 );
 
+		sift.computeTransformsUntilSlice( 30 );
 
-		final ArrayList< RandomAccessibleInterval< R > > slices = new ArrayList<>();
-		for ( int slice = 0; slice < volumeView.dimension( 2 ); slice++ )
-		{
-			slices.add( IntervalImageViews.getSliceView( image.getRai(), slice, 0, 0 ) );
-		}
+//		final ArrayList< RandomAccessibleInterval< R > > slices = new ArrayList<>();
+//		for ( int slice = 0; slice < volumeView.dimension( 2 ); slice++ )
+//		{
+//			slices.add( IntervalImageViews.getSliceView( image.getRai(), slice, 0, 0 ) );
+//		}
+//
+//		final StackView< R > stackView = new StackView<>( slices );
 
-		final StackView< R > stackView = new StackView<>( slices );
 
-
-		final AffineTransform2D transform = sift.getTransform( 30 );
 	}
 
 	public static void main( String[] args )

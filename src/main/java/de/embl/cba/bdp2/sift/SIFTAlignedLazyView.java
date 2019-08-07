@@ -1,16 +1,10 @@
 package de.embl.cba.bdp2.sift;
 
 import net.imglib2.*;
-import net.imglib2.util.Cast;
-import net.imglib2.view.IntervalView;
-import net.imglib2.view.StackView;
-import net.imglib2.view.Views;
 
-import java.lang.reflect.Array;
-
-public class SIFTAlignedView< T > extends AbstractInterval implements RandomAccessibleInterval< T >, View
+public class SIFTAlignedLazyView< T > extends AbstractInterval implements RandomAccessibleInterval< T >, View
 {
-	public SIFTAlignedView( RandomAccessibleInterval< T > rai3D )
+	public SIFTAlignedLazyView( RandomAccessibleInterval< T > rai3D )
 	{
 		super( rai3D.numDimensions() );
 	}
@@ -231,34 +225,34 @@ public class SIFTAlignedView< T > extends AbstractInterval implements RandomAcce
 
 		private void setSliceIndex( final int i )
 		{
-
-			final long[] smin = new long[ sliceDimension ];
-			final long[] smax = new long[ sliceDimension ];
-			for ( int d = 0; d < sliceDimension; ++d )
-			{
-				smin[ d ] = interval.min( d );
-				smax[ d ] = interval.max( d );
-			}
-			final Interval sliceInterval = new FinalInterval( smin, smax );
-			for ( int i = 0; i < slices.length; ++i )
-				sliceAccesses[ i ] = slices[ i ].randomAccess( sliceInterval );
-
-			if ( i != sliceIndex )
-			{
-				sliceIndex = i;
-
-				if ( sliceIndex >= 0 && sliceIndex < sliceAccesses.length )
-				{
-					sliceAccesses[ sliceIndex ].setPosition( sliceAccess );
-					sliceAccess = sliceAccesses[ sliceIndex ];
-
-					final IntervalView< T > interval =
-							Views.interval( slices[ i ], new long[]{ 0, 0, 0 }, new long[]{ 10, 10, 10 } );
-
-					sliceAccess = interval.randomAccess();
-
-				}
-			}
+//
+//			final long[] smin = new long[ sliceDimension ];
+//			final long[] smax = new long[ sliceDimension ];
+//			for ( int d = 0; d < sliceDimension; ++d )
+//			{
+//				smin[ d ] = interval.min( d );
+//				smax[ d ] = interval.max( d );
+//			}
+//			final Interval sliceInterval = new FinalInterval( smin, smax );
+//			for ( int i = 0; i < slices.length; ++i )
+//				sliceAccesses[ i ] = slices[ i ].randomAccess( sliceInterval );
+//
+//			if ( i != sliceIndex )
+//			{
+//				sliceIndex = i;
+//
+//				if ( sliceIndex >= 0 && sliceIndex < sliceAccesses.length )
+//				{
+//					sliceAccesses[ sliceIndex ].setPosition( sliceAccess );
+//					sliceAccess = sliceAccesses[ sliceIndex ];
+//
+//					final IntervalView< T > interval =
+//							Views.interval( slices[ i ], new long[]{ 0, 0, 0 }, new long[]{ 10, 10, 10 } );
+//
+//					sliceAccess = interval.randomAccess();
+//
+//				}
+//			}
 		}
 
 		private void setSlice( final long i )
@@ -273,13 +267,13 @@ public class SIFTAlignedView< T > extends AbstractInterval implements RandomAcce
 		}
 
 		@Override
-		public SIFTAlignedView.SIFTAlignedRandomAccess< T > copy()
+		public SIFTAlignedLazyView.SIFTAlignedRandomAccess< T > copy()
 		{
 			return this; // TODO
 		}
 
 		@Override
-		public SIFTAlignedView.SIFTAlignedRandomAccess< T > copyRandomAccess()
+		public SIFTAlignedLazyView.SIFTAlignedRandomAccess< T > copyRandomAccess()
 		{
 			return copy();
 		}

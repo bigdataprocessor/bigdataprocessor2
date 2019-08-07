@@ -79,18 +79,15 @@ public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > >
 		sliceToLocalTransform.put( referenceSlice, new AffineTransform2D() );
 	}
 
-	public AffineTransform2D getTransform( long slice )
+	public void computeTransformsUntilSlice( long slice )
 	{
+
 		if ( ! sliceToLocalTransform.containsKey( slice ) )
 		{
-			computeMissingFeatures( slice );
+			new Thread( () -> computeMissingFeatures( slice ) );
 			computeMissingTransforms( slice );
 		}
 
-		// TODO: concatenate the transformations
-
-
-		return sliceToGlobalTransform.get( slice );
 	}
 
 	private void computeMissingTransforms( final long requestedSlice )
@@ -100,47 +97,70 @@ public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > >
 
 		final int step = getStep( requestedSlice );
 
-		for ( long slice = referenceSlice + step; slice != ( requestedSlice + step ) ; slice += step )
+		boolean finished = false;
+
+		while( ! finished )
 		{
-			if ( sliceToLocalTransform.containsKey( slice ) ) continue;
 
-			final long featureSlice = slice;
+			for ( long slice = referenceSlice + step; slice != ( requestedSlice + step ); slice += step )
+			{
+				final long featureSlice = slice;
 
-			futures.add( executorService.submit( () -> {
+				if ( sliceToLocalTransform.containsKey( slice ) ) continue;
+				if ( ! sliceToFeatures.containsKey( featureSlice ) ) continue;
+				if ( ! sliceToFeatures.containsKey( featureSlice - step  ) ) continue;
 
-				final Vector< PointMatch > candidates =
-						FloatArray2DSIFT.createMatches(
-								sliceToFeatures.get( featureSlice  ),
-								sliceToFeatures.get( featureSlice - step),
-								1.5f,
-								null,
-								Float.MAX_VALUE, p.rod );
+				futures.add( executorService.submit( () -> {
 
-				final Vector< PointMatch > inliers = new Vector< PointMatch >();
+					final Vector< PointMatch > candidates =
+							FloatArray2DSIFT.createMatches(
+									sliceToFeatures.get( featureSlice ),
+									sliceToFeatures.get( featureSlice - step ),
+									1.5f,
+									null,
+									Float.MAX_VALUE, p.rod );
 
-				AbstractAffineModel2D< ? > model = getAbstractAffineModel2D();
+					final Vector< PointMatch > inliers = new Vector< PointMatch >();
 
-				boolean modelFound;
-				try
-				{
-					modelFound = model.filterRansac(
-							candidates,
-							inliers,
-							1000,
-							p.maxEpsilon,
-							p.minInlierRatio );
-				}
-				catch ( final Exception e )
-				{
-					modelFound = false;
-					System.err.println( e.getMessage() );
-				}
+					AbstractAffineModel2D< ? > model = getAbstractAffineModel2D();
 
-				if ( modelFound )
-					sliceToLocalTransform.put( featureSlice, getAffineTransform2D( model ) );
-				else
-					sliceToLocalTransform.put( featureSlice, null );
-			} ) );
+					boolean modelFound;
+					try
+					{
+						modelFound = model.filterRansac(
+								candidates,
+								inliers,
+								1000,
+								p.maxEpsilon,
+								p.minInlierRatio );
+					} catch ( final Exception e )
+					{
+						modelFound = false;
+						System.err.println( e.getMessage() );
+					}
+
+					if ( modelFound )
+						sliceToLocalTransform.put( featureSlice, getAffineTransform2D( model ) );
+					else
+						sliceToLocalTransform.put( featureSlice, null );
+				} ) );
+			}
+
+
+			for ( long slice = referenceSlice + step; slice != ( requestedSlice + step ); slice += step )
+			{
+				if ( ! sliceToLocalTransform.containsKey( slice ) ) break;
+
+				// TODO: handle sliceToLocalTransform.get() == null, use previous....
+
+				final AffineTransform2D previousGlobal = sliceToGlobalTransform.get( slice - step );
+				final AffineTransform2D currentLocal = sliceToLocalTransform.get( slice );
+				final AffineTransform2D currentGlobal = previousGlobal.preConcatenate( currentLocal );
+
+				sliceToGlobalTransform.put( slice, currentGlobal );
+
+				if ( slice == requestedSlice + step ) finished = true;
+			}
 
 		}
 
@@ -238,7 +258,7 @@ public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > >
 			} ) );
 		}
 
-		collectFutures( executorService, futures );
+		new Thread( () -> collectFutures( executorService, futures ) ).start();
 	}
 
 	private ImageProcessor getImageProcessor( long featureSlice )
