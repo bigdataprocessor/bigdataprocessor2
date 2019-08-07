@@ -14,10 +14,10 @@ import net.imglib2.view.Views;
 
 import java.util.ArrayList;
 
-public class SIFTAlignedView
+public class SIFTAlignedViews
 {
 	public static < R extends RealType< R > & NativeType< R > >
-	Image< R > computeSIFTAlignedImage( Image< R > image, long referenceSlice )
+	Image< R > siftAlignImage( Image< R > image, long referenceSlice )
 	{
 		final RandomAccessibleInterval< R > volumeView =
 				IntervalImageViews.getVolumeView( image.getRai(), 0, 0 );
@@ -50,6 +50,22 @@ public class SIFTAlignedView
 
 		final Image< R > alignedImage = image.newImage( stackView );
 		alignedImage.setName( "aligned" );
+
+		return alignedImage;
+	}
+
+	public static < R extends RealType< R > & NativeType< R > >
+	Image< R > lazySIFTAlignImage( Image< R > image, long referenceSlice )
+	{
+		final RandomAccessibleInterval< R > volumeView =
+				IntervalImageViews.getVolumeView( image.getRai(), 0, 0 );
+
+		RandomAccessibleInterval< R > lazyAlignedRai3D = new SIFTAlignedLazyView<>( volumeView, referenceSlice, 6 );
+		lazyAlignedRai3D = Views.addDimension( lazyAlignedRai3D, 0, 0 );
+		lazyAlignedRai3D = Views.addDimension( lazyAlignedRai3D, 0, 0 );
+
+		final Image< R > alignedImage = image.newImage( lazyAlignedRai3D );
+		alignedImage.setName( "lazy aligned" );
 
 		return alignedImage;
 	}

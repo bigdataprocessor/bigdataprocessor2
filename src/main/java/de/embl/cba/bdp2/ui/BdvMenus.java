@@ -1,6 +1,5 @@
 package de.embl.cba.bdp2.ui;
 
-import bdv.util.BdvFunctions;
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.bin.BinningDialog;
 import de.embl.cba.bdp2.convert.UnsignedByteTypeConversion;
@@ -8,9 +7,8 @@ import de.embl.cba.bdp2.crop.CroppingDialog;
 import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.process.*;
 import de.embl.cba.bdp2.process.splitviewmerge.SplitViewMergingDialog;
-import de.embl.cba.bdp2.sift.SIFTAlignedView;
+import de.embl.cba.bdp2.sift.SIFTAlignedViews;
 import de.embl.cba.bdp2.tracking.ApplyTrackDialog;
-import de.embl.cba.bdp2.tracking.BigDataTrackerGUI;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import de.embl.cba.bdv.utils.BdvUtils;
@@ -72,7 +70,7 @@ public class BdvMenus
                 final FinalRealInterval interval = BdvUtils.getViewerGlobalBoundingInterval( imageViewer.getBdvHandle() );
 
                 final double currentSlice = interval.realMax( DimensionOrder.Z ) / imageViewer.getImage().getVoxelSpacing()[ DimensionOrder.Z ];
-                final Image alignedImage = SIFTAlignedView.computeSIFTAlignedImage(
+                final Image alignedImage = SIFTAlignedViews.siftAlignImage(
                         imageViewer.getImage(),
                         (long) currentSlice );
                 imageViewer.showImageInNewWindow( alignedImage );
