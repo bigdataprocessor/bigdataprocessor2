@@ -4,6 +4,10 @@ import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.process.IntervalImageViews;
 import de.embl.cba.bdp2.registration.SliceRegistrationSIFT;
 import de.embl.cba.bdp2.registration.TransformedStackView;
+import de.embl.cba.bdp2.utils.DimensionOrder;
+import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import de.embl.cba.bdv.utils.BdvUtils;
+import net.imglib2.FinalRealInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealRandomAccessible;
 import net.imglib2.interpolation.randomaccess.NLinearInterpolatorFactory;
@@ -98,5 +102,27 @@ public class SIFTAlignedViews
 			hyperslices.add( sliceView );
 		}
 		return hyperslices;
+	}
+
+	public static void showAlignedBdvView( BdvImageViewer imageViewer )
+	{
+		final double currentSlice = getCurrentSlice( imageViewer );
+
+		final Image alignedImage = lazySIFTAlignFirstVolume(
+				imageViewer.getImage(),
+				(long) currentSlice );
+
+		imageViewer.showImageInNewWindow( alignedImage );
+	}
+
+	private static double getCurrentSlice( BdvImageViewer imageViewer )
+	{
+		final FinalRealInterval interval =
+				BdvUtils.getViewerGlobalBoundingInterval( imageViewer.getBdvHandle() );
+
+		final double currentSlice = interval.realMax( DimensionOrder.Z )
+				/ imageViewer.getImage().getVoxelSpacing()[ DimensionOrder.Z ];
+
+		return currentSlice;
 	}
 }
