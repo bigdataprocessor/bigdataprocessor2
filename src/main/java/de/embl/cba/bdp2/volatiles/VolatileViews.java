@@ -3,6 +3,8 @@ package de.embl.cba.bdp2.volatiles;
 import bdv.img.cache.CreateInvalidVolatileCell;
 import bdv.img.cache.VolatileCachedCellImg;
 import bdv.util.volatiles.*;
+import de.embl.cba.bdp2.registration.HypersliceTransformProvider;
+import de.embl.cba.bdp2.registration.TransformedStackView;
 import de.embl.cba.lazyalgorithm.converter.NeighborhoodAverageConverter;
 import de.embl.cba.lazyalgorithm.converter.VolatileNeighborhoodAverageConverter;
 import de.embl.cba.neighborhood.RectangleShape2;
@@ -274,6 +276,38 @@ public class VolatileViews
 			 */
 			final VolatileViewData volatileViewData = new VolatileViewData(
 					new StackView( volatileSlices ),
+					volatileViews.get( 0 ).getCacheControl(),
+					volatileViews.get( 0 ).getType(),
+					volatileViews.get( 0 ).getVolatileType() );
+
+			return volatileViewData;
+		}
+		else if ( rai instanceof TransformedStackView )
+		{
+			final TransformedStackView< T > view =
+					( TransformedStackView< T > ) rai;
+
+			final List< RandomAccessibleInterval< T > > slices = view.getHyperslices();
+			final HypersliceTransformProvider transformProvider = view.getTransformProvider();
+
+			final List< VolatileViewData< T, V > > volatileViews = new ArrayList<>();
+			for ( RandomAccessibleInterval< T > sourceSlice : slices )
+				volatileViews.add(
+						wrapAsVolatileViewData( sourceSlice, queue, hints ));
+
+
+			final List< RandomAccessible< V > > volatileSlices = new ArrayList<>();
+			for ( VolatileViewData< T, V > volatileViewData : volatileViews )
+				volatileSlices.add( volatileViewData.getImg() );
+
+			/*
+			TODO:
+			It works but it feels wrong just taking the first slice to get the
+			cacheControl, type and volatileType.
+			How to do this properly?
+			 */
+			final VolatileViewData volatileViewData = new VolatileViewData(
+					new TransformedStackView( volatileSlices, transformProvider ),
 					volatileViews.get( 0 ).getCacheControl(),
 					volatileViews.get( 0 ).getType(),
 					volatileViews.get( 0 ).getVolatileType() );

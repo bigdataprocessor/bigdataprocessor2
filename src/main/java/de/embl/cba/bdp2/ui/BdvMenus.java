@@ -7,7 +7,7 @@ import de.embl.cba.bdp2.crop.CroppingDialog;
 import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.process.*;
 import de.embl.cba.bdp2.process.splitviewmerge.SplitViewMergingDialog;
-import de.embl.cba.bdp2.sift.SIFTAlignedViews;
+import de.embl.cba.bdp2.registration.SIFTAlignedViews;
 import de.embl.cba.bdp2.tracking.ApplyTrackDialog;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;

@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class TransformedStackView< R extends RealType< R > & NativeType< R > >
+public class TransformedStackView < R >
 		extends AbstractInterval implements RandomAccessibleInterval< R >, View
 {
 	private final List< RandomAccessibleInterval< R > > hyperslices;
@@ -27,6 +27,16 @@ public class TransformedStackView< R extends RealType< R > & NativeType< R > >
 		setInterval( hyperslices );
 		this.hyperslices = hyperslices;
 		this.transformProvider = transformProvider;
+	}
+
+	public List< RandomAccessibleInterval< R > > getHyperslices()
+	{
+		return hyperslices;
+	}
+
+	public HypersliceTransformProvider getTransformProvider()
+	{
+		return transformProvider;
 	}
 
 	private void setInterval( List< RandomAccessibleInterval< R > > hyperslices )

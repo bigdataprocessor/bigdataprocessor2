@@ -2,7 +2,7 @@ package tests;
 
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
-import de.embl.cba.bdp2.sift.SIFTAlignedViews;
+import de.embl.cba.bdp2.registration.SIFTAlignedViews;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import net.imagej.ImageJ;
 import net.imglib2.type.NativeType;

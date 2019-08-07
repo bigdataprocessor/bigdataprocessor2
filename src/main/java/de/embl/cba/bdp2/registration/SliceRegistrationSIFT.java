@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.sift;
+package de.embl.cba.bdp2.registration;
 
 import de.embl.cba.bdp2.registration.AffineGetNull;
 import de.embl.cba.bdp2.registration.HypersliceTransformProvider;

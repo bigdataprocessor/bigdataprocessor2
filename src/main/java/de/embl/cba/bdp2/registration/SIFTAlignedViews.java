@@ -1,7 +1,8 @@
-package de.embl.cba.bdp2.sift;
+package de.embl.cba.bdp2.registration;
 
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.process.IntervalImageViews;
+import de.embl.cba.bdp2.registration.SliceRegistrationSIFT;
 import de.embl.cba.bdp2.registration.TransformedStackView;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealRandomAccessible;
