@@ -36,7 +36,7 @@ import java.util.Map;
 public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
 {
     private Image< R > image;
-    private BdvStackSource< Volatile< R > > bdvStackSource;
+    private BdvStackSource< ? > bdvStackSource;
     private BdvGrayValuesOverlay overlay;
     private BdvHandle bdvHandle;
     private Map< String, Track > tracks;
@@ -339,7 +339,7 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
         repaint(sourceTransform);
     }
 
-    public BdvStackSource< Volatile< R > > getBdvStackSource() {
+    public BdvStackSource< ? > getBdvStackSource() {
         return bdvStackSource;
     }
 
@@ -358,7 +358,7 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
         setAutoColors();
     }
 
-    private BdvStackSource< Volatile< R > > addToBdv( Image< R > image )
+    private BdvStackSource< ? > addToBdv( Image< R > image )
     {
         final AffineTransform3D scaling = getScalingTransform( image.getVoxelSpacing() );
 
@@ -366,15 +366,28 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
                 asVolatile( image.getRai() );
 
         if ( volatileRai == null )
-            Logger.error( "Could not wrap as volatile!" );
-        else
+        {
+            Logger.error( "Could not convert to volatile!\n" +
+                    "Image viewing might not be very smooth..." );
+
             bdvStackSource = BdvFunctions.show(
-                                    volatileRai,
-                                    image.getName(),
-                                    BdvOptions.options().axisOrder( AxisOrder.XYZCT )
-                                            .addTo( bdvHandle )
-                                            .sourceTransform( scaling )
-                                            .numRenderingThreads( numRenderingThreads ) );
+                    image.getRai(),
+                    image.getName(),
+                    BdvOptions.options().axisOrder( AxisOrder.XYZCT )
+                            .addTo( bdvHandle )
+                            .sourceTransform( scaling )
+                            .numRenderingThreads( numRenderingThreads ) );
+        }
+        else
+        {
+            bdvStackSource = BdvFunctions.show(
+                    volatileRai,
+                    image.getName(),
+                    BdvOptions.options().axisOrder( AxisOrder.XYZCT )
+                            .addTo( bdvHandle )
+                            .sourceTransform( scaling )
+                            .numRenderingThreads( numRenderingThreads ) );
+        }
 
         return bdvStackSource;
     }

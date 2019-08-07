@@ -11,30 +11,30 @@ public class Image< R extends RealType< R > & NativeType< R > >
 	// TODO: keep track of the dimensions
 	//  of the image in the voxel space of the fileInfos
 
-	private RandomAccessibleInterval< R > rai;
+	private RandomAccessibleInterval< R > raiXYZCT;
 	private String name;
 	private double[] voxelSpacing;
 	private String voxelUnit;
 	private FileInfos fileInfos;
 
-	public Image( RandomAccessibleInterval< R > rai,
+	public Image( RandomAccessibleInterval< R > raiXYZCT,
 				  String name,
 				  double[] voxelSpacing,
 				  String voxelUnit )
 	{
-		this.rai = rai;
+		this.raiXYZCT = raiXYZCT;
 		this.name = name;
 		this.voxelSpacing = voxelSpacing;
 		this.voxelUnit = voxelUnit;
 	}
 
-	public Image( RandomAccessibleInterval< R > rai,
+	public Image( RandomAccessibleInterval< R > raiXYZCT,
 				  String name,
 				  double[] voxelSpacing,
 				  String voxelUnit,
 				  FileInfos fileInfos )
 	{
-		this( rai, name, voxelSpacing, voxelUnit );
+		this( raiXYZCT, name, voxelSpacing, voxelUnit );
 		this.fileInfos = fileInfos;
 	}
 
@@ -50,12 +50,12 @@ public class Image< R extends RealType< R > & NativeType< R > >
 
 	public RandomAccessibleInterval< R > getRai()
 	{
-		return rai;
+		return raiXYZCT;
 	}
 
-	public void setRai( RandomAccessibleInterval< R > rai )
+	public void setRai( RandomAccessibleInterval< R > raiXYZCT )
 	{
-		this.rai = rai;
+		this.raiXYZCT = raiXYZCT;
 	}
 
 	public double[] getVoxelSpacing()
@@ -88,18 +88,18 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		return name;
 	}
 
-	public Image< R > newImage( RandomAccessibleInterval< R > rai )
+	public Image< R > newImage( RandomAccessibleInterval< R > raiXYZCT )
 	{
-		return new Image<>( rai, getName(), getVoxelSpacing(), getVoxelUnit(), getFileInfos() );
+		return new Image<>( raiXYZCT, getName(), getVoxelSpacing(), getVoxelUnit(), getFileInfos() );
 	}
 
 	public long numTimePoints()
 	{
-		return rai.dimension( DimensionOrder.T );
+		return raiXYZCT.dimension( DimensionOrder.T );
 	}
 
 	public long numChannels()
 	{
-		return rai.dimension( DimensionOrder.C );
+		return raiXYZCT.dimension( DimensionOrder.C );
 	}
 }

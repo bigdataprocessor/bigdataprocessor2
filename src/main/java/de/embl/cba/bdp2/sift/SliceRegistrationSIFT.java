@@ -31,7 +31,6 @@ public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > >
 	private int sliceDimension;
 	private final int numThreads;
 
-
 	static private class Param
 	{
 		final public FloatArray2DSIFT.Param sift = new FloatArray2DSIFT.Param();
@@ -93,7 +92,14 @@ public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > >
 			new Thread( () -> computeMissingFeatures( slice ) ).start();
 			computeMissingTransforms( slice );
 		}
+	}
 
+	public AffineTransform2D getGlobalTransform( long slice )
+	{
+		if ( sliceToGlobalTransform.containsKey( slice ))
+			return sliceToGlobalTransform.get( slice );
+		else
+			return null;
 	}
 
 	private void computeMissingTransforms( final long requestedSlice )
@@ -127,8 +133,8 @@ public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > >
 
 				// TODO: handle sliceToLocalTransform.get() == null, use previous....
 
-				final AffineTransform2D previousGlobal = sliceToGlobalTransform.get( slice - step );
-				final AffineTransform2D currentLocal = sliceToLocalTransform.get( slice );
+				final AffineTransform2D previousGlobal = sliceToGlobalTransform.get( slice - step ).copy();
+				final AffineTransform2D currentLocal = sliceToLocalTransform.get( slice ).copy();
 				final AffineTransform2D currentGlobal = previousGlobal.preConcatenate( currentLocal );
 				sliceToGlobalTransform.put( slice, currentGlobal );
 
@@ -141,6 +147,8 @@ public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > >
 			}
 
 		}
+
+		// TODO: if there is an error before I might not catch it...
 
 		collectFutures( executorService, futures );
 
