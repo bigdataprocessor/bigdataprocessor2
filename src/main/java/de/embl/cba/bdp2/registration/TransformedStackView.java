@@ -7,7 +7,6 @@ import net.imglib2.realtransform.RealViews;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.view.IntervalView;
-import net.imglib2.view.StackView;
 import net.imglib2.view.Views;
 
 import java.util.List;
@@ -20,8 +19,8 @@ public class TransformedStackView < R >
 	private final List< RandomAccessibleInterval< R > > hyperslices;
 	private final HypersliceTransformProvider transformProvider;
 
-	public TransformedStackView( List< RandomAccessibleInterval< R > > hyperslices,
-								 HypersliceTransformProvider transformProvider )
+	public TransformedStackView( final List< RandomAccessibleInterval< R > > hyperslices,
+								 final HypersliceTransformProvider transformProvider )
 	{
 		super( hyperslices.get( 0 ).numDimensions() + 1 );
 		setInterval( hyperslices );
@@ -62,8 +61,7 @@ public class TransformedStackView < R >
 		return new TransformedRandomAccess( hyperslices, transformProvider, interval );
 	}
 
-
-	public static final class TransformedRandomAccess< R extends RealType< R > & NativeType< R > >
+	public static final class TransformedRandomAccess < R extends RealType< R > & NativeType< R > >
 			implements RandomAccess< R >
 	{
 		private final int numDimensions;
@@ -87,12 +85,12 @@ public class TransformedStackView < R >
 		private final List< RandomAccessibleInterval< R > > hyperslices;
 
 		private boolean sliceReady;
-
+		private int previousSliceIndex;
 
 		public TransformedRandomAccess(
-				List< RandomAccessibleInterval< R > > hyperslices,
-				HypersliceTransformProvider transformProvider,
-				Interval interval )
+				final List< RandomAccessibleInterval< R > > hyperslices,
+				final HypersliceTransformProvider transformProvider,
+				final Interval interval )
 		{
 			this.interval = interval;
 			numDimensions = hyperslices.get( 0 ).numDimensions() + 1;
@@ -276,38 +274,49 @@ public class TransformedStackView < R >
 				setSlice( position );
 		}
 
-		private void setSliceAccess( final long sliceIndex )
+		private void setSliceAccess( final long requestedSliceIndex )
+		{
+			if ( requestedSliceIndex == sliceIndex )
+				return;
+			else
+				changeSliceAccess( requestedSliceIndex );
+		}
+
+		private synchronized void changeSliceAccess( long requestedSliceIndex )
 		{
 			// TODO: handle the interval case!
 
-			if ( sliceToAccess.containsKey( sliceIndex ) )
+			previousSliceIndex = sliceIndex;
+			sliceIndex = (int) requestedSliceIndex;
+
+			if ( sliceIndex < 0 || sliceIndex >= hyperslices.size() ) return;
+
+			if ( sliceToAccess.containsKey( requestedSliceIndex ) )
 			{
-				setAccess( sliceIndex );
+				sliceToAccess.get( requestedSliceIndex ).setPosition( sliceAccess );
+				sliceAccess = sliceToAccess.get( requestedSliceIndex );
+				sliceReady = true;
 				return;
 			}
 
-			if ( transformProvider.getTransform( sliceIndex ) == null )
+			if ( transformProvider.getTransform( requestedSliceIndex ) == null )
 			{
 				sliceReady = false;
-				sliceAccess = hyperslices.get( ( int ) sliceIndex ).randomAccess();
+				sliceAccess = hyperslices.get( ( int ) requestedSliceIndex ).randomAccess();
 				return;
 			}
 			else
 			{
-				// TODO: this is called several times...
 				final IntervalView transformed = getTransformedView(
-						transformProvider.getTransform( sliceIndex ),
-						hyperslices.get( ( int ) sliceIndex ) );
+						transformProvider.getTransform( requestedSliceIndex ),
+						hyperslices.get( ( int ) requestedSliceIndex ) );
 
-				sliceToAccess.put( sliceIndex, transformed.randomAccess() );
-				setAccess( sliceIndex );
+				sliceToAccess.put( requestedSliceIndex, transformed.randomAccess() );
+				sliceAccess = sliceToAccess.get( requestedSliceIndex );
+				sliceReady = true;
+
+				return;
 			}
-		}
-
-		private void setAccess( long sliceIndex )
-		{
-			sliceAccess = sliceToAccess.get( sliceIndex );
-			sliceReady = true;
 		}
 
 		private IntervalView getTransformedView(
