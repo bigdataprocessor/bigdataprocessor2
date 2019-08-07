@@ -1,5 +1,6 @@
 package de.embl.cba.bdp2.sift;
 
+import de.embl.cba.bdp2.registration.AffineGetNull;
 import de.embl.cba.bdp2.registration.HypersliceTransformProvider;
 import ij.process.ImageProcessor;
 import mpicbg.ij.SIFT;
@@ -28,7 +29,7 @@ public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > >
 	private final Map< Long, List< Feature > > sliceToFeatures;
 	private final Map< Long, net.imglib2.realtransform.AffineTransform > sliceToGlobalTransform;
 
-	private int sliceDimension;
+	private int numSliceDimensions;
 	private final int numThreads;
 	private int numSlices;
 
@@ -78,14 +79,14 @@ public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > >
 
 		numSlices = hyperslices.size() - 1;
 
-		sliceDimension = hyperslices.get( 0 ).numDimensions();
+		numSliceDimensions = hyperslices.get( 0 ).numDimensions();
 		sliceToFeatures = new ConcurrentHashMap<>( );
 
 		sliceToLocalTransform = new ConcurrentHashMap< >( );
-		sliceToLocalTransform.put( referenceSlice, new net.imglib2.realtransform.AffineTransform( sliceDimension ) );
+		sliceToLocalTransform.put( referenceSlice, new net.imglib2.realtransform.AffineTransform( numSliceDimensions ) );
 
 		sliceToGlobalTransform = new ConcurrentHashMap< >( );
-		sliceToGlobalTransform.put( referenceSlice, new net.imglib2.realtransform.AffineTransform( sliceDimension )  );
+		sliceToGlobalTransform.put( referenceSlice, new net.imglib2.realtransform.AffineTransform( numSliceDimensions )  );
 
 		sliceToLocalTransformIsBeingComputed = new ConcurrentHashMap< >( );;
 	}
@@ -144,10 +145,10 @@ public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > >
 				if ( ! sliceToLocalTransform.containsKey( slice ) ) break;
 				if( sliceToGlobalTransform.containsKey( slice ) ) continue;
 
-				// TODO: handle sliceToLocalTransform.get() == null, use previous....
+				AffineGet currentLocal = getLocalTransform( slice );
 
 				final net.imglib2.realtransform.AffineTransform previousGlobal = sliceToGlobalTransform.get( slice - step ).copy();
-				final AffineGet currentLocal = sliceToLocalTransform.get( slice ).copy();
+
 				final net.imglib2.realtransform.AffineTransform currentGlobal = previousGlobal.preConcatenate( currentLocal );
 				sliceToGlobalTransform.put( slice, currentGlobal );
 
@@ -157,15 +158,28 @@ public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > >
 					finished = true;
 					break;
 				}
-
 			}
-
 		}
 
 		// TODO: if there is an error before I might not catch it...
 
 		collectFutures( executorService, futures );
 
+	}
+
+	private AffineGet getLocalTransform( long slice )
+	{
+		AffineGet currentLocal;
+		if ( sliceToLocalTransform.get( slice ) instanceof AffineGetNull )
+		{
+			System.out.println( slice + ":" + sliceToLocalTransform.get( slice ).toString() );
+			currentLocal = new net.imglib2.realtransform.AffineTransform( numSliceDimensions );
+		}
+		else
+		{
+			currentLocal = sliceToLocalTransform.get( slice ).copy();
+		}
+		return currentLocal;
 	}
 
 	private void computeLocalTransform( int step, long finalSlice )
@@ -195,12 +209,13 @@ public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > >
 		{
 			modelFound = false;
 			System.err.println( e.getMessage() );
+			System.out.println( "Could not compute local transform for slice: " + finalSlice );
 		}
 
 		if ( modelFound )
 			sliceToLocalTransform.put( finalSlice, getAffineTransform( model ) );
 		else
-			sliceToLocalTransform.put( finalSlice, null );
+			sliceToLocalTransform.put( finalSlice, new AffineGetNull() );
 	}
 
 	private AffineGet getAffineTransform( AbstractAffineModel2D< ? > model )

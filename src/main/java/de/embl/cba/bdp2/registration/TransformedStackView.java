@@ -283,6 +283,8 @@ public class TransformedStackView< R extends RealType< R > & NativeType< R > >
 			}
 			else
 			{
+				// TODO: this is called several times...
+
 				final IntervalView transformed = getTransformedView(
 						transformProvider.getTransform( sliceIndex ),
 						hyperslices.get( ( int ) sliceIndex ) );
@@ -302,13 +304,15 @@ public class TransformedStackView< R extends RealType< R > & NativeType< R > >
 				AffineTransform transform,
 				RandomAccessibleInterval< R > hyperslice )
 		{
-			RealRandomAccessible rra =
+			RealRandomAccessible< R > rra =
 						Views.interpolate( Views.extendZero( hyperslice ), new NLinearInterpolatorFactory<>() );
 
-			return Views.interval(
-						Views.raster(
-								RealViews.transform( rra, transform )
-						), hyperslice );
+			final IntervalView< R > interval = Views.interval(
+					Views.raster(
+							RealViews.transform( rra, transform )
+					), hyperslice );
+
+			return interval;
 		}
 
 		private void setSlice( final long i )

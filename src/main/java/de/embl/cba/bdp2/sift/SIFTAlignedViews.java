@@ -68,6 +68,8 @@ public class SIFTAlignedViews
 		final SliceRegistrationSIFT< R > registration =
 				new SliceRegistrationSIFT<>( hyperslices, referenceSlice, 6 );
 
+		new Thread( () -> registration.computeAllTransforms() ).start();
+
 		RandomAccessibleInterval< R > registered = new TransformedStackView( hyperslices, registration );
 
 		final Image< R > alignedImage = image.newImage( volumeTo5D( registered ) );
