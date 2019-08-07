@@ -4,6 +4,7 @@ import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.registration.SIFTAlignedViews;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
+import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imagej.ImageJ;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -42,10 +43,10 @@ public class TestSIFTAlignment < R extends RealType< R > & NativeType< R > >
 				FileInfos.TIFF_SLICES,
 				".*.tif" );
 
-
 		final Image< R > alignedImage = SIFTAlignedViews.lazySIFTAlignFirstVolume( image, 20 );
 
-		bdp.showImage( alignedImage );
+		final BdvImageViewer viewer = bdp.showImage( alignedImage );
+		viewer.setDisplayRange( 0, 65535, 0  );
 
 	}
 

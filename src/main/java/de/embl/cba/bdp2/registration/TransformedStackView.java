@@ -100,6 +100,7 @@ public class TransformedStackView < R >
 
 			sliceIndex = 0;
 			sliceAccess = hyperslices.get( 0 ).randomAccess();
+			sliceReady = false;
 
 			sliceToAccess = new ConcurrentHashMap<>(  );
 
@@ -288,13 +289,12 @@ public class TransformedStackView < R >
 			if ( transformProvider.getTransform( sliceIndex ) == null )
 			{
 				sliceReady = false;
-				sliceAccess = hyperslices.get( ( int ) sliceIndex ).randomAccess(); // TODO: does this make sense?
+				sliceAccess = hyperslices.get( ( int ) sliceIndex ).randomAccess();
 				return;
 			}
 			else
 			{
 				// TODO: this is called several times...
-
 				final IntervalView transformed = getTransformedView(
 						transformProvider.getTransform( sliceIndex ),
 						hyperslices.get( ( int ) sliceIndex ) );
@@ -341,7 +341,10 @@ public class TransformedStackView < R >
 			{
 				final R r = sliceAccess.get();
 				r.setZero();
-				// TODO: make use of Volatile here!
+
+				if ( r instanceof Volatile )
+					( ( Volatile ) r ).setValid( false );
+
 				return r;
 			}
 		}
