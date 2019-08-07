@@ -299,20 +299,53 @@ public class TransformedStackView < R >
 
 			if ( transformProvider.getTransform( requestedSliceIndex ) == null )
 			{
-				return;
+				if ( sliceAccess.get() instanceof Volatile )
+				{
+					/**
+					 * Even though we cannot compute the data for this slice yet,
+					 * we can return, because in below get() method of this
+					 * RandomAccess we can set the pixels to be invalid.
+					 */
+					return;
+				}
+				else
+				{
+					/**
+					 * The user expects valid data from the get() method.
+					 * Thus we need to wait until this slice can be computed.
+					 */
+					while ( transformProvider.getTransform( requestedSliceIndex ) == null )
+						sleep();
+				}
 			}
-			else
-			{
-				final IntervalView transformed = getTransformedView(
-						transformProvider.getTransform( requestedSliceIndex ),
-						hyperslices.get( requestedSliceIndex ) );
 
-				final RandomAccess access = transformed.randomAccess();
-				access.setPosition( sliceAccess );
-				sliceAccess = access;
-				sliceToAccess.put( requestedSliceIndex, access );
-				return;
+			setTransformedSliceAccess( requestedSliceIndex,
+					transformProvider.getTransform( requestedSliceIndex ) );
+
+		}
+
+		private static void sleep()
+		{
+			try
+			{
+				Thread.sleep( 100 );
+			} catch ( InterruptedException e )
+			{
+				e.printStackTrace();
 			}
+		}
+
+		private void setTransformedSliceAccess( int requestedSliceIndex,
+												AffineTransform transform )
+		{
+			final IntervalView transformed = getTransformedView(
+					transform,
+					hyperslices.get( requestedSliceIndex ) );
+
+			final RandomAccess access = transformed.randomAccess();
+			access.setPosition( sliceAccess );
+			sliceAccess = access;
+			sliceToAccess.put( requestedSliceIndex, access );
 		}
 
 		private IntervalView getTransformedView(
@@ -320,7 +353,8 @@ public class TransformedStackView < R >
 				RandomAccessibleInterval< R > hyperslice )
 		{
 			RealRandomAccessible< R > rra =
-						Views.interpolate( Views.extendZero( hyperslice ), new NLinearInterpolatorFactory<>() );
+						Views.interpolate( Views.extendZero( hyperslice ),
+								new NLinearInterpolatorFactory<>() );
 
 			final IntervalView< R > interval = Views.interval(
 					Views.raster(

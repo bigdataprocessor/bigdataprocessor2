@@ -92,13 +92,16 @@ public class SIFTAlignedViews
 		return rai;
 	}
 
-	private static < R extends RealType< R > & NativeType< R > > ArrayList< RandomAccessibleInterval< R > > getSlices( Image< R > image )
+	private static < R extends RealType< R > & NativeType< R > >
+	ArrayList< RandomAccessibleInterval< R > > getSlices( Image< R > image )
 	{
 		final ArrayList< RandomAccessibleInterval< R > > hyperslices = new ArrayList<>();
 
 		for ( int slice = 0; slice < image.getRai().dimension( 2 ); slice++ )
 		{
-			final RandomAccessibleInterval< R > sliceView = IntervalImageViews.getSliceView( image.getRai(), slice, 0, 0 );
+			final RandomAccessibleInterval< R > sliceView =
+					IntervalImageViews.getSliceView( image.getRai(), slice, 0, 0 );
+
 			hyperslices.add( sliceView );
 		}
 		return hyperslices;
