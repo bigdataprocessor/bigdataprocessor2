@@ -78,7 +78,7 @@ public class TransformedStackView < R >
 
 		private Interval interval;
 
-		private Map< Long, RandomAccess< R > > sliceToAccess;
+		private Map< Integer, RandomAccess< R > > sliceToAccess;
 
 		private final HypersliceTransformProvider transformProvider;
 
@@ -279,15 +279,14 @@ public class TransformedStackView < R >
 			if ( requestedSliceIndex == sliceIndex )
 				return;
 			else
-				changeSliceAccess( requestedSliceIndex );
+				changeSliceAccess( (int) requestedSliceIndex );
 		}
 
-		private synchronized void changeSliceAccess( long requestedSliceIndex )
+		private synchronized void changeSliceAccess( int requestedSliceIndex )
 		{
 			// TODO: handle the interval case!
 
-			previousSliceIndex = sliceIndex;
-			sliceIndex = (int) requestedSliceIndex;
+			sliceIndex = requestedSliceIndex;
 
 			if ( sliceIndex < 0 || sliceIndex >= hyperslices.size() ) return;
 
@@ -295,26 +294,23 @@ public class TransformedStackView < R >
 			{
 				sliceToAccess.get( requestedSliceIndex ).setPosition( sliceAccess );
 				sliceAccess = sliceToAccess.get( requestedSliceIndex );
-				sliceReady = true;
 				return;
 			}
 
 			if ( transformProvider.getTransform( requestedSliceIndex ) == null )
 			{
-				sliceReady = false;
-				sliceAccess = hyperslices.get( ( int ) requestedSliceIndex ).randomAccess();
 				return;
 			}
 			else
 			{
 				final IntervalView transformed = getTransformedView(
 						transformProvider.getTransform( requestedSliceIndex ),
-						hyperslices.get( ( int ) requestedSliceIndex ) );
+						hyperslices.get( requestedSliceIndex ) );
 
-				sliceToAccess.put( requestedSliceIndex, transformed.randomAccess() );
-				sliceAccess = sliceToAccess.get( requestedSliceIndex );
-				sliceReady = true;
-
+				final RandomAccess access = transformed.randomAccess();
+				access.setPosition( sliceAccess );
+				sliceAccess = access;
+				sliceToAccess.put( requestedSliceIndex, access );
 				return;
 			}
 		}
@@ -342,7 +338,7 @@ public class TransformedStackView < R >
 		@Override
 		public R get()
 		{
-			if ( sliceReady )
+			if ( sliceToAccess.containsKey( sliceIndex ) )
 			{
 				return sliceAccess.get();
 			}
