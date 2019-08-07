@@ -2,6 +2,7 @@ package de.embl.cba.bdp2.sift;
 
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.process.IntervalImageViews;
+import de.embl.cba.bdp2.registration.TransformedStackView;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealRandomAccessible;
 import net.imglib2.interpolation.randomaccess.NLinearInterpolatorFactory;
@@ -38,7 +39,7 @@ public class SIFTAlignedViews
 
 			final IntervalView transformed = Views.interval(
 					Views.raster(
-							RealViews.transform( rra, sift.getGlobalTransform( slice ) )
+							RealViews.transform( rra, sift.getTransform( slice ) )
 					), sliceView );
 
 			slices.add( transformed );
@@ -55,14 +56,20 @@ public class SIFTAlignedViews
 	}
 
 	public static < R extends RealType< R > & NativeType< R > >
-	Image< R > lazySIFTAlignImage( Image< R > image, long referenceSlice )
+	Image< R > lazySIFTAlignVolume( Image< R > image, long referenceSlice )
 	{
-		final RandomAccessibleInterval< R > volumeView =
-				IntervalImageViews.getVolumeView( image.getRai(), 0, 0 );
+		final ArrayList< RandomAccessibleInterval< R > > hyperslices = new ArrayList<>();
 
-		RandomAccessibleInterval< R > lazyAlignedRai3D = new SIFTAlignedLazyView<>( volumeView, referenceSlice, 6 );
-		lazyAlignedRai3D = Views.addDimension( lazyAlignedRai3D, 0, 0 );
-		lazyAlignedRai3D = Views.addDimension( lazyAlignedRai3D, 0, 0 );
+		for ( int slice = 0; slice < image.getRai().dimension( 2 ); slice++ )
+		{
+			final RandomAccessibleInterval< R > sliceView = IntervalImageViews.getSliceView( image.getRai(), slice, 0, 0 );
+			hyperslices.add( sliceView );
+		}
+
+		final SliceRegistrationSIFT< R > registration = ( SliceRegistrationSIFT< R > )
+				new SliceRegistrationSIFT<>( hyperslices, referenceSlice, 6 );
+
+		RandomAccessibleInterval< R > registered = new TransformedStackView( hyperslices, registration );
 
 		final Image< R > alignedImage = image.newImage( lazyAlignedRai3D );
 		alignedImage.setName( "lazy aligned" );

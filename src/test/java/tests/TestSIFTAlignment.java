@@ -42,7 +42,8 @@ public class TestSIFTAlignment < R extends RealType< R > & NativeType< R > >
 				FileInfos.TIFF_SLICES,
 				".*.tif" );
 
-		final Image< R > alignedImage = SIFTAlignedViews.lazySIFTAlignImage( image, 20 );
+
+		final Image< R > alignedImage = SIFTAlignedViews.lazySIFTAlignVolume( image, 20 );
 
 		bdp.showImage( alignedImage );
 

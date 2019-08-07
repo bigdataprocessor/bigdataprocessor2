@@ -1,5 +1,6 @@
 package de.embl.cba.bdp2.sift;
 
+import de.embl.cba.bdp2.registration.HypersliceTransformProvider;
 import ij.process.ImageProcessor;
 import mpicbg.ij.SIFT;
 import mpicbg.imagefeatures.Feature;
@@ -18,18 +19,19 @@ import java.util.*;
 import java.util.List;
 import java.util.concurrent.*;
 
-public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > >
+public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > > implements HypersliceTransformProvider
 {
-	private final RandomAccessibleInterval< R > rai3d;
+	private final List< RandomAccessibleInterval< R > > hyperslices;
 	private final long referenceSlice;
-	private final Map< Long, AffineTransform2D > sliceToLocalTransform;
+	private final Map< Long, net.imglib2.realtransform.AffineTransform > sliceToLocalTransform;
 	private final Map< Long, Boolean > sliceToLocalTransformIsBeingComputed;
 
 	private final Map< Long, List< Feature > > sliceToFeatures;
-	private final Map< Long, AffineTransform2D > sliceToGlobalTransform;
+	private final Map< Long, net.imglib2.realtransform.AffineTransform > sliceToGlobalTransform;
 
 	private int sliceDimension;
 	private final int numThreads;
+	private int numSlices;
 
 
 	static private class Param
@@ -67,20 +69,24 @@ public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > >
 	final static Param p = new Param();
 
 
-	public SliceRegistrationSIFT( RandomAccessibleInterval< R > rai3d, long referenceSlice, int numThreads )
+	public SliceRegistrationSIFT( List< RandomAccessibleInterval< R > > hyperslices ,
+								  long referenceSlice,
+								  int numThreads )
 	{
-		this.rai3d = rai3d;
+		this.hyperslices = hyperslices;
 		this.referenceSlice = referenceSlice;
 		this.numThreads = numThreads;
 
-		sliceDimension = 2;
+		numSlices = hyperslices.size() - 1;
+
+		sliceDimension = hyperslices.get( 0 ).numDimensions();
 		sliceToFeatures = new ConcurrentHashMap<>( );
 
 		sliceToLocalTransform = new ConcurrentHashMap< >( );
-		sliceToLocalTransform.put( referenceSlice, new AffineTransform2D() );
+		sliceToLocalTransform.put( referenceSlice, new net.imglib2.realtransform.AffineTransform( sliceDimension ) );
 
 		sliceToGlobalTransform = new ConcurrentHashMap< >( );
-		sliceToGlobalTransform.put( referenceSlice, new AffineTransform2D() );
+		sliceToGlobalTransform.put( referenceSlice, new net.imglib2.realtransform.AffineTransform( sliceDimension )  );
 
 		sliceToLocalTransformIsBeingComputed = new ConcurrentHashMap< >( );;
 	}
@@ -93,14 +99,16 @@ public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > >
 
 	public void computeAllTransforms( )
 	{
-		new Thread( () -> computeSIFTFeatures( rai3d.min( 2 ), numThreads ) ).start();
-		computeTransforms( rai3d.min( 2 ), numThreads );
+		new Thread( () -> computeSIFTFeatures( 0, numThreads ) ).start();
+		computeTransforms( 0, numThreads );
 
-		new Thread( () -> computeSIFTFeatures( rai3d.max( 2 ), numThreads ) ).start();
-		computeTransforms( rai3d.max( 2 ), numThreads );
+		new Thread( () -> computeSIFTFeatures( numSlices, numThreads ) ).start();
+		computeTransforms( numSlices, numThreads );
 	}
 
-	public AffineTransform2D getGlobalTransform( long slice )
+
+	@Override
+	public net.imglib2.realtransform.AffineTransform getTransform( long slice )
 	{
 		if ( sliceToGlobalTransform.containsKey( slice ))
 			return sliceToGlobalTransform.get( slice );
@@ -139,9 +147,9 @@ public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > >
 
 				// TODO: handle sliceToLocalTransform.get() == null, use previous....
 
-				final AffineTransform2D previousGlobal = sliceToGlobalTransform.get( slice - step ).copy();
-				final AffineTransform2D currentLocal = sliceToLocalTransform.get( slice ).copy();
-				final AffineTransform2D currentGlobal = previousGlobal.preConcatenate( currentLocal );
+				final net.imglib2.realtransform.AffineTransform previousGlobal = sliceToGlobalTransform.get( slice - step ).copy();
+				final net.imglib2.realtransform.AffineTransform currentLocal = sliceToLocalTransform.get( slice ).copy();
+				final net.imglib2.realtransform.AffineTransform currentGlobal = previousGlobal.preConcatenate( currentLocal );
 				sliceToGlobalTransform.put( slice, currentGlobal );
 
 				System.out.println( "Transformation ready for slice: " + slice );
@@ -289,18 +297,9 @@ public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > >
 		collectFutures( executorService, futures );
 	}
 
-	private ImageProcessor getImageProcessor( long featureSlice )
+	private ImageProcessor getImageProcessor( long slice )
 	{
-		final long[] min = Intervals.minAsLongArray( rai3d );
-		final long[] max = Intervals.maxAsLongArray( rai3d );
-
-		min[ sliceDimension ] = featureSlice;
-		max[ sliceDimension ] = featureSlice;
-
-		final RandomAccessibleInterval< R > sliceView
-				= Views.dropSingletonDimensions( Views.interval( rai3d, min, max ) );
-
-		return ImageJFunctions.wrap( sliceView, "slice" ).getProcessor();
+		return ImageJFunctions.wrap( hyperslices.get( (int) slice ), "slice" ).getProcessor();
 	}
 
 	private int getStep( long requestedSlice )
