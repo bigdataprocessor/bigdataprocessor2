@@ -1,7 +1,7 @@
 package de.embl.cba.bdp2.saving;
 
 import de.embl.cba.bdp2.logging.Logger;
-import de.embl.cba.bdp2.process.VolumeExtractions;
+import de.embl.cba.bdp2.process.IntervalImageViews;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.imaris.H5DataCubeWriter;
@@ -80,7 +80,7 @@ public class SaveFrameAsImarisVolumes< R extends RealType< R > & NativeType< R >
 
 
             final RandomAccessibleInterval< R > volumeRai
-                    = new VolumeExtractions().getNonVolatileVolumeCopy(
+                    = new IntervalImageViews().getNonVolatileVolumeCopy(
                             rai, c, t, settings.numProcessingThreads );
 
             ImagePlus imagePlus =

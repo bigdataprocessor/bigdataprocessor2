@@ -1,7 +1,7 @@
 package de.embl.cba.bdp2.tracking;
 
 import de.embl.cba.bdp2.Image;
-import de.embl.cba.bdp2.process.VolumeExtractions;
+import de.embl.cba.bdp2.process.IntervalImageViews;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
@@ -22,7 +22,7 @@ public class TrackViews< R extends RealType< R > & NativeType< R > >
 		final ArrayList< RandomAccessibleInterval< R > > timePoints = new ArrayList<>();
 
 		RandomAccessibleInterval< R > volumeView
-				= VolumeExtractions.getVolumeView( image.getRai(), 0, 0 );
+				= IntervalImageViews.getVolumeView( image.getRai(), 0, 0 );
 
 		Interval union = getUnion( track, volumeView );
 
@@ -32,7 +32,7 @@ public class TrackViews< R extends RealType< R > & NativeType< R > >
 			for ( int c = 0; c < image.numChannels(); c++ )
 			{
 				volumeView
-						= VolumeExtractions.getVolumeView( image.getRai(), c, t );
+						= IntervalImageViews.getVolumeView( image.getRai(), c, t );
 
 				RandomAccessible< R > extendBorder
 						= Views.extendBorder( volumeView );

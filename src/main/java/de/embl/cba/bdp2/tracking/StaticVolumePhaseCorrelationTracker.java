@@ -2,7 +2,7 @@ package de.embl.cba.bdp2.tracking;
 
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.logging.Logger;
-import de.embl.cba.bdp2.process.VolumeExtractions;
+import de.embl.cba.bdp2.process.IntervalImageViews;
 import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;
@@ -58,12 +58,12 @@ public class StaticVolumePhaseCorrelationTracker < R extends RealType< R > & Nat
 			final FinalInterval volume = getVolume( position );
 
 			final RandomAccessibleInterval< R > rai0 =
-					VolumeExtractions.getNonVolatileVolumeCopy( image.getRai(), volume, settings.channel, t, settings.numThreads );
+					IntervalImageViews.getNonVolatileVolumeCopy( image.getRai(), volume, settings.channel, t, settings.numThreads );
 
 //			 Utils.showVolumeInImageJ1( rai0, "Time-point " + t );
 
 			final RandomAccessibleInterval< R > rai1 =
-					VolumeExtractions.getNonVolatileVolumeCopy( image.getRai(), volume, settings.channel, t + 1, settings.numThreads );
+					IntervalImageViews.getNonVolatileVolumeCopy( image.getRai(), volume, settings.channel, t + 1, settings.numThreads );
 
 //			Utils.showVolumeInImageJ1( rai1, "Time-point " + ( t + 1 ) );
 

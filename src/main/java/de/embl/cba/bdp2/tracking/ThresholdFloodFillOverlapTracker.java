@@ -1,15 +1,13 @@
 package de.embl.cba.bdp2.tracking;
 
-import bdv.util.BdvHandle;
 import de.embl.cba.bdp2.Image;
-import de.embl.cba.bdp2.process.VolumeExtractions;
+import de.embl.cba.bdp2.process.IntervalImageViews;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import de.embl.cba.bdv.utils.BdvUtils;
 import de.embl.cba.bdv.utils.objects3d.ThresholdFloodFill;
 import ij.gui.NonBlockingGenericDialog;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.RealPoint;
 import net.imglib2.algorithm.neighborhood.RectangleShape;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.logic.BitType;
@@ -92,7 +90,7 @@ public class ThresholdFloodFillOverlapTracker< R extends RealType< R > & NativeT
 		for ( long t = settings.timeInterval[ 0 ]; t < settings.timeInterval[ 1 ]; t++ )
 		{
 			final ThresholdFloodFill< R > fill = new ThresholdFloodFill<>(
-					VolumeExtractions.getVolumeView( image.getRai(), settings.channel, t ),
+					IntervalImageViews.getVolumeView( image.getRai(), settings.channel, t ),
 					settings.threshold,
 					new RectangleShape( 1, false ),
 					settings.maxNumObjectElements
@@ -142,7 +140,7 @@ public class ThresholdFloodFillOverlapTracker< R extends RealType< R > & NativeT
 			double value;
 			long[] seed = new long[ numDimensions ];
 
-			final RandomAccessibleInterval< R > volume = VolumeExtractions.getVolumeView( image.getRai(), settings.channel, t );
+			final RandomAccessibleInterval< R > volume = IntervalImageViews.getVolumeView( image.getRai(), settings.channel, t );
 
 			final RandomAccess< R > access = volume.randomAccess();
 

@@ -21,8 +21,38 @@ import java.util.List;
 
 import static de.embl.cba.bdp2.utils.DimensionOrder.*;
 
-public class VolumeExtractions  // TODO: better name?!
+public class IntervalImageViews
 {
+
+	public static < R extends RealType< R > & NativeType< R > >
+	RandomAccessibleInterval< R > getSliceView(
+			RandomAccessibleInterval< R > image,
+			long z,
+			long c,
+			long t )
+	{
+
+		long[] minInterval = new long[]{
+				image.min( X ),
+				image.min( Y ),
+				z,
+				c,
+				t };
+
+		long[] maxInterval = new long[]{
+				image.max( X ),
+				image.max( Y ),
+				z,
+				c,
+				t };
+
+		RandomAccessibleInterval raiXY =
+				Views.dropSingletonDimensions(
+						Views.interval( image, minInterval, maxInterval ) );
+
+		return raiXY;
+	}
+
 
 	public static < R extends RealType< R > & NativeType< R > >
 	RandomAccessibleInterval< R > getVolumeView(

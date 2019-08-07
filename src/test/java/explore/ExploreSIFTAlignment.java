@@ -2,21 +2,18 @@ package explore;
 
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
-import de.embl.cba.bdp2.process.VolumeExtractions;
+import de.embl.cba.bdp2.process.IntervalImageViews;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
-import ij.WindowManager;
 import ij.gui.GenericDialog;
-import ij.plugin.PlugIn;
 import ij.process.FloatProcessor;
 import ij.process.ImageProcessor;
 
 import java.awt.Color;
 import java.awt.TextField;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -150,7 +147,7 @@ public class ExploreSIFTAlignment < R extends RealType< R > & NativeType< R > >
 				FileInfos.TIFF_SLICES,
 				".*.tif" );
 
-		final RandomAccessibleInterval< R > volumeView = VolumeExtractions.getVolumeView( image.getRai(), 0, 0 );
+		final RandomAccessibleInterval< R > volumeView = IntervalImageViews.getVolumeView( image.getRai(), 0, 0 );
 
 		new ExploreSIFTAlignment().run( volumeView );
 	}
