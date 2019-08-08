@@ -14,12 +14,12 @@ public class ProgressHelpers
 
 	public static void logProgress( long total, AtomicInteger counter, final long startTimeMillis, String msg )
 	{
-		float secondsSpent = (1.0F * System.currentTimeMillis() - startTimeMillis ) / (1000.0F);
-		float secondsPerTask = secondsSpent / counter.get();
-		float secondsLeft = (total - counter.get()) * secondsPerTask;
+		double secondsSpent = (1.0 * System.currentTimeMillis() - startTimeMillis ) / (1000.0);
+		double secondsPerTask = secondsSpent / counter.get();
+		double secondsLeft = (total - counter.get()) * secondsPerTask;
 
 		String unit = "s";
-		float divisor = 60;
+		double divisor = 1;
 
 
 		if ( secondsSpent > 3 * 60 )
@@ -33,7 +33,7 @@ public class ProgressHelpers
 						+ "; time ( spent, left, task ) [ " + unit + " ]: "
 						+ ( int ) ( secondsSpent / divisor )
 						+ ", " + ( int ) ( secondsLeft / divisor )
-						+ ", " + secondsPerTask / divisor
+						+ ", " + String.format("%.3g", secondsPerTask / divisor)
 						+ "; memory: "
 						+ IJ.freeMemory() );
 
