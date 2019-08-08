@@ -20,8 +20,11 @@ public class SaveMenuDialog extends JFrame implements ActionListener
     private static SavingSettings defaults = SavingSettings.getDefaults();
 
     private static final JCheckBox cbSaveVolume = new JCheckBox("Save Volume data");
-    private static final JComboBox comboCompression = new JComboBox( new String[]{
-            SavingSettings.COMPRESSION_ZLIB, SavingSettings.COMPRESSION_LZW
+    private static final JComboBox comboCompression = new JComboBox(
+            new String[]{
+                    SavingSettings.COMPRESSION_NONE,
+                    SavingSettings.COMPRESSION_ZLIB,
+                    SavingSettings.COMPRESSION_LZW
     } );private static final JCheckBox cbSaveProjection = new JCheckBox("Save Projections");
     private static final JTextField tfRowsPerStrip = new JTextField("10", 3);
     private static final JTextField tfNumIOThreads = new JTextField("" + defaults.numIOThreads, 2);

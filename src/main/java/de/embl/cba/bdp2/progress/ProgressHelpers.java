@@ -12,7 +12,8 @@ public class ProgressHelpers
 		logProgress( total, counter, startTimeMillis, "" );
 	}
 
-	public static void logProgress( long total, AtomicInteger counter, final long startTimeMillis, String msg )
+	public static void logProgress(
+			long total, AtomicInteger counter, final long startTimeMillis, String msg )
 	{
 		double secondsSpent = (1.0 * System.currentTimeMillis() - startTimeMillis ) / (1000.0);
 		double secondsPerTask = secondsSpent / counter.get();

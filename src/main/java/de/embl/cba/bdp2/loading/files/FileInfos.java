@@ -32,7 +32,7 @@ public class FileInfos
 	public static final String PATTERN_4= ".*_C<c>_T<t>.tif";
 	public static final String PATTERN_5= ".*--t<t>--Z<z>--C<c>.tif";
 	public static final String PATTERN_6= "Cam_<c>_<t>.h5";
-	public static final int PROGRESS_UPDATE_MILLISECONDS = 200;
+	public static final int PROGRESS_UPDATE_MILLISECONDS = 100;
 	public static final int TOTAL_AXES = 5;
 	public static final AxisType[] AXES_ORDER = { Axes.X, Axes.Y, Axes.Z, Axes.CHANNEL, Axes.TIME};
 	public static final int MAX_ALLOWED_IMAGE_DIMS = AXES_ORDER.length;

@@ -19,6 +19,7 @@ public class Progress
 
         Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
         int numFinishedFutures = 0;
+        int previousFinishedFutures = 0;
 
         boolean error = false;
 
@@ -58,12 +59,16 @@ public class Progress
                         "reduce the number of threads.");
             }
 
-            if ( progressListeners != null )
-                for ( ProgressListener listener : progressListeners )
-                    listener.progress( numFinishedFutures, futures.size() );
+
+            if ( numFinishedFutures != previousFinishedFutures )
+                if ( progressListeners != null )
+                    for ( ProgressListener listener : progressListeners )
+                        listener.progress( numFinishedFutures, futures.size() );
+
+            previousFinishedFutures = numFinishedFutures;
 
             try {
-                Thread.sleep(updateFrequencyMilliseconds);
+                Thread.sleep( updateFrequencyMilliseconds );
             } catch(InterruptedException ex) {
                 Thread.currentThread().interrupt();
             }

@@ -42,6 +42,7 @@ public class Logger
 		}
 
 		IJ.log( progress );
+		System.out.println( progress );
 	}
 
 	public static void info( String msg )

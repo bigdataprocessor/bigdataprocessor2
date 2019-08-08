@@ -23,7 +23,11 @@ public class LoggingProgressListener implements ProgressListener
 
 		this.current = current;
 		this.total = total;
-		ProgressHelpers.logProgress( total, new AtomicInteger( (int) current ), startTimeMillis, msg );
+
+		new Thread( () ->
+			ProgressHelpers.logProgress(
+				total, new AtomicInteger( (int) current ), startTimeMillis, msg )
+		).start();
 	}
 
 	public boolean isFinished()

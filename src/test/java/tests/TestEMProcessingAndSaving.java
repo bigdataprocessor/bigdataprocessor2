@@ -9,7 +9,11 @@ import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import net.imagej.ImageJ;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
+import org.apache.commons.io.FileUtils;
 import org.junit.Test;
+
+import java.io.File;
+import java.io.IOException;
 
 public class TestEMProcessingAndSaving< R extends RealType< R > & NativeType< R > >
 {
@@ -45,10 +49,22 @@ public class TestEMProcessingAndSaving< R extends RealType< R > & NativeType< R 
 		savingSettings.fileType = SavingSettings.FileType.TIFF_PLANES;
 		savingSettings.numIOThreads = 4;
 		savingSettings.numProcessingThreads = 4;
-		savingSettings.volumesFilePath =
-				"/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-data/sift-aligned-em/plane";
+
+		String directory = "/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-data/sift-aligned-em";
+
+		try
+		{
+			FileUtils.cleanDirectory( new File(directory) );
+		} catch ( IOException e )
+		{
+			e.printStackTrace();
+		}
+
+		savingSettings.volumesFilePath = directory +"/plane";
+
+
 		savingSettings.saveVolumes = true;
-		savingSettings.compression = SavingSettings.COMPRESSION_NONE;
+		savingSettings.compression = SavingSettings.COMPRESSION_ZLIB;
 		return savingSettings;
 	}
 
@@ -63,6 +79,7 @@ public class TestEMProcessingAndSaving< R extends RealType< R > & NativeType< R 
 
 	public static void main( String[] args )
 	{
+		new ImageJ().ui().showUI(); // for the logging
 		new TestEMProcessingAndSaving().processAndSave();
 	}
 

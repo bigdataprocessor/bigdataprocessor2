@@ -108,7 +108,7 @@ public class SaveTiffPlane implements Runnable {
             writer.setWriteSequentially( true ); // ? is this necessary
 
             if ( compression.equals( SavingSettings.COMPRESSION_LZW ) )
-                writer.setCompression( TiffWriter.COMPRESSION_ZLIB );
+                writer.setCompression( TiffWriter.COMPRESSION_LZW );
             else if ( compression.equals( SavingSettings.COMPRESSION_ZLIB ) )
                 writer.setCompression( TiffWriter.COMPRESSION_ZLIB );
 
