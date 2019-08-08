@@ -19,8 +19,6 @@ import net.imglib2.*;
 import net.imglib2.cache.img.CachedCellImg;
 import net.imglib2.converter.Converters;
 import net.imglib2.converter.RealUnsignedByteConverter;
-import net.imglib2.img.cell.Cell;
-import net.imglib2.img.cell.CellRandomAccess;
 import net.imglib2.interpolation.InterpolatorFactory;
 import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
 import net.imglib2.realtransform.AffineRandomAccessible;
@@ -56,6 +54,8 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
     public static int MAX_THREAD_LIMIT = Runtime.getRuntime().availableProcessors() * 2;
     public static Map<Integer, AtomicBoolean> saveTracker = new ConcurrentHashMap<>();
 
+
+    // TODO: do we ever need the constructor??
     public BigDataProcessor2() {
         //TODO: have separate shutdown for the executorService. It will not shutdown when ui exeService is shut. --ashis (DONE but needs testing)
         //Ref: https://stackoverflow.com/questions/23684189/java-how-to-make-an-executorservice-running-inside-another-executorservice-not
@@ -74,7 +74,8 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
         Logger.log("Saving: Done." );
     }
 
-    public static < R extends RealType< R > & NativeType< R > > Image< R > bin( Image<R> image, long[] radii )
+    public static < R extends RealType< R > & NativeType< R > >
+    Image< R > bin( Image<R> image, long[] radii )
     {
         return Binner.bin( image, radii );
     }
@@ -84,7 +85,8 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
             generalThreadPool = Executors.newFixedThreadPool( numThreads );
     }
 
-    public Image< R > openImage(
+    public static < R extends RealType< R > & NativeType< R > >
+    Image< R > openImage(
             String directory,
             String loadingScheme,
             String filterPattern )
@@ -98,13 +100,14 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
     }
 
 
-    public static < T extends RealType< T > & NativeType< T > >
-    Image< T > crop( Image< T > image, Interval interval )
+    public static < R extends RealType< R > & NativeType< R > >
+    Image< R > crop( Image< R > image, Interval interval )
     {
         return Cropper.crop( image, interval  );
     }
 
-    public Image< R > openHdf5Image(
+    public static < R extends RealType< R > & NativeType< R > >
+    Image< R > openHdf5Image(
             String directory,
             String loadingScheme,
             String filterPattern,
@@ -122,12 +125,18 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
         return image;
     }
     
-    public BdvImageViewer showImage( Image< R > image )
+    public static < R extends RealType< R > & NativeType< R > >
+    BdvImageViewer showImage( Image< R > image )
     {
-        final BdvImageViewer viewer = new BdvImageViewer( image );
-
-        return viewer;
+        return showImage( image, true );
     }
+
+    public static < R extends RealType< R > & NativeType< R > >
+    BdvImageViewer showImage( Image< R > image, boolean autoContrast )
+    {
+        return new BdvImageViewer( image, autoContrast );
+    }
+
 
     public boolean showVoxelSpacingDialog( Image< R > image )
     {
@@ -204,7 +213,9 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
 
     // TODO: move to Shearing but still have convenience access from here
     public static <T extends RealType<T> & NativeType<T>>
-    RandomAccessibleInterval shearImage( RandomAccessibleInterval rai, ShearingSettings shearingSettings )
+    RandomAccessibleInterval shearImage(
+            RandomAccessibleInterval rai,
+            ShearingSettings shearingSettings )
     {
         System.out.println("Shear Factor X " + shearingSettings.shearingFactorX);
         System.out.println("Shear Factor Y " + shearingSettings.shearingFactorY);

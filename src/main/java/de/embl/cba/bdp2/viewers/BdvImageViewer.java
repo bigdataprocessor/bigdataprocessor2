@@ -3,7 +3,6 @@ package de.embl.cba.bdp2.viewers;
 import bdv.tools.brightness.ConverterSetup;
 import bdv.tools.brightness.MinMaxGroup;
 import bdv.util.*;
-import bdv.viewer.Interpolation;
 import bdv.viewer.SourceAndConverter;
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.boundingbox.BoundingBoxDialog;
@@ -14,7 +13,6 @@ import de.embl.cba.bdp2.ui.BdvMenus;
 import de.embl.cba.bdp2.ui.DisplaySettings;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.volatiles.VolatileViews;
-import net.imagej.legacy.LegacyCommandline;
 import net.imglib2.*;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
@@ -44,9 +42,15 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
 
     public BdvImageViewer( Image< R > image )
     {
+        this( image, true );
+    }
+
+    public BdvImageViewer( Image< R > image, boolean autoContrast )
+    {
         this.image = image;
         show();
-        doAutoContrastPerChannel();
+
+        if ( autoContrast ) autoContrastPerChannel();
 
         // TODO: not logical that this is part of the "Viewer" rather than the "Processor"....
         this.addMenus( new BdvMenus() );
@@ -266,7 +270,7 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
     }
 
 
-    public void doAutoContrastPerChannel()
+    public void autoContrastPerChannel()
     {
         int nChannels = (int) image.getRai().dimension( DimensionOrder.C);
 

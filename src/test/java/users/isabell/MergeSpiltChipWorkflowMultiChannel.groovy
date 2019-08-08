@@ -48,7 +48,7 @@ if ( doCrop )
                 merger,
                 directory );
 
-        final BdvImageViewer viewer = bdp.showImage( merge );
+        final BdvImageViewer viewer = bdp.showImage(merge, false);
 
         final FinalInterval interval = viewer.get5DIntervalFromUser( false );
 

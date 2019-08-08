@@ -42,10 +42,12 @@ public class SIFTAlignedViews
 
 		for ( int slice = 0; slice < volumeView.dimension( 2 ); slice++ )
 		{
-			final RandomAccessibleInterval< R > sliceView = IntervalImageViews.getSliceView( image.getRai(), slice, 0, 0 );
+			final RandomAccessibleInterval< R > sliceView
+					= IntervalImageViews.getSliceView( image.getRai(), slice, 0, 0 );
 
 			RealRandomAccessible rra =
-					Views.interpolate( Views.extendZero( sliceView ), new NLinearInterpolatorFactory<>() );
+					Views.interpolate( Views.extendZero( sliceView ),
+							new NLinearInterpolatorFactory<>() );
 
 			final IntervalView transformed = Views.interval(
 					Views.raster(
@@ -75,11 +77,14 @@ public class SIFTAlignedViews
 
 		new Thread( () -> registration.computeAllTransforms() ).start();
 
-		RandomAccessibleInterval< R > registered = new TransformedStackView( hyperslices, registration );
+		RandomAccessibleInterval< R > registered =
+				new TransformedStackView( hyperslices, registration );
 
 		final Image< R > alignedImage = image.newImage( volumeTo5D( registered ) );
 
 		alignedImage.setName( "lazy aligned" );
+
+
 
 		return alignedImage;
 	}
