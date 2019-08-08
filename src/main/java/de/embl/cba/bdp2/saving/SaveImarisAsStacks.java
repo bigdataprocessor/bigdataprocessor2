@@ -73,10 +73,10 @@ public class SaveImarisAsStacks extends AbstractImgSaver {
             }
         }
         // Monitor the progress
-        Thread thread = new Thread(() -> Progress.informProgressListener(
+        Thread thread = new Thread(() -> Progress.informProgressListeners(
                 futures,
                 FileInfos.PROGRESS_UPDATE_MILLISECONDS,
-                progressListener));
+				progressListeners ));
         thread.start();
     }
 

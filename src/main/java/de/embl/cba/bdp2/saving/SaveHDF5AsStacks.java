@@ -52,8 +52,8 @@ public class SaveHDF5AsStacks extends AbstractImgSaver {
             }
         }
         // Monitor the progress
-        Thread thread = new Thread(() -> Progress.informProgressListener(futures,
-                FileInfos.PROGRESS_UPDATE_MILLISECONDS, progressListener));
+        Thread thread = new Thread(() -> Progress.informProgressListeners(futures,
+                FileInfos.PROGRESS_UPDATE_MILLISECONDS, progressListeners ));
         thread.start();
     }
 

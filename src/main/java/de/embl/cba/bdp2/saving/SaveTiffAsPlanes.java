@@ -33,17 +33,17 @@ public class SaveTiffAsPlanes extends AbstractImgSaver {
             for (int t = 0; t < numFrames; t++) {
                 for (int z = 0; z < numPlanes; z++) {
                     futures.add( es.submit(
-                            new SaveFrameAsTIFFPlanes(c, t, z, savingSettings, stop)
+                            new SaveTiffPlane(c, t, z, savingSettings, stop)
                     ));
                 }
             }
         }
 
         // Monitor the progress
-        Thread thread = new Thread(() -> Progress.informProgressListener(
+        Thread thread = new Thread(() -> Progress.informProgressListeners(
                 futures,
                 FileInfos.PROGRESS_UPDATE_MILLISECONDS,
-                progressListener));
+				progressListeners ));
 
         thread.start();
     }

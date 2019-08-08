@@ -8,6 +8,7 @@ import de.embl.cba.bdp2.loading.CachedCellImgReader;
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.progress.DefaultProgressListener;
+import de.embl.cba.bdp2.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.progress.Progress;
 import de.embl.cba.bdp2.progress.ProgressListener;
 import de.embl.cba.bdp2.saving.*;
@@ -67,10 +68,10 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
     public static < R extends RealType< R > & NativeType< R > >
     void saveImageAndWaitUntilDone(
             SavingSettings savingSettings,
-            Image< R > merge )
+            Image< R > image )
     {
         final DefaultProgressListener progress = new DefaultProgressListener();
-        saveImage( merge, savingSettings, progress );
+        saveImage( image, savingSettings, progress );
         Logger.log( "Saving: " + savingSettings.volumesFilePath );
         Progress.waitUntilDone( progress, 1000 );
         Logger.log("Saving: Done." );
@@ -167,8 +168,11 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
             SavingSettings savingSettings,
             ProgressListener progressListener )
     {
-        Logger.info( "Saving: Started..." );
+
         int nIOThread = Math.max( 1, Math.min( savingSettings.numIOThreads, MAX_THREAD_LIMIT ));
+
+        Logger.info( "Saving started; I/O threads: " + nIOThread );
+
         ExecutorService saveExecutorService = Executors.newFixedThreadPool( nIOThread );
 
         if ( ! savingSettings.fileType.equals( SavingSettings.FileType.TIFF_PLANES ) )
@@ -200,7 +204,7 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
             Utils.createFilePathParentDirectories( savingSettings.projectionsFilePath );
 
         AbstractImgSaver saver = factory.getSaver( savingSettings, saveExecutorService );
-        saver.setProgressListener( progressListener );
+        saver.addProgressListener( progressListener );
         saver.startSave();
 
         return saver;

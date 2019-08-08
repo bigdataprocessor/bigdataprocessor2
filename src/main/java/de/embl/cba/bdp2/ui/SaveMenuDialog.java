@@ -1,5 +1,6 @@
 package de.embl.cba.bdp2.ui;
 
+import de.embl.cba.bdp2.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.progress.ProgressListener;
 import de.embl.cba.bdp2.saving.ImgSaver;
 import de.embl.cba.bdp2.saving.SavingSettings;
@@ -150,11 +151,6 @@ public class SaveMenuDialog extends JFrame implements ActionListener
     {
         MESSAGE.setText( null );
         SavingSettings savingSettings = getSavingSettings();
-        startSaving( savingSettings );
-    }
-
-    public void startSaving( SavingSettings savingSettings )
-    {
         progressBar.setVisible( true );
         pack();
         save.setEnabled( false );
@@ -162,7 +158,9 @@ public class SaveMenuDialog extends JFrame implements ActionListener
             this.saver = BigDataProcessor2.saveImage(
                     imageViewer.getImage(),
                     savingSettings,
-                    getSavingProgressListener() );
+                    progressBar() );
+
+            saver.addProgressListener( new LoggingProgressListener( "Files saved" ) );
         } );
     }
 
@@ -192,20 +190,17 @@ public class SaveMenuDialog extends JFrame implements ActionListener
         return savingSettings;
     }
 
-    public ProgressListener getSavingProgressListener()
+    private ProgressListener progressBar()
     {
         return ( current, total ) -> {
-            int progress = ( int ) ( ( current * 100 ) / total );
-            progressBar.setValue( progress );
-            if ( progress >= 100 )
+
+            int progressPercent = ( int ) ( ( current * 100 ) / total );
+            progressBar.setValue( progressPercent );
+            if ( progressPercent >= 100 )
             {
                 progressBar.setVisible( false );
                 save.setEnabled( true );
                 progressBar.setValue( 0 );
-
-//                if ( ! MESSAGE_SAVE_INTERRUPTED.equals( MESSAGE.getText() ) )
-//                    MESSAGE.setText( MESSAGE_SAVE_FINISHED );
-
                 pack();
                 saver.stopSave();
             }

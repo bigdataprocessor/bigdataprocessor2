@@ -7,6 +7,7 @@ import ij.ImagePlus;
 import net.imglib2.*;
 import net.imglib2.algorithm.util.Grids;
 import net.imglib2.img.AbstractImg;
+import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.cell.CellImgFactory;
 import net.imglib2.type.NativeType;
@@ -158,6 +159,47 @@ public class IntervalImageViews
 		return raiXYZ;
 	}
 
+	public static < R extends RealType< R > & NativeType< R > >
+	RandomAccessibleInterval< R > getNonVolatilePlaneCopy(
+			RandomAccessibleInterval< R > rai,
+			Interval interval,
+			long z,
+			long c,
+			long t,
+			int numThreads )
+	{
+
+		long[] minInterval = new long[]{
+				interval.min( X ),
+				interval.min( Y ),
+				z,
+				c,
+				t };
+
+		long[] maxInterval = new long[]{
+				interval.max( X ),
+				interval.max( Y ),
+				z,
+				c,
+				t };
+
+		// Accommodate cases where the asked-for volume is out-of-bounds
+		RandomAccessible< R > extended = Views.extendBorder( rai );
+
+		RandomAccessibleInterval< R > plane =
+				Views.zeroMin(
+						Views.dropSingletonDimensions(
+								Views.interval( extended, minInterval, maxInterval ) ) );
+
+
+		final ArrayImg copy = new ArrayImgFactory( getType( plane ) ).create( plane );
+
+		copy( plane, copy );
+
+		return copy;
+	}
+
+
 	/**
 	 *
 	 * Create a copyVolumeRAI, thereby forcing computation of a potential
@@ -215,7 +257,8 @@ public class IntervalImageViews
 		return copy;
 	}
 
-	private static < R extends RealType< R > & NativeType< R > > R getType( RandomAccessibleInterval< R > volume )
+	private static < R extends RealType< R > & NativeType< R > >
+	R getType( RandomAccessibleInterval< R > volume )
 	{
 		R type = null;
 		try

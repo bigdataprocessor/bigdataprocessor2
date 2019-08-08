@@ -17,9 +17,10 @@ import ome.xml.model.primitives.PositiveInteger;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static de.embl.cba.bdp2.process.IntervalImageViews.getNonVolatilePlaneCopy;
 import static de.embl.cba.bdp2.saving.SavingUtils.ShortToByteBigEndian;
 
-public class SaveFrameAsTIFFPlanes implements Runnable {
+public class SaveTiffPlane implements Runnable {
 
     private final int c;
     private final int t;
@@ -27,11 +28,11 @@ public class SaveFrameAsTIFFPlanes implements Runnable {
     private final SavingSettings savingSettings;
     private final AtomicBoolean stop;
 
-    public SaveFrameAsTIFFPlanes( int c,
-                                  int t,
-                                  int z,
-                                  SavingSettings savingSettings,
-                                  AtomicBoolean stop) {
+    public SaveTiffPlane( int c,
+						  int t,
+						  int z,
+						  SavingSettings savingSettings,
+						  AtomicBoolean stop) {
         this.c = c;
         this.z = z;
         this.t = t;
@@ -48,32 +49,18 @@ public class SaveFrameAsTIFFPlanes implements Runnable {
             return;
         }
 
-        RandomAccessibleInterval rai = savingSettings.rai;
-
-        long[] minInterval = new long[]{
-                rai.min( DimensionOrder.X ),
-                rai.min( DimensionOrder.Y ),
-                z,
-                c,
-                t};
-
-        long[] maxInterval = new long[]{
-                rai.max( DimensionOrder.X ),
-                rai.max( DimensionOrder.Y ),
-                z,
-                c,
-                t};
-
-        RandomAccessibleInterval raiXY =
-                Views.dropSingletonDimensions(
-                    Views.interval( rai, minInterval, maxInterval ) );
+        final RandomAccessibleInterval raiXY
+                = getNonVolatilePlaneCopy(
+                        savingSettings.rai,
+                        savingSettings.rai,
+                        z, c, t, 1 );
 
         @SuppressWarnings("unchecked")
         ImagePlus imp = ImageJFunctions.wrap( raiXY, "slice");
         imp.setDimensions(1, 1, 1);
 
-        final long nC = rai.dimension( DimensionOrder.C );
-        final long nT = rai.dimension( DimensionOrder.T );
+        final long nC = savingSettings.rai.dimension( DimensionOrder.C );
+        final long nT = savingSettings.rai.dimension( DimensionOrder.T );
 
         if ( ! savingSettings.compression.equals( SavingSettings.COMPRESSION_NONE) )
         {

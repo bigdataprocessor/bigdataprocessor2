@@ -13,9 +13,9 @@ import java.util.concurrent.Future;
 public class Progress
 {
 
-    public static void informProgressListener( List< Future > futures,
-                                               int updateFrequencyMilliseconds,
-                                               ProgressListener progressListener ) {
+    public static void informProgressListeners( List< Future > futures,
+                                                int updateFrequencyMilliseconds,
+                                                List< ProgressListener > progressListeners ) {
 
         Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
         int numFinishedFutures = 0;
@@ -58,8 +58,9 @@ public class Progress
                         "reduce the number of threads.");
             }
 
-            if ( progressListener != null )
-                progressListener.progress( numFinishedFutures, futures.size() );
+            if ( progressListeners != null )
+                for ( ProgressListener listener : progressListeners )
+                    listener.progress( numFinishedFutures, futures.size() );
 
             try {
                 Thread.sleep(updateFrequencyMilliseconds);
@@ -80,7 +81,9 @@ public class Progress
         Logger.log( text + ": " + progress.getCurrent() + " / " + progress.getTotal() );
     }
 
-    public static void waitUntilDone( DefaultProgressListener progress, int progressUpdateMillis )
+    public static void waitUntilDone(
+            DefaultProgressListener progress,
+            int progressUpdateMillis )
     {
         while ( ! progress.isFinished() )
             Utils.sleepMillis( progressUpdateMillis );
