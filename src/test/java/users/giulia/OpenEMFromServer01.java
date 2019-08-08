@@ -21,6 +21,7 @@ public class OpenEMFromServer01
 
 		BigDataProcessor2.showImage( image, false );
 
+
 //		final Image< R > crop = BigDataProcessor2.crop( image, new FinalInterval(
 //				new long[]{ 1500, 3600, 880, 0, 0 },
 //				new long[]{ 4050, 4800, 950, 0, 0 }

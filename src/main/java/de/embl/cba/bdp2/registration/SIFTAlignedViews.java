@@ -1,6 +1,7 @@
 package de.embl.cba.bdp2.registration;
 
 import de.embl.cba.bdp2.Image;
+import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.process.IntervalImageViews;
 import de.embl.cba.bdp2.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.progress.ProgressListener;
@@ -73,6 +74,7 @@ public class SIFTAlignedViews
 
 	public static void showAlignedBdvView( BdvImageViewer imageViewer )
 	{
+		Logger.log("Alignment with SIFT started...");
 		final double currentSlice = getCurrentSlice( imageViewer );
 
 		final Image alignedImage = siftAlignFirstVolume(
