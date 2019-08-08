@@ -1,20 +1,29 @@
 package de.embl.cba.bdp2.progress;
 
-public class DefaultProgressListener implements ProgressListener
+import java.util.concurrent.atomic.AtomicInteger;
+
+public class LoggingProgressListener implements ProgressListener
 {
 	private long current;
 	private long total;
+	private long startTimeMillis = -1;
+	private final String msg;
 
-	public DefaultProgressListener()
+	public LoggingProgressListener( String msg )
 	{
+		this.msg = msg;
 		reset();
 	}
 
 	@Override
 	public void progress( long current, long total )
 	{
+		if ( startTimeMillis == -1 )
+			startTimeMillis = System.currentTimeMillis();
+
 		this.current = current;
 		this.total = total;
+		ProgressHelpers.logProgress( total, new AtomicInteger( (int) current ), startTimeMillis, msg );
 	}
 
 	public boolean isFinished()

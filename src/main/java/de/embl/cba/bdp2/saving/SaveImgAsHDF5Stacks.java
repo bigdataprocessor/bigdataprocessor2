@@ -3,6 +3,7 @@ package de.embl.cba.bdp2.saving;
 import ch.systemsx.cisd.hdf5.hdf5lib.HDF5Constants;
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.logging.Logger;
+import de.embl.cba.bdp2.progress.ProgressHelpers;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import ij.ImagePlus;
@@ -183,7 +184,7 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
                 counter.incrementAndGet();
             }
             if (!stop.get()) {
-                SaveImgHelper.documentProgress(totalSlices, counter, startTime);
+                ProgressHelpers.logProgress( totalSlices, counter, startTime, "Saved file ");
             }
         }
     }

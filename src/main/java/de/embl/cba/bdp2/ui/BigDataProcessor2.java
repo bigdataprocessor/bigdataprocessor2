@@ -48,8 +48,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
 {
 
-    public static ExecutorService generalThreadPool;  //General thread pool
-    public static ExecutorService trackerThreadPool; // Thread pool for tracking
+    public static ExecutorService generalThreadPool =
+            Executors.newFixedThreadPool( Runtime.getRuntime().availableProcessors() * 2  );
+
+    public static ExecutorService trackerThreadPool; // Thread pool for tracking: TODO: remove?
     public static Map<Integer, Integer> progressTracker = new ConcurrentHashMap<>();
     public static int MAX_THREAD_LIMIT = Runtime.getRuntime().availableProcessors() * 2;
     public static Map<Integer, AtomicBoolean> saveTracker = new ConcurrentHashMap<>();
@@ -59,7 +61,7 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
     public BigDataProcessor2() {
         //TODO: have separate shutdown for the executorService. It will not shutdown when ui exeService is shut. --ashis (DONE but needs testing)
         //Ref: https://stackoverflow.com/questions/23684189/java-how-to-make-an-executorservice-running-inside-another-executorservice-not
-        kickOffThreadPack( Runtime.getRuntime().availableProcessors() * 2 );
+        // kickOffThreadPack( Runtime.getRuntime().availableProcessors() * 2 );
     }
 
     public static < R extends RealType< R > & NativeType< R > >
@@ -80,7 +82,7 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
         return Binner.bin( image, radii );
     }
 
-    private void kickOffThreadPack( int numThreads ) {
+    private static void kickOffThreadPack( int numThreads ) {
         if ( generalThreadPool == null)
             generalThreadPool = Executors.newFixedThreadPool( numThreads );
     }
@@ -138,7 +140,8 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
     }
 
 
-    public boolean showVoxelSpacingDialog( Image< R > image )
+    public static < R extends RealType< R > & NativeType< R > >
+    boolean showVoxelSpacingDialog( Image< R > image )
     {
         final double[] voxelSpacing = image.getVoxelSpacing();
         final String voxelUnit = image.getVoxelUnit();

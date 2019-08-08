@@ -26,7 +26,22 @@ public class Logger
 
 	public static void progress( String msg, String progress )
 	{
-		IJ.log( msg + ": " + progress );
+
+		progress = msg + ": " + progress;
+
+		if ( IJ.getLog() != null )
+		{
+			String[] logs = IJ.getLog().split( "\n" );
+			if ( logs.length > 1 )
+			{
+				if ( logs[ logs.length - 1 ].contains( msg ) )
+				{
+					progress = "\\Update:" + progress;
+				}
+			}
+		}
+
+		IJ.log( progress );
 	}
 
 	public static void info( String msg )

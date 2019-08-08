@@ -45,15 +45,17 @@ public class BigDataProcessorCommand < R extends RealType< R > & NativeType< R >
                     FileInfos.PATTERN_6})
     String namingScheme = FileInfos.SINGLE_CHANNEL_TIMELAPSE;
 
+    @Parameter(label = "Auto contrast")
+    boolean autoContrast = false;
+
     public void run()
     {
-        final BigDataProcessor2< R > bdp = new BigDataProcessor2< >();
 
         final Image< R > image =
-                bdp.openImage( directory.toString(), namingScheme, filterPattern );
+                BigDataProcessor2.openImage( directory.toString(), namingScheme, filterPattern );
 
-        bdp.showVoxelSpacingDialog( image );
-        bdp.showImage( image );
+        BigDataProcessor2.showVoxelSpacingDialog( image );
+        BigDataProcessor2.showImage( image, autoContrast );
 
 
     }

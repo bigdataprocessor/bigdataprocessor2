@@ -47,33 +47,4 @@ public class SaveImgHelper
         return newPath;
     }
 
-    public static void documentProgress(long total, AtomicInteger counter, final long startTime)
-    {
-        double minutesSpent = (1.0 * System.currentTimeMillis() - startTime ) / (1000 * 60);
-        double minutesPerStack = minutesSpent / counter.get();
-        double minutesLeft = (total - counter.get()) * minutesPerStack;
-
-        if ( minutesSpent > 3)
-        {
-            Logger.progress( "Saved file",
-                    "" + counter.get() + "/" + total
-                            + "; time ( spent, left, task ) [ min ]: "
-                            + ( int ) minutesSpent
-                            + ", " + ( int ) minutesLeft
-                            + ", " + ( int ) ( minutesSpent / counter.get() )
-                            + "; memory: "
-                            + IJ.freeMemory() );
-        }
-        else
-        {
-            Logger.progress( "Saved file",
-                    "" + counter.get() + "/" + total
-                            + "; time ( spent, left, task ) [ s ]: "
-                            + ( int ) ( minutesSpent * 60 )
-                            + ", " + ( int ) ( minutesLeft * 60 )
-                            + ", " + ( int ) ( minutesSpent * 60 / counter.get() )
-                            + "; memory: "
-                            + IJ.freeMemory() );
-        }
-    }
 }

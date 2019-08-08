@@ -2,17 +2,15 @@ package tests;
 
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
+import de.embl.cba.bdp2.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.registration.SIFTAlignedViews;
 import de.embl.cba.bdp2.saving.SavingSettings;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imagej.ImageJ;
-import net.imglib2.RandomAccess;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.junit.Test;
-
-import java.io.File;
 
 public class TestSIFTAlignment < R extends RealType< R > & NativeType< R > >
 {
@@ -28,7 +26,11 @@ public class TestSIFTAlignment < R extends RealType< R > & NativeType< R > >
 				".*.tif" );
 
 		final Image< R > alignedImage =
-				SIFTAlignedViews.lazySIFTAlignFirstVolume( image, 20 );
+				SIFTAlignedViews.siftAlignFirstVolume(
+						image,
+						20,
+						true,
+						new LoggingProgressListener( "SIFT" ) );
 
 		final BdvImageViewer viewer = BigDataProcessor2.showImage( alignedImage, false );
 		viewer.setDisplayRange( 0, 65535, 0  );

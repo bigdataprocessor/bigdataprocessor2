@@ -2,6 +2,7 @@ package de.embl.cba.bdp2.saving;
 
 import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.process.IntervalImageViews;
+import de.embl.cba.bdp2.progress.ProgressHelpers;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.imaris.H5DataCubeWriter;
@@ -113,7 +114,7 @@ public class SaveFrameAsImarisVolumes< R extends RealType< R > & NativeType< R >
             counter.incrementAndGet();
 
             if (!stop.get())
-                SaveImgHelper.documentProgress( totalFiles, counter, startTime );
+                ProgressHelpers.logProgress( totalFiles, counter, startTime, "Saved files " );
 
             imagePlus = null;
             System.gc();

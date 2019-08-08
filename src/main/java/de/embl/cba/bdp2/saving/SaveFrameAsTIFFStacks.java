@@ -2,6 +2,7 @@ package de.embl.cba.bdp2.saving;
 
 import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.process.IntervalImageViews;
+import de.embl.cba.bdp2.progress.ProgressHelpers;
 import de.embl.cba.bdp2.utils.Utils;
 import ij.ImagePlus;
 import ij.ImageStack;
@@ -106,7 +107,7 @@ public class SaveFrameAsTIFFStacks< R extends RealType< R > & NativeType< R > > 
             counter.incrementAndGet();
 
             if ( ! stop.get() ) {
-                SaveImgHelper.documentProgress( totalCubes, counter, startTime );
+                ProgressHelpers.logProgress( totalCubes, counter, startTime, "Saved file " );
             }
 
             System.out.println( "Saving finished: Frame " + t + ", Channel " + c );

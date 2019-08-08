@@ -1,7 +1,6 @@
 package de.embl.cba.bdp2.registration;
 
-import de.embl.cba.bdp2.registration.AffineGetNull;
-import de.embl.cba.bdp2.registration.HypersliceTransformProvider;
+import de.embl.cba.bdp2.progress.ProgressListener;
 import ij.process.ImageProcessor;
 import mpicbg.ij.SIFT;
 import mpicbg.imagefeatures.Feature;
@@ -32,6 +31,10 @@ public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > >
 	private int numSliceDimensions;
 	private final int numThreads;
 	private int numSlices;
+
+	private ProgressListener progressListener;
+	private int totalSlices;
+	private int processedSlices = 0;
 
 
 	static private class Param
@@ -93,17 +96,25 @@ public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > >
 
 	public void computeTransformsUntilSlice( long slice )
 	{
+		totalSlices = ( int ) Math.abs( referenceSlice - slice );
 		new Thread( () -> computeSIFTFeatures( slice, numThreads ) ).start();
 		computeTransforms( slice, numThreads );
 	}
 
 	public void computeAllTransforms( )
 	{
+		totalSlices = numSlices;
+
 		new Thread( () -> computeSIFTFeatures( 0, numThreads ) ).start();
 		computeTransforms( 0, numThreads );
 
 		new Thread( () -> computeSIFTFeatures( numSlices, numThreads ) ).start();
 		computeTransforms( numSlices, numThreads );
+	}
+
+	public void setProgressListener( ProgressListener progressListener )
+	{
+		this.progressListener = progressListener;
 	}
 
 
@@ -152,7 +163,10 @@ public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > >
 				final net.imglib2.realtransform.AffineTransform currentGlobal = previousGlobal.preConcatenate( currentLocal );
 				sliceToGlobalTransform.put( slice, currentGlobal );
 
-				System.out.println( "Transformation ready for slice: " + slice );
+				// System.out.println( "Transformation ready for slice: " + slice );
+
+				updateProgress();
+
 				if ( slice == requestedSlice )
 				{
 					finished = true;
@@ -165,6 +179,13 @@ public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > >
 
 		collectFutures( executorService, futures );
 
+	}
+
+	private void updateProgress()
+	{
+		processedSlices++;
+		if ( progressListener != null )
+			progressListener.progress( processedSlices, totalSlices );
 	}
 
 	private AffineGet getLocalTransform( long slice )
