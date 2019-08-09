@@ -1,6 +1,7 @@
 package de.embl.cba.bdp2.registration;
 
 import net.imglib2.*;
+import net.imglib2.interpolation.randomaccess.ClampingNLinearInterpolatorFactory;
 import net.imglib2.interpolation.randomaccess.NLinearInterpolatorFactory;
 import net.imglib2.realtransform.AffineTransform;
 import net.imglib2.realtransform.RealViews;
@@ -354,7 +355,7 @@ public class TransformedStackView < R >
 		{
 			RealRandomAccessible< R > rra =
 						Views.interpolate( Views.extendZero( hyperslice ),
-								new NLinearInterpolatorFactory<>() );
+								new ClampingNLinearInterpolatorFactory<>() );
 
 			final IntervalView< R > interval = Views.interval(
 					Views.raster(
