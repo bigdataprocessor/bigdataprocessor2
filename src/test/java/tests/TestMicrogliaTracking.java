@@ -57,14 +57,7 @@ public class TestMicrogliaTracking
         final ThresholdFloodFillOverlapTracker tracker =
                 new ThresholdFloodFillOverlapTracker< R >( image, settings );
 
-        new Thread( new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                tracker.track();
-            }
-        } ).start();
+        tracker.track();
 
 
         if ( showImages )

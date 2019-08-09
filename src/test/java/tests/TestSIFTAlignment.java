@@ -21,8 +21,6 @@ public class TestSIFTAlignment < R extends RealType< R > & NativeType< R > >
 	@Test
 	public void lazySIFT()
 	{
-		new ImageJ().ui().showUI();
-
 		final Image< R > image = BigDataProcessor2.openImage(
 				"/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-data/em-2d-sift-align-01",
 				FileInfos.TIFF_SLICES,
@@ -64,6 +62,7 @@ public class TestSIFTAlignment < R extends RealType< R > & NativeType< R > >
 	public static void main( String[] args )
 	{
 		showImages = true;
+		new ImageJ().ui().showUI();
 		new TestSIFTAlignment().lazySIFT();
 	}
 
