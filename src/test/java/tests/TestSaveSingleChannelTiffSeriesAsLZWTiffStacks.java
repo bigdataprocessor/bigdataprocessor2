@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import java.io.File;
 
+import static de.embl.cba.bdp2.utils.FileUtils.emptyDirectory;
 import static junit.framework.TestCase.assertTrue;
 
 public class TestSaveSingleChannelTiffSeriesAsLZWTiffStacks
@@ -38,8 +39,13 @@ public class TestSaveSingleChannelTiffSeriesAsLZWTiffStacks
         savingSettings.saveVolumes = true;
         savingSettings.compression = SavingSettings.COMPRESSION_LZW;
         savingSettings.rowsPerStrip = 1000; // just whole plane
+
+        final String outputDirectory = "/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-output/nc1-nt3-calibrated-tiff-lzw";
+
+        emptyDirectory( outputDirectory );
+
         savingSettings.volumesFilePath =
-                "/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-output/nc1-nt3-calibrated-tiff-lzw/volume";
+                outputDirectory + "/volume";
 
         final File testVolumeFile = new File( savingSettings.volumesFilePath + "--C00--T00000.ome.tif" );
         if ( testVolumeFile.exists() ) testVolumeFile.delete();

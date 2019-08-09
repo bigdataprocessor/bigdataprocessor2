@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import java.io.File;
 
+import static de.embl.cba.bdp2.utils.FileUtils.emptyDirectory;
 import static junit.framework.TestCase.assertTrue;
 
 public class TestSaveSingleChannelTiffSeriesAsTiffStacks
@@ -35,19 +36,25 @@ public class TestSaveSingleChannelTiffSeriesAsTiffStacks
         savingSettings.numIOThreads = 1;
         savingSettings.numProcessingThreads = 4;
         savingSettings.saveProjections = true;
-        savingSettings.volumesFilePath =
-                "/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-output/nc1-nt3-calibrated-tiff-volumes/volume";
+
+        String outputDirectory = "/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-output/nc1-nt3-calibrated-tiff-volumes";
+
+        emptyDirectory( outputDirectory );
+
+        savingSettings.volumesFilePath = outputDirectory + "/volume";
         savingSettings.saveVolumes = true;
-        savingSettings.projectionsFilePath =
-                "/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-output/nc1-nt3-calibrated-tiff-projections/projection";
 
-        final File testVolumeFile = new File( savingSettings.volumesFilePath + "--C00--T00000.tif" );
-        if ( testVolumeFile.exists() ) testVolumeFile.delete();
+        outputDirectory = "/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-output/nc1-nt3-calibrated-tiff-projections";
 
-        final File testProjectionsFile = new File( savingSettings.projectionsFilePath + "--xyz-max-projection--C00--T00002.tif" );
-        if ( testProjectionsFile.exists() ) testProjectionsFile.delete();
+        emptyDirectory( outputDirectory );
+
+        savingSettings.projectionsFilePath = outputDirectory  + "/projection";
+
 
         BigDataProcessor2.saveImageAndWaitUntilDone( savingSettings, image );
+
+        final File testVolumeFile = new File( savingSettings.volumesFilePath + "--C00--T00000.tif" );
+        final File testProjectionsFile = new File( savingSettings.projectionsFilePath + "--xyz-max-projection--C00--T00002.tif" );
 
         assertTrue( testVolumeFile.exists() );
         assertTrue( testProjectionsFile.exists() );

@@ -12,8 +12,11 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.junit.Test;
 
+import static de.embl.cba.bdp2.utils.FileUtils.emptyDirectory;
+
 public class TestSIFTAlignment < R extends RealType< R > & NativeType< R > >
 {
+	public static boolean showImages = false;
 
 	@Test
 	public void lazySIFT()
@@ -32,15 +35,19 @@ public class TestSIFTAlignment < R extends RealType< R > & NativeType< R > >
 						true,
 						new LoggingProgressListener( "SIFT" ) );
 
-		final BdvImageViewer viewer = BigDataProcessor2.showImage( alignedImage, false );
-		viewer.setDisplayRange( 0, 65535, 0  );
+		if ( showImages )
+		{
+			final BdvImageViewer viewer = BigDataProcessor2.showImage( alignedImage, false );
+			viewer.setDisplayRange( 0, 65535, 0 );
+		}
 
 		final SavingSettings savingSettings = SavingSettings.getDefaults();
 		savingSettings.fileType = SavingSettings.FileType.TIFF_PLANES;
 		savingSettings.numIOThreads = 4;
 		savingSettings.numProcessingThreads = 4;
-		savingSettings.volumesFilePath =
-				"/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-data/sift-aligned-em/plane";
+		final String dir = "/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-data/sift-aligned-em";
+		emptyDirectory( dir );
+		savingSettings.volumesFilePath = dir + "/plane";
 		savingSettings.saveVolumes = true;
 
 //		final File testVolumeFile =
@@ -56,6 +63,7 @@ public class TestSIFTAlignment < R extends RealType< R > & NativeType< R > >
 
 	public static void main( String[] args )
 	{
+		showImages = true;
 		new TestSIFTAlignment().lazySIFT();
 	}
 
