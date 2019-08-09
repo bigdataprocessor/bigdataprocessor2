@@ -13,18 +13,19 @@ import static junit.framework.Assert.assertTrue;
 
 public class TestRegionMerging
 {
+	public static boolean showImages = false;
+
 	@Test
 	public < R extends RealType< R > & NativeType< R > > void mergeTwoRegionsFromOneChannel()
 	{
 
-		final BigDataProcessor2< R > bdp = new BigDataProcessor2<>();
-
-		final Image< R > image = bdp.openImage(
+		final Image< R > image = BigDataProcessor2.openImage(
 				"/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-data/region-merging/one-channel",
 				FileInfos.SINGLE_CHANNEL_TIMELAPSE,
 				".*" );
 
-		bdp.showImage( image );
+		if ( showImages )
+			BigDataProcessor2.showImage( image );
 
 		final SplitViewMerger merger = new SplitViewMerger();
 		final int sizeXY = 100;
@@ -52,7 +53,9 @@ public class TestRegionMerging
 				FileInfos.PATTERN_2,
 				".*" );
 
-		bdp.showImage( image );
+		if ( showImages )
+			BigDataProcessor2.showImage( image );
+
 
 		final SplitViewMerger merger = new SplitViewMerger();
 		final int sizeXY = 100;
@@ -63,7 +66,8 @@ public class TestRegionMerging
 		final Image< R > merged = merger.mergeIntervalsXYC( image );
 		merged.setName( "three-channels" );
 
-		bdp.showImage( merged );
+		if ( showImages )
+			bdp.showImage( merged );
 
 		assertTrue( merged.getRai().min( DimensionOrder.C ) == 0 );
 		assertTrue( merged.getRai().max( DimensionOrder.C ) == 2 );
@@ -76,6 +80,7 @@ public class TestRegionMerging
 
 	public static void main( String[] args )
 	{
+		showImages = true;
 //		new TestRegionMerging().mergeTwoRegionsFromOneChannel();
 		new TestRegionMerging().mergeThreeRegionsFromTwoChannels();
 	}

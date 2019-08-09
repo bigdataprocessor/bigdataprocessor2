@@ -10,6 +10,7 @@ import org.junit.Test;
 public class TestOpenSingleStripZipTiffPlanes
 {
 	// TODO: optimise speed
+	public static boolean showImages = false;
 
 	@Test
 	public < R extends RealType< R > & NativeType< R > > void open()
@@ -21,7 +22,7 @@ public class TestOpenSingleStripZipTiffPlanes
 				FileInfos.TIFF_SLICES,
 				".*.tif" );
 
-		bdp.showImage( image );
+		if ( showImages ) bdp.showImage( image );
 
 		System.out.println("Done.");
 	}
@@ -29,6 +30,7 @@ public class TestOpenSingleStripZipTiffPlanes
 
 	public static void main( String[] args )
 	{
+		showImages = true;
 		new TestOpenSingleStripZipTiffPlanes().open();
 	}
 }

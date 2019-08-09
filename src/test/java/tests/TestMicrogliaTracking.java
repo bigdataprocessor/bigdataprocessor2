@@ -21,6 +21,8 @@ import static org.junit.Assert.assertEquals;
 public class TestMicrogliaTracking
 {
 
+    public static boolean showImages = false;
+
     @Test
     public < R extends RealType< R > & NativeType< R > > void thresholdFloodFillTracking( ) throws IOException
     {
@@ -37,8 +39,12 @@ public class TestMicrogliaTracking
         image.setVoxelUnit( "pixel" );
         image.setVoxelSpacing( 1.0, 1.0, 1.0 );
 
-        final BdvImageViewer viewer = bdp.showImage( image );
-        viewer.setDisplayRange( 0, 150, 0 );
+        BdvImageViewer viewer = null;
+        if ( showImages )
+        {
+            viewer = bdp.showImage( image );
+            viewer.setDisplayRange( 0, 150, 0 );
+        }
 
         ThresholdFloodFillOverlapTracker.Settings settings = new ThresholdFloodFillOverlapTracker.Settings();
 
@@ -60,7 +66,9 @@ public class TestMicrogliaTracking
             }
         } ).start();
 
-        new TrackDisplayBehaviour( viewer.getBdvHandle(), tracker.getTrack() );
+
+        if ( showImages )
+            new TrackDisplayBehaviour( viewer.getBdvHandle(), tracker.getTrack() );
 
         while( ! tracker.isFinished() )
             IJ.wait(100 );
@@ -72,9 +80,11 @@ public class TestMicrogliaTracking
                 "src/test/resources/test-data/microglia-tracking-nt123/track-thresholdFloodFillTracking.csv" ),
                 tracker.getTrack() );
 
-        final Image< R > trackViewImage = TrackViews.applyTrack( image, tracker.getTrack() );
-
-        new BdvImageViewer<>( trackViewImage );
+        if ( showImages )
+        {
+            final Image< R > trackViewImage = TrackViews.applyTrack( image, tracker.getTrack() );
+            new BdvImageViewer<>( trackViewImage );
+        }
     }
 
 
@@ -95,8 +105,12 @@ public class TestMicrogliaTracking
         image.setVoxelUnit( "pixel" );
         image.setVoxelSpacing( 1.0, 1.0, 1.0 );
 
-        final BdvImageViewer viewer = bdp.showImage( image );
-        viewer.setDisplayRange( 0, 150, 0 );
+        BdvImageViewer viewer = null;
+        if ( showImages )
+        {
+            viewer = bdp.showImage( image );
+            viewer.setDisplayRange( 0, 150, 0 );
+        }
 
         ThresholdFloodFillOverlapTracker.Settings settings = new ThresholdFloodFillOverlapTracker.Settings();
 
@@ -110,13 +124,16 @@ public class TestMicrogliaTracking
                 new ThresholdFloodFillOverlapTracker< R >( image, settings );
 
         tracker.track();
-        new TrackDisplayBehaviour( viewer.getBdvHandle(), tracker.getTrack() );
 
-        final Image< R > trackViewImage = TrackViews.applyTrack( image, tracker.getTrack() );
+        if ( showImages )
+        {
+            new TrackDisplayBehaviour( viewer.getBdvHandle(), tracker.getTrack() );
+            final Image< R > trackViewImage = TrackViews.applyTrack( image, tracker.getTrack() );
 
-        final BdvImageViewer< R > newViewer = new BdvImageViewer<>( trackViewImage );
-        newViewer.setDisplaySettings( viewer.getDisplaySettings() );
-        BdvUtils.moveToPosition( newViewer.getBdvHandle(), new double[]{0,0,0}, 0, 100);
+            final BdvImageViewer< R > newViewer = new BdvImageViewer<>( trackViewImage );
+            newViewer.setDisplaySettings( viewer.getDisplaySettings() );
+            BdvUtils.moveToPosition( newViewer.getBdvHandle(), new double[]{ 0, 0, 0 }, 0, 100 );
+        }
     }
 
 
@@ -140,8 +157,12 @@ public class TestMicrogliaTracking
                 1.0,
                 1.0 );
 
-        final BdvImageViewer viewer = bdp.showImage( image );
-        viewer.setDisplayRange( 0, 150, 0 );
+        BdvImageViewer viewer = null;
+        if ( showImages )
+        {
+            viewer = bdp.showImage( image );
+            viewer.setDisplayRange( 0, 150, 0 );
+        }
 
         StaticVolumePhaseCorrelationTracker.Settings settings = new StaticVolumePhaseCorrelationTracker.Settings();
 
@@ -154,22 +175,17 @@ public class TestMicrogliaTracking
         final StaticVolumePhaseCorrelationTracker tracker =
                 new StaticVolumePhaseCorrelationTracker( image, settings, "Track01" );
 
-        new Thread( new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                tracker.track();
-            }
-        } ).start();
+        tracker.track();
 
-        new TrackDisplayBehaviour( viewer.getBdvHandle(), tracker.getTrack() );
+        if ( showImages )
+            new TrackDisplayBehaviour( viewer.getBdvHandle(), tracker.getTrack() );
 
     }
 
 
     public static void main( String[] args ) throws IOException
     {
+        showImages = true;
         final ImageJ imageJ = new ImageJ();
         imageJ.ui().showUI();
 //        new TestMicrogliaTracking().trackUsingPhaseCorrelation();

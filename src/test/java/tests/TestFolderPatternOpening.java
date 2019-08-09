@@ -24,7 +24,7 @@ public class TestFolderPatternOpening
 				FileInfos.LOAD_CHANNELS_FROM_FOLDERS,
 				"stack_10_.*/.*" );
 
-		bdp.showImage( image );
+		// bdp.showImage( image );
 	}
 
 

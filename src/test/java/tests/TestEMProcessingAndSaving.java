@@ -9,11 +9,7 @@ import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import net.imagej.ImageJ;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
-import org.apache.commons.io.FileUtils;
 import org.junit.Test;
-
-import java.io.File;
-import java.io.IOException;
 
 public class TestEMProcessingAndSaving< R extends RealType< R > & NativeType< R > >
 {
@@ -21,7 +17,7 @@ public class TestEMProcessingAndSaving< R extends RealType< R > & NativeType< R 
 	@Test
 	public void processAndSave()
 	{
-		new ImageJ().ui().showUI();
+		//new ImageJ().ui().showUI();
 
 		Image< R > image = BigDataProcessor2.openImage(
 				"/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-data/em-2d-sift-align-01",
@@ -52,13 +48,7 @@ public class TestEMProcessingAndSaving< R extends RealType< R > & NativeType< R 
 
 		String directory = "/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-data/sift-aligned-em";
 
-		try
-		{
-			FileUtils.cleanDirectory( new File(directory) );
-		} catch ( IOException e )
-		{
-			e.printStackTrace();
-		}
+		de.embl.cba.bdp2.utils.FileUtils.emptyDirectory( directory );
 
 		savingSettings.volumesFilePath = directory +"/plane";
 
