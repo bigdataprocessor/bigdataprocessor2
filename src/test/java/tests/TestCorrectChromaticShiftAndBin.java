@@ -5,6 +5,7 @@ import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.bin.Binner;
 import de.embl.cba.bdp2.process.ChannelShifter;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
+import loci.common.DebugTools;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import org.junit.Test;
@@ -23,6 +24,8 @@ public class TestCorrectChromaticShiftAndBin
     @Test
     public void test()
     {
+        DebugTools.setRootLevel("OFF"); // Bio-Formats
+
         BigDataProcessor2 bdp = new BigDataProcessor2();
 
         String imageDirectory =

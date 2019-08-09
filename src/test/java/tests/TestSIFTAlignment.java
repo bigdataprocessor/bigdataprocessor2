@@ -7,6 +7,7 @@ import de.embl.cba.bdp2.registration.SIFTAlignedViews;
 import de.embl.cba.bdp2.saving.SavingSettings;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import loci.common.DebugTools;
 import net.imagej.ImageJ;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -21,6 +22,8 @@ public class TestSIFTAlignment < R extends RealType< R > & NativeType< R > >
 	@Test
 	public void lazySIFT()
 	{
+		DebugTools.setRootLevel("OFF"); // Bio-Formats
+
 		final Image< R > image = BigDataProcessor2.openImage(
 				"/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-data/em-2d-sift-align-01",
 				FileInfos.TIFF_SLICES,

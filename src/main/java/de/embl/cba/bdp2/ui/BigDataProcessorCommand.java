@@ -2,6 +2,7 @@ package de.embl.cba.bdp2.ui;
 
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
+import loci.common.DebugTools;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;
@@ -50,6 +51,8 @@ public class BigDataProcessorCommand < R extends RealType< R > & NativeType< R >
 
     public void run()
     {
+
+        DebugTools.setRootLevel("OFF"); // Bio-Formats
 
         final Image< R > image =
                 BigDataProcessor2.openImage( directory.toString(), namingScheme, filterPattern );

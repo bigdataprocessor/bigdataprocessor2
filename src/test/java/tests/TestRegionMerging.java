@@ -5,6 +5,7 @@ import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.process.splitviewmerge.SplitViewMerger;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.utils.DimensionOrder;
+import loci.common.DebugTools;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.junit.Test;
@@ -18,6 +19,7 @@ public class TestRegionMerging
 	@Test
 	public < R extends RealType< R > & NativeType< R > > void mergeTwoRegionsFromOneChannel()
 	{
+		DebugTools.setRootLevel("OFF"); // Bio-Formats
 
 		final Image< R > image = BigDataProcessor2.openImage(
 				"/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-data/region-merging/one-channel",
@@ -45,6 +47,7 @@ public class TestRegionMerging
 	@Test
 	public < R extends RealType< R > & NativeType< R > > void mergeThreeRegionsFromTwoChannels()
 	{
+		DebugTools.setRootLevel("OFF"); // Bio-Formats
 
 		final BigDataProcessor2< R > bdp = new BigDataProcessor2<>();
 

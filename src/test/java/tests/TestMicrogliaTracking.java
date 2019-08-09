@@ -7,6 +7,7 @@ import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import de.embl.cba.bdv.utils.BdvUtils;
 import ij.IJ;
+import loci.common.DebugTools;
 import net.imagej.ImageJ;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -26,6 +27,9 @@ public class TestMicrogliaTracking
     @Test
     public < R extends RealType< R > & NativeType< R > > void thresholdFloodFillTracking( ) throws IOException
     {
+
+        DebugTools.setRootLevel("OFF"); // Bio-Formats
+
         final BigDataProcessor2< R > bdp = new BigDataProcessor2<>();
 
         String imageDirectory = "/Users/tischer/Documents/fiji-plugin-bigDataTools2/" +
@@ -85,6 +89,9 @@ public class TestMicrogliaTracking
     public < R extends RealType< R > & NativeType< R > > void trackView( )
     {
 
+        DebugTools.setRootLevel("OFF"); // Bio-Formats
+
+
         final BigDataProcessor2< R > bdp = new BigDataProcessor2<>();
 
         String imageDirectory = "/Users/tischer/Documents/fiji-plugin-bigDataTools2/" +
@@ -133,6 +140,8 @@ public class TestMicrogliaTracking
     @Test
     public < R extends RealType< R > & NativeType< R > > void phaseCorrelationTracking( )
     {
+
+        DebugTools.setRootLevel("OFF"); // Bio-Formats
 
         final BigDataProcessor2< R > bdp = new BigDataProcessor2<>();
 

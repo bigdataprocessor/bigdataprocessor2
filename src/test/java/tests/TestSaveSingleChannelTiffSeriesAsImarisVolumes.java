@@ -4,6 +4,7 @@ import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.saving.SavingSettings;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
+import loci.common.DebugTools;
 import org.junit.Test;
 
 import java.io.File;
@@ -15,6 +16,8 @@ public class TestSaveSingleChannelTiffSeriesAsImarisVolumes
     @Test
     public void test( )
     {
+        DebugTools.setRootLevel("OFF"); // Bio-Formats
+
         final BigDataProcessor2 bdp = new BigDataProcessor2();
 
         final String directory =

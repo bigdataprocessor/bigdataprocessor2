@@ -3,6 +3,7 @@ package tests;
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
+import loci.common.DebugTools;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.junit.Test;
@@ -15,6 +16,8 @@ public class TestOpenSingleStripZipTiffPlanes
 	@Test
 	public < R extends RealType< R > & NativeType< R > > void open()
 	{
+		DebugTools.setRootLevel("OFF"); // Bio-Formats
+
 		final BigDataProcessor2< R > bdp = new BigDataProcessor2<>();
 
 		final Image< R > image = bdp.openImage(
@@ -30,7 +33,7 @@ public class TestOpenSingleStripZipTiffPlanes
 
 	public static void main( String[] args )
 	{
-		showImages = true;
+		//showImages = true;
 		new TestOpenSingleStripZipTiffPlanes().open();
 	}
 }
