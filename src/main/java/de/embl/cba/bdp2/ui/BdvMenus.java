@@ -7,6 +7,7 @@ import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.process.*;
 import de.embl.cba.bdp2.process.splitviewmerge.SplitViewMergingDialog;
 import de.embl.cba.bdp2.registration.SIFTAlignedViews;
+import de.embl.cba.bdp2.shear.ShearMenuDialog;
 import de.embl.cba.bdp2.tracking.ApplyTrackDialog;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
@@ -55,8 +56,8 @@ public class BdvMenus
             });
         }else if (e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.OBLIQUE_MENU_ITEM )) {
             BigDataProcessor2.generalThreadPool.submit(() -> {
-                ObliqueMenuDialog obliqueMenuDialog = new ObliqueMenuDialog(imageViewer);
-                obliqueMenuDialog.setVisible(true);
+                ShearMenuDialog shearMenuDialog = new ShearMenuDialog(imageViewer);
+                shearMenuDialog.setVisible(true);
             });
         }else if (e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.APPLY_TRACK_MENU_ITEM )) {
             BigDataProcessor2.generalThreadPool.submit(() -> {

@@ -1,6 +1,6 @@
-package de.embl.cba.bdp2.ui;
+package de.embl.cba.bdp2.shear;
 
-import de.embl.cba.bdp2.Image;
+import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.RandomAccessibleInterval;
@@ -11,7 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-public class ObliqueMenuDialog extends JDialog implements ActionListener {
+public class ShearMenuDialog extends JDialog implements ActionListener {
     private final JCheckBox cbUseYshear = new JCheckBox("");
     private final JCheckBox cbViewLeft = new JCheckBox("");
     private final JTextField tfCameraPixelsize = new JTextField("6.5", 2);
@@ -27,7 +27,7 @@ public class ObliqueMenuDialog extends JDialog implements ActionListener {
     private final BdvImageViewer imageViewer;
     private final RandomAccessibleInterval originalRAI;
 
-    public ObliqueMenuDialog( BdvImageViewer imageViewer) {
+    public ShearMenuDialog( BdvImageViewer imageViewer) {
         this.imageViewer = imageViewer;
         this.originalRAI = imageViewer.getImage().getRai();
         JTabbedPane menu = new JTabbedPane();

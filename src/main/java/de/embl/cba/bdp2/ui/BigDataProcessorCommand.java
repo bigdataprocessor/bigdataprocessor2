@@ -2,6 +2,7 @@ package de.embl.cba.bdp2.ui;
 
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
+import de.embl.cba.bdp2.logging.Logger;
 import loci.common.DebugTools;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -10,6 +11,7 @@ import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
 import java.io.File;
+import java.util.Arrays;
 
 @Plugin(type = Command.class, menuPath = "Plugins>BigDataTools>BigDataProcessor2", initializer = "init")
 public class BigDataProcessorCommand < R extends RealType< R > & NativeType< R >>
@@ -55,10 +57,18 @@ public class BigDataProcessorCommand < R extends RealType< R > & NativeType< R >
         DebugTools.setRootLevel("OFF"); // Bio-Formats
 
         final Image< R > image =
-                BigDataProcessor2.openImage( directory.toString(), namingScheme, filterPattern );
+                BigDataProcessor2.openImage(
+                        directory.toString(),
+                        namingScheme,
+                        filterPattern );
 
         BigDataProcessor2.showVoxelSpacingDialog( image );
+        Logger.info( "Image voxel unit: " + image.getVoxelUnit() );
+        Logger.info( "Image voxel size: " + Arrays.toString( image.getVoxelSpacing() ) );
+
         BigDataProcessor2.showImage( image, autoContrast );
+
+
 
 
     }

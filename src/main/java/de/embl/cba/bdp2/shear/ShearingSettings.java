@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.ui;
+package de.embl.cba.bdp2.shear;
 
 import de.embl.cba.bdp2.utils.Point3D;
 import net.imglib2.interpolation.InterpolatorFactory;

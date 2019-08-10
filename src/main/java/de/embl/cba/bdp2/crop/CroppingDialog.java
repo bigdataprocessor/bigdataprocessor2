@@ -7,6 +7,7 @@ import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.FinalInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
+import sun.rmi.runtime.Log;
 
 public class CroppingDialog< T extends RealType< T > & NativeType< T > >
 {
@@ -23,6 +24,7 @@ public class CroppingDialog< T extends RealType< T > & NativeType< T > >
 			final BdvImageViewer< T > newViewer = new BdvImageViewer<>( cropped );
 			newViewer.setDisplaySettings( viewer.getDisplaySettings() );
 
+			Logger.info( "Cropping interval [" + image.getVoxelUnit() +"]: " + interval.toString() );
 			Logger.info( "Cropped view size [GB]: " + Utils.getSizeGB( cropped.getRai() ) );
 		}
 	}
