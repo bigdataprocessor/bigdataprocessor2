@@ -183,9 +183,10 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
 
                 counter.incrementAndGet();
             }
-            if (!stop.get()) {
-                ProgressHelpers.logProgress( totalSlices, counter, startTime, "Saved file ");
-            }
+
+//            if (!stop.get()) {
+//                ProgressHelpers.logProgress( totalSlices, counter, startTime, "Saved file ");
+//            }
         }
     }
 

@@ -113,8 +113,8 @@ public class SaveFrameAsImarisVolumes< R extends RealType< R > & NativeType< R >
 
             counter.incrementAndGet();
 
-            if (!stop.get())
-                ProgressHelpers.logProgress( totalFiles, counter, startTime, "Saved files " );
+//            if (!stop.get())
+//                ProgressHelpers.logProgress( totalFiles, counter, startTime, "Saved files " );
 
             imagePlus = null;
             System.gc();

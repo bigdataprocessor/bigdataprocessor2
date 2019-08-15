@@ -106,9 +106,9 @@ public class SaveFrameAsTIFFStacks< R extends RealType< R > & NativeType< R > > 
 
             counter.incrementAndGet();
 
-            if ( ! stop.get() ) {
-                ProgressHelpers.logProgress( totalCubes, counter, startTime, "Saved file " );
-            }
+//            if ( ! stop.get() ) {
+//                ProgressHelpers.logProgress( totalCubes, counter, startTime, "Saved file " );
+//            }
 
             System.out.println( "Saving finished: Frame " + t + ", Channel " + c );
 

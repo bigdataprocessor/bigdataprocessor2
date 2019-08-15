@@ -72,7 +72,9 @@ public class SaveImarisAsStacks extends AbstractImgSaver {
                         ));
             }
         }
+
         // Monitor the progress
+        // Todo: one could also use the counter for the progress, rather than the futures
         Thread thread = new Thread(() -> Progress.informProgressListeners(
                 futures,
                 FileInfos.PROGRESS_UPDATE_MILLISECONDS,

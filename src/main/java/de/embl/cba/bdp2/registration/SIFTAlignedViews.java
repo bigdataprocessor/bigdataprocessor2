@@ -8,6 +8,7 @@ import de.embl.cba.bdp2.progress.ProgressListener;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import de.embl.cba.bdv.utils.BdvUtils;
+import net.imglib2.FinalInterval;
 import net.imglib2.FinalRealInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;
@@ -18,7 +19,6 @@ import java.util.ArrayList;
 
 public class SIFTAlignedViews
 {
-
 	public static < R extends RealType< R > & NativeType< R > >
 	Image< R > siftAlignFirstVolume( Image< R > image,
 									 long referenceSlice,
@@ -27,10 +27,13 @@ public class SIFTAlignedViews
 	{
 		referenceSlice = referenceSlice - image.getRai().min( 2 );
 
-		final ArrayList< RandomAccessibleInterval< R > > hyperslices = getSlices( image );
+		final ArrayList< RandomAccessibleInterval< R > > hyperslices = getPlanes( image, 0, 0 );
 
 		final SliceRegistrationSIFT< R > registration =
-				new SliceRegistrationSIFT<>( hyperslices, referenceSlice, 6 );
+				new SliceRegistrationSIFT(
+						hyperslices,
+						referenceSlice,
+						6 );
 
 		if ( progressListener != null )
 			registration.setProgressListener( progressListener );
@@ -49,6 +52,44 @@ public class SIFTAlignedViews
 		return alignedImage;
 	}
 
+	public static < R extends RealType< R > & NativeType< R > >
+	Image< R > siftAlignMovie( Image< R > image,
+							   long referenceHyperSliceIndex,
+							   FinalInterval hyperSliceInterval,
+							   boolean lazy,
+							   ProgressListener progressListener )
+	{
+		final ArrayList< RandomAccessibleInterval< R > > hyperslices = getVolumes( image, 0 );
+
+		final long referenceSliceIndex = referenceHyperSliceIndex - image.getRai().min( 2 );
+		final SliceRegistrationSIFT< R > registration =
+				new SliceRegistrationSIFT<>( hyperslices, referenceSliceIndex, hyperSliceInterval,6 );
+
+		if ( progressListener != null )
+			registration.setProgressListener( progressListener );
+
+		if ( lazy )
+			new Thread( () -> registration.computeAllTransforms() ).start();
+		else
+			registration.computeAllTransforms();
+
+		RandomAccessibleInterval< R > registered =
+				new TransformedStackView( hyperslices, registration );
+
+		final Image< R > alignedImage = image.newImage( movieTo5D( registered ) );
+		alignedImage.setName( "SIFT aligned" );
+
+		return alignedImage;
+	}
+
+	private static < R extends RealType< R > & NativeType< R > >
+	RandomAccessibleInterval<R> movieTo5D( RandomAccessibleInterval< R > rai )
+	{
+		rai = Views.addDimension( rai, 0, 0 );
+		rai = Views.permute( rai, 3, 4 );
+		return rai;
+	}
+
 	private static < R extends RealType< R > & NativeType< R > >
 	RandomAccessibleInterval<R> volumeTo5D( RandomAccessibleInterval< R > rai )
 	{
@@ -58,19 +99,37 @@ public class SIFTAlignedViews
 	}
 
 	private static < R extends RealType< R > & NativeType< R > >
-	ArrayList< RandomAccessibleInterval< R > > getSlices( Image< R > image )
+	ArrayList< RandomAccessibleInterval< R > > getPlanes( Image< R > image, int c, int t )
 	{
 		final ArrayList< RandomAccessibleInterval< R > > hyperslices = new ArrayList<>();
 
-		for ( int slice = 0; slice < image.getRai().dimension( 2 ); slice++ )
+		for ( int z = 0; z < image.getRai().dimension( DimensionOrder.Z ); z++ )
 		{
 			final RandomAccessibleInterval< R > sliceView =
-					IntervalImageViews.getSliceView( image.getRai(), slice, 0, 0 );
+					IntervalImageViews.getSliceView( image.getRai(), z, c, t );
 
 			hyperslices.add( sliceView );
 		}
+
 		return hyperslices;
 	}
+
+	private static < R extends RealType< R > & NativeType< R > >
+	ArrayList< RandomAccessibleInterval< R > > getVolumes( Image< R > image, int c )
+	{
+		final ArrayList< RandomAccessibleInterval< R > > hyperslices = new ArrayList<>();
+
+		for ( int t = 0; t < image.getRai().dimension( DimensionOrder.T ); t++ )
+		{
+			final RandomAccessibleInterval< R > sliceView =
+					IntervalImageViews.getVolumeView( image.getRai(), c, t );
+
+			hyperslices.add( sliceView );
+		}
+
+		return hyperslices;
+	}
+
 
 	public static void showAlignedBdvView( BdvImageViewer imageViewer )
 	{
