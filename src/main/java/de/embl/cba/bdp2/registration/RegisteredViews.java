@@ -17,7 +17,7 @@ import net.imglib2.view.Views;
 
 import java.util.ArrayList;
 
-public class SIFTAlignedViews
+public class RegisteredViews
 {
 	public static < R extends RealType< R > & NativeType< R > >
 	Image< R > siftAlignFirstVolume( Image< R > image,
@@ -29,8 +29,8 @@ public class SIFTAlignedViews
 
 		final ArrayList< RandomAccessibleInterval< R > > hyperslices = getPlanes( image, 0, 0 );
 
-		final SIFTRegistration< R > registration =
-				new SIFTRegistration(
+		final Registration< R > registration =
+				new Registration(
 						hyperslices,
 						referenceSlice,
 						6 );
@@ -39,9 +39,9 @@ public class SIFTAlignedViews
 			registration.setProgressListener( progressListener );
 
 		if ( lazy )
-			new Thread( () -> registration.computeAllTransforms() ).start();
+			new Thread( () -> registration.computeTransforms() ).start();
 		else
-			registration.computeAllTransforms();
+			registration.computeTransforms();
 
 		RandomAccessibleInterval< R > registered =
 				new TransformedStackView( hyperslices, registration );
@@ -62,16 +62,16 @@ public class SIFTAlignedViews
 		final ArrayList< RandomAccessibleInterval< R > > hyperslices = getVolumes( image, 0 );
 
 		final long referenceSliceIndex = referenceHyperSliceIndex - image.getRai().min( 2 );
-		final SIFTRegistration< R > registration =
-				new SIFTRegistration<>( hyperslices, referenceSliceIndex, hyperSliceInterval,6 );
+		final Registration< R > registration =
+				new Registration<>( hyperslices, referenceSliceIndex, hyperSliceInterval,6 );
 
 		if ( progressListener != null )
 			registration.setProgressListener( progressListener );
 
 		if ( lazy )
-			new Thread( () -> registration.computeAllTransforms() ).start();
+			new Thread( () -> registration.computeTransforms() ).start();
 		else
-			registration.computeAllTransforms();
+			registration.computeTransforms();
 
 		RandomAccessibleInterval< R > registered =
 				new TransformedStackView( hyperslices, registration );

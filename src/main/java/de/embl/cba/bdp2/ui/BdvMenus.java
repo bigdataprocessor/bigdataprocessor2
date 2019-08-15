@@ -6,7 +6,7 @@ import de.embl.cba.bdp2.crop.CroppingDialog;
 import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.process.*;
 import de.embl.cba.bdp2.process.splitviewmerge.SplitViewMergingDialog;
-import de.embl.cba.bdp2.registration.SIFTAlignedViews;
+import de.embl.cba.bdp2.registration.RegisteredViews;
 import de.embl.cba.bdp2.shear.ShearMenuDialog;
 import de.embl.cba.bdp2.tracking.ApplyTrackDialog;
 import de.embl.cba.bdp2.utils.DimensionOrder;
@@ -65,11 +65,11 @@ public class BdvMenus
             });
         }else if (e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.REGISTER_VOLUME_SIFT_MENU_ITEM )) {
             BigDataProcessor2.generalThreadPool.submit(() -> {
-                SIFTAlignedViews.showSIFTVolumeAlignedBdvView( imageViewer );
+                RegisteredViews.showSIFTVolumeAlignedBdvView( imageViewer );
             });
         }else if (e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.REGISTER_MOVIE_SIFT_MENU_ITEM )) {
             BigDataProcessor2.generalThreadPool.submit(() -> {
-                SIFTAlignedViews.showSIFTMovieAlignedBdvView( imageViewer );
+                RegisteredViews.showSIFTMovieAlignedBdvView( imageViewer );
             });
         }else if(e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.CROP_MENU_ITEM )){
         	BigDataProcessor2.generalThreadPool.submit(() -> {

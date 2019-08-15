@@ -74,7 +74,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -185,6 +187,24 @@ public class Utils {
 				2, 3 );
 
 		ImageJFunctions.wrap( permute, title ).show();
+	}
+
+	public static void collectFutures( ExecutorService executorService, ArrayList< Future > futures )
+	{
+		for ( Future future : futures )
+		{
+			try
+			{
+				future.get();
+			} catch ( InterruptedException e )
+			{
+				e.printStackTrace();
+			} catch ( ExecutionException e )
+			{
+				e.printStackTrace();
+			}
+		}
+		executorService.shutdown();
 	}
 
 	public enum FileType {

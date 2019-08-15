@@ -3,7 +3,7 @@ package tests;
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.progress.LoggingProgressListener;
-import de.embl.cba.bdp2.registration.SIFTAlignedViews;
+import de.embl.cba.bdp2.registration.RegisteredViews;
 import de.embl.cba.bdp2.saving.SavingSettings;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import loci.common.DebugTools;
@@ -63,7 +63,7 @@ public class TestEMProcessingAndSaving< R extends RealType< R > & NativeType< R 
 
 	private Image< R > align( Image< R > image )
 	{
-		return SIFTAlignedViews.siftAlignFirstVolume(
+		return RegisteredViews.siftAlignFirstVolume(
 						image,
 						20,
 						true,

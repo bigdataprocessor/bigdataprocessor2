@@ -3,8 +3,7 @@ package tests;
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.progress.LoggingProgressListener;
-import de.embl.cba.bdp2.registration.SIFTAlignedViews;
-import de.embl.cba.bdp2.saving.SavingSettings;
+import de.embl.cba.bdp2.registration.RegisteredViews;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import loci.common.DebugTools;
@@ -13,8 +12,6 @@ import net.imglib2.FinalInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.junit.Test;
-
-import static de.embl.cba.bdp2.utils.FileUtils.emptyDirectory;
 
 public class TestSIFTMovieAlignment< R extends RealType< R > & NativeType< R > >
 {
@@ -37,7 +34,7 @@ public class TestSIFTMovieAlignment< R extends RealType< R > & NativeType< R > >
 				image.getRai().max( 0 ), image.getRai().max( 1 ), image.getRai().dimension( 2 ) / 2 );
 
 		final Image< R > alignedImage =
-				SIFTAlignedViews.siftAlignMovie(
+				RegisteredViews.siftAlignMovie(
 						image,
 						3,
 						hyperSliceInterval,
