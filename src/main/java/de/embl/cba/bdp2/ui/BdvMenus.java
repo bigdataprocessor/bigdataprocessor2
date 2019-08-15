@@ -63,9 +63,13 @@ public class BdvMenus
             BigDataProcessor2.generalThreadPool.submit(() -> {
                 ApplyTrackDialog applyTrackDialog = new ApplyTrackDialog( imageViewer );
             });
-        }else if (e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.REGISTER_STACK_WITH_SIFT_MENU_ITEM )) {
+        }else if (e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.REGISTER_VOLUME_SIFT_MENU_ITEM )) {
             BigDataProcessor2.generalThreadPool.submit(() -> {
-                SIFTAlignedViews.showAlignedBdvView( imageViewer );
+                SIFTAlignedViews.showSIFTVolumeAlignedBdvView( imageViewer );
+            });
+        }else if (e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.REGISTER_MOVIE_SIFT_MENU_ITEM )) {
+            BigDataProcessor2.generalThreadPool.submit(() -> {
+                SIFTAlignedViews.showSIFTMovieAlignedBdvView( imageViewer );
             });
         }else if(e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.CROP_MENU_ITEM )){
         	BigDataProcessor2.generalThreadPool.submit(() -> {

@@ -131,10 +131,10 @@ public class SIFTAlignedViews
 	}
 
 
-	public static void showAlignedBdvView( BdvImageViewer imageViewer )
+	public static void showSIFTVolumeAlignedBdvView( BdvImageViewer imageViewer )
 	{
 		Logger.log("Alignment with SIFT started...");
-		final double currentSlice = getCurrentSlice( imageViewer );
+		final double currentSlice = getCurrentPlane( imageViewer );
 
 		final Image alignedImage = siftAlignFirstVolume(
 				imageViewer.getImage(),
@@ -145,7 +145,28 @@ public class SIFTAlignedViews
 		imageViewer.showImageInNewWindow( alignedImage );
 	}
 
-	private static double getCurrentSlice( BdvImageViewer imageViewer )
+	public static void showSIFTMovieAlignedBdvView( BdvImageViewer imageViewer )
+	{
+		Logger.log("Alignment with SIFT started...");
+		final double currentPlane = getCurrentPlane( imageViewer );
+		final Image image = imageViewer.getImage();
+
+		final FinalInterval hyperSliceInterval = FinalInterval.createMinMax(
+				0, 0, (long) currentPlane,
+				image.getRai().max( 0 ), image.getRai().max( 1 ), (long) currentPlane );
+
+		final Image alignedImage = siftAlignMovie(
+				imageViewer.getImage(),
+				imageViewer.getCurrentTimePoint(),
+				hyperSliceInterval,
+				true,
+				new LoggingProgressListener( "SIFT" ) );
+
+		imageViewer.showImageInNewWindow( alignedImage );
+	}
+
+
+	private static double getCurrentPlane( BdvImageViewer imageViewer )
 	{
 		final FinalRealInterval interval =
 				BdvUtils.getViewerGlobalBoundingInterval( imageViewer.getBdvHandle() );

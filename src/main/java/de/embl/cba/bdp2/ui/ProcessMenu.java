@@ -20,7 +20,8 @@ public class ProcessMenu extends JMenu {
 
         final JMenu correctMotionMenu = addMenu( UIDisplayConstants.CORRECT_MOTION_MENU_ITEM );
         addMenuItem( correctMotionMenu, UIDisplayConstants.APPLY_TRACK_MENU_ITEM );
-        addMenuItem( correctMotionMenu, UIDisplayConstants.REGISTER_STACK_WITH_SIFT_MENU_ITEM );
+        addMenuItem( correctMotionMenu, UIDisplayConstants.REGISTER_VOLUME_SIFT_MENU_ITEM );
+        addMenuItem( correctMotionMenu, UIDisplayConstants.REGISTER_MOVIE_SIFT_MENU_ITEM );
     }
 
     private JMenu addMenu( String name )

@@ -33,12 +33,14 @@ public class TestSIFTMovieAlignment< R extends RealType< R > & NativeType< R > >
 		if ( showImages )
 			BigDataProcessor2.showImage( image, true );
 
+		final FinalInterval hyperSliceInterval = FinalInterval.createMinMax( 0, 0, image.getRai().dimension( 2 ) / 2,
+				image.getRai().max( 0 ), image.getRai().max( 1 ), image.getRai().dimension( 2 ) / 2 );
+
 		final Image< R > alignedImage =
 				SIFTAlignedViews.siftAlignMovie(
 						image,
 						3,
-						FinalInterval.createMinMax( 0, 0, image.getRai().dimension( 2 ) / 2,
-								image.getRai().max( 0 ), image.getRai().max( 1 ), image.getRai().dimension( 2 ) / 2 ),
+						hyperSliceInterval,
 						true,
 						new LoggingProgressListener( "SIFT" ) );
 
