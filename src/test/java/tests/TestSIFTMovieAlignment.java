@@ -42,29 +42,7 @@ public class TestSIFTMovieAlignment< R extends RealType< R > & NativeType< R > >
 						new LoggingProgressListener( "SIFT" ) );
 
 		if ( showImages )
-		{
-			final BdvImageViewer viewer = BigDataProcessor2.showImage( alignedImage, false );
-			viewer.setDisplayRange( 100, 200, 0 );
-		}
-//
-//		final SavingSettings savingSettings = SavingSettings.getDefaults();
-//		savingSettings.fileType = SavingSettings.FileType.TIFF_PLANES;
-//		savingSettings.numIOThreads = 4;
-//		savingSettings.numProcessingThreads = 4;
-//		final String dir = "/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-data/sift-aligned-em";
-//		emptyDirectory( dir );
-//		savingSettings.volumesFilePath = dir + "/plane";
-//		savingSettings.saveVolumes = true;
-
-//		final File testVolumeFile =
-//				new File( savingSettings.volumesFilePath + "--C00--T00000.tif" );
-//		if ( testVolumeFile.exists() ) testVolumeFile.delete();
-//
-//		final File testProjectionsFile = new File( savingSettings.projectionsFilePath + "--xyz-max-projection--C00--T00002.tif" );
-//		if ( testProjectionsFile.exists() ) testProjectionsFile.delete();
-
-//		BigDataProcessor2.saveImageAndWaitUntilDone( savingSettings, alignedImage );
-
+			BigDataProcessor2.showImage( alignedImage, false ).setDisplayRange( 100, 200, 0 );
 	}
 
 	public static void main( String[] args )

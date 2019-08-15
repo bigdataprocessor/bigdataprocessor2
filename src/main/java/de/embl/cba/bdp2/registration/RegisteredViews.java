@@ -39,9 +39,9 @@ public class RegisteredViews
 			registration.setProgressListener( progressListener );
 
 		if ( lazy )
-			new Thread( () -> registration.computeTransforms() ).start();
+			new Thread( () -> registration.computeSIFTTransforms() ).start();
 		else
-			registration.computeTransforms();
+			registration.computeSIFTTransforms();
 
 		RandomAccessibleInterval< R > registered =
 				new TransformedStackView( hyperslices, registration );
@@ -69,9 +69,9 @@ public class RegisteredViews
 			registration.setProgressListener( progressListener );
 
 		if ( lazy )
-			new Thread( () -> registration.computeTransforms() ).start();
+			new Thread( () -> registration.computeSIFTTransforms() ).start();
 		else
-			registration.computeTransforms();
+			registration.computeSIFTTransforms();
 
 		RandomAccessibleInterval< R > registered =
 				new TransformedStackView( hyperslices, registration );

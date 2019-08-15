@@ -82,12 +82,21 @@ public class Registration< R extends RealType< R > & NativeType< R > > implement
 			return null;
 	}
 
-	public void computeTransforms( )
+	public void computeSIFTTransforms( )
 	{
 		totalTransforms = numHyperSlices - 1; // reference slice needs no processing
 
 		new SIFTTransformComputer().computeTransforms();
 	}
+
+
+	public void phaseCorrelationTransforms( )
+	{
+		totalTransforms = numHyperSlices - 1; // reference slice needs no processing
+
+		new PhaseCorrelationTransformComputer().computeTransforms();
+	}
+
 
 	public void setProgressListener( ProgressListener progressListener )
 	{
@@ -105,14 +114,12 @@ public class Registration< R extends RealType< R > & NativeType< R > > implement
 	private AffineGet getLocalTransform( long slice )
 	{
 		AffineGet currentLocal;
+
 		if ( hyperSliceIndexToLocalTransform.get( slice ) instanceof AffineGetNull )
-		{
 			currentLocal = new net.imglib2.realtransform.AffineTransform( numHyperSliceDimensions );
-		}
 		else
-		{
 			currentLocal = hyperSliceIndexToLocalTransform.get( slice ).copy();
-		}
+
 		return currentLocal;
 	}
 
@@ -124,8 +131,92 @@ public class Registration< R extends RealType< R > & NativeType< R > > implement
 		return step;
 	}
 
+	private boolean computeGlobalTransforms( long targetHyperSlice, int step )
+	{
+		for ( long hyperSlice = referenceHyperSliceIndex + step; ; hyperSlice += step )
+		{
+			if ( !hyperSliceIndexToLocalTransform.containsKey( hyperSlice ) ) break;
+			if ( hyperSliceIndexToGlobalTransform.containsKey( hyperSlice ) ) continue;
 
-	class SIFTTransformComputer < R extends RealType< R > & NativeType< R > >
+			AffineGet currentLocalTransform = getLocalTransform( hyperSlice );
+
+			final net.imglib2.realtransform.AffineTransform previousGlobal =
+					hyperSliceIndexToGlobalTransform.get( hyperSlice - step ).copy();
+
+			final net.imglib2.realtransform.AffineTransform currentGlobal =
+					previousGlobal.preConcatenate( currentLocalTransform );
+
+			hyperSliceIndexToGlobalTransform.put( hyperSlice, currentGlobal );
+
+			updateProgress();
+
+			if ( hyperSlice == targetHyperSlice )
+				return true;
+
+		}
+
+		return false;
+	}
+
+
+
+	class PhaseCorrelationTransformComputer
+	{
+
+		public PhaseCorrelationTransformComputer( )
+		{
+		}
+
+		public void computeTransforms( )
+		{
+			totalTransforms = numHyperSlices - 1; // reference slice needs no processing
+
+			new Thread( () -> computeLocalTransforms( 0, numThreads ) ).start();
+			computeGlobalTransforms( 0, getStep( 0 ) );
+
+			new Thread( () -> computeLocalTransforms( numHyperSlices - 1, numThreads ) ).start();
+			computeGlobalTransforms( numHyperSlices, numThreads );
+		}
+
+		/**
+		 * Computes features for all hyper-slices between the reference hyper-slice
+		 * and the target hyper-slice.
+		 *
+		 * @param targetHyperSliceIndex
+		 * @param numThreads
+		 */
+		private void computeLocalTransforms( final long targetHyperSliceIndex, int numThreads )
+		{
+			final ExecutorService executorService = Executors.newFixedThreadPool( numThreads );
+			final ArrayList< Future > futures = new ArrayList<>();
+
+			final int step = getStep( targetHyperSliceIndex );
+
+			for ( long hyperSlice = referenceHyperSliceIndex; hyperSlice != ( targetHyperSliceIndex + step ) ; hyperSlice += step )
+			{
+				if ( hyperSliceIndexToLocalTransform.containsKey( hyperSlice ) ) continue;
+
+				final long currentHyperSliceIndex = hyperSlice;
+
+				futures.add( executorService.submit( new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						long start_time = System.currentTimeMillis();
+						hyperSliceIndexToLocalTransform.put( currentHyperSliceIndex, null );
+//						System.out.println( "Processing SIFT of slice: " + currentHyperSliceIndex + " took "
+//								+ ( System.currentTimeMillis() - start_time ) + "ms; "
+//								+ features.size() + " features extracted." );
+					}
+				} ) );
+			}
+
+			Utils.collectFutures( executorService, futures );
+		}
+	}
+
+	class SIFTTransformComputer
 	{
 		private final Map< Long, List< Feature > > hyperSliceIndexToSIFTFeatures;
 
@@ -175,11 +266,11 @@ public class Registration< R extends RealType< R > & NativeType< R > > implement
 		{
 			totalTransforms = numHyperSlices - 1; // reference slice needs no processing
 
-			new Thread( () -> computeSIFTFeatures( 0, numThreads ) ).start();
-			computeSIFTTransforms( 0, numThreads );
+			new Thread( () -> computeFeatures( 0, numThreads ) ).start();
+			computeTransforms( 0, numThreads );
 
-			new Thread( () -> computeSIFTFeatures( numHyperSlices - 1, numThreads ) ).start();
-			computeSIFTTransforms( numHyperSlices, numThreads );
+			new Thread( () -> computeFeatures( numHyperSlices - 1, numThreads ) ).start();
+			computeTransforms( numHyperSlices, numThreads );
 		}
 
 		/**
@@ -189,7 +280,7 @@ public class Registration< R extends RealType< R > & NativeType< R > > implement
 		 * @param targetHyperSliceIndex
 		 * @param numThreads
 		 */
-		private void computeSIFTFeatures( final long targetHyperSliceIndex, int numThreads )
+		private void computeFeatures( final long targetHyperSliceIndex, int numThreads )
 		{
 			final ExecutorService executorService = Executors.newFixedThreadPool( numThreads );
 			final ArrayList< Future > futures = new ArrayList<>();
@@ -229,25 +320,25 @@ public class Registration< R extends RealType< R > & NativeType< R > > implement
 			Utils.collectFutures( executorService, futures );
 		}
 
-		private void computeSIFTTransforms( final long requestedSlice, int numThreads )
+		private void computeTransforms( final long targetHyperSlice, int numThreads )
 		{
 			final ExecutorService executorService = Executors.newFixedThreadPool( numThreads );
 			final ArrayList< Future > futures = new ArrayList<>();
 
-			final int step = getStep( requestedSlice );
+			final int step = getStep( targetHyperSlice );
 
 			boolean finished = false;
 
 			while( ! finished )
 			{
 				for ( long hyperSlice = referenceHyperSliceIndex + step;
-					  hyperSlice != ( requestedSlice + step );
+					  hyperSlice != ( targetHyperSlice + step );
 					  hyperSlice += step )
 				{
 					if ( hyperSliceIndexToLocalTransform.containsKey( hyperSlice ) ) continue;
 					if ( hyperSliceTransformIsBeingComputed.containsKey( hyperSlice ) ) continue;
-					if ( ! hyperSliceIndexToSIFTFeatures.containsKey( hyperSlice ) ) continue;
-					if ( ! hyperSliceIndexToSIFTFeatures.containsKey( hyperSlice - step  ) ) continue;
+					if ( !hyperSliceIndexToSIFTFeatures.containsKey( hyperSlice ) ) continue;
+					if ( !hyperSliceIndexToSIFTFeatures.containsKey( hyperSlice - step ) ) continue;
 
 					hyperSliceTransformIsBeingComputed.put( hyperSlice, true );
 
@@ -255,37 +346,13 @@ public class Registration< R extends RealType< R > & NativeType< R > > implement
 					futures.add( executorService.submit( () -> computeLocalTransform( step, finalSlice ) ) );
 				}
 
-				for ( long hyperSlice = referenceHyperSliceIndex + step; ; hyperSlice += step )
-				{
-					if ( ! hyperSliceIndexToLocalTransform.containsKey( hyperSlice ) ) break;
-					if( hyperSliceIndexToGlobalTransform.containsKey( hyperSlice ) ) continue;
+				finished = computeGlobalTransforms( targetHyperSlice, step );
 
-					AffineGet currentLocalTransform = getLocalTransform( hyperSlice );
-
-					final net.imglib2.realtransform.AffineTransform previousGlobal =
-							hyperSliceIndexToGlobalTransform.get( hyperSlice - step ).copy();
-
-					final net.imglib2.realtransform.AffineTransform currentGlobal =
-							previousGlobal.preConcatenate( currentLocalTransform );
-
-					hyperSliceIndexToGlobalTransform.put( hyperSlice, currentGlobal );
-
-					updateProgress();
-
-					if ( hyperSlice == requestedSlice )
-					{
-						finished = true;
-						break;
-					}
-				}
 			}
-
-			// TODO: if there is an error before I might not catch it...
 
 			Utils.collectFutures( executorService, futures );
 
 		}
-
 
 		private void computeLocalTransform( int step, long finalSlice )
 		{
@@ -380,18 +447,24 @@ public class Registration< R extends RealType< R > & NativeType< R > > implement
 
 		private ImageProcessor getImageProcessor( long hyperSliceIndex )
 		{
-			final RandomAccessibleInterval< R > hyperSlice =
-					( RandomAccessibleInterval< R > ) hyperslices.get( ( int ) hyperSliceIndex );
-
-			final RandomAccessibleInterval< R > hyperSlicePlane = Views.dropSingletonDimensions(
-					Views.interval( hyperSlice, hyperSliceInterval ) );
-
-			final ImagePlus wrap = ImageJFunctions.wrap( hyperSlicePlane, "" + hyperSliceIndex );
+			final RandomAccessibleInterval< R > hyperSlice = hyperslices.get( ( int ) hyperSliceIndex );
+			RandomAccessibleInterval< R > hyperSliceCrop = cropHyperSlice( hyperSlice );
+			final ImagePlus wrap = ImageJFunctions.wrap( hyperSliceCrop, "" + hyperSliceIndex );
 			final ImageProcessor processor = wrap.getProcessor();
 
 			return processor;
 		}
-	}
 
+		private RandomAccessibleInterval< R > cropHyperSlice( RandomAccessibleInterval< R > hyperSlice )
+		{
+			RandomAccessibleInterval< R > hyperSliceCrop;
+			if ( hyperSliceInterval != null )
+				hyperSliceCrop = Views.dropSingletonDimensions(
+					Views.interval( hyperSlice, hyperSliceInterval ) );
+			else
+				hyperSliceCrop = hyperSlice;
+			return hyperSliceCrop;
+		}
+	}
 
 }
