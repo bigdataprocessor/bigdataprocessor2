@@ -357,10 +357,7 @@ public class TransformedStackView < R >
 						Views.interpolate( Views.extendZero( hyperslice ),
 								new ClampingNLinearInterpolatorFactory<>() );
 
-			final IntervalView< R > interval = Views.interval(
-					Views.raster(
-							RealViews.transform( rra, transform )
-					), hyperslice );
+			final IntervalView< R > interval = Views.interval( Views.raster( RealViews.transform( rra, transform ) ), hyperslice );
 
 			return interval;
 		}

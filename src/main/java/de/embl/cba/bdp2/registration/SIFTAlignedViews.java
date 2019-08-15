@@ -29,8 +29,8 @@ public class SIFTAlignedViews
 
 		final ArrayList< RandomAccessibleInterval< R > > hyperslices = getPlanes( image, 0, 0 );
 
-		final SliceRegistrationSIFT< R > registration =
-				new SliceRegistrationSIFT(
+		final SIFTRegistration< R > registration =
+				new SIFTRegistration(
 						hyperslices,
 						referenceSlice,
 						6 );
@@ -62,8 +62,8 @@ public class SIFTAlignedViews
 		final ArrayList< RandomAccessibleInterval< R > > hyperslices = getVolumes( image, 0 );
 
 		final long referenceSliceIndex = referenceHyperSliceIndex - image.getRai().min( 2 );
-		final SliceRegistrationSIFT< R > registration =
-				new SliceRegistrationSIFT<>( hyperslices, referenceSliceIndex, hyperSliceInterval,6 );
+		final SIFTRegistration< R > registration =
+				new SIFTRegistration<>( hyperslices, referenceSliceIndex, hyperSliceInterval,6 );
 
 		if ( progressListener != null )
 			registration.setProgressListener( progressListener );

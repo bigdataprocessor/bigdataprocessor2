@@ -68,9 +68,6 @@ public class BigDataProcessorCommand < R extends RealType< R > & NativeType< R >
 
         BigDataProcessor2.showImage( image, autoContrast );
 
-
-
-
     }
 
 }

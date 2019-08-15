@@ -35,6 +35,7 @@ import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -137,6 +138,8 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
     public static < R extends RealType< R > & NativeType< R > >
     BdvImageViewer showImage( Image< R > image, boolean autoContrast )
     {
+        Logger.info( "Image voxel unit: " + image.getVoxelUnit() );
+        Logger.info( "Image voxel size: " + Arrays.toString( image.getVoxelSpacing() ) );
         return new BdvImageViewer( image, autoContrast );
     }
 

@@ -16,7 +16,6 @@ import net.imglib2.realtransform.AffineTransform2D;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
-import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
 
 import java.awt.geom.AffineTransform;
@@ -24,7 +23,7 @@ import java.util.*;
 import java.util.List;
 import java.util.concurrent.*;
 
-public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > > implements HypersliceTransformProvider
+public class SIFTRegistration< R extends RealType< R > & NativeType< R > > implements HypersliceTransformProvider
 {
 	private final List< RandomAccessibleInterval< R > > hyperslices;
 	private final long referenceHyperSliceIndex;
@@ -32,7 +31,7 @@ public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > >
 	private final Map< Long, Boolean > hyperSliceTransformIsBeingComputed;
 
 	private final Map< Long, List< Feature > > sliceToFeatures;
-	private final Map< Long, net.imglib2.realtransform.AffineTransform > hyperSliceToGlobalTransform;
+	private final Map< Long, net.imglib2.realtransform.AffineTransform > hyperSliceIndexToGlobalTransform;
 	private final FinalInterval hyperSliceInterval;
 
 	private int numHyperSliceDimensions;
@@ -81,14 +80,14 @@ public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > >
 	final static Param p = new Param();
 
 
-	public SliceRegistrationSIFT( List< RandomAccessibleInterval< R > > hyperslices ,
-								  long referenceHyperSliceIndex,
-								  int numThreads )
+	public SIFTRegistration( List< RandomAccessibleInterval< R > > hyperslices ,
+							 long referenceHyperSliceIndex,
+							 int numThreads )
 	{
 		this( hyperslices, referenceHyperSliceIndex, null, numThreads );
 	}
 
-	public SliceRegistrationSIFT(
+	public SIFTRegistration(
 			List< RandomAccessibleInterval< R > > hyperslices,
 			long referenceHyperSliceIndex,
 			FinalInterval hyperSliceInterval,
@@ -107,8 +106,8 @@ public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > >
 		hyperSliceIndexToLocalTransform = new ConcurrentHashMap< >( );
 		hyperSliceIndexToLocalTransform.put( referenceHyperSliceIndex, new net.imglib2.realtransform.AffineTransform( numHyperSliceDimensions ) );
 
-		hyperSliceToGlobalTransform = new ConcurrentHashMap< >( );
-		hyperSliceToGlobalTransform.put( referenceHyperSliceIndex, new net.imglib2.realtransform.AffineTransform( numHyperSliceDimensions )  );
+		hyperSliceIndexToGlobalTransform = new ConcurrentHashMap< >( );
+		hyperSliceIndexToGlobalTransform.put( referenceHyperSliceIndex, new net.imglib2.realtransform.AffineTransform( numHyperSliceDimensions )  );
 
 		hyperSliceTransformIsBeingComputed = new ConcurrentHashMap< >( );
 
@@ -144,8 +143,8 @@ public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > >
 	@Override
 	public net.imglib2.realtransform.AffineTransform getTransform( long hyperSliceIndex )
 	{
-		if ( hyperSliceToGlobalTransform.containsKey( hyperSliceIndex ))
-			return hyperSliceToGlobalTransform.get( hyperSliceIndex );
+		if ( hyperSliceIndexToGlobalTransform.containsKey( hyperSliceIndex ))
+			return hyperSliceIndexToGlobalTransform.get( hyperSliceIndex );
 		else
 			return null;
 	}
@@ -179,17 +178,17 @@ public class SliceRegistrationSIFT < R extends RealType< R > & NativeType< R > >
 			for ( long hyperSlice = referenceHyperSliceIndex + step; ; hyperSlice += step )
 			{
 				if ( ! hyperSliceIndexToLocalTransform.containsKey( hyperSlice ) ) break;
-				if( hyperSliceToGlobalTransform.containsKey( hyperSlice ) ) continue;
+				if( hyperSliceIndexToGlobalTransform.containsKey( hyperSlice ) ) continue;
 
 				AffineGet currentLocalTransform = getLocalTransform( hyperSlice );
 
 				final net.imglib2.realtransform.AffineTransform previousGlobal =
-						hyperSliceToGlobalTransform.get( hyperSlice - step ).copy();
+						hyperSliceIndexToGlobalTransform.get( hyperSlice - step ).copy();
 
 				final net.imglib2.realtransform.AffineTransform currentGlobal =
 						previousGlobal.preConcatenate( currentLocalTransform );
 
-				hyperSliceToGlobalTransform.put( hyperSlice, currentGlobal );
+				hyperSliceIndexToGlobalTransform.put( hyperSlice, currentGlobal );
 
 				updateProgress();
 
