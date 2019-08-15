@@ -131,8 +131,10 @@ public class Registration< R extends RealType< R > & NativeType< R > > implement
 		return step;
 	}
 
-	private boolean computeGlobalTransforms( long targetHyperSlice, int step )
+	private boolean computeGlobalTransforms( long targetHyperSlice )
 	{
+		final int step = getStep( targetHyperSlice );
+
 		for ( long hyperSlice = referenceHyperSliceIndex + step; ; hyperSlice += step )
 		{
 			if ( !hyperSliceIndexToLocalTransform.containsKey( hyperSlice ) ) break;
@@ -170,12 +172,17 @@ public class Registration< R extends RealType< R > & NativeType< R > > implement
 		public void computeTransforms( )
 		{
 			totalTransforms = numHyperSlices - 1; // reference slice needs no processing
+			computeTransformsUntil( 0 );
+			computeTransformsUntil( numHyperSlices - 1 );
+		}
 
-			new Thread( () -> computeLocalTransforms( 0, numThreads ) ).start();
-			computeGlobalTransforms( 0, getStep( 0 ) );
+		private void computeTransformsUntil( int targetHyperSliceIndex )
+		{
+			new Thread( () -> computeLocalTransforms( targetHyperSliceIndex, numThreads ) ).start();
 
-			new Thread( () -> computeLocalTransforms( numHyperSlices - 1, numThreads ) ).start();
-			computeGlobalTransforms( numHyperSlices, numThreads );
+			boolean finished = false;
+			while ( ! finished )
+				finished = computeGlobalTransforms( 0 );
 		}
 
 		/**
@@ -266,11 +273,14 @@ public class Registration< R extends RealType< R > & NativeType< R > > implement
 		{
 			totalTransforms = numHyperSlices - 1; // reference slice needs no processing
 
-			new Thread( () -> computeFeatures( 0, numThreads ) ).start();
-			computeTransforms( 0, numThreads );
+			computeTransformsUntil( 0 );
+			computeTransformsUntil( numHyperSlices - 1 );
+		}
 
-			new Thread( () -> computeFeatures( numHyperSlices - 1, numThreads ) ).start();
-			computeTransforms( numHyperSlices, numThreads );
+		private void computeTransformsUntil( int targetHyperSliceIndex )
+		{
+			new Thread( () -> computeFeatures( targetHyperSliceIndex, numThreads ) ).start();
+			computeTransforms( 0, numThreads );
 		}
 
 		/**
@@ -328,8 +338,7 @@ public class Registration< R extends RealType< R > & NativeType< R > > implement
 			final int step = getStep( targetHyperSlice );
 
 			boolean finished = false;
-
-			while( ! finished )
+			while ( ! finished )
 			{
 				for ( long hyperSlice = referenceHyperSliceIndex + step;
 					  hyperSlice != ( targetHyperSlice + step );
@@ -345,13 +354,9 @@ public class Registration< R extends RealType< R > & NativeType< R > > implement
 					final long finalSlice = hyperSlice;
 					futures.add( executorService.submit( () -> computeLocalTransform( step, finalSlice ) ) );
 				}
-
-				finished = computeGlobalTransforms( targetHyperSlice, step );
-
+				finished = computeGlobalTransforms( targetHyperSlice );
 			}
-
 			Utils.collectFutures( executorService, futures );
-
 		}
 
 		private void computeLocalTransform( int step, long finalSlice )
