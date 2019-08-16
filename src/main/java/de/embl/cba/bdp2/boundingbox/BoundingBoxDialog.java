@@ -176,41 +176,37 @@ public class BoundingBoxDialog < R extends RealType< R > & NativeType< R > >
     private void setInitialInterval( boolean calibrated )
     {
         final FinalRealInterval viewerBoundingInterval = BdvUtils.getViewerGlobalBoundingInterval( bdv );
-        int[] initialCenter = new int[ 3 ];
-        int[] initialSize = new int[ 3 ];
+        double[] initialCenter = new double[ 3 ];
+        double[] initialSize = new double[ 3 ];
 
         for (int d = 0; d < 3; d++)
         {
-            initialCenter[ d ] = (int) ( ( viewerBoundingInterval.realMax( d ) + viewerBoundingInterval.realMin( d ) ) / 2.0 );
-            initialSize[ d ] = (int) ( ( viewerBoundingInterval.realMax( d ) - viewerBoundingInterval.realMin( d ) ) / 2.0 );
-
-            if ( calibrated )
-            {
-                initialCenter[ d ] /= image.getVoxelSpacing()[ d ];
-                initialSize[ d ] /= image.getVoxelSpacing()[ d ];
-            }
-
+            initialCenter[ d ] = ( viewerBoundingInterval.realMax( d ) + viewerBoundingInterval.realMin( d ) ) / 2.0;
+            initialSize[ d ] = ( viewerBoundingInterval.realMax( d ) - viewerBoundingInterval.realMin( d ) ) / 2.0;
         }
 
         // TODO: improve this: take whole range in the smaller direction (up or down..)
-        initialSize[ DimensionOrder.Z ] = (int) image.getRai().dimension( DimensionOrder.Z ) / 10;
+        initialSize[ DimensionOrder.Z ] =  image.getRai().dimension( DimensionOrder.Z ) / 10;
+
         if ( calibrated )
-            initialSize[ DimensionOrder.Z ] = (int) ( initialSize[ DimensionOrder.Z ] * image.getVoxelSpacing()[ DimensionOrder.Z ] );
+            initialSize[ DimensionOrder.Z ] *= image.getVoxelSpacing()[ DimensionOrder.Z ];
 
+        initialSize[ DimensionOrder.Z ] = (int) Math.max( initialSize[ DimensionOrder.Z ],
+                Math.ceil( image.getVoxelSpacing()[ DimensionOrder.Z ] ) );
 
-        int[] minBB = new int[]{
+        double[] minBB = new double[]{
                 initialCenter[ X ] - initialSize[ X ] / 2,
                 initialCenter[ Y ] - initialSize[ Y ] / 2,
                 initialCenter[ Z ] - initialSize[ Z ] / 2 };
 
-        int[] maxBB = new int[]{
+        double[] maxBB = new double[]{
                 initialCenter[ X ] + initialSize[ X ] / 2,
                 initialCenter[ Y ] + initialSize[ Y ] / 2,
                 initialCenter[ Z ] + initialSize[ Z ] / 2 };
 
         initialInterval = Intervals.createMinMax(
-                minBB[X], minBB[Y], minBB[Z],
-                maxBB[X], maxBB[Y], maxBB[Z]);
+                (long) minBB[X], (long) minBB[Y], (long) minBB[Z],
+                (long) maxBB[X], (long) maxBB[Y], (long) maxBB[Z]);
     }
 
     private void setRangeInterval( boolean calibrated )
