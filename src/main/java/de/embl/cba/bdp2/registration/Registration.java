@@ -1,6 +1,7 @@
 package de.embl.cba.bdp2.registration;
 
 import de.embl.cba.bdp2.progress.ProgressListener;
+import de.embl.cba.bdp2.tracking.PhaseCorrelationTranslationComputer;
 import de.embl.cba.bdp2.utils.Utils;
 import ij.ImagePlus;
 import ij.process.FloatProcessor;
@@ -26,12 +27,14 @@ import java.util.concurrent.*;
 
 public class Registration< R extends RealType< R > & NativeType< R > > implements HypersliceTransformProvider
 {
-	private final List< RandomAccessibleInterval< R > > hyperslices;
+	public static final String PHASE_CORRELATION = "PhaseCorrelation";
+	public static final String SIFT_CORRESPONDENCES = "SIFT Correspondences";
+
+	private final List< RandomAccessibleInterval< R > > hyperSlices;
 	private final long referenceHyperSliceIndex;
-	private final Map< Long, AffineGet > hyperSliceIndexToLocalTransform;
 	private final Map< Long, Boolean > hyperSliceTransformIsBeingComputed;
-	private final Map< Long, net.imglib2.realtransform.AffineTransform > hyperSliceIndexToGlobalTransform;
 	private final FinalInterval hyperSliceInterval;
+	private final String registrationMethod;
 
 	private int numHyperSliceDimensions;
 	private final int numThreads;
@@ -41,34 +44,32 @@ public class Registration< R extends RealType< R > & NativeType< R > > implement
 	private int totalTransforms;
 	private int countTransforms = 0;
 
-	public Registration( List< RandomAccessibleInterval< R > > hyperslices ,
+	private Map< Long, AffineGet > hyperSliceIndexToLocalTransform;
+	private Map< Long, net.imglib2.realtransform.AffineTransform > hyperSliceIndexToGlobalTransform;
+
+	public Registration( List< RandomAccessibleInterval< R > > hyperSlices,
 						 long referenceHyperSliceIndex,
-						 int numThreads )
+						 int numThreads,
+						 String registrationMethod )
 	{
-		this( hyperslices, referenceHyperSliceIndex, null, numThreads );
+		this( hyperSlices, referenceHyperSliceIndex, null, registrationMethod, numThreads );
 	}
 
 	public Registration(
-			List< RandomAccessibleInterval< R > > hyperslices,
+			List< RandomAccessibleInterval< R > > hyperSlices,
 			long referenceHyperSliceIndex,
 			FinalInterval hyperSliceInterval,
+			String registrationMethod,
 			int numThreads )
 	{
-		this.hyperslices = hyperslices;
+		this.hyperSlices = hyperSlices;
 		this.referenceHyperSliceIndex = referenceHyperSliceIndex;
 		this.hyperSliceInterval = hyperSliceInterval;
+		this.registrationMethod = registrationMethod;
 		this.numThreads = numThreads;
 
-		numHyperSlices = hyperslices.size();
-		numHyperSliceDimensions = hyperslices.get( 0 ).numDimensions();
-
-		hyperSliceIndexToLocalTransform = new ConcurrentHashMap< >( );
-		hyperSliceIndexToLocalTransform.put( referenceHyperSliceIndex,
-				new net.imglib2.realtransform.AffineTransform( numHyperSliceDimensions ) );
-
-		hyperSliceIndexToGlobalTransform = new ConcurrentHashMap< >( );
-		hyperSliceIndexToGlobalTransform.put( referenceHyperSliceIndex,
-				new net.imglib2.realtransform.AffineTransform( numHyperSliceDimensions )  );
+		numHyperSlices = hyperSlices.size();
+		numHyperSliceDimensions = hyperSlices.get( 0 ).numDimensions();
 
 		hyperSliceTransformIsBeingComputed = new ConcurrentHashMap< >( );
 	}
@@ -82,21 +83,30 @@ public class Registration< R extends RealType< R > & NativeType< R > > implement
 			return null;
 	}
 
-	public void computeSIFTTransforms( )
+	public void computeTransforms( )
 	{
-		totalTransforms = numHyperSlices - 1; // reference slice needs no processing
+		totalTransforms = numHyperSlices; // reference slice needs no processing
 
-		new SIFTTransformComputer().computeTransforms();
+		initialiseTransforms();
+
+		updateProgress();
+
+		if ( registrationMethod.equals( SIFT_CORRESPONDENCES  ) )
+			new SIFTRegistration().computeTransforms();
+		else if ( registrationMethod.equals( PHASE_CORRELATION ) )
+			new PhaseCorrelationRegistration().computeTransforms();
 	}
 
-
-	public void phaseCorrelationTransforms( )
+	private void initialiseTransforms()
 	{
-		totalTransforms = numHyperSlices - 1; // reference slice needs no processing
+		hyperSliceIndexToLocalTransform = new ConcurrentHashMap< >( );
+		hyperSliceIndexToGlobalTransform = new ConcurrentHashMap< >( );
 
-		new PhaseCorrelationTransformComputer().computeTransforms();
+		hyperSliceIndexToLocalTransform.put( referenceHyperSliceIndex,
+				new net.imglib2.realtransform.AffineTransform( numHyperSliceDimensions ) );
+		hyperSliceIndexToGlobalTransform.put( referenceHyperSliceIndex,
+				new net.imglib2.realtransform.AffineTransform( numHyperSliceDimensions )  );
 	}
-
 
 	public void setProgressListener( ProgressListener progressListener )
 	{
@@ -137,8 +147,13 @@ public class Registration< R extends RealType< R > & NativeType< R > > implement
 
 		for ( long hyperSlice = referenceHyperSliceIndex + step; ; hyperSlice += step )
 		{
-			if ( !hyperSliceIndexToLocalTransform.containsKey( hyperSlice ) ) break;
-			if ( hyperSliceIndexToGlobalTransform.containsKey( hyperSlice ) ) continue;
+			if ( hyperSliceIndexToGlobalTransform.containsKey( hyperSlice ) )
+			{
+				if ( hyperSlice == targetHyperSlice ) return true;
+				continue;
+			}
+
+			if ( ! hyperSliceIndexToLocalTransform.containsKey( hyperSlice ) ) break;
 
 			AffineGet currentLocalTransform = getLocalTransform( hyperSlice );
 
@@ -152,37 +167,52 @@ public class Registration< R extends RealType< R > & NativeType< R > > implement
 
 			updateProgress();
 
-			if ( hyperSlice == targetHyperSlice )
-				return true;
-
+			if ( hyperSlice == targetHyperSlice ) return true;
 		}
 
 		return false;
 	}
 
+	private RandomAccessibleInterval< R > getHyperSliceInterval( long hyperSliceIndex )
+	{
+		final RandomAccessibleInterval< R > hyperSlice = hyperSlices.get( (int) hyperSliceIndex );
+		return cropHyperSlice( hyperSlice );
+	}
+
+	private RandomAccessibleInterval< R > cropHyperSlice( RandomAccessibleInterval< R > hyperSlice )
+	{
+		RandomAccessibleInterval< R > hyperSliceCrop;
+		if ( hyperSliceInterval != null )
+			hyperSliceCrop = Views.dropSingletonDimensions(
+					Views.interval( hyperSlice, hyperSliceInterval ) );
+		else
+			hyperSliceCrop = hyperSlice;
+		return hyperSliceCrop;
+	}
 
 
-	class PhaseCorrelationTransformComputer
+	class PhaseCorrelationRegistration
 	{
 
-		public PhaseCorrelationTransformComputer( )
+		public PhaseCorrelationRegistration( )
 		{
 		}
 
 		public void computeTransforms( )
 		{
-			totalTransforms = numHyperSlices - 1; // reference slice needs no processing
+			totalTransforms = numHyperSlices;
+
 			computeTransformsUntil( 0 );
 			computeTransformsUntil( numHyperSlices - 1 );
 		}
 
-		private void computeTransformsUntil( int targetHyperSliceIndex )
+		private void computeTransformsUntil( final int targetHyperSliceIndex )
 		{
 			new Thread( () -> computeLocalTransforms( targetHyperSliceIndex, numThreads ) ).start();
 
 			boolean finished = false;
 			while ( ! finished )
-				finished = computeGlobalTransforms( 0 );
+				finished = computeGlobalTransforms( targetHyperSliceIndex );
 		}
 
 		/**
@@ -199,7 +229,9 @@ public class Registration< R extends RealType< R > & NativeType< R > > implement
 
 			final int step = getStep( targetHyperSliceIndex );
 
-			for ( long hyperSlice = referenceHyperSliceIndex; hyperSlice != ( targetHyperSliceIndex + step ) ; hyperSlice += step )
+			for ( long hyperSlice = referenceHyperSliceIndex + step;
+				  hyperSlice != ( targetHyperSliceIndex + step ); // trick to make it work for both positive and negative steps
+				  hyperSlice += step )
 			{
 				if ( hyperSliceIndexToLocalTransform.containsKey( hyperSlice ) ) continue;
 
@@ -210,24 +242,54 @@ public class Registration< R extends RealType< R > & NativeType< R > > implement
 					@Override
 					public void run()
 					{
-						long start_time = System.currentTimeMillis();
-						hyperSliceIndexToLocalTransform.put( currentHyperSliceIndex, null );
-//						System.out.println( "Processing SIFT of slice: " + currentHyperSliceIndex + " took "
-//								+ ( System.currentTimeMillis() - start_time ) + "ms; "
-//								+ features.size() + " features extracted." );
+						final double[] shift = PhaseCorrelationTranslationComputer.computeShift(
+								getHyperSliceInterval( currentHyperSliceIndex - step ),
+								getHyperSliceInterval( currentHyperSliceIndex ),
+								Executors.newFixedThreadPool( 1 ) );
+
+						hyperSliceIndexToLocalTransform.put( currentHyperSliceIndex, getAffineTransform( shift ) );
 					}
 				} ) );
 			}
 
 			Utils.collectFutures( executorService, futures );
 		}
+
+		private AffineGet getAffineTransform( double[] shift )
+		{
+			if ( numHyperSliceDimensions == 2 )
+			{
+				final AffineTransform2D affineTransform2D = new AffineTransform2D();
+
+				affineTransform2D.set(
+						1.0, 0.0, shift[ 0 ],
+						0.0, 1.0, shift[ 1 ] );
+
+				return affineTransform2D;
+			}
+			else if ( numHyperSliceDimensions == 3 )
+			{
+				final AffineTransform3D affineTransform3D = new AffineTransform3D();
+
+				affineTransform3D.set(
+						1.0, 0.0, 0.0, shift[ 0 ],
+						0.0, 1.0, 0.0, shift[ 1 ],
+						0.0, 0.0, 1.0, 0.0 );
+
+				return affineTransform3D;
+			}
+			else
+			{
+				throw new UnsupportedOperationException( "SIFT Registration: Unsupported hyperslice dimension: " + numHyperSliceDimensions );
+			}
+		}
 	}
 
-	class SIFTTransformComputer
+	class SIFTRegistration
 	{
 		private final Map< Long, List< Feature > > hyperSliceIndexToSIFTFeatures;
 
-		public SIFTTransformComputer( )
+		public SIFTRegistration( )
 		{
 			hyperSliceIndexToSIFTFeatures = new HashMap<>(  );
 			p.sift.initialSigma = 1.0F;
@@ -271,8 +333,6 @@ public class Registration< R extends RealType< R > & NativeType< R > > implement
 
 		public void computeTransforms( )
 		{
-			totalTransforms = numHyperSlices - 1; // reference slice needs no processing
-
 			computeTransformsUntil( 0 );
 			computeTransformsUntil( numHyperSlices - 1 );
 		}
@@ -354,6 +414,7 @@ public class Registration< R extends RealType< R > & NativeType< R > > implement
 					final long finalSlice = hyperSlice;
 					futures.add( executorService.submit( () -> computeLocalTransform( step, finalSlice ) ) );
 				}
+
 				finished = computeGlobalTransforms( targetHyperSlice );
 			}
 			Utils.collectFutures( executorService, futures );
@@ -452,24 +513,14 @@ public class Registration< R extends RealType< R > & NativeType< R > > implement
 
 		private ImageProcessor getImageProcessor( long hyperSliceIndex )
 		{
-			final RandomAccessibleInterval< R > hyperSlice = hyperslices.get( ( int ) hyperSliceIndex );
-			RandomAccessibleInterval< R > hyperSliceCrop = cropHyperSlice( hyperSlice );
-			final ImagePlus wrap = ImageJFunctions.wrap( hyperSliceCrop, "" + hyperSliceIndex );
+			RandomAccessibleInterval< R > hyperSliceInterval = getHyperSliceInterval( ( int ) hyperSliceIndex );
+
+			final ImagePlus wrap = ImageJFunctions.wrap( hyperSliceInterval, "" + hyperSliceIndex );
 			final ImageProcessor processor = wrap.getProcessor();
 
 			return processor;
 		}
 
-		private RandomAccessibleInterval< R > cropHyperSlice( RandomAccessibleInterval< R > hyperSlice )
-		{
-			RandomAccessibleInterval< R > hyperSliceCrop;
-			if ( hyperSliceInterval != null )
-				hyperSliceCrop = Views.dropSingletonDimensions(
-					Views.interval( hyperSlice, hyperSliceInterval ) );
-			else
-				hyperSliceCrop = hyperSlice;
-			return hyperSliceCrop;
-		}
 	}
 
 }

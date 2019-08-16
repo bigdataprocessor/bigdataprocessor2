@@ -33,15 +33,15 @@ public class RegisteredViews
 				new Registration(
 						hyperslices,
 						referenceSlice,
-						6 );
+						6, Registration.SIFT_CORRESPONDENCES );
 
 		if ( progressListener != null )
 			registration.setProgressListener( progressListener );
 
 		if ( lazy )
-			new Thread( () -> registration.computeSIFTTransforms() ).start();
+			new Thread( () -> registration.computeTransforms() ).start();
 		else
-			registration.computeSIFTTransforms();
+			registration.computeTransforms();
 
 		RandomAccessibleInterval< R > registered =
 				new TransformedStackView( hyperslices, registration );
@@ -52,35 +52,41 @@ public class RegisteredViews
 		return alignedImage;
 	}
 
+	// TODO: link to here from BigDataProcessor2
 	public static < R extends RealType< R > & NativeType< R > >
-	Image< R > siftAlignMovie( Image< R > image,
-							   long referenceHyperSliceIndex,
-							   FinalInterval hyperSliceInterval,
-							   boolean lazy,
-							   ProgressListener progressListener )
+	Image< R > alignMovie( Image< R > image,
+						   long referenceTimePoint,
+						   FinalInterval hyperSliceInterval,
+						   boolean lazy,
+						   ProgressListener progressListener,
+						   String registrationMethod )
 	{
 		final ArrayList< RandomAccessibleInterval< R > > hyperslices = getVolumes( image, 0 );
 
-		final long referenceSliceIndex = referenceHyperSliceIndex - image.getRai().min( 2 );
 		final Registration< R > registration =
-				new Registration<>( hyperslices, referenceSliceIndex, hyperSliceInterval,6 );
+				new Registration<>( hyperslices,
+						referenceTimePoint,
+						hyperSliceInterval,
+						registrationMethod,
+						6 );
 
 		if ( progressListener != null )
 			registration.setProgressListener( progressListener );
 
 		if ( lazy )
-			new Thread( () -> registration.computeSIFTTransforms() ).start();
+			new Thread( () -> registration.computeTransforms() ).start();
 		else
-			registration.computeSIFTTransforms();
+			registration.computeTransforms();
 
 		RandomAccessibleInterval< R > registered =
 				new TransformedStackView( hyperslices, registration );
 
 		final Image< R > alignedImage = image.newImage( movieTo5D( registered ) );
-		alignedImage.setName( "SIFT aligned" );
+		alignedImage.setName( "Aligned with " + registrationMethod );
 
 		return alignedImage;
 	}
+
 
 	private static < R extends RealType< R > & NativeType< R > >
 	RandomAccessibleInterval<R> movieTo5D( RandomAccessibleInterval< R > rai )
@@ -145,9 +151,11 @@ public class RegisteredViews
 		imageViewer.showImageInNewWindow( alignedImage );
 	}
 
-	public static void showSIFTMovieAlignedBdvView( BdvImageViewer imageViewer )
+	// TODO: put into BigDataProcessor2
+	public static void showAlignedMovieView( BdvImageViewer imageViewer,
+											 String registrationMethod )
 	{
-		Logger.log("Alignment with SIFT started...");
+		Logger.log("Alignment with started...");
 		final double currentPlane = getCurrentPlane( imageViewer );
 		final Image image = imageViewer.getImage();
 
@@ -155,12 +163,13 @@ public class RegisteredViews
 				0, 0, (long) currentPlane,
 				image.getRai().max( 0 ), image.getRai().max( 1 ), (long) currentPlane );
 
-		final Image alignedImage = siftAlignMovie(
+		final Image alignedImage = alignMovie(
 				imageViewer.getImage(),
 				imageViewer.getCurrentTimePoint(),
 				hyperSliceInterval,
 				true,
-				new LoggingProgressListener( "SIFT" ) );
+				new LoggingProgressListener( "SIFT" ),
+				registrationMethod );
 
 		imageViewer.showImageInNewWindow( alignedImage );
 	}

@@ -7,6 +7,7 @@ import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.process.*;
 import de.embl.cba.bdp2.process.splitviewmerge.SplitViewMergingDialog;
 import de.embl.cba.bdp2.registration.RegisteredViews;
+import de.embl.cba.bdp2.registration.Registration;
 import de.embl.cba.bdp2.shear.ShearMenuDialog;
 import de.embl.cba.bdp2.tracking.ApplyTrackDialog;
 import de.embl.cba.bdp2.utils.DimensionOrder;
@@ -69,7 +70,7 @@ public class BdvMenus
             });
         }else if (e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.REGISTER_MOVIE_SIFT_MENU_ITEM )) {
             BigDataProcessor2.generalThreadPool.submit(() -> {
-                RegisteredViews.showSIFTMovieAlignedBdvView( imageViewer );
+                RegisteredViews.showAlignedMovieView( imageViewer, Registration.SIFT_CORRESPONDENCES );
             });
         }else if(e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.CROP_MENU_ITEM )){
         	BigDataProcessor2.generalThreadPool.submit(() -> {
