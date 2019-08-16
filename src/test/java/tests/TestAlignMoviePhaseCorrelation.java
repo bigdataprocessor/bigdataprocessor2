@@ -22,8 +22,15 @@ public class TestAlignMoviePhaseCorrelation< R extends RealType< R > & NativeTyp
 	{
 		DebugTools.setRootLevel("OFF"); // Bio-Formats
 
+		// short movie
+//		final Image< R > image = BigDataProcessor2.openImage(
+//				"/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-data/sift-align-movie",
+//				FileInfos.SINGLE_CHANNEL_TIMELAPSE,
+//				".*");
+
+		// long movie
 		final Image< R > image = BigDataProcessor2.openImage(
-				"/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-data/sift-align-movie",
+				"/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-data/light-sheet-drift-01",
 				FileInfos.SINGLE_CHANNEL_TIMELAPSE,
 				".*");
 

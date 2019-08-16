@@ -1,10 +1,14 @@
 package de.embl.cba.bdp2;
 
 import de.embl.cba.bdp2.loading.files.FileInfos;
+import de.embl.cba.bdp2.registration.Registration;
 import de.embl.cba.bdp2.utils.DimensionOrder;
+import mpicbg.imglib.multithreading.Stopable;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
+
+import java.util.ArrayList;
 
 public class Image< R extends RealType< R > & NativeType< R > >
 {
@@ -16,6 +20,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 	private double[] voxelSpacing;
 	private String voxelUnit;
 	private FileInfos fileInfos;
+	private ArrayList< Stopable > stopables = new ArrayList<>(  );
 
 	public Image( RandomAccessibleInterval< R > raiXYZCT,
 				  String name,
@@ -101,5 +106,19 @@ public class Image< R extends RealType< R > & NativeType< R > >
 	public long numChannels()
 	{
 		return raiXYZCT.dimension( DimensionOrder.C );
+	}
+
+	public void addStopableProcess( Stopable stopable )
+	{
+		stopables.add( stopable );
+	}
+
+	public void stopStopableProcesses()
+	{
+		for ( Stopable stopable : stopables )
+		{
+			if ( stopable != null ) // might be old an Garbage collected already
+				stopable.stopThread();
+		}
 	}
 }

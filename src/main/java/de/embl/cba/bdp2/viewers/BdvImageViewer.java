@@ -63,6 +63,7 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
         behaviours.install( bdvHandle.getTriggerbindings(), "behaviours" );
 
         installTrackingBehaviour( behaviours );
+        installStoppingBehaviour( behaviours );
     }
 
     private void installTrackingBehaviour( Behaviours behaviours )
@@ -73,6 +74,14 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
                 ( new Thread( () -> ThresholdFloodFillOverlapTracker.trackObjectDialog( this ) )).start(),
                 "Track object", "ctrl T"  ) ;
     }
+
+    private void installStoppingBehaviour( Behaviours behaviours )
+    {
+        behaviours.behaviour( ( ClickBehaviour ) ( x, y ) ->
+                        ( new Thread( () -> image.stopStopableProcesses() )).start(),
+                "Stop image processing", "ctrl S"  ) ;
+    }
+
 
     public BdvImageViewer( RandomAccessibleInterval< R > rai,
                            String name,

@@ -36,9 +36,6 @@ import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.process.splitviewmerge.SplitViewMerger;
-import de.embl.cba.bdp2.progress.DefaultProgressListener;
-import de.embl.cba.bdp2.progress.Progress;
-import de.embl.cba.bdp2.saving.SavingSettings;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.ui.DisplaySettings;
 import ij.IJ;
@@ -48,7 +45,6 @@ import ij.measure.Calibration;
 import ij.plugin.Binner;
 import ij.plugin.Duplicator;
 import ij.process.ImageProcessor;
-import de.embl.cba.bdp2.utils.Point3D;
 import net.imglib2.Cursor;
 import net.imglib2.FinalInterval;
 import net.imglib2.FinalRealInterval;
@@ -78,6 +74,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by tischi on 06/11/16.
@@ -189,7 +186,7 @@ public class Utils {
 		ImageJFunctions.wrap( permute, title ).show();
 	}
 
-	public static void collectFutures( ExecutorService executorService, ArrayList< Future > futures )
+	public static void collectFutures( ExecutorService executorService, ArrayList< Future > futures, AtomicBoolean stop )
 	{
 		for ( Future future : futures )
 		{
@@ -202,6 +199,15 @@ public class Utils {
 			} catch ( ExecutionException e )
 			{
 				e.printStackTrace();
+			}
+
+			if ( stop.get() )
+			{
+				for ( Future f : futures )
+					f.cancel( true );
+
+				executorService.shutdownNow();
+				return;
 			}
 		}
 		executorService.shutdown();

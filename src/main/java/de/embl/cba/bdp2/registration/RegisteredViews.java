@@ -61,6 +61,8 @@ public class RegisteredViews
 						   ProgressListener progressListener,
 						   String registrationMethod )
 	{
+		logRegistrationStart();
+
 		final ArrayList< RandomAccessibleInterval< R > > hyperslices = getVolumes( image, 0 );
 
 		final Registration< R > registration =
@@ -83,6 +85,9 @@ public class RegisteredViews
 
 		final Image< R > alignedImage = image.newImage( movieTo5D( registered ) );
 		alignedImage.setName( "Aligned with " + registrationMethod );
+
+		if ( lazy )
+			alignedImage.addStopableProcess( registration );
 
 		return alignedImage;
 	}
@@ -136,10 +141,11 @@ public class RegisteredViews
 		return hyperslices;
 	}
 
-
+	// TODO: put as method into BigDataProcessor2
 	public static void showSIFTVolumeAlignedBdvView( BdvImageViewer imageViewer )
 	{
-		Logger.log("Alignment with SIFT started...");
+		logRegistrationStart();
+
 		final double currentSlice = getCurrentPlane( imageViewer );
 
 		final Image alignedImage = siftAlignFirstVolume(
@@ -151,11 +157,10 @@ public class RegisteredViews
 		imageViewer.showImageInNewWindow( alignedImage );
 	}
 
-	// TODO: put into BigDataProcessor2
+	// TODO: put as method into BigDataProcessor2
 	public static void createAlignedMovieView( BdvImageViewer imageViewer,
 											   String registrationMethod )
 	{
-		Logger.log("Alignment with started...");
 		final double currentPlane = getCurrentPlane( imageViewer );
 		final Image image = imageViewer.getImage();
 
@@ -172,6 +177,12 @@ public class RegisteredViews
 				registrationMethod );
 
 		imageViewer.showImageInNewWindow( alignedImage );
+	}
+
+	private static void logRegistrationStart()
+	{
+		Logger.log("Registration started...");
+		Logger.log("To stop it, select the BDV window and [Ctrl + S].");
 	}
 
 

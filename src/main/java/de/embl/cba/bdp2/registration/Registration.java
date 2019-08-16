@@ -1,5 +1,6 @@
 package de.embl.cba.bdp2.registration;
 
+import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.progress.ProgressListener;
 import de.embl.cba.bdp2.tracking.PhaseCorrelationTranslationComputer;
 import de.embl.cba.bdp2.utils.Utils;
@@ -9,6 +10,7 @@ import ij.process.ImageProcessor;
 import mpicbg.ij.SIFT;
 import mpicbg.imagefeatures.Feature;
 import mpicbg.imagefeatures.FloatArray2DSIFT;
+import mpicbg.imglib.multithreading.Stopable;
 import mpicbg.models.*;
 import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccessibleInterval;
@@ -24,8 +26,10 @@ import java.awt.geom.AffineTransform;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-public class Registration< R extends RealType< R > & NativeType< R > > implements HypersliceTransformProvider
+public class Registration< R extends RealType< R > & NativeType< R > >
+		implements HypersliceTransformProvider, Stopable
 {
 	public static final String PHASE_CORRELATION = "PhaseCorrelation";
 	public static final String SIFT_CORRESPONDENCES = "SIFT";
@@ -46,6 +50,7 @@ public class Registration< R extends RealType< R > & NativeType< R > > implement
 
 	private Map< Long, AffineGet > hyperSliceIndexToLocalTransform;
 	private Map< Long, net.imglib2.realtransform.AffineTransform > hyperSliceIndexToGlobalTransform;
+	private AtomicBoolean stop;
 
 	public Registration( List< RandomAccessibleInterval< R > > hyperSlices,
 						 long referenceHyperSliceIndex,
@@ -83,7 +88,7 @@ public class Registration< R extends RealType< R > & NativeType< R > > implement
 			return null;
 	}
 
-	public void computeTransforms( )
+	public void computeTransforms()
 	{
 		totalTransforms = numHyperSlices; // reference slice needs no processing
 
@@ -91,10 +96,12 @@ public class Registration< R extends RealType< R > & NativeType< R > > implement
 
 		updateProgress();
 
+		stop = new AtomicBoolean( false );
+
 		if ( registrationMethod.equals( SIFT_CORRESPONDENCES  ) )
-			new SIFTRegistration().computeTransforms();
+			new SIFTRegistration().computeTransforms( stop );
 		else if ( registrationMethod.equals( PHASE_CORRELATION ) )
-			new PhaseCorrelationRegistration().computeTransforms();
+			new PhaseCorrelationRegistration().computeTransforms( stop );
 	}
 
 	private void initialiseTransforms()
@@ -147,6 +154,8 @@ public class Registration< R extends RealType< R > & NativeType< R > > implement
 
 		for ( long hyperSlice = referenceHyperSliceIndex + step; ; hyperSlice += step )
 		{
+			if ( stop.get() ) return true;
+
 			if ( hyperSliceIndexToGlobalTransform.containsKey( hyperSlice ) )
 			{
 				if ( hyperSlice == targetHyperSlice ) return true;
@@ -190,16 +199,25 @@ public class Registration< R extends RealType< R > & NativeType< R > > implement
 		return hyperSliceCrop;
 	}
 
+	@Override
+	public void stopThread()
+	{
+		Logger.log( "Registration is stopping...");
+		stop.set( true );
+	}
+
 
 	class PhaseCorrelationRegistration
 	{
+		private AtomicBoolean stop;
 
 		public PhaseCorrelationRegistration( )
 		{
 		}
 
-		public void computeTransforms( )
+		public void computeTransforms( AtomicBoolean stop )
 		{
+			this.stop = stop;
 			totalTransforms = numHyperSlices;
 
 			computeTransformsUntil( 0 );
@@ -252,7 +270,7 @@ public class Registration< R extends RealType< R > & NativeType< R > > implement
 				} ) );
 			}
 
-			Utils.collectFutures( executorService, futures );
+			Utils.collectFutures( executorService, futures, stop );
 		}
 
 		private AffineGet getAffineTransform( double[] shift )
@@ -288,6 +306,7 @@ public class Registration< R extends RealType< R > & NativeType< R > > implement
 	class SIFTRegistration
 	{
 		private final Map< Long, List< Feature > > hyperSliceIndexToSIFTFeatures;
+		private AtomicBoolean stop;
 
 		public SIFTRegistration( )
 		{
@@ -331,8 +350,9 @@ public class Registration< R extends RealType< R > & NativeType< R > > implement
 
 		final Param p = new Param();
 
-		public void computeTransforms( )
+		public void computeTransforms( AtomicBoolean stop )
 		{
+			this.stop = stop;
 			computeTransformsUntil( 0 );
 			computeTransformsUntil( numHyperSlices - 1 );
 		}
@@ -387,7 +407,7 @@ public class Registration< R extends RealType< R > & NativeType< R > > implement
 				} ) );
 			}
 
-			Utils.collectFutures( executorService, futures );
+			Utils.collectFutures( executorService, futures, stop );
 		}
 
 		private void computeTransforms( final long targetHyperSlice, int numThreads )
@@ -416,8 +436,15 @@ public class Registration< R extends RealType< R > & NativeType< R > > implement
 				}
 
 				finished = computeGlobalTransforms( targetHyperSlice );
+
+				if ( stop.get() )
+				{
+					Utils.collectFutures( executorService, futures, stop );
+					return;
+				}
 			}
-			Utils.collectFutures( executorService, futures );
+
+			Utils.collectFutures( executorService, futures, stop );
 		}
 
 		private void computeLocalTransform( int step, long finalSlice )
