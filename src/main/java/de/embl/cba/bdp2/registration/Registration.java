@@ -28,7 +28,7 @@ import java.util.concurrent.*;
 public class Registration< R extends RealType< R > & NativeType< R > > implements HypersliceTransformProvider
 {
 	public static final String PHASE_CORRELATION = "PhaseCorrelation";
-	public static final String SIFT_CORRESPONDENCES = "SIFT Correspondences";
+	public static final String SIFT_CORRESPONDENCES = "SIFT";
 
 	private final List< RandomAccessibleInterval< R > > hyperSlices;
 	private final long referenceHyperSliceIndex;

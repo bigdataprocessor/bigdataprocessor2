@@ -70,7 +70,11 @@ public class BdvMenus
             });
         }else if (e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.REGISTER_MOVIE_SIFT_MENU_ITEM )) {
             BigDataProcessor2.generalThreadPool.submit(() -> {
-                RegisteredViews.showAlignedMovieView( imageViewer, Registration.SIFT_CORRESPONDENCES );
+                RegisteredViews.createAlignedMovieView( imageViewer, Registration.SIFT_CORRESPONDENCES );
+            });
+        }else if (e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.REGISTER_MOVIE_PHASE_CORRELATION_MENU_ITEM )) {
+            BigDataProcessor2.generalThreadPool.submit(() -> {
+                RegisteredViews.createAlignedMovieView( imageViewer, Registration.PHASE_CORRELATION );
             });
         }else if(e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.CROP_MENU_ITEM )){
         	BigDataProcessor2.generalThreadPool.submit(() -> {

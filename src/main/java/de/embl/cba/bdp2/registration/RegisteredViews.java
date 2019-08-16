@@ -152,8 +152,8 @@ public class RegisteredViews
 	}
 
 	// TODO: put into BigDataProcessor2
-	public static void showAlignedMovieView( BdvImageViewer imageViewer,
-											 String registrationMethod )
+	public static void createAlignedMovieView( BdvImageViewer imageViewer,
+											   String registrationMethod )
 	{
 		Logger.log("Alignment with started...");
 		final double currentPlane = getCurrentPlane( imageViewer );
@@ -168,7 +168,7 @@ public class RegisteredViews
 				imageViewer.getCurrentTimePoint(),
 				hyperSliceInterval,
 				true,
-				new LoggingProgressListener( "SIFT" ),
+				new LoggingProgressListener( registrationMethod ),
 				registrationMethod );
 
 		imageViewer.showImageInNewWindow( alignedImage );

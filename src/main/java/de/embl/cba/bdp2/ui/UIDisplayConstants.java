@@ -12,8 +12,9 @@ public class UIDisplayConstants {
     public static final String IMAGEJ_VIEW_MENU_ITEM = "Show in ImageJ Viewer";
     public static final String CORRECT_MOTION_MENU_ITEM = "Correct Motion...";
     public static final String APPLY_TRACK_MENU_ITEM = "Apply Track...";
-    public static final String REGISTER_VOLUME_SIFT_MENU_ITEM = "SIFT Align XY Slice Drift (EM Volume)...";
-    public static final String REGISTER_MOVIE_SIFT_MENU_ITEM = "SIFT Align XY Volume Drift (3D Time-lapse)...";
+    public static final String REGISTER_VOLUME_SIFT_MENU_ITEM = "Correct Lateral Slice Drift in 3D Volume (SIFT)...";
+    public static final String REGISTER_MOVIE_SIFT_MENU_ITEM = "Correct Lateral Frame Drift in 3D Time-lapse (SIFT)...";
+    public static final String REGISTER_MOVIE_PHASE_CORRELATION_MENU_ITEM = "Correct Lateral Frame Drift in 3D Time-lapse (X-Corr)...";
     public static final String OBLIQUE_MENU_ITEM = "Shear...";
     public static final String CROP_MENU_ITEM = "Crop...";
     public static final String EIGHT_BIT_CONVERSION_MENU_ITEM = "8-bit...";
