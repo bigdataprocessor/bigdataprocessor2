@@ -396,7 +396,14 @@ public class TransformedStackView < R >
 				r.setZero();
 
 				if ( r instanceof Volatile )
-					( ( Volatile ) r ).setValid( false );
+				{
+					if ( transformProvider.wasStopped() )
+						( ( Volatile ) r ).setValid( true );
+					else
+						( ( Volatile ) r ).setValid( false );
+				}
+
+
 
 				return r;
 			}

@@ -88,6 +88,12 @@ public class Registration< R extends RealType< R > & NativeType< R > >
 			return null;
 	}
 
+	@Override
+	public boolean wasStopped()
+	{
+		return stop.get();
+	}
+
 	public void computeTransforms()
 	{
 		totalTransforms = numHyperSlices; // reference slice needs no processing
@@ -98,10 +104,22 @@ public class Registration< R extends RealType< R > & NativeType< R > >
 
 		stop = new AtomicBoolean( false );
 
+		HyperSlicesTransformComputer transformComputer = getHyperSlicesTransformComputer();
+		transformComputer.computeTransformsUntil( numHyperSlices - 1 );
+		transformComputer.computeTransformsUntil( 0 );
+
+	}
+
+	private HyperSlicesTransformComputer getHyperSlicesTransformComputer()
+	{
+		HyperSlicesTransformComputer transformComputer = null;
+
 		if ( registrationMethod.equals( SIFT_CORRESPONDENCES  ) )
-			new SIFTRegistration().computeTransforms( stop );
+			transformComputer = new SIFTTransformComputer( stop );
 		else if ( registrationMethod.equals( PHASE_CORRELATION ) )
-			new PhaseCorrelationRegistration().computeTransforms( stop );
+			transformComputer = new PhaseCorrelationTransformComputer( stop );
+
+		return transformComputer;
 	}
 
 	private void initialiseTransforms()
@@ -154,7 +172,10 @@ public class Registration< R extends RealType< R > & NativeType< R > >
 
 		for ( long hyperSlice = referenceHyperSliceIndex + step; ; hyperSlice += step )
 		{
-			if ( stop.get() ) return true;
+			if ( stop.get() )
+			{
+				return true;
+			}
 
 			if ( hyperSliceIndexToGlobalTransform.containsKey( hyperSlice ) )
 			{
@@ -206,25 +227,17 @@ public class Registration< R extends RealType< R > & NativeType< R > >
 		stop.set( true );
 	}
 
-
-	class PhaseCorrelationRegistration
+	class PhaseCorrelationTransformComputer implements HyperSlicesTransformComputer
 	{
-		private AtomicBoolean stop;
+		private final AtomicBoolean stop;
 
-		public PhaseCorrelationRegistration( )
-		{
-		}
-
-		public void computeTransforms( AtomicBoolean stop )
+		public PhaseCorrelationTransformComputer( AtomicBoolean stop )
 		{
 			this.stop = stop;
-			totalTransforms = numHyperSlices;
-
-			computeTransformsUntil( 0 );
-			computeTransformsUntil( numHyperSlices - 1 );
 		}
 
-		private void computeTransformsUntil( final int targetHyperSliceIndex )
+		@Override
+		public void computeTransformsUntil( final int targetHyperSliceIndex )
 		{
 			new Thread( () -> computeLocalTransforms( targetHyperSliceIndex, numThreads ) ).start();
 
@@ -303,13 +316,14 @@ public class Registration< R extends RealType< R > & NativeType< R > >
 		}
 	}
 
-	class SIFTRegistration
+	class SIFTTransformComputer implements HyperSlicesTransformComputer
 	{
 		private final Map< Long, List< Feature > > hyperSliceIndexToSIFTFeatures;
-		private AtomicBoolean stop;
+		private final AtomicBoolean stop;
 
-		public SIFTRegistration( )
+		public SIFTTransformComputer( AtomicBoolean stop )
 		{
+			this.stop = stop;
 			hyperSliceIndexToSIFTFeatures = new HashMap<>(  );
 			p.sift.initialSigma = 1.0F;
 		}
@@ -350,14 +364,8 @@ public class Registration< R extends RealType< R > & NativeType< R > >
 
 		final Param p = new Param();
 
-		public void computeTransforms( AtomicBoolean stop )
-		{
-			this.stop = stop;
-			computeTransformsUntil( 0 );
-			computeTransformsUntil( numHyperSlices - 1 );
-		}
-
-		private void computeTransformsUntil( int targetHyperSliceIndex )
+		@Override
+		public void computeTransformsUntil( int targetHyperSliceIndex )
 		{
 			new Thread( () -> computeFeatures( targetHyperSliceIndex, numThreads ) ).start();
 			computeTransforms( 0, numThreads );

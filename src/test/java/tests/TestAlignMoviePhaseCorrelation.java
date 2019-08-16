@@ -18,7 +18,7 @@ public class TestAlignMoviePhaseCorrelation< R extends RealType< R > & NativeTyp
 	public static boolean showImages = false;
 
 	@Test
-	public void run()
+	public void isabell()
 	{
 		DebugTools.setRootLevel("OFF"); // Bio-Formats
 
@@ -64,11 +64,53 @@ public class TestAlignMoviePhaseCorrelation< R extends RealType< R > & NativeTyp
 
 	}
 
+
+	//@Test
+	public void gustavo()
+	{
+		DebugTools.setRootLevel("OFF"); // Bio-Formats
+
+		final Image< R > image = BigDataProcessor2.openImage(
+				"/Volumes/cba/exchange/bothChannels/c1",
+				FileInfos.SINGLE_CHANNEL_TIMELAPSE,
+				".*");
+
+		if ( showImages )
+			BigDataProcessor2.showImage( image, false ).setDisplayRange( 0, 200, 0 );
+
+		final FinalInterval hyperSliceInterval = FinalInterval.createMinMax( 0, 0, image.getRai().dimension( 2 ) / 2,
+				image.getRai().max( 0 ), image.getRai().max( 1 ), image.getRai().dimension( 2 ) / 2 );
+
+		final Image< R > alignedImage =
+				RegisteredViews.alignMovie(
+						image,
+						450,
+						hyperSliceInterval,
+						true,
+						new LoggingProgressListener( "PhaseCorrelation" ),
+						Registration.PHASE_CORRELATION );
+
+		if ( showImages )
+			BigDataProcessor2.showImage( alignedImage, false ).setDisplayRange( 0, 200, 0 );
+
+//		final SavingSettings savingSettings = SavingSettings.getDefaults();
+//		savingSettings.fileType = SavingSettings.FileType.TIFF_PLANES;
+//		savingSettings.numIOThreads = 4;
+//		savingSettings.numProcessingThreads = 4;
+//		final String dir = "/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-data/sift-aligned-em";
+//		emptyDirectory( dir );
+//		savingSettings.volumesFilePath = dir + "/plane";
+//		savingSettings.saveVolumes = true;
+//		BigDataProcessor2.saveImageAndWaitUntilDone( savingSettings, alignedImage );
+
+	}
+
 	public static void main( String[] args )
 	{
 		showImages = true;
 		new ImageJ().ui().showUI();
-		new TestAlignMoviePhaseCorrelation().run();
+		new TestAlignMoviePhaseCorrelation().gustavo();
+		//new TestAlignMoviePhaseCorrelation().isabell();
 	}
 
 }

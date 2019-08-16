@@ -78,7 +78,11 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
     private void installStoppingBehaviour( Behaviours behaviours )
     {
         behaviours.behaviour( ( ClickBehaviour ) ( x, y ) ->
-                        ( new Thread( () -> image.stopStopableProcesses() )).start(),
+                        ( new Thread( () ->
+                        {
+                            image.stopStopableProcesses();
+                            //bdvHandle.close();
+                        } )).start(),
                 "Stop image processing", "ctrl S"  ) ;
     }
 

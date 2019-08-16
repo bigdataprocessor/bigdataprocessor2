@@ -49,6 +49,9 @@ public class RegisteredViews
 		final Image< R > alignedImage = image.newImage( volumeTo5D( registered ) );
 		alignedImage.setName( "SIFT aligned" );
 
+		if ( lazy )
+			alignedImage.addStopableProcess( registration );
+
 		return alignedImage;
 	}
 
@@ -84,7 +87,7 @@ public class RegisteredViews
 				new TransformedStackView( hyperslices, registration );
 
 		final Image< R > alignedImage = image.newImage( movieTo5D( registered ) );
-		alignedImage.setName( "Aligned with " + registrationMethod );
+		alignedImage.setName( "aligned with " + registrationMethod );
 
 		if ( lazy )
 			alignedImage.addStopableProcess( registration );
