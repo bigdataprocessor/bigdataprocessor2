@@ -13,7 +13,7 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.junit.Test;
 
-public class TestSIFTMovieAlignment< R extends RealType< R > & NativeType< R > >
+public class TestAlignMovieSIFT< R extends RealType< R > & NativeType< R > >
 {
 	public static boolean showImages = false;
 
@@ -49,7 +49,7 @@ public class TestSIFTMovieAlignment< R extends RealType< R > & NativeType< R > >
 	{
 		showImages = true;
 		new ImageJ().ui().showUI();
-		new TestSIFTMovieAlignment().lazySIFT();
+		new TestAlignMovieSIFT().lazySIFT();
 	}
 
 }

@@ -74,46 +74,46 @@ public class TransformedStackView < R >
 
 		private final int[] tmpInt;
 
-		private RandomAccess< R > sliceAccess;
+		private RandomAccess< R > hyperSliceAccess;
 
 		private Interval interval;
 
-		private Map< Integer, RandomAccess< R > > sliceToAccess;
+		private Map< Integer, RandomAccess< R > > hyperSliceIndexToAccess;
 
 		private final HypersliceTransformProvider transformProvider;
 
-		private final List< RandomAccessibleInterval< R > > hyperslices;
+		private final List< RandomAccessibleInterval< R > > hyperSlices;
 
 		private boolean sliceReady;
 		private int previousSliceIndex;
 
 		public TransformedRandomAccess(
-				final List< RandomAccessibleInterval< R > > hyperslices,
+				final List< RandomAccessibleInterval< R > > hyperSlices,
 				final HypersliceTransformProvider transformProvider,
 				final Interval interval )
 		{
 			this.interval = interval;
-			numDimensions = hyperslices.get( 0 ).numDimensions() + 1;
+			numDimensions = hyperSlices.get( 0 ).numDimensions() + 1;
 			numSliceDimensions = numDimensions - 1;
 
 			currentHyperSliceIndex = -1;
-			sliceAccess = hyperslices.get( 0 ).randomAccess();
+			hyperSliceAccess = hyperSlices.get( 0 ).randomAccess();
 			sliceReady = false;
 
-			sliceToAccess = new ConcurrentHashMap<>(  );
+			hyperSliceIndexToAccess = new ConcurrentHashMap<>(  );
 
 			tmpLong = new long[ numSliceDimensions ];
 			tmpInt = new int[ numSliceDimensions ];
 
 			this.transformProvider = transformProvider;
-			this.hyperslices = hyperslices;
+			this.hyperSlices = hyperSlices;
 		}
 
 		@Override
 		public void localize( final int[] position )
 		{
 			for ( int d = 0; d < numSliceDimensions; ++d )
-				position[ d ] = sliceAccess.getIntPosition( d );
+				position[ d ] = hyperSliceAccess.getIntPosition( d );
 			position[ numSliceDimensions ] = currentHyperSliceIndex;
 		}
 
@@ -121,27 +121,27 @@ public class TransformedStackView < R >
 		public void localize( final long[] position )
 		{
 			for ( int d = 0; d < numSliceDimensions; ++d )
-				position[ d ] = sliceAccess.getLongPosition( d );
+				position[ d ] = hyperSliceAccess.getLongPosition( d );
 			position[ numSliceDimensions ] = currentHyperSliceIndex;
 		}
 
 		@Override
 		public int getIntPosition( final int d )
 		{
-			return ( d < numSliceDimensions ) ? sliceAccess.getIntPosition( d ) : currentHyperSliceIndex;
+			return ( d < numSliceDimensions ) ? hyperSliceAccess.getIntPosition( d ) : currentHyperSliceIndex;
 		}
 
 		@Override
 		public long getLongPosition( final int d )
 		{
-			return ( d < numSliceDimensions ) ? sliceAccess.getLongPosition( d ) : currentHyperSliceIndex;
+			return ( d < numSliceDimensions ) ? hyperSliceAccess.getLongPosition( d ) : currentHyperSliceIndex;
 		}
 
 		@Override
 		public void localize( final float[] position )
 		{
 			for ( int d = 0; d < numSliceDimensions; ++d )
-				position[ d ] = sliceAccess.getLongPosition( d );
+				position[ d ] = hyperSliceAccess.getLongPosition( d );
 			position[ numSliceDimensions ] = currentHyperSliceIndex;
 		}
 
@@ -149,7 +149,7 @@ public class TransformedStackView < R >
 		public void localize( final double[] position )
 		{
 			for ( int d = 0; d < numSliceDimensions; ++d )
-				position[ d ] = sliceAccess.getLongPosition( d );
+				position[ d ] = hyperSliceAccess.getLongPosition( d );
 			position[ numSliceDimensions ] = currentHyperSliceIndex;
 		}
 
@@ -175,60 +175,60 @@ public class TransformedStackView < R >
 		public void fwd( final int d )
 		{
 			if ( d < numSliceDimensions )
-				sliceAccess.fwd( d );
+				hyperSliceAccess.fwd( d );
 			else
-				setSliceAccess( currentHyperSliceIndex + 1 );
+				setHyperSliceAccess( currentHyperSliceIndex + 1 );
 		}
 
 		@Override
 		public void bck( final int d )
 		{
 			if ( d < numSliceDimensions )
-				sliceAccess.bck( d );
+				hyperSliceAccess.bck( d );
 			else
-				setSliceAccess( currentHyperSliceIndex - 1 );
+				setHyperSliceAccess( currentHyperSliceIndex - 1 );
 		}
 
 		@Override
 		public void move( final int distance, final int d )
 		{
 			if ( d < numSliceDimensions )
-				sliceAccess.move( distance, d );
+				hyperSliceAccess.move( distance, d );
 			else
-				setSliceAccess( currentHyperSliceIndex + distance );
+				setHyperSliceAccess( currentHyperSliceIndex + distance );
 		}
 
 		@Override
 		public void move( final long distance, final int d )
 		{
 			if ( d < numSliceDimensions )
-				sliceAccess.move( distance, d );
+				hyperSliceAccess.move( distance, d );
 			else
-				setSliceAccess( currentHyperSliceIndex + ( int ) distance );
+				setHyperSliceAccess( currentHyperSliceIndex + ( int ) distance );
 		}
 
 		@Override
 		public void move( final Localizable distance )
 		{
 			for ( int d = 0; d < numSliceDimensions; ++d )
-				sliceAccess.move( distance.getLongPosition( d ), d );
-			setSliceAccess( currentHyperSliceIndex + distance.getIntPosition( numSliceDimensions ) );
+				hyperSliceAccess.move( distance.getLongPosition( d ), d );
+			setHyperSliceAccess( currentHyperSliceIndex + distance.getIntPosition( numSliceDimensions ) );
 		}
 
 		@Override
 		public void move( final int[] distance )
 		{
 			for ( int d = 0; d < numSliceDimensions; ++d )
-				sliceAccess.move( distance[ d ], d );
-			setSliceAccess( currentHyperSliceIndex + distance[ numSliceDimensions ] );
+				hyperSliceAccess.move( distance[ d ], d );
+			setHyperSliceAccess( currentHyperSliceIndex + distance[ numSliceDimensions ] );
 		}
 
 		@Override
 		public void move( final long[] distance )
 		{
 			for ( int d = 0; d < numSliceDimensions; ++d )
-				sliceAccess.move( distance[ d ], d );
-			setSliceAccess( currentHyperSliceIndex + ( int ) distance[ numSliceDimensions ] );
+				hyperSliceAccess.move( distance[ d ], d );
+			setHyperSliceAccess( currentHyperSliceIndex + ( int ) distance[ numSliceDimensions ] );
 		}
 
 		@Override
@@ -236,23 +236,23 @@ public class TransformedStackView < R >
 		{
 			for ( int d = 0; d < numSliceDimensions; ++d )
 				tmpLong[ d ] = position.getLongPosition( d );
-			sliceAccess.setPosition( tmpLong );
-			setSliceAccess( position.getIntPosition( numSliceDimensions ) );
+			hyperSliceAccess.setPosition( tmpLong );
+			setHyperSliceAccess( position.getIntPosition( numSliceDimensions ) );
 		}
 
 		@Override
 		public void setPosition( final int[] position )
 		{
 			System.arraycopy( position, 0, tmpInt, 0, numSliceDimensions );
-			sliceAccess.setPosition( tmpInt );
-			setSliceAccess( position[ numSliceDimensions ] );
+			hyperSliceAccess.setPosition( tmpInt );
+			setHyperSliceAccess( position[ numSliceDimensions ] );
 		}
 
 		@Override
 		public void setPosition( final long[] position )
 		{
 			System.arraycopy( position, 0, tmpLong, 0, numSliceDimensions );
-			sliceAccess.setPosition( tmpLong );
+			hyperSliceAccess.setPosition( tmpLong );
 			setSlice( position[ numSliceDimensions ] );
 		}
 
@@ -260,21 +260,21 @@ public class TransformedStackView < R >
 		public void setPosition( final int position, final int d )
 		{
 			if ( d < numSliceDimensions )
-				sliceAccess.setPosition( position, d );
+				hyperSliceAccess.setPosition( position, d );
 			else
-				setSliceAccess( position );
+				setHyperSliceAccess( position );
 		}
 
 		@Override
 		public void setPosition( final long position, final int d )
 		{
 			if ( d < numSliceDimensions )
-				sliceAccess.setPosition( position, d );
+				hyperSliceAccess.setPosition( position, d );
 			else
 				setSlice( position );
 		}
 
-		private void setSliceAccess( final long requestedHyperSliceIndex )
+		private void setHyperSliceAccess( final long requestedHyperSliceIndex )
 		{
 			if ( requestedHyperSliceIndex == currentHyperSliceIndex )
 				return;
@@ -288,18 +288,18 @@ public class TransformedStackView < R >
 
 			currentHyperSliceIndex = requestedHyperSliceIndex;
 
-			if ( currentHyperSliceIndex < 0 || currentHyperSliceIndex >= hyperslices.size() ) return;
+			if ( currentHyperSliceIndex < 0 || currentHyperSliceIndex >= hyperSlices.size() ) return;
 
-			if ( sliceToAccess.containsKey( requestedHyperSliceIndex ) )
+			if ( hyperSliceIndexToAccess.containsKey( requestedHyperSliceIndex ) )
 			{
-				sliceToAccess.get( requestedHyperSliceIndex ).setPosition( sliceAccess );
-				sliceAccess = sliceToAccess.get( requestedHyperSliceIndex );
+				hyperSliceIndexToAccess.get( requestedHyperSliceIndex ).setPosition( hyperSliceAccess );
+				hyperSliceAccess = hyperSliceIndexToAccess.get( requestedHyperSliceIndex );
 				return;
 			}
 
 			if ( transformProvider.getTransform( requestedHyperSliceIndex ) == null )
 			{
-				if ( sliceAccess.get() instanceof Volatile )
+				if ( hyperSliceAccess.get() instanceof Volatile )
 				{
 					/**
 					 * Even though we cannot compute the data for this slice yet,
@@ -339,12 +339,12 @@ public class TransformedStackView < R >
 		{
 			final IntervalView transformed = getTransformedView(
 					transform,
-					hyperslices.get( requestedSliceIndex ) );
+					hyperSlices.get( requestedSliceIndex ) );
 
 			final RandomAccess access = transformed.randomAccess();
-			access.setPosition( sliceAccess );
-			sliceAccess = access;
-			sliceToAccess.put( requestedSliceIndex, access );
+			access.setPosition( hyperSliceAccess );
+			hyperSliceAccess = access;
+			hyperSliceIndexToAccess.put( requestedSliceIndex, access );
 		}
 
 		private IntervalView getTransformedView(
@@ -362,19 +362,19 @@ public class TransformedStackView < R >
 
 		private void setSlice( final long i )
 		{
-			setSliceAccess( i );
+			setHyperSliceAccess( i );
 		}
 
 		@Override
 		public R get()
 		{
-			if ( sliceToAccess.containsKey( currentHyperSliceIndex ) )
+			if ( hyperSliceIndexToAccess.containsKey( currentHyperSliceIndex ) )
 			{
-				return sliceAccess.get();
+				return hyperSliceAccess.get();
 			}
 			else
 			{
-				final R r = sliceAccess.get();
+				final R r = hyperSliceAccess.get().copy();
 				r.setZero();
 
 				if ( r instanceof Volatile )
