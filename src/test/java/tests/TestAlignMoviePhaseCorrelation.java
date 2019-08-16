@@ -37,7 +37,8 @@ public class TestAlignMoviePhaseCorrelation< R extends RealType< R > & NativeTyp
 		if ( showImages )
 			BigDataProcessor2.showImage( image, false ).setDisplayRange( 100, 200, 0 );
 
-		final FinalInterval hyperSliceInterval = FinalInterval.createMinMax( 0, 0, image.getRai().dimension( 2 ) / 2,
+		final FinalInterval hyperSliceInterval = FinalInterval.createMinMax(
+				0, 0, image.getRai().dimension( 2 ) / 2,
 				image.getRai().max( 0 ), image.getRai().max( 1 ), image.getRai().dimension( 2 ) / 2 );
 
 		final Image< R > alignedImage =
@@ -71,20 +72,23 @@ public class TestAlignMoviePhaseCorrelation< R extends RealType< R > & NativeTyp
 		DebugTools.setRootLevel("OFF"); // Bio-Formats
 
 		final Image< R > image = BigDataProcessor2.openImage(
-				"/Volumes/cba/exchange/bothChannels/c1",
-				FileInfos.SINGLE_CHANNEL_TIMELAPSE,
+				"/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-data/gustavo-drift",
+				FileInfos.LOAD_CHANNELS_FROM_FOLDERS,
 				".*");
 
 		if ( showImages )
 			BigDataProcessor2.showImage( image, false ).setDisplayRange( 0, 200, 0 );
 
-		final FinalInterval hyperSliceInterval = FinalInterval.createMinMax( 0, 0, image.getRai().dimension( 2 ) / 2,
-				image.getRai().max( 0 ), image.getRai().max( 1 ), image.getRai().dimension( 2 ) / 2 );
+		long channel = 1;
+
+		final FinalInterval hyperSliceInterval = FinalInterval.createMinMax(
+				0, 0, image.getRai().dimension( 2 ) / 2, channel,
+				image.getRai().max( 0 ), image.getRai().max( 1 ), image.getRai().dimension( 2 ) / 2, channel );
 
 		final Image< R > alignedImage =
 				RegisteredViews.alignMovie(
 						image,
-						450,
+						3,
 						hyperSliceInterval,
 						true,
 						new LoggingProgressListener( "PhaseCorrelation" ),

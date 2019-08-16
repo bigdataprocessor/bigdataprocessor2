@@ -66,15 +66,21 @@ public class BdvMenus
             });
         }else if (e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.REGISTER_VOLUME_SIFT_MENU_ITEM )) {
             BigDataProcessor2.generalThreadPool.submit(() -> {
+                Integer channel = Utils.getChannel( imageViewer );
+                if ( channel == null ) return;
                 RegisteredViews.showSIFTVolumeAlignedBdvView( imageViewer );
             });
         }else if (e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.REGISTER_MOVIE_SIFT_MENU_ITEM )) {
             BigDataProcessor2.generalThreadPool.submit(() -> {
-                RegisteredViews.createAlignedMovieView( imageViewer, Registration.SIFT_CORRESPONDENCES );
+                Integer channel = Utils.getChannel( imageViewer );
+                if ( channel == null ) return;
+                RegisteredViews.createAlignedMovieView( imageViewer, Registration.SIFT_CORRESPONDENCES, channel );
             });
         }else if (e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.REGISTER_MOVIE_PHASE_CORRELATION_MENU_ITEM )) {
             BigDataProcessor2.generalThreadPool.submit(() -> {
-                RegisteredViews.createAlignedMovieView( imageViewer, Registration.PHASE_CORRELATION );
+                Integer channel = Utils.getChannel( imageViewer );
+                if ( channel == null ) return;
+                RegisteredViews.createAlignedMovieView( imageViewer, Registration.PHASE_CORRELATION, 0 );
             });
         }else if(e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.CROP_MENU_ITEM )){
         	BigDataProcessor2.generalThreadPool.submit(() -> {

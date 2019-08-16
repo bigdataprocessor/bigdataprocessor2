@@ -16,6 +16,7 @@ import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Intervals;
 import net.imglib2.util.Util;
 import net.imglib2.view.ExtendedRandomAccessibleInterval;
+import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
 
 import java.util.List;
@@ -54,7 +55,6 @@ public class IntervalImageViews
 		return raiXY;
 	}
 
-
 	public static < R extends RealType< R > & NativeType< R > >
 	RandomAccessibleInterval< R > getVolumeView(
 			RandomAccessibleInterval< R > image,
@@ -82,6 +82,32 @@ public class IntervalImageViews
 						Views.interval( image, minInterval, maxInterval ) );
 
 		return raiXYZ;
+	}
+
+	public static < R extends RealType< R > & NativeType< R > >
+	RandomAccessibleInterval< R > getFrameView(
+			RandomAccessibleInterval< R > rai,
+			long t )
+	{
+//		long[] minInterval = new long[]{
+//				image.min( X ),
+//				image.min( Y ),
+//				image.min( Z ),
+//				image.min( C ),
+//				t };
+//
+//		long[] maxInterval = new long[]{
+//				image.max( X ),
+//				image.max( Y ),
+//				image.max( Z ),
+//				image.max( C ),
+//				t };
+
+//		RandomAccessibleInterval rai = Views.interval( image, minInterval, maxInterval );
+
+		final IntervalView< R > frame = Views.hyperSlice( rai, T, t );
+
+		return frame;
 	}
 
 	public static < R extends RealType< R > & NativeType< R > >

@@ -66,10 +66,11 @@ public class RegisteredViews
 	{
 		logRegistrationStart();
 
-		final ArrayList< RandomAccessibleInterval< R > > hyperslices = getVolumes( image, 0 );
+		final ArrayList< RandomAccessibleInterval< R > > hyperslices = getFrames( image );
 
 		final Registration< R > registration =
-				new Registration<>( hyperslices,
+				new Registration<>(
+						hyperslices,
 						referenceTimePoint,
 						hyperSliceInterval,
 						registrationMethod,
@@ -86,7 +87,7 @@ public class RegisteredViews
 		RandomAccessibleInterval< R > registered =
 				new TransformedStackView( hyperslices, registration );
 
-		final Image< R > alignedImage = image.newImage( movieTo5D( registered ) );
+		final Image< R > alignedImage = image.newImage( registered  );
 		alignedImage.setName( "aligned with " + registrationMethod );
 
 		if ( lazy )
@@ -94,7 +95,6 @@ public class RegisteredViews
 
 		return alignedImage;
 	}
-
 
 	private static < R extends RealType< R > & NativeType< R > >
 	RandomAccessibleInterval<R> movieTo5D( RandomAccessibleInterval< R > rai )
@@ -129,16 +129,16 @@ public class RegisteredViews
 	}
 
 	private static < R extends RealType< R > & NativeType< R > >
-	ArrayList< RandomAccessibleInterval< R > > getVolumes( Image< R > image, int c )
+	ArrayList< RandomAccessibleInterval< R > > getFrames( Image< R > image )
 	{
 		final ArrayList< RandomAccessibleInterval< R > > hyperslices = new ArrayList<>();
 
 		for ( int t = 0; t < image.getRai().dimension( DimensionOrder.T ); t++ )
 		{
-			final RandomAccessibleInterval< R > sliceView =
-					IntervalImageViews.getVolumeView( image.getRai(), c, t );
+			final RandomAccessibleInterval< R > frame =
+					IntervalImageViews.getFrameView( image.getRai(), t );
 
-			hyperslices.add( sliceView );
+			hyperslices.add( frame );
 		}
 
 		return hyperslices;
@@ -162,14 +162,15 @@ public class RegisteredViews
 
 	// TODO: put as method into BigDataProcessor2
 	public static void createAlignedMovieView( BdvImageViewer imageViewer,
-											   String registrationMethod )
+											   String registrationMethod,
+											   long channel )
 	{
 		final double currentPlane = getCurrentPlane( imageViewer );
 		final Image image = imageViewer.getImage();
 
 		final FinalInterval hyperSliceInterval = FinalInterval.createMinMax(
-				0, 0, (long) currentPlane,
-				image.getRai().max( 0 ), image.getRai().max( 1 ), (long) currentPlane );
+				0, 0, (long) currentPlane, channel,
+				image.getRai().max( 0 ), image.getRai().max( 1 ), (long) currentPlane, channel );
 
 		final Image alignedImage = alignMovie(
 				imageViewer.getImage(),

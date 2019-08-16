@@ -212,11 +212,13 @@ public class Registration< R extends RealType< R > & NativeType< R > >
 	private RandomAccessibleInterval< R > cropHyperSlice( RandomAccessibleInterval< R > hyperSlice )
 	{
 		RandomAccessibleInterval< R > hyperSliceCrop;
+
 		if ( hyperSliceInterval != null )
 			hyperSliceCrop = Views.dropSingletonDimensions(
 					Views.interval( hyperSlice, hyperSliceInterval ) );
 		else
 			hyperSliceCrop = hyperSlice;
+
 		return hyperSliceCrop;
 	}
 
@@ -239,6 +241,8 @@ public class Registration< R extends RealType< R > & NativeType< R > >
 		@Override
 		public void computeTransformsUntil( final int targetHyperSliceIndex )
 		{
+			if ( targetHyperSliceIndex == referenceHyperSliceIndex ) return;
+
 			new Thread( () -> computeLocalTransforms( targetHyperSliceIndex, numThreads ) ).start();
 
 			boolean finished = false;
@@ -309,6 +313,18 @@ public class Registration< R extends RealType< R > & NativeType< R > >
 
 				return affineTransform3D;
 			}
+			else if ( numHyperSliceDimensions == 4 )
+			{
+				final net.imglib2.realtransform.AffineTransform affineTransform4D = new net.imglib2.realtransform.AffineTransform( 4 );
+
+				affineTransform4D.set(
+						1.0, 0.0, 0.0, 0.0, shift[ 0 ],
+						0.0, 1.0, 0.0, 0.0, shift[ 1 ],
+						0.0, 0.0, 1.0, 0.0, 0.0,
+						0.0, 0.0, 0.0, 1.0, 0.0);
+
+				return affineTransform4D;
+			}
 			else
 			{
 				throw new UnsupportedOperationException( "SIFT Registration: Unsupported hyperslice dimension: " + numHyperSliceDimensions );
@@ -367,6 +383,7 @@ public class Registration< R extends RealType< R > & NativeType< R > >
 		@Override
 		public void computeTransformsUntil( int targetHyperSliceIndex )
 		{
+			if ( targetHyperSliceIndex == referenceHyperSliceIndex ) return;
 			new Thread( () -> computeFeatures( targetHyperSliceIndex, numThreads ) ).start();
 			computeTransforms( 0, numThreads );
 		}
@@ -516,6 +533,17 @@ public class Registration< R extends RealType< R > & NativeType< R > >
 						0.0,        0.0,        1.0, 0.0);
 
 				return affineTransform3D;
+			}
+			else if ( numHyperSliceDimensions == 4 )
+			{
+				final net.imglib2.realtransform.AffineTransform affineTransform = new net.imglib2.realtransform.AffineTransform( 4 );
+				affineTransform.set(
+						array[ 0 ], array[ 1 ], 0.0, 0.0, array[ 4 ],
+						array[ 2 ], array[ 3 ], 0.0, 0.0, array[ 5 ],
+						0.0,        0.0,        1.0, 0.0, 0.0,
+						0.0,        0.0,        0.0, 1.0, 0.0 );
+
+				return affineTransform;
 			}
 			else
 			{
