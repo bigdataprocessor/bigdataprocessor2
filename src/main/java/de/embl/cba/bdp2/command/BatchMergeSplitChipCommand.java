@@ -8,7 +8,6 @@ import de.embl.cba.bdp2.saving.SavingSettings;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
-import net.imagej.ImageJ;
 import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
 import net.imglib2.type.NativeType;
@@ -46,14 +45,13 @@ public class BatchMergeSplitChipCommand < R extends RealType< R > & NativeType< 
     @Override
     public void run()
     {
-        final BigDataProcessor2< R > bdp = new BigDataProcessor2<>();
-
         final ArrayList< File > directories = selectDirectories();
+        process( directories );
+    }
 
-        directories.clear();
-//        directories.add( new File( "/Users/tischer/Desktop/isabell/stack_10_channel_0" ) );
-//        directories.add( new File( "/Volumes/cba/exchange/Isabell_Schneider/3-Color/stack_11_channel_0" ) );
-//        directories.add( new File( "/Volumes/cba/exchange/Isabell_Schneider/Example_images/20190329_H2B-mCherry_0.1_EGFP_0.37_thick_sheet_2_cell/stack_0_channel_0") );
+    public void process( ArrayList< File > directories )
+    {
+        final BigDataProcessor2< R > bdp = new BigDataProcessor2<>();
 
         final SavingSettings savingSettings = SavingSettings.getDefaults();
         savingSettings.fileType = SavingSettings.FileType.TIFF_STACKS;
@@ -145,4 +143,10 @@ public class BatchMergeSplitChipCommand < R extends RealType< R > & NativeType< 
         Logger.log( "Done!" );
     }
 
+    public void test()
+    {
+        final ArrayList< File > directories = new ArrayList<>(  );
+        directories.add( new File( "/Volumes/cba/exchange/Isabell_Schneider/Example_images/20190329_H2B-mCherry_0.1_EGFP_0.37_thick_sheet_2_cell/stack_0_channel_0") );
+        process( directories );
+    }
 }

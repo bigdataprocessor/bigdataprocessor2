@@ -183,6 +183,12 @@ public class BoundingBoxDialog < R extends RealType< R > & NativeType< R > >
         {
             initialCenter[ d ] = ( viewerBoundingInterval.realMax( d ) + viewerBoundingInterval.realMin( d ) ) / 2.0;
             initialSize[ d ] = ( viewerBoundingInterval.realMax( d ) - viewerBoundingInterval.realMin( d ) ) / 2.0;
+
+            if ( ! calibrated )
+            {
+                initialCenter[ d ] /= image.getVoxelSpacing()[ d ];
+                initialSize[ d ] /= image.getVoxelSpacing()[ d ];
+            }
         }
 
         // TODO: improve this: take whole range in the smaller direction (up or down..)
