@@ -539,8 +539,8 @@ public class Utils {
 //        }
 //    }
 
-    public static double[] delimitedStringToDoubleArray(String s, String delimiter) {
-
+    public static double[] delimitedStringToDoubleArray(String s, String delimiter)
+	{
         String[] sA = s.split(delimiter);
         double[] nums = new double[sA.length];
         for (int i = 0; i < nums.length; i++) {

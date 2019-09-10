@@ -1,9 +1,10 @@
 package command;
 
+import de.embl.cba.bdp2.command.BatchMergeSplitChipCommand;
 import de.embl.cba.bdp2.command.BigDataProcessorCommand;
 import net.imagej.ImageJ;
 
-public class RunBigDataProcessorCommand
+public class RunBatchMergeSplitChipCommand
 {
 	public static void main ( String... args )
 	{
@@ -11,6 +12,6 @@ public class RunBigDataProcessorCommand
 		ij.ui().showUI();
 
 		// invoke the plugin
-		ij.command().run( BigDataProcessorCommand.class, true );
+		ij.command().run( BatchMergeSplitChipCommand.class, true );
 	}
 }

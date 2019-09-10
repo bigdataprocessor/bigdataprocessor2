@@ -110,8 +110,8 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
             boundingBoxDialog.showVoxelUnitsBox( );
 
         FinalInterval interval = boundingBoxDialog.getVoxelUnitsSelectionInterval();
-        return interval;
 
+        return interval;
     }
 
     public Image< R > getImage() {

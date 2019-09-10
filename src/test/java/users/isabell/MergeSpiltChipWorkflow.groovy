@@ -3,7 +3,7 @@
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.logging.Logger;
-import de.embl.cba.bdp2.process.Cropper;
+import de.embl.cba.bdp2.crop.Cropper;
 import de.embl.cba.bdp2.process.splitviewmerge.SplitViewMerger;
 import de.embl.cba.bdp2.saving.SavingSettings;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
@@ -18,7 +18,6 @@ final String voxelUnit = "micrometer";
 double voxelSpacingMicrometerX = 0.13;
 double voxelSpacingMicrometerY = 0.13;
 double voxelSpacingMicrometerZ = 1.04;
-
 
 int numberOfProcessors = Runtime.getRuntime().availableProcessors();
 Logger.log( "Number of processors: " + numberOfProcessors );

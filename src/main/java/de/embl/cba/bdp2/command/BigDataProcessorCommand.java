@@ -1,8 +1,9 @@
-package de.embl.cba.bdp2.ui;
+package de.embl.cba.bdp2.command;
 
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.logging.Logger;
+import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import loci.common.DebugTools;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -14,8 +15,7 @@ import java.io.File;
 import java.util.Arrays;
 
 @Plugin(type = Command.class, menuPath = "Plugins>BigDataTools>BigDataProcessor2", initializer = "init")
-public class BigDataProcessorCommand < R extends RealType< R > & NativeType< R >>
-        implements Command {
+public class BigDataProcessorCommand < R extends RealType< R > & NativeType< R > > implements Command {
 
     @Parameter(label = "Image data directory", style = "directory")
     File directory;
