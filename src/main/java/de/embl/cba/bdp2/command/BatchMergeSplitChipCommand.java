@@ -39,6 +39,11 @@ public class BatchMergeSplitChipCommand < R extends RealType< R > & NativeType< 
     @Parameter(label = "Intervals [ minX, minY, sizeX, sizeY, channel; ... ]")
     public String intervalsString = "896, 46, 1000, 1000, 0; 22, 643, 1000, 1000, 0";
 
+    @Parameter(label = "Compress", choices = { SavingSettings.COMPRESSION_NONE,
+            SavingSettings.COMPRESSION_ZLIB,
+            SavingSettings.COMPRESSION_LZW } )
+    public String compression = SavingSettings.COMPRESSION_NONE;
+
     @Parameter( label = "Crop")
     public boolean doCrop = true;
 
@@ -124,15 +129,15 @@ public class BatchMergeSplitChipCommand < R extends RealType< R > & NativeType< 
             // save full volume
             savingSettings.saveVolumes = true;
             savingSettings.volumesFilePath = outputDirectoryStump + "-stacks/stack";
-            savingSettings.saveProjections = false;
+            savingSettings.saveProjections = ! doCrop; // when not cropping, do not save projections
             savingSettings.numIOThreads = 3;
+            savingSettings.compression = compression;
             BigDataProcessor2.saveImageAndWaitUntilDone( savingSettings, merge );
 
             if ( doCrop )
             {
                 // crop & save cropped volume
                 final Image< R > crop = Cropper.crop( merge, croppingIntervals.get( i ) );
-                savingSettings.saveVolumes = true;
                 savingSettings.volumesFilePath = outputDirectoryStump + "-crop-stacks/stack";
                 savingSettings.saveProjections = true;
                 savingSettings.projectionsFilePath =

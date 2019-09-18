@@ -56,7 +56,7 @@ public class BigDataProcessorCommand < R extends RealType< R > & NativeType< R >
 
     public void run()
     {
-        DebugTools.setRootLevel("OFF"); // Bio-Formats
+        DebugTools.setRootLevel( "OFF" ); // Bio-Formats
 
         final Image< R > image =
                 BigDataProcessor2.openImage(

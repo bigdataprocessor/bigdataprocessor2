@@ -7,6 +7,7 @@ import de.embl.cba.bdp2.utils.Utils;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.io.FileSaver;
+import loci.common.DebugTools;
 import loci.common.services.ServiceFactory;
 import loci.formats.ImageWriter;
 import loci.formats.meta.IMetadata;
@@ -20,9 +21,11 @@ import ome.xml.model.enums.DimensionOrder;
 import ome.xml.model.enums.PixelType;
 import ome.xml.model.primitives.PositiveInteger;
 
+import java.io.File;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static de.embl.cba.bdp2.saving.SavingUtils.ShortToByteBigEndian;
 import static de.embl.cba.bdp2.utils.DimensionOrder.*;
 
 public class SaveFrameAsTIFFStacks< R extends RealType< R > & NativeType< R > > implements Runnable {
@@ -166,12 +169,33 @@ public class SaveFrameAsTIFFStacks< R extends RealType< R > & NativeType< R > > 
             int rowsPerStrip,
             String path) {
 
-        if ( compression.equals("LZW") ) // Use BioFormats
-        {
+        DebugTools.setRootLevel( "OFF" ); // Bio-Formats
 
-            String sC = String.format("%1$02d", c);
-            String sT = String.format("%1$05d", t);
+        String sC = String.format( "%1$02d", c );
+        String sT = String.format( "%1$05d", t );
+
+        if ( compression.equals( SavingSettings.COMPRESSION_NONE ) )
+        {
+            // no compression: use ImageJ's FileSaver, as it is faster than BioFormats
+            if ( stop.get() )
+            {
+                settings.saveProjections = false;
+                Logger.progress( "Stopped saving thread: ", "" + t );
+                return;
+            }
+
+            FileSaver fileSaver = new FileSaver( imp );
+            String pathCT = path + "--C" + sC + "--T" + sT + ".tif";
+
+            fileSaver.saveAsTiffStack( pathCT );
+        }
+        else
+        {
+            // Use Bio-Formats for compressing the data
+
             String pathCT = path + "--C" + sC + "--T" + sT + ".ome.tif";
+
+            if ( new File( pathCT ).exists() ) new File( pathCT ).delete();
 
             try {
 
@@ -202,51 +226,45 @@ public class SaveFrameAsTIFFStacks< R extends RealType< R > & NativeType< R > > 
                 writer.setMetadataRetrieve( meta );
                 writer.setId( pathCT );
                 writer.setWriteSequentially( true ); // ? is this necessary
-                writer.setCompression( TiffWriter.COMPRESSION_LZW );
+
+                if ( settings.compression.equals( SavingSettings.COMPRESSION_ZLIB ) )
+                    writer.setCompression( TiffWriter.COMPRESSION_ZLIB );
+                else if ( settings.compression.equals( SavingSettings.COMPRESSION_LZW ) )
+                    writer.setCompression( TiffWriter.COMPRESSION_LZW );
+
                 TiffWriter tiffWriter = (TiffWriter) writer.getWriter();
 
                 long[] rowsPerStripArray = new long[]{ rowsPerStrip };
 
-                for (int z = 0; z < imp.getNSlices(); z++) {
-                    if (stop.get()) {
+                for (int z = 0; z < imp.getNSlices(); z++)
+                {
+                    if ( stop.get() )
+                    {
                         Logger.progress("Stopped saving thread: ", "" + t);
                         settings.saveProjections = false;
                         return;
                     }
 
-//                    // save using planes
-//                    if (imp.getBytesPerPixel() == 2) {
-//                        writer.saveBytes( z, ShortToByteBigEndian((short[]) imp.getStack().getProcessor(z + 1).getPixels() ) );
-//                    } else if (imp.getBytesPerPixel() == 1) {
-//                        writer.saveBytes( z, (byte[]) (imp.getStack().getProcessor(z + 1).getPixels() ) );
-//                    }
+                    // save using planes for compression
+                    if (imp.getBytesPerPixel() == 2)
+                        writer.saveBytes( z, ShortToByteBigEndian((short[]) imp.getStack().getProcessor(z + 1).getPixels() ) );
+                    else if (imp.getBytesPerPixel() == 1)
+                        writer.saveBytes( z, (byte[]) (imp.getStack().getProcessor(z + 1).getPixels() ) );
 
-                    // save using strips
-                    IFD ifd = new IFD();
-                    ifd.put( IFD.ROWS_PER_STRIP, rowsPerStripArray );
-                    if (imp.getBytesPerPixel() == 2) {
-                        tiffWriter.saveBytes(z, SavingUtils.ShortToByteBigEndian((short[]) imp.getStack().getProcessor(z + 1).getPixels()), ifd);
-                    } else if (imp.getBytesPerPixel() == 1) {
-                        tiffWriter.saveBytes(z, (byte[]) (imp.getStack().getProcessor(z + 1).getPixels()), ifd);
-                    }
+                    // save using strips for compression
+//                    IFD ifd = new IFD();
+//                    ifd.put( IFD.ROWS_PER_STRIP, rowsPerStripArray );
+//                    if (imp.getBytesPerPixel() == 2) {
+//                        tiffWriter.saveBytes(z, SavingUtils.ShortToByteBigEndian((short[]) imp.getStack().getProcessor(z + 1).getPixels()), ifd);
+//                    } else if (imp.getBytesPerPixel() == 1) {
+//                        tiffWriter.saveBytes(z, (byte[]) (imp.getStack().getProcessor(z + 1).getPixels()), ifd);
+//                    }
                 }
                 writer.close();
 
             } catch (Exception e) {
                 Logger.error(e.toString());
             }
-        } else{  // no compression: use ImageJ's FileSaver, as it is faster than BioFormats
-            if (stop.get()) {
-                settings.saveProjections = false;
-                Logger.progress("Stopped saving thread: ", "" + t);
-                return;
-            }
-            FileSaver fileSaver = new FileSaver(imp);
-            String sC = String.format("%1$02d", c);
-            String sT = String.format("%1$05d", t);
-            String pathCT = path + "--C" + sC + "--T" + sT + ".tif";
-            //Logger.info("Saving " + pathCT);
-            fileSaver.saveAsTiffStack(pathCT);
         }
     }
 

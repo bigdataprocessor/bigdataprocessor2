@@ -62,7 +62,7 @@ public class SaveTiffPlane implements Runnable {
         final long nC = savingSettings.rai.dimension( DimensionOrder.C );
         final long nT = savingSettings.rai.dimension( DimensionOrder.T );
 
-        if ( ! savingSettings.compression.equals( SavingSettings.COMPRESSION_NONE) )
+        if ( ! savingSettings.compression.equals( SavingSettings.COMPRESSION_NONE ) )
         {
             saveCompressed( imp, nC, nT, savingSettings.compression );
         }

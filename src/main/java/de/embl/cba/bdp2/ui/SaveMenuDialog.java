@@ -189,7 +189,6 @@ public class SaveMenuDialog extends JFrame implements ActionListener
         savingSettings.voxelSpacing = imageViewer.getImage().getVoxelSpacing();
         savingSettings.voxelUnit = imageViewer.getImage().getVoxelUnit();
 
-
         return savingSettings;
     }
 

@@ -9,7 +9,6 @@ public class SavingSettings {
 
     public static final int AVAILABLE_PROCESSORS = Runtime.getRuntime().availableProcessors();
 
-
     // TODO: remove the image itself from the settings
     public RandomAccessibleInterval rai;
     public double[] voxelSpacing;
@@ -17,7 +16,6 @@ public class SavingSettings {
 
     // TODO: also remove the binning
     public String bin;
-
 
     public static final String COMPRESSION_LZW = "LZW";
     public static final String COMPRESSION_ZLIB = "ZLIB";

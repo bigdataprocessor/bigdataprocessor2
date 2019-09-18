@@ -55,7 +55,6 @@ public class TestEMProcessingAndSaving< R extends RealType< R > & NativeType< R 
 
 		savingSettings.volumesFilePath = directory +"/plane";
 
-
 		savingSettings.saveVolumes = true;
 		savingSettings.compression = SavingSettings.COMPRESSION_ZLIB;
 		return savingSettings;
