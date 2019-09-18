@@ -164,7 +164,7 @@ public class Utils {
 		final Image< R > image = bdp.openHdf5Image(
 				parentFolder,
 				FileInfos.LOAD_CHANNELS_FROM_FOLDERS,
-				subFolderPattern + File.separator + ".*.h5",
+				subFolderPattern + File.separator + FileInfos.PATTERN_LUXENDO ,
 				"Data" );
 
 		image.setVoxelUnit( voxelUnit );
@@ -555,12 +555,24 @@ public class Utils {
         String[] sA = s.split(delimiter);
         int[] nums = new int[sA.length];
         for (int i = 0; i < nums.length; i++)
-        {
             nums[i] = Integer.parseInt(sA[i].trim());
-        }
 
         return nums;
     }
+
+	public static String[] delimitedStringToStringArray( String s, String delimiter ) {
+
+		s = s.trim();
+		if( s.endsWith( delimiter ) )
+			s = s.substring( 0, s.length() - 1 );
+
+		String[] sA = s.split( delimiter );
+		String[] strings = new String[ sA.length ];
+		for (int i = 0; i < strings.length; i++)
+			strings[i] = sA[i].trim();
+
+		return strings;
+	}
 
     public static void printMap(Map mp) {
         Iterator it = mp.entrySet().iterator();

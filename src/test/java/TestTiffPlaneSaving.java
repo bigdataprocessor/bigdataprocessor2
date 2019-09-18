@@ -1,5 +1,6 @@
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.CachedCellImgReader;
+import de.embl.cba.bdp2.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.progress.ProgressListener;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.loading.files.FileInfos;
@@ -30,14 +31,7 @@ public class TestTiffPlaneSaving
         defaults.numIOThreads = 3;
         defaults.voxelSpacing =imageViewer.getImage().getVoxelSpacing();
         defaults.voxelUnit = imageViewer.getImage().getVoxelUnit();
-        new BigDataProcessor2().saveImage( image, defaults, new ProgressListener()
-        {
-            @Override
-            public void progress( long current, long total )
-            {
-
-            }
-        } );
+        new BigDataProcessor2().saveImage( image, defaults, new LoggingProgressListener( "Files saved" ) );
     }
 
 }

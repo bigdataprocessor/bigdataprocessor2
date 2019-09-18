@@ -181,7 +181,8 @@ public class FileInfosHelper
             String filterPattern)
     {
 
-        String[][] fileLists = getFilesInFolders( fileInfos, directory, namingScheme, filterPattern );
+        String[][] fileLists =
+                getFilesInFolders( fileInfos, directory, namingScheme, filterPattern );
 
         if ( fileLists == null )
         {
@@ -382,11 +383,21 @@ public class FileInfosHelper
         }
     }
 
-    private static String[][] getFilesInFolders( FileInfos infoSource, String directory, String namingScheme, String filterPattern )
+    private static String[][] getFilesInFolders(
+            FileInfos infoSource,
+            String directory,
+            String namingScheme,
+            String filterPattern )
     {
+        if ( ! new File( directory ).exists() )
+        {
+            Logger.error("Directory not found: " + directory );
+            return null;
+        }
+
         String[][] fileLists;
 
-        if ( namingScheme.equals( FileInfos.LOAD_CHANNELS_FROM_FOLDERS) )
+        if ( namingScheme.equals( FileInfos.LOAD_CHANNELS_FROM_FOLDERS ) )
         {
             //
             // Check for sub-folders
@@ -416,7 +427,7 @@ public class FileInfosHelper
             else
             {
                 Logger.error("No sub-folders found; " +
-                        "please specify a different options for loading " +
+                        "please specify different options for loading " +
                         "the channels");
                 fileLists = null;
             }
@@ -492,20 +503,19 @@ public class FileInfosHelper
     {
         int count = 0;
 
-        Pattern patternFilter = Pattern.compile(filterPattern);
+        Pattern patternFilter = Pattern.compile( filterPattern );
 
         for (int i = 0; i < rawlist.length; i++)
         {
             String name = rawlist[i];
-            if (!patternFilter.matcher(name).matches())
+            if (! patternFilter.matcher( name ).matches() )
                 rawlist[i] = null;
             else if (name.endsWith(".tif") || name.endsWith(".h5"))
                 count++;
             else
                 rawlist[i] = null;
-
-
         }
+
         if (count == 0) return null;
         String[] list = rawlist;
         if (count < rawlist.length)
@@ -581,7 +591,6 @@ public class FileInfosHelper
 //        }
 
         String[] list = new File( directory ).list();
-
 
         if (list == null || list.length == 0)
             return null;

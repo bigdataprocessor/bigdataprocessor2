@@ -10,9 +10,7 @@ public class TestBatchMergeSplitChipCommand
 		final ImageJ ij = new ImageJ();
 		ij.ui().showUI();
 
-		// invoke the plugin
 		final BatchMergeSplitChipCommand command = new BatchMergeSplitChipCommand();
 		command.test();
 	}
-
 }

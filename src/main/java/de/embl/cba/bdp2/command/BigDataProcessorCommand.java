@@ -14,6 +14,8 @@ import org.scijava.plugin.Plugin;
 import java.io.File;
 import java.util.Arrays;
 
+import static de.embl.cba.bdp2.loading.files.FileInfos.PATTERN_LUXENDO;
+
 @Plugin(type = Command.class, menuPath = "Plugins>BigDataTools>BigDataProcessor2", initializer = "init")
 public class BigDataProcessorCommand < R extends RealType< R > & NativeType< R > > implements Command {
 
@@ -23,6 +25,7 @@ public class BigDataProcessorCommand < R extends RealType< R > & NativeType< R >
     @Parameter(label = "Subset files using regular expression",
             choices = {
                     ".*",
+                    PATTERN_LUXENDO,
                     ".*.tif",
                     ".*--C.*",
                     ".*Left.*",
@@ -53,7 +56,6 @@ public class BigDataProcessorCommand < R extends RealType< R > & NativeType< R >
 
     public void run()
     {
-
         DebugTools.setRootLevel("OFF"); // Bio-Formats
 
         final Image< R > image =

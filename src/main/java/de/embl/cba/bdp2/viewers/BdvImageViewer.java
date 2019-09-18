@@ -251,7 +251,6 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
                     DimensionOrder.C,
                     channel);
 
-
             final long stackCenter =
                     (long) Math.ceil( ( raiXYZ.max( DimensionOrder.Z ) - raiXYZ.min( DimensionOrder.Z ) ) / 2.0 )
                             + raiXYZ.min( DimensionOrder.Z ) + 1;
@@ -259,7 +258,7 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
             IntervalView< R > raiXY = Views.hyperSlice(
                     raiXYZ,
                     DimensionOrder.Z,
-                    stackCenter);
+                    stackCenter );
 
             Cursor< R > cursor = Views.iterable( raiXY ).cursor();
             min = Double.MAX_VALUE;
@@ -271,7 +270,6 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
                 if (value < min) min = value;
                 if (value > max) max = value;
             }
-
         }
         else
         {

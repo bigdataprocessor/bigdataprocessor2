@@ -90,6 +90,15 @@ public class SplitViewMerger
 
 			Logger.log( "Split Image Merging Interval [X, Y, Z, C, T]: " + intervalXYZCT );
 
+			final FinalInterval union = Intervals.union( raiXYZCT, intervalXYZCT );
+
+			if ( ! Intervals.equals( union, raiXYZCT ) )
+			{
+				System.err.println( "The region to be merged: " + intervalXYZCT
+						+ "\nis outside the image bounds: " + raiXYZCT );
+				throw new UnsupportedOperationException();
+			};
+
 			final IntervalView crop =
 					Views.zeroMin(
 							Views.interval(

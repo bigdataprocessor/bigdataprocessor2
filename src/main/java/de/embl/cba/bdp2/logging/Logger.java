@@ -26,7 +26,6 @@ public class Logger
 
 	public static void progress( String msg, String progress )
 	{
-
 		progress = msg + ": " + progress;
 
 		if ( IJ.getLog() != null )

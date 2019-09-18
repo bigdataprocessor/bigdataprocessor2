@@ -9,7 +9,7 @@
 	</parent>
 	<groupId>de.embl.cba</groupId>
 	<artifactId>fiji-plugin-bigDataProcessor2</artifactId>
-	<version>0.3.4</version>
+	<version>0.3.5</version>
 	<url>https://github.com/tischi/fiji-plugin-bigDataProcessor2</url>
 	<name>Fiji Plugin BigDataProcessor2</name>
 	<description>TODO</description>

@@ -21,26 +21,26 @@ import java.util.ArrayList;
 
 import static de.embl.cba.bdp2.ui.Utils.selectDirectories;
 
-@Plugin(type = Command.class, menuPath = "Plugins>BigDataTools>Extras>BatchMergeSplitChip", initializer = "init")
+@Plugin(type = Command.class, menuPath = "Plugins>BigDataTools>Extras>Merge Luxendo Split Chip", initializer = "init")
 public class BatchMergeSplitChipCommand < R extends RealType< R > & NativeType< R > > implements Command
 {
     @Parameter(label = "Voxel Unit")
-    String voxelUnit = "micrometer";
+    public String voxelUnit = "micrometer";
 
     @Parameter(label = "Voxel Size X")
-    double voxelSpacingMicrometerX = 0.13;
+    public double voxelSpacingMicrometerX = 0.13;
 
     @Parameter(label = "Voxel Size Y")
-    double voxelSpacingMicrometerY = 0.13;
+    public double voxelSpacingMicrometerY = 0.13;
 
     @Parameter(label = "Voxel Size Z")
-    double voxelSpacingMicrometerZ = 1.04;
+    public double voxelSpacingMicrometerZ = 1.04;
 
-    @Parameter(label = "Intervals [ minX, minY, sizeX, sizeY, channel; ]")
-    String intervalsString = "896, 46, 1000, 1000, 0; 22, 643, 1000, 1000, 0";
+    @Parameter(label = "Intervals [ minX, minY, sizeX, sizeY, channel; ... ]")
+    public String intervalsString = "896, 46, 1000, 1000, 0; 22, 643, 1000, 1000, 0";
 
     @Parameter( label = "Crop")
-    boolean doCrop = true;
+    public boolean doCrop = true;
 
     @Override
     public void run()
@@ -59,7 +59,8 @@ public class BatchMergeSplitChipCommand < R extends RealType< R > & NativeType< 
 
         final SplitViewMerger merger = new SplitViewMerger();
 
-        final String[] intervals = intervalsString.split( ";" );
+        final String[] intervals =
+                Utils.delimitedStringToStringArray( intervalsString, ";" );
 
         for ( String interval : intervals )
         {

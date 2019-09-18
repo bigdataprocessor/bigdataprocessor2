@@ -163,7 +163,7 @@ public class SaveMenuDialog extends JFrame implements ActionListener
                     savingSettings,
                     progressBar() );
 
-            saver.addProgressListener( new LoggingProgressListener( "Files saved" ) );
+            saver.addProgressListener( new LoggingProgressListener( "Frames saved" ) );
         } );
     }
 

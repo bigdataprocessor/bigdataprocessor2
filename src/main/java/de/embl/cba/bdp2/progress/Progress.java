@@ -77,7 +77,6 @@ public class Progress
 
     public static void waitUntilDoneAndLogProgress( DefaultProgressListener progress, int progressUpdateMillis, String text )
     {
-
         while ( ! progress.isFinished() )
         {
             Logger.log( text + ": " + progress.getCurrent() + " / " + progress.getTotal() );
@@ -87,7 +86,7 @@ public class Progress
     }
 
     public static void waitUntilDone(
-            DefaultProgressListener progress,
+            LoggingProgressListener progress,
             int progressUpdateMillis )
     {
         while ( ! progress.isFinished() )

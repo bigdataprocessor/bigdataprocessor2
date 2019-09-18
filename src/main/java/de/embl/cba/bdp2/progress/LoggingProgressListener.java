@@ -39,7 +39,7 @@ public class LoggingProgressListener implements ProgressListener
 	{
 		return current;
 	}
-
+	
 	public long getTotal()
 	{
 		return total;

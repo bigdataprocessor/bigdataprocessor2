@@ -22,7 +22,6 @@ public class ProgressHelpers
 		String unit = "s";
 		double divisor = 1;
 
-
 		if ( secondsSpent > 3 * 60 )
 		{
 			unit = "min";
