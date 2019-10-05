@@ -51,7 +51,7 @@ public class TestCorrectChromaticShiftAndBin
 
         // imageViewer.replaceImage( image.newImage( shiftedRAI ) );
 
-        final Image bin = Binner.bin( shifted, new long[]{ 1, 1, 0, 0, 0 } );
+        final Image bin = Binner.bin( shifted, new long[]{ 3, 3, 1, 1, 1 } );
 
         // imageViewer.replaceImage( bin );
 
@@ -59,7 +59,7 @@ public class TestCorrectChromaticShiftAndBin
 
         // bdp.showImage( bin );
 
-        assertTrue( ! ( randomAccess == null ) );
+        assertTrue( randomAccess != null );
 
 //
 //        final Image crop = Cropper.crop( imageViewer.getImage(), new FinalInterval(

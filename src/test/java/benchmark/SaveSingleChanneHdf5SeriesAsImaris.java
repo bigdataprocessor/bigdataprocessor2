@@ -39,7 +39,7 @@ public class SaveSingleChanneHdf5SeriesAsImaris
 
         bdp.showImage( image );
 
-        final Image binnedImage = Binner.bin( image, new long[]{ 1, 1, 1, 0, 0 } );
+        final Image binnedImage = Binner.bin( image, new long[]{ 3, 3, 3, 1, 1 } );
         //   bdp.showImage( bin );
 
         FileInfos fileInfos =

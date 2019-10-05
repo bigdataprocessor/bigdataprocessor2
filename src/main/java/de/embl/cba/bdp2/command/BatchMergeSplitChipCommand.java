@@ -104,7 +104,6 @@ public class BatchMergeSplitChipCommand < R extends RealType< R > & NativeType< 
             }
         }
 
-
         /**
          *
          * Save both the complete merged data
@@ -129,7 +128,9 @@ public class BatchMergeSplitChipCommand < R extends RealType< R > & NativeType< 
             // save full volume
             savingSettings.saveVolumes = true;
             savingSettings.volumesFilePath = outputDirectoryStump + "-stacks/stack";
-            savingSettings.saveProjections = ! doCrop; // when not cropping, do not save projections
+            savingSettings.projectionsFilePath =
+                    outputDirectoryStump + "-projections/projection";
+            savingSettings.saveProjections = ! doCrop; // when not cropping, save full projections
             savingSettings.numIOThreads = 3;
             savingSettings.compression = compression;
             BigDataProcessor2.saveImageAndWaitUntilDone( savingSettings, merge );

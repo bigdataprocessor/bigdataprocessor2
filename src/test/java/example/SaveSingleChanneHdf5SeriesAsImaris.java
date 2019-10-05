@@ -8,7 +8,6 @@ import de.embl.cba.bdp2.ui.BigDataProcessor2;
 
 public class SaveSingleChanneHdf5SeriesAsImaris
 {
-
     public static void main(String[] args)
     {
         final BigDataProcessor2 bdp = new BigDataProcessor2();
@@ -31,7 +30,7 @@ public class SaveSingleChanneHdf5SeriesAsImaris
 
         bdp.showImage( image );
 
-        final Image binnedImage = Binner.bin( image, new long[]{ 1, 1, 1, 0, 0 } );
+        final Image binnedImage = Binner.bin( image, new long[]{ 3, 3, 3, 0, 0 } );
         //   bdp.showImage( bin );
 
         final SavingSettings savingSettings = SavingSettings.getDefaults();

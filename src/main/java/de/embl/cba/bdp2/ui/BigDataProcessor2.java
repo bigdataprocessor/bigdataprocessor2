@@ -80,9 +80,9 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
     }
 
     public static < R extends RealType< R > & NativeType< R > >
-    Image< R > bin( Image<R> image, long[] radii )
+    Image< R > bin( Image<R> image, long[] span )
     {
-        return Binner.bin( image, radii );
+        return Binner.bin( image, span );
     }
 
     private static void kickOffThreadPack( int numThreads ) {

@@ -20,6 +20,7 @@ public class FixError01
 		directories.add( new File( "/Volumes/cba/exchange/Isabell_Schneider/2019_09_18_Fehlermeldung_1/stack_3_channel_0") );
 		command.intervalsString = "896, 46, 1000, 1000, 0; 22, 630, 1000, 1000, 0";
 		command.compression = SavingSettings.COMPRESSION_ZLIB;
+		command.doCrop = false;
 		command.process( directories );
 	}
 }

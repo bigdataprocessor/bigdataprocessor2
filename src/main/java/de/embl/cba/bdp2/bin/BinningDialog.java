@@ -15,7 +15,6 @@ import java.util.ArrayList;
 
 public class BinningDialog< T extends RealType< T > & NativeType< T > >
 {
-
 	public BinningDialog( final BdvImageViewer< T > imageViewer  )
 	{
 		Logger.info( "Image size [GB]: "
@@ -40,7 +39,7 @@ public class BinningDialog< T extends RealType< T > & NativeType< T > >
 		for ( int d = 0; d < 3; d++ )
 		{
 			boundedValues.add(
-					new BoundedValue(1,11,1 ) );
+					new BoundedValue(1,21,1 ) );
 
 			sliderPanels.add(
 					new SliderPanel(
@@ -62,7 +61,7 @@ public class BinningDialog< T extends RealType< T > & NativeType< T > >
 
 				previousSpan = span;
 
-				final Image< T > binned = Binner.bin( inputImage, asRadii( span ) );
+				final Image< T > binned = Binner.bin( inputImage, span );
 
 				imageViewer.replaceImage( binned );
 
@@ -84,14 +83,13 @@ public class BinningDialog< T extends RealType< T > & NativeType< T > >
 				return false;
 			}
 
-
-			private long[] asRadii( long[] span )
-			{
-				final long[] radii = new long[ 5 ];
-				for ( int d = 0; d < 3; d++ )
-					radii[ d ] = ( span[ d ] - 1 ) / 2;
-				return radii;
-			}
+//			private long[] asRadii( long[] span )
+//			{
+//				final long[] radii = new long[ 5 ];
+//				for ( int d = 0; d < 3; d++ )
+//					radii[ d ] = ( span[ d ] - 1 ) / 2;
+//				return radii;
+//			}
 
 			private long[] getNewSpan()
 			{
@@ -119,6 +117,4 @@ public class BinningDialog< T extends RealType< T > & NativeType< T > >
 		frame.pack();
 		frame.setVisible( true );
 	}
-
-
 }
