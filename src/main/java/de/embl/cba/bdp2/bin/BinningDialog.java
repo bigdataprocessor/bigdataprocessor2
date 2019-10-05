@@ -12,6 +12,7 @@ import net.imglib2.type.numeric.RealType;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class BinningDialog< T extends RealType< T > & NativeType< T > >
 {
@@ -45,7 +46,7 @@ public class BinningDialog< T extends RealType< T > & NativeType< T > >
 					new SliderPanel(
 							"Binning " + xyz[ d ] ,
 								boundedValues.get( d ),
-								2 ));
+								1 ));
 		}
 
 		class UpdateListener implements BoundedValue.UpdateListener
@@ -94,6 +95,7 @@ public class BinningDialog< T extends RealType< T > & NativeType< T > >
 			private long[] getNewSpan()
 			{
 				final long[] span = new long[ 5 ];
+				Arrays.fill( span, 1 );
 				for ( int d = 0; d < 3; d++ )
 					span[ d ] = boundedValues.get( d ).getCurrentValue() ;
 				return span;
