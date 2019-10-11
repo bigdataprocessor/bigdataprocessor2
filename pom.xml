@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>de.embl.cba</groupId>
 		<artifactId>pom-embl-cba</artifactId>
-		<version>0.3.7</version>
+		<version>0.3.9</version>
 		<relativePath>../pom-embl-cba</relativePath>
 	</parent>
 	<groupId>de.embl.cba</groupId>

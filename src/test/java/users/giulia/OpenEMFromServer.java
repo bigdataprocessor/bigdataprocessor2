@@ -28,7 +28,7 @@ public class OpenEMFromServer
 				new long[]{ 4050, 4800, 950, 0, 0 }
 		) );
 
-		final Image< R > bin = BigDataProcessor2.bin( crop, new long[]{ 3, 3, 0, 0, 0 } );
+		final Image< R > bin = BigDataProcessor2.bin( crop, new long[]{ 3, 3, 1, 1, 1 } );
 
 		bdp.showImage( bin );
 

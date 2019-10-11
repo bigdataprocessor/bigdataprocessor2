@@ -33,7 +33,7 @@ public class TestEMProcessingAndSaving< R extends RealType< R > & NativeType< R 
 
 		image = BigDataProcessor2.convert( image, 65535, 0 );
 
-		image = BigDataProcessor2.bin( image, new long[]{ 3, 3, 0, 0, 0} );
+		image = BigDataProcessor2.bin( image, new long[]{ 3, 3, 1, 1, 1} );
 
 		final SavingSettings savingSettings = getSavingSettings();
 
