@@ -21,7 +21,7 @@ public class TestOpenSingleStripZipTiffPlanes
 		final BigDataProcessor2< R > bdp = new BigDataProcessor2<>();
 
 		final Image< R > image = bdp.openImage(
-				"/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-data/em-slices-zip-strips",
+				"/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-data/em-slices-zip-strips",
 				FileInfos.TIFF_SLICES,
 				".*.tif" );
 

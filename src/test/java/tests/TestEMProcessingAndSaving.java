@@ -25,7 +25,7 @@ public class TestEMProcessingAndSaving< R extends RealType< R > & NativeType< R 
 		DebugTools.setRootLevel("OFF"); // Bio-Formats
 
 		Image< R > image = BigDataProcessor2.openImage(
-				"/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-data/em-2d-sift-align-01",
+				"/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-data/em-2d-sift-align-01",
 				FileInfos.TIFF_SLICES,
 				".*.tif" );
 
@@ -51,7 +51,7 @@ public class TestEMProcessingAndSaving< R extends RealType< R > & NativeType< R 
 		savingSettings.numIOThreads = 4;
 		savingSettings.numProcessingThreads = 4;
 
-		String directory = "/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-data/sift-aligned-em";
+		String directory = "/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-data/sift-aligned-em";
 
 		de.embl.cba.bdp2.utils.FileUtils.emptyDirectory( directory );
 

@@ -22,7 +22,7 @@ public class TestRegionMerging
 		DebugTools.setRootLevel("OFF"); // Bio-Formats
 
 		final Image< R > image = BigDataProcessor2.openImage(
-				"/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-data/region-merging/one-channel",
+				"/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-data/region-merging/one-channel",
 				FileInfos.SINGLE_CHANNEL_TIMELAPSE,
 				".*" );
 
@@ -52,7 +52,7 @@ public class TestRegionMerging
 		final BigDataProcessor2< R > bdp = new BigDataProcessor2<>();
 
 		final Image< R > image = bdp.openImage(
-				"/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-data/region-merging/two-channel",
+				"/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-data/region-merging/two-channel",
 				FileInfos.PATTERN_2,
 				".*" );
 

@@ -22,7 +22,7 @@ public class TestAlignVolumeSIFT< R extends RealType< R > & NativeType< R > >
 		DebugTools.setRootLevel("OFF"); // Bio-Formats
 
 		final Image< R > image = BigDataProcessor2.openImage(
-				"/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-data/em-2d-sift-align-01",
+				"/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-data/em-2d-sift-align-01",
 				FileInfos.TIFF_SLICES,
 				".*.tif" );
 
@@ -43,7 +43,7 @@ public class TestAlignVolumeSIFT< R extends RealType< R > & NativeType< R > >
 //		savingSettings.fileType = SavingSettings.FileType.TIFF_PLANES;
 //		savingSettings.numIOThreads = 4;
 //		savingSettings.numProcessingThreads = 4;
-//		final String dir = "/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-data/sift-aligned-em";
+//		final String dir = "/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-data/sift-aligned-em";
 //		emptyDirectory( dir );
 //		savingSettings.volumesFilePath = dir + "/plane";
 //		savingSettings.saveVolumes = true;

@@ -17,20 +17,19 @@ public class TestAlignMoviePhaseCorrelation< R extends RealType< R > & NativeTyp
 {
 	public static boolean showImages = false;
 
-	@Test
 	public void isabell()
 	{
 		DebugTools.setRootLevel("OFF"); // Bio-Formats
 
 		// short movie
 //		final Image< R > image = BigDataProcessor2.openImage(
-//				"/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-data/sift-align-movie",
+//				"/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-data/sift-align-movie",
 //				FileInfos.SINGLE_CHANNEL_TIMELAPSE,
 //				".*");
 
 		// long movie
 		final Image< R > image = BigDataProcessor2.openImage(
-				"/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-data/light-sheet-drift-01",
+				"/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-data/light-sheet-drift-01",
 				FileInfos.SINGLE_CHANNEL_TIMELAPSE,
 				".*");
 
@@ -57,7 +56,7 @@ public class TestAlignMoviePhaseCorrelation< R extends RealType< R > & NativeTyp
 //		savingSettings.fileType = SavingSettings.FileType.TIFF_PLANES;
 //		savingSettings.numIOThreads = 4;
 //		savingSettings.numProcessingThreads = 4;
-//		final String dir = "/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-data/sift-aligned-em";
+//		final String dir = "/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-data/sift-aligned-em";
 //		emptyDirectory( dir );
 //		savingSettings.volumesFilePath = dir + "/plane";
 //		savingSettings.saveVolumes = true;
@@ -66,13 +65,12 @@ public class TestAlignMoviePhaseCorrelation< R extends RealType< R > & NativeTyp
 	}
 
 
-	//@Test
 	public void gustavo()
 	{
 		DebugTools.setRootLevel("OFF"); // Bio-Formats
 
 		final Image< R > image = BigDataProcessor2.openImage(
-				"/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-data/gustavo-drift",
+				"/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-data/gustavo-drift",
 				FileInfos.LOAD_CHANNELS_FROM_FOLDERS,
 				".*");
 
@@ -101,7 +99,7 @@ public class TestAlignMoviePhaseCorrelation< R extends RealType< R > & NativeTyp
 //		savingSettings.fileType = SavingSettings.FileType.TIFF_PLANES;
 //		savingSettings.numIOThreads = 4;
 //		savingSettings.numProcessingThreads = 4;
-//		final String dir = "/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-data/sift-aligned-em";
+//		final String dir = "/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-data/sift-aligned-em";
 //		emptyDirectory( dir );
 //		savingSettings.volumesFilePath = dir + "/plane";
 //		savingSettings.saveVolumes = true;

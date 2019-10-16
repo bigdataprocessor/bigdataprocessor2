@@ -663,7 +663,10 @@ public class OpenerExtension extends Opener {
                     throw new IllegalArgumentException( "could not open file" );
                 }
 
-                if ( ( fi.compression != COMPRESSION_NONE ) && ( fi.compression != LZW ) && ( fi.compression != ZIP )
+                if (       ( fi.compression != COMPRESSION_UNKNOWN )
+                        && ( fi.compression != COMPRESSION_NONE )
+                        && ( fi.compression != LZW )
+                        && ( fi.compression != ZIP )
                         && ( fi.compression != PACK_BITS ) )
                 {
                     Logger.error( "Tiff compression not implemented: fi.compression = " + fi.compression );

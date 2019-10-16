@@ -23,7 +23,7 @@ public class TestAlignMovieSIFT< R extends RealType< R > & NativeType< R > >
 		DebugTools.setRootLevel("OFF"); // Bio-Formats
 
 		final Image< R > image = BigDataProcessor2.openImage(
-				"/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-data/gustavo-drift",
+				"/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-data/gustavo-drift",
 				FileInfos.LOAD_CHANNELS_FROM_FOLDERS,
 				".*");
 

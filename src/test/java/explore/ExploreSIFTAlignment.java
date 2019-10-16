@@ -143,7 +143,7 @@ public class ExploreSIFTAlignment < R extends RealType< R > & NativeType< R > >
 		final BigDataProcessor2< R > bdp = new BigDataProcessor2<>();
 
 		final Image< R > image = bdp.openImage(
-				"/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-data/em-2d-sift-align-01",
+				"/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-data/em-2d-sift-align-01",
 				FileInfos.TIFF_SLICES,
 				".*.tif" );
 

@@ -11,7 +11,7 @@ import java.io.File;
 
 import static junit.framework.TestCase.assertTrue;
 
-public class TestSaveSingleChannelTiffSeriesAsImarisVolumes
+public class TestSaveSingleChannel8BitTiffSeriesAsImarisVolumes
 {
     @Test
     public void test( )
@@ -21,7 +21,7 @@ public class TestSaveSingleChannelTiffSeriesAsImarisVolumes
         final BigDataProcessor2 bdp = new BigDataProcessor2();
 
         final String directory =
-                "/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-data/nc1-nt3-calibrated-tiff";
+                "/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-data/nc1-nt3-calibrated-8bit-tiff";
 
         final String loadingScheme = FileInfos.SINGLE_CHANNEL_TIMELAPSE;
         final String filterPattern = ".*.tif";
@@ -39,10 +39,10 @@ public class TestSaveSingleChannelTiffSeriesAsImarisVolumes
         savingSettings.numProcessingThreads = 4;
         savingSettings.saveProjections = true;
         savingSettings.volumesFilePath =
-                "/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-output/nc1-nt3-calibrated-imaris-volumes/volume";
+                "/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-output/nc1-nt3-calibrated-8bit-tiff-imaris-volumes/volume";
         savingSettings.saveVolumes = true;
         savingSettings.projectionsFilePath =
-                "/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-output/nc1-nt3-calibrated-imaris-projections/projection";
+                "/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-output/nc1-nt3-calibrated-8bit-tiff-imaris-projections/projection";
 
         final File testVolumeFile = new File( savingSettings.volumesFilePath + "--C00--T00000.h5" );
         if ( testVolumeFile.exists() ) testVolumeFile.delete();
@@ -58,7 +58,7 @@ public class TestSaveSingleChannelTiffSeriesAsImarisVolumes
 
     public static void main( String[] args )
     {
-        new TestSaveSingleChannelTiffSeriesAsImarisVolumes().test();
+        new TestSaveSingleChannel8BitTiffSeriesAsImarisVolumes().test();
     }
 
 }

@@ -22,7 +22,7 @@ public class TestSaveSingleChannelTiffSeriesAsLZWTiffStacks
         final BigDataProcessor2 bdp = new BigDataProcessor2();
 
         final String directory =
-                "/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-data/nc1-nt3-calibrated-tiff";
+                "/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-data/nc1-nt3-calibrated-8bit-tiff";
 
         final String loadingScheme = FileInfos.SINGLE_CHANNEL_TIMELAPSE;
         final String filterPattern = ".*.tif";
@@ -43,7 +43,7 @@ public class TestSaveSingleChannelTiffSeriesAsLZWTiffStacks
         savingSettings.compression = SavingSettings.COMPRESSION_LZW;
         savingSettings.rowsPerStrip = 1000; // just whole plane
 
-        final String outputDirectory = "/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-output/nc1-nt3-calibrated-tiff-lzw";
+        final String outputDirectory = "/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-output/nc1-nt3-calibrated-8bit-tiff-lzw";
 
         emptyDirectory( outputDirectory );
 

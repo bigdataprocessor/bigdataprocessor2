@@ -22,7 +22,7 @@ public class TestSaveSingleChannelTiffSeriesAsTiffStacks
         final BigDataProcessor2 bdp = new BigDataProcessor2();
 
         final String directory =
-                "/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-data/nc1-nt3-calibrated-tiff";
+                "/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-data/nc1-nt3-calibrated-8bit-tiff";
 
         final String loadingScheme = FileInfos.SINGLE_CHANNEL_TIMELAPSE;
         final String filterPattern = ".*.tif";
@@ -40,14 +40,14 @@ public class TestSaveSingleChannelTiffSeriesAsTiffStacks
         savingSettings.numProcessingThreads = 4;
         savingSettings.saveProjections = true;
 
-        String outputDirectory = "/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-output/nc1-nt3-calibrated-tiff-volumes";
+        String outputDirectory = "/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-output/nc1-nt3-calibrated-8bit-tiff-volumes";
 
         emptyDirectory( outputDirectory );
 
         savingSettings.volumesFilePath = outputDirectory + "/volume";
         savingSettings.saveVolumes = true;
 
-        outputDirectory = "/Users/tischer/Documents/fiji-plugin-bigDataTools2/src/test/resources/test-output/nc1-nt3-calibrated-tiff-projections";
+        outputDirectory = "/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-output/nc1-nt3-calibrated-8bit-tiff-projections";
 
         emptyDirectory( outputDirectory );
 
