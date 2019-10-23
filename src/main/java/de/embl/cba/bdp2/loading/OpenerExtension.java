@@ -612,8 +612,10 @@ public class OpenerExtension extends Opener {
         private String directory;
         int z, zs, ze, dz, ys, ye, ny, xs, xe, nx, imByteWidth;
 
-
-        readCroppedPlaneFromTiffIntoImageStack( String directory, SerializableFileInfo[] info, ImageStack stack, byte[][] buffer,
+        readCroppedPlaneFromTiffIntoImageStack( String directory,
+                                                SerializableFileInfo[] info,
+                                                ImageStack stack,
+                                                byte[][] buffer,
                                                 int z, int zs, int ze, int dz,
                                                 int ys, int ye, int ny,
                                                 int xs, int xe, int nx,
@@ -640,7 +642,6 @@ public class OpenerExtension extends Opener {
 
         public void run()
         {
-
             RandomAccessFile inputStream = null;
 
             this.fi = info[ z ];
@@ -693,7 +694,6 @@ public class OpenerExtension extends Opener {
 
             if ( hasStrips )
             {
-
                 // check what we have read
                 int rps = fi.rowsPerStrip;
                 int ss = ys / rps; // the int is doing a floor()
@@ -703,7 +703,8 @@ public class OpenerExtension extends Opener {
                         ( fi.compression == 0 ) )
                 {
                     // do nothing
-                } else if ( fi.compression == LZW )
+                }
+                else if ( fi.compression == LZW )
                 {
                     // init to hold all data present in the uncompressed strips
                     byte[] unCompressedBuffer = new byte[ ( se - ss + 1 ) * rps * imByteWidth ];
@@ -749,7 +750,8 @@ public class OpenerExtension extends Opener {
 
                     buffer[ ( z - zs ) / dz ] = unCompressedBuffer;
 
-                } else if ( fi.compression == PACK_BITS )
+                }
+                else if ( fi.compression == PACK_BITS )
                 {
                     // init to hold all data present in the uncompressed strips
                     byte[] unCompressedBuffer = new byte[ ( se - ss + 1 ) * rps * imByteWidth ];
@@ -792,7 +794,8 @@ public class OpenerExtension extends Opener {
                     }
 
                     buffer[ ( z - zs ) / dz ] = unCompressedBuffer;
-                } else if ( fi.compression == ZIP )
+                }
+                else if ( fi.compression == ZIP )
                 {
                     // init to hold all data present in the uncompressed strips
                     byte[] unCompressedBuffer = new byte[ ( se - ss + 1 ) * rps * imByteWidth ];
@@ -874,12 +877,11 @@ public class OpenerExtension extends Opener {
 
                 ys = ys % rps; // we might have to skip a few rows in the beginning because the strips can hold several rows
 
-            } else
-            { // no strips
-
+            }
+            else // no strips
+            {
                 if ( fi.compression == ZIP )
                 {
-
                     /** TIFF Adobe ZIP support contributed by Jason Newton. */
                     ByteArrayOutputStream imageBuffer = new ByteArrayOutputStream();
                     byte[] tmpBuffer = new byte[ 1024 ];
@@ -902,11 +904,15 @@ public class OpenerExtension extends Opener {
                     buffer[ ( z - zs ) / dz ] = imageBuffer.toByteArray();
 
                     //setShortPixelsCropXY((short[]) stack.getPixels((z - zs)/dz + 1), ys, ny, xs, nx, imByteWidth, buffer[(z - zs)/dz]);
-                } else
+                }
+                else if ( fi.compression == LZW )
                 {
-
-                    ys = 0; // the buffer contains only the correct y-range
-                    //setShortPixelsCropXY((short[]) stack.getPixels((z - zs)/dz + 1), ys, ny, xs, nx, imByteWidth, buffer[(z - zs)/dz]);
+                    buffer[ ( z - zs ) / dz ] = lzwUncompress( buffer[ ( z - zs ) / dz ], imByteWidth * ny  );
+                    ys = 0; // buffer contains full y-range
+                }
+                else
+                {
+                    ys = 0; // buffer contains full y-range
                 }
 
                 if ( Logger.isShowDebug() )
@@ -1111,14 +1117,9 @@ public class OpenerExtension extends Opener {
             //while (out.size()<byteCount) {
             while ( iOut < byteCount )
             {
-
                 //startTime2 = System.nanoTime();
-
                 code = bb.getBits( bitsToRead );
-
                 //totalTime2 += (System.nanoTime() - startTime2);
-
-
                 if ( code == EOI_CODE || code == -1 )
                     break;
                 if ( code == CLEAR_CODE )
@@ -1322,14 +1323,16 @@ public class OpenerExtension extends Opener {
 
                 for ( int s = ss; s <= se; s++ )
                     readLength += fi.stripLengths[ s ];
-            } else
-            {  // none or one strip
-                if ( fi.compression == ZIP )
+            }
+            else // none or one strip
+            {
+                if ( fi.compression == ZIP || fi.compression == LZW || fi.compression == PACK_BITS )
                 {
                     // read all data
                     readStart = fi.offset;
                     readLength = ( int ) fi.stripLengths[ 0 ];
-                } else
+                }
+                else
                 {
                     // read subset
                     // convert rows to bytes

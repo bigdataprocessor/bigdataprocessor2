@@ -13,7 +13,7 @@ public class TestPACKBITSCompressedTiffLoading
 	public static  < R extends RealType< R > & NativeType< R > > void main( String[] args )
 	{
 		final Image< R > image = BigDataProcessor2.openImage(
-				"/Users/tischer/Desktop/gustavo/",
+				"/Users/tischer/Desktop/gustavo/issue1",
 				FileInfos.SINGLE_CHANNEL_TIMELAPSE,
 				".*.tif"
 		);

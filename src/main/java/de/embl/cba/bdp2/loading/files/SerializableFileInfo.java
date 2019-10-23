@@ -160,8 +160,6 @@ public class SerializableFileInfo implements Cloneable, Serializable {
         this.gapBetweenImages = info.gapBetweenImages;
         this.info = info.info;
         this.description = info.description;
-
-
     }
 
 

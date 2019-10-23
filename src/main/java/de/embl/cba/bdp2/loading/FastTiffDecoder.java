@@ -917,7 +917,7 @@ public class FastTiffDecoder {
                         fi.fileType = FileInfo.RGB_PLANAR;
                     else if (value!=2 && !(fi.samplesPerPixel==1||fi.samplesPerPixel==3||fi.samplesPerPixel==4)) {
                         String msg = "Unsupported SamplesPerPixel: " + fi.samplesPerPixel;
-                        error(msg);
+                        // error(msg); does not seem to matter?
                     }
                     break;
                 case COMPRESSION:
@@ -1161,7 +1161,8 @@ public class FastTiffDecoder {
         return fi;
     }
 
-    public SerializableFileInfo[] getTiffInfo() throws IOException {
+    public SerializableFileInfo[] getTiffInfo() throws IOException
+    {
         if( Logger.isShowDebug() ) {
               Logger.info("# getTiffInfo");
         }
@@ -1173,9 +1174,9 @@ public class FastTiffDecoder {
         long ifdOffset;
         ArrayList listIFDs = new ArrayList();
         SerializableFileInfo fi = null;
-        if (in==null) {
-            in = new RandomAccessStream(new RandomAccessFile(new File(directory, name), "r"));
-        }
+        if (in == null)
+            in = new RandomAccessStream(new RandomAccessFile( new File(directory, name), "r"));
+
         ifdOffset = OpenImageFileHeader();
         if (ifdOffset<0L) {
             in.close();

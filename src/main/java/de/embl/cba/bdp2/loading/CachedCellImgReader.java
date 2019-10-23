@@ -13,6 +13,7 @@ import net.imglib2.type.numeric.RealType;
 
 import java.io.File;
 
+import static de.embl.cba.bdp2.loading.OpenerExtension.readCroppedPlaneFromTiffIntoImageStack.COMPRESSION_NONE;
 import static net.imglib2.cache.img.ReadOnlyCachedCellImgOptions.options;
 
 public class CachedCellImgReader
@@ -23,7 +24,7 @@ public class CachedCellImgReader
     public static CachedCellImg getCachedCellImg( FileInfos fileInfos )
     {
         // TODO: optimise somehow....
-        final int cellDimY = ( int ) Math.ceil( fileInfos.nY / 10 );
+        int cellDimY = ( int ) Math.ceil( fileInfos.nY / 10 );
 //        final int cellDimY = fileInfos.nY;
 
         if ( fileInfos.fileType.equals( Utils.FileType.HDF5.toString() ) )
@@ -31,21 +32,17 @@ public class CachedCellImgReader
             return getCachedCellImg( fileInfos,
                     fileInfos.nX, cellDimY, 1 );
         }
-        else if ( fileInfos.fileType.equals( Utils.FileType.TIFF_STACKS.toString() ) )
+        else // Tiff
         {
-            return getCachedCellImg( fileInfos,
-                    fileInfos.nX, cellDimY, 1 );
-        }
-        else if ( fileInfos.fileType.equals( Utils.FileType.SINGLE_PLANE_TIFF.toString() ) )
-        {
-            return getCachedCellImg( fileInfos,
-                    fileInfos.nX, cellDimY, 1 );
-        }
-        else
-        {
-            return null;
-        }
+            if ( fileInfos.numTiffStrips == 1 && fileInfos.compression != COMPRESSION_NONE )
+            {
+                // File is compressed plane-wise => we need to load the whole plane
+                cellDimY = fileInfos.nY;
+            }
 
+            return getCachedCellImg( fileInfos,
+                    fileInfos.nX, cellDimY, 1 );
+        }
     }
 
 

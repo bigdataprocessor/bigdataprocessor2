@@ -6,6 +6,7 @@ import de.embl.cba.bdp2.utils.Utils;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -136,14 +137,14 @@ public class FileInfosHelper
     {
         SerializableFileInfo[] info;
 
+        FastTiffDecoder ftd = new FastTiffDecoder(directory, fileName);
         try
         {
-            FastTiffDecoder ftd = new FastTiffDecoder(directory, fileName);
             info = ftd.getTiffInfo();
-        }
-        catch (Exception e)
+        } catch ( IOException e )
         {
-            info = null; // TODO : Handle exceptions properly --ashis
+            e.printStackTrace();
+            return;
         }
 
         if ( info[0].nImages > 1 )
