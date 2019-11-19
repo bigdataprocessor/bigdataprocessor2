@@ -103,7 +103,6 @@ public class SaveFrameAsTIFFStacks< R extends RealType< R > & NativeType< R > > 
                         settings.compression, settings.rowsPerStrip, settings.volumesFilePath );
             }
 
-
             if ( settings.saveProjections )
                 saveProjections( raiXYZ, c );
 

@@ -22,7 +22,7 @@ import java.util.ArrayList;
 
 import static de.embl.cba.bdp2.ui.Utils.selectDirectories;
 
-@Plugin(type = Command.class, menuPath = "Plugins>BigDataTools>Luxendo>Batch Convert (and Crop)", initializer = "init")
+@Plugin(type = Command.class, menuPath = "Plugins>BigDataTools>Luxendo>Batch Convert and Crop", initializer = "init")
 public class LuxendoBatchConvertAndCropCommand< R extends RealType< R > & NativeType< R > > implements Command
 {
     @Parameter(label = "Voxel Unit")
@@ -42,7 +42,7 @@ public class LuxendoBatchConvertAndCropCommand< R extends RealType< R > & Native
             SavingSettings.COMPRESSION_LZW } )
     public String compression = SavingSettings.COMPRESSION_NONE;
 
-    @Parameter( label = "Crop")
+//    @Parameter( label = "Crop")
     public boolean doCrop = true;
 
     @Parameter( label = "Save Projections")
@@ -71,10 +71,11 @@ public class LuxendoBatchConvertAndCropCommand< R extends RealType< R > & Native
             for ( File directory : directories )
             {
                 // Open
-                final Image< R > image = BigDataProcessor2.openImage(
+                final Image< R > image = BigDataProcessor2.openHdf5Image(
                         directory.getAbsolutePath(),
                         FileInfos.PATTERN_6,
-                        FileInfos.PATTERN_LUXENDO );
+                        FileInfos.PATTERN_LUXENDO,
+                        "Data");
 
                 image.setVoxelUnit( voxelUnit );
                 image.setVoxelSpacing( new double[]{ voxelSpacingX, voxelSpacingY, voxelSpacingZ } );
@@ -100,25 +101,27 @@ public class LuxendoBatchConvertAndCropCommand< R extends RealType< R > & Native
         {
             // open
             final String directory = directories.get( i ).toString();
+
             // Open
-            final Image< R > image = BigDataProcessor2.openImage(
+            final Image< R > image = BigDataProcessor2.openHdf5Image(
                     directory,
                     FileInfos.PATTERN_6,
-                    FileInfos.PATTERN_LUXENDO );
+                    FileInfos.PATTERN_LUXENDO,
+                    "Data");
 
             final String outputDirectoryStump = directory.replace( "_channel_0", "" );
 
             // save full volume
-            savingSettings.saveVolumes = true;
-            savingSettings.volumesFilePath = outputDirectoryStump + "-stacks/stack";
-            savingSettings.projectionsFilePath =
-                    outputDirectoryStump + "-projections/projection";
-            savingSettings.saveProjections = (!doCrop) & doProjections; // when not cropping, save full projections
-            savingSettings.numIOThreads = 3;
-            savingSettings.compression = compression;
-            BigDataProcessor2.saveImageAndWaitUntilDone( savingSettings, image );
+//            savingSettings.saveVolumes = true;
+//            savingSettings.volumesFilePath = outputDirectoryStump + "-stacks/stack";
+//            savingSettings.projectionsFilePath =
+//                    outputDirectoryStump + "-projections/projection";
+//            savingSettings.saveProjections = (!doCrop) & doProjections; // when not cropping, save full projections
+//            savingSettings.numIOThreads = 3;
+//            savingSettings.compression = compression;
+//            BigDataProcessor2.saveImageAndWaitUntilDone( savingSettings, image );
 
-            if ( doCrop )
+            if ( doCrop ) // always true for this Command
             {
                 // crop & save cropped volume
                 final Image< R > crop = Cropper.crop( image, croppingIntervals.get( i ) );
