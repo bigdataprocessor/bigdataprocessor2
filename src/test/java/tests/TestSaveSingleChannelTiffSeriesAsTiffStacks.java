@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import java.io.File;
 
-import static de.embl.cba.bdp2.utils.FileUtils.emptyDirectory;
+import static de.embl.cba.bdp2.utils.FileUtils.createOrEmptyDirectory;
 import static junit.framework.TestCase.assertTrue;
 
 public class TestSaveSingleChannelTiffSeriesAsTiffStacks
@@ -42,14 +42,14 @@ public class TestSaveSingleChannelTiffSeriesAsTiffStacks
 
         String outputDirectory = "/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-output/nc1-nt3-calibrated-8bit-tiff-volumes";
 
-        emptyDirectory( outputDirectory );
+        createOrEmptyDirectory( outputDirectory );
 
         savingSettings.volumesFilePath = outputDirectory + "/volume";
         savingSettings.saveVolumes = true;
 
         outputDirectory = "/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-output/nc1-nt3-calibrated-8bit-tiff-projections";
 
-        emptyDirectory( outputDirectory );
+        createOrEmptyDirectory( outputDirectory );
 
         savingSettings.projectionsFilePath = outputDirectory  + "/projection";
 

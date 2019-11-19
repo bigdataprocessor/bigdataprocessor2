@@ -236,7 +236,7 @@ public class IntervalImageViews
 	 * @param <R>
 	 * @return
 	 */
-	private static < R extends RealType< R > & NativeType< R > >
+	public static < R extends RealType< R > & NativeType< R > >
 	RandomAccessibleInterval< R > copyVolumeRAI( RandomAccessibleInterval< R > volume,
 												 int numThreads )
 	{
@@ -299,7 +299,7 @@ public class IntervalImageViews
 	}
 
 
-	private static < T extends Type< T > > void copy(
+	public static < T extends Type< T > > void copy(
 			final RandomAccessible< T > source,
 			final IterableInterval< T > target )
 	{
@@ -319,8 +319,6 @@ public class IntervalImageViews
 			// set the value of this pixel of the output image, every Type supports T.set( T type )
 			targetCursor.get().set( sourceRandomAccess.get() );
 		}
-
-
 	}
 
 }

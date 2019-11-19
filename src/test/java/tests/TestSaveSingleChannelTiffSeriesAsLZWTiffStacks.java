@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import java.io.File;
 
-import static de.embl.cba.bdp2.utils.FileUtils.emptyDirectory;
+import static de.embl.cba.bdp2.utils.FileUtils.createOrEmptyDirectory;
 import static junit.framework.TestCase.assertTrue;
 
 public class TestSaveSingleChannelTiffSeriesAsLZWTiffStacks
@@ -45,7 +45,7 @@ public class TestSaveSingleChannelTiffSeriesAsLZWTiffStacks
 
         final String outputDirectory = "/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-output/nc1-nt3-calibrated-8bit-tiff-lzw";
 
-        emptyDirectory( outputDirectory );
+        createOrEmptyDirectory( outputDirectory );
 
         savingSettings.volumesFilePath =
                 outputDirectory + "/volume";

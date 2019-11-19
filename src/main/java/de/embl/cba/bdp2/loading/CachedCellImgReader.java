@@ -24,13 +24,11 @@ public class CachedCellImgReader
     public static CachedCellImg getCachedCellImg( FileInfos fileInfos )
     {
         // TODO: optimise somehow....
-        int cellDimY = ( int ) Math.ceil( fileInfos.nY / 10 );
-//        final int cellDimY = fileInfos.nY;
+        int cellDimY = ( int ) Math.ceil( fileInfos.nY / 10 ); // final int cellDimY = fileInfos.nY;
 
         if ( fileInfos.fileType.equals( Utils.FileType.HDF5.toString() ) )
         {
-            return getCachedCellImg( fileInfos,
-                    fileInfos.nX, cellDimY, 1 );
+            return getCachedCellImg( fileInfos, fileInfos.nX, cellDimY, 1 );
         }
         else // Tiff
         {

@@ -8,12 +8,12 @@ import ij.ImagePlus;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
-public class TestPACKBITSCompressedTiffLoading
+public class TestTiffLoading
 {
 	public static  < R extends RealType< R > & NativeType< R > > void main( String[] args )
 	{
 		final Image< R > image = BigDataProcessor2.openImage(
-				"/Users/tischer/Desktop/gustavo/issue1",
+				"/Users/tischer/Documents/gustavo/bdp2-errors/error001",
 				FileInfos.SINGLE_CHANNEL_TIMELAPSE,
 				".*.tif"
 		);

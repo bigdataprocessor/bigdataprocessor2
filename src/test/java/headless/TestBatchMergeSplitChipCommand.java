@@ -1,6 +1,6 @@
 package headless;
 
-import de.embl.cba.bdp2.command.BatchMergeSplitChipCommand;
+import de.embl.cba.bdp2.command.LuxendoBatchMergeSplitChipCommand;
 import net.imagej.ImageJ;
 
 public class TestBatchMergeSplitChipCommand
@@ -10,7 +10,7 @@ public class TestBatchMergeSplitChipCommand
 		final ImageJ ij = new ImageJ();
 		ij.ui().showUI();
 
-		final BatchMergeSplitChipCommand command = new BatchMergeSplitChipCommand();
+		final LuxendoBatchMergeSplitChipCommand command = new LuxendoBatchMergeSplitChipCommand();
 		command.test();
 	}
 }

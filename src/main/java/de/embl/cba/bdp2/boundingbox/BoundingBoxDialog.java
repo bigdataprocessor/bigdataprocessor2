@@ -19,7 +19,6 @@ import org.mozilla.javascript.tools.debugger.Dim;
 
 public class BoundingBoxDialog < R extends RealType< R > & NativeType< R > >
 {
-
     private final Image< R > image;
     private Bdv bdv;
     public static final int X = 0;
@@ -33,7 +32,6 @@ public class BoundingBoxDialog < R extends RealType< R > & NativeType< R > >
     private int[] min;
     private int[] max;
     private boolean selectionIsCalibrated;
-
 
     public BoundingBoxDialog( BdvHandle bdvHandle, Image< R > image )
     {
@@ -101,7 +99,6 @@ public class BoundingBoxDialog < R extends RealType< R > & NativeType< R > >
             collectSelection( result.getInterval(), result.getMinTimepoint(), result.getMaxTimepoint() );
             selectionIsCalibrated = false;
         }
-
     }
 
     private void collectSelection( RealInterval interval, int minTimepoint, int maxTimepoint )
@@ -118,8 +115,6 @@ public class BoundingBoxDialog < R extends RealType< R > & NativeType< R > >
         selectedMin[T] = minTimepoint;
         selectedMax[T] = maxTimepoint;
     }
-
-
 
     public TransformedRealBoxSelectionDialog.Result showRealBox( String voxelUnit )
     {
@@ -192,7 +187,7 @@ public class BoundingBoxDialog < R extends RealType< R > & NativeType< R > >
         }
 
         // TODO: improve this: take whole range in the smaller direction (up or down..)
-        initialSize[ DimensionOrder.Z ] =  image.getRai().dimension( DimensionOrder.Z ) / 10;
+        initialSize[ DimensionOrder.Z ] = image.getRai().dimension( DimensionOrder.Z ) / 10;
 
         if ( calibrated )
             initialSize[ DimensionOrder.Z ] *= image.getVoxelSpacing()[ DimensionOrder.Z ];

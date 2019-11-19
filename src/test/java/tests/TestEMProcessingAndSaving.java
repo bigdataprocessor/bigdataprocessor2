@@ -1,7 +1,5 @@
 package tests;
 
-import bdv.ViewerImgLoader;
-import bdv.viewer.Source;
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.progress.LoggingProgressListener;
@@ -53,7 +51,7 @@ public class TestEMProcessingAndSaving< R extends RealType< R > & NativeType< R 
 
 		String directory = "/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-data/sift-aligned-em";
 
-		de.embl.cba.bdp2.utils.FileUtils.emptyDirectory( directory );
+		de.embl.cba.bdp2.utils.FileUtils.createOrEmptyDirectory( directory );
 
 		savingSettings.volumesFilePath = directory +"/plane";
 

@@ -1,7 +1,6 @@
 package command;
 
-import de.embl.cba.bdp2.command.BatchMergeSplitChipCommand;
-import de.embl.cba.bdp2.command.BigDataProcessorCommand;
+import de.embl.cba.bdp2.command.LuxendoBatchMergeSplitChipCommand;
 import net.imagej.ImageJ;
 
 public class RunBatchMergeSplitChipCommand
@@ -12,6 +11,6 @@ public class RunBatchMergeSplitChipCommand
 		ij.ui().showUI();
 
 		// invoke the plugin
-		ij.command().run( BatchMergeSplitChipCommand.class, true );
+		ij.command().run( LuxendoBatchMergeSplitChipCommand.class, true );
 	}
 }
