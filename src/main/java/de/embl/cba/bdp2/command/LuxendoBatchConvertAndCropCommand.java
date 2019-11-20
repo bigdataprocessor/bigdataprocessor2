@@ -100,14 +100,14 @@ public class LuxendoBatchConvertAndCropCommand< R extends RealType< R > & Native
         for ( int i = 0; i < directories.size(); i++ )
         {
             // open
-            final String directory = directories.get( i ).toString();
-
-            // Open
+            final String directory = directories.get( i ).getAbsolutePath();
             final Image< R > image = BigDataProcessor2.openHdf5Image(
                     directory,
                     FileInfos.PATTERN_6,
                     FileInfos.PATTERN_LUXENDO,
                     "Data");
+            image.setVoxelUnit( voxelUnit );
+            image.setVoxelSpacing( new double[]{ voxelSpacingX, voxelSpacingY, voxelSpacingZ } );
 
             final String outputDirectoryStump = directory.replace( "_channel_0", "" );
 

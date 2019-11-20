@@ -40,7 +40,7 @@ public class LuxendoBatchMergeSplitChipCommand< R extends RealType< R > & Native
     /**
      * This specifies the regions where the different channels appear on the camera chip
      */
-    @Parameter(label = "Intervals [ minX, minY, sizeX, sizeY, channel; ... ]")
+    @Parameter(label = "Channel Regions [ minX, minY, sizeX, sizeY, channel; ... ]")
     public String intervalsString = "896, 46, 1000, 1000, 0; 22, 643, 1000, 1000, 0";
 
     @Parameter(label = "Tiff Output Compression", choices = { SavingSettings.COMPRESSION_NONE,
@@ -130,7 +130,6 @@ public class LuxendoBatchMergeSplitChipCommand< R extends RealType< R > & Native
             final String outputDirectoryStump = directory.replace( "_channel_0", "" );
 
             // save full volume
-            savingSettings.saveVolumes = true;
             savingSettings.volumesFilePath = outputDirectoryStump + "-stacks/stack";
             savingSettings.projectionsFilePath =
                     outputDirectoryStump + "-projections/projection";
