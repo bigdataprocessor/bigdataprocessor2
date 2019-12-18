@@ -201,7 +201,6 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
                 .getBigDataViewer().getViewerFrame().getJMenuBar().updateUI();
     }
 
-    
     public void setDisplayRange( double min, double max, int channel )
     {
         final List< ConverterSetup > converterSetups =
@@ -212,11 +211,11 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
 
         final MinMaxGroup minMaxGroup =
                 getBdvHandle().getSetupAssignments().getMinMaxGroup( converterSetup );
+
         minMaxGroup.getMinBoundedValue().setCurrentValue( min );
         minMaxGroup.getMaxBoundedValue().setCurrentValue( max );
     }
 
-    
     public List< DisplaySettings > getDisplaySettings()
     {
         final List< ConverterSetup > converterSetups = bdvStackSource.getBdvHandle()
@@ -280,7 +279,6 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
         return new DisplaySettings( min, max, null );
     }
 
-
     public void autoContrastPerChannel()
     {
         int nChannels = (int) image.getRai().dimension( DimensionOrder.C);
@@ -296,7 +294,6 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
         }
     }
 
-    
     public AffineTransform3D getViewerTransform()
     {
         if ( bdvStackSource != null )
@@ -310,7 +307,6 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
            return null;
     }
 
-    
     public void setViewerTransform( AffineTransform3D viewerTransform )
     {
         bdvStackSource.getBdvHandle().getViewerPanel()
@@ -320,7 +316,7 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
                 .requestRepaint();
     }
 
-    public void replicateViewerContrast( BdvImageViewer newImageView ) {
+    public void replicateViewerContrast( BdvImageViewer newImageViewer ) {
 
         int nChannels = bdvHandle.getSetupAssignments().getConverterSetups().size();
 
@@ -331,7 +327,7 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
 
             if (! ( converterSetup instanceof PlaceHolderConverterSetup))
             { // PlaceHolderConverterSetup is the Overlay.
-                newImageView.setDisplayRange(
+                newImageViewer.setDisplayRange(
                         converterSetup.getDisplayRangeMin(),
                         converterSetup.getDisplayRangeMax(), channel);
             }

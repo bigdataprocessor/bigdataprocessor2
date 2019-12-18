@@ -4,13 +4,16 @@ import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
+import de.embl.cba.bdp2.ui.HelpDialog;
 import loci.common.DebugTools;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
+import org.scijava.widget.Button;
 
+import javax.swing.*;
 import java.io.File;
 import java.util.Arrays;
 
@@ -22,20 +25,11 @@ public class BigDataProcessorCommand < R extends RealType< R > & NativeType< R >
     @Parameter(label = "Image data directory", style = "directory")
     File directory;
 
-    @Parameter(label = "Subset files using regular expression",
-            choices = {
-                    ".*",
-                    PATTERN_LUXENDO,
-                    ".*.tif",
-                    ".*--C.*",
-                    ".*Left.*",
-                    ".*Right.*",
-                    ".*short.*",
-                    ".*long.*",
-                    ".*Target.*",
-                    ".*LSEA00.*",
-                    ".*LSEA01.*"})
+    @Parameter(label = "Subset files using regular expression")
     String filterPattern = ".*";
+
+    @Parameter(label = "Regular expression help", callback = "showRegExpHelp")
+    Button regExpHelpButton;
 
     @Parameter(label = "Image files scheme",
             choices = {
@@ -69,6 +63,15 @@ public class BigDataProcessorCommand < R extends RealType< R > & NativeType< R >
         Logger.info( "Image voxel size: " + Arrays.toString( image.getVoxelSpacing() ) );
 
         BigDataProcessor2.showImage( image, autoContrast );
+    }
+
+    public void showRegExpHelp()
+    {
+        SwingUtilities.invokeLater( () -> {
+            final HelpDialog helpDialog = new HelpDialog( null,
+                    BigDataProcessorCommand.class.getResource( "/RegExpHelp.html" ) );
+            helpDialog.setVisible( true );
+        } );
 
     }
 

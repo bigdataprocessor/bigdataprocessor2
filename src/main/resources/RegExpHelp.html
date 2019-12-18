@@ -1,0 +1,76 @@
+<!-- vim::set expandtab tabstop=4 softtabstop=2 shiftwidth=2: -->
+<html>
+<style TYPE="text/css">
+h2
+{
+  margin-bottom: 0px;
+}
+table, tr, td
+{
+  border-spacing: 0px;
+}
+table
+{
+  width:100%;
+  border-top: 1px solid black;
+  border-right: 1px solid black;
+  background-color:#f8f8f8;
+}
+td
+{
+  padding:5px;
+  padding-right:10px;
+  padding-left:10px;
+  border-left: 1px solid black;
+  border-bottom: 1px solid black;
+}
+td.a
+{
+  text-align:center;
+}
+body
+{
+  background-color:white;
+  margin-left:10px;
+}
+</style>
+<p>
+<h2>Regular expression help</h2>
+<p>
+  Regular expressions are a powerful way to subset files.
+  They are not only used here in the BigDataProcessor2 but are widely used in many software packages.<br><br>
+  <a href="https://www.freeformatter.com/java-regex-tester.html#documentation">Regular expression documentation</a><br><br>
+  <a href="https://www.freeformatter.com/java-regex-tester.html">Test regular expressions</a><br><br>
+</p>
+<p></p>
+
+<h2>Useful examples</h2>
+
+
+<p>
+<table border="1">
+<tr>
+  <td class="a"><b>.*</b></td>
+  <td>Selects all files</td>
+</tr><tr>
+  <td class="a"><b>.*.tif$</b></td>
+  <td>Only open files ending with .tif</td>
+</tr><tr>
+  <td class="a"><b>.*.h5$</b></td>
+  <td>Only open files ending with .h5</td>
+</tr><tr>
+  <td class="a"><b>^((?!_All).)*.h5$</b></td>
+  <td>Luxendo: Only open files ending with .h5, but not containing the text "All".</td>
+</tr><tr>
+  <td class="a"><b>Ctrl + B</b></td>
+  <td>Leica DSL: </td>
+</tr><tr>
+  <td class="a"><b>Ctrl + N</b></td>
+  <td>Leica DSL: </td>
+</tr>
+</table>
+<br/>
+</p>
+
+</body>
+</html>
