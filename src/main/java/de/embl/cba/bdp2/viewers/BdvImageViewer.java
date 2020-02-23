@@ -12,12 +12,15 @@ import de.embl.cba.bdp2.tracking.Track;
 import de.embl.cba.bdp2.ui.BdvMenus;
 import de.embl.cba.bdp2.ui.DisplaySettings;
 import de.embl.cba.bdp2.utils.DimensionOrder;
+import de.embl.cba.bdp2.volatiles.VolatileCachedCellImg;
 import de.embl.cba.bdp2.volatiles.VolatileViews;
 import net.imglib2.*;
+import net.imglib2.cache.img.CachedCellImg;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.integer.ShortType;
 import net.imglib2.util.Util;
 import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
@@ -376,6 +379,17 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
         final RandomAccessibleInterval< Volatile< R > > volatileRai =
                 asVolatile( image.getRai() );
 
+        final CachedCellImg cachedCellImg = VolatileCachedCellImg.asVolatileCachedCellImg( ( RandomAccessibleInterval ) image.getRai() );
+
+        bdvStackSource = BdvFunctions.show(
+                cachedCellImg,
+                image.getName(),
+                BdvOptions.options().axisOrder( AxisOrder.XYZCT )
+                        .addTo( bdvHandle )
+                        .sourceTransform( scaling )
+                        .numRenderingThreads( numRenderingThreads ) );
+
+
         if ( volatileRai == null )
         {
             Logger.error( "Could not convert to volatile!\n" +
@@ -452,8 +466,7 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
         }
     }
 
-    private RandomAccessibleInterval< Volatile< R > >
-    asVolatile( RandomAccessibleInterval< R > rai ) {
+    private RandomAccessibleInterval< Volatile< R > > asVolatile( RandomAccessibleInterval< R > rai ) {
 
         try {
             final RandomAccessibleInterval< Volatile< R > > volatileRai

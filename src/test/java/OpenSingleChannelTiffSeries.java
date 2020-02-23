@@ -1,3 +1,4 @@
+import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 
@@ -10,16 +11,19 @@ public class OpenSingleChannelTiffSeries
 
     public static void main(String[] args)
     {
-        BigDataProcessor2 bigDataProcessor2 = new BigDataProcessor2();
 
         String imageDirectory =
                 OpenSingleChannelTiffSeries.class
-                        .getResource( "/nc1-nt3-calibrated-tiff"  ).getFile();
+                        .getResource( "/test-data/nc1-nt3-calibrated-16bit-tiff"  ).getFile();
 
-        bigDataProcessor2.openImage(
+        final Image< ? > image = BigDataProcessor2.openImage(
                 imageDirectory,
                 FileInfos.SINGLE_CHANNEL_TIMELAPSE,
                 ".*" );
+
+        BigDataProcessor2.showImage( image );
+
+
 
     }
 

@@ -36,7 +36,5 @@ public class ProgressHelpers
 						+ ", " + String.format("%.3g", secondsPerTask / divisor)
 						+ "; memory: "
 						+ IJ.freeMemory() );
-
-
 	}
 }
