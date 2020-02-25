@@ -89,7 +89,7 @@ public class ShearMenuDialog extends JDialog implements ActionListener {
         getShearingSettings(shearingSettings);
         shearingSettings.useObliqueAngle = true;
         RandomAccessibleInterval sheared =
-                BigDataProcessor2.shearImage( originalRAI, shearingSettings );
+                BigDataProcessor2.shearRaiXYZCT( originalRAI, shearingSettings );
 
         imageViewer.replaceImage( imageViewer.getImage().newImage( sheared ) );
 

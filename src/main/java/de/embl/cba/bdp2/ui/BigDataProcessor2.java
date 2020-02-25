@@ -219,8 +219,8 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
 
     // TODO: move to Shearing but still have convenience access from here
     public static <T extends RealType<T> & NativeType<T>>
-    RandomAccessibleInterval shearImage(
-            RandomAccessibleInterval rai,
+    RandomAccessibleInterval shearRaiXYZCT(
+            final RandomAccessibleInterval< T > rai,
             ShearingSettings shearingSettings )
     {
         System.out.println("Shear Factor X " + shearingSettings.shearingFactorX);
@@ -246,9 +246,20 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
         }
         final RandomAccessibleInterval sheared = Views.stack( timeTracks );
 //        System.out.println("Time elapsed (ms) " + (System.currentTimeMillis() - startTime));
+
+
         return sheared;
     }
 
+    /**
+     * TODO: this appears too slow
+     *
+     * @param rai5D
+     * @param shearingSettings
+     * @param <T>
+     * @return
+     */
+    @Deprecated
     public static <T extends RealType<T> & NativeType<T>>
     RandomAccessibleInterval shearImage5D( RandomAccessibleInterval rai5D, ShearingSettings shearingSettings)
     {

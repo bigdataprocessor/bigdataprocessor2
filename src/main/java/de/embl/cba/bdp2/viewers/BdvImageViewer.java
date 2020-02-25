@@ -6,7 +6,6 @@ import bdv.util.*;
 import bdv.viewer.SourceAndConverter;
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.boundingbox.BoundingBoxDialog;
-import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.tracking.ThresholdFloodFillOverlapTracker;
 import de.embl.cba.bdp2.tracking.Track;
 import de.embl.cba.bdp2.ui.BdvMenus;
@@ -20,7 +19,6 @@ import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
-import net.imglib2.type.numeric.integer.ShortType;
 import net.imglib2.util.Util;
 import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
@@ -379,7 +377,7 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
 //        final RandomAccessibleInterval< Volatile< R > > volatileRai =
 //                asVolatile( image.getRai() );
 
-        final CachedCellImg cachedCellImg = VolatileCachedCellImg.asVolatileCachedCellImg( ( RandomAccessibleInterval ) image.getRai() );
+        CachedCellImg cachedCellImg = VolatileCachedCellImg.getVolatileCachedCellImg( image );
 
         bdvStackSource = BdvFunctions.show(
                 cachedCellImg,

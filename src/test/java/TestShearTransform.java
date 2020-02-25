@@ -17,7 +17,7 @@ public class TestShearTransform {
                 ".*", "");
         CachedCellImg cachedCellImg = CachedCellImgReader.getCachedCellImg( fileInfos );
 
-       BdvImageViewer imageViewer = new BdvImageViewer<UnsignedShortType>(
+        BdvImageViewer imageViewer = new BdvImageViewer<UnsignedShortType>(
                 cachedCellImg,
                 "input",
                 new double[]{1.0, 1.0, 1.0},
@@ -55,7 +55,7 @@ public class TestShearTransform {
         ShearingSettings shearingSettings = new ShearingSettings();
         ShearMenuDialog dialog = new ShearMenuDialog(imageViewer);
         dialog.getShearingSettings( shearingSettings ); // sets default values.
-        return BigDataProcessor2.shearImage( cachedCellImg, shearingSettings );
+        return BigDataProcessor2.shearRaiXYZCT( cachedCellImg, shearingSettings );
     }
 
     private static RandomAccessibleInterval
