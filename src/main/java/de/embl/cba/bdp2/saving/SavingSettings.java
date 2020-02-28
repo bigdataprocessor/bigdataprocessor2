@@ -67,7 +67,7 @@ public class SavingSettings {
         savingSettings.voxelUnit = "pixel";
         savingSettings.saveVolumes = true;
         savingSettings.fileType = FileType.TIFF_PLANES;
-        savingSettings.volumesFilePath = "/Users/tischer/Desktop/bdp2-out";
+        savingSettings.volumesFilePath = "/Users/tischer/Desktop/bdp2-out/image";
         savingSettings.compression = SavingSettings.COMPRESSION_NONE;
         savingSettings.numProcessingThreads = (int) Math.ceil( Math.sqrt( AVAILABLE_PROCESSORS ) + 1 );
         savingSettings.numIOThreads = savingSettings.numProcessingThreads;

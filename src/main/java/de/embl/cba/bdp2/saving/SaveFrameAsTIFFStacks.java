@@ -85,11 +85,15 @@ public class SaveFrameAsTIFFStacks< R extends RealType< R > & NativeType< R > > 
 
             System.out.println( "Saving started: Frame " + t + ", Channel " + c );
 
+//            RandomAccessibleInterval< R > raiXYZ =
+//                    IntervalImageViews.getNonVolatileVolumeCopy(
+//                            image,
+//                            c, t,
+//                            settings.numProcessingThreads );
+//
+
             RandomAccessibleInterval< R > raiXYZ =
-                    new IntervalImageViews().getNonVolatileVolumeCopy(
-                            image,
-                            c, t,
-                            settings.numProcessingThreads );
+                    IntervalImageViews.getVolumeView( image, c, t );
 
             if ( settings.saveVolumes )
             {
