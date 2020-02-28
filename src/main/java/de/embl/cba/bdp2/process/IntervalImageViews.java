@@ -21,6 +21,7 @@ import net.imglib2.view.Views;
 
 import java.util.List;
 
+import static de.embl.cba.bdp2.loading.CachedCellImgReader.MAX_ARRAY_LENGTH;
 import static de.embl.cba.bdp2.utils.DimensionOrder.*;
 
 public class IntervalImageViews
@@ -251,13 +252,13 @@ public class IntervalImageViews
 
 		R type = getType( volume );
 
-		if ( numElements < Integer.MAX_VALUE - 1 )
+		if ( numElements < MAX_ARRAY_LENGTH )
 		{
 			copy = new ArrayImgFactory( type ).create( volume );
 		}
 		else
 		{
-			int nz = (int) ( numElements / ( volume.dimension( 0  ) * volume.dimension( 1 ) ) );
+			int nz = (int) ( (long) MAX_ARRAY_LENGTH / ( volume.dimension( 0  ) * volume.dimension( 1 ) ) );
 
 			final int[] cellSize = {
 					dimensionX,

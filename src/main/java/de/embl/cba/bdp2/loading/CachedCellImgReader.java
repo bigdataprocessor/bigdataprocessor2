@@ -18,7 +18,6 @@ import static net.imglib2.cache.img.ReadOnlyCachedCellImgOptions.options;
 
 public class CachedCellImgReader
 {
-
     public static final int MAX_ARRAY_LENGTH = Integer.MAX_VALUE - 100;
 
     public static CachedCellImg getCachedCellImg( FileInfos fileInfos )
@@ -38,11 +37,9 @@ public class CachedCellImgReader
                 cellDimY = fileInfos.nY;
             }
 
-            return getCachedCellImg( fileInfos,
-                    fileInfos.nX, cellDimY, 1 );
+            return getCachedCellImg( fileInfos, fileInfos.nX, cellDimY, 1 );
         }
     }
-
 
     public static < R extends RealType< R > & NativeType< R > >
     Image< R > loadImage( FileInfos fileInfos )
@@ -90,11 +87,13 @@ public class CachedCellImgReader
         int cellDimY = fileInfos.nY;
         int cellDimZ = fileInfos.nZ;
 
-        if ( cellDimX * cellDimY * cellDimZ > MAX_ARRAY_LENGTH )
+        final long numPixels = (long) cellDimX * (long) cellDimY * (long) cellDimZ;
+
+        if ( numPixels > MAX_ARRAY_LENGTH )
         {
             Logger.info( "Adapting cell size in Z to satisfy java array indexing limit.");
             Logger.info( "Desired cell size in Z: " + cellDimZ );
-            cellDimZ = MAX_ARRAY_LENGTH / ( cellDimY * cellDimZ );
+            cellDimZ = MAX_ARRAY_LENGTH / ( cellDimX * cellDimY );
             Logger.info( "Adapted cell size in Z: " + cellDimZ );
         }
 

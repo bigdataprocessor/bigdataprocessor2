@@ -89,11 +89,11 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
     public static < R extends RealType< R > & NativeType< R > >
     Image< R > openImage(
             String directory,
-            String loadingScheme,
+            String fileInfosLoadingScheme,
             String filterPattern )
     {
         FileInfos fileInfos =
-                new FileInfos( directory, loadingScheme, filterPattern );
+                new FileInfos( directory, fileInfosLoadingScheme, filterPattern );
 
         final Image< R > image = CachedCellImgReader.loadImage( fileInfos );
 

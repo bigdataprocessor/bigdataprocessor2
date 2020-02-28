@@ -8,10 +8,9 @@ public class FilterLuxendo
 {
 	public static void main( String[] args )
 	{
-		Pattern patternFilter = Pattern.compile( FileInfos.PATTERN_LUXENDO );
+		System.out.println( Pattern.compile( ".*_df.*" + "|" + "^((?!_all).)*.h5$").matcher( "asfsdf_All_aaa.json" ).matches() );
 
-		String name = "_All_aaa.h5";
-		final boolean matches = patternFilter.matcher( name ).matches();
-		int a = 1;
+		System.out.println( Pattern.compile( "Cam_Right_(\\d)+.h5$").matcher( "Cam_Right_All.h5" ).matches() );
+
 	}
 }

@@ -380,7 +380,7 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
         CachedCellImg cachedCellImg = VolatileCachedCellImg.getVolatileCachedCellImg( image );
 
         bdvStackSource = BdvFunctions.show(
-                cachedCellImg,
+                VolatileViews.wrapAsVolatile( cachedCellImg ),
                 image.getName(),
                 BdvOptions.options().axisOrder( AxisOrder.XYZCT )
                         .addTo( bdvHandle )

@@ -27,6 +27,8 @@ public class FileInfos
 	public static final String LEICA_LIGHT_SHEET_TIFF = "Leica Light Sheet Tiff";
 	public static final String SINGLE_CHANNEL_TIMELAPSE = "Single Channel Movie";
     public static final String PATTERN_LUXENDO = "^((?!_All).)*.h5$";
+    public static final String PATTERN_LUXENDO_LEFT_CAM = "Cam_Left_(\\d)+.h5$";
+    public static final String PATTERN_LUXENDO_RIGHT_CAM = "Cam_Right_(\\d)+.h5$";
     public static final String PATTERN_1= "<Z0000-0009>.tif"; // make pattern class
 	public static final String PATTERN_2= ".*--C<c>--T<t>.tif";
 	public static final String PATTERN_3= ".*--C<c>--T<t>.h5";

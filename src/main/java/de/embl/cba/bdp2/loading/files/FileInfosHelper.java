@@ -509,7 +509,7 @@ public class FileInfosHelper
         for (int i = 0; i < rawlist.length; i++)
         {
             String name = rawlist[i];
-            if (! patternFilter.matcher( name ).matches() )
+            if ( ! patternFilter.matcher( name ).matches() )
                 rawlist[i] = null;
             else if (name.endsWith(".tif") || name.endsWith(".h5"))
                 count++;
