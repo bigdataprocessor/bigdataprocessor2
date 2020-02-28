@@ -13,7 +13,7 @@ public class TestOpenEmTiffSlices {
         System.out.println( fileInfos.nT);
         System.out.println( fileInfos.nC);
         System.out.println( fileInfos.nX);
-        Img myImg = new CachedCellImgReader().getCachedCellImg( fileInfos );
+        Img myImg = new CachedCellImgReader().createCachedCellImg( fileInfos );
         BdvFunctions.show(myImg,"stream", BdvOptions.options().axisOrder( AxisOrder.XYCZT));
 
     }

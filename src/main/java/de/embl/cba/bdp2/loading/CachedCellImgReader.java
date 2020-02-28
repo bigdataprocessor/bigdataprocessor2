@@ -4,12 +4,15 @@ import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.utils.Utils;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.cache.img.CachedCellImg;
-import net.imglib2.cache.img.DiskCachedCellImgOptions.CacheType;
 import net.imglib2.cache.img.ReadOnlyCachedCellImgFactory;
 import net.imglib2.cache.img.ReadOnlyCachedCellImgOptions;
+import net.imglib2.img.cell.CellGrid;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.integer.UnsignedByteType;
+import net.imglib2.util.Intervals;
 
 import java.io.File;
 
@@ -20,53 +23,75 @@ public class CachedCellImgReader
 {
     public static final int MAX_ARRAY_LENGTH = Integer.MAX_VALUE - 100;
 
-    public static CachedCellImg getCachedCellImg( FileInfos fileInfos )
+    public static CachedCellImg createCachedCellImg( FileInfos fileInfos )
     {
-        // TODO: optimise somehow....
-        int cellDimY = ( int ) Math.ceil( fileInfos.nY / 10 ); // final int cellDimY = fileInfos.nY;
+        int[] cellDimsXYZCT = getCellDimsXYZCT( fileInfos );
 
         if ( fileInfos.fileType.equals( Utils.FileType.HDF5.toString() ) )
         {
-            return getCachedCellImg( fileInfos, fileInfos.nX, cellDimY, 1 );
+            return createCachedCellImg( fileInfos, cellDimsXYZCT );
         }
         else // Tiff
         {
             if ( fileInfos.numTiffStrips == 1 && fileInfos.compression != COMPRESSION_NONE )
             {
                 // File is compressed plane-wise => we need to load the whole plane
-                cellDimY = fileInfos.nY;
+                cellDimsXYZCT[ 1 ] = fileInfos.nY;
             }
 
-            return getCachedCellImg( fileInfos, fileInfos.nX, cellDimY, 1 );
+            return createCachedCellImg( fileInfos, cellDimsXYZCT );
         }
+    }
+
+    public static int[] getCellDimsXYZCT( FileInfos fileInfos )
+    {
+        final int[] imageDimsXYZCT = { fileInfos.nX, fileInfos.nY, fileInfos.nZ, 1, 1 };
+        return getCellDimsXYZCT( imageDimsXYZCT );
+    }
+
+    public static int[] getCellDimsXYZCT( int[] imageDimsXYZCT )
+    {
+        int[] cellDimsXYZCT = new int[ 5 ];
+
+        // load whole rows
+        cellDimsXYZCT[ 0 ] = imageDimsXYZCT[ 0 ];
+
+        // load rows in blocks of 10
+        cellDimsXYZCT[ 1 ] = ( int ) Math.ceil( imageDimsXYZCT[ 1 ] / 10 );
+
+        // load one plane
+        cellDimsXYZCT[ 2 ] = 1;
+
+        // load one channel
+        cellDimsXYZCT[ 3 ] = 1;
+
+        // load one timepoint
+        cellDimsXYZCT[ 4 ] = 1;
+
+        return cellDimsXYZCT;
     }
 
     public static < R extends RealType< R > & NativeType< R > >
     Image< R > loadImage( FileInfos fileInfos )
     {
-        CachedCellImg cachedCellImg = getCachedCellImg( fileInfos );
+        CachedCellImg cachedCellImg = createCachedCellImg( fileInfos );
         return asImage( fileInfos, cachedCellImg );
     }
 
     public static < R extends RealType< R > & NativeType< R > >
-    Image< R > loadImage( FileInfos fileInfos,
-                          int cellDimX,
-                          int cellDimY,
-                          int cellDimZ )
+    Image< R > loadImage( FileInfos fileInfos, int[] cellDimsXYZ )
     {
-        CachedCellImg cachedCellImg = getCachedCellImg(
-                fileInfos, cellDimX, cellDimY, cellDimZ );
-        return asImage( fileInfos, cachedCellImg );
+        CachedCellImg cachedCellImg = createCachedCellImg(
+                fileInfos, cellDimsXYZ );
 
+        return asImage( fileInfos, cachedCellImg );
     }
 
-    public static CachedCellImg getCachedCellImg( FileInfos fileInfos,
-                                                  int cellDimX,
-                                                  int cellDimY,
-                                                  int cellDimZ )
+    public static CachedCellImg createCachedCellImg( FileInfos fileInfos,
+                                                     int[] cellDimsXYZCT )
     {
         final ImageLoader loader =
-                new ImageLoader( fileInfos, cellDimX, cellDimY, cellDimZ );
+                new ImageLoader( fileInfos, cellDimsXYZCT );
 
         final ReadOnlyCachedCellImgOptions options = options()
                 .cellDimensions( loader.getCellDims() );
@@ -98,10 +123,7 @@ public class CachedCellImgReader
         }
 
         final ImageLoader loader = new ImageLoader(
-                fileInfos,
-                cellDimX,
-                cellDimY,
-                cellDimZ );
+                fileInfos, new int[]{ cellDimX, cellDimY, cellDimZ } );
 
         final ReadOnlyCachedCellImgOptions options = options()
                 .cellDimensions( loader.getCellDims() );
@@ -124,5 +146,11 @@ public class CachedCellImgReader
                 fileInfos.voxelUnit,
                 fileInfos
                 );
+    }
+
+    public static int[] getCellDimsXYZCT( RandomAccessibleInterval< ? > raiXYZCT )
+    {
+        final int[] imageDims = Intervals.dimensionsAsIntArray( raiXYZCT );
+        return getCellDimsXYZCT( imageDims );
     }
 }

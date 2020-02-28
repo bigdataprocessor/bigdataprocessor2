@@ -35,14 +35,14 @@ public class ImageLoader< T extends NativeType< T > > implements CellLoader< T >
     private LoadingCache< List< Integer >, SerializableFileInfo[] > serializableFileInfoCache;
     private final String fileType;
 
-    public ImageLoader( FileInfos fileInfos, int cellDimX, int cellDimY, int cellDimZ ) {
-
-        this.cellDims = new int[]{ cellDimX, cellDimY, cellDimZ, 1, 1 };
+    public ImageLoader( FileInfos fileInfos, int[] cellDimsXYZCT )
+    {
+        this.cellDims = cellDimsXYZCT;
         this.dimensions = fileInfos.getDimensions();
         this.directory = fileInfos.directory;
-        fileType = fileInfos.fileType;
+        this.fileType = fileInfos.fileType;
 
-        //Google Guava cache
+        // Google Guava cache
         CacheLoader< List<Integer>, SerializableFileInfo[] > loader =
                 new CacheLoader<List<Integer>, SerializableFileInfo[]>(){
                     @Override

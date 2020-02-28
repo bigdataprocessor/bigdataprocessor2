@@ -15,7 +15,7 @@ public class TestShearTransform {
         String imageDirectory = "src/test/resources/shear_transform_test";
         final FileInfos fileInfos = new FileInfos( imageDirectory, FileInfos.SINGLE_CHANNEL_TIMELAPSE,
                 ".*", "");
-        CachedCellImg cachedCellImg = CachedCellImgReader.getCachedCellImg( fileInfos );
+        CachedCellImg cachedCellImg = CachedCellImgReader.createCachedCellImg( fileInfos );
 
         BdvImageViewer imageViewer = new BdvImageViewer<UnsignedShortType>(
                 cachedCellImg,

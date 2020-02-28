@@ -15,7 +15,7 @@ public class TestBigDataTracker {
         String imageDirectory = "src/test/resources/tiff-nc2-nt3-tracking/";
         final FileInfos fileInfos = new FileInfos(imageDirectory, FileInfos.LOAD_CHANNELS_FROM_FOLDERS,
                 ".*", "");
-        CachedCellImg cachedCellImg = CachedCellImgReader.getCachedCellImg( fileInfos );
+        CachedCellImg cachedCellImg = CachedCellImgReader.createCachedCellImg( fileInfos );
 
         BdvImageViewer imageViewer = new BdvImageViewer< UnsignedShortType >(
                 cachedCellImg,

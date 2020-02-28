@@ -169,7 +169,6 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
             ProgressListener progressListener )
     {
         int nIOThread = Math.max( 1, Math.min( savingSettings.numIOThreads, MAX_THREAD_LIMIT ));
-
         Logger.info( "Saving started; I/O threads: " + nIOThread );
 
         ExecutorService saveExecutorService = Executors.newFixedThreadPool( nIOThread );

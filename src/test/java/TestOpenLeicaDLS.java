@@ -19,7 +19,7 @@ public class TestOpenLeicaDLS
         System.out.println( fileInfos.nC);
         System.out.println( fileInfos.nZ);
         System.out.println("BitDepth "+ fileInfos.bitDepth);
-        Img myImg = new CachedCellImgReader().getCachedCellImg( fileInfos );
+        Img myImg = new CachedCellImgReader().createCachedCellImg( fileInfos );
 
 //        AffineTransform3D affineTransform3D = new AffineTransform3D(); // TODO: Play with it later
 //        affineTransform3D.set( 1.0, 0, 0);

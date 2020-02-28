@@ -21,8 +21,8 @@ public class TestOpenLeftRightHDF5WithUI {
         FileInfos fileInfosRight = new FileInfos(directory,"None",
                 ".*Right.*.h5","Data");
 
-        Img myImgLeft = new CachedCellImgReader().getCachedCellImg( fileInfosLeft );
-        Img myImgRight = new CachedCellImgReader().getCachedCellImg( fileInfosRight );
+        Img myImgLeft = new CachedCellImgReader().createCachedCellImg( fileInfosLeft );
+        Img myImgRight = new CachedCellImgReader().createCachedCellImg( fileInfosRight );
         double [] voxelSpacing = new double[]{0,0};
         final BdvStackSource bdvss0 = BdvFunctions.show(myImgLeft, "left", BdvOptions.options().axisOrder(AxisOrder.XYCZT)
                 .doubleBuffered(false)

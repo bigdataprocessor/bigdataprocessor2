@@ -1,6 +1,7 @@
 package de.embl.cba.bdp2.volatiles;
 
 import de.embl.cba.bdp2.Image;
+import de.embl.cba.bdp2.loading.CachedCellImgReader;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.cache.img.CachedCellImg;
 import net.imglib2.cache.img.RandomAccessibleCacheLoader;
@@ -10,7 +11,6 @@ import net.imglib2.img.basictypeaccess.array.ShortArray;
 import net.imglib2.img.basictypeaccess.volatiles.array.VolatileByteArray;
 import net.imglib2.img.basictypeaccess.volatiles.array.VolatileShortArray;
 import net.imglib2.type.Type;
-import net.imglib2.type.numeric.integer.ShortType;
 import net.imglib2.img.cell.CellGrid;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
@@ -24,14 +24,12 @@ public class VolatileCachedCellImg
 	/**
 	 * TODO: Make work for other than ShortType
 	 * @param raiXYZCT
+	 * @param grid
 	 * @return
 	 */
 	public static CachedCellImg< UnsignedShortType, VolatileShortArray > asVolatileShortTypeCachedCellImg(
-			RandomAccessibleInterval< UnsignedShortType > raiXYZCT )
+			RandomAccessibleInterval< UnsignedShortType > raiXYZCT, CellGrid grid )
 	{
-		final CellGrid grid = new CellGrid( Intervals.dimensionsAsLongArray( raiXYZCT ),
-				new int[]{ 16, 16, 16, 1, 1 } );
-
 		final RandomAccessibleCacheLoader< UnsignedShortType, ShortArray, VolatileShortArray > loader = RandomAccessibleCacheLoader.get(
 				grid,
 				raiXYZCT,
@@ -47,11 +45,8 @@ public class VolatileCachedCellImg
 	}
 
 	public static CachedCellImg< UnsignedByteType, VolatileByteArray > asVolatileByteTypeCachedCellImg(
-			RandomAccessibleInterval< UnsignedByteType > raiXYZCT )
+			RandomAccessibleInterval< UnsignedByteType > raiXYZCT, CellGrid grid )
 	{
-		final CellGrid grid = new CellGrid( Intervals.dimensionsAsLongArray( raiXYZCT ),
-				new int[]{ 16, 16, 16, 1, 1 } );
-
 		final RandomAccessibleCacheLoader< UnsignedByteType, ByteArray, VolatileByteArray > loader = RandomAccessibleCacheLoader.get(
 				grid,
 				raiXYZCT,
@@ -69,20 +64,27 @@ public class VolatileCachedCellImg
 	public static CachedCellImg getVolatileCachedCellImg( Image< ? > image )
 	{
 		final Type typeFromInterval = Util.getTypeFromInterval( image.getRai() );
+		final CellGrid grid = new CellGrid(
+				Intervals.dimensionsAsLongArray( image.getRai() ),
+				CachedCellImgReader.getCellDimsXYZCT( image.getRai() ) );
 
 		CachedCellImg cachedCellImg;
+
 		if( UnsignedShortType.class.isInstance( typeFromInterval ) )
 		{
-			cachedCellImg = asVolatileShortTypeCachedCellImg( ( RandomAccessibleInterval ) image.getRai() );
+			cachedCellImg = asVolatileShortTypeCachedCellImg(
+					( RandomAccessibleInterval ) image.getRai(), grid );
 		}
 		else if ( UnsignedByteType.class.isInstance( typeFromInterval ) )
 		{
-			cachedCellImg = asVolatileByteTypeCachedCellImg( ( RandomAccessibleInterval ) image.getRai() );
+			cachedCellImg = asVolatileByteTypeCachedCellImg(
+					( RandomAccessibleInterval ) image.getRai(), grid );
 		}
 		else
 		{
-			throw new UnsupportedOperationException( "Cannot create CachedCellImg for type:" + typeFromInterval );
+			throw new UnsupportedOperationException( "Cannot yet create CachedCellImg for type:" + typeFromInterval );
 		}
+
 		return cachedCellImg;
 	}
 }

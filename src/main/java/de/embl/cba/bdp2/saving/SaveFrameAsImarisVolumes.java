@@ -2,7 +2,6 @@ package de.embl.cba.bdp2.saving;
 
 import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.process.IntervalImageViews;
-import de.embl.cba.bdp2.progress.ProgressHelpers;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.imaris.H5DataCubeWriter;
@@ -26,7 +25,7 @@ public class SaveFrameAsImarisVolumes< R extends RealType< R > & NativeType< R >
     private final long startTime;
     private ImarisDataSet imarisDataSetProperties;
     private final AtomicBoolean stop;
-    private final RandomAccessibleInterval rai;
+    private final RandomAccessibleInterval raiXYZCT;
 
     public SaveFrameAsImarisVolumes(
             SavingSettings settings,
@@ -36,9 +35,9 @@ public class SaveFrameAsImarisVolumes< R extends RealType< R > & NativeType< R >
             long startTime,
             AtomicBoolean stop)
     {
-        rai = settings.rai;
-        this.nFrames = Math.toIntExact( rai.dimension( DimensionOrder.T ) );
-        this.nChannels = Math.toIntExact( rai.dimension( DimensionOrder.C ) );
+        raiXYZCT = settings.rai;
+        this.nFrames = Math.toIntExact( raiXYZCT.dimension( DimensionOrder.T ) );
+        this.nChannels = Math.toIntExact( raiXYZCT.dimension( DimensionOrder.C ) );
         this.settings = settings;
         this.t = t;
         this.counter = counter;
@@ -79,14 +78,12 @@ public class SaveFrameAsImarisVolumes< R extends RealType< R > & NativeType< R >
                 return;
             }
 
-
-            final RandomAccessibleInterval< R > volumeRai
-                    = new IntervalImageViews().getNonVolatileVolumeCopy(
-                            rai, c, t, settings.numProcessingThreads );
+            RandomAccessibleInterval< R > raiXYZ =
+                    IntervalImageViews.getVolumeForSaving( raiXYZCT, c, t, settings.numProcessingThreads );
 
             ImagePlus imagePlus =
                     Utils.wrap3DRaiToCalibratedImagePlus(
-                            volumeRai,
+                            raiXYZ,
                             settings.voxelSpacing,
                             settings.voxelUnit,
                             "");

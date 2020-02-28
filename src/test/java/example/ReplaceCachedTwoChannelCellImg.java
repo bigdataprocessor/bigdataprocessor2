@@ -36,7 +36,7 @@ public class ReplaceCachedTwoChannelCellImg
 						dataset );
 
 		final CachedCellImg cachedCellImg = CachedCellImgReader
-				.getCachedCellImg( fileInfos );
+				.createCachedCellImg( fileInfos );
 
 		final CachedCellImg cachedCellImg2 = CachedCellImgReader
 				.getVolumeCachedCellImg(

@@ -58,29 +58,27 @@ public class IntervalImageViews
 
 	public static < R extends RealType< R > & NativeType< R > >
 	RandomAccessibleInterval< R > getVolumeView(
-			RandomAccessibleInterval< R > image,
+			RandomAccessibleInterval< R > raiXYZCT,
 			long c,
 			long t )
 	{
-		long start = System.currentTimeMillis();
-
 		long[] minInterval = new long[]{
-				image.min( X ),
-				image.min( Y ),
-				image.min( Z ),
+				raiXYZCT.min( X ),
+				raiXYZCT.min( Y ),
+				raiXYZCT.min( Z ),
 				c,
 				t };
 
 		long[] maxInterval = new long[]{
-				image.max( X ),
-				image.max( Y ),
-				image.max( Z ),
+				raiXYZCT.max( X ),
+				raiXYZCT.max( Y ),
+				raiXYZCT.max( Z ),
 				c,
 				t };
 
 		RandomAccessibleInterval raiXYZ =
 				Views.dropSingletonDimensions(
-						Views.interval( image, minInterval, maxInterval ) );
+						Views.interval( raiXYZCT, minInterval, maxInterval ) );
 
 		return raiXYZ;
 	}
@@ -109,6 +107,16 @@ public class IntervalImageViews
 		final IntervalView< R > frame = Views.hyperSlice( rai, T, t );
 
 		return frame;
+	}
+
+	public static < R extends RealType< R > & NativeType< R > >
+	RandomAccessibleInterval< R > getVolumeForSaving(
+			RandomAccessibleInterval< R > raiXYZCT,
+			long c,
+			long t,
+			int numThreads )
+	{
+		return getVolumeView( raiXYZCT, c, t );
 	}
 
 	public static < R extends RealType< R > & NativeType< R > >
@@ -145,6 +153,7 @@ public class IntervalImageViews
 
 		return raiXYZ;
 	}
+
 
 	public static < R extends RealType< R > & NativeType< R > >
 	RandomAccessibleInterval< R > getNonVolatileVolumeCopy(
