@@ -1,7 +1,6 @@
-package de.embl.cba.bdp2.tracking;
+package de.embl.cba.bdp2.track;
 
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.algorithm.gauss3.Gauss3;
 import net.imglib2.algorithm.phasecorrelation.PhaseCorrelation2;
 import net.imglib2.algorithm.phasecorrelation.PhaseCorrelationPeak2;
 import net.imglib2.img.cell.CellImgFactory;

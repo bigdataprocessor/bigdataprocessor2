@@ -10,7 +10,7 @@ public class UIDisplayConstants {
     // Menu items
     public static final String SAVE_AS_MENU_ITEM = "Save As...";
     public static final String IMAGEJ_VIEW_MENU_ITEM = "Show in ImageJ Viewer";
-    public static final String CORRECT_MOTION_MENU_ITEM = "Correct Motion...";
+    public static final String CORRECT_MOTION_MENU_ITEM = "Correct Motion... (Under Development)";
     public static final String APPLY_TRACK_MENU_ITEM = "Apply Track...";
     public static final String REGISTER_VOLUME_SIFT_MENU_ITEM = "Correct Lateral Slice Drift in Volume (SIFT)...";
     public static final String REGISTER_MOVIE_SIFT_MENU_ITEM = "Correct Lateral Frame Drift in Time-lapse (SIFT)...";

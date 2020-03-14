@@ -1,11 +1,10 @@
-package de.embl.cba.bdp2.tracking;
+package de.embl.cba.bdp2.track;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Set;
 
 public class TrackingIO

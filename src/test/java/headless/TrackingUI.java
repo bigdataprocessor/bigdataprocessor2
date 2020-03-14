@@ -22,7 +22,7 @@ public class TrackingUI
 		final BigDataProcessor2 bdp = new BigDataProcessor2<>();
 
 		String imageDirectory = "/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/" +
-				"src/test/resources/test-data/microglia-tracking-nt123/volumes";
+				"src/test/resources/test-data/microglia-track-nt123/volumes";
 
 		final Image image = bdp.openImage(
 				imageDirectory,

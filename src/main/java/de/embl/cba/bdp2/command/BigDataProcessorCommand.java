@@ -62,7 +62,9 @@ public class BigDataProcessorCommand < R extends RealType< R > & NativeType< R >
         Logger.info( "Image voxel unit: " + image.getVoxelUnit() );
         Logger.info( "Image voxel size: " + Arrays.toString( image.getVoxelSpacing() ) );
 
-        BigDataProcessor2.showImage( image, autoContrast );
+        SwingUtilities.invokeLater( () ->  {
+            BigDataProcessor2.showImage( image, autoContrast );
+        });
     }
 
     public void showRegExpHelp()

@@ -53,7 +53,7 @@ public class TestEMProcessingAndSaving< R extends RealType< R > & NativeType< R 
 
 		de.embl.cba.bdp2.utils.FileUtils.createOrEmptyDirectory( directory );
 
-		savingSettings.volumesFilePath = directory +"/plane";
+		savingSettings.volumesFilePathStump = directory +"/plane";
 
 		savingSettings.saveVolumes = true;
 		savingSettings.compression = SavingSettings.COMPRESSION_ZLIB;

@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.tracking;
+package de.embl.cba.bdp2.track;
 
 import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
@@ -41,7 +41,7 @@ public class BigDataTrackerGUI < R extends RealType< R > & NativeType< R > >
             //"dx(bin), dy(bin), dz(subsample), dt(subsample) [pixels, frames]",
             "Length [frames]",
             "Intensity gating [min, max]",
-            //"Show (processed) tracking regions [Num]",
+            //"Show (processed) track regions [Num]",
             "Resize regions by [factor]"
     };
 
@@ -49,7 +49,7 @@ public class BigDataTrackerGUI < R extends RealType< R > & NativeType< R > >
             "Select ROI",
             //"Set z",
             "Track selected object",
-            "Stop tracking",
+            "Stop track",
             //"Show table",
             //"Save table",
             //"Clear all tracks",
@@ -387,7 +387,7 @@ public class BigDataTrackerGUI < R extends RealType< R > & NativeType< R > >
             // track selected object
 
             //
-            // configure tracking
+            // configure track
             //
            MESSAGE.setText(null);
             trackingSettings.rai = image;
@@ -421,7 +421,7 @@ public class BigDataTrackerGUI < R extends RealType< R > & NativeType< R > >
                });
            });
        }
-        else if ( e.getActionCommand().equals("Stop tracking") ) {
+        else if ( e.getActionCommand().equals("Stop track") ) {
            tracker.stopTrack(); // Don't submit to thread pool. Let the main thread handle it.
            progressBar.setVisible(false);
            buttons[1].setEnabled(true);
@@ -527,7 +527,7 @@ public class BigDataTrackerGUI < R extends RealType< R > & NativeType< R > >
             JTextField source = (JTextField) e.getSource();
             trackingSettings.intensityGate = Utils.delimitedStringToIntegerArray( source.getText(), ",");
         }
-        else if ( e.getActionCommand().equals("Show (processed) tracking regions [Num]") )
+        else if ( e.getActionCommand().equals("Show (processed) track regions [Num]") )
         {System.out.println(e.getActionCommand());
             //
             // Show processed image regions

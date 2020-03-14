@@ -4,10 +4,8 @@ import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.crop.Cropper;
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.logging.Logger;
-import de.embl.cba.bdp2.process.splitviewmerge.SplitViewMerger;
 import de.embl.cba.bdp2.saving.SavingSettings;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
-import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
@@ -125,9 +123,9 @@ public class LuxendoBatchConvertAndCropCommand< R extends RealType< R > & Native
             {
                 // crop & save cropped volume
                 final Image< R > crop = Cropper.crop( image, croppingIntervals.get( i ) );
-                savingSettings.volumesFilePath = outputDirectoryStump + "-crop-stacks/stack";
+                savingSettings.volumesFilePathStump = outputDirectoryStump + "-crop-stacks/stack";
                 savingSettings.saveProjections = doProjections;
-                savingSettings.projectionsFilePath =
+                savingSettings.projectionsFilePathStump =
                         outputDirectoryStump + "-crop-projections/projection";
                 BigDataProcessor2.saveImageAndWaitUntilDone( savingSettings, crop );
             }

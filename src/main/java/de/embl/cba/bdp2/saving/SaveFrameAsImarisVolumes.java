@@ -106,7 +106,7 @@ public class SaveFrameAsImarisVolumes< R extends RealType< R > & NativeType< R >
 
             // Save projections
             if ( settings.saveProjections )
-                saveAsTiffXYZMaxProjection( imagePlus, c, t, settings.projectionsFilePath );
+                saveAsTiffXYZMaxProjection( imagePlus, c, t, settings.projectionsFilePathStump );
 
             counter.incrementAndGet();
 

@@ -2,7 +2,7 @@ package tests;
 
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
-import de.embl.cba.bdp2.tracking.*;
+import de.embl.cba.bdp2.track.*;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import de.embl.cba.bdv.utils.BdvUtils;
@@ -33,7 +33,7 @@ public class TestMicrogliaTracking
         final BigDataProcessor2< R > bdp = new BigDataProcessor2<>();
 
         String imageDirectory = "/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/" +
-                "src/test/resources/test-data/microglia-tracking-nt123/volumes";
+                "src/test/resources/test-data/microglia-track-nt123/volumes";
 
         final Image< R > image = bdp.openImage(
                 imageDirectory,
@@ -74,7 +74,7 @@ public class TestMicrogliaTracking
         assertArrayEquals( new double[]{ 38.27,36.69,20.81 }, tracker.getTrack().getCalibratedPosition( 120 ), 1.0 );
 
         TrackingIO.saveTrack( new File( "/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/" +
-                "src/test/resources/test-data/microglia-tracking-nt123/track-thresholdFloodFillTracking.csv" ),
+                "src/test/resources/test-data/microglia-track-nt123/track-thresholdFloodFillTracking.csv" ),
                 tracker.getTrack() );
 
         if ( showImages )
@@ -95,7 +95,7 @@ public class TestMicrogliaTracking
         final BigDataProcessor2< R > bdp = new BigDataProcessor2<>();
 
         String imageDirectory = "/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/" +
-                "src/test/resources/test-data/microglia-tracking-nt123/volumes";
+                "src/test/resources/test-data/microglia-track-nt123/volumes";
 
         final Image< R > image = bdp.openImage(
                 imageDirectory,
@@ -146,7 +146,7 @@ public class TestMicrogliaTracking
         final BigDataProcessor2< R > bdp = new BigDataProcessor2<>();
 
         String imageDirectory = "/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/" +
-                "src/test/resources/test-data/microglia-tracking-nt3/";
+                "src/test/resources/test-data/microglia-track-nt3/";
 
         final Image< R > image = bdp.openImage(
                 imageDirectory,

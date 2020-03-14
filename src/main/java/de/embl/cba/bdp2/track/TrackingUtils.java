@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.tracking;
+package de.embl.cba.bdp2.track;
 
 import de.embl.cba.bdp2.logging.Logger;
 

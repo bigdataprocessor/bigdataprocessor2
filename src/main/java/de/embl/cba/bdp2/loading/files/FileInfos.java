@@ -29,6 +29,11 @@ public class FileInfos
     public static final String PATTERN_LUXENDO = "^((?!_All).)*.h5$";
     public static final String PATTERN_LUXENDO_LEFT_CAM = "Cam_Left_(\\d)+.h5$";
     public static final String PATTERN_LUXENDO_RIGHT_CAM = "Cam_Right_(\\d)+.h5$";
+    public static final String PATTERN_LUXENDO_LONG_CAM = "Cam_long_(\\d)+.h5$";
+    public static final String PATTERN_LUXENDO_SHORT_CAM = "Cam_short_(\\d)+.h5$";
+    public static final String PATTERN_LUXENDO_2 = "Cam_.*_(\\d)+.h5$";
+    public static final String PATTERN_ALL= ".*";
+
     public static final String PATTERN_1= "<Z0000-0009>.tif"; // make pattern class
 	public static final String PATTERN_2= ".*--C<c>--T<t>.tif";
 	public static final String PATTERN_3= ".*--C<c>--T<t>.h5";

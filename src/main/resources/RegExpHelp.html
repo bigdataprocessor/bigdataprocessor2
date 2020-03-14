@@ -59,14 +59,14 @@ body
   <td class="a"><b>.*.h5$</b></td>
   <td>Only open files ending with .h5</td>
 </tr><tr>
-  <td class="a"><b>^((?!_All).)*.h5$</b></td>
-  <td>Luxendo: Only open files ending with .h5, but not containing the text "All".</td>
+  <td class="a"><b>"^Cam_.*_(\d)+.h5$"</b></td>
+  <td>Luxendo: Open files starting with "Cam", ending on "h5" and containing numbers.</td>
 </tr><tr>
-  <td class="a"><b>^Cam_Left_(\\d)+.h5$</b></td>
-  <td>Luxendo: Only all left camera images.</td>
+  <td class="a"><b>^Cam_Left_(\d)+.h5$</b></td>
+  <td>Luxendo: Open all "Left" camera images.</td>
 </tr><tr>
-  <td class="a"><b>^Cam_Right_(\\d)+.h5$</b></td>
-  <td>Luxendo: Only all right camera images.</td>
+  <td class="a"><b>^Cam_Right_(\d)+.h5$</b></td>
+  <td>Luxendo: Open all "Right" camera images.</td>
 </tr><tr>
   <td class="a"><b>...</b></td>
   <td>Leica DSL: ...</td>

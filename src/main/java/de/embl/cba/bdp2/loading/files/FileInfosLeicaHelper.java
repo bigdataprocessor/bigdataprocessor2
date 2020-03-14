@@ -11,7 +11,6 @@ import java.util.regex.Pattern;
 
 public class FileInfosLeicaHelper
 {
-
     public static boolean initLeicaSinglePlaneTiffData(
             FileInfos imageDataInfo, String directory, String filterPattern, String[] fileList, int nC, int nZ )
     {

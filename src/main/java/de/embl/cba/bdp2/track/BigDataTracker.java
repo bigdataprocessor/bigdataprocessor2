@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.tracking;
+package de.embl.cba.bdp2.track;
 
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.utils.DimensionOrder;

@@ -84,7 +84,7 @@ for ( int i = 0; i < directories.size(); i++ )
 
     // save full volume
     savingSettings.saveVolumes = true;
-    savingSettings.volumesFilePath = outputDirectoryStump + "-stacks/stack";
+    savingSettings.volumesFilePathStump = outputDirectoryStump + "-stacks/stack";
     savingSettings.saveProjections = false;
     savingSettings.numIOThreads = 3;
     BigDataProcessor2.saveImageAndWaitUntilDone( bdp, savingSettings, merge );
@@ -94,9 +94,9 @@ for ( int i = 0; i < directories.size(); i++ )
         // crop & save cropped volume
         final Image crop = Cropper.crop( merge, croppingIntervals.get( i ) );
         savingSettings.saveVolumes = true;
-        savingSettings.volumesFilePath = outputDirectoryStump + "-crop-stacks/stack";
+        savingSettings.volumesFilePathStump = outputDirectoryStump + "-crop-stacks/stack";
         savingSettings.saveProjections = true;
-        savingSettings.projectionsFilePath =
+        savingSettings.projectionsFilePathStump =
                 outputDirectoryStump + "-crop-projections/projection";
         BigDataProcessor2.saveImageAndWaitUntilDone( bdp, savingSettings, crop );
     }

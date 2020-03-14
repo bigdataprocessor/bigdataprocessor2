@@ -27,7 +27,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * #L%
  */
-package de.embl.cba.bdp2.tracking;
+package de.embl.cba.bdp2.track;
 
 import bdv.tools.boundingbox.TransformedBox;
 import bdv.tools.boundingbox.TransformedBoxOverlay;

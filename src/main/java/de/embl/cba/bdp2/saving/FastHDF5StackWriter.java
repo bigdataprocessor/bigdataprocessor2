@@ -108,7 +108,7 @@ public class FastHDF5StackWriter<T extends RealType<T> & NativeType<T>> implemen
                     Logger.progress("Stopped saving thread @ merge: ", "" + current_t);
                     return;
                 }
-                String newPath = savingSettings.volumesFilePath;
+                String newPath = savingSettings.volumesFilePathStump;
                 // Binning
                 ImgPlus<T> impBinned = new ImgPlus<>(imgChannelTime, "", FileInfos.AXES_ORDER);
                 int[] binningA = Utils.delimitedStringToIntegerArray(binning, ",");

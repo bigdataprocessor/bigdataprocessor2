@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.tracking;
+package de.embl.cba.bdp2.track;
 
 import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
@@ -82,7 +82,7 @@ public class ObjectTracker < R extends RealType< R > & NativeType< R > > extends
             Logger.info("Current time tracked " + t);
             randomAccess.setPosition(t, DimensionOrder.T );
             double trackingFraction;
-            // compute stack center and tracking radii
+            // compute stack center and track radii
             // at each iteration, the center of mass is only computed for a subset of the data cube
             // this subset iteratively shifts every iteration according to the results of the center of mass computation
             for(int i=0; i<iterations; i++) {

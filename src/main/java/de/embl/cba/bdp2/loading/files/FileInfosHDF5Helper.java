@@ -14,20 +14,20 @@ import java.util.stream.Collectors;
 public class FileInfosHDF5Helper
 {
 
-    public static void setImageDataInfoFromH5(
+    public static boolean setImageDataInfoFromH5(
             FileInfos imageDataInfo,
             String directory,
-            String fileName) {
-
+            String fileName)
+    {
         IHDF5Reader reader = HDF5Factory.openForReading(directory + "/" + fileName);
 
         StringBuilder hdf5DataSetSB = new StringBuilder();
         if (imageDataInfo.h5DataSetName != null && !imageDataInfo.h5DataSetName.isEmpty()
                 && !imageDataInfo.h5DataSetName.trim().isEmpty()) {
             hdf5DataSetSB = new StringBuilder( imageDataInfo.h5DataSetName );
-            if ( ! hdf5DataSetExists(reader, hdf5DataSetSB ) ) return;
+            if ( ! hdf5DataSetExists(reader, hdf5DataSetSB ) ) return false;
         } else {
-            setHDF5DatasetViaUI(reader,hdf5DataSetSB);
+            if( ! setHDF5DatasetViaUI(reader,hdf5DataSetSB) ) return false;
         }
         imageDataInfo.h5DataSetName = hdf5DataSetSB.toString();
         HDF5DataSetInformation dsInfo = reader.object().getDataSetInformation("/" + imageDataInfo.h5DataSetName);
@@ -46,6 +46,8 @@ public class FileInfosHDF5Helper
         // There is no standard way of retrieving voxelSpacings from h5 data....
         imageDataInfo.voxelSpacing = new double[]{1,1,1};
         imageDataInfo.voxelUnit = "micrometer";
+
+        return true;
 
     }
 
@@ -88,8 +90,8 @@ public class FileInfosHDF5Helper
         return dataSetExists;
     }
 
-    private static void setHDF5DatasetViaUI( IHDF5Reader reader,
-                                             StringBuilder hdf5DataSet) {
+    private static boolean setHDF5DatasetViaUI( IHDF5Reader reader,
+                                                StringBuilder hdf5DataSet) {
 
         List<String> hdf5Header = reader.getGroupMembers("/");
 
@@ -100,10 +102,11 @@ public class FileInfosHDF5Helper
                 hdf5Header.get( 0 )  );
 
         gd.showDialog();
-        if( gd.wasCanceled() ) return;
+        if( gd.wasCanceled() ) return false;
 
         hdf5DataSet.delete(0, hdf5DataSet.length());
         hdf5DataSet.append( gd.getNextChoice() );
+        return true;
     }
 
     public static String dsInfoToTypeString (HDF5DataSetInformation dsInfo ) {  //TODO : DUPLICATE CODE! Fix it! --ashis

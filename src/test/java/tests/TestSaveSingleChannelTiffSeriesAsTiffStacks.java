@@ -44,20 +44,20 @@ public class TestSaveSingleChannelTiffSeriesAsTiffStacks
 
         createOrEmptyDirectory( outputDirectory );
 
-        savingSettings.volumesFilePath = outputDirectory + "/volume";
+        savingSettings.volumesFilePathStump = outputDirectory + "/volume";
         savingSettings.saveVolumes = true;
 
         outputDirectory = "/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-output/nc1-nt3-calibrated-8bit-tiff-projections";
 
         createOrEmptyDirectory( outputDirectory );
 
-        savingSettings.projectionsFilePath = outputDirectory  + "/projection";
+        savingSettings.projectionsFilePathStump = outputDirectory  + "/projection";
 
 
         BigDataProcessor2.saveImageAndWaitUntilDone( savingSettings, image );
 
-        final File testVolumeFile = new File( savingSettings.volumesFilePath + "--C00--T00000.tif" );
-        final File testProjectionsFile = new File( savingSettings.projectionsFilePath + "--xyz-max-projection--C00--T00002.tif" );
+        final File testVolumeFile = new File( savingSettings.volumesFilePathStump + "--C00--T00000.tif" );
+        final File testProjectionsFile = new File( savingSettings.projectionsFilePathStump + "--xyz-max-projection--C00--T00002.tif" );
 
         assertTrue( testVolumeFile.exists() );
         assertTrue( testProjectionsFile.exists() );

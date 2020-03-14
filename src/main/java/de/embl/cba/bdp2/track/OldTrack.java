@@ -1,6 +1,6 @@
 /*
  * #%L
- * Data streaming, tracking and cropping tools
+ * Data streaming, track and cropping tools
  * %%
  * Copyright (C) 2017 Christian Tischer
  *
@@ -28,7 +28,7 @@
  * #L%
  */
 
-package de.embl.cba.bdp2.tracking;
+package de.embl.cba.bdp2.track;
 
 
 import de.embl.cba.bdp2.utils.Point3D;

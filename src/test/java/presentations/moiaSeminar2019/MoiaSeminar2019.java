@@ -1,4 +1,4 @@
-package presentations;
+package presentations.moiaSeminar2019;
 
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
@@ -15,7 +15,7 @@ import net.imglib2.type.numeric.integer.UnsignedShortType;
 
 import static net.imglib2.cache.img.ReadOnlyCachedCellImgOptions.*;
 
-public class PresentationAugust2019
+public class MoiaSeminar2019
 {
 
 	public void traditionalImage()

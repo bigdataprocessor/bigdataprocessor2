@@ -45,7 +45,7 @@ public class ProcessEMfromServer
 			savingSettings.saveVolumes = true;
 			savingSettings.compression = SavingSettings.COMPRESSION_NONE;
 			savingSettings.rowsPerStrip = 50;
-			savingSettings.volumesFilePath =
+			savingSettings.volumesFilePathStump =
 					"/Users/tischer/Desktop/giulia/plane";
 
 			//final File testVolumeFile = new File( savingSettings.volumesFilePath + "--C00--T00000.ome.tif" );
@@ -53,7 +53,7 @@ public class ProcessEMfromServer
 
 			//BigDataProcessor2.saveImageAndWaitUntilDone( savingSettings, crop );
 
-			savingSettings.volumesFilePath =
+			savingSettings.volumesFilePathStump =
 					"/Users/tischer/Desktop/giulia-zlib/plane";
 			savingSettings.compression = SavingSettings.COMPRESSION_LZW;
 			BigDataProcessor2.saveImageAndWaitUntilDone( savingSettings, convert );

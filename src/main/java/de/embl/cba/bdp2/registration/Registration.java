@@ -2,7 +2,7 @@ package de.embl.cba.bdp2.registration;
 
 import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.progress.ProgressListener;
-import de.embl.cba.bdp2.tracking.PhaseCorrelationTranslationComputer;
+import de.embl.cba.bdp2.track.PhaseCorrelationTranslationComputer;
 import de.embl.cba.bdp2.utils.Utils;
 import ij.ImagePlus;
 import ij.process.FloatProcessor;

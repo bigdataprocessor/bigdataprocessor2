@@ -174,7 +174,6 @@ public class FileInfosHelper
             fileInfos.voxelUnit = fileInfos.voxelUnit.trim();
     }
 
-
     public static void setFileInfos(
             FileInfos fileInfos,
             String directory,
@@ -208,7 +207,7 @@ public class FileInfosHelper
 
     }
 
-    private static void  setImageMetadata( FileInfos fileInfos, String directory, String namingScheme, String[] fileList )
+    private static void setImageMetadata( FileInfos fileInfos, String directory, String namingScheme, String[] fileList )
     {
         if ( fileList[ 0 ].endsWith(".tif") )
         {
@@ -229,10 +228,12 @@ public class FileInfosHelper
         }
         else if ( fileList[0].endsWith(".h5") )
         {
-            FileInfosHDF5Helper.setImageDataInfoFromH5(
+            if ( ! FileInfosHDF5Helper.setImageDataInfoFromH5(
                     fileInfos,
                     directory,
-                    fileList[0]);
+                    fileList[ 0 ] ) ) return;
+            // TODO: this indicates something went wrong => pass on properly.
+            // maybe define or use some hdf5 initialisation error?
             fileInfos.fileType = Utils.FileType.HDF5.toString();
         }
         else

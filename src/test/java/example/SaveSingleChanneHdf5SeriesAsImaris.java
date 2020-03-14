@@ -38,9 +38,9 @@ public class SaveSingleChanneHdf5SeriesAsImaris
         savingSettings.numIOThreads = 1;
         savingSettings.numProcessingThreads = 4;
         savingSettings.saveVolumes = true;
-        savingSettings.volumesFilePath = "/Users/tischer/Desktop/stack_0_channel_0-imaris-volumes/volume";
+        savingSettings.volumesFilePathStump = "/Users/tischer/Desktop/stack_0_channel_0-imaris-volumes/volume";
         savingSettings.saveProjections = true;
-        savingSettings.projectionsFilePath = "/Users/tischer/Desktop/stack_0_channel_0-imaris-projections/projection";
+        savingSettings.projectionsFilePathStump = "/Users/tischer/Desktop/stack_0_channel_0-imaris-projections/projection";
 
 
 

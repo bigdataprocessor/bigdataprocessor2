@@ -1,8 +1,6 @@
-package de.embl.cba.bdp2.tracking;
+package de.embl.cba.bdp2.track;
 
-import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.utils.Point3D;
-import net.imglib2.FinalInterval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;

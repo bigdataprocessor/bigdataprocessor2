@@ -2,7 +2,6 @@ package de.embl.cba.bdp2.command;
 
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.crop.Cropper;
-import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.process.splitviewmerge.SplitViewMerger;
 import de.embl.cba.bdp2.saving.SavingSettings;
@@ -130,8 +129,8 @@ public class LuxendoBatchMergeSplitChipCommand< R extends RealType< R > & Native
             final String outputDirectoryStump = directory.replace( "_channel_0", "" );
 
             // save full volume
-            savingSettings.volumesFilePath = outputDirectoryStump + "-stacks/stack";
-            savingSettings.projectionsFilePath =
+            savingSettings.volumesFilePathStump = outputDirectoryStump + "-stacks/stack";
+            savingSettings.projectionsFilePathStump =
                     outputDirectoryStump + "-projections/projection";
             savingSettings.saveProjections = ! doCrop; // when not cropping, save full projections
             savingSettings.numIOThreads = 3;
@@ -142,9 +141,9 @@ public class LuxendoBatchMergeSplitChipCommand< R extends RealType< R > & Native
             {
                 // crop & save cropped volume
                 final Image< R > crop = Cropper.crop( merge, croppingIntervals.get( i ) );
-                savingSettings.volumesFilePath = outputDirectoryStump + "-crop-stacks/stack";
+                savingSettings.volumesFilePathStump = outputDirectoryStump + "-crop-stacks/stack";
                 savingSettings.saveProjections = true;
-                savingSettings.projectionsFilePath =
+                savingSettings.projectionsFilePathStump =
                         outputDirectoryStump + "-crop-projections/projection";
                 BigDataProcessor2.saveImageAndWaitUntilDone( savingSettings, crop );
             }

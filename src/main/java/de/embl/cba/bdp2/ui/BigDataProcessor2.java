@@ -7,7 +7,6 @@ import de.embl.cba.bdp2.crop.Cropper;
 import de.embl.cba.bdp2.loading.CachedCellImgReader;
 import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.logging.Logger;
-import de.embl.cba.bdp2.progress.DefaultProgressListener;
 import de.embl.cba.bdp2.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.progress.Progress;
 import de.embl.cba.bdp2.progress.ProgressListener;
@@ -50,7 +49,7 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
     public static ExecutorService generalThreadPool =
             Executors.newFixedThreadPool( Runtime.getRuntime().availableProcessors() * 2  );
 
-    public static ExecutorService trackerThreadPool; // Thread pool for tracking: TODO: remove?
+    public static ExecutorService trackerThreadPool; // Thread pool for track: TODO: remove?
     public static Map<Integer, Integer> progressTracker = new ConcurrentHashMap<>();
     public static int MAX_THREAD_LIMIT = Runtime.getRuntime().availableProcessors() * 2;
     public static Map<Integer, AtomicBoolean> saveTracker = new ConcurrentHashMap<>();
@@ -70,7 +69,7 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
     {
         final LoggingProgressListener progressListener = new LoggingProgressListener( "Frames saved" );
         saveImage( image, savingSettings, progressListener );
-        Logger.log( "Saving: " + savingSettings.volumesFilePath );
+        Logger.log( "Saving: " + savingSettings.volumesFilePathStump );
         Progress.waitUntilDone( progressListener, 1000 );
         Logger.log("Saving: Done." );
     }
@@ -145,12 +144,13 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
     boolean showVoxelSpacingDialog( Image< R > image )
     {
         final double[] voxelSpacing = image.getVoxelSpacing();
-        final String voxelUnit = image.getVoxelUnit();
+        String voxelUnit = image.getVoxelUnit();
+        voxelUnit = fixVoxelSpacingAndUnit( voxelSpacing, voxelUnit );
         final GenericDialog genericDialog = new GenericDialog( "Calibration" );
         genericDialog.addStringField( "Unit", voxelUnit, 12 );
-        genericDialog.addNumericField( "Spacing X", voxelSpacing[ 0 ], 3 );
-        genericDialog.addNumericField( "Spacing Y", voxelSpacing[ 1 ], 3 );
-        genericDialog.addNumericField( "Spacing Z", voxelSpacing[ 2 ], 3 );
+        genericDialog.addNumericField( "Spacing X", voxelSpacing[ 0 ], 3, 12, "" );
+        genericDialog.addNumericField( "Spacing Y", voxelSpacing[ 1 ], 3, 12, "" );
+        genericDialog.addNumericField( "Spacing Z", voxelSpacing[ 2 ], 3, 12, "" );
         genericDialog.showDialog();
         if ( genericDialog.wasCanceled() ) return false;
         image.setVoxelUnit( genericDialog.getNextString() );
@@ -158,6 +158,15 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
         voxelSpacing[ 1 ] = genericDialog.getNextNumber();
         voxelSpacing[ 2 ] = genericDialog.getNextNumber();
         return true;
+    }
+
+    public static < R extends RealType< R > & NativeType< R > > String fixVoxelSpacingAndUnit( double[] voxelSpacing, String voxelUnit )
+    {
+        if ( voxelUnit.equals( "cm" ) )
+            voxelUnit = "micrometer";
+        for ( int i = 0; i < voxelSpacing.length; i++ )
+            voxelSpacing[ i ] *= 10000;
+        return voxelUnit;
     }
 
 
@@ -196,10 +205,10 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
         ImgSaverFactory factory = new ImgSaverFactory();
 
         if ( savingSettings.saveVolumes )
-            Utils.createFilePathParentDirectories( savingSettings.volumesFilePath );
+            Utils.createFilePathParentDirectories( savingSettings.volumesFilePathStump );
 
         if ( savingSettings.saveProjections )
-            Utils.createFilePathParentDirectories( savingSettings.projectionsFilePath );
+            Utils.createFilePathParentDirectories( savingSettings.projectionsFilePathStump );
 
         AbstractImgSaver saver = factory.getSaver( savingSettings, saveExecutorService );
         saver.addProgressListener( progressListener );

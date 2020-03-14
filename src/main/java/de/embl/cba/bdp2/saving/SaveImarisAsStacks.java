@@ -90,8 +90,8 @@ public class SaveImarisAsStacks extends AbstractImgSaver {
 
     private ImarisDataSet getImarisDataSet( SavingSettings settings, AtomicBoolean stop ) {
 
-        final String directory = new File( settings.volumesFilePath ).getParent();
-        final String filename = new File( settings.volumesFilePath ).getName();
+        final String directory = new File( settings.volumesFilePathStump ).getParent();
+        final String filename = new File( settings.volumesFilePathStump ).getName();
 
         ImagePlus image = Utils.wrap5DRaiToCalibratedImagePlus(
                 settings.rai,

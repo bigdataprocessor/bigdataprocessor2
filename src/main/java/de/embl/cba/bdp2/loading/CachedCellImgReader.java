@@ -56,8 +56,10 @@ public class CachedCellImgReader
         // load whole rows
         cellDimsXYZCT[ 0 ] = imageDimsXYZCT[ 0 ];
 
-        // load rows in blocks of 10
-        cellDimsXYZCT[ 1 ] = ( int ) Math.ceil( imageDimsXYZCT[ 1 ] / 10 );
+        // load whole columns
+        cellDimsXYZCT[ 1 ] = imageDimsXYZCT[ 1 ];
+
+        //cellDimsXYZCT[ 1 ] = ( int ) Math.ceil( imageDimsXYZCT[ 1 ] / 10 );
 
         // load one plane
         cellDimsXYZCT[ 2 ] = 1;
@@ -112,22 +114,22 @@ public class CachedCellImgReader
         int cellDimY = fileInfos.nY;
         int cellDimZ = fileInfos.nZ;
 
-        final long numPixels = (long) cellDimX * (long) cellDimY * (long) cellDimZ;
+        long numPixels = (long) cellDimX * (long) cellDimY * (long) cellDimZ;
 
         if ( numPixels > MAX_ARRAY_LENGTH )
         {
             Logger.info( "Adapting cell size in Z to satisfy java array indexing limit.");
             Logger.info( "Desired cell size in Z: " + cellDimZ );
-            cellDimZ = MAX_ARRAY_LENGTH / ( cellDimX * cellDimY );
+            cellDimZ = MAX_ARRAY_LENGTH / ( cellDimX * cellDimY ) ;
             Logger.info( "Adapted cell size in Z: " + cellDimZ );
         }
 
         final ImageLoader loader = new ImageLoader(
-                fileInfos, new int[]{ cellDimX, cellDimY, cellDimZ } );
+                fileInfos, new int[]{ cellDimX, cellDimY, cellDimZ, 1, 1 } );
 
         final ReadOnlyCachedCellImgOptions options = options()
                 .cellDimensions( loader.getCellDims() );
-
+        
         final CachedCellImg cachedCellImg = new ReadOnlyCachedCellImgFactory().create(
                 loader.getDimensions(),
                 fileInfos.getType(),

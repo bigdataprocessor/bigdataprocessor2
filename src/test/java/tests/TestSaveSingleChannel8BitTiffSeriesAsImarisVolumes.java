@@ -38,16 +38,16 @@ public class TestSaveSingleChannel8BitTiffSeriesAsImarisVolumes
         savingSettings.numIOThreads = 1;
         savingSettings.numProcessingThreads = 4;
         savingSettings.saveProjections = true;
-        savingSettings.volumesFilePath =
+        savingSettings.volumesFilePathStump =
                 "/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-output/nc1-nt3-calibrated-8bit-tiff-imaris-volumes/volume";
         savingSettings.saveVolumes = true;
-        savingSettings.projectionsFilePath =
+        savingSettings.projectionsFilePathStump =
                 "/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-output/nc1-nt3-calibrated-8bit-tiff-imaris-projections/projection";
 
-        final File testVolumeFile = new File( savingSettings.volumesFilePath + "--C00--T00000.h5" );
+        final File testVolumeFile = new File( savingSettings.volumesFilePathStump + "--C00--T00000.h5" );
         if ( testVolumeFile.exists() ) testVolumeFile.delete();
 
-        final File testProjectionsFile = new File( savingSettings.projectionsFilePath + "--xyz-max-projection--C00--T00002.tif" );
+        final File testProjectionsFile = new File( savingSettings.projectionsFilePathStump + "--xyz-max-projection--C00--T00002.tif" );
         if ( testProjectionsFile.exists() ) testProjectionsFile.delete();
 
         BigDataProcessor2.saveImageAndWaitUntilDone( savingSettings, image );

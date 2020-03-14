@@ -11,7 +11,6 @@ import loci.formats.out.TiffWriter;
 import loci.formats.services.OMEXMLService;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.display.imagej.ImageJFunctions;
-import net.imglib2.view.Views;
 import ome.xml.model.enums.PixelType;
 import ome.xml.model.primitives.PositiveInteger;
 
@@ -153,9 +152,9 @@ public class SaveTiffPlane implements Runnable {
         String extension = getExtension( isOME );
 
         if ( nC > 1 || nT > 1 )
-            pathCTZ = savingSettings.volumesFilePath + "--C" + sC + "--T" + sT + "--Z" + sZ + extension;
+            pathCTZ = savingSettings.volumesFilePathStump + "--C" + sC + "--T" + sT + "--Z" + sZ + extension;
         else
-            pathCTZ = savingSettings.volumesFilePath + "--Z" + sZ + extension;
+            pathCTZ = savingSettings.volumesFilePathStump + "--Z" + sZ + extension;
 
         return pathCTZ;
     }

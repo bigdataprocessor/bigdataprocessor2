@@ -21,10 +21,10 @@ public class SavingSettings {
     public static final String COMPRESSION_ZLIB = "ZLIB";
     public static final String COMPRESSION_NONE = "None";
     public boolean saveVolumes;
-    public String volumesFilePath;
+    public String volumesFilePathStump;
 
     public boolean saveProjections;
-    public String projectionsFilePath;
+    public String projectionsFilePathStump;
 
     public boolean convertTo8Bit;
     public int mapTo0, mapTo255;
@@ -67,11 +67,10 @@ public class SavingSettings {
         savingSettings.voxelUnit = "pixel";
         savingSettings.saveVolumes = true;
         savingSettings.fileType = FileType.TIFF_PLANES;
-        savingSettings.volumesFilePath = "/Users/tischer/Desktop/bdp2-out/image";
+        savingSettings.volumesFilePathStump = "/Users/tischer/Desktop/bdp2-out/image";
         savingSettings.compression = SavingSettings.COMPRESSION_NONE;
         savingSettings.numProcessingThreads = (int) Math.ceil( Math.sqrt( AVAILABLE_PROCESSORS ) + 1 );
         savingSettings.numIOThreads = savingSettings.numProcessingThreads;
-
 
         return savingSettings;
     }

@@ -179,10 +179,10 @@ public class SaveMenuDialog extends JFrame implements ActionListener
         savingSettings.rowsPerStrip = Integer.parseInt( tfRowsPerStrip.getText() );
 
         savingSettings.saveVolumes = cbSaveVolume.isSelected();
-        savingSettings.volumesFilePath = tfVolumesFilePath.getText() + File.separator + "volume";
+        savingSettings.volumesFilePathStump = tfVolumesFilePath.getText() + File.separator + "volume";
 
         savingSettings.saveProjections = cbSaveProjection.isSelected();
-        savingSettings.projectionsFilePath = tfProjectionsFilePath.getText() + File.separator + "projection";
+        savingSettings.projectionsFilePathStump = tfProjectionsFilePath.getText() + File.separator + "projection";
         savingSettings.numIOThreads = Integer.parseInt( tfNumIOThreads.getText() );
         savingSettings.numProcessingThreads = Integer.parseInt( tfNumProcessingThreads.getText() );
 

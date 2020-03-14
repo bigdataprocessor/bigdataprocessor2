@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.tracking;
+package de.embl.cba.bdp2.track;
 
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
@@ -110,7 +110,7 @@ public class BigDataTrackerCommand < R extends RealType< R > & NativeType< R > >
     }
 
     private void doTracking() {
-        // configure tracking
+        // configure track
         trackingSettings.rai = image.getRai();
         if (length < -1) {
             length = -1;

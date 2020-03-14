@@ -69,7 +69,7 @@ public class SaveSingleChanneHdf5SeriesAsImaris
         savingSettings.numIOThreads = 1;
         savingSettings.saveProjections = false;
         savingSettings.saveVolumes = true;
-        savingSettings.volumesFilePath = out.toString();
+        savingSettings.volumesFilePathStump = out.toString();
 
         BigDataProcessor2.saveImageAndWaitUntilDone( savingSettings, binnedImage );
 

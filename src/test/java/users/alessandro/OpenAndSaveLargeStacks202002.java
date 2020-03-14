@@ -25,6 +25,6 @@ public class OpenAndSaveLargeStacks202002
 		savingSettings.voxelSpacing = image.getVoxelSpacing();
 		savingSettings.voxelUnit = image.getVoxelUnit();
 
-//		BigDataProcessor2.saveImage( image, savingSettings, new LoggingProgressListener( "Save" ) );
+		BigDataProcessor2.saveImage( image, savingSettings, new LoggingProgressListener( "Save" ) );
 	}
 }

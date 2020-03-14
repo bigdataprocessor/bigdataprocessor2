@@ -2,7 +2,6 @@ package de.embl.cba.bdp2.saving;
 
 import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.process.IntervalImageViews;
-import de.embl.cba.bdp2.progress.ProgressHelpers;
 import de.embl.cba.bdp2.utils.Utils;
 import ij.ImagePlus;
 import ij.ImageStack;
@@ -13,7 +12,6 @@ import loci.formats.ImageWriter;
 import loci.formats.meta.IMetadata;
 import loci.formats.out.TiffWriter;
 import loci.formats.services.OMEXMLService;
-import loci.formats.tiff.IFD;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -97,7 +95,7 @@ public class SaveFrameAsTIFFStacks< R extends RealType< R > & NativeType< R > > 
                         "" );
 
                 saveAsTiff( imp, c, t,
-                        settings.compression, settings.rowsPerStrip, settings.volumesFilePath );
+                        settings.compression, settings.rowsPerStrip, settings.volumesFilePathStump );
             }
 
             if ( settings.saveProjections )
@@ -142,7 +140,7 @@ public class SaveFrameAsTIFFStacks< R extends RealType< R > & NativeType< R > > 
                 settings.voxelUnit,
                 "" );
 
-        ProjectionXYZ.saveAsTiffXYZMaxProjection( imp3D, c, t, settings.projectionsFilePath );
+        ProjectionXYZ.saveAsTiffXYZMaxProjection( imp3D, c, t, settings.projectionsFilePathStump );
 
         Logger.debug( "Computing and saving projections  [ s ]: "
                 + ( System.currentTimeMillis() - start ) / 1000);
@@ -193,8 +191,8 @@ public class SaveFrameAsTIFFStacks< R extends RealType< R > & NativeType< R > > 
 
             if ( new File( pathCT ).exists() ) new File( pathCT ).delete();
 
-            try {
-
+            try
+            {
                 ServiceFactory factory = new ServiceFactory();
                 OMEXMLService service = factory.getInstance(OMEXMLService.class);
                 IMetadata meta = service.createOMEXMLMetadata();
@@ -212,6 +210,9 @@ public class SaveFrameAsTIFFStacks< R extends RealType< R > & NativeType< R > > 
                 meta.setPixelsSizeZ(new PositiveInteger(imp.getNSlices()), 0);
                 meta.setPixelsSizeC(new PositiveInteger(1), 0);
                 meta.setPixelsSizeT(new PositiveInteger(1), 0);
+
+                // TODO: add image calibration
+                //meta.setPixelsPhysicalSizeX(  );
 
                 int channel = 0;
                 meta.setChannelID("Channel:0:" + channel, 0, channel);

@@ -6,8 +6,8 @@ import bdv.util.*;
 import bdv.viewer.SourceAndConverter;
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.boundingbox.BoundingBoxDialog;
-import de.embl.cba.bdp2.tracking.ThresholdFloodFillOverlapTracker;
-import de.embl.cba.bdp2.tracking.Track;
+import de.embl.cba.bdp2.track.ThresholdFloodFillOverlapTracker;
+import de.embl.cba.bdp2.track.Track;
 import de.embl.cba.bdp2.ui.BdvMenus;
 import de.embl.cba.bdp2.ui.DisplaySettings;
 import de.embl.cba.bdp2.utils.DimensionOrder;
@@ -54,7 +54,10 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
         if ( autoContrast ) autoContrastPerChannel();
 
         // TODO: not logical that this is part of the "Viewer" rather than the "Processor"....
-        this.addMenus( new BdvMenus() );
+        SwingUtilities.invokeLater( () -> {
+            this.addMenus( new BdvMenus() );
+        });
+
         this.installBehaviours( );
     }
 
@@ -106,9 +109,9 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
         BoundingBoxDialog boundingBoxDialog = new BoundingBoxDialog( bdvHandle, image );
 
         if ( calibratedSelection )
-            boundingBoxDialog.showCalibratedUnitsBox( );
+            boundingBoxDialog.showCalibratedBoxAndWaitForResult();
         else
-            boundingBoxDialog.showVoxelUnitsBox( );
+            boundingBoxDialog.showVoxelBoxAndWaitForResult();
 
         FinalInterval interval = boundingBoxDialog.getVoxelUnitsSelectionInterval();
 

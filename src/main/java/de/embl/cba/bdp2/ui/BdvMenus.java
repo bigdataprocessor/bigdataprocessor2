@@ -9,7 +9,7 @@ import de.embl.cba.bdp2.process.splitviewmerge.SplitViewMergingDialog;
 import de.embl.cba.bdp2.registration.RegisteredViews;
 import de.embl.cba.bdp2.registration.Registration;
 import de.embl.cba.bdp2.shear.ShearMenuDialog;
-import de.embl.cba.bdp2.tracking.ApplyTrackDialog;
+import de.embl.cba.bdp2.track.ApplyTrackDialog;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.RandomAccessibleInterval;
@@ -49,7 +49,7 @@ public class BdvMenus
 
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public synchronized void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.SAVE_AS_MENU_ITEM )) {
             BigDataProcessor2.generalThreadPool.submit(() -> {
                 SaveMenuDialog saveMenuDialog = new SaveMenuDialog(imageViewer);
@@ -83,10 +83,9 @@ public class BdvMenus
                 RegisteredViews.createAlignedMovieView( imageViewer, Registration.PHASE_CORRELATION, 0 );
             });
         }else if(e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.CROP_MENU_ITEM )){
-        	BigDataProcessor2.generalThreadPool.submit(() -> {
-            	new CroppingDialog<>( imageViewer );
-            });
-
+        	new Thread( () ->  {
+        	    new CroppingDialog<>( imageViewer );
+            }).start();
         }else if(e.getActionCommand().equalsIgnoreCase(
                 UIDisplayConstants.IMAGEJ_VIEW_MENU_ITEM )){
             // TODO: improve this:

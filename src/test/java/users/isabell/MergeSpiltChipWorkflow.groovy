@@ -93,16 +93,16 @@ for ( int i = 0; i < directories.length; i++ )
     // merge
     final Image merge = merger.mergeRegionsAandB( image );
     savingSettings.saveVolumes = true;
-    savingSettings.volumesFilePath = directory + "-stacks/stack";
+    savingSettings.volumesFilePathStump = directory + "-stacks/stack";
     savingSettings.saveProjections = false;
     Utils.saveImageAndWaitUntilDone( bdp, savingSettings, merge );
 
     // crop
     final Image crop = Cropper.crop( merge, croppingIntervals.get( i ) );
     savingSettings.saveVolumes = true;
-    savingSettings.volumesFilePath = directory + "-crop-stacks/stack";
+    savingSettings.volumesFilePathStump = directory + "-crop-stacks/stack";
     savingSettings.saveProjections = true;
-    savingSettings.projectionsFilePath =
+    savingSettings.projectionsFilePathStump =
             directory + "-crop-projections/projection";
     Utils.saveImageAndWaitUntilDone( bdp, savingSettings, crop );
 

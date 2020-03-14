@@ -1,7 +1,6 @@
 package tests;
 
 import bdv.img.imaris.Imaris;
-import bdv.img.imaris.ImarisImageLoader;
 import bdv.util.BdvFunctions;
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
@@ -43,16 +42,16 @@ public class TestSaveSingleChannel16BitTiffSeriesAsImarisVolumes
         savingSettings.numIOThreads = 1;
         savingSettings.numProcessingThreads = 4;
         savingSettings.saveProjections = true;
-        savingSettings.volumesFilePath =
+        savingSettings.volumesFilePathStump =
                 TestConstants.TEST_FOLDER + "test-output/nc1-nt3-calibrated-16bit-tiff-imaris-volumes/volume";
         savingSettings.saveVolumes = true;
-        savingSettings.projectionsFilePath =
+        savingSettings.projectionsFilePathStump =
                 TestConstants.TEST_FOLDER + "test-output/nc1-nt3-calibrated-16bit-tiff-imaris-projections/projection";
 
-        final File testVolumeFile = new File( savingSettings.volumesFilePath + "--C00--T00000.h5" );
+        final File testVolumeFile = new File( savingSettings.volumesFilePathStump + "--C00--T00000.h5" );
         if ( testVolumeFile.exists() ) testVolumeFile.delete();
 
-        final File testProjectionsFile = new File( savingSettings.projectionsFilePath + "--xyz-max-projection--C00--T00002.tif" );
+        final File testProjectionsFile = new File( savingSettings.projectionsFilePathStump + "--xyz-max-projection--C00--T00002.tif" );
         if ( testProjectionsFile.exists() ) testProjectionsFile.delete();
 
         BigDataProcessor2.saveImageAndWaitUntilDone( savingSettings, image );
@@ -62,7 +61,7 @@ public class TestSaveSingleChannel16BitTiffSeriesAsImarisVolumes
 
         if ( TestConstants.interactive )
         {
-            BdvFunctions.show( Imaris.openIms( savingSettings.volumesFilePath + ".ims" ) );
+            BdvFunctions.show( Imaris.openIms( savingSettings.volumesFilePathStump + ".ims" ) );
         }
     }
 

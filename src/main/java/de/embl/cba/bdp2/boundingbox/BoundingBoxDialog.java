@@ -39,7 +39,7 @@ public class BoundingBoxDialog < R extends RealType< R > & NativeType< R > >
         this.image = image;
     }
 
-    public FinalInterval getVoxelUnits5DInterval()
+    private FinalInterval getVoxelUnits5DInterval()
     {
         final RandomAccessibleInterval< R > rai = image.getRai();
 
@@ -75,12 +75,11 @@ public class BoundingBoxDialog < R extends RealType< R > & NativeType< R > >
         return interval;
     }
 
-    public void showCalibratedUnitsBox() {
+    public void showCalibratedBoxAndWaitForResult() {
 
         setInitialSelectionAndRange( true );
 
         final TransformedRealBoxSelectionDialog.Result result = showRealBox( image.getVoxelUnit() );
-
         if ( result.isValid() )
         {
             collectSelection( result.getInterval(), result.getMinTimepoint(), result.getMaxTimepoint() );
@@ -88,7 +87,7 @@ public class BoundingBoxDialog < R extends RealType< R > & NativeType< R > >
         }
     }
 
-    public void showVoxelUnitsBox() {
+    public void showVoxelBoxAndWaitForResult() {
 
         setInitialSelectionAndRange( false );
 

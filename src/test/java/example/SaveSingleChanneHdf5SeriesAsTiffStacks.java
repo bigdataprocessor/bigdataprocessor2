@@ -40,9 +40,9 @@ public class SaveSingleChanneHdf5SeriesAsTiffStacks
         savingSettings.numIOThreads = 1;
         savingSettings.numProcessingThreads = 4;
         savingSettings.saveProjections = true;
-        savingSettings.volumesFilePath = "/Users/tischer/Desktop/stack_0_channel_0-asTIFF-volumes/im";
+        savingSettings.volumesFilePathStump = "/Users/tischer/Desktop/stack_0_channel_0-asTIFF-volumes/im";
         savingSettings.saveVolumes = true;
-        savingSettings.projectionsFilePath = "/Users/tischer/Desktop/stack_0_channel_0-asTIFF-projections/im";
+        savingSettings.projectionsFilePathStump = "/Users/tischer/Desktop/stack_0_channel_0-asTIFF-projections/im";
 
         BigDataProcessor2.saveImageAndWaitUntilDone( savingSettings, binnedImage );
 

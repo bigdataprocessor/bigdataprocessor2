@@ -1,7 +1,7 @@
 import de.embl.cba.bdp2.loading.CachedCellImgReader;
 import de.embl.cba.bdp2.loading.files.FileInfos;
-import de.embl.cba.bdp2.tracking.BigDataTracker;
-import de.embl.cba.bdp2.tracking.TrackingSettings;
+import de.embl.cba.bdp2.track.BigDataTracker;
+import de.embl.cba.bdp2.track.TrackingSettings;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import de.embl.cba.bdp2.utils.Point3D;
@@ -12,7 +12,7 @@ public class TestBigDataTracker {
 
     public static void main(String[] args) {
 
-        String imageDirectory = "src/test/resources/tiff-nc2-nt3-tracking/";
+        String imageDirectory = "src/test/resources/tiff-nc2-nt3-track/";
         final FileInfos fileInfos = new FileInfos(imageDirectory, FileInfos.LOAD_CHANNELS_FROM_FOLDERS,
                 ".*", "");
         CachedCellImg cachedCellImg = CachedCellImgReader.createCachedCellImg( fileInfos );
@@ -26,10 +26,10 @@ public class TestBigDataTracker {
 
         BigDataTracker bdt = new BigDataTracker();
         TrackingSettings< ? > trackingSettings = createTrackingSettings(imageViewer);
-        //Test for CROSS_CORRELATION tracking
+        //Test for CROSS_CORRELATION track
         trackingSettings.trackingMethod = TrackingSettings.PHASE_CORRELATION;
         bdt.trackObject(trackingSettings, imageViewer);
-        //Test for CENTER of MASS tracking
+        //Test for CENTER of MASS track
 //        trackingSettings.trackingMethod = TrackingSettings.CENTER_OF_MASS;
 //        bdt.trackObject(trackingSettings, imageViewer);
     }
