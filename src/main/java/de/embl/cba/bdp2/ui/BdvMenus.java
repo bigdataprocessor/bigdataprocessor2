@@ -47,7 +47,6 @@ public class BdvMenus
         return jMenuList;
     }
 
-
     @Override
     public synchronized void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.SAVE_AS_MENU_ITEM )) {
@@ -62,7 +61,7 @@ public class BdvMenus
             });
         }else if (e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.APPLY_TRACK_MENU_ITEM )) {
             BigDataProcessor2.generalThreadPool.submit(() -> {
-                ApplyTrackDialog applyTrackDialog = new ApplyTrackDialog( imageViewer );
+                new ApplyTrackDialog( imageViewer );
             });
         }else if (e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.REGISTER_VOLUME_SIFT_MENU_ITEM )) {
             BigDataProcessor2.generalThreadPool.submit(() -> {
@@ -82,19 +81,20 @@ public class BdvMenus
                 if ( channel == null ) return;
                 RegisteredViews.createAlignedMovieView( imageViewer, Registration.PHASE_CORRELATION, 0 );
             });
-        }else if(e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.CROP_MENU_ITEM )){
+        }else if(e.getActionCommand().equalsIgnoreCase( UIDisplayConstants.CROP_MENU_ITEM )){
         	new Thread( () ->  {
         	    new CroppingDialog<>( imageViewer );
             }).start();
-        }else if(e.getActionCommand().equalsIgnoreCase(
-                UIDisplayConstants.IMAGEJ_VIEW_MENU_ITEM )){
-            // TODO: improve this:
-            // - make own class
-            // - add calibration
-            RandomAccessibleInterval permuted =
-                    Views.permute( imageViewer.getImage().getRai(),
-                            DimensionOrder.Z, DimensionOrder.C);
-            ImageJFunctions.show(permuted, BigDataProcessor2.generalThreadPool);
+        }else if(e.getActionCommand().equalsIgnoreCase( UIDisplayConstants.IMAGEJ_VIEW_MENU_ITEM )){
+            new Thread( () -> {
+                // TODO:
+                // - make own class
+                // - add calibration
+                RandomAccessibleInterval permuted =
+                        Views.permute( imageViewer.getImage().getRai(),
+                                DimensionOrder.Z, DimensionOrder.C );
+                ImageJFunctions.show( permuted, BigDataProcessor2.generalThreadPool );
+            }).start();
         }else if(e.getActionCommand().equalsIgnoreCase(
                 UIDisplayConstants.EIGHT_BIT_CONVERSION_MENU_ITEM )){
             BigDataProcessor2.generalThreadPool.submit(() -> {

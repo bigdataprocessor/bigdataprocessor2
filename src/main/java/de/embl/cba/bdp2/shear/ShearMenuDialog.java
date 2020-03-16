@@ -1,6 +1,5 @@
 package de.embl.cba.bdp2.shear;
 
-import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.RandomAccessibleInterval;
@@ -89,7 +88,7 @@ public class ShearMenuDialog extends JDialog implements ActionListener {
         getShearingSettings(shearingSettings);
         shearingSettings.useObliqueAngle = true;
         RandomAccessibleInterval sheared =
-                BigDataProcessor2.shearRaiXYZCT( originalRAI, shearingSettings );
+                ImageShearer.shearRai5D( originalRAI, shearingSettings );
 
         imageViewer.replaceImage( imageViewer.getImage().newImage( sheared ) );
 

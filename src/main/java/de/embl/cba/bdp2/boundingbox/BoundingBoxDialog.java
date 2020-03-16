@@ -2,11 +2,11 @@ package de.embl.cba.bdp2.boundingbox;
 
 import bdv.tools.boundingbox.BoxSelectionOptions;
 import bdv.tools.boundingbox.TransformedBoxSelectionDialog;
+import bdv.tools.boundingbox.TransformedRealBoxSelectionDialog;
 import bdv.util.Bdv;
 import bdv.util.BdvFunctions;
 import bdv.util.BdvHandle;
 import de.embl.cba.bdp2.Image;
-import de.embl.cba.bdp2.loading.files.FileInfos;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdv.utils.BdvUtils;
 import net.imglib2.*;
@@ -14,8 +14,6 @@ import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Intervals;
-import bdv.tools.boundingbox.TransformedRealBoxSelectionDialog;
-import org.mozilla.javascript.tools.debugger.Dim;
 
 public class BoundingBoxDialog < R extends RealType< R > & NativeType< R > >
 {

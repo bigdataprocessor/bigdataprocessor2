@@ -2,7 +2,6 @@ package de.embl.cba.bdp2.command;
 
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
-import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.ui.HelpDialog;
 import loci.common.DebugTools;
@@ -15,9 +14,6 @@ import org.scijava.widget.Button;
 
 import javax.swing.*;
 import java.io.File;
-import java.util.Arrays;
-
-import static de.embl.cba.bdp2.loading.files.FileInfos.PATTERN_LUXENDO;
 
 @Plugin(type = Command.class, menuPath = "Plugins>BigDataTools>BigDataProcessor2", initializer = "init")
 public class BigDataProcessorCommand < R extends RealType< R > & NativeType< R > > implements Command {
@@ -28,7 +24,7 @@ public class BigDataProcessorCommand < R extends RealType< R > & NativeType< R >
     @Parameter(label = "Subset files using regular expression")
     String filterPattern = ".*";
 
-    @Parameter(label = "Regular expression help", callback = "showRegExpHelp")
+    @Parameter(label = "Regular expression help", callback = "showRegExpHelp", required = false)
     Button regExpHelpButton;
 
     @Parameter(label = "Image files scheme",
@@ -50,19 +46,17 @@ public class BigDataProcessorCommand < R extends RealType< R > & NativeType< R >
 
     public void run()
     {
-        DebugTools.setRootLevel( "OFF" ); // Bio-Formats
-
-        final Image< R > image =
-                BigDataProcessor2.openImage(
-                        directory.toString(),
-                        namingScheme,
-                        filterPattern );
-
-        BigDataProcessor2.showVoxelSpacingDialog( image );
-        Logger.info( "Image voxel unit: " + image.getVoxelUnit() );
-        Logger.info( "Image voxel size: " + Arrays.toString( image.getVoxelSpacing() ) );
-
         SwingUtilities.invokeLater( () ->  {
+            DebugTools.setRootLevel( "OFF" ); // Bio-Formats
+
+            final Image< R > image =
+                    BigDataProcessor2.openImage(
+                            directory.toString(),
+                            namingScheme,
+                            filterPattern );
+
+            BigDataProcessor2.setVoxelSpacingViaDialog( image );
+
             BigDataProcessor2.showImage( image, autoContrast );
         });
     }
@@ -74,7 +68,5 @@ public class BigDataProcessorCommand < R extends RealType< R > & NativeType< R >
                     BigDataProcessorCommand.class.getResource( "/RegExpHelp.html" ) );
             helpDialog.setVisible( true );
         } );
-
     }
-
 }

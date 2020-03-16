@@ -51,12 +51,9 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
         this.image = image;
         show();
 
-        if ( autoContrast ) autoContrastPerChannel();
+        this.addMenus( new BdvMenus() );
 
-        // TODO: not logical that this is part of the "Viewer" rather than the "Processor"....
-        SwingUtilities.invokeLater( () -> {
-            this.addMenus( new BdvMenus() );
-        });
+        if ( autoContrast ) autoContrastPerChannel();
 
         this.installBehaviours( );
     }

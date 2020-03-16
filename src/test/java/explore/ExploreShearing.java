@@ -2,6 +2,7 @@ package explore;
 
 import de.embl.cba.bdp2.Image;
 import de.embl.cba.bdp2.loading.files.FileInfos;
+import de.embl.cba.bdp2.shear.ImageShearer;
 import de.embl.cba.bdp2.shear.ShearMenuDialog;
 import de.embl.cba.bdp2.shear.ShearingSettings;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
@@ -25,7 +26,7 @@ public class ExploreShearing < R extends RealType< R > & NativeType< R > >
 		ShearMenuDialog dialog = new ShearMenuDialog( bdvImageViewer );
 		dialog.getShearingSettings( shearingSettings ); // sets default values.
 
-		final RandomAccessibleInterval shearRaiXYZCT = BigDataProcessor2.shearRaiXYZCT( image.getRai(), shearingSettings );
+		final RandomAccessibleInterval shearRaiXYZCT = ImageShearer.shearRai5D( image.getRai(), shearingSettings );
 		final Image shearImage = image.newImage( shearRaiXYZCT );
 		bdvImageViewer.replaceImage( shearImage );
 	}

@@ -1,5 +1,6 @@
 import de.embl.cba.bdp2.loading.CachedCellImgReader;
-import de.embl.cba.bdp2.ui.BigDataProcessor2;
+import de.embl.cba.bdp2.shear.ImageShearer;
+import de.embl.cba.bdp2.shear.RaiNDShearer;
 import de.embl.cba.bdp2.shear.ShearMenuDialog;
 import de.embl.cba.bdp2.shear.ShearingSettings;
 import de.embl.cba.bdp2.loading.files.FileInfos;
@@ -55,7 +56,7 @@ public class TestShearTransform {
         ShearingSettings shearingSettings = new ShearingSettings();
         ShearMenuDialog dialog = new ShearMenuDialog(imageViewer);
         dialog.getShearingSettings( shearingSettings ); // sets default values.
-        return BigDataProcessor2.shearRaiXYZCT( cachedCellImg, shearingSettings );
+        return ImageShearer.shearRai5D( cachedCellImg, shearingSettings );
     }
 
     private static RandomAccessibleInterval
@@ -64,6 +65,6 @@ public class TestShearTransform {
         ShearingSettings shearingSettings = new ShearingSettings();
         ShearMenuDialog dialog = new ShearMenuDialog(imageViewer);
         dialog.getShearingSettings( shearingSettings ); // sets default values.
-        return BigDataProcessor2.shearImage5D( cachedCellImg, shearingSettings );
+        return RaiNDShearer.shear( cachedCellImg, shearingSettings );
     }
 }

@@ -13,19 +13,19 @@ public class CroppingDialog< T extends RealType< T > & NativeType< T > >
 {
 	public CroppingDialog( BdvImageViewer< T > viewer )
 	{
-		Logger.info( "\nCropping..." );
 		FinalInterval interval = viewer.get5DIntervalFromUser( true );
-		final Image< T > image = viewer.getImage();
 
 		if ( interval != null )
 		{
+			final Image< T > image = viewer.getImage();
 			Image< T > cropped = Cropper.crop( image, interval );
+
+			Logger.info( "\n# Crop" );
+			Logger.info( "Crop interval [" + image.getVoxelUnit() +"]: " + interval.toString() );
+			Logger.info( "Crop view size [GB]: " + Utils.getSizeGB( cropped.getRai() ) );
 
 			final BdvImageViewer< T > newViewer = new BdvImageViewer<>( cropped );
 			newViewer.setDisplaySettings( viewer.getDisplaySettings() );
-
-			Logger.info( "Cropping interval [" + image.getVoxelUnit() +"]: " + interval.toString() );
-			Logger.info( "Cropped view size [GB]: " + Utils.getSizeGB( cropped.getRai() ) );
 		}
 	}
 }

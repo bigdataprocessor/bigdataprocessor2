@@ -11,6 +11,7 @@ import de.embl.cba.bdp2.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.progress.Progress;
 import de.embl.cba.bdp2.progress.ProgressListener;
 import de.embl.cba.bdp2.saving.*;
+import de.embl.cba.bdp2.shear.Rai5DShearer;
 import de.embl.cba.bdp2.shear.ShearingSettings;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
@@ -20,18 +21,11 @@ import net.imglib2.*;
 import net.imglib2.cache.img.CachedCellImg;
 import net.imglib2.converter.Converters;
 import net.imglib2.converter.RealUnsignedByteConverter;
-import net.imglib2.interpolation.InterpolatorFactory;
-import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
-import net.imglib2.realtransform.AffineRandomAccessible;
-import net.imglib2.realtransform.AffineTransform;
 import net.imglib2.realtransform.AffineTransform3D;
-import net.imglib2.realtransform.RealViews;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
-import net.imglib2.util.Intervals;
 import net.imglib2.util.Util;
-import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
 
 import java.util.ArrayList;
@@ -41,7 +35,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.RecursiveTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
@@ -55,7 +48,7 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
     public static Map<Integer, AtomicBoolean> saveTracker = new ConcurrentHashMap<>();
 
 
-    // TODO: do we ever need the constructor??
+    // TODO: do we ever need the constructor, maybe only static methods are more convenient?!
     public BigDataProcessor2() {
         //TODO: have separate shutdown for the executorService. It will not shutdown when ui exeService is shut. --ashis (DONE but needs testing)
         //Ref: https://stackoverflow.com/questions/23684189/java-how-to-make-an-executorservice-running-inside-another-executorservice-not
@@ -134,29 +127,34 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
     public static < R extends RealType< R > & NativeType< R > >
     BdvImageViewer showImage( Image< R > image, boolean autoContrast )
     {
-        Logger.info( "Image voxel unit: " + image.getVoxelUnit() );
-        Logger.info( "Image voxel size: " + Arrays.toString( image.getVoxelSpacing() ) );
         return new BdvImageViewer( image, autoContrast );
     }
 
-
     public static < R extends RealType< R > & NativeType< R > >
-    boolean showVoxelSpacingDialog( Image< R > image )
+    boolean setVoxelSpacingViaDialog( Image< R > image )
     {
+        // TODO: refactor into a class
         final double[] voxelSpacing = image.getVoxelSpacing();
         String voxelUnit = image.getVoxelUnit();
         voxelUnit = fixVoxelSpacingAndUnit( voxelSpacing, voxelUnit );
+
         final GenericDialog genericDialog = new GenericDialog( "Calibration" );
         genericDialog.addStringField( "Unit", voxelUnit, 12 );
         genericDialog.addNumericField( "Spacing X", voxelSpacing[ 0 ], 3, 12, "" );
         genericDialog.addNumericField( "Spacing Y", voxelSpacing[ 1 ], 3, 12, "" );
         genericDialog.addNumericField( "Spacing Z", voxelSpacing[ 2 ], 3, 12, "" );
+
         genericDialog.showDialog();
         if ( genericDialog.wasCanceled() ) return false;
+
         image.setVoxelUnit( genericDialog.getNextString() );
         voxelSpacing[ 0 ] = genericDialog.getNextNumber();
         voxelSpacing[ 1 ] = genericDialog.getNextNumber();
         voxelSpacing[ 2 ] = genericDialog.getNextNumber();
+
+        Logger.info( "Image voxel unit: " + image.getVoxelUnit() );
+        Logger.info( "Image voxel size: " + Arrays.toString( image.getVoxelSpacing() ) );
+
         return true;
     }
 
@@ -169,14 +167,14 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
         return voxelUnit;
     }
 
-
-    // Return futures from the image saver
+    // TODO: Return futures from the image saver
     public static < R extends RealType< R > & NativeType< R > >
     ImgSaver saveImage(
             Image< R > image,
             SavingSettings savingSettings,
             ProgressListener progressListener )
     {
+        // TODO: refactor into a class
         int nIOThread = Math.max( 1, Math.min( savingSettings.numIOThreads, MAX_THREAD_LIMIT ));
         Logger.info( "Saving started; I/O threads: " + nIOThread );
 
@@ -222,126 +220,6 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
     Image< R > convert( Image< R > image, double mapTo0, double mapTo255 )
     {
         return UnsignedByteTypeConversion.convert( image, mapTo0, mapTo255 );
-    }
-
-
-    // TODO: move to Shearing but still have convenience access from here
-    public static <T extends RealType<T> & NativeType<T>>
-    RandomAccessibleInterval shearRaiXYZCT(
-            final RandomAccessibleInterval< T > rai,
-            ShearingSettings shearingSettings )
-    {
-        System.out.println("Shear Factor X " + shearingSettings.shearingFactorX);
-        System.out.println("Shear Factor Y " + shearingSettings.shearingFactorY);
-
-        List< RandomAccessibleInterval< T > > timeTracks = new ArrayList<>();
-        int nTimeFrames = (int) rai.dimension( DimensionOrder.T );
-        int nChannels = (int) rai.dimension( DimensionOrder.C );
-        System.out.println("Shear Factor X " + shearingSettings.shearingFactorX);
-        System.out.println("Shear Factor Y " + shearingSettings.shearingFactorY);
-        AffineTransform3D affine = new AffineTransform3D();
-        affine.set(shearingSettings.shearingFactorX, 0, 2);
-        affine.set(shearingSettings.shearingFactorY, 1, 2);
-        List<ApplyShearToRAI> tasks = new ArrayList<>();
-       // long startTime = System.currentTimeMillis();
-        for (int t = 0; t < nTimeFrames; ++t) {
-            ApplyShearToRAI task = new ApplyShearToRAI(rai, t, nChannels, affine, shearingSettings.interpolationFactory);
-            task.fork();
-            tasks.add(task);
-        }
-        for (ApplyShearToRAI task : tasks) {
-            timeTracks.add((RandomAccessibleInterval) task.join());
-        }
-        final RandomAccessibleInterval sheared = Views.stack( timeTracks );
-//        System.out.println("Time elapsed (ms) " + (System.currentTimeMillis() - startTime));
-
-
-        return sheared;
-    }
-
-    /**
-     * TODO: this appears too slow
-     *
-     * @param rai5D
-     * @param shearingSettings
-     * @param <T>
-     * @return
-     */
-    @Deprecated
-    public static <T extends RealType<T> & NativeType<T>>
-    RandomAccessibleInterval shearImage5D( RandomAccessibleInterval rai5D, ShearingSettings shearingSettings)
-    {
-        final AffineTransform affine5D = new AffineTransform( 5 );
-        affine5D.set(shearingSettings.shearingFactorX, 0, 2);
-        affine5D.set(shearingSettings.shearingFactorY, 1, 2);
-
-        RealRandomAccessible rra = Views.interpolate(
-                Views.extendZero( rai5D ),
-                new NearestNeighborInterpolatorFactory());
-
-        AffineRandomAccessible af = RealViews.affine( rra, affine5D );
-
-        final FinalInterval interval5D = getInterval5DAfterShearing( rai5D, shearingSettings );
-
-        RandomAccessibleInterval intervalView = Views.interval( af, interval5D );
-
-        return intervalView;
-    }
-
-    private static FinalInterval getInterval5DAfterShearing(
-            RandomAccessibleInterval rai5D,
-            ShearingSettings shearingSettings )
-    {
-        AffineTransform3D affine3DtoEstimateBoundsAfterTransformation = new AffineTransform3D();
-        affine3DtoEstimateBoundsAfterTransformation.set(shearingSettings.shearingFactorX, 0, 2);
-        affine3DtoEstimateBoundsAfterTransformation.set(shearingSettings.shearingFactorY, 1, 2);
-
-
-        final IntervalView intervalView3D = Views.hyperSlice( Views.hyperSlice( rai5D, DimensionOrder.T, 0 ), DimensionOrder.C, 0 );
-        FinalRealInterval transformedRealInterval = affine3DtoEstimateBoundsAfterTransformation.estimateBounds( intervalView3D );
-
-        final Interval interval = Intervals.largestContainedInterval( transformedRealInterval );
-        final long[] min = new long[ 5 ];
-        final long[] max = new long[ 5 ];
-        rai5D.min( min );
-        rai5D.max( max );
-        interval.min( min );
-        interval.max( max );
-        return new FinalInterval( min, max );
-    }
-
-
-    private static class ApplyShearToRAI<T extends RealType<T> & NativeType<T>> extends RecursiveTask<RandomAccessibleInterval> {
-
-        private RandomAccessibleInterval rai;
-        private int t;
-        private final int nChannels;
-        private final AffineTransform3D affine;
-        private InterpolatorFactory interpolatorFactory;
-
-        public ApplyShearToRAI(RandomAccessibleInterval rai, int time, int nChannels, AffineTransform3D affine,InterpolatorFactory interpolatorFactory) {
-            this.rai = rai;
-            this.t = time;
-            this.nChannels = nChannels;
-            this.affine = affine;
-            this.interpolatorFactory = interpolatorFactory;
-        }
-
-        @Override
-        protected RandomAccessibleInterval<T> compute() {
-            List<RandomAccessibleInterval<T>> channelTracks = new ArrayList<>();
-            RandomAccessibleInterval tStep = Views.hyperSlice(rai, DimensionOrder.T, t);
-            for (int channel = 0; channel < nChannels; ++channel) {
-                RandomAccessibleInterval cStep = Views.hyperSlice(tStep, DimensionOrder.C, channel);
-                RealRandomAccessible real = Views.interpolate(Views.extendZero(cStep),this.interpolatorFactory);
-                AffineRandomAccessible af = RealViews.affine(real, affine);
-                FinalRealInterval transformedRealInterval = affine.estimateBounds(cStep);
-                FinalInterval transformedInterval = Utils.asIntegerInterval(transformedRealInterval);
-                RandomAccessibleInterval intervalView = Views.interval(af, transformedInterval);
-                channelTracks.add(intervalView);
-            }
-            return Views.stack(channelTracks);
-        }
     }
 
 
