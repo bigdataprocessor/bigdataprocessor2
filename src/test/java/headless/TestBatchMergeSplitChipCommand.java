@@ -1,6 +1,6 @@
 package headless;
 
-import de.embl.cba.bdp2.command.LuxendoBatchMergeSplitChipCommand;
+import de.embl.cba.bdp2.scijava.command.LuxendoBatchMergeSplitChipCommand;
 import net.imagej.ImageJ;
 
 public class TestBatchMergeSplitChipCommand

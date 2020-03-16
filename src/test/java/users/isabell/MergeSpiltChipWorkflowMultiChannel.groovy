@@ -1,10 +1,10 @@
 //#@File[] (label="Select", style="both") directories
 
-import de.embl.cba.bdp2.Image;
+import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.crop.Cropper;
 import de.embl.cba.bdp2.process.splitviewmerge.SplitViewMerger;
-import de.embl.cba.bdp2.saving.SavingSettings;
+import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer

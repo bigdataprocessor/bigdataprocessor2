@@ -2,8 +2,8 @@ package de.embl.cba.bdp2.ui;
 
 import de.embl.cba.bdp2.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.progress.ProgressListener;
-import de.embl.cba.bdp2.saving.ImgSaver;
-import de.embl.cba.bdp2.saving.SavingSettings;
+import de.embl.cba.bdp2.save.ImgSaver;
+import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import ij.IJ;
 

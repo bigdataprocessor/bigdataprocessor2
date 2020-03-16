@@ -6,7 +6,7 @@ import bdv.tools.brightness.SliderPanel;
 import bdv.util.BoundedValue;
 import bdv.util.ModifiableInterval;
 import bdv.viewer.ViewerPanel;
-import de.embl.cba.bdp2.Image;
+import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.FinalInterval;
 import net.imglib2.Interval;

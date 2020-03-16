@@ -1,7 +1,7 @@
 package tests;
 
-import de.embl.cba.bdp2.Image;
-import de.embl.cba.bdp2.loading.files.FileInfos;
+import de.embl.cba.bdp2.image.Image;
+import de.embl.cba.bdp2.load.files.FileInfos;
 import de.embl.cba.bdp2.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.registration.RegisteredViews;
 import de.embl.cba.bdp2.registration.Registration;
@@ -11,7 +11,6 @@ import net.imagej.ImageJ;
 import net.imglib2.FinalInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
-import org.junit.Test;
 
 public class TestAlignMoviePhaseCorrelation< R extends RealType< R > & NativeType< R > >
 {

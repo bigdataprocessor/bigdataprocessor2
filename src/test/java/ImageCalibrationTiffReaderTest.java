@@ -1,4 +1,4 @@
-import de.embl.cba.bdp2.loading.files.FileInfos;
+import de.embl.cba.bdp2.load.files.FileInfos;
 import ij.IJ;
 import ij.ImageJ;
 import ij.io.FileInfo;

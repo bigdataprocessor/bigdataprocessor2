@@ -1,9 +1,6 @@
 package de.embl.cba.bdp2.process;
 
 import de.embl.cba.bdp2.logging.Logger;
-import de.embl.cba.bdp2.utils.DimensionOrder;
-import de.embl.cba.bdp2.utils.Utils;
-import ij.ImagePlus;
 import net.imglib2.*;
 import net.imglib2.algorithm.util.Grids;
 import net.imglib2.img.AbstractImg;
@@ -15,13 +12,12 @@ import net.imglib2.type.Type;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Intervals;
 import net.imglib2.util.Util;
-import net.imglib2.view.ExtendedRandomAccessibleInterval;
 import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
 
 import java.util.List;
 
-import static de.embl.cba.bdp2.loading.CachedCellImgReader.MAX_ARRAY_LENGTH;
+import static de.embl.cba.bdp2.load.CachedCellImgReader.MAX_ARRAY_LENGTH;
 import static de.embl.cba.bdp2.utils.DimensionOrder.*;
 
 public class IntervalImageViews

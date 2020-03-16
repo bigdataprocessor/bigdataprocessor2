@@ -1,6 +1,6 @@
 package de.embl.cba.bdp2.ui;
 
-import de.embl.cba.bdp2.Image;
+import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.numeric.integer.UnsignedByteType;

@@ -1,6 +1,6 @@
 package de.embl.cba.bdp2.crop;
 
-import de.embl.cba.bdp2.Image;
+import de.embl.cba.bdp2.image.Image;
 import net.imglib2.Interval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;

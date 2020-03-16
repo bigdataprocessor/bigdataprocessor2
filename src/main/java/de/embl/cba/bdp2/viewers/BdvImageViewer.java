@@ -4,7 +4,7 @@ import bdv.tools.brightness.ConverterSetup;
 import bdv.tools.brightness.MinMaxGroup;
 import bdv.util.*;
 import bdv.viewer.SourceAndConverter;
-import de.embl.cba.bdp2.Image;
+import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.boundingbox.BoundingBoxDialog;
 import de.embl.cba.bdp2.track.ThresholdFloodFillOverlapTracker;
 import de.embl.cba.bdp2.track.Track;

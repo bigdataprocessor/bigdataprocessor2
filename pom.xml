@@ -132,6 +132,7 @@
 		<dependency>
 			<groupId>net.imagej</groupId>
 			<artifactId>imagej-legacy</artifactId>
+			<version>0.37.3-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>net.imagej</groupId>

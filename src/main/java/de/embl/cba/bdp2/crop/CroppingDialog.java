@@ -1,13 +1,12 @@
 package de.embl.cba.bdp2.crop;
 
-import de.embl.cba.bdp2.Image;
+import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.FinalInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
-import sun.rmi.runtime.Log;
 
 public class CroppingDialog< T extends RealType< T > & NativeType< T > >
 {

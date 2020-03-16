@@ -2,8 +2,6 @@ package de.embl.cba.bdp2.process;
 
 import bdv.tools.brightness.SliderPanel;
 import bdv.util.BoundedValue;
-import de.embl.cba.bdp2.Image;
-import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;

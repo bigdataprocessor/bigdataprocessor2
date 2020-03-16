@@ -8,7 +8,7 @@ import de.embl.cba.bdp2.boundingbox.CustomBoundingBoxDialog;
 import de.embl.cba.bdp2.boundingbox.SetupBoundingBox;
 import de.embl.cba.bdp2.files.FileInfoConstants;
 import de.embl.cba.bdp2.files.FileInfoSource;
-import de.embl.cba.bdp2.saving.SavingSettings;
+import de.embl.cba.bdp2.save.SavingSettings;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealInterval;

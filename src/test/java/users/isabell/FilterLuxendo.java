@@ -1,7 +1,5 @@
 package users.isabell;
 
-import de.embl.cba.bdp2.loading.files.FileInfos;
-
 import java.util.regex.Pattern;
 
 public class FilterLuxendo

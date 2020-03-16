@@ -8,6 +8,8 @@ import de.embl.cba.bdp2.process.*;
 import de.embl.cba.bdp2.process.splitviewmerge.SplitViewMergingDialog;
 import de.embl.cba.bdp2.registration.RegisteredViews;
 import de.embl.cba.bdp2.registration.Registration;
+import de.embl.cba.bdp2.scijava.command.BinCommand;
+import de.embl.cba.bdp2.scijava.command.Services;
 import de.embl.cba.bdp2.shear.ShearMenuDialog;
 import de.embl.cba.bdp2.track.ApplyTrackDialog;
 import de.embl.cba.bdp2.utils.DimensionOrder;
@@ -103,7 +105,8 @@ public class BdvMenus
         }else if(e.getActionCommand().equalsIgnoreCase(
                 UIDisplayConstants.BINNING_MENU_ITEM )){
             BigDataProcessor2.generalThreadPool.submit(() -> {
-               new BinningDialog<>(imageViewer);
+                Services.commandService.run( BinCommand.class, true );
+               //new BinningDialog<>(imageViewer);
             });
         }else if(e.getActionCommand().equalsIgnoreCase(
             UIDisplayConstants.CHROMATIC_SHIFT_CORRECTION_MENU_ITEM )){

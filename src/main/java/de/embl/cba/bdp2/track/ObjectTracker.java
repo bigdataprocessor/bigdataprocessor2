@@ -86,7 +86,7 @@ public class ObjectTracker < R extends RealType< R > & NativeType< R > > extends
             // at each iteration, the center of mass is only computed for a subset of the data cube
             // this subset iteratively shifts every iteration according to the results of the center of mass computation
             for(int i=0; i<iterations; i++) {
-                // trackingFraction = 1/trackingFactor is the user selected object size, because we are loading
+                // trackingFraction = 1/trackingFactor is the user selected object size, because we are load
                 // a portion of the data, which is trackingFactor times larger than the object size
                 // below formula makes the region in which the center of mass is compute go from 1 to 1/trackingfactor
                 trackingFraction = 1.0 - Math.pow(1.0*(i+1)/iterations,1.0/4.0)*(1.0-1.0/trackingFactor);

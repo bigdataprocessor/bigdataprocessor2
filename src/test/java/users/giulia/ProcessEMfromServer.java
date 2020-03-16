@@ -1,8 +1,8 @@
 package users.giulia;
 
-import de.embl.cba.bdp2.Image;
-import de.embl.cba.bdp2.loading.files.FileInfos;
-import de.embl.cba.bdp2.saving.SavingSettings;
+import de.embl.cba.bdp2.image.Image;
+import de.embl.cba.bdp2.load.files.FileInfos;
+import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import net.imagej.ImageJ;
 import net.imglib2.FinalInterval;

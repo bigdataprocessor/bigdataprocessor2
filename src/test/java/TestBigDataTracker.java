@@ -1,5 +1,5 @@
-import de.embl.cba.bdp2.loading.CachedCellImgReader;
-import de.embl.cba.bdp2.loading.files.FileInfos;
+import de.embl.cba.bdp2.load.CachedCellImgReader;
+import de.embl.cba.bdp2.load.files.FileInfos;
 import de.embl.cba.bdp2.track.BigDataTracker;
 import de.embl.cba.bdp2.track.TrackingSettings;
 import de.embl.cba.bdp2.utils.Utils;

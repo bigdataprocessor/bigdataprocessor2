@@ -1,6 +1,6 @@
 package de.embl.cba.bdp2.track;
 
-import de.embl.cba.bdp2.Image;
+import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;

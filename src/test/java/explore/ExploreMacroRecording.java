@@ -1,6 +1,6 @@
 package explore;
 
-import de.embl.cba.bdp2.command.BigDataProcessorCommand;
+import de.embl.cba.bdp2.scijava.command.OpenCommand;
 import ij.plugin.frame.Recorder;
 import net.imagej.ImageJ;
 
@@ -14,6 +14,6 @@ public class ExploreMacroRecording
 		final Recorder recorder = new Recorder();
 
 		// invoke the plugin
-		ij.command().run( BigDataProcessorCommand.class, true );
+		ij.command().run( OpenCommand.class, true );
 	}
 }

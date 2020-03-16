@@ -2,7 +2,7 @@ package de.embl.cba.bdp2.convert;
 
 import bdv.tools.brightness.SliderPanelDouble;
 import bdv.util.BoundedValueDouble;
-import de.embl.cba.bdp2.Image;
+import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;

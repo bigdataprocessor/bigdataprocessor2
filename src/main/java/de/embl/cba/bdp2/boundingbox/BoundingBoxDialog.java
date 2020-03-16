@@ -6,7 +6,7 @@ import bdv.tools.boundingbox.TransformedRealBoxSelectionDialog;
 import bdv.util.Bdv;
 import bdv.util.BdvFunctions;
 import bdv.util.BdvHandle;
-import de.embl.cba.bdp2.Image;
+import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdv.utils.BdvUtils;
 import net.imglib2.*;
