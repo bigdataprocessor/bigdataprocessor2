@@ -25,8 +25,8 @@ public class OpenCommand< R extends RealType< R > & NativeType< R > > implements
     @Parameter(label = "Subset files using regular expression")
     String filterPattern = ".*";
 
-    @Parameter(label = "Regular expression help", callback = "showRegExpHelp", required = false)
-    Button regExpHelpButton;
+    //@Parameter(label = "Regular expression help", callback = "showRegExpHelp", required = false)
+    //Button regExpHelpButton;
 
     @Parameter(label = "Image files scheme",
             choices = {
@@ -42,8 +42,8 @@ public class OpenCommand< R extends RealType< R > & NativeType< R > > implements
                     FileInfos.PATTERN_6})
     String namingScheme = FileInfos.SINGLE_CHANNEL_TIMELAPSE;
 
-    @Parameter(label = "Auto contrast")
-    boolean autoContrast = false;
+    //@Parameter(label = "Auto contrast")
+    boolean autoContrast = true;
 
     public void run()
     {

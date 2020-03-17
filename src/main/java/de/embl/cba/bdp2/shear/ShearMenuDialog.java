@@ -90,7 +90,7 @@ public class ShearMenuDialog extends JDialog implements ActionListener {
         RandomAccessibleInterval sheared =
                 ImageShearer.shearRai5D( originalRAI, shearingSettings );
 
-        imageViewer.replaceImage( imageViewer.getImage().newImage( sheared ), autoContrast );
+        imageViewer.replaceImage( imageViewer.getImage().newImage( sheared ), false );
 
         double[] centerCoordinates = {sheared.min(DimensionOrder.X) / 2.0,
                 sheared.max(DimensionOrder.Y) / 2.0,

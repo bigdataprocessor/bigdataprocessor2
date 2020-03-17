@@ -1,6 +1,6 @@
 package de.embl.cba.bdp2.ui;
 
-import de.embl.cba.bdp2.bin.BinningDialog;
+import de.embl.cba.bdp2.bin.InteractiveBinningDialog;
 import de.embl.cba.bdp2.convert.UnsignedByteTypeConversion;
 import de.embl.cba.bdp2.crop.CroppingDialog;
 import de.embl.cba.bdp2.logging.Logger;
@@ -8,8 +8,6 @@ import de.embl.cba.bdp2.process.*;
 import de.embl.cba.bdp2.process.splitviewmerge.SplitViewMergingDialog;
 import de.embl.cba.bdp2.registration.RegisteredViews;
 import de.embl.cba.bdp2.registration.Registration;
-import de.embl.cba.bdp2.scijava.command.BinCommand;
-import de.embl.cba.bdp2.scijava.command.Services;
 import de.embl.cba.bdp2.shear.ShearMenuDialog;
 import de.embl.cba.bdp2.track.ApplyTrackDialog;
 import de.embl.cba.bdp2.utils.DimensionOrder;
@@ -102,14 +100,16 @@ public class BdvMenus
             BigDataProcessor2.generalThreadPool.submit(() -> {
                 new UnsignedByteTypeConversion(imageViewer);
             });
-        }else if(e.getActionCommand().equalsIgnoreCase( UIDisplayConstants.BINNING_MENU_ITEM )){
-            BigDataProcessor2.generalThreadPool.submit(() -> {
-                SwingUtilities.invokeLater( () -> {
-                            Services.commandService.run( BinCommand.class, true );
-                        });
-               //new BinningDialog<>(imageViewer);
+        }
+        else if(e.getActionCommand().equalsIgnoreCase(
+                UIDisplayConstants.BINNING_MENU_ITEM ))
+        {
+            BigDataProcessor2.generalThreadPool.submit(() ->
+            {
+                new InteractiveBinningDialog<>( imageViewer );
             });
-        }else if(e.getActionCommand().equalsIgnoreCase(
+        }
+        else if(e.getActionCommand().equalsIgnoreCase(
             UIDisplayConstants.CHROMATIC_SHIFT_CORRECTION_MENU_ITEM )){
             BigDataProcessor2.generalThreadPool.submit(() -> {
                 new ChannelShiftCorrectionDialog<>( imageViewer );

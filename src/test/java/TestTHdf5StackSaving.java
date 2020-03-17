@@ -22,7 +22,7 @@ public class TestTHdf5StackSaving
                 "input",
                 new double[]{1.0, 1.0, 1.0},
                 "pixel");
-        imageViewer.show( autoContrast );
+        imageViewer.show( true );
         imageViewer.setDisplayRange( 0, 800, 0 );
 
         /**

@@ -103,7 +103,7 @@ public class ChannelShiftCorrectionDialog < T extends RealType< T > & NativeType
 			final RandomAccessibleInterval< T > correctedRAI =
 					channelShifter.getChannelShiftedRAI( translations );
 
-			imageViewer.replaceImage( imageViewer.getImage().newImage( correctedRAI ), autoContrast );
+			imageViewer.replaceImage( imageViewer.getImage().newImage( correctedRAI ), false );
 		}
 
 		private boolean isTranslationsChanged( ArrayList< long[] > translations )
