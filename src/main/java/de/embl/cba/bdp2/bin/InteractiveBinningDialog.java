@@ -6,6 +6,7 @@ import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import ij.plugin.frame.Recorder;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
@@ -30,6 +31,7 @@ public class InteractiveBinningDialog< T extends RealType< T > & NativeType< T >
 	private final BdvImageViewer< T > viewer;
 	private final Image< T > inputImage;
 	private Image< T > outputImage;
+	private long[] span;
 
 	public InteractiveBinningDialog( final BdvImageViewer< T > viewer )
 	{
@@ -59,7 +61,22 @@ public class InteractiveBinningDialog< T extends RealType< T > & NativeType< T >
 
 	private void ok()
 	{
-		// TODO: Record Macro
+		Recorder recorder =  Recorder.getInstance();
+		if( recorder != null )
+		{
+			if ( ! Recorder.scriptMode() )
+			{
+				String options = "";
+				options += "inputImage=[" + inputImage.getName() + "] ";
+				options += "outputImageName=[" + outputImage.getName() + "] ";
+				options += "newViewer=" + true + " ";
+				options += "binWidthXPixels=" + span[ 0 ];
+				options += "binWidthYPixels=" + span[ 1 ];
+				options += "binWidthZPixels=" + span[ 2 ];
+
+				Recorder.record( "run", "BDP2_Bin...", options );
+			}
+		}
 		Logger.info( "Binning was applied." );
 		setVisible( false );
 	}
@@ -103,7 +120,7 @@ public class InteractiveBinningDialog< T extends RealType< T > & NativeType< T >
 			@Override
 			public synchronized void update()
 			{
-				final long[] span = getNewSpan();
+				span = getNewSpan();
 
 				if ( ! isSpanChanged( span ) ) return;
 

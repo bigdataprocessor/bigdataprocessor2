@@ -8,9 +8,6 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.plugin.Parameter;
 
-import javax.swing.*;
-import java.util.ArrayList;
-
 public class AbstractProcessingCommand< R extends RealType< R > & NativeType< R > >
 {
     @Parameter(label = "Input image name", persist = true)
@@ -19,14 +16,14 @@ public class AbstractProcessingCommand< R extends RealType< R > & NativeType< R 
     @Parameter(label = "Output image name")
     String outputImageName = ImageService.nameToImage.keySet().iterator().next() + "-binned";
 
-    @Parameter(label = "Open in new viewer")
-    boolean openInNewViewer = false;
+    @Parameter(label = "Show output image in new viewer")
+    boolean newViewer = false;
 
     protected Image< R > outputImage;
 
     protected void show()
     {
-        if ( openInNewViewer )
+        if ( newViewer )
         {
             new BdvImageViewer<>( outputImage, true );
         }

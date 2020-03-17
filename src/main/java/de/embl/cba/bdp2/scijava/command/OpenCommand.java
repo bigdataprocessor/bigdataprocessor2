@@ -16,7 +16,7 @@ import org.scijava.widget.Button;
 import javax.swing.*;
 import java.io.File;
 
-@Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>Open...")
+@Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>BDP2_Open...")
 public class OpenCommand< R extends RealType< R > & NativeType< R > > implements Command {
 
     @Parameter(label = "Image data directory", style = "directory")
