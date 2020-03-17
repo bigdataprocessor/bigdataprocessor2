@@ -15,6 +15,8 @@ public class Cropper
 		final IntervalView< T > crop =
 				Views.zeroMin( Views.interval( image.getRai(), intervalXYZCT ) );
 
-		return image.newImage( crop );
+		final Image< T > croppedImage = image.newImage( crop );
+		croppedImage.setName( image.getName() + "-crop" );
+		return croppedImage;
 	}
 }

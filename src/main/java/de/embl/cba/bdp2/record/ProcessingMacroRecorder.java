@@ -12,21 +12,31 @@ public class ProcessingMacroRecorder < R extends RealType< R > & NativeType< R >
 	private final Image< R > outputImage;
 	private String options;
 
-	public ProcessingMacroRecorder( String commandName, Image< R > inputImage, Image< R > outputImage )
+	public ProcessingMacroRecorder( String commandName, Image< R > inputImage, Image< R > outputImage, boolean openImageInNewViewer )
 	{
 		this.commandName = commandName;
 		this.inputImage = inputImage;
 		this.outputImage = outputImage;
 
 		options = "";
-		options += "inputImage=[" + inputImage.getName() + "] ";
-		options += "outputImageName=[" + outputImage.getName() + "] ";
 
+		addOption( "inputImage", inputImage.getName() );
+		addOption( "outputImageName", outputImage.getName() );
+		addOption( "newViewer", openImageInNewViewer );
 	}
 
 	public void addOption( String name, Object value )
 	{
-		options += name + "=" + value + " ";
+		name = name.toLowerCase();
+
+		if ( value instanceof String )
+		{
+			options += name + "=[" + value + "] ";
+		}
+		else
+		{
+			options += name + "=" + value + " ";
+		}
 	}
 
 	public void record()

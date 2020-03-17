@@ -77,9 +77,9 @@ public class InteractiveBinningDialog< T extends RealType< T > & NativeType< T >
 				options += "inputImage=[" + inputImage.getName() + "] ";
 				options += "outputImageName=[" + outputImage.getName() + "] ";
 				options += "newViewer=" + true + " ";
-				options += "binWidthXPixels=" + span[ 0 ];
-				options += "binWidthYPixels=" + span[ 1 ];
-				options += "binWidthZPixels=" + span[ 2 ];
+				options += "binWidthXPixels=" + span[ 0 ] + " ";
+				options += "binWidthYPixels=" + span[ 1 ] + " ";
+				options += "binWidthZPixels=" + span[ 2 ] + " ";
 
 				Recorder.record( "run", "BDP2_Bin...", options );
 			}
