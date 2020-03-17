@@ -102,10 +102,11 @@ public class BdvMenus
             BigDataProcessor2.generalThreadPool.submit(() -> {
                 new UnsignedByteTypeConversion(imageViewer);
             });
-        }else if(e.getActionCommand().equalsIgnoreCase(
-                UIDisplayConstants.BINNING_MENU_ITEM )){
+        }else if(e.getActionCommand().equalsIgnoreCase( UIDisplayConstants.BINNING_MENU_ITEM )){
             BigDataProcessor2.generalThreadPool.submit(() -> {
-                Services.commandService.run( BinCommand.class, true );
+                SwingUtilities.invokeLater( () -> {
+                            Services.commandService.run( BinCommand.class, true );
+                        });
                //new BinningDialog<>(imageViewer);
             });
         }else if(e.getActionCommand().equalsIgnoreCase(

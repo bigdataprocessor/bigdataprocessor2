@@ -22,7 +22,7 @@ public class TestBigDataTracker {
                 "input",
                 new double[]{1.0, 1.0, 1.0},
                 "pixel");
-        imageViewer.show();
+        imageViewer.show( autoContrast );
 
         BigDataTracker bdt = new BigDataTracker();
         TrackingSettings< ? > trackingSettings = createTrackingSettings(imageViewer);

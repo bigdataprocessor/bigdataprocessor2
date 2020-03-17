@@ -1,10 +1,8 @@
 package de.embl.cba.bdp2.scijava.widget;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.image.ImageService;
+import de.embl.cba.bdp2.service.ImageService;
 import org.scijava.Priority;
-import org.scijava.object.ObjectService;
-import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 import org.scijava.ui.swing.widget.SwingInputWidget;
 import org.scijava.widget.InputWidget;
@@ -21,7 +19,7 @@ import java.util.Collection;
 
 @Plugin(type = InputWidget.class, priority = Priority.EXTREMELY_HIGH)
 public class SwingImageWidget extends SwingInputWidget< Image > implements
-        ImageWidget<JPanel> {
+        ImageWidget< JPanel > {
 
     private JComboBox< Image > comboBox;
 
@@ -51,6 +49,8 @@ public class SwingImageWidget extends SwingInputWidget< Image > implements
         {
             comboBox.addItem( image );
         }
+
+        comboBox.addItemListener((e)-> model.setValue(getValue()));
 
         getComponent().add( comboBox );
     }

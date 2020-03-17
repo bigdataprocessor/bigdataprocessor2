@@ -6,6 +6,7 @@ import bdv.util.*;
 import bdv.viewer.SourceAndConverter;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.boundingbox.BoundingBoxDialog;
+import de.embl.cba.bdp2.service.BdvService;
 import de.embl.cba.bdp2.track.ThresholdFloodFillOverlapTracker;
 import de.embl.cba.bdp2.track.Track;
 import de.embl.cba.bdp2.ui.BdvMenus;
@@ -49,11 +50,10 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
     public BdvImageViewer( Image< R > image, boolean autoContrast )
     {
         this.image = image;
-        show();
+
+        show( autoContrast );
 
         this.addMenus( new BdvMenus() );
-
-        if ( autoContrast ) autoContrastPerChannel();
 
         this.installBehaviours( );
     }
@@ -128,12 +128,12 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
         this.bdvStackSource.getBdvHandle().getViewerPanel().requestRepaint();
     }
 
-    
-    public void show() {
-        showImage( image );
+    // TODO: get rid of this method
+    public void show( boolean autoContrast ) {
+        showImage( image, autoContrast );
     }
 
-    public void replaceImage( Image image )
+    public void replaceImage( Image image, boolean autoContrast )
     {
         final AffineTransform3D viewerTransform = getViewerTransform();
         final List< DisplaySettings > displaySettings = getDisplaySettings();
@@ -141,7 +141,7 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
         if ( bdvStackSource != null )
             removeAllSourcesFromBdv();
 
-        showImage( image );
+        showImage( image, autoContrast );
 
         bdvHandle.getViewerPanel().setCurrentViewerTransform( viewerTransform );
         setDisplaySettings( displaySettings );
@@ -360,14 +360,16 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
         return bdvHandle;
     }
 
-    private void showImage( Image< R > image )
+    private void showImage( Image< R > image, boolean autoContrast )
     {
         this.image = image;
+        BdvService.imageNameToBdv.put( image.getName(), this );
         bdvStackSource = addToBdv( image );
         bdvHandle = bdvStackSource.getBdvHandle();
         //bdvHandle.getViewerPanel().setInterpolation( Interpolation.NLINEAR );
         //setTransform();
         setAutoColors();
+        if ( autoContrast ) autoContrastPerChannel();
     }
 
     private BdvStackSource< ? > addToBdv( Image< R > image )

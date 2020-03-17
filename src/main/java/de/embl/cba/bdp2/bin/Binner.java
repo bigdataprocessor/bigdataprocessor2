@@ -23,27 +23,27 @@ public class Binner
 	public static < T extends RealType< T > & NativeType< T > >
 	Image< T > bin( Image< T > inputImage, long[] span )
 	{
-		boolean allOne = true;
-		for ( int i = 0; i < span.length; i++ )
-			if ( span[ i ] != 1 )
-				allOne = false;
+//		boolean allOne = true;
+//		for ( int i = 0; i < span.length; i++ )
+//			if ( span[ i ] != 1 )
+//				allOne = false;
+//
+//		if ( allOne ) return inputImage;
+//
+//		boolean someSmallerOne = false;
+//		for ( int i = 0; i < span.length; i++ )
+//			if ( span[ i ] < 1 )
+//				someSmallerOne = true;
+//
+//		if ( someSmallerOne )
+//			throw new UnsupportedOperationException( "The minimal bin width is 1.\n " +
+//					"Some values of the requested binning span were smaller than one: " + Arrays.toString( span ) );
 
-		if ( allOne ) return inputImage;
-
-		boolean someSmallerOne = false;
-		for ( int i = 0; i < span.length; i++ )
-			if ( span[ i ] < 1 )
-				someSmallerOne = true;
-
-		if ( someSmallerOne )
-			throw new UnsupportedOperationException( "The minimal bin width is 1.\n " +
-					"Some values of the requested binning span were smaller than one: " + Arrays.toString( span ) );
-
-		final RandomAccessibleInterval< T > binnedView =
+		final RandomAccessibleInterval< T > binnedRai =
 				NeighborhoodViews.averageBinnedView( inputImage.getRai(), span );
 
 		return ( Image< T > ) new Image(
-					binnedView,
+					binnedRai,
 					inputImage.getName(),
 					getBinnedVoxelSize( span, inputImage.getVoxelSpacing() ),
 					inputImage.getVoxelUnit(),

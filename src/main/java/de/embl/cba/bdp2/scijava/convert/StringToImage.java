@@ -1,10 +1,8 @@
 package de.embl.cba.bdp2.scijava.convert;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.image.ImageService;
+import de.embl.cba.bdp2.service.ImageService;
 import org.scijava.convert.AbstractConverter;
-import org.scijava.object.ObjectService;
-import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
 @Plugin(type = org.scijava.convert.Converter.class)

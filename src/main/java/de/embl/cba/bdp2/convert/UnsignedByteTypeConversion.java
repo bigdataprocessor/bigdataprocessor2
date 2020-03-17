@@ -50,7 +50,7 @@ public class UnsignedByteTypeConversion < R extends RealType< R > & NativeType< 
 		final Image< R > convertedImage = image.newImage( convertedRai );
 
 
-		imageViewer.replaceImage( convertedImage );
+		imageViewer.replaceImage( convertedImage, autoContrast );
 
 		for ( int c = 0; c < imageViewer.getImage().numChannels(); c++ )
 			imageViewer.setDisplayRange( 0, 255, c );

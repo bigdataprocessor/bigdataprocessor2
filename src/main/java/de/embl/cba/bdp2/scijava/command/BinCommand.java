@@ -1,69 +1,61 @@
 package de.embl.cba.bdp2.scijava.command;
 
-import de.embl.cba.bdp2.bin.Binner;
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.image.ImageService;
+import de.embl.cba.bdp2.service.BdvService;
+import de.embl.cba.bdp2.service.ImageService;
+import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
-import org.scijava.command.Command;
-import org.scijava.command.DynamicCommand;
+import org.scijava.command.*;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
-import javax.swing.*;
-
-@Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>Bin...")
-public class BinCommand< R extends RealType< R > & NativeType< R > > extends DynamicCommand
+@Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>Process>BDP2_Bin...")
+public class BinCommand< R extends RealType< R > & NativeType< R > >
+        implements Command
 {
-    @Parameter(label = "Input Image")
-    Image image = ImageService.nameToImage.values().iterator().next();
+    @Parameter(label = "Input Image", persist = true)
+    Image inputImage = ImageService.nameToImage.values().iterator().next();
 
-    @Parameter(label = "Bin width X&Y [pixels]", persist = false)
+    @Parameter(label = "Bin width X&Y [pixels]", min = "1")
     int binWidthXYPixels = 1;
 
-    @Parameter(label = "Bin width Z [pixels]", persist = false)
+    @Parameter(label = "Bin width Z [pixels]", min = "1")
     int binWidthZPixels = 1;
 
-    @Parameter(label = "Output image name", persist = false)
-    String outputImageName = ImageService.nameToImage.keySet().iterator().next() + "Binned";
+    @Parameter(label = "Output image name")
+    String outputImageName = ImageService.nameToImage.keySet().iterator().next() + "-binned";
 
-    private BdvImageViewer< R > viewer;
-    private Image< R > binned;
+    @Parameter(label = "Open in new viewer")
+    boolean openInNewViewer = false;
+
+    private Image< R > outputImage;
 
     @Override
     public void run()
     {
-        SwingUtilities.invokeLater( () ->  {
-            bin();
-            ImageService.nameToImage.put( binned.getName(), binned );
-        });
+        process();
+        show();
+        ImageService.nameToImage.put( outputImage.getName(), outputImage );
     }
 
-    private void bin()
+    private void process()
     {
-        binned = Binner.bin( image, new long[]{ binWidthXYPixels, binWidthXYPixels, binWidthZPixels, 1, 1});
-        binned.setName( outputImageName );
-        showImage( binned );
+        outputImage = BigDataProcessor2.bin( inputImage, new long[]{ binWidthXYPixels, binWidthXYPixels, binWidthZPixels, 1, 1 } );
+        outputImage.setName( outputImageName );
     }
 
-    private void showImage( Image< R > binned )
+    private void show()
     {
-        if ( viewer == null )
+        if ( openInNewViewer )
         {
-            viewer = new BdvImageViewer<>( binned );
+            new BdvImageViewer<>( outputImage, true );
         }
         else
         {
-            viewer.replaceImage( binned );
+            final BdvImageViewer viewer = BdvService.imageNameToBdv.get( inputImage.getName() );
+            viewer.replaceImage( outputImage, true );
         }
-    }
-
-    @Override
-    public void preview()
-    {
-        SwingUtilities.invokeLater( () -> {
-            bin();
-        } );
     }
 }

@@ -1,13 +1,15 @@
-package de.embl.cba.bdp2.image;
+package de.embl.cba.bdp2.service;
+
+import de.embl.cba.bdp2.image.Image;
+import de.embl.cba.bdp2.viewers.BdvImageViewer;
 
 import java.util.Collections;
 import java.util.Map;
 import java.util.WeakHashMap;
-import java.util.concurrent.ConcurrentHashMap;
 
-public abstract class ImageService
+public abstract class BdvService
 {
-	public static Map< String, Image > nameToImage =
+	public static Map< String, BdvImageViewer > imageNameToBdv =
 			Collections.synchronizedMap( new WeakHashMap<>( ) );
 
 //	private static final ImageService imageService = new ImageService();
