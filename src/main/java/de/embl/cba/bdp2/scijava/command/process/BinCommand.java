@@ -1,5 +1,6 @@
-package de.embl.cba.bdp2.scijava.command;
+package de.embl.cba.bdp2.scijava.command.process;
 
+import de.embl.cba.bdp2.scijava.command.process.AbstractProcessingCommand;
 import de.embl.cba.bdp2.service.ImageService;
 import de.embl.cba.bdp2.ui.BigDataProcessor2;
 import net.imglib2.type.NativeType;

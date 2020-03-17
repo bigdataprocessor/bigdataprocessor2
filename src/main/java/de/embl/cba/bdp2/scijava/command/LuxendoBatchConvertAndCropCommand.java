@@ -79,7 +79,7 @@ public class LuxendoBatchConvertAndCropCommand< R extends RealType< R > & Native
                 image.setVoxelSpacing( new double[]{ voxelSpacingX, voxelSpacingY, voxelSpacingZ } );
                 final BdvImageViewer viewer = BigDataProcessor2.showImage( image );
 
-                final FinalInterval interval = viewer.get5DIntervalFromUser( false );
+                final FinalInterval interval = viewer.getVoxelIntervalXYZCTDialog( false );
 
                 Logger.log( "Data set: " + directory );
                 Logger.log( "Crop interval: " + interval.toString() );
@@ -122,7 +122,7 @@ public class LuxendoBatchConvertAndCropCommand< R extends RealType< R > & Native
             if ( doCrop ) // always true for this Command
             {
                 // crop & save cropped volume
-                final Image< R > crop = Cropper.crop( image, croppingIntervals.get( i ) );
+                final Image< R > crop = Cropper.crop5D( image, croppingIntervals.get( i ) );
                 savingSettings.volumesFilePathStump = outputDirectoryStump + "-crop-stacks/stack";
                 savingSettings.saveProjections = doProjections;
                 savingSettings.projectionsFilePathStump =

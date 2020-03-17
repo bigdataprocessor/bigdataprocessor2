@@ -1,5 +1,6 @@
 package run;
 
+import de.embl.cba.bdp2.scijava.command.image.OpenCommand;
 import ij.plugin.frame.Recorder;
 import net.imagej.ImageJ;
 import de.embl.cba.bdp2.scijava.command.*;

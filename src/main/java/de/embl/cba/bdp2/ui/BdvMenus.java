@@ -3,11 +3,14 @@ package de.embl.cba.bdp2.ui;
 import de.embl.cba.bdp2.bin.InteractiveBinningDialog;
 import de.embl.cba.bdp2.convert.UnsignedByteTypeConversion;
 import de.embl.cba.bdp2.crop.CroppingDialog;
+import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.process.*;
 import de.embl.cba.bdp2.process.splitviewmerge.SplitViewMergingDialog;
 import de.embl.cba.bdp2.registration.RegisteredViews;
 import de.embl.cba.bdp2.registration.Registration;
+import de.embl.cba.bdp2.scijava.command.Services;
+import de.embl.cba.bdp2.scijava.command.image.CalibrateCommand;
 import de.embl.cba.bdp2.shear.ShearMenuDialog;
 import de.embl.cba.bdp2.track.ApplyTrackDialog;
 import de.embl.cba.bdp2.utils.DimensionOrder;
@@ -24,15 +27,15 @@ import java.util.List;
 public class BdvMenus
         extends JMenu implements ActionListener {
 
-    private final SaveSelectMenu saveSelectMenu;
-    private final OthersMenu othersMenu;
+    private final ImageMenu imageMenu;
+    private final OthersMenu otherMenu;
     private final ProcessMenu processMenu;
     private BdvImageViewer imageViewer;
 
     public BdvMenus(){
-        saveSelectMenu = new SaveSelectMenu(this);
-        othersMenu = new OthersMenu(this);
+        imageMenu = new ImageMenu(this);
         processMenu = new ProcessMenu(this);
+        otherMenu = new OthersMenu(this);
     }
 
     public void setImageViewer( BdvImageViewer viewer ){
@@ -41,20 +44,41 @@ public class BdvMenus
 
     public List< JMenu > getMenus(){ //Add new menu items here.
         List<JMenu> jMenuList = new ArrayList<>();
-        jMenuList.add(saveSelectMenu);
-        jMenuList.add(processMenu);
-        jMenuList.add(othersMenu);
+        jMenuList.add( imageMenu );
+        jMenuList.add( processMenu );
+        jMenuList.add( otherMenu );
         return jMenuList;
     }
 
     @Override
-    public synchronized void actionPerformed(ActionEvent e) {
-        if (e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.SAVE_AS_MENU_ITEM )) {
+    public synchronized void actionPerformed(ActionEvent e)
+    {
+        if (e.getActionCommand().equalsIgnoreCase(
+                UIDisplayConstants.SAVE_AS_MENU_ITEM ))
+        {
             BigDataProcessor2.generalThreadPool.submit(() -> {
                 SaveMenuDialog saveMenuDialog = new SaveMenuDialog(imageViewer);
                 saveMenuDialog.setVisible(true);
             });
-        }else if (e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.OBLIQUE_MENU_ITEM )) {
+        }
+        else if (e.getActionCommand().equalsIgnoreCase(
+                UIDisplayConstants.CALIBRATE_MENU_ITEM ))
+        {
+            BigDataProcessor2.generalThreadPool.submit(() -> {
+//                Services.commandService.run( CalibrateCommand.class,true,
+//                        "inputImage", imageViewer.getImage()
+//                        );
+
+//                // TODO: put all of this in a class
+                final Image image = imageViewer.getImage();
+                BigDataProcessor2.setVoxelSpacingViaDialog( image );
+                imageViewer.close();
+                BigDataProcessor2.showImage( image );
+
+            });
+        }
+        else if (e.getActionCommand().equalsIgnoreCase(
+                UIDisplayConstants.OBLIQUE_MENU_ITEM )) {
             BigDataProcessor2.generalThreadPool.submit(() -> {
                 ShearMenuDialog shearMenuDialog = new ShearMenuDialog(imageViewer);
                 shearMenuDialog.setVisible(true);

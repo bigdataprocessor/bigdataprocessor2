@@ -7,6 +7,7 @@ import bdv.viewer.SourceAndConverter;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.boundingbox.BoundingBoxDialog;
 import de.embl.cba.bdp2.service.BdvService;
+import de.embl.cba.bdp2.service.ImageService;
 import de.embl.cba.bdp2.track.ThresholdFloodFillOverlapTracker;
 import de.embl.cba.bdp2.track.Track;
 import de.embl.cba.bdp2.ui.BdvMenus;
@@ -101,7 +102,7 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
         bdvHandle.close();
     }
 
-    public FinalInterval get5DIntervalFromUser( boolean calibratedSelection )
+    public FinalInterval getVoxelIntervalXYZCTDialog( boolean calibratedSelection )
     {
         BoundingBoxDialog boundingBoxDialog = new BoundingBoxDialog( bdvHandle, image );
 
@@ -363,7 +364,10 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
     private void showImage( Image< R > image, boolean autoContrast )
     {
         this.image = image;
+
         BdvService.imageNameToBdv.put( image.getName(), this );
+        ImageService.nameToImage.put( image.getName(), image );
+
         bdvStackSource = addToBdv( image );
         bdvHandle = bdvStackSource.getBdvHandle();
         //bdvHandle.getViewerPanel().setInterpolation( Interpolation.NLINEAR );

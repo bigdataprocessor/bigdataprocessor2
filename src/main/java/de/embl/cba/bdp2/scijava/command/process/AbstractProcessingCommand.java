@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.scijava.command;
+package de.embl.cba.bdp2.scijava.command.process;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.service.BdvService;
@@ -11,13 +11,13 @@ import org.scijava.plugin.Parameter;
 public class AbstractProcessingCommand< R extends RealType< R > & NativeType< R > >
 {
     @Parameter(label = "Input image name", persist = true)
-    Image inputImage = ImageService.nameToImage.values().iterator().next();
+    protected Image inputImage = ImageService.nameToImage.values().iterator().next();
 
     @Parameter(label = "Output image name")
-    String outputImageName = ImageService.nameToImage.keySet().iterator().next() + "-binned";
+    protected String outputImageName = ImageService.nameToImage.keySet().iterator().next() + "-binned";
 
     @Parameter(label = "Show output image in new viewer")
-    boolean newViewer = false;
+    protected boolean newViewer = false;
 
     protected Image< R > outputImage;
 

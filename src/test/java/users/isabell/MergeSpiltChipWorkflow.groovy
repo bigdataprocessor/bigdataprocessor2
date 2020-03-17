@@ -60,7 +60,7 @@ for ( File directory : directories )
 
     final BdvImageViewer viewer = bdp.showImage( merge );
 
-    final FinalInterval interval = viewer.get5DIntervalFromUser( false );
+    final FinalInterval interval = viewer.getVoxelIntervalXYZCTDialog( false );
 
     Logger.log( "Data set: " + directory );
     Logger.log( "Crop interval: " + interval.toString()   );
@@ -98,7 +98,7 @@ for ( int i = 0; i < directories.length; i++ )
     Utils.saveImageAndWaitUntilDone( bdp, savingSettings, merge );
 
     // crop
-    final Image crop = Cropper.crop( merge, croppingIntervals.get( i ) );
+    final Image crop = Cropper.crop5D( merge, croppingIntervals.get( i ) );
     savingSettings.saveVolumes = true;
     savingSettings.volumesFilePathStump = directory + "-crop-stacks/stack";
     savingSettings.saveProjections = true;

@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.scijava.command;
+package de.embl.cba.bdp2.scijava.command.image;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.service.ImageService;
@@ -9,15 +9,18 @@ import loci.common.DebugTools;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;
+import org.scijava.command.CommandService;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
-import org.scijava.widget.Button;
 
 import javax.swing.*;
 import java.io.File;
 
 @Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>BDP2_Open...")
 public class OpenCommand< R extends RealType< R > & NativeType< R > > implements Command {
+
+    @Parameter
+    CommandService commandService;
 
     @Parameter(label = "Image data directory", style = "directory")
     File directory;
@@ -55,10 +58,6 @@ public class OpenCommand< R extends RealType< R > & NativeType< R > > implements
                             directory.toString(),
                             namingScheme,
                             filterPattern );
-
-            ImageService.nameToImage.put( image.getName(), image );
-
-            BigDataProcessor2.setVoxelSpacingViaDialog( image );
 
             BigDataProcessor2.showImage( image, autoContrast );
         });

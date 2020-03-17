@@ -5,10 +5,12 @@ public class UIDisplayConstants {
     // Menus
     public static final String PROCESS_MENU_DISPLAY_TEXT = "Process";
     public static final String MISC_MENU = "Misc";
-    public static final String SAVE_MENU_DISPLAY_TEXT = "Save";
+    public static final String IMAGE_MENU_DISPLAY_TEXT = "Image";
 
     // Menu items
     public static final String SAVE_AS_MENU_ITEM = "Save As...";
+    public static final String CALIBRATE_MENU_ITEM = "Calibrate...";
+
     public static final String IMAGEJ_VIEW_MENU_ITEM = "Show in ImageJ Viewer";
     public static final String CORRECT_MOTION_MENU_ITEM = "Correct Motion... (Under Development)";
     public static final String APPLY_TRACK_MENU_ITEM = "Apply Track...";

@@ -89,7 +89,7 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
     public static < R extends RealType< R > & NativeType< R > >
     Image< R > crop( Image< R > image, Interval interval )
     {
-        return Cropper.crop( image, interval  );
+        return Cropper.crop5D( image, interval );
     }
 
     public static < R extends RealType< R > & NativeType< R > >
@@ -126,7 +126,7 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
     public static < R extends RealType< R > & NativeType< R > >
     boolean setVoxelSpacingViaDialog( Image< R > image )
     {
-        // TODO: refactor into a class
+        // TODO: refactor into a class and add macro recording
         final double[] voxelSpacing = image.getVoxelSpacing();
         String voxelUnit = image.getVoxelUnit();
         voxelUnit = fixVoxelSpacingAndUnit( voxelSpacing, voxelUnit );

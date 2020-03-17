@@ -10,10 +10,10 @@ import net.imglib2.view.Views;
 public class Cropper
 {
 	public static < T extends RealType< T > & NativeType< T > >
-	Image< T > crop( Image< T > image, Interval interval )
+	Image< T > crop5D( Image< T > image, Interval intervalXYZCT )
 	{
 		final IntervalView< T > crop =
-				Views.zeroMin( Views.interval( image.getRai(), interval ) );
+				Views.zeroMin( Views.interval( image.getRai(), intervalXYZCT ) );
 
 		return image.newImage( crop );
 	}

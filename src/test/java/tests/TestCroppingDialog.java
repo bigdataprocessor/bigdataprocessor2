@@ -30,7 +30,7 @@ public class TestCroppingDialog
         image.setVoxelSpacing( 1.0, 1.0, 1.0 );
 
         final BdvImageViewer viewer = BigDataProcessor2.showImage( image );
-        viewer.get5DIntervalFromUser( true );
+        viewer.getVoxelIntervalXYZCTDialog( true );
     }
 
     public static void main( String[] args )

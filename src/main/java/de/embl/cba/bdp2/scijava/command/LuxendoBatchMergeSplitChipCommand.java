@@ -97,7 +97,7 @@ public class LuxendoBatchMergeSplitChipCommand< R extends RealType< R > & Native
 
                 final BdvImageViewer viewer = bdp.showImage( merge );
 
-                final FinalInterval interval = viewer.get5DIntervalFromUser( false );
+                final FinalInterval interval = viewer.getVoxelIntervalXYZCTDialog( false );
 
                 Logger.log( "Data set: " + directory );
                 Logger.log( "Crop interval: " + interval.toString() );
@@ -140,7 +140,7 @@ public class LuxendoBatchMergeSplitChipCommand< R extends RealType< R > & Native
             if ( doCrop )
             {
                 // crop & save cropped volume
-                final Image< R > crop = Cropper.crop( merge, croppingIntervals.get( i ) );
+                final Image< R > crop = Cropper.crop5D( merge, croppingIntervals.get( i ) );
                 savingSettings.volumesFilePathStump = outputDirectoryStump + "-crop-stacks/stack";
                 savingSettings.saveProjections = true;
                 savingSettings.projectionsFilePathStump =

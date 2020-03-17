@@ -61,6 +61,13 @@ public class InteractiveBinningDialog< T extends RealType< T > & NativeType< T >
 
 	private void ok()
 	{
+		recordAsMacro();
+		Logger.info( "Binning was applied." );
+		setVisible( false );
+	}
+
+	private void recordAsMacro()
+	{
 		Recorder recorder =  Recorder.getInstance();
 		if( recorder != null )
 		{
@@ -77,8 +84,6 @@ public class InteractiveBinningDialog< T extends RealType< T > & NativeType< T >
 				Recorder.record( "run", "BDP2_Bin...", options );
 			}
 		}
-		Logger.info( "Binning was applied." );
-		setVisible( false );
 	}
 
 	private void cancel()
