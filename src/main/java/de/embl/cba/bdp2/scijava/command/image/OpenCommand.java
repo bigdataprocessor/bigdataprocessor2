@@ -1,9 +1,8 @@
 package de.embl.cba.bdp2.scijava.command.image;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.service.ImageService;
 import de.embl.cba.bdp2.load.files.FileInfos;
-import de.embl.cba.bdp2.ui.BigDataProcessor2;
+import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.ui.HelpDialog;
 import loci.common.DebugTools;
 import net.imglib2.type.NativeType;

@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.registration;
+package de.embl.cba.bdp2.register;
 
 import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.progress.ProgressListener;

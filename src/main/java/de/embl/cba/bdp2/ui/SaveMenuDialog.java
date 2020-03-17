@@ -1,5 +1,6 @@
 package de.embl.cba.bdp2.ui;
 
+import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.progress.ProgressListener;
 import de.embl.cba.bdp2.save.ImgSaver;

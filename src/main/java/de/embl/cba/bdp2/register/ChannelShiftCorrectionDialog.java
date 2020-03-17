@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.process;
+package de.embl.cba.bdp2.register;
 
 import bdv.tools.brightness.SliderPanel;
 import bdv.util.BoundedValue;
@@ -11,9 +11,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class ChannelShiftCorrectionDialog < T extends RealType< T > & NativeType< T > >
+public class ChannelShiftCorrectionDialog < T extends RealType< T > & NativeType< T > > extends JDialog
 {
-
 	private final BdvImageViewer< T > imageViewer;
 	private ArrayList< BoundedValue > boundedValues;
 	private ArrayList< SliderPanel > sliderPanels;
@@ -31,7 +30,6 @@ public class ChannelShiftCorrectionDialog < T extends RealType< T > & NativeType
 
 		showChromaticShiftCorrectionDialog();
 	}
-
 
 	private void showChromaticShiftCorrectionDialog()
 	{
@@ -88,7 +86,6 @@ public class ChannelShiftCorrectionDialog < T extends RealType< T > & NativeType
 
 	class ChromaticShiftUpdateListener implements BoundedValue.UpdateListener
 	{
-
 		private ArrayList< long[] > previousTranslations;
 
 		@Override
@@ -152,6 +149,4 @@ public class ChannelShiftCorrectionDialog < T extends RealType< T > & NativeType
 					sliderPanels.get( i++ ).update();
 		}
 	}
-
-
 }

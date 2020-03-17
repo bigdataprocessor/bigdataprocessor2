@@ -6,7 +6,7 @@ import de.embl.cba.bdp2.load.files.FileInfos;
 import de.embl.cba.bdp2.bin.Binner;
 import de.embl.cba.bdp2.save.CachedCellImgReplacer;
 import de.embl.cba.bdp2.save.SavingSettings;
-import de.embl.cba.bdp2.ui.BigDataProcessor2;
+import de.embl.cba.bdp2.BigDataProcessor2;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.cache.img.CachedCellImg;
 

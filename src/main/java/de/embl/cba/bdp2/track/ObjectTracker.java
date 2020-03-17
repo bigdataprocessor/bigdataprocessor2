@@ -1,7 +1,7 @@
 package de.embl.cba.bdp2.track;
 
 import de.embl.cba.bdp2.logging.Logger;
-import de.embl.cba.bdp2.ui.BigDataProcessor2;
+import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.utils.Point3D;

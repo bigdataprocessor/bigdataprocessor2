@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.registration;
+package de.embl.cba.bdp2.register;
 
 public interface HyperSlicesTransformComputer
 {

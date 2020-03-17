@@ -3,7 +3,7 @@ package de.embl.cba.bdp2.load;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import de.embl.cba.bdp2.ui.BigDataProcessor2;
+import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.load.files.FileInfos;
 import de.embl.cba.bdp2.load.files.SerializableFileInfo;
 import de.embl.cba.bdp2.utils.DimensionOrder;

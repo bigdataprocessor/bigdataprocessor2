@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.registration;
+package de.embl.cba.bdp2.register;
 
 import net.imglib2.RealLocalizable;
 import net.imglib2.RealPositionable;

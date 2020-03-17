@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.ui;
+package de.embl.cba.bdp2;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.bin.Binner;
@@ -11,6 +11,7 @@ import de.embl.cba.bdp2.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.progress.Progress;
 import de.embl.cba.bdp2.progress.ProgressListener;
 import de.embl.cba.bdp2.save.*;
+import de.embl.cba.bdp2.ui.DisplaySettings;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import ij.gui.GenericDialog;

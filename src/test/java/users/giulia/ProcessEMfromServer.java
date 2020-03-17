@@ -3,7 +3,7 @@ package users.giulia;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.load.files.FileInfos;
 import de.embl.cba.bdp2.save.SavingSettings;
-import de.embl.cba.bdp2.ui.BigDataProcessor2;
+import de.embl.cba.bdp2.BigDataProcessor2;
 import net.imagej.ImageJ;
 import net.imglib2.FinalInterval;
 import net.imglib2.type.NativeType;

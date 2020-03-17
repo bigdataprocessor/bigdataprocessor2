@@ -5,6 +5,7 @@ import bdv.util.BoundedValue;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.record.MacroRecorder;
+import de.embl.cba.bdp2.ui.AbstractOkCancelDialog;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.type.NativeType;
@@ -21,35 +22,16 @@ import java.util.Arrays;
  *
  * TODO: make only one slider for binning in X and Y
  *
- *
- *
- * @param <T>
  */
-public class InteractiveBinningDialog< T extends RealType< T > & NativeType< T > > extends JDialog
+public class BinningDialog< T extends RealType< T > & NativeType< T > > extends AbstractOkCancelDialog
 {
-	protected final InteractiveBinningDialog.OkCancelPanel buttons;
 	private final BdvImageViewer< T > viewer;
 	private final Image< T > inputImage;
 	private Image< T > outputImage;
 	private long[] span;
 
-	public InteractiveBinningDialog( final BdvImageViewer< T > viewer )
+	public BinningDialog( final BdvImageViewer< T > viewer )
 	{
-		buttons = new InteractiveBinningDialog.OkCancelPanel();
-		getContentPane().add( buttons, BorderLayout.SOUTH );
-		setDefaultCloseOperation( WindowConstants.HIDE_ON_CLOSE );
-		addWindowListener( new WindowAdapter()
-		{
-			@Override
-			public void windowClosing( final WindowEvent e )
-			{
-				cancel();
-			}
-		} );
-
-		buttons.onOk( this::ok );
-		buttons.onCancel( this::cancel );
-
 		this.inputImage = viewer.getImage();
 		this.viewer = viewer;
 
@@ -59,10 +41,19 @@ public class InteractiveBinningDialog< T extends RealType< T > & NativeType< T >
 		showBinningAdjustmentDialog();
 	}
 
-	private void ok()
+	@Override
+	protected void ok()
 	{
 		recordMacro();
 		Logger.info( "Binning was applied." );
+		setVisible( false );
+	}
+
+	@Override
+	protected void cancel()
+	{
+		viewer.replaceImage( inputImage, true );
+		Logger.info( "Binning was cancelled." );
 		setVisible( false );
 	}
 
@@ -75,13 +66,6 @@ public class InteractiveBinningDialog< T extends RealType< T > & NativeType< T >
 		recorder.addOption( "binWidthZPixels",  span[ 0 ] );
 
 		recorder.record();
-	}
-
-	private void cancel()
-	{
-		viewer.replaceImage( inputImage, true );
-		Logger.info( "Binning was cancelled." );
-		setVisible( false );
 	}
 
 	private void showBinningAdjustmentDialog()
@@ -170,40 +154,6 @@ public class InteractiveBinningDialog< T extends RealType< T > & NativeType< T >
 		this.setResizable( false );
 		this.pack();
 		this.setVisible( true );
-	}
-
-	/**
-	 * A panel containing OK and Cancel buttons, and callback lists for both.
-	 */
-	public static class OkCancelPanel extends JPanel
-	{
-		private final ArrayList< Runnable > runOnOk = new ArrayList<>();
-
-		private final ArrayList< Runnable > runOnCancel = new ArrayList<>();
-
-		public OkCancelPanel()
-		{
-			final JButton cancelButton = new JButton( "Cancel" );
-			cancelButton.addActionListener( e -> runOnCancel.forEach( Runnable::run ) );
-
-			final JButton okButton = new JButton( "OK" );
-			okButton.addActionListener( e -> runOnOk.forEach( Runnable::run ) );
-
-			setLayout( new BoxLayout( this, BoxLayout.LINE_AXIS ) );
-			add( Box.createHorizontalGlue() );
-			add( cancelButton );
-			add( okButton );
-		}
-
-		public synchronized void onOk( final Runnable runnable )
-		{
-			runOnOk.add( runnable );
-		}
-
-		public synchronized void onCancel( final Runnable runnable )
-		{
-			runOnCancel.add( runnable );
-		}
 	}
 
 }

@@ -2,7 +2,7 @@ package tests;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.load.files.FileInfos;
-import de.embl.cba.bdp2.ui.BigDataProcessor2;
+import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import loci.common.DebugTools;
 import net.imagej.ImageJ;

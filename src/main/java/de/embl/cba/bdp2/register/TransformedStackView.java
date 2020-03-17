@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.registration;
+package de.embl.cba.bdp2.register;
 
 import net.imglib2.*;
 import net.imglib2.interpolation.randomaccess.ClampingNLinearInterpolatorFactory;

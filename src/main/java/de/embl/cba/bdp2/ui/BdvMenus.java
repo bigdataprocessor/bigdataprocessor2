@@ -1,16 +1,15 @@
 package de.embl.cba.bdp2.ui;
 
-import de.embl.cba.bdp2.bin.InteractiveBinningDialog;
+import de.embl.cba.bdp2.BigDataProcessor2;
+import de.embl.cba.bdp2.bin.BinningDialog;
 import de.embl.cba.bdp2.convert.UnsignedByteTypeConversion;
 import de.embl.cba.bdp2.crop.CroppingDialog;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.logging.Logger;
-import de.embl.cba.bdp2.process.*;
 import de.embl.cba.bdp2.process.splitviewmerge.SplitViewMergingDialog;
-import de.embl.cba.bdp2.registration.RegisteredViews;
-import de.embl.cba.bdp2.registration.Registration;
-import de.embl.cba.bdp2.scijava.command.Services;
-import de.embl.cba.bdp2.scijava.command.image.CalibrateCommand;
+import de.embl.cba.bdp2.register.ChannelShiftCorrectionDialog;
+import de.embl.cba.bdp2.register.RegisteredViews;
+import de.embl.cba.bdp2.register.Registration;
 import de.embl.cba.bdp2.shear.ShearMenuDialog;
 import de.embl.cba.bdp2.track.ApplyTrackDialog;
 import de.embl.cba.bdp2.utils.DimensionOrder;
@@ -130,7 +129,7 @@ public class BdvMenus
         {
             BigDataProcessor2.generalThreadPool.submit(() ->
             {
-                new InteractiveBinningDialog<>( imageViewer );
+                new BinningDialog<>( imageViewer );
             });
         }
         else if(e.getActionCommand().equalsIgnoreCase(

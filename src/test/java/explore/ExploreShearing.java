@@ -5,7 +5,7 @@ import de.embl.cba.bdp2.load.files.FileInfos;
 import de.embl.cba.bdp2.shear.ImageShearer;
 import de.embl.cba.bdp2.shear.ShearMenuDialog;
 import de.embl.cba.bdp2.shear.ShearingSettings;
-import de.embl.cba.bdp2.ui.BigDataProcessor2;
+import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;

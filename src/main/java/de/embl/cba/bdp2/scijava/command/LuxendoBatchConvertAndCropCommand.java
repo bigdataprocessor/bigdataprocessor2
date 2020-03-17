@@ -5,7 +5,7 @@ import de.embl.cba.bdp2.crop.Cropper;
 import de.embl.cba.bdp2.load.files.FileInfos;
 import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.save.SavingSettings;
-import de.embl.cba.bdp2.ui.BigDataProcessor2;
+import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.FinalInterval;
 import net.imglib2.Interval;

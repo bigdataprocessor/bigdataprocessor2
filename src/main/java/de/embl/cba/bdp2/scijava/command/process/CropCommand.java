@@ -1,7 +1,7 @@
 package de.embl.cba.bdp2.scijava.command.process;
 
 import de.embl.cba.bdp2.service.ImageService;
-import de.embl.cba.bdp2.ui.BigDataProcessor2;
+import de.embl.cba.bdp2.BigDataProcessor2;
 import net.imglib2.FinalInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
