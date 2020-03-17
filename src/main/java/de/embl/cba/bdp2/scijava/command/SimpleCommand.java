@@ -8,7 +8,7 @@ import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
-@Plugin(type = Command.class, menuPath = "Bin...")
+@Plugin(type = Command.class, menuPath = "Test...")
 public class SimpleCommand< R extends RealType< R > & NativeType< R > > implements Command
 {
     @Parameter(label = "Bin width X&Y [pixels]", min = "1", persist = false)
@@ -17,15 +17,5 @@ public class SimpleCommand< R extends RealType< R > & NativeType< R > > implemen
     @Override
     public void run()
     {
-    }
-
-    public static void main( String[] args )
-    {
-        final ImageJ imageJ = new ImageJ();
-        imageJ.ui().showUI();
-
-        new Recorder();
-
-        imageJ.command().run( SimpleCommand.class, true, "binWidthXYPixels", 3 );
     }
 }

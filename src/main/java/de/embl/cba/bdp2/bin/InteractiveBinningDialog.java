@@ -4,9 +4,9 @@ import bdv.tools.brightness.SliderPanel;
 import bdv.util.BoundedValue;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.logging.Logger;
+import de.embl.cba.bdp2.record.MacroRecorder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
-import ij.plugin.frame.Recorder;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
@@ -61,29 +61,20 @@ public class InteractiveBinningDialog< T extends RealType< T > & NativeType< T >
 
 	private void ok()
 	{
-		recordAsMacro();
+		recordMacro();
 		Logger.info( "Binning was applied." );
 		setVisible( false );
 	}
 
-	private void recordAsMacro()
+	private void recordMacro()
 	{
-		Recorder recorder =  Recorder.getInstance();
-		if( recorder != null )
-		{
-			if ( ! Recorder.scriptMode() )
-			{
-				String options = "";
-				options += "inputImage=[" + inputImage.getName() + "] ";
-				options += "outputImageName=[" + outputImage.getName() + "] ";
-				options += "newViewer=" + true + " ";
-				options += "binWidthXPixels=" + span[ 0 ] + " ";
-				options += "binWidthYPixels=" + span[ 1 ] + " ";
-				options += "binWidthZPixels=" + span[ 2 ] + " ";
+		final MacroRecorder recorder = new MacroRecorder( "BDP2_Bin...", inputImage, outputImage, false );
 
-				Recorder.record( "run", "BDP2_Bin...", options );
-			}
-		}
+		recorder.addOption( "binWidthXPixels",  span[ 0 ] );
+		recorder.addOption( "binWidthYPixels",  span[ 0 ] );
+		recorder.addOption( "binWidthZPixels",  span[ 0 ] );
+
+		recorder.record();
 	}
 
 	private void cancel()

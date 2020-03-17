@@ -5,14 +5,14 @@ import ij.plugin.frame.Recorder;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
-public class ProcessingMacroRecorder < R extends RealType< R > & NativeType< R > >
+public class MacroRecorder< R extends RealType< R > & NativeType< R > >
 {
 	private final String commandName;
 	private final Image< R > inputImage;
 	private final Image< R > outputImage;
 	private String options;
 
-	public ProcessingMacroRecorder( String commandName, Image< R > inputImage, Image< R > outputImage, boolean openImageInNewViewer )
+	public MacroRecorder( String commandName, Image< R > inputImage, Image< R > outputImage, boolean openImageInNewViewer )
 	{
 		this.commandName = commandName;
 		this.inputImage = inputImage;
@@ -41,9 +41,11 @@ public class ProcessingMacroRecorder < R extends RealType< R > & NativeType< R >
 
 	public void record()
 	{
-		Recorder recorder =  Recorder.getInstance();
-		if( recorder != null )
-			if ( ! Recorder.scriptMode() )
-				Recorder.record( "run", commandName, options );
+		new Thread( () -> {
+			Recorder recorder = Recorder.getInstance();
+			if ( recorder != null )
+				if ( ! Recorder.scriptMode() )
+					Recorder.record( "run", commandName, options );
+		}).start();
 	}
 }
