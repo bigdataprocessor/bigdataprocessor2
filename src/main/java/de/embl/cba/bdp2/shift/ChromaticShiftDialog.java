@@ -17,15 +17,12 @@ import java.util.ArrayList;
 
 public class ChromaticShiftDialog< T extends RealType< T > & NativeType< T > > extends AbstractProcessingDialog
 {
-	private final BdvImageViewer< T > viewer;
-	private final Image< T > inputImage;
 	private ArrayList< BoundedValue > boundedValues;
 	private ArrayList< SliderPanel > sliderPanels;
 	private ChromaticShiftUpdateListener updateListener;
 	private JPanel panel;
 	private final ChannelShifter channelShifter;
 	private final long numChannels;
-	private Image< T > outputImage;
 	private ArrayList< long[] > shifts;
 
 	public ChromaticShiftDialog( final BdvImageViewer< T > viewer  )
@@ -36,6 +33,7 @@ public class ChromaticShiftDialog< T extends RealType< T > & NativeType< T > > e
 		channelShifter = new ChannelShifter( inputImage.getRai() );
 		numChannels = inputImage.getRai().dimension( DimensionOrder.C );
 
+		prepareDialog();
 		showDialog();
 	}
 
@@ -60,8 +58,7 @@ public class ChromaticShiftDialog< T extends RealType< T > & NativeType< T > > e
 		recorder.record();
 	}
 
-	@Override
-	protected void showDialog()
+	protected void prepareDialog()
 	{
 		panel = new JPanel();
 		panel.setLayout( new BoxLayout( panel, BoxLayout.PAGE_AXIS ) );
@@ -75,18 +72,6 @@ public class ChromaticShiftDialog< T extends RealType< T > & NativeType< T > > e
 		for ( int c = 0; c < numChannels; c++ )
 			for ( String axis : xyz )
 				createValueAndSlider( c, axis );
-
-		getContentPane().add( panel, BorderLayout.CENTER  );
-		setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
-
-		setBounds(
-				MouseInfo.getPointerInfo().getLocation().x,
-				MouseInfo.getPointerInfo().getLocation().y,
-				120, 10);
-		setTitle( "Chromatic Shift Correction [Pixels]" );
-		setResizable( false );
-		pack();
-		setVisible( true );
 	}
 
 	private void createValueAndSlider( int c, String axis )

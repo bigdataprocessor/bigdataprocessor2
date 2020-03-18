@@ -12,7 +12,6 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -23,9 +22,6 @@ import java.util.Arrays;
  */
 public class BinningDialog< T extends RealType< T > & NativeType< T > > extends AbstractProcessingDialog
 {
-	private final BdvImageViewer< T > viewer;
-	private final Image< T > inputImage;
-	private Image< T > outputImage;
 	private long[] span;
 
 	public BinningDialog( final BdvImageViewer< T > viewer )
@@ -36,6 +32,7 @@ public class BinningDialog< T extends RealType< T > & NativeType< T > > extends 
 		Logger.info( "Image size [GB]: "
 				+ Utils.getSizeGB( this.inputImage.getRai() ) );
 
+		prepareDialog();
 		showDialog();
 	}
 
@@ -64,8 +61,7 @@ public class BinningDialog< T extends RealType< T > & NativeType< T > > extends 
 		recorder.record();
 	}
 
-	@Override
-	protected void showDialog()
+	protected void prepareDialog()
 	{
 
 		JPanel panel = new JPanel();
@@ -140,15 +136,6 @@ public class BinningDialog< T extends RealType< T > & NativeType< T > > extends 
 			boundedValues.get( d ).setUpdateListener( updateListener );
 			panel.add( sliderPanels.get( d ) );
 		}
-
-		getContentPane().add( panel, BorderLayout.CENTER  );
-		setBounds(
-				MouseInfo.getPointerInfo().getLocation().x,
-				MouseInfo.getPointerInfo().getLocation().y,
-				120, 10);
-		setResizable( false );
-		pack();
-		setVisible( true );
 	}
 
 }
