@@ -1,18 +1,26 @@
 package de.embl.cba.bdp2.ui;
 
+import de.embl.cba.bdp2.image.Image;
+import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.RealType;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
-public abstract class AbstractOkCancelDialog extends JDialog
+public abstract class AbstractProcessingDialog< R extends RealType< R > & NativeType< R > > extends JDialog
 {
-	protected final AbstractOkCancelDialog.OkCancelPanel buttons;
+	protected final AbstractProcessingDialog.OkCancelPanel buttons;
+	protected BdvImageViewer viewer;
+	protected Image< R > inputImage;
+	protected Image< R > outputImage;
 
-	public AbstractOkCancelDialog( )
+	public AbstractProcessingDialog( )
 	{
-		buttons = new AbstractOkCancelDialog.OkCancelPanel();
+		buttons = new AbstractProcessingDialog.OkCancelPanel();
 		getContentPane().add( buttons, BorderLayout.SOUTH );
 		setDefaultCloseOperation( WindowConstants.HIDE_ON_CLOSE );
 		addWindowListener( new WindowAdapter()
@@ -31,6 +39,8 @@ public abstract class AbstractOkCancelDialog extends JDialog
 	protected abstract void ok();
 
 	protected abstract void cancel();
+
+	protected abstract void showDialog();
 
 	public static class OkCancelPanel extends JPanel
 	{

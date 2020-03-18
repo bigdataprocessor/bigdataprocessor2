@@ -5,7 +5,7 @@ import ch.systemsx.cisd.hdf5.HDF5DataSetInformation;
 import ch.systemsx.cisd.hdf5.HDF5DataTypeInformation;
 import ch.systemsx.cisd.hdf5.HDF5Factory;
 import ch.systemsx.cisd.hdf5.IHDF5Reader;
-import de.embl.cba.bdp2.logging.Logger;
+import de.embl.cba.bdp2.log.Logger;
 import net.imglib2.Interval;
 
 public class Hdf5DataCubeReader

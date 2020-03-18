@@ -23,7 +23,7 @@ package de.embl.cba.bdp2.save;
  *
  */
 
-import de.embl.cba.bdp2.logging.Logger;
+import de.embl.cba.bdp2.log.Logger;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.io.FileSaver;

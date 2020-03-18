@@ -2,7 +2,7 @@ package users.isabell;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.load.files.FileInfos;
-import de.embl.cba.bdp2.logging.Logger;
+import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.process.splitviewmerge.SplitViewMerger;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.BigDataProcessor2;

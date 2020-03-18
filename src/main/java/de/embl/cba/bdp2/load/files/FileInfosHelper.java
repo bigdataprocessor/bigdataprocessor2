@@ -1,7 +1,7 @@
 package de.embl.cba.bdp2.load.files;
 
 import de.embl.cba.bdp2.load.FastTiffDecoder;
-import de.embl.cba.bdp2.logging.Logger;
+import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.utils.Utils;
 
 import java.io.File;

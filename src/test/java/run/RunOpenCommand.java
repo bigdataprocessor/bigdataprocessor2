@@ -1,9 +1,9 @@
 package run;
 
-import de.embl.cba.bdp2.scijava.command.image.OpenCommand;
+import de.embl.cba.bdp2.open.OpenCommand;
+import de.embl.cba.bdp2.scijava.Services;
 import ij.plugin.frame.Recorder;
 import net.imagej.ImageJ;
-import de.embl.cba.bdp2.scijava.command.*;
 
 public class RunOpenCommand
 {

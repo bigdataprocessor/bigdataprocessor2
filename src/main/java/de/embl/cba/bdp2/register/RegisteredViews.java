@@ -1,7 +1,7 @@
 package de.embl.cba.bdp2.register;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.logging.Logger;
+import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.process.IntervalImageViews;
 import de.embl.cba.bdp2.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.progress.ProgressListener;

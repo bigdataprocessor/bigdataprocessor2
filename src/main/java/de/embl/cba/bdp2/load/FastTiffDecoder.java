@@ -33,7 +33,7 @@ package de.embl.cba.bdp2.load;
 
 
 import de.embl.cba.bdp2.load.files.SerializableFileInfo;
-import de.embl.cba.bdp2.logging.Logger;
+import de.embl.cba.bdp2.log.Logger;
 import ij.IJ;
 import ij.io.FileInfo;
 import ij.io.RandomAccessStream;

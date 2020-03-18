@@ -1,7 +1,7 @@
 package de.embl.cba.bdp2.process.splitviewmerge;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.logging.Logger;
+import de.embl.cba.bdp2.log.Logger;
 import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessibleInterval;

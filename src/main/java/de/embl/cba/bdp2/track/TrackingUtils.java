@@ -1,6 +1,6 @@
 package de.embl.cba.bdp2.track;
 
-import de.embl.cba.bdp2.logging.Logger;
+import de.embl.cba.bdp2.log.Logger;
 
 import java.util.Arrays;
 

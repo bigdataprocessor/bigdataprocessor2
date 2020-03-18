@@ -1,6 +1,6 @@
 package de.embl.cba.bdp2.save;
 
-import de.embl.cba.bdp2.logging.Logger;
+import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.lazyalgorithm.converter.NeighborhoodAverageConverter;
 import de.embl.cba.neighborhood.RectangleShape2;
 import net.imglib2.RandomAccessible;

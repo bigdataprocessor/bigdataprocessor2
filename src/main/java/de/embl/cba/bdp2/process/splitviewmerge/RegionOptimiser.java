@@ -2,7 +2,7 @@ package de.embl.cba.bdp2.process.splitviewmerge;
 
 import bdv.util.ModifiableInterval;
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.logging.Logger;
+import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.track.PhaseCorrelationTranslationComputer;
 import net.imglib2.*;
 import net.imglib2.type.NativeType;

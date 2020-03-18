@@ -71,7 +71,7 @@ public class TestEMProcessingAndSaving< R extends RealType< R > & NativeType< R 
 
 	public static void main( String[] args )
 	{
-		new ImageJ().ui().showUI(); // for the logging
+		new ImageJ().ui().showUI(); // for the log
 		new TestEMProcessingAndSaving().processAndSave();
 	}
 

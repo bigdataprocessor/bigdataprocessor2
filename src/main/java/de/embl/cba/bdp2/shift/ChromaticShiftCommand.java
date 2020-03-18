@@ -1,6 +1,6 @@
-package de.embl.cba.bdp2.scijava.command.process;
+package de.embl.cba.bdp2.shift;
 
-import de.embl.cba.bdp2.register.ChannelShifter;
+import de.embl.cba.bdp2.scijava.command.AbstractProcessingCommand;
 import de.embl.cba.bdp2.service.ImageService;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;

@@ -1,6 +1,6 @@
 package de.embl.cba.bdp2.progress;
 
-import de.embl.cba.bdp2.logging.Logger;
+import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.utils.Utils;
 
 import java.util.List;

@@ -3,9 +3,9 @@ package de.embl.cba.bdp2.bin;
 import bdv.tools.brightness.SliderPanel;
 import bdv.util.BoundedValue;
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.logging.Logger;
+import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.record.MacroRecorder;
-import de.embl.cba.bdp2.ui.AbstractOkCancelDialog;
+import de.embl.cba.bdp2.ui.AbstractProcessingDialog;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.type.NativeType;
@@ -21,7 +21,7 @@ import java.util.Arrays;
  * TODO: make only one slider for binning in X and Y
  *
  */
-public class BinningDialog< T extends RealType< T > & NativeType< T > > extends AbstractOkCancelDialog
+public class BinningDialog< T extends RealType< T > & NativeType< T > > extends AbstractProcessingDialog
 {
 	private final BdvImageViewer< T > viewer;
 	private final Image< T > inputImage;
@@ -43,7 +43,6 @@ public class BinningDialog< T extends RealType< T > & NativeType< T > > extends 
 	protected void ok()
 	{
 		recordMacro();
-		Logger.info( "Binning was applied." );
 		setVisible( false );
 	}
 
@@ -51,7 +50,6 @@ public class BinningDialog< T extends RealType< T > & NativeType< T > > extends 
 	protected void cancel()
 	{
 		viewer.replaceImage( inputImage, true );
-		Logger.info( "Binning was cancelled." );
 		setVisible( false );
 	}
 
@@ -66,7 +64,8 @@ public class BinningDialog< T extends RealType< T > & NativeType< T > > extends 
 		recorder.record();
 	}
 
-	private void showDialog()
+	@Override
+	protected void showDialog()
 	{
 
 		JPanel panel = new JPanel();

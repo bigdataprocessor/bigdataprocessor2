@@ -3,7 +3,7 @@ package tests;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.load.files.FileInfos;
 import de.embl.cba.bdp2.bin.Binner;
-import de.embl.cba.bdp2.register.ChannelShifter;
+import de.embl.cba.bdp2.shift.ChannelShifter;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import loci.common.DebugTools;
 import net.imglib2.RandomAccess;

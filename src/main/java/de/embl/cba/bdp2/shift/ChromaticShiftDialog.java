@@ -1,11 +1,10 @@
-package de.embl.cba.bdp2.register;
+package de.embl.cba.bdp2.shift;
 
 import bdv.tools.brightness.SliderPanel;
 import bdv.util.BoundedValue;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.record.MacroRecorder;
-import de.embl.cba.bdp2.scijava.command.process.ChromaticShiftCommand;
-import de.embl.cba.bdp2.ui.AbstractOkCancelDialog;
+import de.embl.cba.bdp2.ui.AbstractProcessingDialog;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.RandomAccessibleInterval;
@@ -16,7 +15,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class ChromaticShiftDialog< T extends RealType< T > & NativeType< T > > extends AbstractOkCancelDialog
+public class ChromaticShiftDialog< T extends RealType< T > & NativeType< T > > extends AbstractProcessingDialog
 {
 	private final BdvImageViewer< T > viewer;
 	private final Image< T > inputImage;
@@ -61,7 +60,8 @@ public class ChromaticShiftDialog< T extends RealType< T > & NativeType< T > > e
 		recorder.record();
 	}
 
-	private void showDialog()
+	@Override
+	protected void showDialog()
 	{
 		panel = new JPanel();
 		panel.setLayout( new BoxLayout( panel, BoxLayout.PAGE_AXIS ) );

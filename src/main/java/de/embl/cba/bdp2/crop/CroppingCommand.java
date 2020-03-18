@@ -1,5 +1,6 @@
-package de.embl.cba.bdp2.scijava.command.process;
+package de.embl.cba.bdp2.crop;
 
+import de.embl.cba.bdp2.scijava.command.AbstractProcessingCommand;
 import de.embl.cba.bdp2.service.ImageService;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import net.imglib2.FinalInterval;
@@ -11,7 +12,7 @@ import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
 @Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>Process>BDP2_Crop...")
-public class CropCommand< R extends RealType< R > & NativeType< R > > extends AbstractProcessingCommand implements Command
+public class CroppingCommand< R extends RealType< R > & NativeType< R > > extends AbstractProcessingCommand implements Command
 {
     @Parameter(label = "Min X [pixel]", min = "0")
     long minX = 0;

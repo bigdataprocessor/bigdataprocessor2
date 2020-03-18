@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.scijava.command.process;
+package de.embl.cba.bdp2.scijava.command;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.service.BdvService;

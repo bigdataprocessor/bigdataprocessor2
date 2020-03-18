@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.scijava.command.image;
+package de.embl.cba.bdp2.calibrate;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.service.BdvService;

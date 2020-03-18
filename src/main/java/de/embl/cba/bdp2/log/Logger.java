@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.logging;
+package de.embl.cba.bdp2.log;
 
 import ij.IJ;
 import ij.gui.GenericDialog;

@@ -1,7 +1,7 @@
 package de.embl.cba.bdp2.save;
 
 import de.embl.cba.bdp2.load.files.FileInfos;
-import de.embl.cba.bdp2.logging.Logger;
+import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.progress.Progress;
 import de.embl.cba.bdp2.utils.Utils;

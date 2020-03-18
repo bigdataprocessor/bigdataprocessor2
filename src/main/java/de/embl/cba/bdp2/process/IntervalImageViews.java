@@ -1,6 +1,6 @@
 package de.embl.cba.bdp2.process;
 
-import de.embl.cba.bdp2.logging.Logger;
+import de.embl.cba.bdp2.log.Logger;
 import net.imglib2.*;
 import net.imglib2.algorithm.util.Grids;
 import net.imglib2.img.AbstractImg;

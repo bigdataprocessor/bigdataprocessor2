@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.scijava.command;
+package de.embl.cba.bdp2.scijava;
 
 import org.scijava.command.CommandService;
 

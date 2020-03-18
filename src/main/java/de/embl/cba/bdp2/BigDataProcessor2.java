@@ -2,11 +2,11 @@ package de.embl.cba.bdp2;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.bin.Binner;
-import de.embl.cba.bdp2.convert.UnsignedByteTypeConversion;
+import de.embl.cba.bdp2.convert.UnsignedByteTypeConversionDialog;
 import de.embl.cba.bdp2.crop.Cropper;
 import de.embl.cba.bdp2.load.CachedCellImgReader;
 import de.embl.cba.bdp2.load.files.FileInfos;
-import de.embl.cba.bdp2.logging.Logger;
+import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.progress.Progress;
 import de.embl.cba.bdp2.progress.ProgressListener;
@@ -213,7 +213,7 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
     public static < R extends RealType< R > & NativeType< R > >
     Image< R > convert( Image< R > image, double mapTo0, double mapTo255 )
     {
-        return UnsignedByteTypeConversion.convert( image, mapTo0, mapTo255 );
+        return UnsignedByteTypeConversionDialog.convert( image, mapTo0, mapTo255 );
     }
 
 
