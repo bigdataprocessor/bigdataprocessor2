@@ -24,7 +24,7 @@ public class BinCommand< R extends RealType< R > & NativeType< R > > extends Abs
     public void run()
     {
         process();
-        show();
+        showOutputImage();
         ImageService.nameToImage.put( outputImage.getName(), outputImage );
     }
 

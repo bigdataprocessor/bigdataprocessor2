@@ -47,7 +47,7 @@ public class CropCommand< R extends RealType< R > & NativeType< R > > extends Ab
     public void run()
     {
         process();
-        show();
+        showOutputImage();
         ImageService.nameToImage.put( outputImage.getName(), outputImage );
     }
 

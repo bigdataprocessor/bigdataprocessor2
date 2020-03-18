@@ -7,7 +7,7 @@ import de.embl.cba.bdp2.crop.CroppingDialog;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.process.splitviewmerge.SplitViewMergingDialog;
-import de.embl.cba.bdp2.register.ChannelShiftCorrectionDialog;
+import de.embl.cba.bdp2.register.ChromaticShiftDialog;
 import de.embl.cba.bdp2.register.RegisteredViews;
 import de.embl.cba.bdp2.register.Registration;
 import de.embl.cba.bdp2.shear.ShearMenuDialog;
@@ -135,7 +135,7 @@ public class BdvMenus
         else if(e.getActionCommand().equalsIgnoreCase(
             UIDisplayConstants.CHROMATIC_SHIFT_CORRECTION_MENU_ITEM )){
             BigDataProcessor2.generalThreadPool.submit(() -> {
-                new ChannelShiftCorrectionDialog<>( imageViewer );
+                new ChromaticShiftDialog<>( imageViewer );
             });
         }else if(e.getActionCommand().equalsIgnoreCase(
                     UIDisplayConstants.SPLIT_VIEW_MENU_ITEM ))

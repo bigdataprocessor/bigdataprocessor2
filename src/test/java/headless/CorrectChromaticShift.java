@@ -2,7 +2,7 @@ package headless;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.load.files.FileInfos;
-import de.embl.cba.bdp2.register.ChannelShiftCorrectionDialog;
+import de.embl.cba.bdp2.register.ChromaticShiftDialog;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 
@@ -27,7 +27,7 @@ public class CorrectChromaticShift
 
         final BdvImageViewer imageViewer = bdp.showImage( image );
 
-        new ChannelShiftCorrectionDialog<>( imageViewer );
+        new ChromaticShiftDialog<>( imageViewer );
 
     }
 

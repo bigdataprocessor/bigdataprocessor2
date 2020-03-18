@@ -50,11 +50,9 @@ public class ChannelShifter < T extends RealType< T > & NativeType< T > >
 		final ArrayList< RandomAccessibleInterval< T > > cropped = new ArrayList<>();
 		for ( int c = 0; c < numChannels; c++ )
 		{
-			final IntervalView< T > crop =
-					Views.interval( rais.get( c ), intersect );
-			cropped.add(  crop );
+			final IntervalView< T > crop = Views.interval( rais.get( c ), intersect );
+			cropped.add( Views.zeroMin( crop ) );
 		}
-
 		return cropped;
 	}
 

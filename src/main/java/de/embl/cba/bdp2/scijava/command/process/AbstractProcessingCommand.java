@@ -21,7 +21,7 @@ public class AbstractProcessingCommand< R extends RealType< R > & NativeType< R 
 
     protected Image< R > outputImage;
 
-    protected void show()
+    protected void showOutputImage()
     {
         if ( newViewer )
         {

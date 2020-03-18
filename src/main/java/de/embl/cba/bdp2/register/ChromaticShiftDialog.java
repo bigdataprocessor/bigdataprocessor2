@@ -3,8 +3,8 @@ package de.embl.cba.bdp2.register;
 import bdv.tools.brightness.SliderPanel;
 import bdv.util.BoundedValue;
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.logging.Logger;
 import de.embl.cba.bdp2.record.MacroRecorder;
+import de.embl.cba.bdp2.scijava.command.process.ChromaticShiftCommand;
 import de.embl.cba.bdp2.ui.AbstractOkCancelDialog;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
@@ -16,7 +16,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class ChannelShiftCorrectionDialog < T extends RealType< T > & NativeType< T > > extends AbstractOkCancelDialog
+public class ChromaticShiftDialog< T extends RealType< T > & NativeType< T > > extends AbstractOkCancelDialog
 {
 	private final BdvImageViewer< T > viewer;
 	private final Image< T > inputImage;
@@ -27,9 +27,9 @@ public class ChannelShiftCorrectionDialog < T extends RealType< T > & NativeType
 	private final ChannelShifter channelShifter;
 	private final long numChannels;
 	private Image< T > outputImage;
-	private ArrayList< long[] > translations;
+	private ArrayList< long[] > shifts;
 
-	public ChannelShiftCorrectionDialog( final BdvImageViewer< T > viewer  )
+	public ChromaticShiftDialog( final BdvImageViewer< T > viewer  )
 	{
 		this.viewer = viewer;
 		this.inputImage = viewer.getImage();
@@ -43,26 +43,22 @@ public class ChannelShiftCorrectionDialog < T extends RealType< T > & NativeType
 	@Override
 	protected void ok()
 	{
-
+		recordMacro();
+		setVisible( false );
 	}
 
 	@Override
 	protected void cancel()
 	{
 		viewer.replaceImage( inputImage, true );
-		Logger.info( "Chromatic shift correction was cancelled." );
 		setVisible( false );
 	}
 
 	private void recordMacro()
 	{
 		final MacroRecorder recorder = new MacroRecorder( "BDP2_ShiftChannels...", inputImage, outputImage, false );
-
-//		recorder.addOption( "translations",  span[ 0 ] );
-//		recorder.addOption( "binWidthYPixels",  span[ 0 ] );
-//		recorder.addOption( "binWidthZPixels",  span[ 0 ] );
-//
-//		recorder.record();
+		recorder.addOption( "shifts", ChromaticShiftCommand.longsToString( shifts ) );
+		recorder.record();
 	}
 
 	private void showDialog()
@@ -120,21 +116,20 @@ public class ChannelShiftCorrectionDialog < T extends RealType< T > & NativeType
 		@Override
 		public synchronized void update()
 		{
-			translations = getTranslations();
+			shifts = getShiftsXYZT();
 
-			if ( ! isTranslationsChanged( translations ) ) return;
+			if ( ! shiftsChanged( shifts ) ) return;
 
 			updateSliders();
 
-			final RandomAccessibleInterval< T > correctedRAI =
-					channelShifter.getShiftedRai( translations );
+			final RandomAccessibleInterval< T > correctedRAI = channelShifter.getShiftedRai( shifts );
 
 			outputImage = inputImage.newImage( correctedRAI );
 
 			viewer.replaceImage( outputImage, false );
 		}
 
-		private boolean isTranslationsChanged( ArrayList< long[] > translations )
+		private boolean shiftsChanged( ArrayList< long[] > translations )
 		{
 			if ( previousTranslations == null )
 			{
@@ -156,9 +151,9 @@ public class ChannelShiftCorrectionDialog < T extends RealType< T > & NativeType
 			return false;
 		}
 
-		private ArrayList< long[] > getTranslations()
+		private ArrayList< long[] > getShiftsXYZT()
 		{
-			final ArrayList< long[] > translations = new ArrayList<>();
+			final ArrayList< long[] > translationsXYZT = new ArrayList<>();
 			int valueIndex = 0;
 			for ( int c = 0; c < numChannels; c++ )
 			{
@@ -167,9 +162,9 @@ public class ChannelShiftCorrectionDialog < T extends RealType< T > & NativeType
 				for ( int d = 0; d < 3; d++ )
 					translation[ d ] = boundedValues.get( valueIndex++ ).getCurrentValue();
 
-				translations.add( translation );
+				translationsXYZT.add( translation );
 			}
-			return translations;
+			return translationsXYZT;
 		}
 
 		private void updateSliders()
