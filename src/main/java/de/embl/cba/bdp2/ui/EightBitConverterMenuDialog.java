@@ -79,7 +79,7 @@ public class EightBitConverterMenuDialog extends JDialog implements ActionListen
                 BigDataProcessor2.unsignedByteTypeConverter(
                         image.getRai(), displaySettings );
 
-        imageViewer.replaceImage( image.newImage( unsignedByteTypeRAI ), true );
+        imageViewer.replaceImage( image.newImage( unsignedByteTypeRAI ), true, true );
 
         dispose();
     }

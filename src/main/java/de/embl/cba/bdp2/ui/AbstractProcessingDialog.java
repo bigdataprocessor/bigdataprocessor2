@@ -41,7 +41,7 @@ public abstract class AbstractProcessingDialog< R extends RealType< R > & Native
 
 	protected abstract void cancel();
 
-	protected void showDialog()
+	protected void showDialog( JPanel panel )
 	{
 		setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
 		getContentPane().add( panel, BorderLayout.CENTER );

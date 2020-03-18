@@ -33,7 +33,7 @@ public class TestShearTransform {
          */
         RandomAccessibleInterval sheared = getShearedImage( cachedCellImg, imageViewer );
 
-        imageViewer.replaceImage( imageViewer.getImage().newImage( sheared ), false );
+        imageViewer.replaceImage( imageViewer.getImage().newImage( sheared ), false, true );
 
         /**
          * Compute shearing using a 5D Affine Transform.

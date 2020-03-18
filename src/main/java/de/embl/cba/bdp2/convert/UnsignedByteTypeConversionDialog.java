@@ -18,7 +18,6 @@ import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.util.Util;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class UnsignedByteTypeConversionDialog< R extends RealType< R > & NativeType< R > > extends AbstractProcessingDialog< R >
 {
@@ -46,7 +45,7 @@ public class UnsignedByteTypeConversionDialog< R extends RealType< R > & NativeT
 		converter = unsignedByteTypeConverter.getConverter();
 		outputImage = unsignedByteTypeConverter.getConvertedImage();
 
-		viewer.replaceImage( outputImage, true );
+		viewer.replaceImage( outputImage, true, true );
 
 		for ( int c = 0; c < viewer.getImage().numChannels(); c++ )
 			viewer.setDisplayRange( 0, 255, c );
@@ -54,7 +53,7 @@ public class UnsignedByteTypeConversionDialog< R extends RealType< R > & NativeT
 		Logger.info( "8-bit view size [GB]: " + Utils.getSizeGB( outputImage.getRai() ) );
 
 		prepareDialog();
-		showDialog();
+		showDialog( panel );
 	}
 
 	@Override
@@ -67,7 +66,7 @@ public class UnsignedByteTypeConversionDialog< R extends RealType< R > & NativeT
 	@Override
 	protected void cancel()
 	{
-		viewer.replaceImage( inputImage, true );
+		viewer.replaceImage( inputImage, true, true );
 		setVisible( false );
 	}
 
@@ -115,7 +114,7 @@ public class UnsignedByteTypeConversionDialog< R extends RealType< R > & NativeT
 				converter.setMax( mapTo255 );
 				minSlider.update();
 				maxSlider.update();
-				viewer.replaceImage( outputImage, false );
+				viewer.replaceImage( outputImage, false, true );
 			}
 		}
 

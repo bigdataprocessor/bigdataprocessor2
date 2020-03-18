@@ -48,7 +48,7 @@ public class CroppingCommand< R extends RealType< R > & NativeType< R > > extend
     public void run()
     {
         process();
-        showOutputImage();
+        showOutputImage( false, false );
         ImageService.nameToImage.put( outputImage.getName(), outputImage );
     }
 

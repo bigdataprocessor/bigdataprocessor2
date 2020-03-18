@@ -124,43 +124,6 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
         return new BdvImageViewer( image, autoContrast );
     }
 
-    public static < R extends RealType< R > & NativeType< R > >
-    boolean setVoxelSpacingViaDialog( Image< R > image )
-    {
-        // TODO: refactor into a class and add macro recording
-        final double[] voxelSpacing = image.getVoxelSpacing();
-        String voxelUnit = image.getVoxelUnit();
-        voxelUnit = fixVoxelSpacingAndUnit( voxelSpacing, voxelUnit );
-
-        final GenericDialog genericDialog = new GenericDialog( "Calibration" );
-        genericDialog.addStringField( "Unit", voxelUnit, 12 );
-        genericDialog.addNumericField( "Spacing X", voxelSpacing[ 0 ], 3, 12, "" );
-        genericDialog.addNumericField( "Spacing Y", voxelSpacing[ 1 ], 3, 12, "" );
-        genericDialog.addNumericField( "Spacing Z", voxelSpacing[ 2 ], 3, 12, "" );
-
-        genericDialog.showDialog();
-        if ( genericDialog.wasCanceled() ) return false;
-
-        image.setVoxelUnit( genericDialog.getNextString() );
-        voxelSpacing[ 0 ] = genericDialog.getNextNumber();
-        voxelSpacing[ 1 ] = genericDialog.getNextNumber();
-        voxelSpacing[ 2 ] = genericDialog.getNextNumber();
-
-        Logger.info( "Image voxel unit: " + image.getVoxelUnit() );
-        Logger.info( "Image voxel size: " + Arrays.toString( image.getVoxelSpacing() ) );
-
-        return true;
-    }
-
-    public static < R extends RealType< R > & NativeType< R > > String fixVoxelSpacingAndUnit( double[] voxelSpacing, String voxelUnit )
-    {
-        if ( voxelUnit.equals( "cm" ) )
-            voxelUnit = "micrometer";
-        for ( int i = 0; i < voxelSpacing.length; i++ )
-            voxelSpacing[ i ] *= 10000;
-        return voxelUnit;
-    }
-
     // TODO: Return futures from the image saver
     public static < R extends RealType< R > & NativeType< R > >
     ImgSaver saveImage(

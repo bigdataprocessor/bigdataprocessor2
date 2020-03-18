@@ -1,5 +1,6 @@
 package presentations.tim2020;
 
+import de.embl.cba.bdp2.calibrate.CalibrationUtils;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.load.files.FileInfos;
 import de.embl.cba.bdp2.BigDataProcessor2;
@@ -16,7 +17,7 @@ public class OpenLeicaLightSheetTiff
 		// The image calibration is read in cm.
 		// I do not know why, we fix it here to micrometer.
 		final double[] voxelSpacing = image.getVoxelSpacing();
-		final String voxelUnit = BigDataProcessor2.fixVoxelSpacingAndUnit( voxelSpacing, image.getVoxelUnit() );
+		final String voxelUnit = CalibrationUtils.fixVoxelSpacingAndUnit( voxelSpacing, image.getVoxelUnit() );
 		voxelSpacing[ 2 ] = 3.7;
 		image.setVoxelSpacing( voxelSpacing );
 		image.setVoxelUnit( voxelUnit );

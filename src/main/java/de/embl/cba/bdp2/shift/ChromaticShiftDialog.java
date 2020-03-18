@@ -2,7 +2,6 @@ package de.embl.cba.bdp2.shift;
 
 import bdv.tools.brightness.SliderPanel;
 import bdv.util.BoundedValue;
-import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.record.MacroRecorder;
 import de.embl.cba.bdp2.ui.AbstractProcessingDialog;
 import de.embl.cba.bdp2.utils.DimensionOrder;
@@ -12,7 +11,6 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.ArrayList;
 
 public class ChromaticShiftDialog< T extends RealType< T > & NativeType< T > > extends AbstractProcessingDialog
@@ -34,7 +32,7 @@ public class ChromaticShiftDialog< T extends RealType< T > & NativeType< T > > e
 		numChannels = inputImage.getRai().dimension( DimensionOrder.C );
 
 		prepareDialog();
-		showDialog();
+		showDialog( panel );
 	}
 
 	@Override
@@ -47,7 +45,7 @@ public class ChromaticShiftDialog< T extends RealType< T > & NativeType< T > > e
 	@Override
 	protected void cancel()
 	{
-		viewer.replaceImage( inputImage, true );
+		viewer.replaceImage( inputImage, true, true );
 		setVisible( false );
 	}
 
@@ -111,7 +109,7 @@ public class ChromaticShiftDialog< T extends RealType< T > & NativeType< T > > e
 
 			outputImage = inputImage.newImage( correctedRAI );
 
-			viewer.replaceImage( outputImage, false );
+			viewer.replaceImage( outputImage, false, true );
 		}
 
 		private boolean shiftsChanged( ArrayList< long[] > translations )

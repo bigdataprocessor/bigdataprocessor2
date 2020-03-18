@@ -2,6 +2,7 @@ package de.embl.cba.bdp2.ui;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.bin.BinningDialog;
+import de.embl.cba.bdp2.calibrate.CalibrationDialog;
 import de.embl.cba.bdp2.convert.UnsignedByteTypeConversionDialog;
 import de.embl.cba.bdp2.crop.CroppingDialog;
 import de.embl.cba.bdp2.image.Image;
@@ -29,7 +30,7 @@ public class BdvMenus
     private final ImageMenu imageMenu;
     private final OthersMenu otherMenu;
     private final ProcessMenu processMenu;
-    private BdvImageViewer imageViewer;
+    private BdvImageViewer viewer;
 
     public BdvMenus(){
         imageMenu = new ImageMenu(this);
@@ -37,8 +38,8 @@ public class BdvMenus
         otherMenu = new OthersMenu(this);
     }
 
-    public void setImageViewer( BdvImageViewer viewer ){
-        this.imageViewer = viewer;
+    public void setViewer( BdvImageViewer viewer ){
+        this.viewer = viewer;
     }
 
     public List< JMenu > getMenus(){ //Add new menu items here.
@@ -56,7 +57,7 @@ public class BdvMenus
                 UIDisplayConstants.SAVE_AS_MENU_ITEM ))
         {
             BigDataProcessor2.generalThreadPool.submit(() -> {
-                SaveMenuDialog saveMenuDialog = new SaveMenuDialog(imageViewer);
+                SaveMenuDialog saveMenuDialog = new SaveMenuDialog( viewer );
                 saveMenuDialog.setVisible(true);
             });
         }
@@ -64,22 +65,14 @@ public class BdvMenus
                 UIDisplayConstants.CALIBRATE_MENU_ITEM ))
         {
             BigDataProcessor2.generalThreadPool.submit(() -> {
-//                Services.commandService.run( CalibrateCommand.class,true,
-//                        "inputImage", imageViewer.getImage()
-//                        );
-
-//                // TODO: put all of this in a class
-                final Image image = imageViewer.getImage();
-                BigDataProcessor2.setVoxelSpacingViaDialog( image );
-                imageViewer.close();
-                BigDataProcessor2.showImage( image );
+                new CalibrationDialog< >( viewer );
             });
         }
         else if (e.getActionCommand().equalsIgnoreCase(
                 UIDisplayConstants.OBLIQUE_MENU_ITEM ))
         {
             BigDataProcessor2.generalThreadPool.submit(() -> {
-                ShearMenuDialog shearMenuDialog = new ShearMenuDialog(imageViewer);
+                ShearMenuDialog shearMenuDialog = new ShearMenuDialog( viewer );
                 shearMenuDialog.setVisible(true);
             });
         }
@@ -87,41 +80,41 @@ public class BdvMenus
         		UIDisplayConstants.APPLY_TRACK_MENU_ITEM ))
         {
             BigDataProcessor2.generalThreadPool.submit(() -> {
-                new ApplyTrackDialog( imageViewer );
+                new ApplyTrackDialog( viewer );
             });
         }else if (e.getActionCommand().equalsIgnoreCase(
         		UIDisplayConstants.REGISTER_VOLUME_SIFT_MENU_ITEM ))
         {
             BigDataProcessor2.generalThreadPool.submit(() ->
 			{
-                Integer channel = Utils.getChannel( imageViewer );
+                Integer channel = Utils.getChannel( viewer );
                 if ( channel == null ) return;
-                RegisteredViews.showSIFTVolumeAlignedBdvView( imageViewer );
+                RegisteredViews.showSIFTVolumeAlignedBdvView( viewer );
             });
         }
         else if (e.getActionCommand().equalsIgnoreCase(
         		UIDisplayConstants.REGISTER_MOVIE_SIFT_MENU_ITEM ))
         {
             BigDataProcessor2.generalThreadPool.submit(() -> {
-                Integer channel = Utils.getChannel( imageViewer );
+                Integer channel = Utils.getChannel( viewer );
                 if ( channel == null ) return;
-                RegisteredViews.createAlignedMovieView( imageViewer, Registration.SIFT_CORRESPONDENCES, channel );
+                RegisteredViews.createAlignedMovieView( viewer, Registration.SIFT_CORRESPONDENCES, channel );
             });
         }
         else if (e.getActionCommand().equalsIgnoreCase(
         		UIDisplayConstants.REGISTER_MOVIE_PHASE_CORRELATION_MENU_ITEM ))
         {
             BigDataProcessor2.generalThreadPool.submit(() -> {
-                Integer channel = Utils.getChannel( imageViewer );
+                Integer channel = Utils.getChannel( viewer );
                 if ( channel == null ) return;
-                RegisteredViews.createAlignedMovieView( imageViewer, Registration.PHASE_CORRELATION, 0 );
+                RegisteredViews.createAlignedMovieView( viewer, Registration.PHASE_CORRELATION, 0 );
             });
         }
         else if(e.getActionCommand().equalsIgnoreCase(
         		UIDisplayConstants.CROP_MENU_ITEM ))
         {
         	new Thread( () ->  {
-        	    new CroppingDialog<>( imageViewer );
+        	    new CroppingDialog<>( viewer );
             }).start();
         }
         else if(e.getActionCommand().equalsIgnoreCase(
@@ -132,7 +125,7 @@ public class BdvMenus
                 // - make own class
                 // - add calibration
                 RandomAccessibleInterval permuted =
-                        Views.permute( imageViewer.getImage().getRai(),
+                        Views.permute( viewer.getImage().getRai(),
                                 DimensionOrder.Z, DimensionOrder.C );
                 ImageJFunctions.show( permuted, BigDataProcessor2.generalThreadPool );
             }).start();
@@ -141,7 +134,7 @@ public class BdvMenus
         {
             BigDataProcessor2.generalThreadPool.submit(() ->
 			{
-                new UnsignedByteTypeConversionDialog(imageViewer);
+                new UnsignedByteTypeConversionDialog( viewer );
             });
         }
         else if(e.getActionCommand().equalsIgnoreCase(
@@ -149,19 +142,20 @@ public class BdvMenus
         {
             BigDataProcessor2.generalThreadPool.submit(() ->
             {
-                new BinningDialog<>( imageViewer );
+                new BinningDialog<>( viewer );
             });
         }
         else if(e.getActionCommand().equalsIgnoreCase(
             UIDisplayConstants.CHROMATIC_SHIFT_CORRECTION_MENU_ITEM )){
             BigDataProcessor2.generalThreadPool.submit(() -> {
-                new ChromaticShiftDialog<>( imageViewer );
+                new ChromaticShiftDialog<>( viewer );
             });
         }else if(e.getActionCommand().equalsIgnoreCase(
                     UIDisplayConstants.SPLIT_VIEW_MENU_ITEM ))
         {
                 BigDataProcessor2.generalThreadPool.submit(() -> {
-                    new SplitViewMergingDialog( ( BdvImageViewer ) imageViewer );
+                    // TODO: Make Command
+                    new SplitViewMergingDialog( viewer );
                 });
         }
         else if(e.getActionCommand().equalsIgnoreCase(

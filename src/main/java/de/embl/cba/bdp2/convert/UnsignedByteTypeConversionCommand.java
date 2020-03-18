@@ -1,6 +1,5 @@
 package de.embl.cba.bdp2.convert;
 
-import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.scijava.command.AbstractProcessingCommand;
 import de.embl.cba.bdp2.service.ImageService;
 import net.imglib2.type.NativeType;
@@ -22,7 +21,7 @@ public class UnsignedByteTypeConversionCommand< R extends RealType< R > & Native
     public void run()
     {
         process();
-        showOutputImage();
+        showOutputImage( true, true );
     }
 
     private void process()

@@ -28,6 +28,6 @@ public class ExploreShearing < R extends RealType< R > & NativeType< R > >
 
 		final RandomAccessibleInterval shearRaiXYZCT = ImageShearer.shearRai5D( image.getRai(), shearingSettings );
 		final Image shearImage = image.newImage( shearRaiXYZCT );
-		bdvImageViewer.replaceImage( shearImage, false );
+		bdvImageViewer.replaceImage( shearImage, false, true );
 	}
 }

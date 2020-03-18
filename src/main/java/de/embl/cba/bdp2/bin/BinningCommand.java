@@ -25,7 +25,7 @@ public class BinningCommand< R extends RealType< R > & NativeType< R > > extends
     public void run()
     {
         process();
-        showOutputImage();
+        showOutputImage( true, true );
         ImageService.nameToImage.put( outputImage.getName(), outputImage );
     }
 

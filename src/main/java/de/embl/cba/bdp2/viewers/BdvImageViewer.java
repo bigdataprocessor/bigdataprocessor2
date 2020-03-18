@@ -124,7 +124,6 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
         this.bdvStackSource.getBdvHandle().getViewerPanel().setCurrentViewerTransform(viewerTransform);
     }
 
-    
     public void repaint() {
         this.bdvStackSource.getBdvHandle().getViewerPanel().requestRepaint();
     }
@@ -134,17 +133,17 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
         showImage( image, autoContrast );
     }
 
-    public void replaceImage( Image image, boolean autoContrast )
+    public void replaceImage( Image image, boolean autoContrast, boolean keepViewerTransform )
     {
         final AffineTransform3D viewerTransform = getViewerTransform();
         final List< DisplaySettings > displaySettings = getDisplaySettings();
 
-        if ( bdvStackSource != null )
-            removeAllSourcesFromBdv();
+        if ( bdvStackSource != null ) removeAllSourcesFromBdv();
 
         showImage( image, autoContrast );
 
-        bdvHandle.getViewerPanel().setCurrentViewerTransform( viewerTransform );
+        if ( keepViewerTransform )
+            bdvHandle.getViewerPanel().setCurrentViewerTransform( viewerTransform );
 
         if ( ! autoContrast )
             setDisplaySettings( displaySettings );
@@ -194,7 +193,7 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
 
     public void addMenus( BdvMenus menus ) {
 
-        menus.setImageViewer(this);
+        menus.setViewer(this);
         for ( JMenu menu : menus.getMenus() )
         {
             ((BdvHandleFrame) this.bdvStackSource.getBdvHandle())

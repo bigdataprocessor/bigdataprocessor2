@@ -23,7 +23,7 @@ public class ChromaticShiftCommand< R extends RealType< R > & NativeType< R > > 
     public void run()
     {
         process();
-        showOutputImage();
+        showOutputImage( false, true );
         ImageService.nameToImage.put( outputImage.getName(), outputImage );
     }
 

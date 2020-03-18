@@ -21,16 +21,16 @@ public class AbstractProcessingCommand< R extends RealType< R > & NativeType< R 
 
     protected Image< R > outputImage;
 
-    protected void showOutputImage()
+    protected void showOutputImage( boolean autoContrast, boolean keepViewerTransform )
     {
         if ( newViewer )
         {
-            new BdvImageViewer<>( outputImage, true );
+            new BdvImageViewer<>( outputImage, autoContrast );
         }
         else
         {
             final BdvImageViewer viewer = BdvService.imageNameToBdv.get( inputImage.getName() );
-            viewer.replaceImage( outputImage, true );
+            viewer.replaceImage( outputImage, autoContrast, keepViewerTransform );
         }
     }
 

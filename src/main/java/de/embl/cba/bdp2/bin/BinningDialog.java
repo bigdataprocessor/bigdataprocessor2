@@ -2,7 +2,6 @@ package de.embl.cba.bdp2.bin;
 
 import bdv.tools.brightness.SliderPanel;
 import bdv.util.BoundedValue;
-import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.record.MacroRecorder;
 import de.embl.cba.bdp2.ui.AbstractProcessingDialog;
@@ -32,8 +31,8 @@ public class BinningDialog< T extends RealType< T > & NativeType< T > > extends 
 		Logger.info( "Image size [GB]: "
 				+ Utils.getSizeGB( this.inputImage.getRai() ) );
 
-		prepareDialog();
-		showDialog();
+		panel = createContent();
+		showDialog( panel );
 	}
 
 	@Override
@@ -46,7 +45,7 @@ public class BinningDialog< T extends RealType< T > & NativeType< T > > extends 
 	@Override
 	protected void cancel()
 	{
-		viewer.replaceImage( inputImage, true );
+		viewer.replaceImage( inputImage, true, true );
 		setVisible( false );
 	}
 
@@ -61,9 +60,8 @@ public class BinningDialog< T extends RealType< T > & NativeType< T > > extends 
 		recorder.record();
 	}
 
-	protected void prepareDialog()
+	protected JPanel createContent()
 	{
-
 		JPanel panel = new JPanel();
 		panel.setLayout( new BoxLayout( panel, BoxLayout.PAGE_AXIS ) );
 
@@ -99,7 +97,7 @@ public class BinningDialog< T extends RealType< T > & NativeType< T > > extends 
 
 				outputImage = Binner.bin( inputImage, span );
 				outputImage.setName( inputImage.getName() + "-binned" );
-				viewer.replaceImage( outputImage, true );
+				viewer.replaceImage( outputImage, true, true );
 
 				Logger.info( "Binning: "
 						+ span[ 0 ] + " , "
@@ -136,6 +134,8 @@ public class BinningDialog< T extends RealType< T > & NativeType< T > > extends 
 			boundedValues.get( d ).setUpdateListener( updateListener );
 			panel.add( sliderPanels.get( d ) );
 		}
+
+		return panel;
 	}
 
 }
