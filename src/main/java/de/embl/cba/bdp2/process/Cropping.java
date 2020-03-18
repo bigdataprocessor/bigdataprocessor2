@@ -10,12 +10,20 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.view.Views;
 
+import javax.swing.*;
+
 public class Cropping< T extends RealType< T > & NativeType< T > >
 {
 	// TODO: better split UI
 	public Cropping( ImageViewer< T > imageViewer )
 	{
-		// Logger.info( "\nCropping..." );
+		Logger.info( "\nCropping..." );
+		Logger.info( "\nCropping..." );
+		Logger.info( "\nCropping..." );
+		Logger.info( "\nCropping..." );
+		Logger.info( "\nCropping..." );
+		Logger.info( "\nCropping..." );
+		Logger.info( "\nCropping..." );
 		FinalInterval interval = imageViewer.get5DIntervalFromUser();
 		final Image< T > image = imageViewer.getImage();
 

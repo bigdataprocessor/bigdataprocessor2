@@ -56,8 +56,8 @@ public class BdvMenus
             });
         }else if(e.getActionCommand().equalsIgnoreCase(UIDisplayConstants.CROP_MENU_ITEM )){
         	BigDataProcessor2.generalThreadPool.submit(() -> {
-        	    SwingUtilities.invokeLater( () -> new Cropping<>( imageViewer ) );
-            });
+        	   new Cropping<>( imageViewer );
+        	});
         }else if(e.getActionCommand().equalsIgnoreCase(
                 UIDisplayConstants.IMAGEJ_VIEW_MENU_ITEM )){
             // TODO: improve this:
