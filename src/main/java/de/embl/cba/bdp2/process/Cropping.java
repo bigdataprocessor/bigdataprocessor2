@@ -15,7 +15,7 @@ public class Cropping< T extends RealType< T > & NativeType< T > >
 	// TODO: better split UI
 	public Cropping( ImageViewer< T > imageViewer )
 	{
-		Logger.info( "\nCropping..." );
+		// Logger.info( "\nCropping..." );
 		FinalInterval interval = imageViewer.get5DIntervalFromUser();
 		final Image< T > image = imageViewer.getImage();
 
