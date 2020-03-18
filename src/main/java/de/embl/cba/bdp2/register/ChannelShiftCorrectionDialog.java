@@ -2,6 +2,11 @@ package de.embl.cba.bdp2.register;
 
 import bdv.tools.brightness.SliderPanel;
 import bdv.util.BoundedValue;
+import de.embl.cba.bdp2.image.Image;
+import de.embl.cba.bdp2.logging.Logger;
+import de.embl.cba.bdp2.record.MacroRecorder;
+import de.embl.cba.bdp2.ui.AbstractOkCancelDialog;
+import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;
@@ -11,27 +16,56 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class ChannelShiftCorrectionDialog < T extends RealType< T > & NativeType< T > > extends JDialog
+public class ChannelShiftCorrectionDialog < T extends RealType< T > & NativeType< T > > extends AbstractOkCancelDialog
 {
-	private final BdvImageViewer< T > imageViewer;
+	private final BdvImageViewer< T > viewer;
+	private final Image< T > inputImage;
 	private ArrayList< BoundedValue > boundedValues;
 	private ArrayList< SliderPanel > sliderPanels;
 	private ChromaticShiftUpdateListener updateListener;
 	private JPanel panel;
 	private final ChannelShifter channelShifter;
 	private final long numChannels;
+	private Image< T > outputImage;
+	private ArrayList< long[] > translations;
 
-	public ChannelShiftCorrectionDialog( final BdvImageViewer< T > imageViewer  )
+	public ChannelShiftCorrectionDialog( final BdvImageViewer< T > viewer  )
 	{
-		this.imageViewer = imageViewer;
+		this.viewer = viewer;
+		this.inputImage = viewer.getImage();
 
-		channelShifter = new ChannelShifter( imageViewer.getImage().getRai() );
-		numChannels = channelShifter.getNumChannels();
+		channelShifter = new ChannelShifter( inputImage.getRai() );
+		numChannels = inputImage.getRai().dimension( DimensionOrder.C );
 
-		showChromaticShiftCorrectionDialog();
+		showDialog();
 	}
 
-	private void showChromaticShiftCorrectionDialog()
+	@Override
+	protected void ok()
+	{
+
+	}
+
+	@Override
+	protected void cancel()
+	{
+		viewer.replaceImage( inputImage, true );
+		Logger.info( "Chromatic shift correction was cancelled." );
+		setVisible( false );
+	}
+
+	private void recordMacro()
+	{
+		final MacroRecorder recorder = new MacroRecorder( "BDP2_ShiftChannels...", inputImage, outputImage, false );
+
+//		recorder.addOption( "translations",  span[ 0 ] );
+//		recorder.addOption( "binWidthYPixels",  span[ 0 ] );
+//		recorder.addOption( "binWidthZPixels",  span[ 0 ] );
+//
+//		recorder.record();
+	}
+
+	private void showDialog()
 	{
 		panel = new JPanel();
 		panel.setLayout( new BoxLayout( panel, BoxLayout.PAGE_AXIS ) );
@@ -42,26 +76,21 @@ public class ChannelShiftCorrectionDialog < T extends RealType< T > & NativeType
 
 		final String[] xyz = { "X", "Y", "Z" };
 
-		for ( int c = 0; c < channelShifter.getNumChannels(); c++ )
+		for ( int c = 0; c < numChannels; c++ )
 			for ( String axis : xyz )
 				createValueAndSlider( c, axis );
 
-		showFrame( panel );
-	}
+		getContentPane().add( panel, BorderLayout.CENTER  );
+		setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
 
-	private void showFrame( JPanel panel )
-	{
-		final JFrame frame = new JFrame( "Chromatic Shift Correction [Pixels]" );
-		frame.setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
-
-		frame.setContentPane( panel );
-		frame.setBounds(
+		setBounds(
 				MouseInfo.getPointerInfo().getLocation().x,
 				MouseInfo.getPointerInfo().getLocation().y,
 				120, 10);
-		frame.setResizable( false );
-		frame.pack();
-		frame.setVisible( true );
+		setTitle( "Chromatic Shift Correction [Pixels]" );
+		setResizable( false );
+		pack();
+		setVisible( true );
 	}
 
 	private void createValueAndSlider( int c, String axis )
@@ -91,16 +120,18 @@ public class ChannelShiftCorrectionDialog < T extends RealType< T > & NativeType
 		@Override
 		public synchronized void update()
 		{
-			final ArrayList< long[] > translations = getTranslations();
+			translations = getTranslations();
 
 			if ( ! isTranslationsChanged( translations ) ) return;
 
 			updateSliders();
 
 			final RandomAccessibleInterval< T > correctedRAI =
-					channelShifter.getChannelShiftedRAI( translations );
+					channelShifter.getShiftedRai( translations );
 
-			imageViewer.replaceImage( imageViewer.getImage().newImage( correctedRAI ), false );
+			outputImage = inputImage.newImage( correctedRAI );
+
+			viewer.replaceImage( outputImage, false );
 		}
 
 		private boolean isTranslationsChanged( ArrayList< long[] > translations )

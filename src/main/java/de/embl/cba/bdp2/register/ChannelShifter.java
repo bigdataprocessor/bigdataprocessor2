@@ -10,6 +10,7 @@ import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ChannelShifter < T extends RealType< T > & NativeType< T > >
 {
@@ -24,7 +25,7 @@ public class ChannelShifter < T extends RealType< T > & NativeType< T > >
 		channelRAIs = getChannelRAIs();
 	}
 
-	public RandomAccessibleInterval< T > getChannelShiftedRAI( ArrayList< long[] > translations )
+	public RandomAccessibleInterval< T > getShiftedRai( List< long[] > translations )
 	{
 		ArrayList< RandomAccessibleInterval< T > > shiftedChannelRAIs =
 				getShiftedRAIs( translations );
@@ -42,7 +43,7 @@ public class ChannelShifter < T extends RealType< T > & NativeType< T > >
 		return shiftedView;
 	}
 
-	public ArrayList< RandomAccessibleInterval< T > > getCroppedRAIs(
+	private ArrayList< RandomAccessibleInterval< T > > getCroppedRAIs(
 			ArrayList< RandomAccessibleInterval< T > > rais,
 			Interval intersect )
 	{
@@ -57,7 +58,7 @@ public class ChannelShifter < T extends RealType< T > & NativeType< T > >
 		return cropped;
 	}
 
-	public Interval getIntersectionInterval( ArrayList< RandomAccessibleInterval< T > > shiftedChannelRAIs )
+	private Interval getIntersectionInterval( ArrayList< RandomAccessibleInterval< T > > shiftedChannelRAIs )
 	{
 		Interval intersect = shiftedChannelRAIs.get( 0 );
 		for ( int c = 1; c < numChannels; c++ )
@@ -65,8 +66,7 @@ public class ChannelShifter < T extends RealType< T > & NativeType< T > >
 		return intersect;
 	}
 
-	public ArrayList< RandomAccessibleInterval< T > > getShiftedRAIs(
-			ArrayList< long[] > translations )
+	private ArrayList< RandomAccessibleInterval< T > > getShiftedRAIs( List< long[] > translations )
 	{
 		ArrayList< RandomAccessibleInterval< T > > shiftedChannelRAIs = new ArrayList<>();
 
@@ -87,7 +87,7 @@ public class ChannelShifter < T extends RealType< T > & NativeType< T > >
 		return channelRais;
 	}
 
-	public long getNumChannels()
+	private long getNumChannels()
 	{
 		return numChannels;
 	}

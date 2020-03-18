@@ -45,7 +45,7 @@ public class TestCorrectChromaticShiftAndBin
         shifts.add( new long[]{ 0, 0, 0, 0 } );
         shifts.add( new long[]{ 30, 0, 0, 0 } );
 
-        final RandomAccessibleInterval shiftedRAI = shifter.getChannelShiftedRAI( shifts );
+        final RandomAccessibleInterval shiftedRAI = shifter.getShiftedRai( shifts );
 
         final Image shifted = image.newImage( shiftedRAI );
 

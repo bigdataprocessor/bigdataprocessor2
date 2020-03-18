@@ -13,8 +13,6 @@ import net.imglib2.type.numeric.RealType;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -38,7 +36,7 @@ public class BinningDialog< T extends RealType< T > & NativeType< T > > extends 
 		Logger.info( "Image size [GB]: "
 				+ Utils.getSizeGB( this.inputImage.getRai() ) );
 
-		showBinningAdjustmentDialog();
+		showDialog();
 	}
 
 	@Override
@@ -68,10 +66,8 @@ public class BinningDialog< T extends RealType< T > & NativeType< T > > extends 
 		recorder.record();
 	}
 
-	private void showBinningAdjustmentDialog()
+	private void showDialog()
 	{
-//		final JFrame frame = new JFrame( "Binning" );
-//		frame.setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
 
 		JPanel panel = new JPanel();
 		panel.setLayout( new BoxLayout( panel, BoxLayout.PAGE_AXIS ) );
@@ -147,13 +143,13 @@ public class BinningDialog< T extends RealType< T > & NativeType< T > > extends 
 		}
 
 		getContentPane().add( panel, BorderLayout.CENTER  );
-		this.setBounds(
+		setBounds(
 				MouseInfo.getPointerInfo().getLocation().x,
 				MouseInfo.getPointerInfo().getLocation().y,
 				120, 10);
-		this.setResizable( false );
-		this.pack();
-		this.setVisible( true );
+		setResizable( false );
+		pack();
+		setVisible( true );
 	}
 
 }
