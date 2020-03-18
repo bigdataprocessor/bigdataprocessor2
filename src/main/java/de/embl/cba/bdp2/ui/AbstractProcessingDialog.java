@@ -17,6 +17,7 @@ public abstract class AbstractProcessingDialog< R extends RealType< R > & Native
 	protected BdvImageViewer viewer;
 	protected Image< R > inputImage;
 	protected Image< R > outputImage;
+	protected JPanel panel;
 
 	public AbstractProcessingDialog( )
 	{
@@ -40,7 +41,19 @@ public abstract class AbstractProcessingDialog< R extends RealType< R > & Native
 
 	protected abstract void cancel();
 
-	protected abstract void showDialog();
+	protected void showDialog()
+	{
+		setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
+		getContentPane().add( panel, BorderLayout.CENTER );
+		setBounds(
+				MouseInfo.getPointerInfo().getLocation().x,
+				MouseInfo.getPointerInfo().getLocation().y,
+				120, 10);
+		setResizable( false );
+		pack();
+		setVisible( true );
+	}
+
 
 	public static class OkCancelPanel extends JPanel
 	{

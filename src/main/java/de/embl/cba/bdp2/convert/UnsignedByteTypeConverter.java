@@ -28,6 +28,7 @@ public class UnsignedByteTypeConverter < R extends RealType< R > & NativeType< R
 						new UnsignedByteType() );
 
 		final Image< R > outputImage = inputImage.newImage( convertedRai );
+		outputImage.setName( inputImage.getName() + "-8bit" );
 
 		return outputImage;
 	}

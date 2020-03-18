@@ -53,6 +53,7 @@ public class UnsignedByteTypeConversionDialog< R extends RealType< R > & NativeT
 
 		Logger.info( "8-bit view size [GB]: " + Utils.getSizeGB( outputImage.getRai() ) );
 
+		prepareDialog();
 		showDialog();
 	}
 
@@ -80,8 +81,7 @@ public class UnsignedByteTypeConversionDialog< R extends RealType< R > & NativeT
 		recorder.record();
 	}
 	
-	@Override
-	protected void showDialog()
+	protected void prepareDialog()
 	{
 		final double rangeMin = 0;
 		final double rangeMax = 65535;
@@ -96,7 +96,7 @@ public class UnsignedByteTypeConversionDialog< R extends RealType< R > & NativeT
 				rangeMax,
 				mapTo255 );
 
-		JPanel panel = new JPanel();
+		panel = new JPanel();
 		panel.setLayout( new BoxLayout( panel, BoxLayout.PAGE_AXIS ) );
 
 		final SliderPanelDouble minSlider =
@@ -115,7 +115,7 @@ public class UnsignedByteTypeConversionDialog< R extends RealType< R > & NativeT
 				converter.setMax( mapTo255 );
 				minSlider.update();
 				maxSlider.update();
-				viewer.repaint();
+				viewer.replaceImage( outputImage, false );
 			}
 		}
 
@@ -127,15 +127,6 @@ public class UnsignedByteTypeConversionDialog< R extends RealType< R > & NativeT
 		panel.add( maxSlider );
 
 		setTitle( "8-bit conversion" );
-		setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
-		setContentPane( panel );
-		setBounds(
-			MouseInfo.getPointerInfo().getLocation().x,
-			MouseInfo.getPointerInfo().getLocation().y,
-			120, 10);
-		setResizable( false );
-		pack();
-		setVisible( true );
 	}
 
 	public static < R extends RealType< R > & NativeType< R > >

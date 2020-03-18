@@ -145,7 +145,9 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
         showImage( image, autoContrast );
 
         bdvHandle.getViewerPanel().setCurrentViewerTransform( viewerTransform );
-        setDisplaySettings( displaySettings );
+
+        if ( ! autoContrast )
+            setDisplaySettings( displaySettings );
     }
 
     public BdvImageViewer< R > showImageInNewWindow( Image< R > image )
@@ -205,8 +207,7 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
 
     public void setDisplayRange( double min, double max, int channel )
     {
-        final List< ConverterSetup > converterSetups =
-                this.bdvStackSource.getBdvHandle().getSetupAssignments().getConverterSetups();
+        final List< ConverterSetup > converterSetups = bdvHandle.getSetupAssignments().getConverterSetups();
 
         final ConverterSetup converterSetup = converterSetups.get( channel );
         converterSetup.setDisplayRange( min, max );
@@ -220,9 +221,8 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
 
     public List< DisplaySettings > getDisplaySettings()
     {
-        final List< ConverterSetup > converterSetups = bdvStackSource.getBdvHandle()
-                .getSetupAssignments()
-                .getConverterSetups();
+        final List< ConverterSetup > converterSetups =
+                bdvHandle.getSetupAssignments().getConverterSetups();
 
         final ArrayList< DisplaySettings > displaySettings = new ArrayList<>();
         for ( int c = 0; c < converterSetups.size(); c++ )
@@ -391,7 +391,8 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
                 BdvOptions.options().axisOrder( AxisOrder.XYZCT )
                         .addTo( bdvHandle )
                         .sourceTransform( scaling )
-                        .numRenderingThreads( numRenderingThreads ) );
+                        .numRenderingThreads( numRenderingThreads )
+                        .frameTitle( "BigDataProcessor" ) );
 
 
 //        if ( volatileRai == null )
