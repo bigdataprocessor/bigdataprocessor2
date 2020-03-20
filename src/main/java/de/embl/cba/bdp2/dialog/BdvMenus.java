@@ -1,13 +1,12 @@
-package de.embl.cba.bdp2.ui;
+package de.embl.cba.bdp2.dialog;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.bin.BinningDialog;
 import de.embl.cba.bdp2.calibrate.CalibrationDialog;
 import de.embl.cba.bdp2.convert.UnsignedByteTypeConversionDialog;
 import de.embl.cba.bdp2.crop.CroppingDialog;
-import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.process.splitviewmerge.SplitViewMergingDialog;
+import de.embl.cba.bdp2.splitviewmerge.SplitViewMergeDialog;
 import de.embl.cba.bdp2.shift.ChromaticShiftDialog;
 import de.embl.cba.bdp2.register.RegisteredViews;
 import de.embl.cba.bdp2.register.Registration;
@@ -155,7 +154,7 @@ public class BdvMenus
         {
                 BigDataProcessor2.generalThreadPool.submit(() -> {
                     // TODO: Make Command
-                    new SplitViewMergingDialog( viewer );
+                    new SplitViewMergeDialog( viewer );
                 });
         }
         else if(e.getActionCommand().equalsIgnoreCase(

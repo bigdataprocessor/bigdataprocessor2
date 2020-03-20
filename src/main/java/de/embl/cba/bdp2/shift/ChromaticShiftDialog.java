@@ -3,8 +3,9 @@ package de.embl.cba.bdp2.shift;
 import bdv.tools.brightness.SliderPanel;
 import bdv.util.BoundedValue;
 import de.embl.cba.bdp2.record.MacroRecorder;
-import de.embl.cba.bdp2.ui.AbstractProcessingDialog;
+import de.embl.cba.bdp2.dialog.AbstractProcessingDialog;
 import de.embl.cba.bdp2.utils.DimensionOrder;
+import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;
@@ -52,7 +53,7 @@ public class ChromaticShiftDialog< T extends RealType< T > & NativeType< T > > e
 	private void recordMacro()
 	{
 		final MacroRecorder recorder = new MacroRecorder( "BDP2_ShiftChannels...", inputImage, outputImage, false );
-		recorder.addOption( "shifts", ChromaticShiftCommand.longsToString( shifts ) );
+		recorder.addOption( "shifts", Utils.longsToDelimitedString( shifts ) );
 		recorder.record();
 	}
 

@@ -21,7 +21,7 @@ public class UnsignedByteTypeConversionCommand< R extends RealType< R > & Native
     public void run()
     {
         process();
-        showOutputImage( true, true );
+        handleOutputImage( true, true );
     }
 
     private void process()
@@ -29,7 +29,5 @@ public class UnsignedByteTypeConversionCommand< R extends RealType< R > & Native
         final UnsignedByteTypeConverter converter = new UnsignedByteTypeConverter<>( inputImage, mapTo0, mapTo255 );
 
         outputImage = converter.getConvertedImage();
-        outputImage.setName( outputImageName );
-        ImageService.nameToImage.put( outputImage.getName(), outputImage );
     }
 }

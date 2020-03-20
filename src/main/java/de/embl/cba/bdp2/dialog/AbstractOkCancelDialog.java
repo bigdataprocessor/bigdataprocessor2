@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.ui;
+package de.embl.cba.bdp2.dialog;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
@@ -11,17 +11,14 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
-public abstract class AbstractProcessingDialog< R extends RealType< R > & NativeType< R > > extends JDialog
+public abstract class AbstractOkCancelDialog< R extends RealType< R > & NativeType< R > > extends JDialog
 {
-	protected final AbstractProcessingDialog.OkCancelPanel buttons;
-	protected BdvImageViewer viewer;
-	protected Image< R > inputImage;
-	protected Image< R > outputImage;
+	protected final AbstractOkCancelDialog.OkCancelPanel buttons;
 	protected JPanel panel;
 
-	public AbstractProcessingDialog( )
+	public AbstractOkCancelDialog( )
 	{
-		buttons = new AbstractProcessingDialog.OkCancelPanel();
+		buttons = new AbstractOkCancelDialog.OkCancelPanel();
 		getContentPane().add( buttons, BorderLayout.SOUTH );
 		setDefaultCloseOperation( WindowConstants.HIDE_ON_CLOSE );
 		addWindowListener( new WindowAdapter()
@@ -53,7 +50,6 @@ public abstract class AbstractProcessingDialog< R extends RealType< R > & Native
 		pack();
 		setVisible( true );
 	}
-
 
 	public static class OkCancelPanel extends JPanel
 	{

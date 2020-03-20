@@ -4,7 +4,7 @@ import bdv.tools.brightness.SliderPanel;
 import bdv.util.BoundedValue;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.record.MacroRecorder;
-import de.embl.cba.bdp2.ui.AbstractProcessingDialog;
+import de.embl.cba.bdp2.dialog.AbstractProcessingDialog;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.type.NativeType;

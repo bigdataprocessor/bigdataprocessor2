@@ -11,10 +11,9 @@ import de.embl.cba.bdp2.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.progress.Progress;
 import de.embl.cba.bdp2.progress.ProgressListener;
 import de.embl.cba.bdp2.save.*;
-import de.embl.cba.bdp2.ui.DisplaySettings;
+import de.embl.cba.bdp2.dialog.DisplaySettings;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
-import ij.gui.GenericDialog;
 import net.imglib2.*;
 import net.imglib2.cache.img.CachedCellImg;
 import net.imglib2.converter.Converters;
@@ -24,7 +23,6 @@ import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.util.Util;
 
-import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -44,7 +42,7 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
 
     // TODO: do we ever need the constructor, maybe only static methods are more convenient?!
     public BigDataProcessor2() {
-        //TODO: have separate shutdown for the executorService. It will not shutdown when ui exeService is shut. --ashis (DONE but needs testing)
+        //TODO: have separate shutdown for the executorService. It will not shutdown when dialog exeService is shut. --ashis (DONE but needs testing)
         //Ref: https://stackoverflow.com/questions/23684189/java-how-to-make-an-executorservice-running-inside-another-executorservice-not
         // kickOffThreadPack( Runtime.getRuntime().availableProcessors() * 2 );
     }

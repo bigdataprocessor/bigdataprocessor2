@@ -1,10 +1,12 @@
-package de.embl.cba.bdp2.process.splitviewmerge;
+package de.embl.cba.bdp2.splitviewmerge;
 
 import bdv.util.ModifiableInterval;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.track.PhaseCorrelationTranslationComputer;
-import net.imglib2.*;
+import net.imglib2.FinalInterval;
+import net.imglib2.Interval;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Intervals;
@@ -14,13 +16,10 @@ import net.imglib2.view.Views;
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
 
-import static de.embl.cba.bdp2.process.splitviewmerge.SplitViewMerger.intervalXYZasXYZCT;
 import static de.embl.cba.bdp2.utils.DimensionOrder.*;
 
 public class RegionOptimiser
 {
-
-
 	public static < R extends RealType< R > & NativeType< R > >
 	double[] optimiseIntervals(
 			Image< R > image,
@@ -36,9 +35,7 @@ public class RegionOptimiser
 		return shift;
 	}
 
-
-	public static
-	void adjustModifiableInterval( double[] shift, ModifiableInterval interval )
+	public static void adjustModifiableInterval( double[] shift, ModifiableInterval interval )
 	{
 
 		final long[] min = Intervals.minAsLongArray( interval );
@@ -63,7 +60,7 @@ public class RegionOptimiser
 
 		for ( Interval interval : intervals )
 		{
-			final FinalInterval interval5D = intervalXYZasXYZCT( rai5D, interval );
+			final FinalInterval interval5D = SplitViewMerger.intervalXYZasXYZCT( rai5D, interval );
 
 			final IntervalView< R > crop =
 					Views.zeroMin(

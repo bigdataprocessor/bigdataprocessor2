@@ -2,16 +2,14 @@ package de.embl.cba.bdp2.shift;
 
 import de.embl.cba.bdp2.scijava.command.AbstractProcessingCommand;
 import de.embl.cba.bdp2.service.ImageService;
+import de.embl.cba.bdp2.utils.Utils;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>Process>BDP2_ChromaticShift...")
 public class ChromaticShiftCommand< R extends RealType< R > & NativeType< R > > extends AbstractProcessingCommand implements Command
@@ -23,37 +21,17 @@ public class ChromaticShiftCommand< R extends RealType< R > & NativeType< R > > 
     public void run()
     {
         process();
-        showOutputImage( false, true );
+        handleOutputImage( false, true );
         ImageService.nameToImage.put( outputImage.getName(), outputImage );
     }
 
     private void process()
     {
-        final List< long[] > longs = stringToLongs( shifts );
+        final List< long[] > longs = Utils.delimitedStringToLongs( shifts );
 
         final ChannelShifter< R > shifter = new ChannelShifter< R >( inputImage.getRai() );
         outputImage = inputImage.newImage( shifter.getShiftedRai( longs ) );
         outputImage.setName( outputImageName );
     }
 
-    public static String longsToString( ArrayList< long[] > shifts )
-    {
-        final String collect = shifts.stream().map( t ->
-                Arrays.stream( t ).mapToObj( x -> String.valueOf( x ) )
-                        .collect( Collectors.joining( "," ) ) )
-                        .collect( Collectors.joining( ";" ) );
-
-        return collect;
-    }
-
-    public static List< long[] > stringToLongs( String string )
-    {
-        final List< long[] > shifts = Arrays.stream( string.split( ";" ) )
-                .map( t -> Arrays.stream( t.split( "," ) )
-                        .mapToLong( Long::parseLong )
-                        .toArray()
-                ).collect( Collectors.toList() );
-
-        return shifts;
-    }
 }

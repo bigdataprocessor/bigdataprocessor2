@@ -18,7 +18,7 @@ public class TestEMProcessingAndSaving< R extends RealType< R > & NativeType< R 
 	@Test
 	public void processAndSave()
 	{
-		//new ImageJ().ui().showUI();
+		//new ImageJ().dialog().showUI();
 
 		DebugTools.setRootLevel("OFF"); // Bio-Formats
 

@@ -35,9 +35,9 @@ import bdv.viewer.animate.SimilarityTransformAnimator;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.load.files.FileInfos;
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.process.splitviewmerge.SplitViewMerger;
+import de.embl.cba.bdp2.splitviewmerge.SplitViewMerger;
 import de.embl.cba.bdp2.BigDataProcessor2;
-import de.embl.cba.bdp2.ui.DisplaySettings;
+import de.embl.cba.bdp2.dialog.DisplaySettings;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
@@ -66,15 +66,13 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 /**
  * Created by tischi on 06/11/16.
@@ -212,6 +210,27 @@ public class Utils {
 		}
 
 		executorService.shutdown();
+	}
+
+	public static String longsToDelimitedString( ArrayList< long[] > shifts )
+	{
+		final String collect = shifts.stream().map( t ->
+				Arrays.stream( t ).mapToObj( x -> String.valueOf( x ) )
+						.collect( Collectors.joining( "," ) ) )
+						.collect( Collectors.joining( ";" ) );
+
+		return collect;
+	}
+
+	public static List< long[] > delimitedStringToLongs( String string )
+	{
+		final List< long[] > shifts = Arrays.stream( string.split( ";" ) )
+				.map( t -> Arrays.stream( t.split( "," ) )
+						.mapToLong( Long::parseLong )
+						.toArray()
+				).collect( Collectors.toList() );
+
+		return shifts;
 	}
 
 	public enum FileType {

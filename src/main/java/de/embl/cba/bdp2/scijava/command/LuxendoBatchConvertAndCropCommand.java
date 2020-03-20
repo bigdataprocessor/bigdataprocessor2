@@ -18,7 +18,7 @@ import org.scijava.plugin.Plugin;
 import java.io.File;
 import java.util.ArrayList;
 
-import static de.embl.cba.bdp2.ui.Utils.selectDirectories;
+import static de.embl.cba.bdp2.dialog.Utils.selectDirectories;
 
 @Plugin(type = Command.class, menuPath = "Plugins>BigDataTools>Luxendo>Batch Convert and Crop", initializer = "init")
 public class LuxendoBatchConvertAndCropCommand< R extends RealType< R > & NativeType< R > > implements Command

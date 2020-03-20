@@ -3,7 +3,7 @@ package explore;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.load.files.FileInfos;
 import de.embl.cba.bdp2.load.CachedCellImgReader;
-import de.embl.cba.bdp2.process.splitviewmerge.SplitViewMergingDialog;
+import de.embl.cba.bdp2.splitviewmerge.SplitViewMergeDialog;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -17,7 +17,7 @@ public class SplitChipMerging
 
 		final BdvImageViewer< R > viewer = new BdvImageViewer<>( image );
 
-		new SplitViewMergingDialog< R >( viewer );
+		new SplitViewMergeDialog< R >( viewer );
 	}
 
 	public static < R extends RealType< R > & NativeType< R > > Image< R > openImage()

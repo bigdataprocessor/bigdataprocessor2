@@ -27,6 +27,6 @@ public class CalibrationCommand< R extends RealType< R > & NativeType< R > > ext
         outputImage = inputImage;
         outputImage.setVoxelUnit( unit );
         outputImage.setVoxelSpacing( new double[]{voxelSpacingX, voxelSpacingY, voxelSpacingZ} );
-        showOutputImage( false, false );
+        handleOutputImage( false, false );
     }
 }

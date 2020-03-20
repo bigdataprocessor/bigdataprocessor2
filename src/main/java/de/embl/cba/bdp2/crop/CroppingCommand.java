@@ -48,7 +48,7 @@ public class CroppingCommand< R extends RealType< R > & NativeType< R > > extend
     public void run()
     {
         process();
-        showOutputImage( false, false );
+        handleOutputImage( false, false );
         ImageService.nameToImage.put( outputImage.getName(), outputImage );
     }
 
@@ -59,7 +59,6 @@ public class CroppingCommand< R extends RealType< R > & NativeType< R > > extend
                 maxX, maxY, maxZ, maxC, maxT );
 
         outputImage = BigDataProcessor2.crop( inputImage, minMax);
-        outputImage.setName( outputImageName );
     }
 
 }

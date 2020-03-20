@@ -25,14 +25,12 @@ public class BinningCommand< R extends RealType< R > & NativeType< R > > extends
     public void run()
     {
         process();
-        showOutputImage( true, true );
-        ImageService.nameToImage.put( outputImage.getName(), outputImage );
+        handleOutputImage( true, true );
     }
 
     private void process()
     {
         outputImage = BigDataProcessor2.bin( inputImage, new long[]{ binWidthXPixels, binWidthYPixels, binWidthZPixels, 1, 1 } );
-        outputImage.setName( outputImageName );
     }
 
 }

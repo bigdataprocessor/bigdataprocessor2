@@ -1,14 +1,12 @@
-package de.embl.cba.bdp2.process.splitviewmerge;
+package de.embl.cba.bdp2.splitviewmerge;
 
 import net.imglib2.FinalInterval;
-import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealInterval;
 import net.imglib2.type.numeric.RealType;
-import net.imglib2.util.Intervals;
 
 import java.util.ArrayList;
 
-public class SplitViewMergingHelpers
+public class SplitViewMergeUtils
 {
 
 	public static < R extends RealType< R > >

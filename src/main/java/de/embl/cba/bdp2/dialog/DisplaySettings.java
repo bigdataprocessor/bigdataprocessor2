@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.ui;
+package de.embl.cba.bdp2.dialog;
 
 import net.imglib2.type.numeric.ARGBType;
 

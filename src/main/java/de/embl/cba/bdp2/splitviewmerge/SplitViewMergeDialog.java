@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.process.splitviewmerge;
+package de.embl.cba.bdp2.splitviewmerge;
 
 import bdv.tools.boundingbox.TransformedBox;
 import bdv.tools.boundingbox.TransformedBoxOverlay;
@@ -7,6 +7,7 @@ import bdv.util.BoundedValue;
 import bdv.util.ModifiableInterval;
 import bdv.viewer.ViewerPanel;
 import de.embl.cba.bdp2.image.Image;
+import de.embl.cba.bdp2.dialog.AbstractProcessingDialog;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
@@ -21,15 +22,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.embl.cba.bdp2.process.splitviewmerge.RegionOptimiser.adjustModifiableInterval;
+import static de.embl.cba.bdp2.splitviewmerge.RegionOptimiser.adjustModifiableInterval;
 
-public class SplitViewMergingDialog< R extends RealType< R > & NativeType< R > >
+
+public class SplitViewMergeDialog< R extends RealType< R > & NativeType< R > > extends AbstractProcessingDialog< R >
 {
 	public static final int X = 0;
 	public static final int Y = 1;
 	public static final int Z = 2;
 
-	private final BdvImageViewer< R > viewer;
 	private Map< String, BoundedValue > boundedValues;
 	private ArrayList< SliderPanel > sliderPanels;
 	private SelectionUpdateListener updateListener;
@@ -38,13 +39,25 @@ public class SplitViewMergingDialog< R extends RealType< R > & NativeType< R > >
 	private ArrayList< ModifiableInterval > intervals3D;
 	private Image< R > image;
 
-	public SplitViewMergingDialog( final BdvImageViewer< R > viewer )
+	public SplitViewMergeDialog( final BdvImageViewer< R > viewer )
 	{
 		this.viewer = viewer;
 		this.image = viewer.getImage();
 
 		initSelectedRegions();
 		showRegionSelectionDialog();
+	}
+
+	@Override
+	protected void ok()
+	{
+
+	}
+
+	@Override
+	protected void cancel()
+	{
+
 	}
 
 	public void initSelectedRegions( )
@@ -54,7 +67,6 @@ public class SplitViewMergingDialog< R extends RealType< R > & NativeType< R > >
 		for ( int c = 0; c < 2; c++ )
 			intervals3D.add( showRegionSelectionOverlay( c, margin ) );
 	}
-
 
 	private void showRegionSelectionDialog( )
 	{
@@ -69,14 +81,12 @@ public class SplitViewMergingDialog< R extends RealType< R > & NativeType< R > >
 			showOrUpdateMerge( );
 		} );
 
-
 //		final JButton optimise = new JButton( "Optimise Region Centres" );
 //		panel.add( optimise );
 //		optimise.addActionListener( e -> {
 //			optimise();
 //			showOrUpdateMerge();
 //		} );
-
 
 		showFrame( panel );
 	}

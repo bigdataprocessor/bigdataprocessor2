@@ -3,7 +3,8 @@ package de.embl.cba.bdp2.open;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.load.files.FileInfos;
 import de.embl.cba.bdp2.BigDataProcessor2;
-import de.embl.cba.bdp2.ui.HelpDialog;
+import de.embl.cba.bdp2.dialog.HelpDialog;
+import de.embl.cba.bdp2.scijava.RegExpAndHelp;
 import loci.common.DebugTools;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -15,6 +16,13 @@ import org.scijava.plugin.Plugin;
 import javax.swing.*;
 import java.io.File;
 
+
+/**
+ * TODO: How to add a HELP button for the regular expression without screwing up the macro recording?
+ *
+ *
+ * @param <R>
+ */
 @Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>BDP2_Open...")
 public class OpenCommand< R extends RealType< R > & NativeType< R > > implements Command {
 
@@ -24,7 +32,7 @@ public class OpenCommand< R extends RealType< R > & NativeType< R > > implements
     @Parameter(label = "Image data directory", style = "directory")
     File directory;
 
-    @Parameter(label = "Subset files using regular expression")
+    @Parameter(label = "Subset files using regular expression" )
     String filterPattern = ".*";
 
     //@Parameter(label = "Regular expression help", callback = "showRegExpHelp", required = false)

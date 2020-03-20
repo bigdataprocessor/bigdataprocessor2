@@ -2,7 +2,7 @@ package users.isabell;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.load.files.FileInfos;
-import de.embl.cba.bdp2.process.splitviewmerge.SplitViewMergingDialog;
+import de.embl.cba.bdp2.splitviewmerge.SplitViewMergeDialog;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imagej.ImageJ;
@@ -29,7 +29,7 @@ public class MergeSplitChipDialog
         image.setVoxelSpacing( new double[]{0.13, 0.13, 1.04} );
 
         final BdvImageViewer viewer = bdp.showImage( image );
-        new SplitViewMergingDialog( viewer );
+        new SplitViewMergeDialog( viewer );
     }
 
 }

@@ -3,7 +3,7 @@ package de.embl.cba.bdp2.scijava.command;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.crop.Cropper;
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.process.splitviewmerge.SplitViewMerger;
+import de.embl.cba.bdp2.splitviewmerge.SplitViewMerger;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.utils.Utils;
@@ -19,7 +19,7 @@ import org.scijava.plugin.Plugin;
 import java.io.File;
 import java.util.ArrayList;
 
-import static de.embl.cba.bdp2.ui.Utils.selectDirectories;
+import static de.embl.cba.bdp2.dialog.Utils.selectDirectories;
 
 @Plugin(type = Command.class, menuPath = "Plugins>BigDataTools>Luxendo>Batch Merge Split Chip", initializer = "init")
 public class LuxendoBatchMergeSplitChipCommand< R extends RealType< R > & NativeType< R > > implements Command

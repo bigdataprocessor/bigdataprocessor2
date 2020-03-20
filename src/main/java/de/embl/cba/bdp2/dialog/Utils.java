@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.ui;
+package de.embl.cba.bdp2.dialog;
 
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;

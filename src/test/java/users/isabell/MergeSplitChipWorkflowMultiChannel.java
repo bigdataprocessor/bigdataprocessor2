@@ -3,7 +3,7 @@ package users.isabell;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.crop.Cropper;
-import de.embl.cba.bdp2.process.splitviewmerge.SplitViewMerger;
+import de.embl.cba.bdp2.splitviewmerge.SplitViewMerger;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.utils.Utils;
@@ -17,7 +17,7 @@ import net.imglib2.type.numeric.RealType;
 import java.io.File;
 import java.util.ArrayList;
 
-import static de.embl.cba.bdp2.ui.Utils.selectDirectories;
+import static de.embl.cba.bdp2.dialog.Utils.selectDirectories;
 
 public class MergeSplitChipWorkflowMultiChannel
 {

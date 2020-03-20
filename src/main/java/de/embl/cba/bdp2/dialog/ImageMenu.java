@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.ui;
+package de.embl.cba.bdp2.dialog;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -9,7 +9,7 @@ public class ImageMenu extends JMenu {
 
     public ImageMenu( BdvMenus bdvMenus ) {
         this.bdvMenus = bdvMenus;
-        setText(UIDisplayConstants.IMAGE_MENU_DISPLAY_TEXT );
+        setText(UIDisplayConstants.DEVELOPMENT_MENU_DISPLAY_TEXT );
 
         addMenuItem( UIDisplayConstants.CALIBRATE_MENU_ITEM );
         addMenuItem( UIDisplayConstants.SAVE_AS_MENU_ITEM );

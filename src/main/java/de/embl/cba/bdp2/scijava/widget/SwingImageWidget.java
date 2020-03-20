@@ -11,12 +11,6 @@ import org.scijava.widget.WidgetModel;
 import javax.swing.*;
 import java.util.Collection;
 
-/**
- * Swing implementation of {@link ImageWidget}.
- *
- * @author Nicolas Chiaruttini
- */
-
 @Plugin(type = InputWidget.class, priority = Priority.EXTREMELY_HIGH)
 public class SwingImageWidget extends SwingInputWidget< Image > implements
         ImageWidget< JPanel > {
@@ -25,7 +19,6 @@ public class SwingImageWidget extends SwingInputWidget< Image > implements
 
     @Override
     protected void doRefresh() {
-        int a = 1;
     }
 
     @Override

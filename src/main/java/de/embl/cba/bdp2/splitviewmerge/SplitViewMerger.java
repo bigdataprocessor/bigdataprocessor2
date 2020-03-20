@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.process.splitviewmerge;
+package de.embl.cba.bdp2.splitviewmerge;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
@@ -13,6 +13,7 @@ import net.imglib2.view.Views;
 
 import java.util.ArrayList;
 
+import static de.embl.cba.bdp2.splitviewmerge.SplitViewMergeUtils.asIntervalXYC;
 import static de.embl.cba.bdp2.utils.DimensionOrder.C;
 
 public class SplitViewMerger
@@ -24,13 +25,20 @@ public class SplitViewMerger
 		intervalsXYC = new ArrayList<>(  );
 	}
 
-
 	public void addIntervalXYC( int minX, int minY, int sizeX, int sizeY, int channel )
 	{
-		intervalsXYC.add( SplitViewMergingHelpers.asIntervalXYC(
-				new long[]{ minX, minY },
-				new long[]{ sizeX, sizeY },
-				channel ) );
+		intervalsXYC.add( asIntervalXYC(
+			new long[]{ minX, minY },
+			new long[]{ sizeX, sizeY },
+			channel ) );
+	}
+
+	public void addIntervalXYC( long[] longs )
+	{
+		intervalsXYC.add( asIntervalXYC(
+				new long[]{ longs[ 0 ], longs[ 1] },
+				new long[]{ longs[ 2 ], longs[ 3 ] },
+				longs[ 4] ) );
 	}
 
 	public < R extends RealType< R > & NativeType< R > >
@@ -42,7 +50,6 @@ public class SplitViewMerger
 
 		return mergeImage;
 	}
-
 
 	public static < R extends RealType< R > & NativeType< R > >
 	RandomAccessibleInterval< R > mergeIntervalsXYZ(
@@ -74,7 +81,6 @@ public class SplitViewMerger
 
 		return permute;
 	}
-
 
 	public static < R extends RealType< R > & NativeType< R > >
 	RandomAccessibleInterval< R > mergeIntervalsXYC(
