@@ -3,7 +3,7 @@ package de.embl.cba.bdp2.dialog;
 public class UIDisplayConstants {
 
     // Menus
-    public static final String PROCESS_MENU_DISPLAY_TEXT = "Process";
+    public static final String PROCESS_MENU_DISPLAY_TEXT = "BDP2";
     public static final String MISC_MENU = "Misc";
     public static final String IMAGE_MENU_DISPLAY_TEXT = "Image";
     public static final String DEVELOPMENT_MENU_DISPLAY_TEXT = "Development";

@@ -2,15 +2,17 @@ package de.embl.cba.bdp2.dialog;
 
 import javax.swing.*;
 
-public class ProcessMenu extends JMenu {
+public class BDPMenu extends JMenu {
 
     private final BdvMenus bdvMenus;
 
-    public ProcessMenu( BdvMenus bdvMenus ) {
+    public BDPMenu( BdvMenus bdvMenus ) {
 
         setText(UIDisplayConstants.PROCESS_MENU_DISPLAY_TEXT);
         this.bdvMenus = bdvMenus;
 
+        addMenuItem( UIDisplayConstants.CALIBRATE_MENU_ITEM );
+        addMenuItem( UIDisplayConstants.SAVE_AS_MENU_ITEM );
         addMenuItem( UIDisplayConstants.BINNING_MENU_ITEM );
         addMenuItem( UIDisplayConstants.OBLIQUE_MENU_ITEM );
         addMenuItem( UIDisplayConstants.CROP_MENU_ITEM );
@@ -18,11 +20,12 @@ public class ProcessMenu extends JMenu {
         addMenuItem( UIDisplayConstants.CHROMATIC_SHIFT_CORRECTION_MENU_ITEM );
         addMenuItem( UIDisplayConstants.SPLIT_VIEW_MENU_ITEM );
 
-        final JMenu correctMotionMenu = addMenu( UIDisplayConstants.CORRECT_MOTION_MENU_ITEM );
-        addMenuItem( correctMotionMenu, UIDisplayConstants.APPLY_TRACK_MENU_ITEM );
-        addMenuItem( correctMotionMenu, UIDisplayConstants.REGISTER_VOLUME_SIFT_MENU_ITEM );
-        addMenuItem( correctMotionMenu, UIDisplayConstants.REGISTER_MOVIE_SIFT_MENU_ITEM );
-        addMenuItem( correctMotionMenu, UIDisplayConstants.REGISTER_MOVIE_PHASE_CORRELATION_MENU_ITEM );
+        // TODO: put this into another menu item once it works
+//        final JMenu correctMotionMenu = addMenu( UIDisplayConstants.CORRECT_MOTION_MENU_ITEM );
+//        addMenuItem( correctMotionMenu, UIDisplayConstants.APPLY_TRACK_MENU_ITEM );
+//        addMenuItem( correctMotionMenu, UIDisplayConstants.REGISTER_VOLUME_SIFT_MENU_ITEM );
+//        addMenuItem( correctMotionMenu, UIDisplayConstants.REGISTER_MOVIE_SIFT_MENU_ITEM );
+//        addMenuItem( correctMotionMenu, UIDisplayConstants.REGISTER_MOVIE_PHASE_CORRELATION_MENU_ITEM );
     }
 
     private JMenu addMenu( String name )

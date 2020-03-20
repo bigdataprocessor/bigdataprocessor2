@@ -3,10 +3,10 @@ package de.embl.cba.bdp2.dialog;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
-public class OthersMenu extends JMenu {
+public class MiscMenu extends JMenu {
 
 
-    public OthersMenu( BdvMenus actionListener ) {
+    public MiscMenu( BdvMenus actionListener ) {
         setText( UIDisplayConstants.MISC_MENU );
 
         final JMenuItem imageJViewerItem

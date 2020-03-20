@@ -26,15 +26,15 @@ import java.util.List;
 public class BdvMenus
         extends JMenu implements ActionListener {
 
-    private final ImageMenu imageMenu;
-    private final OthersMenu otherMenu;
-    private final ProcessMenu processMenu;
+    //private final ImageMenu imageMenu;
+    private final MiscMenu miscMenu;
+    private final BDPMenu bdpMenu;
     private BdvImageViewer viewer;
 
     public BdvMenus(){
-        imageMenu = new ImageMenu(this);
-        processMenu = new ProcessMenu(this);
-        otherMenu = new OthersMenu(this);
+        //imageMenu = new ImageMenu(this);
+        bdpMenu = new BDPMenu(this);
+        miscMenu = new MiscMenu(this);
     }
 
     public void setViewer( BdvImageViewer viewer ){
@@ -43,9 +43,9 @@ public class BdvMenus
 
     public List< JMenu > getMenus(){ //Add new menu items here.
         List<JMenu> jMenuList = new ArrayList<>();
-        jMenuList.add( imageMenu );
-        jMenuList.add( processMenu );
-        jMenuList.add( otherMenu );
+        //jMenuList.add( imageMenu );
+        jMenuList.add( bdpMenu );
+        jMenuList.add( miscMenu );
         return jMenuList;
     }
 
@@ -81,7 +81,8 @@ public class BdvMenus
             BigDataProcessor2.generalThreadPool.submit(() -> {
                 new ApplyTrackDialog( viewer );
             });
-        }else if (e.getActionCommand().equalsIgnoreCase(
+        }
+        else if (e.getActionCommand().equalsIgnoreCase(
         		UIDisplayConstants.REGISTER_VOLUME_SIFT_MENU_ITEM ))
         {
             BigDataProcessor2.generalThreadPool.submit(() ->
