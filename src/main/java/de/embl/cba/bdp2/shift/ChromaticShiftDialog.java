@@ -38,7 +38,7 @@ public class ChromaticShiftDialog< T extends RealType< T > & NativeType< T > > e
 	@Override
 	protected void recordMacro()
 	{
-		final MacroRecorder recorder = new MacroRecorder( "BDP2_ShiftChannels...", inputImage, outputImage );
+		final MacroRecorder recorder = new MacroRecorder( ChromaticShiftCommand.COMMAND_NAME, inputImage, outputImage );
 		recorder.addOption( "shifts", Utils.longsToDelimitedString( shifts ) );
 		recorder.record();
 	}

@@ -10,7 +10,7 @@ public class OpenLuxendoTwoChannelMovie
 	{
 		final Image image = BigDataProcessor2.openHdf5Image( "/Volumes/cba/exchange/bigdataprocessor/data/tim2020/luxendo-two-channel-movie",
 				FileInfos.LOAD_CHANNELS_FROM_FOLDERS,
-				FileInfos.PATTERN_LUXENDO_2,
+				FileInfos.PATTERN_LUXENDO,
 				"Data"
 		);
 

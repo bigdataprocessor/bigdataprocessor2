@@ -8,9 +8,7 @@ public class UIDisplayConstants {
     public static final String IMAGE_MENU_DISPLAY_TEXT = "Image";
     public static final String DEVELOPMENT_MENU_DISPLAY_TEXT = "Development";
 
-    // Image Menu items
-
-    // Process Menu items
+    // Menu items
     public static final String SAVE_AS_MENU_ITEM = "Save As...";
     public static final String CALIBRATE_MENU_ITEM = "Calibrate...";
     public static final String OBLIQUE_MENU_ITEM = "Shear..."; // TODO: ?
@@ -22,7 +20,7 @@ public class UIDisplayConstants {
 
 
     public static final String CONFIGURE_LOGGING_MENU_ITEM = "Configure Logging...";
-    public static final String VIEW_In_3D_VIEWER = "3D Viewer..."; // TODO
+    public static final String VIEW_IN_3D_VIEWER = "3D Viewer..."; // TODO
 
     // Development (alpha stage)
     public static final String IMAGEJ_VIEW_MENU_ITEM = "Show in ImageJ Viewer";

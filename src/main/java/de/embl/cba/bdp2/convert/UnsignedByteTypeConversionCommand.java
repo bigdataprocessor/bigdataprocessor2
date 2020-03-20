@@ -8,9 +8,10 @@ import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
-@Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>Process>BDP2_ConvertToUnsignedByte...")
+@Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>Process>" + UnsignedByteTypeConversionCommand.COMMAND_NAME )
 public class UnsignedByteTypeConversionCommand< R extends RealType< R > & NativeType< R > > extends AbstractProcessingCommand implements Command
 {
+    public static final String COMMAND_NAME = "BDP2_ConvertToUnsignedByte...";
     @Parameter(label = "Map to 0", min = "0")
     int mapTo0 = 0;
 

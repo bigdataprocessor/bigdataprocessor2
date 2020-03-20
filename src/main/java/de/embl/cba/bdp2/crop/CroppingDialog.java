@@ -34,7 +34,7 @@ public class CroppingDialog< R extends RealType< R > & NativeType< R > >
 
 	private void recordAsMacro( Image< R > inputImage, Image< R > outputImage, FinalInterval intervalXYZCT )
 	{
-		final MacroRecorder< R > recorder = new MacroRecorder<>( "BDP2_Crop...", inputImage, outputImage, AbstractProcessingCommand.SHOW_IN_NEW_VIEWER );
+		final MacroRecorder< R > recorder = new MacroRecorder<>( CroppingCommand.COMMAND_NAME, inputImage, outputImage, AbstractProcessingCommand.SHOW_IN_NEW_VIEWER );
 		
 		recorder.addOption( "minX", intervalXYZCT.min(0 ) );
 		recorder.addOption( "minY", intervalXYZCT.min(1 ) );

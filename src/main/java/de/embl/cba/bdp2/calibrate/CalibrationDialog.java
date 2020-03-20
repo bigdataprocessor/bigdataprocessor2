@@ -58,7 +58,7 @@ public class CalibrationDialog< R extends RealType< R > & NativeType< R > >
 
 	protected void recordMacro()
 	{
-		final MacroRecorder recorder = new MacroRecorder( "BDP2_Calibrate...", inputImage, outputImage );
+		final MacroRecorder recorder = new MacroRecorder( CalibrationCommand.COMMAND_NAME, inputImage, outputImage );
 
 		final double[] voxelSpacing = outputImage.getVoxelSpacing();
 		recorder.addOption( "unit", outputImage.getVoxelUnit() );

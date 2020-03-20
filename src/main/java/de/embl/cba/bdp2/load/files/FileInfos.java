@@ -26,12 +26,11 @@ public class FileInfos
 	public static final String TIFF_SLICES = "Tiff Slices";
 	public static final String LEICA_LIGHT_SHEET_TIFF = "Leica Light Sheet Tiff";
 	public static final String SINGLE_CHANNEL_TIMELAPSE = "Single Channel Movie";
-    public static final String PATTERN_LUXENDO = "^((?!_All).)*.h5$";
     public static final String PATTERN_LUXENDO_LEFT_CAM = "Cam_Left_(\\d)+.h5$";
     public static final String PATTERN_LUXENDO_RIGHT_CAM = "Cam_Right_(\\d)+.h5$";
     public static final String PATTERN_LUXENDO_LONG_CAM = "Cam_long_(\\d)+.h5$";
     public static final String PATTERN_LUXENDO_SHORT_CAM = "Cam_short_(\\d)+.h5$";
-    public static final String PATTERN_LUXENDO_2 = "Cam_.*_(\\d)+.h5$";
+    public static final String PATTERN_LUXENDO = "Cam_.*_(\\d)+.h5$";
     public static final String PATTERN_ALL= ".*";
 
     public static final String PATTERN_1= "<Z0000-0009>.tif"; // make pattern class

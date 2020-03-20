@@ -83,6 +83,21 @@ public class BigDataProcessor2
     }
 
     public static < R extends RealType< R > & NativeType< R > >
+    Image< R > openImage(
+            String directory,
+            String fileInfosLoadingScheme,
+            String filterPattern,
+            String hdf5DataSetName)
+    {
+        FileInfos fileInfos =
+                new FileInfos( directory, fileInfosLoadingScheme, filterPattern,hdf5DataSetName );
+
+        final Image< R > image = CachedCellImgReader.loadImage( fileInfos );
+
+        return image;
+    }
+
+    public static < R extends RealType< R > & NativeType< R > >
     Image< R > crop( Image< R > image, Interval interval )
     {
         return Cropper.crop5D( image, interval );
@@ -93,14 +108,14 @@ public class BigDataProcessor2
             String directory,
             String loadingScheme,
             String filterPattern,
-            String hdf5DatasetName )
+            String hdf5DataSetName )
     {
         FileInfos fileInfos =
 				new FileInfos(
 				        directory,
                         loadingScheme,
                         filterPattern,
-                        hdf5DatasetName );
+                        hdf5DataSetName );
 
         final Image< R > image = CachedCellImgReader.loadImage( fileInfos );
         

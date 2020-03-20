@@ -7,9 +7,11 @@ import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
-@Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>Image>BDP2_Calibrate...")
+@Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>Process>" + CalibrationCommand.COMMAND_NAME )
 public class CalibrationCommand< R extends RealType< R > & NativeType< R > > extends AbstractProcessingCommand< R >
 {
+    public static final String COMMAND_NAME = "BDP2_Calibrate...";
+
     @Parameter(label = "Unit", choices = {"micrometer", "nanometer"}, persist = false)
     public String unit = "micrometer";
 

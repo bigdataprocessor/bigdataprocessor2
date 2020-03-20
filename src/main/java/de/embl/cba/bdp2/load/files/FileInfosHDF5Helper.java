@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 
 public class FileInfosHDF5Helper
 {
-
     public static boolean setImageDataInfoFromH5(
             FileInfos imageDataInfo,
             String directory,
@@ -23,12 +22,29 @@ public class FileInfosHDF5Helper
 
         StringBuilder hdf5DataSetSB = new StringBuilder();
         if (imageDataInfo.h5DataSetName != null && !imageDataInfo.h5DataSetName.isEmpty()
-                && !imageDataInfo.h5DataSetName.trim().isEmpty()) {
+                && !imageDataInfo.h5DataSetName.trim().isEmpty())
+        {
+            // TODO: improve this, try different names recursively
             hdf5DataSetSB = new StringBuilder( imageDataInfo.h5DataSetName );
-            if ( ! hdf5DataSetExists(reader, hdf5DataSetSB ) ) return false;
-        } else {
+            if ( ! hdf5DataSetExists(reader, hdf5DataSetSB ) )
+            {
+                if ( imageDataInfo.h5DataSetName.equals( "Data" ) )
+                {
+                    imageDataInfo.h5DataSetName = "Data111";
+                }
+
+                if ( ! hdf5DataSetExists(reader, hdf5DataSetSB ) )
+                {
+                    if ( !setHDF5DatasetViaUI( reader, hdf5DataSetSB ) )
+                        return false;
+                }
+            }
+        }
+        else
+        {
             if( ! setHDF5DatasetViaUI(reader,hdf5DataSetSB) ) return false;
         }
+
         imageDataInfo.h5DataSetName = hdf5DataSetSB.toString();
         HDF5DataSetInformation dsInfo = reader.object().getDataSetInformation("/" + imageDataInfo.h5DataSetName);
 

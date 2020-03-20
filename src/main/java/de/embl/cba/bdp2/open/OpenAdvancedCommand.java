@@ -4,7 +4,6 @@ import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.load.files.FileInfos;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.dialog.HelpDialog;
-import de.embl.cba.bdp2.scijava.RegExpAndHelp;
 import loci.common.DebugTools;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -23,11 +22,8 @@ import java.io.File;
  *
  * @param <R>
  */
-@Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>BDP2_Open...")
-public class OpenCommand< R extends RealType< R > & NativeType< R > > implements Command {
-
-    @Parameter
-    CommandService commandService;
+@Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>Open>BDP2_OpenAdvanced...")
+public class OpenAdvancedCommand< R extends RealType< R > & NativeType< R > > implements Command {
 
     @Parameter(label = "Image data directory", style = "directory")
     File directory;
@@ -38,7 +34,7 @@ public class OpenCommand< R extends RealType< R > & NativeType< R > > implements
     //@Parameter(label = "Regular expression help", callback = "showRegExpHelp", required = false)
     //Button regExpHelpButton;
 
-    @Parameter(label = "Image files scheme",
+    @Parameter(label = "Image naming scheme",
             choices = {
                     FileInfos.SINGLE_CHANNEL_TIMELAPSE,
                     FileInfos.LEICA_LIGHT_SHEET_TIFF,
@@ -51,6 +47,9 @@ public class OpenCommand< R extends RealType< R > & NativeType< R > > implements
                     FileInfos.PATTERN_5,
                     FileInfos.PATTERN_6})
     String namingScheme = FileInfos.SINGLE_CHANNEL_TIMELAPSE;
+
+    @Parameter(label = "Hdf5 data set name (optional)", required = false)
+    String hdf5DataSetName = "Data";
 
     //@Parameter(label = "Auto contrast")
     boolean autoContrast = true;
@@ -74,7 +73,7 @@ public class OpenCommand< R extends RealType< R > & NativeType< R > > implements
     {
         SwingUtilities.invokeLater( () -> {
             final HelpDialog helpDialog = new HelpDialog( null,
-                    OpenCommand.class.getResource( "/RegExpHelp.html" ) );
+                    OpenAdvancedCommand.class.getResource( "/RegExpHelp.html" ) );
             helpDialog.setVisible( true );
         } );
     }

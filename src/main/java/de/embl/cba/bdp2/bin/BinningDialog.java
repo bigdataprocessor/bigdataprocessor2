@@ -39,7 +39,7 @@ public class BinningDialog< T extends RealType< T > & NativeType< T > > extends 
 	@Override
 	protected void recordMacro()
 	{
-		final MacroRecorder recorder = new MacroRecorder( "BDP2_Bin...", inputImage, outputImage );
+		final MacroRecorder recorder = new MacroRecorder( BinningCommand.COMMAND_NAME, inputImage, outputImage );
 
 		recorder.addOption( "binWidthXPixels",  span[ 0 ] );
 		recorder.addOption( "binWidthYPixels",  span[ 0 ] );
