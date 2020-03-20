@@ -16,9 +16,7 @@ public class TestFolderPatternOpening
 	{
 		DebugTools.setRootLevel("OFF"); // Bio-Formats
 
-		final BigDataProcessor2< R > bdp = new BigDataProcessor2<>();
-
-		final Image< R > image = bdp.openImage(
+		final Image< R > image = BigDataProcessor2.openImage(
 				"/Volumes/cba/exchange/Isabell_Schneider/3-Color",
 				FileInfos.LOAD_CHANNELS_FROM_FOLDERS,
 				"stack_10_.*/.*" );

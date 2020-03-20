@@ -148,7 +148,6 @@ public class Utils {
 
     public static < R extends RealType< R > & NativeType< R > >
     Image< R > openMergedImageFromLuxendoChannelFolders(
-			BigDataProcessor2< R > bdp,
 			String voxelUnit,
 			double voxelSpacingMicrometerX,
 			double voxelSpacingMicrometerY,
@@ -159,7 +158,7 @@ public class Utils {
 		final String subFolderPattern = directory.getName().replace( "channel_0", "channel_.*" );
 		final String parentFolder = directory.getParent();
 
-		final Image< R > image = bdp.openHdf5Image(
+		final Image< R > image = BigDataProcessor2.openHdf5Image(
 				parentFolder,
 				FileInfos.LOAD_CHANNELS_FROM_FOLDERS,
 				subFolderPattern + File.separator + FileInfos.PATTERN_LUXENDO ,

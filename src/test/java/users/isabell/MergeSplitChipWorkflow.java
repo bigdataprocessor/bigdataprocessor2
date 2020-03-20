@@ -24,8 +24,6 @@ public class MergeSplitChipWorkflow
         final ImageJ imageJ = new ImageJ();
         imageJ.ui().showUI();
 
-        final BigDataProcessor2< R > bdp = new BigDataProcessor2<>();
-
         final ArrayList< File > directories = selectDirectories();
 
         final String voxelUnit = "micrometer";
@@ -49,7 +47,7 @@ public class MergeSplitChipWorkflow
 
         for ( File directory : directories )
         {
-            final Image< R > image = bdp.openHdf5Image(
+            final Image< R > image = BigDataProcessor2.openHdf5Image(
                     directory.toString(),
                     FileInfos.SINGLE_CHANNEL_TIMELAPSE,
                     ".*.h5",
@@ -82,7 +80,7 @@ public class MergeSplitChipWorkflow
         {
             // open
             final String directory = directories.get( i ).toString();
-            final Image< R > image = bdp.openHdf5Image(
+            final Image< R > image = BigDataProcessor2.openHdf5Image(
                     directory,
                     FileInfos.SINGLE_CHANNEL_TIMELAPSE,
                     ".*.h5",

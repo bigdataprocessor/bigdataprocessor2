@@ -49,7 +49,7 @@ public class TestRegionMerging
 	{
 		DebugTools.setRootLevel("OFF"); // Bio-Formats
 
-		final BigDataProcessor2< R > bdp = new BigDataProcessor2<>();
+		final BigDataProcessor2 bdp = new BigDataProcessor2();
 
 		final Image< R > image = bdp.openImage(
 				"/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-data/region-merging/two-channel",

@@ -16,15 +16,18 @@ public class AbstractProcessingCommand< R extends RealType< R > & NativeType< R 
 
     @Parameter(label = "Input image name", persist = true)
     protected Image inputImage = ImageService.nameToImage.values().iterator().next();
+    public static final String INPUT_IMAGE_PARAMETER = "inputImage";
 
     @Parameter(label = "Output image name")
     protected String outputImageName = ImageService.nameToImage.keySet().iterator().next() + "-binned";
+    public static final String OUTPUT_IMAGE_NAME_PARAMETER = "outputImageName";
 
     @Parameter(label = "Output image handling", choices = {
             REPLACE_IN_VIEWER,
             SHOW_IN_NEW_VIEWER,
             DO_NOT_SHOW })
     protected String outputModality;
+    public static final String OUTPUT_MODALITY_PARAMETER = "outputModality";
 
     protected Image< R > outputImage;
 

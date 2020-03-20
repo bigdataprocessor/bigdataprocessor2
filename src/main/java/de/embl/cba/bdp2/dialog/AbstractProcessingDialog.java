@@ -23,7 +23,6 @@ public abstract class AbstractProcessingDialog< R extends RealType< R > & Native
 		super();
 	}
 
-
 	@Override
 	protected void ok()
 	{
@@ -31,12 +30,12 @@ public abstract class AbstractProcessingDialog< R extends RealType< R > & Native
 		setVisible( false );
 	}
 
-	protected abstract void recordMacro();
-
 	@Override
 	protected void cancel()
 	{
 		viewer.replaceImage( inputImage, true, true );
 		setVisible( false );
 	}
+
+	protected abstract void recordMacro();
 }

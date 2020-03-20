@@ -5,6 +5,8 @@ import ij.plugin.frame.Recorder;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
+import static de.embl.cba.bdp2.scijava.command.AbstractProcessingCommand.*;
+
 public class MacroRecorder< R extends RealType< R > & NativeType< R > >
 {
 	private final String commandName;
@@ -12,7 +14,12 @@ public class MacroRecorder< R extends RealType< R > & NativeType< R > >
 	private final Image< R > outputImage;
 	private String options;
 
-	public MacroRecorder( String commandName, Image< R > inputImage, Image< R > outputImage, boolean openImageInNewViewer )
+	public MacroRecorder( String commandName, Image< R > inputImage, Image< R > outputImage )
+	{
+		this( commandName, inputImage, outputImage, REPLACE_IN_VIEWER );
+	}
+
+	public MacroRecorder( String commandName, Image< R > inputImage, Image< R > outputImage, String outputImageHandling )
 	{
 		this.commandName = commandName;
 		this.inputImage = inputImage;
@@ -20,9 +27,9 @@ public class MacroRecorder< R extends RealType< R > & NativeType< R > >
 
 		options = "";
 
-		addOption( "inputImage", inputImage.getName() );
-		addOption( "outputImageName", outputImage.getName() );
-		addOption( "newViewer", openImageInNewViewer );
+		addOption( INPUT_IMAGE_PARAMETER, inputImage.getName() );
+		addOption( OUTPUT_IMAGE_NAME_PARAMETER, outputImage.getName() );
+		addOption( OUTPUT_MODALITY_PARAMETER, outputImageHandling );
 	}
 
 	public void addOption( String name, Object value )

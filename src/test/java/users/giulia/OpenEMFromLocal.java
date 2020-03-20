@@ -14,14 +14,12 @@ public class OpenEMFromLocal
 	{
 		new ImageJ().ui().showUI();
 
-		final BigDataProcessor2< R > bdp = new BigDataProcessor2<>();
-
-		final Image< R > image = bdp.openImage(
+		final Image< R > image = BigDataProcessor2.openImage(
 				"/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-data/em-2d-sift-align-01",
 				FileInfos.TIFF_SLICES,
 				".*.tif" );
 
-		bdp.showImage( image );
+		BigDataProcessor2.showImage( image );
 
 		System.out.println("Done.");
 	}

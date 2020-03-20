@@ -39,21 +39,20 @@ public class SplitViewMergeDialog< R extends RealType< R > & NativeType< R > > e
 	private SelectionUpdateListener updateListener;
 	private JPanel panel;
 	private ArrayList< ModifiableInterval > intervals3D;
-	private Image< R > image;
 
 	public SplitViewMergeDialog( final BdvImageViewer< R > viewer )
 	{
 		this.viewer = viewer;
-		this.image = viewer.getImage();
+		this.inputImage = viewer.getImage();
 
 		initSelectedRegions();
-		showRegionSelectionDialog();
+		showDialog( createContent() );
 	}
 
 	@Override
 	protected void recordMacro()
 	{
-		final MacroRecorder recorder = new MacroRecorder( "BDP2_SplitViewMerge...", inputImage, outputImage, true );
+		final MacroRecorder recorder = new MacroRecorder( "BDP2_SplitViewMerge...", inputImage, outputImage );
 
 		ArrayList< long[] > intervals = intervals3dAsLongsList();
 
@@ -86,14 +85,14 @@ public class SplitViewMergeDialog< R extends RealType< R > & NativeType< R > > e
 			intervals3D.add( showRegionSelectionOverlay( c, margin ) );
 	}
 
-	private void showRegionSelectionDialog( )
+	private JPanel createContent()
 	{
 		panel = new JPanel();
 		panel.setLayout( new BoxLayout( panel, BoxLayout.PAGE_AXIS ) );
 
 		addRegionSliders();
 
-		final JButton showMerge = new JButton( "Show Merge" );
+		final JButton showMerge = new JButton( "Preview" );
 		panel.add( showMerge );
 		showMerge.addActionListener( e -> {
 			showOrUpdateMerge( );
@@ -106,13 +105,13 @@ public class SplitViewMergeDialog< R extends RealType< R > & NativeType< R > > e
 //			showOrUpdateMerge();
 //		} );
 
-		showFrame( panel );
+		return panel;
 	}
 
 	private void optimise()
 	{
 		final double[] shift = RegionOptimiser.optimiseIntervals(
-				image,
+				inputImage,
 				intervals3D );
 
 		adjustModifiableInterval( shift, intervals3D.get( 1 ) );
@@ -133,15 +132,15 @@ public class SplitViewMergeDialog< R extends RealType< R > & NativeType< R > > e
 	{
 		final RandomAccessibleInterval< R > merge =
 				SplitViewMerger.mergeIntervalsXYZ(
-						image.getRai(),
+						inputImage.getRai(),
 						intervals3D,
 						CHANNEL ); // TODO: Could be different channel?
 
-		final Image< R > mergedImage = image.newImage( merge );
-		viewer.showImageInNewWindow( mergedImage );
+		outputImage = inputImage.newImage( merge );
+		viewer.showImageInNewWindow( outputImage );
 	}
 
-	private void addRegionSliders( )
+	private void addRegionSliders()
 	{
 		sliderPanels = new ArrayList<>(  );
 		boundedValues = new HashMap<>(  );

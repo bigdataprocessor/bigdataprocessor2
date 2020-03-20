@@ -15,9 +15,7 @@ public class OpenEMFromServer
 	{
 		new ImageJ().ui().showUI();
 
-		final BigDataProcessor2< R > bdp = new BigDataProcessor2<>();
-
-		final Image< R > image = bdp.openImage(
+		final Image< R > image = BigDataProcessor2.openImage(
 				"/Volumes/emcf/Mizzon/projects/Julian_FIBSEM/fib-SEM/20190730_batch6-blockB-prep/20190730_02UA_01GA_cell1",
 				FileInfos.TIFF_SLICES,
 				".*.tif" );
@@ -29,7 +27,7 @@ public class OpenEMFromServer
 
 		final Image< R > bin = BigDataProcessor2.bin( crop, new long[]{ 3, 3, 1, 1, 1 } );
 
-		bdp.showImage( bin );
+		BigDataProcessor2.showImage( bin );
 
 		System.out.println("Done.");
 	}

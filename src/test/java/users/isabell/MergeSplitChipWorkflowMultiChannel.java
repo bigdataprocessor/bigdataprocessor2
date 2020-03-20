@@ -28,8 +28,6 @@ public class MergeSplitChipWorkflowMultiChannel
         final ImageJ imageJ = new ImageJ();
         imageJ.ui().showUI();
 
-        final BigDataProcessor2< R > bdp = new BigDataProcessor2<>();
-
         final ArrayList< File > directories = selectDirectories();
 
         directories.clear();
@@ -65,7 +63,6 @@ public class MergeSplitChipWorkflowMultiChannel
             {
                 // Open
                 final Image< R > merge = Utils.openMergedImageFromLuxendoChannelFolders(
-                        bdp,
                         voxelUnit,
                         voxelSpacingMicrometerX,
                         voxelSpacingMicrometerY,
@@ -73,7 +70,7 @@ public class MergeSplitChipWorkflowMultiChannel
                         merger,
                         directory );
 
-                final BdvImageViewer viewer = bdp.showImage( merge );
+                final BdvImageViewer viewer = BigDataProcessor2.showImage( merge );
 
                 final FinalInterval interval = viewer.getVoxelIntervalXYZCTDialog( false );
 
@@ -97,7 +94,6 @@ public class MergeSplitChipWorkflowMultiChannel
             // open
             final String directory = directories.get( i ).toString();
             final Image< R > merge = Utils.openMergedImageFromLuxendoChannelFolders(
-                    bdp,
                     voxelUnit,
                     voxelSpacingMicrometerX,
                     voxelSpacingMicrometerY,

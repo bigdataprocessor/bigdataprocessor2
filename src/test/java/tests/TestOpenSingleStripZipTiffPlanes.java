@@ -18,18 +18,15 @@ public class TestOpenSingleStripZipTiffPlanes
 	{
 		DebugTools.setRootLevel("OFF"); // Bio-Formats
 
-		final BigDataProcessor2< R > bdp = new BigDataProcessor2<>();
-
-		final Image< R > image = bdp.openImage(
+		final Image< R > image = BigDataProcessor2.openImage(
 				"/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-data/em-slices-zip-strips",
 				FileInfos.TIFF_SLICES,
 				".*.tif" );
 
-		if ( showImages ) bdp.showImage( image );
+		if ( showImages ) BigDataProcessor2.showImage( image );
 
 		System.out.println("Done.");
 	}
-
 
 	public static void main( String[] args )
 	{

@@ -16,14 +16,12 @@ public class ProcessEMfromServer
 
 	public < R extends RealType< R > & NativeType< R > > void invertEM()
 	{
-		final BigDataProcessor2< R > bdp = new BigDataProcessor2<>();
-
-		final Image< R > image = bdp.openImage(
+		final Image< R > image = BigDataProcessor2.openImage(
 				"/Volumes/emcf/Mizzon/projects/Julian_FIBSEM/fib-SEM/20190730_batch6-blockB-prep/20190730_02UA_01GA_cell1",
 				FileInfos.TIFF_SLICES,
 				".*.tif" );
 
-		bdp.showImage( image );
+		BigDataProcessor2.showImage( image );
 
 		boolean process = false;
 

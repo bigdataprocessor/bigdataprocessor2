@@ -32,27 +32,20 @@ public class ChromaticShiftDialog< T extends RealType< T > & NativeType< T > > e
 		channelShifter = new ChannelShifter( inputImage.getRai() );
 		numChannels = inputImage.getRai().dimension( DimensionOrder.C );
 
-		prepareDialog();
-		showDialog( panel );
+		showDialog( createContent() );
 	}
 
 	@Override
-	protected void ok()
+	protected void recordMacro()
 	{
-		recordMacro();
-		setVisible( false );
-	}
-
-	private void recordMacro()
-	{
-		final MacroRecorder recorder = new MacroRecorder( "BDP2_ShiftChannels...", inputImage, outputImage, false );
+		final MacroRecorder recorder = new MacroRecorder( "BDP2_ShiftChannels...", inputImage, outputImage );
 		recorder.addOption( "shifts", Utils.longsToDelimitedString( shifts ) );
 		recorder.record();
 	}
 
-	protected void prepareDialog()
+	protected JPanel createContent()
 	{
-		panel = new JPanel();
+		JPanel panel = new JPanel();
 		panel.setLayout( new BoxLayout( panel, BoxLayout.PAGE_AXIS ) );
 
 		boundedValues = new ArrayList<>();
@@ -64,6 +57,8 @@ public class ChromaticShiftDialog< T extends RealType< T > & NativeType< T > > e
 		for ( int c = 0; c < numChannels; c++ )
 			for ( String axis : xyz )
 				createValueAndSlider( c, axis );
+
+		return panel;
 	}
 
 	private void createValueAndSlider( int c, String axis )

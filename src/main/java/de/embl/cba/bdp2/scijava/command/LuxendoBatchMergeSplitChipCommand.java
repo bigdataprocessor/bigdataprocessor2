@@ -59,8 +59,6 @@ public class LuxendoBatchMergeSplitChipCommand< R extends RealType< R > & Native
 
     public void process( ArrayList< File > directories )
     {
-        final BigDataProcessor2< R > bdp = new BigDataProcessor2<>();
-
         final SavingSettings savingSettings = SavingSettings.getDefaults();
         savingSettings.fileType = SavingSettings.FileType.TIFF_STACKS;
         savingSettings.numIOThreads = Runtime.getRuntime().availableProcessors();
@@ -87,7 +85,6 @@ public class LuxendoBatchMergeSplitChipCommand< R extends RealType< R > & Native
             {
                 // Open and merge channels from split chip
                 final Image< R > merge = Utils.openMergedImageFromLuxendoChannelFolders(
-                        bdp,
                         voxelUnit,
                         voxelSpacingMicrometerX,
                         voxelSpacingMicrometerY,
@@ -95,7 +92,7 @@ public class LuxendoBatchMergeSplitChipCommand< R extends RealType< R > & Native
                         merger,
                         directory );
 
-                final BdvImageViewer viewer = bdp.showImage( merge );
+                final BdvImageViewer viewer = BigDataProcessor2.showImage( merge );
 
                 final FinalInterval interval = viewer.getVoxelIntervalXYZCTDialog( false );
 
@@ -118,7 +115,6 @@ public class LuxendoBatchMergeSplitChipCommand< R extends RealType< R > & Native
             // open
             final String directory = directories.get( i ).toString();
             final Image< R > merge = Utils.openMergedImageFromLuxendoChannelFolders(
-                    bdp,
                     voxelUnit,
                     voxelSpacingMicrometerX,
                     voxelSpacingMicrometerY,

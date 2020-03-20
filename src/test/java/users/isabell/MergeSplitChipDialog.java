@@ -17,9 +17,7 @@ public class MergeSplitChipDialog
         final ImageJ imageJ = new ImageJ();
         imageJ.ui().showUI();
 
-        final BigDataProcessor2< R > bdp = new BigDataProcessor2<>();
-
-        final Image< R > image = bdp.openHdf5Image(
+        final Image< R > image = BigDataProcessor2.openHdf5Image(
                 "/Users/tischer/Desktop/stack_0_channel_0",
                 FileInfos.SINGLE_CHANNEL_TIMELAPSE,
                 ".*.h5",
@@ -28,7 +26,7 @@ public class MergeSplitChipDialog
         image.setVoxelUnit( "micrometer" );
         image.setVoxelSpacing( new double[]{0.13, 0.13, 1.04} );
 
-        final BdvImageViewer viewer = bdp.showImage( image );
+        final BdvImageViewer viewer = BigDataProcessor2.showImage( image );
         new SplitViewMergeDialog( viewer );
     }
 

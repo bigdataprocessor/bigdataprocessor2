@@ -5,6 +5,7 @@ import bdv.util.BoundedValue;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.record.MacroRecorder;
 import de.embl.cba.bdp2.dialog.AbstractProcessingDialog;
+import de.embl.cba.bdp2.scijava.command.AbstractProcessingCommand;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.type.NativeType;
@@ -38,7 +39,7 @@ public class BinningDialog< T extends RealType< T > & NativeType< T > > extends 
 	@Override
 	protected void recordMacro()
 	{
-		final MacroRecorder recorder = new MacroRecorder( "BDP2_Bin...", inputImage, outputImage, false );
+		final MacroRecorder recorder = new MacroRecorder( "BDP2_Bin...", inputImage, outputImage );
 
 		recorder.addOption( "binWidthXPixels",  span[ 0 ] );
 		recorder.addOption( "binWidthYPixels",  span[ 0 ] );

@@ -59,7 +59,7 @@ public class UnsignedByteTypeConversionDialog< R extends RealType< R > & NativeT
 	@Override
 	protected void recordMacro()
 	{
-		final MacroRecorder recorder = new MacroRecorder( "BDP2_ConvertToUnsignedByte...", inputImage, outputImage, false );
+		final MacroRecorder recorder = new MacroRecorder( "BDP2_ConvertToUnsignedByte...", inputImage, outputImage);
 
 		recorder.addOption( "mapTo0", (int) mapTo0 );
 		recorder.addOption( "mapTo255",  (int) mapTo255 );

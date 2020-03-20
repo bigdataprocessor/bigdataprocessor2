@@ -30,12 +30,10 @@ public class TestMicrogliaTracking
 
         DebugTools.setRootLevel("OFF"); // Bio-Formats
 
-        final BigDataProcessor2< R > bdp = new BigDataProcessor2<>();
-
         String imageDirectory = "/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/" +
                 "src/test/resources/test-data/microglia-track-nt123/volumes";
 
-        final Image< R > image = bdp.openImage(
+        final Image< R > image = BigDataProcessor2.openImage(
                 imageDirectory,
                 FileInfos.SINGLE_CHANNEL_TIMELAPSE,
                 ".*" );
@@ -46,7 +44,7 @@ public class TestMicrogliaTracking
         BdvImageViewer viewer = null;
         if ( showImages )
         {
-            viewer = bdp.showImage( image );
+            viewer = BigDataProcessor2.showImage( image );
             viewer.setDisplayRange( 0, 150, 0 );
         }
 
@@ -91,13 +89,10 @@ public class TestMicrogliaTracking
 
         DebugTools.setRootLevel("OFF"); // Bio-Formats
 
-
-        final BigDataProcessor2< R > bdp = new BigDataProcessor2<>();
-
         String imageDirectory = "/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/" +
                 "src/test/resources/test-data/microglia-track-nt123/volumes";
 
-        final Image< R > image = bdp.openImage(
+        final Image< R > image = BigDataProcessor2.openImage(
                 imageDirectory,
                 FileInfos.SINGLE_CHANNEL_TIMELAPSE,
                 ".*" );
@@ -108,7 +103,7 @@ public class TestMicrogliaTracking
         BdvImageViewer viewer = null;
         if ( showImages )
         {
-            viewer = bdp.showImage( image );
+            viewer = BigDataProcessor2.showImage( image );
             viewer.setDisplayRange( 0, 150, 0 );
         }
 
@@ -140,15 +135,12 @@ public class TestMicrogliaTracking
     @Test
     public < R extends RealType< R > & NativeType< R > > void phaseCorrelationTracking( )
     {
-
         DebugTools.setRootLevel("OFF"); // Bio-Formats
-
-        final BigDataProcessor2< R > bdp = new BigDataProcessor2<>();
 
         String imageDirectory = "/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/" +
                 "src/test/resources/test-data/microglia-track-nt3/";
 
-        final Image< R > image = bdp.openImage(
+        final Image< R > image = BigDataProcessor2.openImage(
                 imageDirectory,
                 FileInfos.SINGLE_CHANNEL_TIMELAPSE,
                 ".*" );
@@ -162,7 +154,7 @@ public class TestMicrogliaTracking
         BdvImageViewer viewer = null;
         if ( showImages )
         {
-            viewer = bdp.showImage( image );
+            viewer = BigDataProcessor2.showImage( image );
             viewer.setDisplayRange( 0, 150, 0 );
         }
 
@@ -184,7 +176,6 @@ public class TestMicrogliaTracking
 
     }
 
-
     public static void main( String[] args ) throws IOException
     {
         showImages = true;
@@ -194,5 +185,4 @@ public class TestMicrogliaTracking
 //        new TestMicrogliaTracking().thresholdFloodFillTracking();
         new TestMicrogliaTracking().trackView();
     }
-
 }

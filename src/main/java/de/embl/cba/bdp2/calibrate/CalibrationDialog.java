@@ -3,6 +3,7 @@ package de.embl.cba.bdp2.calibrate;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.record.MacroRecorder;
+import de.embl.cba.bdp2.scijava.command.AbstractProcessingCommand;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import ij.gui.GenericDialog;
 import net.imglib2.type.NativeType;
@@ -57,7 +58,7 @@ public class CalibrationDialog< R extends RealType< R > & NativeType< R > >
 
 	protected void recordMacro()
 	{
-		final MacroRecorder recorder = new MacroRecorder( "BDP2_Calibrate...", inputImage, outputImage, false );
+		final MacroRecorder recorder = new MacroRecorder( "BDP2_Calibrate...", inputImage, outputImage );
 
 		final double[] voxelSpacing = outputImage.getVoxelSpacing();
 		recorder.addOption( "unit", outputImage.getVoxelUnit() );
