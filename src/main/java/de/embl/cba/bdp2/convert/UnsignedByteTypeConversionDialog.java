@@ -57,20 +57,7 @@ public class UnsignedByteTypeConversionDialog< R extends RealType< R > & NativeT
 	}
 
 	@Override
-	protected void ok()
-	{
-		recordMacro();
-		setVisible( false );
-	}
-
-	@Override
-	protected void cancel()
-	{
-		viewer.replaceImage( inputImage, true, true );
-		setVisible( false );
-	}
-
-	private void recordMacro()
+	protected void recordMacro()
 	{
 		final MacroRecorder recorder = new MacroRecorder( "BDP2_ConvertToUnsignedByte...", inputImage, outputImage, false );
 

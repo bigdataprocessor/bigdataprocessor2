@@ -16,7 +16,7 @@ import ome.xml.model.primitives.PositiveInteger;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static de.embl.cba.bdp2.process.IntervalImageViews.getNonVolatilePlaneCopy;
+import static de.embl.cba.bdp2.utils.IntervalImageViews.getNonVolatilePlaneCopy;
 import static de.embl.cba.bdp2.save.SavingUtils.ShortToByteBigEndian;
 
 public class SaveTiffPlane implements Runnable {

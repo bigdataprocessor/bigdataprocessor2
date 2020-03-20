@@ -12,7 +12,7 @@ import ch.systemsx.cisd.hdf5.HDF5IntStorageFeatures;
 import ch.systemsx.cisd.hdf5.IHDF5Writer;
 import de.embl.cba.bdp2.load.files.FileInfos;
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.progress.ProgressHelpers;
+import de.embl.cba.bdp2.log.progress.ProgressHelpers;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import ij.ImagePlus;

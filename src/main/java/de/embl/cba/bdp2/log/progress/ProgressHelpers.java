@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.progress;
+package de.embl.cba.bdp2.log.progress;
 
 import de.embl.cba.bdp2.log.Logger;
 import ij.IJ;

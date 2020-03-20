@@ -7,9 +7,9 @@ import de.embl.cba.bdp2.crop.Cropper;
 import de.embl.cba.bdp2.load.CachedCellImgReader;
 import de.embl.cba.bdp2.load.files.FileInfos;
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.progress.LoggingProgressListener;
-import de.embl.cba.bdp2.progress.Progress;
-import de.embl.cba.bdp2.progress.ProgressListener;
+import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
+import de.embl.cba.bdp2.log.progress.Progress;
+import de.embl.cba.bdp2.log.progress.ProgressListener;
 import de.embl.cba.bdp2.save.*;
 import de.embl.cba.bdp2.dialog.DisplaySettings;
 import de.embl.cba.bdp2.utils.Utils;
@@ -29,16 +29,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
+public class BigDataProcessor2
 {
     public static ExecutorService generalThreadPool =
             Executors.newFixedThreadPool( Runtime.getRuntime().availableProcessors() * 2  );
-
     public static ExecutorService trackerThreadPool; // Thread pool for track: TODO: remove?
     public static Map<Integer, Integer> progressTracker = new ConcurrentHashMap<>();
     public static int MAX_THREAD_LIMIT = Runtime.getRuntime().availableProcessors() * 2;
     public static Map<Integer, AtomicBoolean> saveTracker = new ConcurrentHashMap<>();
-
 
     // TODO: do we ever need the constructor, maybe only static methods are more convenient?!
     public BigDataProcessor2() {
@@ -47,7 +45,7 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
         // kickOffThreadPack( Runtime.getRuntime().availableProcessors() * 2 );
     }
 
-    public static < R extends RealType< R > & NativeType< R > >
+    public static< R extends RealType< R > & NativeType< R > >
     void saveImageAndWaitUntilDone(
             SavingSettings savingSettings,
             Image< R > image )
@@ -83,7 +81,6 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
 
         return image;
     }
-
 
     public static < R extends RealType< R > & NativeType< R > >
     Image< R > crop( Image< R > image, Interval interval )
@@ -170,13 +167,11 @@ public class BigDataProcessor2 < R extends RealType< R > & NativeType< R >>
         return saver;
     }
 
-
     public static < R extends RealType< R > & NativeType< R > >
     Image< R > convert( Image< R > image, double mapTo0, double mapTo255 )
     {
         return UnsignedByteTypeConversionDialog.convert( image, mapTo0, mapTo255 );
     }
-
 
     public static <T extends RealType<T>> RandomAccessibleInterval
     unsignedByteTypeConverter(

@@ -43,13 +43,6 @@ public class ChromaticShiftDialog< T extends RealType< T > & NativeType< T > > e
 		setVisible( false );
 	}
 
-	@Override
-	protected void cancel()
-	{
-		viewer.replaceImage( inputImage, true, true );
-		setVisible( false );
-	}
-
 	private void recordMacro()
 	{
 		final MacroRecorder recorder = new MacroRecorder( "BDP2_ShiftChannels...", inputImage, outputImage, false );

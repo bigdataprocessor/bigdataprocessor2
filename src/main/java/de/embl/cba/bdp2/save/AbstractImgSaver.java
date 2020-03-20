@@ -1,6 +1,6 @@
 package de.embl.cba.bdp2.save;
 
-import de.embl.cba.bdp2.progress.ProgressListener;
+import de.embl.cba.bdp2.log.progress.ProgressListener;
 
 import java.util.ArrayList;
 import java.util.List;

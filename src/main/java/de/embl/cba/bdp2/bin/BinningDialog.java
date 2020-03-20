@@ -19,7 +19,7 @@ import java.util.Arrays;
  * TODO: make only one slider for binning in X and Y
  *
  */
-public class BinningDialog< T extends RealType< T > & NativeType< T > > extends AbstractProcessingDialog
+public class BinningDialog< T extends RealType< T > & NativeType< T > > extends AbstractProcessingDialog< T >
 {
 	private long[] span;
 
@@ -36,20 +36,7 @@ public class BinningDialog< T extends RealType< T > & NativeType< T > > extends 
 	}
 
 	@Override
-	protected void ok()
-	{
-		recordMacro();
-		setVisible( false );
-	}
-
-	@Override
-	protected void cancel()
-	{
-		viewer.replaceImage( inputImage, true, true );
-		setVisible( false );
-	}
-
-	private void recordMacro()
+	protected void recordMacro()
 	{
 		final MacroRecorder recorder = new MacroRecorder( "BDP2_Bin...", inputImage, outputImage, false );
 

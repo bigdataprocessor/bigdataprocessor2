@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.progress;
+package de.embl.cba.bdp2.log.progress;
 
 public interface ProgressListener
 {

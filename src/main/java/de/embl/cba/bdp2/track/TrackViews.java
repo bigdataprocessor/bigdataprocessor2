@@ -1,7 +1,7 @@
 package de.embl.cba.bdp2.track;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.process.IntervalImageViews;
+import de.embl.cba.bdp2.utils.IntervalImageViews;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;

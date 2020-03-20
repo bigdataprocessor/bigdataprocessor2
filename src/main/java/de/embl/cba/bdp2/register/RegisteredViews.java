@@ -2,9 +2,9 @@ package de.embl.cba.bdp2.register;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.process.IntervalImageViews;
-import de.embl.cba.bdp2.progress.LoggingProgressListener;
-import de.embl.cba.bdp2.progress.ProgressListener;
+import de.embl.cba.bdp2.utils.IntervalImageViews;
+import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
+import de.embl.cba.bdp2.log.progress.ProgressListener;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import de.embl.cba.bdv.utils.BdvUtils;

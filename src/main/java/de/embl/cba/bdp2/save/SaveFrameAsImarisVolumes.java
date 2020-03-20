@@ -1,7 +1,7 @@
 package de.embl.cba.bdp2.save;
 
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.process.IntervalImageViews;
+import de.embl.cba.bdp2.utils.IntervalImageViews;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.imaris.H5DataCubeWriter;

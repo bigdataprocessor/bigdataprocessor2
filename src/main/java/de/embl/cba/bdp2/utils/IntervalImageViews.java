@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.process;
+package de.embl.cba.bdp2.utils;
 
 import de.embl.cba.bdp2.log.Logger;
 import net.imglib2.*;
@@ -22,7 +22,6 @@ import static de.embl.cba.bdp2.utils.DimensionOrder.*;
 
 public class IntervalImageViews
 {
-
 	public static < R extends RealType< R > & NativeType< R > >
 	RandomAccessibleInterval< R > getSliceView(
 			RandomAccessibleInterval< R > image,
@@ -30,7 +29,6 @@ public class IntervalImageViews
 			long c,
 			long t )
 	{
-
 		long[] minInterval = new long[]{
 				image.min( X ),
 				image.min( Y ),

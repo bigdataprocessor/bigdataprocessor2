@@ -8,6 +8,8 @@ import bdv.util.ModifiableInterval;
 import bdv.viewer.ViewerPanel;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.dialog.AbstractProcessingDialog;
+import de.embl.cba.bdp2.record.MacroRecorder;
+import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
@@ -30,12 +32,12 @@ public class SplitViewMergeDialog< R extends RealType< R > & NativeType< R > > e
 	public static final int X = 0;
 	public static final int Y = 1;
 	public static final int Z = 2;
+	public static final int CHANNEL = 0;
 
 	private Map< String, BoundedValue > boundedValues;
 	private ArrayList< SliderPanel > sliderPanels;
 	private SelectionUpdateListener updateListener;
 	private JPanel panel;
-	private BdvImageViewer newImageViewer;
 	private ArrayList< ModifiableInterval > intervals3D;
 	private Image< R > image;
 
@@ -49,15 +51,31 @@ public class SplitViewMergeDialog< R extends RealType< R > & NativeType< R > > e
 	}
 
 	@Override
-	protected void ok()
+	protected void recordMacro()
 	{
+		final MacroRecorder recorder = new MacroRecorder( "BDP2_SplitViewMerge...", inputImage, outputImage, true );
 
+		ArrayList< long[] > intervals = intervals3dAsLongsList();
+
+		recorder.addOption( "intervalsString", Utils.longsToDelimitedString( intervals ) );
+
+		recorder.record();
 	}
 
-	@Override
-	protected void cancel()
+	private ArrayList< long[] > intervals3dAsLongsList()
 	{
-
+		ArrayList< long[] > intervals = new ArrayList<>(  );
+		for ( ModifiableInterval interval : intervals3D )
+		{
+			final long[] longs = new long[ 5 ];
+			longs[ 0 ] = interval.min( 0 );
+			longs[ 1 ] = interval.min( 1 );
+			longs[ 2 ] = interval.dimension( 0 );
+			longs[ 3 ] = interval.dimension( 1 );
+			longs[ 4 ] = CHANNEL;
+			intervals.add( longs );
+		}
+		return intervals;
 	}
 
 	public void initSelectedRegions( )
@@ -117,7 +135,7 @@ public class SplitViewMergeDialog< R extends RealType< R > & NativeType< R > > e
 				SplitViewMerger.mergeIntervalsXYZ(
 						image.getRai(),
 						intervals3D,
-						0 );
+						CHANNEL ); // TODO: Could be different channel?
 
 		final Image< R > mergedImage = image.newImage( merge );
 		viewer.showImageInNewWindow( mergedImage );

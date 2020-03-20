@@ -10,8 +10,9 @@ import org.scijava.plugin.Parameter;
 
 public class AbstractProcessingCommand< R extends RealType< R > & NativeType< R > >
 {
-    public static final String SHOW_IMAGE_IN_NEW_VIEWER = "Show image in new viewer";
-
+    public static final String SHOW_IN_NEW_VIEWER = "Show in new viewer";
+    public static final String REPLACE_IN_VIEWER = "Replace input image";
+    public static final String DO_NOT_SHOW = "Do not show";
 
     @Parameter(label = "Input image name", persist = true)
     protected Image inputImage = ImageService.nameToImage.values().iterator().next();
@@ -20,16 +21,10 @@ public class AbstractProcessingCommand< R extends RealType< R > & NativeType< R 
     protected String outputImageName = ImageService.nameToImage.keySet().iterator().next() + "-binned";
 
     @Parameter(label = "Output image handling", choices = {
-            SHOW_IMAGE_IN_NEW_VIEWER,
-
-            "Replace image in viewer",
-            "Do not show"})
-    protected String newViewer;
-
-    {
-        final String s = "Replace image in viewer";
-        newViewer = false;
-    }
+            REPLACE_IN_VIEWER,
+            SHOW_IN_NEW_VIEWER,
+            DO_NOT_SHOW })
+    protected String outputModality;
 
     protected Image< R > outputImage;
 
@@ -37,15 +32,19 @@ public class AbstractProcessingCommand< R extends RealType< R > & NativeType< R 
     {
         outputImage.setName( outputImageName );
         ImageService.nameToImage.put( outputImageName, outputImage );
-        if ( newViewer )
+
+        if ( outputModality.equals( SHOW_IN_NEW_VIEWER ) )
         {
             new BdvImageViewer<>( outputImage, autoContrast );
         }
-        else
+        else if ( outputModality.equals( REPLACE_IN_VIEWER ))
         {
             final BdvImageViewer viewer = BdvService.imageNameToBdv.get( inputImage.getName() );
             viewer.replaceImage( outputImage, autoContrast, keepViewerTransform );
         }
+        else if ( outputModality.equals( DO_NOT_SHOW ))
+        {
+            // do nothing
+        }
     }
-
 }

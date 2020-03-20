@@ -1,7 +1,7 @@
 package de.embl.cba.bdp2.track;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.process.IntervalImageViews;
+import de.embl.cba.bdp2.utils.IntervalImageViews;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import de.embl.cba.bdv.utils.BdvUtils;
 import de.embl.cba.bdv.utils.objects3d.ThresholdFloodFill;

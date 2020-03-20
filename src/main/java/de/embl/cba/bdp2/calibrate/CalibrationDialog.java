@@ -55,7 +55,7 @@ public class CalibrationDialog< R extends RealType< R > & NativeType< R > >
 		recordMacro();
 	}
 
-	private void recordMacro()
+	protected void recordMacro()
 	{
 		final MacroRecorder recorder = new MacroRecorder( "BDP2_Calibrate...", inputImage, outputImage, false );
 

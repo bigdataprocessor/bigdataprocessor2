@@ -1,6 +1,6 @@
 package de.embl.cba.bdp2.track;
 
-import de.embl.cba.bdp2.progress.ProgressListener;
+import de.embl.cba.bdp2.log.progress.ProgressListener;
 
 public abstract class AbstractObjectTracker {
 
