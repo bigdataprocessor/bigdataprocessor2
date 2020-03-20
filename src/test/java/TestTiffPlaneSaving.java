@@ -1,8 +1,8 @@
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.load.CachedCellImgReader;
+import de.embl.cba.bdp2.open.CachedCellImgReader;
 import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.BigDataProcessor2;
-import de.embl.cba.bdp2.load.files.FileInfos;
+import de.embl.cba.bdp2.open.files.FileInfos;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.type.numeric.integer.UnsignedShortType;

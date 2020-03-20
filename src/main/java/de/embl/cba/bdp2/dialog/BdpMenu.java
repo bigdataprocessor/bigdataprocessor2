@@ -2,19 +2,19 @@ package de.embl.cba.bdp2.dialog;
 
 import javax.swing.*;
 
-public class BDPMenu extends JMenu {
+public class BdpMenu extends JMenu {
 
-    private final BdvMenus bdvMenus;
+    private final BdpMenus bdpMenus;
 
-    public BDPMenu( BdvMenus bdvMenus ) {
+    public BdpMenu( BdpMenus bdpMenus ) {
 
         setText(UIDisplayConstants.PROCESS_MENU_DISPLAY_TEXT);
-        this.bdvMenus = bdvMenus;
+        this.bdpMenus = bdpMenus;
 
         addMenuItem( UIDisplayConstants.CALIBRATE_MENU_ITEM );
         addMenuItem( UIDisplayConstants.SAVE_AS_MENU_ITEM );
         addMenuItem( UIDisplayConstants.BINNING_MENU_ITEM );
-        addMenuItem( UIDisplayConstants.OBLIQUE_MENU_ITEM );
+        //addMenuItem( UIDisplayConstants.OBLIQUE_MENU_ITEM );
         addMenuItem( UIDisplayConstants.CROP_MENU_ITEM );
         addMenuItem( UIDisplayConstants.EIGHT_BIT_CONVERSION_MENU_ITEM );
         addMenuItem( UIDisplayConstants.CHROMATIC_SHIFT_CORRECTION_MENU_ITEM );
@@ -38,7 +38,7 @@ public class BDPMenu extends JMenu {
     private JMenuItem addMenuItem( String name )
     {
         JMenuItem jMenuItem = new JMenuItem( name );
-        jMenuItem.addActionListener( bdvMenus );
+        jMenuItem.addActionListener( bdpMenus );
         this.add( jMenuItem );
         return jMenuItem;
     }
@@ -46,7 +46,7 @@ public class BDPMenu extends JMenu {
     private JMenuItem addMenuItem( JMenu jMenu, String name )
     {
         JMenuItem jMenuItem = new JMenuItem( name );
-        jMenuItem.addActionListener( bdvMenus );
+        jMenuItem.addActionListener( bdpMenus );
         jMenu.add( jMenuItem );
         return jMenuItem;
     }

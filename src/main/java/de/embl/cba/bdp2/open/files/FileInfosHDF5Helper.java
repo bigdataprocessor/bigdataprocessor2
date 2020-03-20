@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.load.files;
+package de.embl.cba.bdp2.open.files;
 
 import ch.systemsx.cisd.hdf5.HDF5DataSetInformation;
 import ch.systemsx.cisd.hdf5.HDF5DataTypeInformation;

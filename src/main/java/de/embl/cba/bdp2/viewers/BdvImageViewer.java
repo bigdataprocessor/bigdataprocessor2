@@ -10,7 +10,7 @@ import de.embl.cba.bdp2.service.BdvService;
 import de.embl.cba.bdp2.service.ImageService;
 import de.embl.cba.bdp2.track.ThresholdFloodFillOverlapTracker;
 import de.embl.cba.bdp2.track.Track;
-import de.embl.cba.bdp2.dialog.BdvMenus;
+import de.embl.cba.bdp2.dialog.BdpMenus;
 import de.embl.cba.bdp2.dialog.DisplaySettings;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.volatiles.VolatileCachedCellImg;
@@ -54,7 +54,7 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
 
         show( autoContrast );
 
-        this.addMenus( new BdvMenus() );
+        this.addMenus( new BdpMenus() );
 
         this.installBehaviours( );
     }
@@ -191,7 +191,7 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
         }
     }
 
-    public void addMenus( BdvMenus menus ) {
+    public void addMenus( BdpMenus menus ) {
 
         menus.setViewer(this);
         for ( JMenu menu : menus.getMenus() )

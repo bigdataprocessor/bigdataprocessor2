@@ -1,7 +1,7 @@
 package users.gustavo;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.load.files.FileInfos;
+import de.embl.cba.bdp2.open.files.FileInfos;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;

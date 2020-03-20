@@ -1,7 +1,7 @@
 package explore;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.load.files.FileInfos;
+import de.embl.cba.bdp2.open.files.FileInfos;
 import de.embl.cba.bdp2.shear.ImageShearer;
 import de.embl.cba.bdp2.shear.ShearMenuDialog;
 import de.embl.cba.bdp2.shear.ShearingSettings;

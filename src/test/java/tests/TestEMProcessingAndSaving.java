@@ -1,7 +1,7 @@
 package tests;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.load.files.FileInfos;
+import de.embl.cba.bdp2.open.files.FileInfos;
 import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.register.RegisteredViews;
 import de.embl.cba.bdp2.save.SavingSettings;

@@ -1,7 +1,7 @@
 package de.embl.cba.bdp2.volatiles;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.load.CachedCellImgReader;
+import de.embl.cba.bdp2.open.CachedCellImgReader;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.cache.img.CachedCellImg;
 import net.imglib2.cache.img.RandomAccessibleCacheLoader;

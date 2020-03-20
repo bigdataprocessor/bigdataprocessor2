@@ -1,12 +1,15 @@
-package de.embl.cba.bdp2.dialog;
+package de.embl.cba.bdp2.save;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
+import de.embl.cba.bdp2.crop.CropCommand;
+import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.log.progress.ProgressListener;
-import de.embl.cba.bdp2.save.ImgSaver;
-import de.embl.cba.bdp2.save.SavingSettings;
+import de.embl.cba.bdp2.record.MacroRecorder;
+import de.embl.cba.bdp2.scijava.command.AbstractProcessingCommand;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import ij.IJ;
+import net.imglib2.FinalInterval;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -14,10 +17,8 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 
-public class SaveMenuDialog extends JFrame implements ActionListener
+public class SaveDialog extends JFrame implements ActionListener
 {
-
-
     private static SavingSettings defaults = SavingSettings.getDefaults();
 
     private static final JCheckBox cbSaveVolume = new JCheckBox("Save Volume data");
@@ -35,9 +36,9 @@ public class SaveMenuDialog extends JFrame implements ActionListener
 
     private final
     JComboBox comboFileTypeForSaving = new JComboBox(new SavingSettings.FileType[]{
-            SavingSettings.FileType.TIFF_STACKS,
+            SavingSettings.FileType.TIFF_VOLUMES,
 //            SavingSettings.FileType.HDF5_STACKS, //TODO: implement
-            SavingSettings.FileType.IMARIS_STACKS,
+            SavingSettings.FileType.IMARIS_VOLUMES,
             SavingSettings.FileType.TIFF_PLANES });
 
     private final String SAVE = "Save";
@@ -48,11 +49,12 @@ public class SaveMenuDialog extends JFrame implements ActionListener
     protected final String MESSAGE_SAVE_INTERRUPTED ="Saving Interrupted!";
     protected final String MESSAGE_SAVE_FINISHED ="Saving Completed!";
     protected final JProgressBar progressBar;
-    private final BdvImageViewer imageViewer;
+    private final BdvImageViewer viewer;
     private ImgSaver saver;
+    private SavingSettings savingSettings;
 
-    public SaveMenuDialog( BdvImageViewer imageViewer) {
-        this.imageViewer = imageViewer;
+    public SaveDialog( BdvImageViewer viewer ) {
+        this.viewer = viewer;
         JTabbedPane menu = new JTabbedPane();
         ArrayList<JPanel> mainPanels = new ArrayList<>();
         ArrayList<JPanel> panels = new ArrayList<>();
@@ -134,6 +136,7 @@ public class SaveMenuDialog extends JFrame implements ActionListener
             if ( e.getActionCommand().equals( SAVE ) )
             {
                 save();
+                recordMacro();
             }
             else if ( e.getActionCommand().equals( STOP_SAVING ) )
             {
@@ -154,13 +157,13 @@ public class SaveMenuDialog extends JFrame implements ActionListener
     public void save()
     {
         MESSAGE.setText( null );
-        SavingSettings savingSettings = getSavingSettings();
+        savingSettings =  getSavingSettings();
         progressBar.setVisible( true );
         pack();
         save.setEnabled( false );
         BigDataProcessor2.generalThreadPool.submit( () -> {
             this.saver = BigDataProcessor2.saveImage(
-                    imageViewer.getImage(),
+                    viewer.getImage(),
                     savingSettings,
                     progressBar() );
 
@@ -168,7 +171,7 @@ public class SaveMenuDialog extends JFrame implements ActionListener
         } );
     }
 
-    public SavingSettings getSavingSettings()
+    private SavingSettings getSavingSettings()
     {
         SavingSettings savingSettings = new SavingSettings();
 
@@ -187,8 +190,8 @@ public class SaveMenuDialog extends JFrame implements ActionListener
         savingSettings.numIOThreads = Integer.parseInt( tfNumIOThreads.getText() );
         savingSettings.numProcessingThreads = Integer.parseInt( tfNumProcessingThreads.getText() );
 
-        savingSettings.voxelSpacing = imageViewer.getImage().getVoxelSpacing();
-        savingSettings.voxelUnit = imageViewer.getImage().getVoxelUnit();
+        savingSettings.voxelSpacing = viewer.getImage().getVoxelSpacing();
+        savingSettings.voxelUnit = viewer.getImage().getVoxelUnit();
 
         return savingSettings;
     }
@@ -208,6 +211,16 @@ public class SaveMenuDialog extends JFrame implements ActionListener
                 saver.stopSave();
             }
         };
+    }
+
+    private void recordMacro()
+    {
+        final MacroRecorder recorder = new MacroRecorder( SaveAdvancedCommand.COMMAND_NAME, inputImage );
+
+        // TODO: recorder.addOption( "directory", savingSettings.volumesFilePathStump );
+        //...
+
+        recorder.record();
     }
 }
 

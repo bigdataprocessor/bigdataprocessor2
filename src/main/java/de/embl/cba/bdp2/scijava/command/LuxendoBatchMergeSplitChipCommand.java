@@ -60,7 +60,7 @@ public class LuxendoBatchMergeSplitChipCommand< R extends RealType< R > & Native
     public void process( ArrayList< File > directories )
     {
         final SavingSettings savingSettings = SavingSettings.getDefaults();
-        savingSettings.fileType = SavingSettings.FileType.TIFF_STACKS;
+        savingSettings.fileType = SavingSettings.FileType.TIFF_VOLUMES;
         savingSettings.numIOThreads = Runtime.getRuntime().availableProcessors();
 
         final SplitViewMerger merger = new SplitViewMerger();

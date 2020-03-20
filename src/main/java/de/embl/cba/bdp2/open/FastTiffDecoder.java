@@ -29,10 +29,10 @@
  */
 
 
-package de.embl.cba.bdp2.load;
+package de.embl.cba.bdp2.open;
 
 
-import de.embl.cba.bdp2.load.files.SerializableFileInfo;
+import de.embl.cba.bdp2.open.files.SerializableFileInfo;
 import de.embl.cba.bdp2.log.Logger;
 import ij.IJ;
 import ij.io.FileInfo;

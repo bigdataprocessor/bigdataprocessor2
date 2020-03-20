@@ -27,6 +27,14 @@ public class MacroRecorder< R extends RealType< R > & NativeType< R > >
 		addOption( OUTPUT_MODALITY_PARAMETER, outputImageHandling );
 	}
 
+	public MacroRecorder( String commandName, Image< R > inputImage )
+	{
+		this.commandName = commandName;
+		this.options = "";
+
+		addOption( INPUT_IMAGE_PARAMETER, inputImage.getName() );
+	}
+
 	public void addOption( String name, Object value )
 	{
 		name = name.toLowerCase();

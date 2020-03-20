@@ -33,7 +33,7 @@ package de.embl.cba.bdp2.utils;
 import bdv.util.Bdv;
 import bdv.viewer.animate.SimilarityTransformAnimator;
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.load.files.FileInfos;
+import de.embl.cba.bdp2.open.files.FileInfos;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.splitviewmerge.SplitViewMerger;
 import de.embl.cba.bdp2.BigDataProcessor2;

@@ -1,11 +1,12 @@
 package de.embl.cba.bdp2.dialog;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
-import de.embl.cba.bdp2.bin.BinningDialog;
+import de.embl.cba.bdp2.bin.BinDialog;
 import de.embl.cba.bdp2.calibrate.CalibrationDialog;
 import de.embl.cba.bdp2.convert.UnsignedByteTypeConversionDialog;
-import de.embl.cba.bdp2.crop.CroppingDialog;
+import de.embl.cba.bdp2.crop.CropDialog;
 import de.embl.cba.bdp2.log.Logger;
+import de.embl.cba.bdp2.save.SaveDialog;
 import de.embl.cba.bdp2.splitviewmerge.SplitViewMergeDialog;
 import de.embl.cba.bdp2.shift.ChromaticShiftDialog;
 import de.embl.cba.bdp2.register.RegisteredViews;
@@ -23,17 +24,17 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BdvMenus
+public class BdpMenus
         extends JMenu implements ActionListener {
 
     //private final ImageMenu imageMenu;
     private final MiscMenu miscMenu;
-    private final BDPMenu bdpMenu;
+    private final BdpMenu bdpMenu;
     private BdvImageViewer viewer;
 
-    public BdvMenus(){
+    public BdpMenus(){
         //imageMenu = new ImageMenu(this);
-        bdpMenu = new BDPMenu(this);
+        bdpMenu = new BdpMenu(this);
         miscMenu = new MiscMenu(this);
     }
 
@@ -56,8 +57,8 @@ public class BdvMenus
                 UIDisplayConstants.SAVE_AS_MENU_ITEM ))
         {
             BigDataProcessor2.generalThreadPool.submit(() -> {
-                SaveMenuDialog saveMenuDialog = new SaveMenuDialog( viewer );
-                saveMenuDialog.setVisible(true);
+                SaveDialog saveDialog = new SaveDialog( viewer );
+                saveDialog.setVisible(true);
             });
         }
         else if (e.getActionCommand().equalsIgnoreCase(
@@ -114,7 +115,7 @@ public class BdvMenus
         		UIDisplayConstants.CROP_MENU_ITEM ))
         {
         	new Thread( () ->  {
-        	    new CroppingDialog<>( viewer );
+        	    new CropDialog<>( viewer );
             }).start();
         }
         else if(e.getActionCommand().equalsIgnoreCase(
@@ -129,7 +130,8 @@ public class BdvMenus
                                 DimensionOrder.Z, DimensionOrder.C );
                 ImageJFunctions.show( permuted, BigDataProcessor2.generalThreadPool );
             }).start();
-        }else if(e.getActionCommand().equalsIgnoreCase(
+        }
+        else if(e.getActionCommand().equalsIgnoreCase(
                 UIDisplayConstants.EIGHT_BIT_CONVERSION_MENU_ITEM ))
         {
             BigDataProcessor2.generalThreadPool.submit(() ->
@@ -142,15 +144,18 @@ public class BdvMenus
         {
             BigDataProcessor2.generalThreadPool.submit(() ->
             {
-                new BinningDialog<>( viewer );
+                new BinDialog<>( viewer );
             });
         }
         else if(e.getActionCommand().equalsIgnoreCase(
-            UIDisplayConstants.CHROMATIC_SHIFT_CORRECTION_MENU_ITEM )){
-            BigDataProcessor2.generalThreadPool.submit(() -> {
+            UIDisplayConstants.CHROMATIC_SHIFT_CORRECTION_MENU_ITEM ))
+        {
+            BigDataProcessor2.generalThreadPool.submit(() ->
+            {
                 new ChromaticShiftDialog<>( viewer );
             });
-        }else if(e.getActionCommand().equalsIgnoreCase(
+        }
+        else if(e.getActionCommand().equalsIgnoreCase(
                     UIDisplayConstants.SPLIT_VIEW_MENU_ITEM ))
         {
                 BigDataProcessor2.generalThreadPool.submit(() -> {

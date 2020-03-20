@@ -1,7 +1,7 @@
 package users.alessandro;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.load.files.FileInfos;
+import de.embl.cba.bdp2.open.files.FileInfos;
 import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.BigDataProcessor2;
@@ -19,7 +19,7 @@ public class OpenAndSaveLargeStacks202002
 		BigDataProcessor2.showImage( image );
 
 		final SavingSettings savingSettings = SavingSettings.getDefaults();
-		savingSettings.fileType = SavingSettings.FileType.TIFF_STACKS;
+		savingSettings.fileType = SavingSettings.FileType.TIFF_VOLUMES;
 		savingSettings.numIOThreads = 1;
 		savingSettings.numProcessingThreads = 1;
 		savingSettings.voxelSpacing = image.getVoxelSpacing();

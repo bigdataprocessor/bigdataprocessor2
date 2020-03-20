@@ -1,8 +1,8 @@
 package explore;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.load.files.FileInfos;
-import de.embl.cba.bdp2.load.CachedCellImgReader;
+import de.embl.cba.bdp2.open.files.FileInfos;
+import de.embl.cba.bdp2.open.CachedCellImgReader;
 import de.embl.cba.bdp2.splitviewmerge.SplitViewMergeDialog;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.type.NativeType;

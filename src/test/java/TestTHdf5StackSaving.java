@@ -1,7 +1,7 @@
-import de.embl.cba.bdp2.load.CachedCellImgReader;
+import de.embl.cba.bdp2.open.CachedCellImgReader;
 import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.BigDataProcessor2;
-import de.embl.cba.bdp2.load.files.FileInfos;
+import de.embl.cba.bdp2.open.files.FileInfos;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.cache.img.CachedCellImg;
@@ -29,7 +29,7 @@ public class TestTHdf5StackSaving
 		 * Save as HDF5_STACKS Stacks
          */
         final SavingSettings defaults = SavingSettings.getDefaults();
-        defaults.fileType = SavingSettings.FileType.HDF5_STACKS;
+        defaults.fileType = SavingSettings.FileType.HDF5_VOLUMES;
         defaults.numIOThreads = 3;
         defaults.voxelSpacing =imageViewer.getImage().getVoxelSpacing();
         defaults.voxelUnit = imageViewer.getImage().getVoxelUnit();

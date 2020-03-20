@@ -1,7 +1,7 @@
-package de.embl.cba.bdp2.load;
+package de.embl.cba.bdp2.open;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.load.files.FileInfos;
+import de.embl.cba.bdp2.open.files.FileInfos;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.utils.Utils;
 import net.imglib2.RandomAccessibleInterval;
@@ -14,7 +14,7 @@ import net.imglib2.util.Intervals;
 
 import java.io.File;
 
-import static de.embl.cba.bdp2.load.OpenerExtension.readCroppedPlaneFromTiffIntoImageStack.COMPRESSION_NONE;
+import static de.embl.cba.bdp2.open.OpenerExtension.readCroppedPlaneFromTiffIntoImageStack.COMPRESSION_NONE;
 import static net.imglib2.cache.img.ReadOnlyCachedCellImgOptions.options;
 
 public class CachedCellImgReader

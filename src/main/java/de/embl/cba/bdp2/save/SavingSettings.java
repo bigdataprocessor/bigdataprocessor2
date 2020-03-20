@@ -8,6 +8,10 @@ import net.imglib2.RandomAccessibleInterval;
 public class SavingSettings {
 
     public static final int AVAILABLE_PROCESSORS = Runtime.getRuntime().availableProcessors();
+    public static final String TIFF_PLANES = "Tiff Planes";
+    public static final String TIFF_VOLUMES = "Tiff Volumes";
+    public static final String HDF_5_VOLUMES = "Hdf5 Volumes";
+    public static final String IMARIS_VOLUMES = "Imaris Volumes";
 
     // TODO: remove the image itself from the settings
     public RandomAccessibleInterval rai;
@@ -40,10 +44,10 @@ public class SavingSettings {
     public int numProcessingThreads = 1;
 
 	public enum FileType {
-        TIFF_PLANES("Tiff Planes"),
-        TIFF_STACKS("Tiff Volumes"),
-        HDF5_STACKS("Hdf5 Volumes"),
-        IMARIS_STACKS("Imaris Volumes");
+        TIFF_PLANES( SavingSettings.TIFF_PLANES ),
+        TIFF_VOLUMES( SavingSettings.TIFF_VOLUMES ),
+        HDF5_VOLUMES( HDF_5_VOLUMES ),
+        IMARIS_VOLUMES( SavingSettings.IMARIS_VOLUMES );
 
         private final String text;
         FileType(String s) {

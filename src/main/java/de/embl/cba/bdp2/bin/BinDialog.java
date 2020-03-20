@@ -5,7 +5,6 @@ import bdv.util.BoundedValue;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.record.MacroRecorder;
 import de.embl.cba.bdp2.dialog.AbstractProcessingDialog;
-import de.embl.cba.bdp2.scijava.command.AbstractProcessingCommand;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.type.NativeType;
@@ -20,11 +19,11 @@ import java.util.Arrays;
  * TODO: make only one slider for binning in X and Y
  *
  */
-public class BinningDialog< T extends RealType< T > & NativeType< T > > extends AbstractProcessingDialog< T >
+public class BinDialog< T extends RealType< T > & NativeType< T > > extends AbstractProcessingDialog< T >
 {
 	private long[] span;
 
-	public BinningDialog( final BdvImageViewer< T > viewer )
+	public BinDialog( final BdvImageViewer< T > viewer )
 	{
 		this.inputImage = viewer.getImage();
 		this.viewer = viewer;
@@ -39,7 +38,7 @@ public class BinningDialog< T extends RealType< T > & NativeType< T > > extends 
 	@Override
 	protected void recordMacro()
 	{
-		final MacroRecorder recorder = new MacroRecorder( BinningCommand.COMMAND_NAME, inputImage, outputImage );
+		final MacroRecorder recorder = new MacroRecorder( BinCommand.COMMAND_NAME, inputImage, outputImage );
 
 		recorder.addOption( "binWidthXPixels",  span[ 0 ] );
 		recorder.addOption( "binWidthYPixels",  span[ 0 ] );

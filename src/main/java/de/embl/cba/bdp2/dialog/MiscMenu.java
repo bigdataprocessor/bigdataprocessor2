@@ -6,7 +6,7 @@ import javax.swing.JMenuItem;
 public class MiscMenu extends JMenu {
 
 
-    public MiscMenu( BdvMenus actionListener ) {
+    public MiscMenu( BdpMenus actionListener ) {
         setText( UIDisplayConstants.MISC_MENU );
 
         final JMenuItem imageJViewerItem

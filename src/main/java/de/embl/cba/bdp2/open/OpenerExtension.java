@@ -9,7 +9,7 @@
 * GNU General Public License for more details.
 */
 
-package de.embl.cba.bdp2.load;
+package de.embl.cba.bdp2.open;
 
 import ch.systemsx.cisd.base.mdarray.MDByteArray;
 import ch.systemsx.cisd.base.mdarray.MDShortArray;
@@ -17,7 +17,7 @@ import ch.systemsx.cisd.hdf5.HDF5DataSetInformation;
 import ch.systemsx.cisd.hdf5.HDF5DataTypeInformation;
 import ch.systemsx.cisd.hdf5.HDF5Factory;
 import ch.systemsx.cisd.hdf5.IHDF5Reader;
-import de.embl.cba.bdp2.load.files.SerializableFileInfo;
+import de.embl.cba.bdp2.open.files.SerializableFileInfo;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.utils.Point3D;
 import de.embl.cba.bdp2.utils.Utils;

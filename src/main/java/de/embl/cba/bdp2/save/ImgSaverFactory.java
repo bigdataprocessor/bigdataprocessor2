@@ -9,15 +9,15 @@ public class ImgSaverFactory {
         {
             return new SaveTiffAsPlanes(savingSettings, es);
         }
-        else if (savingSettings.fileType.equals(SavingSettings.FileType.TIFF_STACKS))
+        else if (savingSettings.fileType.equals(SavingSettings.FileType.TIFF_VOLUMES ))
         {
             return new SaveTiffAsStacks(savingSettings, es);
         }
-        else if (savingSettings.fileType.equals(SavingSettings.FileType.HDF5_STACKS))
+        else if (savingSettings.fileType.equals(SavingSettings.FileType.HDF5_VOLUMES ))
         {
             return new SaveHDF5AsStacks(savingSettings, es);
         }
-        else if (savingSettings.fileType.equals(SavingSettings.FileType.IMARIS_STACKS))
+        else if (savingSettings.fileType.equals(SavingSettings.FileType.IMARIS_VOLUMES ))
         {
             return new SaveImarisAsStacks(savingSettings, es);
         }

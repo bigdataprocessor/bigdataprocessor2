@@ -10,9 +10,9 @@ import net.imglib2.FinalInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
-public class CroppingDialog< R extends RealType< R > & NativeType< R > >
+public class CropDialog< R extends RealType< R > & NativeType< R > >
 {
-	public CroppingDialog( BdvImageViewer< R > viewer )
+	public CropDialog( BdvImageViewer< R > viewer )
 	{
 		FinalInterval intervalXYZCT = viewer.getVoxelIntervalXYZCTDialog( true );
 
@@ -28,13 +28,13 @@ public class CroppingDialog< R extends RealType< R > & NativeType< R > >
 			final BdvImageViewer< R > newViewer = new BdvImageViewer<>( outputImage );
 			newViewer.setDisplaySettings( viewer.getDisplaySettings() );
 
-			recordAsMacro( inputImage, outputImage, intervalXYZCT );
+			recordMacro( inputImage, outputImage, intervalXYZCT );
 		}
 	}
 
-	private void recordAsMacro( Image< R > inputImage, Image< R > outputImage, FinalInterval intervalXYZCT )
+	private void recordMacro( Image< R > inputImage, Image< R > outputImage, FinalInterval intervalXYZCT )
 	{
-		final MacroRecorder< R > recorder = new MacroRecorder<>( CroppingCommand.COMMAND_NAME, inputImage, outputImage, AbstractProcessingCommand.SHOW_IN_NEW_VIEWER );
+		final MacroRecorder< R > recorder = new MacroRecorder<>( CropCommand.COMMAND_NAME, inputImage, outputImage, AbstractProcessingCommand.SHOW_IN_NEW_VIEWER );
 		
 		recorder.addOption( "minX", intervalXYZCT.min(0 ) );
 		recorder.addOption( "minY", intervalXYZCT.min(1 ) );

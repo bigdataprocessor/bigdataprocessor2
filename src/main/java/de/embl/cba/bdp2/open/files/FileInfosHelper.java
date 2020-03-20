@@ -1,6 +1,6 @@
-package de.embl.cba.bdp2.load.files;
+package de.embl.cba.bdp2.open.files;
 
-import de.embl.cba.bdp2.load.FastTiffDecoder;
+import de.embl.cba.bdp2.open.FastTiffDecoder;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.utils.Utils;
 

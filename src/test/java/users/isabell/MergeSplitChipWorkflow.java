@@ -1,7 +1,7 @@
 package users.isabell;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.load.files.FileInfos;
+import de.embl.cba.bdp2.open.files.FileInfos;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.splitviewmerge.SplitViewMerger;
 import de.embl.cba.bdp2.save.SavingSettings;
@@ -32,7 +32,7 @@ public class MergeSplitChipWorkflow
         double voxelSpacingMicrometerZ = 1.04;
 
         final SavingSettings savingSettings = SavingSettings.getDefaults();
-        savingSettings.fileType = SavingSettings.FileType.TIFF_STACKS;
+        savingSettings.fileType = SavingSettings.FileType.TIFF_VOLUMES;
         savingSettings.numIOThreads = Runtime.getRuntime().availableProcessors();
 
         final SplitViewMerger merger = new SplitViewMerger();

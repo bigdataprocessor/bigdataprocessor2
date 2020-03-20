@@ -17,7 +17,7 @@ import net.imglib2.view.Views;
 
 import java.util.List;
 
-import static de.embl.cba.bdp2.load.CachedCellImgReader.MAX_ARRAY_LENGTH;
+import static de.embl.cba.bdp2.open.CachedCellImgReader.MAX_ARRAY_LENGTH;
 import static de.embl.cba.bdp2.utils.DimensionOrder.*;
 
 public class IntervalImageViews

@@ -1,7 +1,7 @@
 package example;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.load.files.FileInfos;
+import de.embl.cba.bdp2.open.files.FileInfos;
 import de.embl.cba.bdp2.bin.Binner;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.BigDataProcessor2;
@@ -34,7 +34,7 @@ public class SaveSingleChanneHdf5SeriesAsImaris
         //   bdp.showImage( bin );
 
         final SavingSettings savingSettings = SavingSettings.getDefaults();
-        savingSettings.fileType = SavingSettings.FileType.IMARIS_STACKS;
+        savingSettings.fileType = SavingSettings.FileType.IMARIS_VOLUMES;
         savingSettings.numIOThreads = 1;
         savingSettings.numProcessingThreads = 4;
         savingSettings.saveVolumes = true;
