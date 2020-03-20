@@ -12,7 +12,7 @@ import org.scijava.plugin.Plugin;
 import java.util.List;
 
 @Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>Process>BDP2_ChromaticShift...")
-public class ChromaticShiftCommand< R extends RealType< R > & NativeType< R > > extends AbstractProcessingCommand implements Command
+public class ChromaticShiftCommand< R extends RealType< R > & NativeType< R > > extends AbstractProcessingCommand< R >
 {
     @Parameter(label = "Shifts X_C0,Y_C0,Z_C0;X_C1,Y_C1,Z_C1;... [pixels]")
     String shifts = "0,0,0;0,0,0";

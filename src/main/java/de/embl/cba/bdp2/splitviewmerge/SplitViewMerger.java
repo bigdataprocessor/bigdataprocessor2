@@ -62,14 +62,14 @@ public class SplitViewMerger
 
 		for ( Interval intervalXYZ : intervalsXYZ )
 		{
-		 	Logger.log( "Split Image Merging Interval [X, Y, Z]: " + intervalXYZ );
+//		 	Logger.log( "Split Image Merging Interval [X, Y, Z]: " + intervalXYZ );
 
 			final FinalInterval interval5D = intervalXYZasXYZCT( raiXYZCT, intervalXYZ );
 
 			final IntervalView crop =
 					Views.zeroMin(
 							Views.interval(
-									raiXYZCT,
+									Views.extendZero( raiXYZCT ),
 									interval5D ) );
 
 			crops.add( Views.hyperSlice( crop, C, channel ) );

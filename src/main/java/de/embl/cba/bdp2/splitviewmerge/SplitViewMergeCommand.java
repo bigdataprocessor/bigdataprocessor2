@@ -10,9 +10,11 @@ import org.scijava.plugin.Plugin;
 
 import java.util.List;
 
-@Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>BDP2_SplitViewMerge..." )
+@Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>" + SplitViewMergeCommand.COMMAND_NAME )
 public class SplitViewMergeCommand< R extends RealType< R > & NativeType< R > > extends AbstractProcessingCommand< R >
 {
+    public static final String COMMAND_NAME = "BDP2_SplitViewMerge...";
+
     @Parameter(label = "Regions [ minX, minY, sizeX, sizeY, channel; minX, ... ]")
     public String intervalsString = "896, 46, 1000, 1000, 0; 22, 643, 1000, 1000, 0";
 

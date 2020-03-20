@@ -48,6 +48,7 @@ public class SplitViewMergeDialog< R extends RealType< R > & NativeType< R > > e
 
 		initIntervals();
 		showIntervalOverlays();
+		showMerge();
 		showDialog( createContent() );
 	}
 
@@ -64,7 +65,7 @@ public class SplitViewMergeDialog< R extends RealType< R > & NativeType< R > > e
 	@Override
 	protected void recordMacro()
 	{
-		final MacroRecorder recorder = new MacroRecorder( "BDP2_SplitViewMerge...", inputImage, outputImage );
+		final MacroRecorder recorder = new MacroRecorder( SplitViewMergeCommand.COMMAND_NAME, inputImage, outputImage );
 
 		ArrayList< long[] > intervals = intervals3dAsLongsList();
 
@@ -106,13 +107,12 @@ public class SplitViewMergeDialog< R extends RealType< R > & NativeType< R > > e
 
 		addRegionSliders();
 
-		final JButton showMerge = new JButton( "Preview" );
-		panel.add( showMerge );
-
-		showMerge.addActionListener( e -> {
-			showOrUpdateMerge( );
-		} );
-
+//		final JButton showMerge = new JButton( "Preview" );
+//		panel.add( showMerge );
+//
+//		showMerge.addActionListener( e -> {
+//			updateMerge( );
+//		} );
 //		final JButton optimise = new JButton( "Optimise Region Centres" );
 //		panel.add( optimise );
 //		optimise.addActionListener( e -> {
@@ -143,7 +143,7 @@ public class SplitViewMergeDialog< R extends RealType< R > & NativeType< R > > e
 		}
 	}
 
-	private void showOrUpdateMerge( )
+	private void showMerge()
 	{
 		final RandomAccessibleInterval< R > merge =
 				SplitViewMerger.mergeIntervalsXYZ(
@@ -161,8 +161,6 @@ public class SplitViewMergeDialog< R extends RealType< R > & NativeType< R > > e
 			outputImageViewer = BigDataProcessor2.showImage( outputImage );
 		else
 			outputImageViewer.replaceImage( outputImage, false, false );
-
-		//viewer.showImageInNewWindow( outputImage );
 	}
 
 	private void addRegionSliders()
@@ -349,6 +347,7 @@ public class SplitViewMergeDialog< R extends RealType< R > & NativeType< R > > e
 			for ( int c = 0; c < 2; c++ )
 				updateInterval( c );
 
+			showMerge();
 			viewer.repaint();
 		}
 

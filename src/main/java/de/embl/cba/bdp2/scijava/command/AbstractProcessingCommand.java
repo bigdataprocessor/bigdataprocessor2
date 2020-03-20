@@ -6,9 +6,10 @@ import de.embl.cba.bdp2.service.ImageService;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
+import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 
-public class AbstractProcessingCommand< R extends RealType< R > & NativeType< R > >
+public abstract class AbstractProcessingCommand< R extends RealType< R > & NativeType< R > > implements Command
 {
     public static final String SHOW_IN_NEW_VIEWER = "Show in new viewer";
     public static final String REPLACE_IN_VIEWER = "Replace input image";

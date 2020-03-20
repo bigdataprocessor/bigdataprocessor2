@@ -12,7 +12,7 @@ import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
 @Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>Process>BDP2_Crop...")
-public class CroppingCommand< R extends RealType< R > & NativeType< R > > extends AbstractProcessingCommand implements Command
+public class CroppingCommand< R extends RealType< R > & NativeType< R > > extends AbstractProcessingCommand< R >
 {
     @Parameter(label = "Min X [pixel]", min = "0")
     long minX = 0;
