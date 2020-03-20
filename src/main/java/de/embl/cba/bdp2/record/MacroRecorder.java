@@ -10,8 +10,6 @@ import static de.embl.cba.bdp2.scijava.command.AbstractProcessingCommand.*;
 public class MacroRecorder< R extends RealType< R > & NativeType< R > >
 {
 	private final String commandName;
-	private final Image< R > inputImage;
-	private final Image< R > outputImage;
 	private String options;
 
 	public MacroRecorder( String commandName, Image< R > inputImage, Image< R > outputImage )
@@ -22,10 +20,7 @@ public class MacroRecorder< R extends RealType< R > & NativeType< R > >
 	public MacroRecorder( String commandName, Image< R > inputImage, Image< R > outputImage, String outputImageHandling )
 	{
 		this.commandName = commandName;
-		this.inputImage = inputImage;
-		this.outputImage = outputImage;
-
-		options = "";
+		this.options = "";
 
 		addOption( INPUT_IMAGE_PARAMETER, inputImage.getName() );
 		addOption( OUTPUT_IMAGE_NAME_PARAMETER, outputImage.getName() );

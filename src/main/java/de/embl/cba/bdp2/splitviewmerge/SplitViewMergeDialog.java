@@ -6,7 +6,7 @@ import bdv.tools.brightness.SliderPanel;
 import bdv.util.BoundedValue;
 import bdv.util.ModifiableInterval;
 import bdv.viewer.ViewerPanel;
-import de.embl.cba.bdp2.image.Image;
+import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.dialog.AbstractProcessingDialog;
 import de.embl.cba.bdp2.record.MacroRecorder;
 import de.embl.cba.bdp2.utils.Utils;
@@ -39,14 +39,26 @@ public class SplitViewMergeDialog< R extends RealType< R > & NativeType< R > > e
 	private SelectionUpdateListener updateListener;
 	private JPanel panel;
 	private ArrayList< ModifiableInterval > intervals3D;
+	private BdvImageViewer outputImageViewer;
 
 	public SplitViewMergeDialog( final BdvImageViewer< R > viewer )
 	{
 		this.viewer = viewer;
 		this.inputImage = viewer.getImage();
 
-		initSelectedRegions();
+		initIntervals();
+		showIntervalOverlays();
 		showDialog( createContent() );
+	}
+
+	public void showIntervalOverlays()
+	{
+		for ( ModifiableInterval interval : intervals3D )
+		{
+			addOverlayToViewer( interval );
+		}
+
+		viewer.repaint();
 	}
 
 	@Override
@@ -77,12 +89,14 @@ public class SplitViewMergeDialog< R extends RealType< R > & NativeType< R > > e
 		return intervals;
 	}
 
-	public void initSelectedRegions( )
+	public void initIntervals()
 	{
 		intervals3D = new ArrayList<>();
 		final int margin = ( int ) ( viewer.getImage().getRai().dimension( 0 ) * 0.01 );
 		for ( int c = 0; c < 2; c++ )
-			intervals3D.add( showRegionSelectionOverlay( c, margin ) );
+		{
+			intervals3D.add( createInterval( c, margin ) );
+		}
 	}
 
 	private JPanel createContent()
@@ -94,6 +108,7 @@ public class SplitViewMergeDialog< R extends RealType< R > & NativeType< R > > e
 
 		final JButton showMerge = new JButton( "Preview" );
 		panel.add( showMerge );
+
 		showMerge.addActionListener( e -> {
 			showOrUpdateMerge( );
 		} );
@@ -137,7 +152,17 @@ public class SplitViewMergeDialog< R extends RealType< R > & NativeType< R > > e
 						CHANNEL ); // TODO: Could be different channel?
 
 		outputImage = inputImage.newImage( merge );
-		viewer.showImageInNewWindow( outputImage );
+		showOutputImage();
+	}
+
+	private void showOutputImage()
+	{
+		if ( outputImageViewer == null )
+			outputImageViewer = BigDataProcessor2.showImage( outputImage );
+		else
+			outputImageViewer.replaceImage( outputImage, false, false );
+
+		//viewer.showImageInNewWindow( outputImage );
 	}
 
 	private void addRegionSliders()
@@ -190,7 +215,7 @@ public class SplitViewMergeDialog< R extends RealType< R > & NativeType< R > > e
 		return ( int ) interval.dimension( d );
 	}
 
-	private ModifiableInterval showRegionSelectionOverlay( int c, int margin )
+	private ModifiableInterval createInterval( int c, int margin )
 	{
 		final RandomAccessibleInterval rai = viewer.getImage().getRai();
 
@@ -198,6 +223,11 @@ public class SplitViewMergeDialog< R extends RealType< R > & NativeType< R > > e
 
 		ModifiableInterval modifiableInterval3D = new ModifiableInterval( interval3D );
 
+		return modifiableInterval3D;
+	}
+
+	private void addOverlayToViewer( ModifiableInterval modifiableInterval3D )
+	{
 		final TransformedBoxOverlay transformedBoxOverlay =
 				new TransformedBoxOverlay( new TransformedBox()
 				{
@@ -225,9 +255,6 @@ public class SplitViewMergeDialog< R extends RealType< R > & NativeType< R > > e
 				.getBdvHandle().getViewerPanel();
 		viewerPanel.getDisplay().addOverlayRenderer(transformedBoxOverlay);
 		viewerPanel.addRenderTransformListener(transformedBoxOverlay);
-
-		return modifiableInterval3D;
-
 	}
 
 	private FinalInterval getInitial3DInterval(

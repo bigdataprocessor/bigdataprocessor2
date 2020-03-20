@@ -11,7 +11,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
-public abstract class AbstractProcessingDialog< R extends RealType< R > & NativeType< R > > extends AbstractOkCancelDialog< R >
+public abstract class AbstractProcessingDialog< R extends RealType< R > & NativeType< R > > extends AbstractOkCancelDialog
 {
 	protected BdvImageViewer< R > viewer;
 	protected Image< R > inputImage;

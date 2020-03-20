@@ -11,7 +11,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
-public abstract class AbstractOkCancelDialog< R extends RealType< R > & NativeType< R > > extends JDialog
+public abstract class AbstractOkCancelDialog extends JDialog
 {
 	protected final AbstractOkCancelDialog.OkCancelPanel buttons;
 	protected JPanel panel;
@@ -48,7 +48,7 @@ public abstract class AbstractOkCancelDialog< R extends RealType< R > & NativeTy
 				120, 10);
 		setResizable( false );
 		pack();
-		setVisible( true );
+		SwingUtilities.invokeLater( () -> setVisible( true ) );
 	}
 
 	public static class OkCancelPanel extends JPanel
