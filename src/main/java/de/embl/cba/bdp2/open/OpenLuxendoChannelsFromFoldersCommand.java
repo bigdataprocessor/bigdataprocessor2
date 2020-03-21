@@ -20,7 +20,7 @@ import java.io.File;
  *
  * @param <R>
  */
-@Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>Open>BDP2_OpenLuxendoChannelsFromFolders...")
+@Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>Open>Open Luxendo Volumes From Channel Folders...")
 public class OpenLuxendoChannelsFromFoldersCommand< R extends RealType< R > & NativeType< R > > implements Command {
 
     @Parameter(label = "Image data directory (must contain channel sub-folders)", style = "directory")

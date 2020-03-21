@@ -54,7 +54,7 @@ public class TestSaveSingleChannel16BitTiffSeriesAsImarisVolumes
         final File testProjectionsFile = new File( savingSettings.projectionsFilePathStump + "--xyz-max-projection--C00--T00002.tif" );
         if ( testProjectionsFile.exists() ) testProjectionsFile.delete();
 
-        BigDataProcessor2.saveImageAndWaitUntilDone( savingSettings, image );
+        BigDataProcessor2.saveImageAndWaitUntilDone( image, savingSettings );
 
         assertTrue( testVolumeFile.exists() );
         assertTrue( testProjectionsFile.exists() );

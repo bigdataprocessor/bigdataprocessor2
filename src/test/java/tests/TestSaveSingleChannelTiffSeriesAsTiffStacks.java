@@ -54,7 +54,7 @@ public class TestSaveSingleChannelTiffSeriesAsTiffStacks
         savingSettings.projectionsFilePathStump = outputDirectory  + "/projection";
 
 
-        BigDataProcessor2.saveImageAndWaitUntilDone( savingSettings, image );
+        BigDataProcessor2.saveImageAndWaitUntilDone( image, savingSettings );
 
         final File testVolumeFile = new File( savingSettings.volumesFilePathStump + "--C00--T00000.tif" );
         final File testProjectionsFile = new File( savingSettings.projectionsFilePathStump + "--xyz-max-projection--C00--T00002.tif" );

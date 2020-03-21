@@ -11,7 +11,7 @@ import org.scijava.plugin.Plugin;
 @Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>Process>" + BinCommand.COMMAND_NAME )
 public class BinCommand< R extends RealType< R > & NativeType< R > > extends AbstractProcessingCommand implements Command
 {
-    public static final String COMMAND_NAME = "BDP2_Bin...";
+    public static final String COMMAND_NAME = "BDP Bin...";
 
     @Parameter(label = "Bin width X [pixels]", min = "1")
     int binWidthXPixels = 1;

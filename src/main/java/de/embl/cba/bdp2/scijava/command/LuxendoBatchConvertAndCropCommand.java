@@ -127,7 +127,7 @@ public class LuxendoBatchConvertAndCropCommand< R extends RealType< R > & Native
                 savingSettings.saveProjections = doProjections;
                 savingSettings.projectionsFilePathStump =
                         outputDirectoryStump + "-crop-projections/projection";
-                BigDataProcessor2.saveImageAndWaitUntilDone( savingSettings, crop );
+                BigDataProcessor2.saveImageAndWaitUntilDone( crop, savingSettings);
             }
         }
 

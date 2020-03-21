@@ -44,7 +44,7 @@ public class SaveSingleChanneHdf5SeriesAsTiffStacks
         savingSettings.saveVolumes = true;
         savingSettings.projectionsFilePathStump = "/Users/tischer/Desktop/stack_0_channel_0-asTIFF-projections/im";
 
-        BigDataProcessor2.saveImageAndWaitUntilDone( savingSettings, binnedImage );
+        BigDataProcessor2.saveImageAndWaitUntilDone( binnedImage, savingSettings );
 
     }
 

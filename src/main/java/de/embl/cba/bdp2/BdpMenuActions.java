@@ -1,12 +1,14 @@
-package de.embl.cba.bdp2.dialog;
+package de.embl.cba.bdp2;
 
-import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.bin.BinDialog;
 import de.embl.cba.bdp2.calibrate.CalibrationDialog;
 import de.embl.cba.bdp2.convert.UnsignedByteTypeConversionDialog;
 import de.embl.cba.bdp2.crop.CropDialog;
+import de.embl.cba.bdp2.dialog.MiscMenu;
+import de.embl.cba.bdp2.dialog.Utils;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.save.SaveDialog;
+import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.splitviewmerge.SplitViewMergeDialog;
 import de.embl.cba.bdp2.shift.ChromaticShiftDialog;
 import de.embl.cba.bdp2.register.RegisteredViews;
@@ -24,16 +26,15 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BdpMenus
-        extends JMenu implements ActionListener {
+public class BdpMenuActions extends JMenu implements ActionListener {
 
     //private final ImageMenu imageMenu;
     private final MiscMenu miscMenu;
     private final BdpMenu bdpMenu;
     private BdvImageViewer viewer;
 
-    public BdpMenus(){
-        //imageMenu = new ImageMenu(this);
+    public BdpMenuActions()
+    {
         bdpMenu = new BdpMenu(this);
         miscMenu = new MiscMenu(this);
     }
@@ -44,7 +45,6 @@ public class BdpMenus
 
     public List< JMenu > getMenus(){ //Add new menu items here.
         List<JMenu> jMenuList = new ArrayList<>();
-        //jMenuList.add( imageMenu );
         jMenuList.add( bdpMenu );
         jMenuList.add( miscMenu );
         return jMenuList;
@@ -54,22 +54,38 @@ public class BdpMenus
     public synchronized void actionPerformed(ActionEvent e)
     {
         if (e.getActionCommand().equalsIgnoreCase(
-                UIDisplayConstants.SAVE_AS_MENU_ITEM ))
+                BdpMenu.SAVE_AS_IMARIS_VOLUMES_MENU_ITEM ))
         {
             BigDataProcessor2.generalThreadPool.submit(() -> {
-                SaveDialog saveDialog = new SaveDialog( viewer );
+                SaveDialog saveDialog = new SaveDialog( viewer, SavingSettings.FileType.IMARIS_VOLUMES );
                 saveDialog.setVisible(true);
             });
         }
         else if (e.getActionCommand().equalsIgnoreCase(
-                UIDisplayConstants.CALIBRATE_MENU_ITEM ))
+                BdpMenu.SAVE_AS_TIFF_VOLUMES_MENU_ITEM ))
+        {
+            BigDataProcessor2.generalThreadPool.submit(() -> {
+                SaveDialog saveDialog = new SaveDialog( viewer, SavingSettings.FileType.TIFF_VOLUMES );
+                saveDialog.setVisible(true);
+            });
+        }
+        else if (e.getActionCommand().equalsIgnoreCase(
+                BdpMenu.SAVE_AS_TIFF_PLANES_MENU_ITEM ))
+        {
+            BigDataProcessor2.generalThreadPool.submit(() -> {
+                SaveDialog saveDialog = new SaveDialog( viewer, SavingSettings.FileType.TIFF_PLANES );
+                saveDialog.setVisible(true);
+            });
+        }
+        else if (e.getActionCommand().equalsIgnoreCase(
+                BdpMenu.CALIBRATE_MENU_ITEM ))
         {
             BigDataProcessor2.generalThreadPool.submit(() -> {
                 new CalibrationDialog< >( viewer );
             });
         }
         else if (e.getActionCommand().equalsIgnoreCase(
-                UIDisplayConstants.OBLIQUE_MENU_ITEM ))
+                BdpMenu.OBLIQUE_MENU_ITEM ))
         {
             BigDataProcessor2.generalThreadPool.submit(() -> {
                 ShearMenuDialog shearMenuDialog = new ShearMenuDialog( viewer );
@@ -77,14 +93,14 @@ public class BdpMenus
             });
         }
         else if (e.getActionCommand().equalsIgnoreCase(
-        		UIDisplayConstants.APPLY_TRACK_MENU_ITEM ))
+        		BdpMenu.APPLY_TRACK_MENU_ITEM ))
         {
             BigDataProcessor2.generalThreadPool.submit(() -> {
                 new ApplyTrackDialog( viewer );
             });
         }
         else if (e.getActionCommand().equalsIgnoreCase(
-        		UIDisplayConstants.REGISTER_VOLUME_SIFT_MENU_ITEM ))
+        		BdpMenu.REGISTER_VOLUME_SIFT_MENU_ITEM ))
         {
             BigDataProcessor2.generalThreadPool.submit(() ->
 			{
@@ -94,7 +110,7 @@ public class BdpMenus
             });
         }
         else if (e.getActionCommand().equalsIgnoreCase(
-        		UIDisplayConstants.REGISTER_MOVIE_SIFT_MENU_ITEM ))
+        		BdpMenu.REGISTER_MOVIE_SIFT_MENU_ITEM ))
         {
             BigDataProcessor2.generalThreadPool.submit(() -> {
                 Integer channel = Utils.getChannel( viewer );
@@ -103,7 +119,7 @@ public class BdpMenus
             });
         }
         else if (e.getActionCommand().equalsIgnoreCase(
-        		UIDisplayConstants.REGISTER_MOVIE_PHASE_CORRELATION_MENU_ITEM ))
+        		BdpMenu.REGISTER_MOVIE_PHASE_CORRELATION_MENU_ITEM ))
         {
             BigDataProcessor2.generalThreadPool.submit(() -> {
                 Integer channel = Utils.getChannel( viewer );
@@ -112,14 +128,14 @@ public class BdpMenus
             });
         }
         else if(e.getActionCommand().equalsIgnoreCase(
-        		UIDisplayConstants.CROP_MENU_ITEM ))
+        		BdpMenu.CROP_MENU_ITEM ))
         {
         	new Thread( () ->  {
         	    new CropDialog<>( viewer );
             }).start();
         }
         else if(e.getActionCommand().equalsIgnoreCase(
-        		UIDisplayConstants.IMAGEJ_VIEW_MENU_ITEM ))
+        		BdpMenu.IMAGEJ_VIEW_MENU_ITEM ))
         {
             new Thread( () -> {
                 // TODO:
@@ -132,7 +148,7 @@ public class BdpMenus
             }).start();
         }
         else if(e.getActionCommand().equalsIgnoreCase(
-                UIDisplayConstants.EIGHT_BIT_CONVERSION_MENU_ITEM ))
+                BdpMenu.EIGHT_BIT_CONVERSION_MENU_ITEM ))
         {
             BigDataProcessor2.generalThreadPool.submit(() ->
 			{
@@ -140,7 +156,7 @@ public class BdpMenus
             });
         }
         else if(e.getActionCommand().equalsIgnoreCase(
-                UIDisplayConstants.BINNING_MENU_ITEM ))
+                BdpMenu.BINNING_MENU_ITEM ))
         {
             BigDataProcessor2.generalThreadPool.submit(() ->
             {
@@ -148,7 +164,7 @@ public class BdpMenus
             });
         }
         else if(e.getActionCommand().equalsIgnoreCase(
-            UIDisplayConstants.CHROMATIC_SHIFT_CORRECTION_MENU_ITEM ))
+            BdpMenu.CHROMATIC_SHIFT_CORRECTION_MENU_ITEM ))
         {
             BigDataProcessor2.generalThreadPool.submit(() ->
             {
@@ -156,7 +172,7 @@ public class BdpMenus
             });
         }
         else if(e.getActionCommand().equalsIgnoreCase(
-                    UIDisplayConstants.SPLIT_VIEW_MENU_ITEM ))
+                    BdpMenu.SPLIT_VIEW_MENU_ITEM ))
         {
                 BigDataProcessor2.generalThreadPool.submit(() -> {
                     // TODO: Make Command
@@ -164,7 +180,7 @@ public class BdpMenus
                 });
         }
         else if(e.getActionCommand().equalsIgnoreCase(
-                UIDisplayConstants.CONFIGURE_LOGGING_MENU_ITEM ))
+                BdpMenu.CONFIGURE_LOGGING_MENU_ITEM ))
         {
             BigDataProcessor2.generalThreadPool.submit(() -> {
                 Logger.showLoggingLevelDialog();

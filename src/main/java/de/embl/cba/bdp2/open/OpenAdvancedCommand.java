@@ -21,7 +21,7 @@ import java.io.File;
  *
  * @param <R>
  */
-@Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>Open>BDP2_OpenAdvanced...")
+@Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>Open>Open Advanced...")
 public class OpenAdvancedCommand< R extends RealType< R > & NativeType< R > > implements Command {
 
     @Parameter(label = "Image data directory", style = "directory")

@@ -10,7 +10,7 @@ import de.embl.cba.bdp2.service.BdvService;
 import de.embl.cba.bdp2.service.ImageService;
 import de.embl.cba.bdp2.track.ThresholdFloodFillOverlapTracker;
 import de.embl.cba.bdp2.track.Track;
-import de.embl.cba.bdp2.dialog.BdpMenus;
+import de.embl.cba.bdp2.BdpMenuActions;
 import de.embl.cba.bdp2.dialog.DisplaySettings;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.volatiles.VolatileCachedCellImg;
@@ -54,7 +54,7 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
 
         show( autoContrast );
 
-        this.addMenus( new BdpMenus() );
+        this.addMenus( new BdpMenuActions() );
 
         this.installBehaviours( );
     }
@@ -191,17 +191,19 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
         }
     }
 
-    public void addMenus( BdpMenus menus ) {
-
+    public void addMenus( BdpMenuActions menus )
+    {
         menus.setViewer(this);
+
+        final BdvHandleFrame bdvHandleFrame = ( BdvHandleFrame ) this.bdvHandle;
+        final JMenuBar bdvMenuBar = bdvHandleFrame.getBigDataViewer().getViewerFrame().getJMenuBar();
+
         for ( JMenu menu : menus.getMenus() )
         {
-            ((BdvHandleFrame) this.bdvStackSource.getBdvHandle())
-                    .getBigDataViewer().getViewerFrame().getJMenuBar().add((menu));
+            bdvMenuBar.add( menu );
         }
 
-        ((BdvHandleFrame) this.bdvStackSource.getBdvHandle())
-                .getBigDataViewer().getViewerFrame().getJMenuBar().updateUI();
+        bdvMenuBar.updateUI();
     }
 
     public void setDisplayRange( double min, double max, int channel )

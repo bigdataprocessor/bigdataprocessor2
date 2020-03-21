@@ -53,7 +53,7 @@ public class TestSaveSingleChannelTiffSeriesAsLZWTiffStacks
         final File testVolumeFile = new File( savingSettings.volumesFilePathStump + "--C00--T00000.ome.tif" );
         if ( testVolumeFile.exists() ) testVolumeFile.delete();
 
-        BigDataProcessor2.saveImageAndWaitUntilDone( savingSettings, image );
+        BigDataProcessor2.saveImageAndWaitUntilDone( image, savingSettings );
 
         assertTrue( testVolumeFile.exists() );
     }

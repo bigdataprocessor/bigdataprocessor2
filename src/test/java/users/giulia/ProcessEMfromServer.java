@@ -54,7 +54,7 @@ public class ProcessEMfromServer
 			savingSettings.volumesFilePathStump =
 					"/Users/tischer/Desktop/giulia-zlib/plane";
 			savingSettings.compression = SavingSettings.COMPRESSION_LZW;
-			BigDataProcessor2.saveImageAndWaitUntilDone( savingSettings, convert );
+			BigDataProcessor2.saveImageAndWaitUntilDone( convert, savingSettings );
 		}
 
 		System.out.println("Done.");

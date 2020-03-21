@@ -44,7 +44,7 @@ public class SaveSingleChanneHdf5SeriesAsImaris
 
 
 
-        BigDataProcessor2.saveImageAndWaitUntilDone( savingSettings, binnedImage );
+        BigDataProcessor2.saveImageAndWaitUntilDone( binnedImage, savingSettings );
 
     }
 

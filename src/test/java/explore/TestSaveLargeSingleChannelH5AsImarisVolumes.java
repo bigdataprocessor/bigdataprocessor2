@@ -48,7 +48,7 @@ public class TestSaveLargeSingleChannelH5AsImarisVolumes
 
 //        if ( testProjectionsFile.exists() ) testProjectionsFile.delete();
 
-        BigDataProcessor2.saveImageAndWaitUntilDone( savingSettings, image );
+        BigDataProcessor2.saveImageAndWaitUntilDone( image, savingSettings );
 
         assertTrue( testVolumeFile.exists() );
 

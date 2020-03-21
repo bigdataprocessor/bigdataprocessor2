@@ -20,7 +20,7 @@ import java.io.File;
  *
  * @param <R>
  */
-@Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>Open>BDP2_OpenEMTiffPlanes...")
+@Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>Open>Open EM Tiff Planes...")
 public class OpenEMTiffPlanesCommand< R extends RealType< R > & NativeType< R > > implements Command {
 
     @Parameter(label = "Image data directory", style = "directory")

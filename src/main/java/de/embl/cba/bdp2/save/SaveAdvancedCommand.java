@@ -22,7 +22,7 @@ import java.io.File;
 @Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>Save>" + SaveAdvancedCommand.COMMAND_NAME )
 public class SaveAdvancedCommand< R extends RealType< R > & NativeType< R > > implements Command
 {
-    public static final String COMMAND_NAME = "BDP2_SaveAdvanced...";
+    public static final String COMMAND_NAME = "BDP Save Advanced...";
 
     @Parameter(label = "Input image name", persist = true)
     protected Image< R > inputImage = ImageService.nameToImage.values().iterator().next();
@@ -30,12 +30,15 @@ public class SaveAdvancedCommand< R extends RealType< R > & NativeType< R > > im
 
     @Parameter(label = "Saving directory", style = "directory")
     File directory;
+    public static String DIRECTORY_PARAMETER = "directory";
 
     @Parameter(label = "Save volumes")
     boolean saveVolumes;
+    public static String SAVE_VOLUMES_PARAMETER = "saveVolumes";
 
     @Parameter(label = "Save projections")
     boolean saveProjections;
+    public static String SAVE_PROJECTIONS_PARAMETER = "saveProjections";
 
     @Parameter(label = "File type", choices =
             {
@@ -44,6 +47,7 @@ public class SaveAdvancedCommand< R extends RealType< R > & NativeType< R > > im
                     SavingSettings.TIFF_PLANES
             })
     String fileType;
+    public static String SAVE_FILE_TYPE_PARAMETER = "fileType";
 
     @Parameter(label = "Tiff compression", choices =
             {
@@ -52,26 +56,23 @@ public class SaveAdvancedCommand< R extends RealType< R > & NativeType< R > > im
                     SavingSettings.COMPRESSION_LZW
             })
     String tiffCompression;
+    public static String TIFF_COMPRESSION_PARAMETER = "tiffCompression";
 
     @Parameter(label = "Number of I/O threads")
     int numIOThreads;
+    public static String NUM_IO_THREADS_PARAMETER = "numIOThreads";
 
     @Parameter(label = "Number of processing threads")
     int numProcessingThreads;
-
+    public static String NUM_PROCESSING_THREADS_PARAMETER = "numProcessingThreads";
 
     public void run()
     {
-        new Thread( () ->
-        {
-            SavingSettings savingSettings = getSavingSettings();
+        SavingSettings savingSettings = getSavingSettings();
 
-            BigDataProcessor2.saveImage(
+        BigDataProcessor2.saveImageAndWaitUntilDone(
                     inputImage,
-                    savingSettings,
-                    new LoggingProgressListener( "Frames saved" ) );
-
-        } ).start();
+                    savingSettings );
     }
 
     private SavingSettings getSavingSettings()

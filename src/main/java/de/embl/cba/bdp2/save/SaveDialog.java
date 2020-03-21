@@ -1,15 +1,14 @@
 package de.embl.cba.bdp2.save;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
-import de.embl.cba.bdp2.crop.CropCommand;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.log.progress.ProgressListener;
 import de.embl.cba.bdp2.record.MacroRecorder;
-import de.embl.cba.bdp2.scijava.command.AbstractProcessingCommand;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import ij.IJ;
-import net.imglib2.FinalInterval;
+import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.RealType;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -17,8 +16,12 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 
-public class SaveDialog extends JFrame implements ActionListener
+public class SaveDialog< R extends RealType< R > & NativeType< R > >  extends JFrame implements ActionListener
 {
+    private final BdvImageViewer viewer;
+    private final Image< R > inputImage;
+    private final SavingSettings.FileType fileType;
+
     private static SavingSettings defaults = SavingSettings.getDefaults();
 
     private static final JCheckBox cbSaveVolume = new JCheckBox("Save Volume data");
@@ -34,12 +37,6 @@ public class SaveDialog extends JFrame implements ActionListener
     private static final JTextField tfVolumesFilePath = new JTextField("", 50);
     private static final JTextField tfProjectionsFilePath = new JTextField("", 50);
 
-    private final
-    JComboBox comboFileTypeForSaving = new JComboBox(new SavingSettings.FileType[]{
-            SavingSettings.FileType.TIFF_VOLUMES,
-//            SavingSettings.FileType.HDF5_STACKS, //TODO: implement
-            SavingSettings.FileType.IMARIS_VOLUMES,
-            SavingSettings.FileType.TIFF_PLANES });
 
     private final String SAVE = "Save";
     protected final JButton save = new JButton(SAVE);
@@ -48,84 +45,115 @@ public class SaveDialog extends JFrame implements ActionListener
     protected final JLabel MESSAGE = new JLabel("");
     protected final String MESSAGE_SAVE_INTERRUPTED ="Saving Interrupted!";
     protected final String MESSAGE_SAVE_FINISHED ="Saving Completed!";
-    protected final JProgressBar progressBar;
-    private final BdvImageViewer viewer;
+    protected JProgressBar progressBar;
+
     private ImgSaver saver;
     private SavingSettings savingSettings;
+    private JPanel mainPanel;
+    private ArrayList< JPanel > panels;
 
-    public SaveDialog( BdvImageViewer viewer ) {
+    public SaveDialog( BdvImageViewer viewer, SavingSettings.FileType fileType )
+    {
         this.viewer = viewer;
+        this.inputImage = viewer.getImage();
+        this.fileType = fileType;
+
+        createDialog();
+    }
+
+
+    public void createDialog()
+    {
         JTabbedPane menu = new JTabbedPane();
-        ArrayList<JPanel> mainPanels = new ArrayList<>();
-        ArrayList<JPanel> panels = new ArrayList<>();
-        int j = 0, k = 0;
-        mainPanels.add(new JPanel());
-        mainPanels.get(k).setLayout(new BoxLayout(mainPanels.get(k), BoxLayout.PAGE_AXIS));
-        cbSaveVolume.setSelected(true);
-        panels.add(new JPanel());
-        panels.get(j).add(new JLabel("File Type:"));
-        panels.get(j).add(comboFileTypeForSaving);
-        mainPanels.get(k).add(panels.get(j++));
+        mainPanel = new JPanel();
+        panels = new ArrayList<>();
+        int panelIndex = 0, mainPanelIndex = 0;
+
+        mainPanel.add(new JPanel());
+        mainPanel.setLayout(new BoxLayout( mainPanel, BoxLayout.PAGE_AXIS));
 
         panels.add(new JPanel());
-        panels.get(j).add(cbSaveVolume);
-        panels.get(j).add(tfVolumesFilePath);
+        panels.get(panelIndex).add(tfVolumesFilePath);
         final JButton volumesPathSelectionButton = new JButton( "Folder" );
         volumesPathSelectionButton.addActionListener( e ->
-            tfVolumesFilePath.setText( IJ.getDirectory( "Volumes" ) ) );
-        panels.get(j).add(volumesPathSelectionButton);
-        mainPanels.get(k).add(panels.get(j++));
+                tfVolumesFilePath.setText( IJ.getDirectory( "Volumes" ) ) );
+        panels.get(panelIndex).add(volumesPathSelectionButton);
+        mainPanel.add( panels.get(panelIndex++));
 
         panels.add(new JPanel());
-        panels.get(j).add(cbSaveProjection);
-        panels.get(j).add(tfProjectionsFilePath);
-        final JButton projectionsPathSelectionButton = new JButton( "Folder" );
-        projectionsPathSelectionButton.addActionListener( e ->
-                tfProjectionsFilePath.setText( IJ.getDirectory( "Projections" ) ) );
-        panels.get(j).add(projectionsPathSelectionButton);
-        mainPanels.get(k).add(panels.get(j++));
+        cbSaveVolume.setSelected(true);
+        panels.get(panelIndex).add(cbSaveVolume);
+        cbSaveProjection.setSelected(true);
+        panels.get(panelIndex).add(cbSaveProjection);
+        mainPanel.add( panels.get(panelIndex++));
+
+//        panels.get(j).add(tfVolumesFilePath);
+//        final JButton volumesPathSelectionButton = new JButton( "Folder" );
+//        volumesPathSelectionButton.addActionListener( e ->
+//            tfVolumesFilePath.setText( IJ.getDirectory( "Volumes" ) ) );
+//        panels.get(j).add(volumesPathSelectionButton);
+//        mainPanels.get(k).add(panels.get(j++));
+
+//        panels.add(new JPanel());
+//        panels.get(j).add(cbSaveProjection);
+//        panels.get(j).add(tfProjectionsFilePath);
+//        final JButton projectionsPathSelectionButton = new JButton( "Folder" );
+//        projectionsPathSelectionButton.addActionListener( e ->
+//                tfProjectionsFilePath.setText( IJ.getDirectory( "Projections" ) ) );
+//        panels.get(j).add(projectionsPathSelectionButton);
+//        mainPanels.get(k).add(panels.get(j++));
+
+        panelIndex = addTiffCompressionPanel( panelIndex );
 
         panels.add(new JPanel());
-        panels.get(j).add(new JLabel( "Tiff Compression" ));
-        panels.get(j).add( comboCompression );
-        //panels.get(j).add(new JLabel("Rows per Strip [ny]"));
-        //panels.get(j).add(tfRowsPerStrip);
-        mainPanels.get(k).add(panels.get(j++));
+        panels.get(panelIndex).add(new JLabel("I/O Threads"));
+        panels.get(panelIndex).add( tfNumIOThreads );
+        mainPanel.add( panels.get(panelIndex++));
 
         panels.add(new JPanel());
-        panels.get(j).add(new JLabel("I/O Threads"));
-        panels.get(j).add( tfNumIOThreads );
-        mainPanels.get(k).add(panels.get(j++));
-
-        panels.add(new JPanel());
-        panels.get(j).add(new JLabel("Processing Threads"));
-        panels.get(j).add( tfNumProcessingThreads );
-        mainPanels.get(k).add(panels.get(j++));
+        panels.get(panelIndex).add(new JLabel("Processing Threads"));
+        panels.get(panelIndex).add( tfNumProcessingThreads );
+        mainPanel.add( panels.get(panelIndex++));
 
         panels.add(new JPanel());
         save.setActionCommand(SAVE);
         save.addActionListener(this);
-        panels.get(j).add(save);
+        panels.get(panelIndex).add(save);
         stopSaving.setActionCommand(STOP_SAVING);
         stopSaving.addActionListener(this);
-        panels.get(j).add(stopSaving);
-        mainPanels.get(k).add(panels.get(j++));
+        panels.get(panelIndex).add(stopSaving);
+        mainPanel.add( panels.get(panelIndex++));
 
         panels.add(new JPanel());
         progressBar = new JProgressBar(0, 100);
         progressBar.setValue(0);
         progressBar.setStringPainted(true);
         progressBar.setVisible(false);
-        panels.get(j).add(progressBar);
-        mainPanels.get(k).add(panels.get(j++));
+        panels.get(panelIndex).add(progressBar);
+        mainPanel.add( panels.get(panelIndex++));
 
         panels.add(new JPanel());
-        panels.get(j).add(MESSAGE);
-        mainPanels.get(k).add(panels.get(j++));
+        panels.get(panelIndex).add(MESSAGE);
+        mainPanel.add( panels.get(panelIndex++));
 
-        menu.add("Saving", mainPanels.get(k++));
+        menu.add( "Save as " + fileType.toString(), mainPanel);
         add(menu);
         pack();
+    }
+
+    public int addTiffCompressionPanel( int j )
+    {
+        if ( fileType.equals( SavingSettings.FileType.TIFF_VOLUMES ) ||
+             fileType.equals( SavingSettings.FileType.TIFF_PLANES ) )
+        {
+            panels.add( new JPanel() );
+            panels.get( j ).add( new JLabel( "Tiff Compression" ) );
+            panels.get( j ).add( comboCompression );
+            //panels.get(j).add(new JLabel("Rows per Strip [ny]"));
+            //panels.get(j).add(tfRowsPerStrip);
+            mainPanel.add( panels.get( j++ ) );
+        }
+        return j;
     }
 
     @Override
@@ -175,8 +203,6 @@ public class SaveDialog extends JFrame implements ActionListener
     {
         SavingSettings savingSettings = new SavingSettings();
 
-        SavingSettings.FileType fileType
-                = ( SavingSettings.FileType ) comboFileTypeForSaving.getSelectedItem();
         savingSettings.fileType = fileType;
 
         savingSettings.compression = ( String ) comboCompression.getSelectedItem();
@@ -217,8 +243,7 @@ public class SaveDialog extends JFrame implements ActionListener
     {
         final MacroRecorder recorder = new MacroRecorder( SaveAdvancedCommand.COMMAND_NAME, inputImage );
 
-        // TODO: recorder.addOption( "directory", savingSettings.volumesFilePathStump );
-        //...
+        recorder.addOption( SaveAdvancedCommand.DIRECTORY_PARAMETER, savingSettings.volumesFilePathStump );
 
         recorder.record();
     }

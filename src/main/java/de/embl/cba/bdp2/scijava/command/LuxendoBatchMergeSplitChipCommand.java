@@ -131,7 +131,7 @@ public class LuxendoBatchMergeSplitChipCommand< R extends RealType< R > & Native
             savingSettings.saveProjections = ! doCrop; // when not cropping, save full projections
             savingSettings.numIOThreads = 3;
             savingSettings.compression = compression;
-            BigDataProcessor2.saveImageAndWaitUntilDone( savingSettings, merge );
+            BigDataProcessor2.saveImageAndWaitUntilDone( merge, savingSettings );
 
             if ( doCrop )
             {
@@ -141,7 +141,7 @@ public class LuxendoBatchMergeSplitChipCommand< R extends RealType< R > & Native
                 savingSettings.saveProjections = true;
                 savingSettings.projectionsFilePathStump =
                         outputDirectoryStump + "-crop-projections/projection";
-                BigDataProcessor2.saveImageAndWaitUntilDone( savingSettings, crop );
+                BigDataProcessor2.saveImageAndWaitUntilDone( crop, savingSettings);
             }
         }
 
