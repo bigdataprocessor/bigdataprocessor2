@@ -3,6 +3,7 @@ package de.embl.cba.bdp2.crop;
 import de.embl.cba.bdp2.scijava.command.AbstractProcessingCommand;
 import de.embl.cba.bdp2.service.ImageService;
 import de.embl.cba.bdp2.BigDataProcessor2;
+import de.embl.cba.bdp2.utils.Utils;
 import net.imglib2.FinalInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -14,7 +15,7 @@ import org.scijava.plugin.Plugin;
 @Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>Process>" + CropCommand.COMMAND_NAME )
 public class CropCommand< R extends RealType< R > & NativeType< R > > extends AbstractProcessingCommand< R >
 {
-    public static final String COMMAND_NAME = "BDP Crop...";
+    public static final String COMMAND_NAME = Utils.COMMAND_PREFIX + "Crop...";
 
     @Parameter(label = "Min X [pixel]", min = "0")
     long minX = 0;

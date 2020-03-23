@@ -15,6 +15,8 @@ import loci.formats.services.OMEXMLService;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
+import ome.units.quantity.Length;
+import ome.units.unit.Unit;
 import ome.xml.model.enums.DimensionOrder;
 import ome.xml.model.enums.PixelType;
 import ome.xml.model.primitives.PositiveInteger;
@@ -212,7 +214,7 @@ public class SaveFrameAsTIFFStacks< R extends RealType< R > & NativeType< R > > 
                 meta.setPixelsSizeT(new PositiveInteger(1), 0);
 
                 // TODO: add image calibration
-                //meta.setPixelsPhysicalSizeX(  );
+                //meta.setPixelsPhysicalSizeX( new Length( imp.getCalibration().pixelWidth );
 
                 int channel = 0;
                 meta.setChannelID("Channel:0:" + channel, 0, channel);

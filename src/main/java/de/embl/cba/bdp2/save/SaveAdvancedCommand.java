@@ -2,8 +2,8 @@ package de.embl.cba.bdp2.save;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.service.ImageService;
+import de.embl.cba.bdp2.utils.Utils;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;
@@ -22,7 +22,7 @@ import java.io.File;
 @Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>Save>" + SaveAdvancedCommand.COMMAND_NAME )
 public class SaveAdvancedCommand< R extends RealType< R > & NativeType< R > > implements Command
 {
-    public static final String COMMAND_NAME = "BDP Save Advanced...";
+    public static final String COMMAND_NAME = Utils.COMMAND_PREFIX + "Save as...";
 
     @Parameter(label = "Input image name", persist = true)
     protected Image< R > inputImage = ImageService.nameToImage.values().iterator().next();
@@ -79,7 +79,7 @@ public class SaveAdvancedCommand< R extends RealType< R > & NativeType< R > > im
     {
         SavingSettings savingSettings = new SavingSettings();
 
-        savingSettings.fileType = SavingSettings.FileType.valueOf( fileType );
+        savingSettings.fileType = SavingSettings.FileType.getEnum( fileType );
 
         savingSettings.compression = tiffCompression;
         savingSettings.rowsPerStrip = 10;

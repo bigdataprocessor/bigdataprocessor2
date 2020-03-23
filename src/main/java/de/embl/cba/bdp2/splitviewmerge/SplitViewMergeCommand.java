@@ -13,7 +13,7 @@ import java.util.List;
 @Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>Process>" + SplitViewMergeCommand.COMMAND_NAME )
 public class SplitViewMergeCommand< R extends RealType< R > & NativeType< R > > extends AbstractProcessingCommand< R >
 {
-    public static final String COMMAND_NAME = "BDP Merge Split View...";
+    public static final String COMMAND_NAME = Utils.COMMAND_PREFIX + "Merge Split View...";
 
     @Parameter(label = "Regions [ minX, minY, sizeX, sizeY, channel; minX, ... ]")
     public String intervalsString = "896, 46, 1000, 1000, 0; 22, 643, 1000, 1000, 0";

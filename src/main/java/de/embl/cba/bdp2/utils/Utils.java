@@ -80,7 +80,9 @@ import java.util.stream.Collectors;
 
 public class Utils {
 
-    public static boolean verbose = false;
+	public static final String COMMAND_PREFIX = "BDP ";
+
+	public static boolean verbose = false;
 
 	public static ImagePlus getDataCube(ImagePlus image, int c, int t, int[] binning )
 	{

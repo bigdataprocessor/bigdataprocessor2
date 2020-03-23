@@ -43,19 +43,31 @@ public class SavingSettings {
     public int numIOThreads = 1;
     public int numProcessingThreads = 1;
 
-	public enum FileType {
+	public enum FileType
+    {
         TIFF_PLANES( SavingSettings.TIFF_PLANES ),
         TIFF_VOLUMES( SavingSettings.TIFF_VOLUMES ),
         HDF5_VOLUMES( HDF_5_VOLUMES ),
         IMARIS_VOLUMES( SavingSettings.IMARIS_VOLUMES );
 
         private final String text;
-        FileType(String s) {
+
+        FileType( String s )
+        {
             text = s;
         }
+
         @Override
-        public String toString() {
+        public String toString()
+        {
             return text;
+        }
+
+        public static FileType getEnum( String value )
+        {
+            for ( FileType v : values() )
+                if ( v.toString().equalsIgnoreCase( value ) ) return v;
+            throw new IllegalArgumentException();
         }
     }
 
@@ -72,7 +84,7 @@ public class SavingSettings {
         savingSettings.saveVolumes = true;
         savingSettings.fileType = FileType.TIFF_PLANES;
         savingSettings.volumesFilePathStump = "/Users/tischer/Desktop/bdp2-out/image";
-        savingSettings.compression = SavingSettings.COMPRESSION_NONE;
+        savingSettings.compression = COMPRESSION_NONE;
         savingSettings.numProcessingThreads = (int) Math.ceil( Math.sqrt( AVAILABLE_PROCESSORS ) + 1 );
         savingSettings.numIOThreads = savingSettings.numProcessingThreads;
 

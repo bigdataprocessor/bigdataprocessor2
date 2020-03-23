@@ -2,6 +2,7 @@ package de.embl.cba.bdp2.convert;
 
 import de.embl.cba.bdp2.scijava.command.AbstractProcessingCommand;
 import de.embl.cba.bdp2.service.ImageService;
+import de.embl.cba.bdp2.utils.Utils;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;
@@ -11,7 +12,7 @@ import org.scijava.plugin.Plugin;
 @Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>Process>" + UnsignedByteTypeConversionCommand.COMMAND_NAME )
 public class UnsignedByteTypeConversionCommand< R extends RealType< R > & NativeType< R > > extends AbstractProcessingCommand implements Command
 {
-    public static final String COMMAND_NAME = "BDP Convert to 8-Bit...";
+    public static final String COMMAND_NAME = Utils.COMMAND_PREFIX + "Convert to 8-Bit...";
     @Parameter(label = "Map to 0", min = "0")
     int mapTo0 = 0;
 
@@ -27,7 +28,7 @@ public class UnsignedByteTypeConversionCommand< R extends RealType< R > & Native
 
     private void process()
     {
-        final UnsignedByteTypeConverter converter = new UnsignedByteTypeConverter<>( inputImage, mapTo0, mapTo255 );
+        final UnsignedByteTypeConverter< R > converter = new UnsignedByteTypeConverter<>( inputImage, mapTo0, mapTo255 );
 
         outputImage = converter.getConvertedImage();
     }

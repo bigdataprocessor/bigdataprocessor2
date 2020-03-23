@@ -34,9 +34,7 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > >  extends JF
     private static final JTextField tfRowsPerStrip = new JTextField("10", 3);
     private static final JTextField tfNumIOThreads = new JTextField("" + defaults.numIOThreads, 2);
     private static final JTextField tfNumProcessingThreads = new JTextField( "" + defaults.numProcessingThreads, 2);
-    private static final JTextField tfVolumesFilePath = new JTextField("", 50);
-    private static final JTextField tfProjectionsFilePath = new JTextField("", 50);
-
+    private static final JTextField tfDirectory = new JTextField("", 50);
 
     private final String SAVE = "Save";
     protected final JButton save = new JButton(SAVE);
@@ -67,16 +65,16 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > >  extends JF
         JTabbedPane menu = new JTabbedPane();
         mainPanel = new JPanel();
         panels = new ArrayList<>();
-        int panelIndex = 0, mainPanelIndex = 0;
+        int panelIndex = 0;
 
         mainPanel.add(new JPanel());
         mainPanel.setLayout(new BoxLayout( mainPanel, BoxLayout.PAGE_AXIS));
 
         panels.add(new JPanel());
-        panels.get(panelIndex).add(tfVolumesFilePath);
+        panels.get(panelIndex).add( tfDirectory );
         final JButton volumesPathSelectionButton = new JButton( "Folder" );
         volumesPathSelectionButton.addActionListener( e ->
-                tfVolumesFilePath.setText( IJ.getDirectory( "Volumes" ) ) );
+                tfDirectory.setText( IJ.getDirectory( "Directory" ) ) );
         panels.get(panelIndex).add(volumesPathSelectionButton);
         mainPanel.add( panels.get(panelIndex++));
 
@@ -85,7 +83,6 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > >  extends JF
         panels.get(panelIndex).add(cbSaveVolume);
         cbSaveProjection.setSelected(true);
         panels.get(panelIndex).add(cbSaveProjection);
-        mainPanel.add( panels.get(panelIndex++));
 
 //        panels.get(j).add(tfVolumesFilePath);
 //        final JButton volumesPathSelectionButton = new JButton( "Folder" );
@@ -102,6 +99,7 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > >  extends JF
 //                tfProjectionsFilePath.setText( IJ.getDirectory( "Projections" ) ) );
 //        panels.get(j).add(projectionsPathSelectionButton);
 //        mainPanels.get(k).add(panels.get(j++));
+        mainPanel.add( panels.get(panelIndex++));
 
         panelIndex = addTiffCompressionPanel( panelIndex );
 
@@ -207,12 +205,11 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > >  extends JF
 
         savingSettings.compression = ( String ) comboCompression.getSelectedItem();
         savingSettings.rowsPerStrip = Integer.parseInt( tfRowsPerStrip.getText() );
-
         savingSettings.saveVolumes = cbSaveVolume.isSelected();
-        savingSettings.volumesFilePathStump = tfVolumesFilePath.getText() + File.separator + "volume";
+        savingSettings.volumesFilePathStump = tfDirectory.getText() + File.separator + "volumes" + File.separator + "volume";
 
         savingSettings.saveProjections = cbSaveProjection.isSelected();
-        savingSettings.projectionsFilePathStump = tfProjectionsFilePath.getText() + File.separator + "projection";
+        savingSettings.projectionsFilePathStump = tfDirectory.getText() + File.separator + "projections" + File.separator + "projection";
         savingSettings.numIOThreads = Integer.parseInt( tfNumIOThreads.getText() );
         savingSettings.numProcessingThreads = Integer.parseInt( tfNumProcessingThreads.getText() );
 
@@ -243,7 +240,13 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > >  extends JF
     {
         final MacroRecorder recorder = new MacroRecorder( SaveAdvancedCommand.COMMAND_NAME, inputImage );
 
-        recorder.addOption( SaveAdvancedCommand.DIRECTORY_PARAMETER, savingSettings.volumesFilePathStump );
+        recorder.addOption( SaveAdvancedCommand.DIRECTORY_PARAMETER, tfDirectory.getText() );
+        recorder.addOption( SaveAdvancedCommand.NUM_IO_THREADS_PARAMETER, savingSettings.numIOThreads );
+        recorder.addOption( SaveAdvancedCommand.NUM_PROCESSING_THREADS_PARAMETER, savingSettings.numProcessingThreads );
+        recorder.addOption( SaveAdvancedCommand.SAVE_FILE_TYPE_PARAMETER, savingSettings.fileType.toString());
+        recorder.addOption( SaveAdvancedCommand.SAVE_PROJECTIONS_PARAMETER, savingSettings.saveProjections);
+        recorder.addOption( SaveAdvancedCommand.SAVE_VOLUMES_PARAMETER, savingSettings.saveVolumes);
+        recorder.addOption( SaveAdvancedCommand.TIFF_COMPRESSION_PARAMETER, savingSettings.compression);
 
         recorder.record();
     }

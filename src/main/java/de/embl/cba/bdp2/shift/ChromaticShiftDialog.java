@@ -45,7 +45,7 @@ public class ChromaticShiftDialog< T extends RealType< T > & NativeType< T > > e
 
 	protected JPanel createContent()
 	{
-		JPanel panel = new JPanel();
+		panel = new JPanel();
 		panel.setLayout( new BoxLayout( panel, BoxLayout.PAGE_AXIS ) );
 
 		boundedValues = new ArrayList<>();

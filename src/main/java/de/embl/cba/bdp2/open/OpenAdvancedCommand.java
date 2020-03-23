@@ -14,6 +14,8 @@ import org.scijava.plugin.Plugin;
 import javax.swing.*;
 import java.io.File;
 
+import static de.embl.cba.bdp2.utils.Utils.COMMAND_PREFIX;
+
 
 /**
  * TODO: How to add a HELP button for the regular expression without screwing up the macro recording?
@@ -21,9 +23,10 @@ import java.io.File;
  *
  * @param <R>
  */
-@Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>Open>Open Advanced...")
+@Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>Open>" + OpenAdvancedCommand.COMMAND_NAME )
 public class OpenAdvancedCommand< R extends RealType< R > & NativeType< R > > implements Command {
 
+    public static final String COMMAND_NAME = COMMAND_PREFIX + "Open Advanced...";
     @Parameter(label = "Image data directory", style = "directory")
     File directory;
 
