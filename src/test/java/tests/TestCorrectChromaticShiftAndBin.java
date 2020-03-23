@@ -21,7 +21,7 @@ import static junit.framework.TestCase.assertTrue;
 
 public class TestCorrectChromaticShiftAndBin
 {
-    @Test
+    //@Test
     public void test()
     {
         DebugTools.setRootLevel("OFF"); // Bio-Formats

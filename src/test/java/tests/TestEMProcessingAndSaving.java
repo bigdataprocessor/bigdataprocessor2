@@ -15,7 +15,7 @@ import org.junit.Test;
 public class TestEMProcessingAndSaving< R extends RealType< R > & NativeType< R > >
 {
 
-	@Test
+	//@Test
 	public void processAndSave()
 	{
 		//new ImageJ().dialog().showUI();

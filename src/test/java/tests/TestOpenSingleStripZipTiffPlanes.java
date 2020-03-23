@@ -13,7 +13,7 @@ public class TestOpenSingleStripZipTiffPlanes
 	// TODO: optimise speed
 	public static boolean showImages = false;
 
-	@Test
+	//@Test
 	public < R extends RealType< R > & NativeType< R > > void open()
 	{
 		DebugTools.setRootLevel("OFF"); // Bio-Formats

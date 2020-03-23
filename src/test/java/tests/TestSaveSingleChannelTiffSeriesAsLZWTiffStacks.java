@@ -14,7 +14,7 @@ import static junit.framework.TestCase.assertTrue;
 
 public class TestSaveSingleChannelTiffSeriesAsLZWTiffStacks
 {
-    @Test
+    //@Test
     public void test( )
     {
         DebugTools.setRootLevel("OFF"); // Bio-Formats

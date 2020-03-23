@@ -14,7 +14,7 @@ import static org.junit.Assert.assertArrayEquals;
 
 public class TestCroppingDialog
 {
-    @Test
+    //@Test
     public < R extends RealType< R > & NativeType< R > > void run( )
     {
         DebugTools.setRootLevel("OFF"); // Bio-Formats

@@ -15,7 +15,7 @@ public abstract class AbstractProcessingCommand< R extends RealType< R > & Nativ
     public static final String REPLACE_IN_VIEWER = "Replace input image";
     public static final String DO_NOT_SHOW = "Do not show";
 
-    @Parameter(label = "Input image name", persist = true)
+    @Parameter(label = "Input image", persist = true)
     protected Image inputImage = ImageService.nameToImage.values().iterator().next();
     public static final String INPUT_IMAGE_PARAMETER = "inputImage";
 

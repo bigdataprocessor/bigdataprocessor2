@@ -406,7 +406,7 @@ public class FileInfosHelper
             //
             Logger.info("Checking for sub-folders...");
 
-            infoSource.channelFolders = getFoldersInFolder( directory, getFolderFilter( filterPattern ) );
+            infoSource.channelFolders = getSubFolders( directory, getFolderFilter( filterPattern ) );
 
             if ( infoSource.channelFolders != null )
             {
@@ -456,20 +456,20 @@ public class FileInfosHelper
 
     public static String getFolderFilter( String filterPattern )
     {
-        String filter;
         if ( filterPattern != null )
         {
-            final String[] split = filterPattern.split( Pattern.quote( File.separator ) );
+            // TODO: make functions from and to regexp
+            final String replaceNumberRegExpWithBracketD = filterPattern.replace( "(\\d)", "(D)" ); // otherwise, for windows it will split at the \\d
+            final String[] split = replaceNumberRegExpWithBracketD.split( Pattern.quote( File.separator ) );
             if ( split.length > 1 )
-                filter = split[ 0 ];
+                return split[ 0 ].replace( "(D)", "(\\d)" );
             else
-                filter = ".*";
+                return ".*";
         }
         else
         {
-            filter = ".*";
+            return ".*";
         }
-        return filter;
     }
 
     public static String getFileFilter( String filterPattern )
@@ -605,22 +605,20 @@ public class FileInfosHelper
         else return ( list );
     }
 
-    private static String[] getFoldersInFolder( String directory, String folderFilter )
+    private static String[] getSubFolders( String parentFolder, String subFolderFilter )
     {
-        //info("# getFoldersInFolder: " + directory);
-
-        String[] list = new File(directory).list(new FilenameFilter()
+        String[] list = new File(parentFolder).list( new FilenameFilter()
         {
             @Override
-            public boolean accept(File current, String name)
+            public boolean accept(File parentFolder, String fileName)
             {
-                boolean isValid = true;
-                isValid &= new File(current, name).isDirectory();
+                if ( ! new File(parentFolder, fileName).isDirectory() ) return false;
 
-                Pattern.compile(folderFilter).matcher(name);
-                isValid &= Pattern.compile(folderFilter).matcher(name).matches();
+                Pattern.compile( subFolderFilter ).matcher( fileName );
 
-                return isValid;
+                if ( ! Pattern.compile( subFolderFilter ).matcher( fileName ).matches() ) return false;
+
+                return true;
             }
         });
 
@@ -630,9 +628,5 @@ public class FileInfosHelper
         Arrays.sort( list );
 
         return (list);
-
     }
-
-
-
 }

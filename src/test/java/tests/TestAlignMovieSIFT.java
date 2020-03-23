@@ -17,7 +17,7 @@ public class TestAlignMovieSIFT< R extends RealType< R > & NativeType< R > >
 {
 	public static boolean showImages = false;
 
-	@Test
+	//@Test
 	public void lazySIFT()
 	{
 		DebugTools.setRootLevel("OFF"); // Bio-Formats

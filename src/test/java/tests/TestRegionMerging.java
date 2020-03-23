@@ -16,7 +16,7 @@ public class TestRegionMerging
 {
 	public static boolean showImages = false;
 
-	@Test
+	//@Test
 	public < R extends RealType< R > & NativeType< R > > void mergeTwoRegionsFromOneChannel()
 	{
 		DebugTools.setRootLevel("OFF"); // Bio-Formats
@@ -44,7 +44,7 @@ public class TestRegionMerging
 		System.out.println("Done.");
 	}
 
-	@Test
+	//@Test
 	public < R extends RealType< R > & NativeType< R > > void mergeThreeRegionsFromTwoChannels()
 	{
 		DebugTools.setRootLevel("OFF"); // Bio-Formats

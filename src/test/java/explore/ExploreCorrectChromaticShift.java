@@ -15,7 +15,7 @@ import static junit.framework.TestCase.assertTrue;
 
 public class ExploreCorrectChromaticShift
 {
-    @Test
+    //@Test
     public void test()
     {
         DebugTools.setRootLevel("OFF"); // Bio-Formats

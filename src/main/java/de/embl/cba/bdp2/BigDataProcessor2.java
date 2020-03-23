@@ -88,8 +88,7 @@ public class BigDataProcessor2
             String filterPattern,
             String hdf5DataSetName)
     {
-        FileInfos fileInfos =
-                new FileInfos( directory, fileInfosLoadingScheme, filterPattern,hdf5DataSetName );
+        FileInfos fileInfos = new FileInfos( directory, fileInfosLoadingScheme, filterPattern,hdf5DataSetName );
 
         final Image< R > image = CachedCellImgReader.loadImage( fileInfos );
 

@@ -24,7 +24,7 @@ public class TestMicrogliaTracking
 
     public static boolean showImages = false;
 
-    @Test
+    ////@Test
     public < R extends RealType< R > & NativeType< R > > void thresholdFloodFillTracking( ) throws IOException
     {
 
@@ -83,7 +83,7 @@ public class TestMicrogliaTracking
     }
 
 
-    @Test
+    //@Test
     public < R extends RealType< R > & NativeType< R > > void trackView( )
     {
 
@@ -132,7 +132,7 @@ public class TestMicrogliaTracking
     }
 
 
-    @Test
+    //@Test
     public < R extends RealType< R > & NativeType< R > > void phaseCorrelationTracking( )
     {
         DebugTools.setRootLevel("OFF"); // Bio-Formats
