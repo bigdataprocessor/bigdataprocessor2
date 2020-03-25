@@ -183,7 +183,7 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > >  extends JF
     public void save()
     {
         MESSAGE.setText( null );
-        savingSettings =  getSavingSettings();
+        savingSettings = getSavingSettings();
         progressBar.setVisible( true );
         pack();
         save.setEnabled( false );

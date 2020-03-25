@@ -1,12 +1,11 @@
 package run;
 
-import de.embl.cba.bdp2.open.OpenAdvancedCommand;
-import de.embl.cba.bdp2.open.OpenLuxendoChannelsFromFoldersCommand;
+import de.embl.cba.bdp2.open.command.OpenLeicaDSLTiffPlanesCommand;
 import de.embl.cba.bdp2.scijava.Services;
 import ij.plugin.frame.Recorder;
 import net.imagej.ImageJ;
 
-public class RunOpenLuxendoChannelsCommand
+public class RunOpenLeicaDSLTiffPlanesCommand
 {
 	public static void main ( String... args )
 	{
@@ -17,6 +16,6 @@ public class RunOpenLuxendoChannelsCommand
 
 		Services.commandService = ij.command();
 
-		ij.command().run( OpenLuxendoChannelsFromFoldersCommand.class, true );
+		ij.command().run( OpenLeicaDSLTiffPlanesCommand.class, true );
 	}
 }

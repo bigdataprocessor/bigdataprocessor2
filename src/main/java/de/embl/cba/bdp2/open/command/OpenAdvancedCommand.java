@@ -1,9 +1,7 @@
-package de.embl.cba.bdp2.open;
+package de.embl.cba.bdp2.open.command;
 
-import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.open.files.FileInfos;
 import de.embl.cba.bdp2.BigDataProcessor2;
-import de.embl.cba.bdp2.dialog.HelpDialog;
 import loci.common.DebugTools;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -12,7 +10,6 @@ import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
 import javax.swing.*;
-import java.io.File;
 
 import static de.embl.cba.bdp2.utils.Utils.COMMAND_PREFIX;
 
@@ -24,11 +21,9 @@ import static de.embl.cba.bdp2.utils.Utils.COMMAND_PREFIX;
  * @param <R>
  */
 @Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>Open>" + OpenAdvancedCommand.COMMAND_NAME )
-public class OpenAdvancedCommand< R extends RealType< R > & NativeType< R > > implements Command {
-
+public class OpenAdvancedCommand< R extends RealType< R > & NativeType< R > > extends AbstractOpenCommand< R >
+{
     public static final String COMMAND_NAME = COMMAND_PREFIX + "Open Advanced...";
-    @Parameter(label = "Image data directory", style = "directory")
-    File directory;
 
     @Parameter(label = "Subset files using regular expression" )
     String filterPattern = ".*";
@@ -53,30 +48,17 @@ public class OpenAdvancedCommand< R extends RealType< R > & NativeType< R > > im
     @Parameter(label = "Hdf5 data set name (optional)", required = false)
     String hdf5DataSetName = "Data";
 
-    //@Parameter(label = "Auto contrast")
-    boolean autoContrast = true;
-
     public void run()
     {
         SwingUtilities.invokeLater( () ->  {
             DebugTools.setRootLevel( "OFF" ); // Bio-Formats
 
-            final Image< R > image =
-                    BigDataProcessor2.openImage(
-                            directory.toString(),
-                            namingScheme,
-                            filterPattern );
+            outputImage = BigDataProcessor2.openImage(
+                    directory.toString(),
+                    namingScheme,
+                    filterPattern );
 
-            BigDataProcessor2.showImage( image, autoContrast );
+            handleOutputImage( autoContrast, false );
         });
-    }
-
-    public void showRegExpHelp()
-    {
-        SwingUtilities.invokeLater( () -> {
-            final HelpDialog helpDialog = new HelpDialog( null,
-                    OpenAdvancedCommand.class.getResource( "/RegExpHelp.html" ) );
-            helpDialog.setVisible( true );
-        } );
     }
 }

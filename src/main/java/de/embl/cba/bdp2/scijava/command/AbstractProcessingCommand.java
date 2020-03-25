@@ -1,5 +1,6 @@
 package de.embl.cba.bdp2.scijava.command;
 
+import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.service.BdvService;
 import de.embl.cba.bdp2.service.ImageService;
@@ -11,11 +12,11 @@ import org.scijava.plugin.Parameter;
 
 public abstract class AbstractProcessingCommand< R extends RealType< R > & NativeType< R > > implements Command
 {
-    public static final String SHOW_IN_NEW_VIEWER = "Show in new viewer";
-    public static final String REPLACE_IN_VIEWER = "Replace input image";
-    public static final String DO_NOT_SHOW = "Do not show";
+    public static final String SHOW_IN_NEW_VIEWER = "Show image in new viewer";
+    public static final String REPLACE_IN_VIEWER = "Replace image in current viewer";
+    public static final String DO_NOT_SHOW = "Do not show image";
 
-    @Parameter(label = "Input image", persist = true)
+    @Parameter(label = "Input image")
     protected Image inputImage = ImageService.nameToImage.values().iterator().next();
     public static final String INPUT_IMAGE_PARAMETER = "inputImage";
 
@@ -27,8 +28,8 @@ public abstract class AbstractProcessingCommand< R extends RealType< R > & Nativ
             REPLACE_IN_VIEWER,
             SHOW_IN_NEW_VIEWER,
             DO_NOT_SHOW })
-    protected String outputModality;
-    public static final String OUTPUT_MODALITY_PARAMETER = "outputModality";
+    protected String viewingModality;
+    public static final String OUTPUT_MODALITY_PARAMETER = "viewingModality";
 
     protected Image< R > outputImage;
 
@@ -37,16 +38,16 @@ public abstract class AbstractProcessingCommand< R extends RealType< R > & Nativ
         outputImage.setName( outputImageName );
         ImageService.nameToImage.put( outputImageName, outputImage );
 
-        if ( outputModality.equals( SHOW_IN_NEW_VIEWER ) )
+        if ( viewingModality.equals( SHOW_IN_NEW_VIEWER ) )
         {
-            new BdvImageViewer<>( outputImage, autoContrast );
+            BigDataProcessor2.showImage( outputImage, autoContrast );
         }
-        else if ( outputModality.equals( REPLACE_IN_VIEWER ))
+        else if ( viewingModality.equals( REPLACE_IN_VIEWER ))
         {
             final BdvImageViewer viewer = BdvService.imageNameToBdv.get( inputImage.getName() );
             viewer.replaceImage( outputImage, autoContrast, keepViewerTransform );
         }
-        else if ( outputModality.equals( DO_NOT_SHOW ))
+        else if ( viewingModality.equals( DO_NOT_SHOW ))
         {
             // do nothing
         }

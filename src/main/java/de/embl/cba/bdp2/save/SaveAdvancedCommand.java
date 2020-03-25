@@ -22,7 +22,7 @@ import java.io.File;
 @Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>Save>" + SaveAdvancedCommand.COMMAND_NAME )
 public class SaveAdvancedCommand< R extends RealType< R > & NativeType< R > > implements Command
 {
-    public static final String COMMAND_NAME = Utils.COMMAND_PREFIX + "Save as...";
+    public static final String COMMAND_NAME = Utils.COMMAND_PREFIX + "Save As...";
 
     @Parameter(label = "Input image name", persist = true)
     protected Image< R > inputImage = ImageService.nameToImage.values().iterator().next();

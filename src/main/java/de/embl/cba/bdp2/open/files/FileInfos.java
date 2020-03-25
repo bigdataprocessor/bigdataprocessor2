@@ -141,8 +141,11 @@ public class FileInfos
         info += "nZ: " + nZ + "\n";
         info += "nC: " + nC + "\n";
         info += "nT: " + nT + "\n";
+        info += "voxelUnit: " + voxelUnit + "\n";
+        info += "voxelSpacingX: " + voxelSpacing[0] + "\n";
+        info += "voxelSpacingY: " + voxelSpacing[1] + "\n";
+        info += "voxelSpacingZ: " + voxelSpacing[2] + "\n";
         info += "GB: " + getSizeInGB() + "\n";
-
         return info;
     }
 

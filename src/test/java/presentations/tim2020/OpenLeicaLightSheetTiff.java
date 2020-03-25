@@ -18,9 +18,10 @@ public class OpenLeicaLightSheetTiff
 		// I do not know why, we fix it here to micrometer.
 		final double[] voxelSpacing = image.getVoxelSpacing();
 		final String voxelUnit = CalibrationUtils.fixVoxelSpacingAndUnit( voxelSpacing, image.getVoxelUnit() );
-		voxelSpacing[ 2 ] = 3.7;
+		voxelSpacing[ 2 ] = voxelSpacing[ 1 ];
 		image.setVoxelSpacing( voxelSpacing );
 		image.setVoxelUnit( voxelUnit );
+
 
 		BigDataProcessor2.showImage( image );
 	}

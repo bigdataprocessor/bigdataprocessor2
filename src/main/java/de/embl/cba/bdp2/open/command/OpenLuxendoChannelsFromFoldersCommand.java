@@ -1,46 +1,34 @@
-package de.embl.cba.bdp2.open;
+package de.embl.cba.bdp2.open.command;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
-import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.open.files.FileInfos;
 import de.embl.cba.bdp2.utils.Utils;
 import loci.common.DebugTools;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;
-import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
 import javax.swing.*;
-import java.io.File;
 
-
-/**
- * TODO: How to add a HELP button for the regular expression without screwing up the macro recording?
- *
- *
- * @param <R>
- */
 @Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>Open>" + OpenLuxendoChannelsFromFoldersCommand.COMMAND_NAME )
-public class OpenLuxendoChannelsFromFoldersCommand< R extends RealType< R > & NativeType< R > > implements Command {
-
+public class OpenLuxendoChannelsFromFoldersCommand< R extends RealType< R > & NativeType< R > > extends AbstractOpenCommand< R >
+{
     public static final String COMMAND_NAME = Utils.COMMAND_PREFIX + "Open Luxendo Channel Folders...";
-    @Parameter(label = "Image data directory (must contain channel sub-folders)", style = "directory")
-    File directory;
 
     public void run()
     {
         SwingUtilities.invokeLater( () ->  {
             DebugTools.setRootLevel( "OFF" ); // Bio-Formats
 
-            final Image< R > image =
+            outputImage =
                     BigDataProcessor2.openImage(
                             directory.toString(),
                             FileInfos.LOAD_CHANNELS_FROM_FOLDERS,
                             FileInfos.PATTERN_LUXENDO,
                             "Data");
 
-            BigDataProcessor2.showImage( image, true );
+            handleOutputImage( true, false );
         });
     }
 }

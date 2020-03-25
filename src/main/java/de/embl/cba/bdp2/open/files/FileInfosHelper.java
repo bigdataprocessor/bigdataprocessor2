@@ -155,6 +155,7 @@ public class FileInfosHelper
         else
         {
             fileInfos.nZ = info.length;
+            info[0].pixelDepth = info[0].pixelWidth; // assume this since we do not know
         }
 
         fileInfos.nX = info[0].width;
@@ -414,8 +415,7 @@ public class FileInfosHelper
                 for (int i = 0; i < infoSource.channelFolders.length; i++)
                 {
                     fileLists[i] = getFilesInFolder(
-                            directory + infoSource.channelFolders[ i ],
-                            getFileFilter( filterPattern ));
+                            directory + infoSource.channelFolders[ i ], getFileFilter( filterPattern ));
 
                     if ( fileLists[i] == null )
                     {
@@ -458,12 +458,14 @@ public class FileInfosHelper
     {
         if ( filterPattern != null )
         {
-            // TODO: make functions from and to regexp
-            final String replaceNumberRegExpWithBracketD = filterPattern.replace( "(\\d)", "(D)" ); // otherwise, for windows it will split at the \\d
-            final String[] split = replaceNumberRegExpWithBracketD.split( Pattern.quote( File.separator ) );
+            // TODO: replace by proper regexp
+            final String savePattern = toWindowsSplitSavePattern( filterPattern );
+            final String[] split = savePattern.split( Pattern.quote( File.separator ) );
             if ( split.length > 1 )
-                return split[ 0 ].replace( "(D)", "(\\d)" );
-            else
+            {
+                final String folder = split[ 0 ];
+                return fromWindowsSplitSavePattern( folder );
+            } else
                 return ".*";
         }
         else
@@ -477,17 +479,30 @@ public class FileInfosHelper
         String filter;
         if ( filterPattern != null )
         {
-            final String[] split = filterPattern.split( Pattern.quote( File.separator )  );
+            // TODO: replace by proper regexp
+            final String savePattern = toWindowsSplitSavePattern( filterPattern );
+            final String[] split = savePattern.split( Pattern.quote( File.separator )  );
             if ( split.length > 1 )
-                filter = split[ 1 ];
+                filter = fromWindowsSplitSavePattern( split[ 1 ] );
             else
-                filter = split[ 0 ];
+                filter = fromWindowsSplitSavePattern( split[ 0 ] );
         }
         else
         {
             filter = ".*";
         }
         return filter;
+    }
+
+
+    public static String fromWindowsSplitSavePattern( String pattern )
+    {
+        return pattern.replace( "(D)", "(\\d)" );
+    }
+
+    public static String toWindowsSplitSavePattern( String pattern )
+    {
+        return pattern.replace( "(\\d)", "(D)"  );
     }
 
     public static String getFirstChannelDirectory( FileInfos infoSource, String directory )
