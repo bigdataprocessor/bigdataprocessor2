@@ -13,7 +13,6 @@ import java.util.regex.Pattern;
 
 public class FileInfosHelper
 {
-
     public static boolean setFileInfos(
             FileInfos infoSource,
             String directory,
@@ -458,13 +457,14 @@ public class FileInfosHelper
     {
         if ( filterPattern != null )
         {
-            // TODO: replace by proper regexp
-            final String savePattern = toWindowsSplitSavePattern( filterPattern );
-            final String[] split = savePattern.split( Pattern.quote( File.separator ) );
+            //final String savePattern = toWindowsSplitSavePattern( filterPattern );
+            //final String[] split = savePattern.split( Pattern.quote( File.separator ) );
+            final String[] split = filterPattern.split( Pattern.quote( File.separator ) + "(?!d\\))" );
             if ( split.length > 1 )
             {
                 final String folder = split[ 0 ];
-                return fromWindowsSplitSavePattern( folder );
+                return folder;
+                // return fromWindowsSplitSavePattern( folder );
             } else
                 return ".*";
         }
@@ -476,22 +476,22 @@ public class FileInfosHelper
 
     public static String getFileFilter( String filterPattern )
     {
-        String filter;
         if ( filterPattern != null )
         {
-            // TODO: replace by proper regexp
-            final String savePattern = toWindowsSplitSavePattern( filterPattern );
-            final String[] split = savePattern.split( Pattern.quote( File.separator )  );
+            //final String savePattern = toWindowsSplitSavePattern( filterPattern );
+            //final String[] split = savePattern.split( Pattern.quote( File.separator )  );
+            final String[] split = filterPattern.split( Pattern.quote( File.separator ) + "(?!d\\))" );
             if ( split.length > 1 )
-                filter = fromWindowsSplitSavePattern( split[ 1 ] );
+                return split[ 1 ];
+                //filter = fromWindowsSplitSavePattern( split[ 1 ] );
             else
-                filter = fromWindowsSplitSavePattern( split[ 0 ] );
+                return split[ 0 ];
+                //filter = fromWindowsSplitSavePattern( split[ 0 ] );
         }
         else
         {
-            filter = ".*";
+            return ".*";
         }
-        return filter;
     }
 
 

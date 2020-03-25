@@ -10,5 +10,7 @@ public class ExploreRegExp
 		final String s = "adfsdfsd\\asdf(\\d)sa";
 		final String replace = s.replace( "(\\d)", "_" );
 		final String[] split = s.split( Pattern.quote( "\\" ) );
+
+		final String[] split1 = s.split( Pattern.quote( "\\" ) + "(?!d\\))" );
 	}
 }
