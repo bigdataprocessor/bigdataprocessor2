@@ -6,6 +6,8 @@ import de.embl.cba.bdp2.convert.UnsignedByteTypeConversionDialog;
 import de.embl.cba.bdp2.crop.CropDialog;
 import de.embl.cba.bdp2.dialog.MiscMenu;
 import de.embl.cba.bdp2.dialog.Utils;
+import de.embl.cba.bdp2.image.ImageRenameCommand;
+import de.embl.cba.bdp2.image.ImageRenameDialog;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.save.SaveDialog;
 import de.embl.cba.bdp2.save.SavingSettings;
@@ -184,6 +186,13 @@ public class BdpMenuActions extends JMenu implements ActionListener {
         {
             BigDataProcessor2.generalThreadPool.submit(() -> {
                 Logger.showLoggingLevelDialog();
+            });
+        }
+        else if(e.getActionCommand().equalsIgnoreCase(
+                ImageRenameCommand.BDP_MENU_NAME ))
+        {
+            BigDataProcessor2.generalThreadPool.submit(() -> {
+                new ImageRenameDialog<>( viewer );
             });
         }
     }

@@ -21,7 +21,7 @@ public abstract class AbstractProcessingCommand< R extends RealType< R > & Nativ
     public static final String INPUT_IMAGE_PARAMETER = "inputImage";
 
     @Parameter(label = "Output image name")
-    protected String outputImageName = ImageService.nameToImage.keySet().iterator().next() + "-binned";
+    protected String outputImageName = ImageService.nameToImage.keySet().iterator().next();
     public static final String OUTPUT_IMAGE_NAME_PARAMETER = "outputImageName";
 
     @Parameter(label = "Output image handling", choices = {

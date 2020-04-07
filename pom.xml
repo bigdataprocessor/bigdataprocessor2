@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>de.embl.cba</groupId>
 		<artifactId>pom-embl-cba</artifactId>
-		<version>0.3.10</version>
+		<version>0.3.12</version>
 	</parent>
 	<groupId>de.embl.cba</groupId>
 	<artifactId>fiji-plugin-bigDataProcessor2</artifactId>

@@ -1,5 +1,7 @@
 package de.embl.cba.bdp2;
 
+import de.embl.cba.bdp2.image.ImageRenameCommand;
+
 import javax.swing.*;
 
 public class BdpMenu extends JMenu {
@@ -22,6 +24,7 @@ public class BdpMenu extends JMenu {
     public static final String SAVE_AS_TIFF_VOLUMES_MENU_ITEM = "Save as Tiff Volumes...";
     public static final String SAVE_AS_TIFF_PLANES_MENU_ITEM = "Save as Tiff Planes...";
     public static final String CALIBRATE_MENU_ITEM = "Calibrate...";
+
     public static final String OBLIQUE_MENU_ITEM = "Shear..."; // TODO: ?
     public static final String CROP_MENU_ITEM = "Crop...";
     // Menus
@@ -35,7 +38,9 @@ public class BdpMenu extends JMenu {
         this.bdpMenuActions = bdpMenuActions;
         setText( "BigDataProcessor" );
 
-        addMenuItem( CALIBRATE_MENU_ITEM );
+        final JMenu imageMenu = addMenu( "Image" );
+        addMenuItem( imageMenu, ImageRenameCommand.BDP_MENU_NAME );
+        addMenuItem( imageMenu, CALIBRATE_MENU_ITEM );
 
         final JMenu processMenu = addMenu( "Process" );
         addMenuItem( processMenu, BINNING_MENU_ITEM );
