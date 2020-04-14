@@ -12,6 +12,7 @@ import de.embl.cba.bdp2.log.progress.Progress;
 import de.embl.cba.bdp2.log.progress.ProgressListener;
 import de.embl.cba.bdp2.save.*;
 import de.embl.cba.bdp2.dialog.DisplaySettings;
+import de.embl.cba.bdp2.shift.ChannelShifter;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.*;
@@ -23,6 +24,7 @@ import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.util.Util;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -57,9 +59,9 @@ public class BigDataProcessor2
     }
 
     public static < R extends RealType< R > & NativeType< R > >
-    Image< R > bin( Image<R> image, long[] span )
+    Image< R > bin( Image<R> image, long[] spanXYZCT )
     {
-        return Binner.bin( image, span );
+        return Binner.bin( image, spanXYZCT );
     }
 
     private static void kickOffThreadPack( int numThreads ) {
@@ -96,9 +98,9 @@ public class BigDataProcessor2
     }
 
     public static < R extends RealType< R > & NativeType< R > >
-    Image< R > crop( Image< R > image, Interval interval )
+    Image< R > crop( Image< R > image, Interval intervalXYZCT )
     {
-        return Cropper.crop5D( image, interval );
+        return Cropper.crop5D( image, intervalXYZCT );
     }
 
     public static < R extends RealType< R > & NativeType< R > >
@@ -203,5 +205,17 @@ public class BigDataProcessor2
             newRai = rai;
         }
         return newRai;
+    }
+
+    public static void calibrate( Image image, double[] doubles, String voxelUnit )
+    {
+        image.setVoxelSpacing( doubles );
+        image.setVoxelUnit( voxelUnit );
+    }
+
+    public static < R extends RealType< R > & NativeType< R > > Image correctChromaticShift( Image crop, ArrayList< long[] > shifts )
+    {
+        final ChannelShifter< R > shifter = new ChannelShifter< >( crop.getRai() );
+        return crop.newImage( shifter.getShiftedRai( shifts ) );
     }
 }

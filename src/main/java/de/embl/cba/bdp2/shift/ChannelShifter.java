@@ -12,30 +12,30 @@ import net.imglib2.view.Views;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChannelShifter < T extends RealType< T > & NativeType< T > >
+public class ChannelShifter < R extends RealType< R > & NativeType< R > >
 {
-	private final RandomAccessibleInterval< T > rai;
+	private final RandomAccessibleInterval< R > rai;
 	private final long numChannels;
-	private final ArrayList< RandomAccessibleInterval< T > > channelRAIs;
+	private final ArrayList< RandomAccessibleInterval< R > > channelRAIs;
 
-	public ChannelShifter( RandomAccessibleInterval< T > rai )
+	public ChannelShifter( RandomAccessibleInterval< R > rai )
 	{
 		this.rai = rai;
 		numChannels = rai.dimension( DimensionOrder.C );
 		channelRAIs = getChannelRAIs();
 	}
 
-	public RandomAccessibleInterval< T > getShiftedRai( List< long[] > translations )
+	public RandomAccessibleInterval< R > getShiftedRai( List< long[] > translationsXYZT )
 	{
-		ArrayList< RandomAccessibleInterval< T > > shiftedChannelRAIs =
-				getShiftedRAIs( translations );
+		ArrayList< RandomAccessibleInterval< R > > shiftedChannelRAIs =
+				getShiftedRAIs( translationsXYZT );
 
 		Interval intersect = getIntersectionInterval( shiftedChannelRAIs );
 
-		final ArrayList< RandomAccessibleInterval< T > > croppedRAIs
+		final ArrayList< RandomAccessibleInterval< R > > croppedRAIs
 				= getCroppedRAIs( shiftedChannelRAIs, intersect );
 
-		final IntervalView< T > shiftedView = Views.permute(
+		final IntervalView< R > shiftedView = Views.permute(
 				Views.stack( croppedRAIs ),
 				DimensionOrder.C,
 				DimensionOrder.T );
@@ -43,20 +43,20 @@ public class ChannelShifter < T extends RealType< T > & NativeType< T > >
 		return shiftedView;
 	}
 
-	private ArrayList< RandomAccessibleInterval< T > > getCroppedRAIs(
-			ArrayList< RandomAccessibleInterval< T > > rais,
+	private ArrayList< RandomAccessibleInterval< R > > getCroppedRAIs(
+			ArrayList< RandomAccessibleInterval< R > > rais,
 			Interval intersect )
 	{
-		final ArrayList< RandomAccessibleInterval< T > > cropped = new ArrayList<>();
+		final ArrayList< RandomAccessibleInterval< R > > cropped = new ArrayList<>();
 		for ( int c = 0; c < numChannels; c++ )
 		{
-			final IntervalView< T > crop = Views.interval( rais.get( c ), intersect );
+			final IntervalView< R > crop = Views.interval( rais.get( c ), intersect );
 			cropped.add( Views.zeroMin( crop ) );
 		}
 		return cropped;
 	}
 
-	private Interval getIntersectionInterval( ArrayList< RandomAccessibleInterval< T > > shiftedChannelRAIs )
+	private Interval getIntersectionInterval( ArrayList< RandomAccessibleInterval< R > > shiftedChannelRAIs )
 	{
 		Interval intersect = shiftedChannelRAIs.get( 0 );
 		for ( int c = 1; c < numChannels; c++ )
@@ -64,20 +64,20 @@ public class ChannelShifter < T extends RealType< T > & NativeType< T > >
 		return intersect;
 	}
 
-	private ArrayList< RandomAccessibleInterval< T > > getShiftedRAIs( List< long[] > translations )
+	private ArrayList< RandomAccessibleInterval< R > > getShiftedRAIs( List< long[] > translationsXYZT )
 	{
-		ArrayList< RandomAccessibleInterval< T > > shiftedChannelRAIs = new ArrayList<>();
+		ArrayList< RandomAccessibleInterval< R > > shiftedChannelRAIs = new ArrayList<>();
 
 		for ( int c = 0; c < numChannels; c++ )
 			shiftedChannelRAIs.add(
-					Views.translate( channelRAIs.get( c ), translations.get( c ) ) );
+					Views.translate( channelRAIs.get( c ), translationsXYZT.get( c ) ) );
 
 		return shiftedChannelRAIs;
 	}
 
-	private ArrayList< RandomAccessibleInterval< T > > getChannelRAIs()
+	private ArrayList< RandomAccessibleInterval< R > > getChannelRAIs()
 	{
-		ArrayList< RandomAccessibleInterval< T > > channelRais = new ArrayList<>();
+		ArrayList< RandomAccessibleInterval< R > > channelRais = new ArrayList<>();
 
 		for ( int c = 0; c < numChannels; c++ )
 			channelRais.add( Views.hyperSlice( rai, DimensionOrder.C, c ) );

@@ -41,10 +41,10 @@ public class BdpMenu extends JMenu {
         final JMenu imageMenu = addMenu( "Image" );
         addMenuItem( imageMenu, ImageRenameCommand.BDP_MENU_NAME );
         addMenuItem( imageMenu, CALIBRATE_MENU_ITEM );
+        addMenuItem( imageMenu, CROP_MENU_ITEM );
 
         final JMenu processMenu = addMenu( "Process" );
         addMenuItem( processMenu, BINNING_MENU_ITEM );
-        addMenuItem( processMenu, CROP_MENU_ITEM );
         addMenuItem( processMenu, EIGHT_BIT_CONVERSION_MENU_ITEM );
         addMenuItem( processMenu, CHROMATIC_SHIFT_CORRECTION_MENU_ITEM );
         addMenuItem( processMenu, SPLIT_VIEW_MENU_ITEM );

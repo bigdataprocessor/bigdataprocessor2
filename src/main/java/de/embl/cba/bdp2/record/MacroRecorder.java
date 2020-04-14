@@ -53,9 +53,11 @@ public class MacroRecorder< R extends RealType< R > & NativeType< R > >
 	{
 		new Thread( () -> {
 			Recorder recorder = Recorder.getInstance();
+
 			if ( recorder != null )
 				if ( ! Recorder.scriptMode() )
 					Recorder.record( "run", commandName, options );
+
 		}).start();
 	}
 }

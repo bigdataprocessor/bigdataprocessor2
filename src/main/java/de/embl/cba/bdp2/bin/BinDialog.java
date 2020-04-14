@@ -41,8 +41,8 @@ public class BinDialog< T extends RealType< T > & NativeType< T > > extends Abst
 		final MacroRecorder recorder = new MacroRecorder( BinCommand.COMMAND_NAME, inputImage, outputImage );
 
 		recorder.addOption( "binWidthXPixels",  span[ 0 ] );
-		recorder.addOption( "binWidthYPixels",  span[ 0 ] );
-		recorder.addOption( "binWidthZPixels",  span[ 0 ] );
+		recorder.addOption( "binWidthYPixels",  span[ 1 ] );
+		recorder.addOption( "binWidthZPixels",  span[ 2 ] );
 
 		recorder.record();
 	}
@@ -64,7 +64,7 @@ public class BinDialog< T extends RealType< T > & NativeType< T > > extends Abst
 
 			sliderPanels.add(
 					new SliderPanel(
-							"Binning " + xyz[ d ] ,
+							" Binning " + xyz[ d ] ,
 								boundedValues.get( d ),
 								1 ));
 		}
@@ -85,6 +85,11 @@ public class BinDialog< T extends RealType< T > & NativeType< T > > extends Abst
 				outputImage = Binner.bin( inputImage, span );
 				outputImage.setName( inputImage.getName() + "-binned" );
 				viewer.replaceImage( outputImage, true, true );
+
+				for ( SliderPanel sliderPanel : sliderPanels )
+				{
+					sliderPanel.update();
+				}
 
 				Logger.info( "Binning: "
 						+ span[ 0 ] + " , "

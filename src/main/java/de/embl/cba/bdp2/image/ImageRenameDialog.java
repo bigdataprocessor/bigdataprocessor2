@@ -43,6 +43,7 @@ public class ImageRenameDialog< R extends RealType< R > & NativeType< R > >
 
 		inputImage.setName( gd.getNextString() );
 		outputImage = inputImage;
+		viewer.replaceImage( outputImage, false, true );
 		recordMacro();
 	}
 }

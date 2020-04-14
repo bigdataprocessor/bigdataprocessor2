@@ -3,6 +3,7 @@ package de.embl.cba.bdp2.viewers;
 import bdv.tools.brightness.ConverterSetup;
 import bdv.tools.brightness.MinMaxGroup;
 import bdv.util.*;
+import bdv.viewer.DisplayMode;
 import bdv.viewer.SourceAndConverter;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.boundingbox.BoundingBoxDialog;
@@ -129,7 +130,8 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
     }
 
     // TODO: get rid of this method
-    public void show( boolean autoContrast ) {
+    public void show( boolean autoContrast )
+    {
         showImage( image, autoContrast );
     }
 
@@ -208,6 +210,9 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
 
     public void setDisplayRange( double min, double max, int channel )
     {
+        final boolean groupingEnabled = bdvHandle.getViewerPanel().getVisibilityAndGrouping().isGroupingEnabled();
+        final DisplayMode displayMode = bdvHandle.getViewerPanel().getVisibilityAndGrouping().getDisplayMode();
+
         final List< ConverterSetup > converterSetups = bdvHandle.getSetupAssignments().getConverterSetups();
 
         final ConverterSetup converterSetup = converterSetups.get( channel );
@@ -243,7 +248,8 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
      * as a DisplaySettings object of the requested channel.
      */
     
-    public DisplaySettings getAutoContrastDisplaySettings( int channel ) {
+    public DisplaySettings getAutoContrastDisplaySettings( int channel )
+    {
         double min, max;
 
         if ( image != null)

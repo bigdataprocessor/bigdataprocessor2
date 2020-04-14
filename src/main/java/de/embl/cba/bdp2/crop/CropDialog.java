@@ -1,5 +1,6 @@
 package de.embl.cba.bdp2.crop;
 
+import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.record.MacroRecorder;
@@ -19,7 +20,7 @@ public class CropDialog< R extends RealType< R > & NativeType< R > >
 		if ( intervalXYZCT != null )
 		{
 			final Image< R > inputImage = viewer.getImage();
-			Image< R > outputImage = Cropper.crop5D( inputImage, intervalXYZCT );
+			Image< R > outputImage = BigDataProcessor2.crop( inputImage, intervalXYZCT );
 
 			Logger.info( "\n# Crop" );
 			Logger.info( "Crop interval [pixel]: " + intervalXYZCT.toString() );
