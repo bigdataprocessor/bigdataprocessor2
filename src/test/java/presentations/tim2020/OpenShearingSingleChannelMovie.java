@@ -13,6 +13,6 @@ public class OpenShearingSingleChannelMovie
 				FileInfos.PATTERN_ALL
 		);
 
-		BigDataProcessor2.showImage( image );
+		BigDataProcessor2.showImage( image);
 	}
 }

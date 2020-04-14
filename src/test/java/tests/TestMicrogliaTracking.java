@@ -11,7 +11,6 @@ import loci.common.DebugTools;
 import net.imagej.ImageJ;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
-import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,7 +43,7 @@ public class TestMicrogliaTracking
         BdvImageViewer viewer = null;
         if ( showImages )
         {
-            viewer = BigDataProcessor2.showImage( image );
+            viewer = BigDataProcessor2.showImage( image);
             viewer.setDisplayRange( 0, 150, 0 );
         }
 
@@ -103,7 +102,7 @@ public class TestMicrogliaTracking
         BdvImageViewer viewer = null;
         if ( showImages )
         {
-            viewer = BigDataProcessor2.showImage( image );
+            viewer = BigDataProcessor2.showImage( image);
             viewer.setDisplayRange( 0, 150, 0 );
         }
 
@@ -154,7 +153,7 @@ public class TestMicrogliaTracking
         BdvImageViewer viewer = null;
         if ( showImages )
         {
-            viewer = BigDataProcessor2.showImage( image );
+            viewer = BigDataProcessor2.showImage( image);
             viewer.setDisplayRange( 0, 150, 0 );
         }
 

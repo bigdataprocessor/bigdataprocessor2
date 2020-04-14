@@ -21,7 +21,7 @@ public class ProcessEMfromServer
 				FileInfos.TIFF_SLICES,
 				".*.tif" );
 
-		BigDataProcessor2.showImage( image );
+		BigDataProcessor2.showImage( image);
 
 		boolean process = false;
 

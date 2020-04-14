@@ -12,7 +12,7 @@ import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
-@Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>Image>" + CropCommand.COMMAND_NAME )
+@Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>Process>" + CropCommand.COMMAND_NAME )
 public class CropCommand< R extends RealType< R > & NativeType< R > > extends AbstractProcessingCommand< R >
 {
     public static final String COMMAND_NAME = Utils.COMMAND_PREFIX + "Crop...";

@@ -25,7 +25,7 @@ public class FigureCreator
 		);
 		image.setName( "raw" );
 		BigDataProcessor2.calibrate( image,  new double[]{0.3, 0.3, 1.0}, image.getVoxelUnit() );
-		BigDataProcessor2.showImage( image );
+		BigDataProcessor2.showImage( image);
 
 		// crop
 		//

@@ -64,7 +64,7 @@ public class BinDialog< T extends RealType< T > & NativeType< T > > extends Abst
 
 			sliderPanels.add(
 					new SliderPanel(
-							" Binning " + xyz[ d ] ,
+							"  Binning " + xyz[ d ] ,
 								boundedValues.get( d ),
 								1 ));
 		}

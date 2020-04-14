@@ -37,21 +37,26 @@ import java.util.Map;
 
 public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
 {
+    public static boolean disableArbitraryPlaneSlicing = false;
+
     private Image< R > image;
+    private boolean autoContrast;
     private BdvStackSource< ? > bdvStackSource;
     private BdvGrayValuesOverlay overlay;
     private BdvHandle bdvHandle;
     private Map< String, Track > tracks;
     private int numRenderingThreads = Runtime.getRuntime().availableProcessors(); // TODO
 
-    public BdvImageViewer( Image< R > image )
+    public BdvImageViewer( final Image< R > image )
     {
-        this( image, true );
+        this( image, true, false );
     }
 
-    public BdvImageViewer( Image< R > image, boolean autoContrast )
+    public BdvImageViewer( final Image< R > image, final boolean autoContrast, final boolean disableArbitraryPlaneSlicing )
     {
         this.image = image;
+        this.autoContrast = autoContrast;
+        this.disableArbitraryPlaneSlicing = disableArbitraryPlaneSlicing;
 
         show( autoContrast );
 
@@ -392,15 +397,21 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
 
         CachedCellImg cachedCellImg = VolatileCachedCellImg.getVolatileCachedCellImg( image );
 
+        BdvOptions options = BdvOptions.options().axisOrder( AxisOrder.XYZCT )
+                .addTo( bdvHandle )
+                .sourceTransform( scaling )
+                .numRenderingThreads( numRenderingThreads )
+                .frameTitle( "BigDataProcessor2" );
+
+        if ( disableArbitraryPlaneSlicing )
+        {
+            options = options.transformEventHandlerFactory( new BehaviourTransformEventHandler3DWithoutRotation.BehaviourTransformEventHandler3DFactory() );
+        }
+
         bdvStackSource = BdvFunctions.show(
                 VolatileViews.wrapAsVolatile( cachedCellImg ),
                 image.getName(),
-                BdvOptions.options().axisOrder( AxisOrder.XYZCT )
-                        .addTo( bdvHandle )
-                        .sourceTransform( scaling )
-                        .numRenderingThreads( numRenderingThreads )
-                        .frameTitle( "BigDataProcessor" ) );
-
+                options );
 
 //        if ( volatileRai == null )
 //        {

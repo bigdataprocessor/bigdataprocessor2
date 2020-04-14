@@ -19,7 +19,7 @@ public class OpenEMFromLocal
 				FileInfos.TIFF_SLICES,
 				".*.tif" );
 
-		BigDataProcessor2.showImage( image );
+		BigDataProcessor2.showImage( image);
 
 		System.out.println("Done.");
 	}

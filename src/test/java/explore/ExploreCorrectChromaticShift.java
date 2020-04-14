@@ -4,7 +4,6 @@ import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.open.files.FileInfos;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import loci.common.DebugTools;
-import org.junit.Test;
 
 import static junit.framework.TestCase.assertTrue;
 
@@ -31,7 +30,7 @@ public class ExploreCorrectChromaticShift
                 FileInfos.LOAD_CHANNELS_FROM_FOLDERS,
                 ".*" );
 
-        BigDataProcessor2.showImage( image );
+        BigDataProcessor2.showImage( image);
     }
 
     public static void main( String[] args )

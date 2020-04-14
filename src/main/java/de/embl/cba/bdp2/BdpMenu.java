@@ -36,14 +36,14 @@ public class BdpMenu extends JMenu {
     public BdpMenu( BdpMenuActions bdpMenuActions )
     {
         this.bdpMenuActions = bdpMenuActions;
-        setText( "BigDataProcessor" );
+        setText( "BigDataProcessor2" );
 
         final JMenu imageMenu = addMenu( "Image" );
         addMenuItem( imageMenu, ImageRenameCommand.BDP_MENU_NAME );
         addMenuItem( imageMenu, CALIBRATE_MENU_ITEM );
-        addMenuItem( imageMenu, CROP_MENU_ITEM );
 
         final JMenu processMenu = addMenu( "Process" );
+        addMenuItem( processMenu, CROP_MENU_ITEM );
         addMenuItem( processMenu, BINNING_MENU_ITEM );
         addMenuItem( processMenu, EIGHT_BIT_CONVERSION_MENU_ITEM );
         addMenuItem( processMenu, CHROMATIC_SHIFT_CORRECTION_MENU_ITEM );

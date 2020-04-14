@@ -70,7 +70,7 @@ public class MergeSplitChipWorkflowMultiChannel
                         merger,
                         directory );
 
-                final BdvImageViewer viewer = BigDataProcessor2.showImage( merge );
+                final BdvImageViewer viewer = BigDataProcessor2.showImage( merge);
 
                 final FinalInterval interval = viewer.getVoxelIntervalXYZCTDialog( false );
 

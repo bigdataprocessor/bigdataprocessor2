@@ -21,7 +21,7 @@ public class OpenSingleChannelTiffSeries
                 FileInfos.SINGLE_CHANNEL_TIMELAPSE,
                 ".*" );
 
-        BigDataProcessor2.showImage( image );
+        BigDataProcessor2.showImage( image);
 
 
 

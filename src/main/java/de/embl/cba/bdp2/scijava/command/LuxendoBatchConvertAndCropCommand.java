@@ -77,7 +77,7 @@ public class LuxendoBatchConvertAndCropCommand< R extends RealType< R > & Native
 
                 image.setVoxelUnit( voxelUnit );
                 image.setVoxelSpacing( new double[]{ voxelSpacingX, voxelSpacingY, voxelSpacingZ } );
-                final BdvImageViewer viewer = BigDataProcessor2.showImage( image );
+                final BdvImageViewer viewer = BigDataProcessor2.showImage( image);
 
                 final FinalInterval interval = viewer.getVoxelIntervalXYZCTDialog( false );
 

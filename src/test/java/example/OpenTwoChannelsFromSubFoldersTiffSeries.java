@@ -19,7 +19,7 @@ public class OpenTwoChannelsFromSubFoldersTiffSeries
                 FileInfos.LOAD_CHANNELS_FROM_FOLDERS,
                 ".*" );
 
-        bdp.showImage( image );
+        bdp.showImage( image);
     }
 
 }

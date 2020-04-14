@@ -6,7 +6,6 @@ import de.embl.cba.bdp2.BigDataProcessor2;
 import loci.common.DebugTools;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
-import org.junit.Test;
 
 public class TestOpenSingleStripZipTiffPlanes
 {
@@ -23,7 +22,7 @@ public class TestOpenSingleStripZipTiffPlanes
 				FileInfos.TIFF_SLICES,
 				".*.tif" );
 
-		if ( showImages ) BigDataProcessor2.showImage( image );
+		if ( showImages ) BigDataProcessor2.showImage( image);
 
 		System.out.println("Done.");
 	}

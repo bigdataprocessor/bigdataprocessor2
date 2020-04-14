@@ -37,7 +37,7 @@ public class SaveSingleChanneHdf5SeriesAsImaris
         image.setVoxelUnit( "micrometer" );
         image.setVoxelSpacing( 0.13, 0.13, 1.04 );
 
-        bdp.showImage( image );
+        bdp.showImage( image);
 
         final Image binnedImage = Binner.bin( image, new long[]{ 3, 3, 3, 1, 1 } );
         //   bdp.showImage( bin );

@@ -25,7 +25,7 @@ public class CorrectChromaticShift
                 FileInfos.LOAD_CHANNELS_FROM_FOLDERS,
                 ".*" );
 
-        final BdvImageViewer imageViewer = bdp.showImage( image );
+        final BdvImageViewer imageViewer = bdp.showImage( image);
 
         new ChromaticShiftDialog<>( imageViewer );
 

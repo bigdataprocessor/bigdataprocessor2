@@ -158,7 +158,7 @@ public class SplitViewMergeDialog< R extends RealType< R > & NativeType< R > > e
 	private void showOutputImage()
 	{
 		if ( outputImageViewer == null )
-			outputImageViewer = BigDataProcessor2.showImage( outputImage );
+			outputImageViewer = BigDataProcessor2.showImage( outputImage, false );
 		else
 			outputImageViewer.replaceImage( outputImage, false, false );
 	}

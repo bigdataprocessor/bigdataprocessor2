@@ -14,7 +14,7 @@ public class OpenLuxendoTwoChannelMovie
 				"Data"
 		);
 
-		BigDataProcessor2.showImage( image );
+		BigDataProcessor2.showImage( image);
 
 	}
 }

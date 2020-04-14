@@ -16,7 +16,7 @@ public class OpenAndSaveLargeStacks202002
 				"Data"
 		);
 
-		BigDataProcessor2.showImage( image );
+		BigDataProcessor2.showImage( image);
 
 		final SavingSettings savingSettings = SavingSettings.getDefaults();
 		savingSettings.fileType = SavingSettings.FileType.TIFF_VOLUMES;

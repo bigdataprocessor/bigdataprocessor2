@@ -23,6 +23,6 @@ public class OpenLeicaLightSheetTiff
 		image.setVoxelUnit( voxelUnit );
 
 
-		BigDataProcessor2.showImage( image );
+		BigDataProcessor2.showImage( image);
 	}
 }

@@ -6,6 +6,7 @@ import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.service.ImageService;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
+import org.scijava.ItemVisibility;
 import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 
@@ -25,7 +26,10 @@ public abstract class AbstractOpenCommand< R extends RealType< R > & NativeType<
             // REPLACE_IN_VIEWER,
             SHOW_IN_NEW_VIEWER,
             DO_NOT_SHOW })
-    protected String viewingModality; // Note: this must be the same variable name as in AbstractProcessingCommand
+    protected String viewingModality = SHOW_IN_NEW_VIEWER; // Note: this must be the same variable name as in AbstractProcessingCommand
+
+    @Parameter(label = "Disable arbitrary plane slicing")
+    protected boolean disableArbitraryPlaneSlicing = true;
 
     protected boolean autoContrast = true;
 
@@ -37,7 +41,7 @@ public abstract class AbstractOpenCommand< R extends RealType< R > & NativeType<
 
         if ( viewingModality.equals( SHOW_IN_NEW_VIEWER ) )
         {
-            BigDataProcessor2.showImage( outputImage, autoContrast );
+            BigDataProcessor2.showImage( outputImage, autoContrast, disableArbitraryPlaneSlicing );
         }
 //        else if ( outputModality.equals( REPLACE_IN_VIEWER ))
 //        {

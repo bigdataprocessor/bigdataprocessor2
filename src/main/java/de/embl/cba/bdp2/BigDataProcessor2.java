@@ -123,16 +123,25 @@ public class BigDataProcessor2
     }
     
     public static < R extends RealType< R > & NativeType< R > >
-    BdvImageViewer showImage( Image< R > image )
+    BdvImageViewer showImage( Image< R > image, boolean autoContrast, boolean disableArbitraryPlaneSlicing )
     {
-        return showImage( image, true );
+        BdvImageViewer.disableArbitraryPlaneSlicing = disableArbitraryPlaneSlicing;
+
+        return new BdvImageViewer( image, autoContrast, disableArbitraryPlaneSlicing );
     }
 
     public static < R extends RealType< R > & NativeType< R > >
     BdvImageViewer showImage( Image< R > image, boolean autoContrast )
     {
-        return new BdvImageViewer( image, autoContrast );
+        return new BdvImageViewer( image, autoContrast, BdvImageViewer.disableArbitraryPlaneSlicing );
     }
+
+    public static < R extends RealType< R > & NativeType< R > >
+    BdvImageViewer showImage( Image< R > image )
+    {
+        return new BdvImageViewer( image, true, BdvImageViewer.disableArbitraryPlaneSlicing );
+    }
+
 
     // TODO: Return futures from the image saver
     public static < R extends RealType< R > & NativeType< R > >

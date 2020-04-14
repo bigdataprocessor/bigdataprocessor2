@@ -8,7 +8,6 @@ import loci.common.DebugTools;
 import net.imagej.ImageJ;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
-import org.junit.Test;
 
 import static org.junit.Assert.assertArrayEquals;
 
@@ -29,7 +28,7 @@ public class TestCroppingDialog
         image.setVoxelUnit( "pixel" );
         image.setVoxelSpacing( 1.0, 1.0, 1.0 );
 
-        final BdvImageViewer viewer = BigDataProcessor2.showImage( image );
+        final BdvImageViewer viewer = BigDataProcessor2.showImage( image);
         viewer.getVoxelIntervalXYZCTDialog( true );
     }
 

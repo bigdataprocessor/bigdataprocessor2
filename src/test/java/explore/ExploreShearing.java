@@ -20,7 +20,7 @@ public class ExploreShearing < R extends RealType< R > & NativeType< R > >
 				FileInfos.SINGLE_CHANNEL_TIMELAPSE,
 				".*");
 
-		final BdvImageViewer bdvImageViewer = BigDataProcessor2.showImage( image );
+		final BdvImageViewer bdvImageViewer = BigDataProcessor2.showImage( image);
 
 		final ShearingSettings shearingSettings = new ShearingSettings();
 		ShearMenuDialog dialog = new ShearMenuDialog( bdvImageViewer );

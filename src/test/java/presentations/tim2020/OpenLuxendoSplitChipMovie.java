@@ -14,6 +14,6 @@ public class OpenLuxendoSplitChipMovie
 				"Data"
 		);
 
-		BigDataProcessor2.showImage( image );
+		BigDataProcessor2.showImage( image);
 	}
 }
