@@ -13,7 +13,7 @@ BigDataProcessor2 is a Fiji Plugin.
     - [X] EMBL-CBA
 - Restart Fiji
 - BigDataProcessor2 can be found in the Plugins menu (as it is an ImageJ2 plugin you have to scroll all the way to the bottom).
-[<img width="500" alt="image" src="https://user-images.githubusercontent.com/2157566/79339050-8da45d00-7f28-11ea-916c-7c8deaa4b77a.png">]
+<img width="500" alt="image" src="https://user-images.githubusercontent.com/2157566/79339050-8da45d00-7f28-11ea-916c-7c8deaa4b77a.png">
 
 ## Overview and examples
 
