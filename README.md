@@ -4,6 +4,17 @@
 
 Interactive processing of TB-sized image data within [Fiji](http://fiji.sc/), on your laptop.
 
+## Installation
+
+BigDataProcessor2 is a Fiji Plugin.
+
+- Please install [Fiji](fiji.sc)
+- Within Fiji, please enable the following [Update Site](https://imagej.net/Update_Sites): 
+    - [X] EMBL-CBA
+- Restart Fiji
+- BigDataProcessor2 can be found in the Plugins menu (as it is an ImageJ2 plugin you have to scroll all the way to the bottom).
+[<img width="500" alt="image" src="https://user-images.githubusercontent.com/2157566/79339050-8da45d00-7f28-11ea-916c-7c8deaa4b77a.png">]
+
 ## Overview and examples
 
 ### Opening TB-sized Tiff or Hdf5 based raw data
@@ -70,11 +81,6 @@ The BigDataProcessor2 is a new version of the **BigDataTools** plugin, a.k.a [Bi
 - Multi-stack HDF
 - Multi-stack IMARIS HDF
 
- 
-## Installation
-Within ImageJ/Fiji you can install the plugin using the `Help > Update > Manage Update Sites` and select the `EMBL-CBA` site.
-
-Note: The plugins need Java 1.8 if you see error messages popping up that might be caused by an older Java version.
 
 ## Contributors
 
