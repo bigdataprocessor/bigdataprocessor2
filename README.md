@@ -90,8 +90,7 @@ ashis.r91@gmail.com&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;christian.tischer@embl.de
 
 ## User Documentation
 
-
-## Image viewing
+### Image viewing
 
 Images are displayed in a slicing mode. The initial view is a slice perpendicular to the z axis (i.e. an xy plane). The currently viewed plane can be changed by the following keyboard shortcuts:
 - **[ Shift X ]** Shows a yz plane
@@ -101,11 +100,11 @@ Images are displayed in a slicing mode. The initial view is a slice perpendicula
 - **[ Shift , ]** or **[ Shift . ]** Change plane fast
 - You can also drag the mouse while keeping the left mouse button pressed to inspect the data at oblique views.
 
-### Tip 
+#### Tip 
 
 - Due the way most data are layout on disc, it is faster to inspect the data only using the **[ Shift Y ]** and **[ Shift Z ]** views, as the **[ Shift X ]** view will render much slower.
 
 
-## More 
+### Processing operations 
 
-*Coming soon*
+
