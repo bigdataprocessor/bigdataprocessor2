@@ -14,7 +14,7 @@ import javax.swing.*;
 
 import static de.embl.cba.bdp2.utils.Utils.COMMAND_BDP_PREFIX;
 
-@Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2 " + AbstractOpenCommand.COMMAND_OPEN_PATH + OpenLeicaDSLTiffPlanesCommand.COMMAND_FULL_NAME )
+@Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>" + AbstractOpenCommand.COMMAND_OPEN_PATH + OpenLeicaDSLTiffPlanesCommand.COMMAND_FULL_NAME )
 public class OpenLeicaDSLTiffPlanesCommand< R extends RealType< R > & NativeType< R > > extends AbstractOpenCommand< R >
 {
     public static final String COMMAND_NAME = "Open Leica DSL Tiff Planes...";

@@ -45,7 +45,7 @@ public class BigDataProcessor2Command< R extends RealType< R > & NativeType< R >
             final BdvImageViewer viewer = BigDataProcessor2.showImage( image );
 
             new Thread( () ->  {
-                IJ.wait( 3000 );
+                IJ.wait( 2000 );
                 viewer.getBdvHandle().getViewerPanel().addOverlayAnimator ( new TextOverlayAnimator( "Go to Menu > BigDataProcessor2 > Open", 10000, TextOverlayAnimator.TextPosition.CENTER ) );
             }).start();
 

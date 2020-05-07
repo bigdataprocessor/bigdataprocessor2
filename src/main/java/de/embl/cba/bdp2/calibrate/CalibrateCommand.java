@@ -8,7 +8,7 @@ import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
-@Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>Image>" + CalibrateCommand.COMMAND_FULL_NAME )
+@Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>" + AbstractProcessingCommand.COMMAND_PROCESS_PATH + CalibrateCommand.COMMAND_FULL_NAME )
 public class CalibrateCommand< R extends RealType< R > & NativeType< R > > extends AbstractProcessingCommand< R >
 {
     public static final String COMMAND_NAME = "Set Scale...";

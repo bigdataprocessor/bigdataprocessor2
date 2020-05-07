@@ -8,7 +8,7 @@ import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;
 import org.scijava.plugin.Plugin;
 
-@Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>Image>" + ImageRenameCommand.COMMAND_FULL_NAME )
+@Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>" + AbstractProcessingCommand.COMMAND_PROCESS_PATH + ImageRenameCommand.COMMAND_FULL_NAME )
 public class ImageRenameCommand< R extends RealType< R > & NativeType< R > > extends AbstractProcessingCommand< R >
 {
     public static final String COMMAND_NAME = "Rename...";
