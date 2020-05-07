@@ -1,14 +1,13 @@
 package tests;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.open.files.FileInfos;
 import de.embl.cba.bdp2.bin.Binner;
+import de.embl.cba.bdp2.read.NamingScheme;
 import de.embl.cba.bdp2.shift.ChannelShifter;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import loci.common.DebugTools;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
-import org.junit.Test;
 
 import java.util.ArrayList;
 
@@ -34,7 +33,7 @@ public class TestCorrectChromaticShiftAndBin
 
         final Image image = bdp.openImage(
                 imageDirectory,
-                FileInfos.LOAD_CHANNELS_FROM_FOLDERS,
+                NamingScheme.LOAD_CHANNELS_FROM_FOLDERS,
                 ".*" );
 
         // final BdvImageViewer imageViewer = bdp.showImage( image );

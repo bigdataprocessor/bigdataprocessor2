@@ -1,6 +1,6 @@
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.open.files.FileInfos;
 import de.embl.cba.bdp2.BigDataProcessor2;
+import de.embl.cba.bdp2.read.NamingScheme;
 import ij.ImageJ;
 
 import java.io.File;
@@ -21,7 +21,7 @@ public class ImageCalibrationBdvVisualisationTest
 
 		final Image image = bigDataProcessor2.openImage(
 				imageDirectory.toString(),
-				FileInfos.SINGLE_CHANNEL_TIMELAPSE,
+				NamingScheme.SINGLE_CHANNEL_TIMELAPSE,
 				".*" );
 	}
 }

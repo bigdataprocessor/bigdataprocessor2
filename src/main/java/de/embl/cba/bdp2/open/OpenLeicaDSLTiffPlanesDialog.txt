@@ -1,0 +1,58 @@
+package de.embl.cba.bdp2.open;
+
+import de.embl.cba.bdp2.image.Image;
+import de.embl.cba.bdp2.read.NamingScheme;
+import de.embl.cba.bdp2.record.MacroRecorder;
+import de.embl.cba.bdp2.utils.Utils;
+import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import fiji.util.gui.GenericDialogPlus;
+import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.RealType;
+
+public class OpenLeicaDSLTiffPlanesDialog< R extends RealType< R > & NativeType< R > >
+{
+	private final BdvImageViewer< R > viewer;
+	private Image< R > outputImage;
+	private String directory;
+	private String viewingModality;
+
+	public OpenLeicaDSLTiffPlanesDialog( final BdvImageViewer< R > viewer )
+	{
+		this.viewer = viewer;
+		showGenericDialog();
+	}
+
+	private void showGenericDialog()
+	{
+		final GenericDialogPlus genericDialog = new GenericDialogPlus( "" );
+		genericDialog.addDirectoryField( "Image directory", "", 100 );
+		genericDialog.addChoice( "Opening Modality",
+				AbstractOpenCommand.VIEWING_CHOICES,
+				Utils.SHOW_IN_CURRENT_VIEWER
+				);
+
+		genericDialog.showDialog();
+		if ( genericDialog.wasCanceled() ) return;
+
+		directory = genericDialog.getNextString();
+		viewingModality = genericDialog.getNextChoice();
+
+		viewer.replaceImage( outputImage, false, false );
+
+		recordMacro();
+	}
+
+	protected void recordMacro()
+	{
+		final MacroRecorder recorder = new MacroRecorder(
+				AdvancedOpenCommand.COMMAND_FULL_NAME,
+				viewingModality );
+
+		recorder.addOption( AbstractOpenCommand.INPUT_DIRECTORY, directory );
+		recorder.addOption( AbstractOpenCommand.VIEWING_MODALITY, viewingModality );
+		recorder.addOption( AdvancedOpenCommand.NAMING_SCHEME, NamingScheme.LEICA_LIGHT_SHEET_TIFF );
+		recorder.addOption( AdvancedOpenCommand.FILTER_PATTERN, ".*.tif" );
+
+		recorder.record();
+	}
+}

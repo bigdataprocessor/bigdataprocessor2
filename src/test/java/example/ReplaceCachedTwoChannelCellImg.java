@@ -1,8 +1,9 @@
 package example;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.open.CachedCellImgReader;
-import de.embl.cba.bdp2.open.files.FileInfos;
+import de.embl.cba.bdp2.read.CachedCellImgReader;
+import de.embl.cba.bdp2.read.FileInfos;
+import de.embl.cba.bdp2.read.NamingScheme;
 import de.embl.cba.bdp2.save.CachedCellImgReplacer;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import net.imglib2.RandomAccessibleInterval;
@@ -16,7 +17,7 @@ public class ReplaceCachedTwoChannelCellImg
 
 		final String directory = "/Users/tischer/Documents/isabell-schneider-splitchipmerge/two_channels";
 
-		final String loadingScheme = FileInfos.LOAD_CHANNELS_FROM_FOLDERS;
+		final String loadingScheme = NamingScheme.LOAD_CHANNELS_FROM_FOLDERS;
 		final String filterPattern = ".*.h5";
 		final String dataset = "Data";
 

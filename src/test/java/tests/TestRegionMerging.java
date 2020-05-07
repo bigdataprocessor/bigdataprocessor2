@@ -1,8 +1,8 @@
 package tests;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.open.files.FileInfos;
-import de.embl.cba.bdp2.splitviewmerge.SplitViewMerger;
+import de.embl.cba.bdp2.read.NamingScheme;
+import de.embl.cba.bdp2.splitchip.SplitViewMerger;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import loci.common.DebugTools;
@@ -22,7 +22,7 @@ public class TestRegionMerging
 
 		final Image< R > image = BigDataProcessor2.openImage(
 				"/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-data/region-merging/one-channel",
-				FileInfos.SINGLE_CHANNEL_TIMELAPSE,
+				NamingScheme.SINGLE_CHANNEL_TIMELAPSE,
 				".*" );
 
 		if ( showImages )
@@ -52,7 +52,7 @@ public class TestRegionMerging
 
 		final Image< R > image = bdp.openImage(
 				"/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-data/region-merging/two-channel",
-				FileInfos.PATTERN_2,
+				NamingScheme.PATTERN_2,
 				".*" );
 
 		if ( showImages )

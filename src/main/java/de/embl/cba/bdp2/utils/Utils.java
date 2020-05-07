@@ -33,9 +33,9 @@ package de.embl.cba.bdp2.utils;
 import bdv.util.Bdv;
 import bdv.viewer.animate.SimilarityTransformAnimator;
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.open.files.FileInfos;
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.splitviewmerge.SplitViewMerger;
+import de.embl.cba.bdp2.read.NamingScheme;
+import de.embl.cba.bdp2.splitchip.SplitViewMerger;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.dialog.DisplaySettings;
 import ij.IJ;
@@ -80,13 +80,13 @@ import java.util.stream.Collectors;
 
 public class Utils {
 
-	public static final String COMMAND_PREFIX = "BDP ";
+	public static final String COMMAND_BDP_PREFIX = "BDP ";
 
 	public static boolean verbose = false;
 
 	public static ImagePlus getDataCube(ImagePlus image, int c, int t, int[] binning )
 	{
-        ImagePlus dataCube; //= getFullStackFromInfo(c,t,files);
+        ImagePlus dataCube; //= getFullStackFromInfo(c,t,file);
 
 //        if( image.getStack() instanceof VirtualStackOfStacks )
 //        {
@@ -162,8 +162,8 @@ public class Utils {
 
 		final Image< R > image = BigDataProcessor2.openHdf5Image(
 				parentFolder,
-				FileInfos.LOAD_CHANNELS_FROM_FOLDERS,
-				subFolderPattern + File.separator + FileInfos.PATTERN_LUXENDO ,
+				NamingScheme.LOAD_CHANNELS_FROM_FOLDERS,
+				subFolderPattern + File.separator + NamingScheme.PATTERN_LUXENDO ,
 				"Data" );
 
 		image.setVoxelUnit( voxelUnit );

@@ -1,18 +1,10 @@
 package de.embl.cba.bdp2.image;
 
-import bdv.tools.brightness.SliderPanel;
-import bdv.util.BoundedValue;
 import de.embl.cba.bdp2.record.MacroRecorder;
-import de.embl.cba.bdp2.shift.ChromaticShiftCommand;
-import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import ij.gui.GenericDialog;
-import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
-
-import javax.swing.*;
-import java.util.ArrayList;
 
 public class ImageRenameDialog< R extends RealType< R > & NativeType< R > >
 {
@@ -29,7 +21,7 @@ public class ImageRenameDialog< R extends RealType< R > & NativeType< R > >
 
 	protected void recordMacro()
 	{
-		final MacroRecorder recorder = new MacroRecorder( ImageRenameCommand.COMMAND_NAME, inputImage, outputImage );
+		final MacroRecorder recorder = new MacroRecorder( ImageRenameCommand.COMMAND_FULL_NAME, inputImage, outputImage );
 		recorder.record();
 	}
 

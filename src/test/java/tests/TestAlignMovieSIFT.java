@@ -1,8 +1,8 @@
 package tests;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.open.files.FileInfos;
 import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
+import de.embl.cba.bdp2.read.NamingScheme;
 import de.embl.cba.bdp2.register.RegisteredViews;
 import de.embl.cba.bdp2.register.Registration;
 import de.embl.cba.bdp2.BigDataProcessor2;
@@ -11,7 +11,6 @@ import net.imagej.ImageJ;
 import net.imglib2.FinalInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
-import org.junit.Test;
 
 public class TestAlignMovieSIFT< R extends RealType< R > & NativeType< R > >
 {
@@ -24,7 +23,7 @@ public class TestAlignMovieSIFT< R extends RealType< R > & NativeType< R > >
 
 		final Image< R > image = BigDataProcessor2.openImage(
 				"/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-data/gustavo-drift",
-				FileInfos.LOAD_CHANNELS_FROM_FOLDERS,
+				NamingScheme.LOAD_CHANNELS_FROM_FOLDERS,
 				".*");
 
 		if ( showImages )

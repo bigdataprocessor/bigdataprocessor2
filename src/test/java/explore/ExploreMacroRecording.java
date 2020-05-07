@@ -1,6 +1,6 @@
 package explore;
 
-import de.embl.cba.bdp2.open.command.OpenAdvancedCommand;
+import de.embl.cba.bdp2.open.OpenAdvancedCommand;
 import ij.plugin.frame.Recorder;
 import net.imagej.ImageJ;
 

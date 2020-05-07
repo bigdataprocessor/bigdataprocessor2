@@ -4,8 +4,8 @@ import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.bin.Binner;
 import de.embl.cba.bdp2.convert.UnsignedByteTypeConversionDialog;
 import de.embl.cba.bdp2.crop.Cropper;
-import de.embl.cba.bdp2.open.CachedCellImgReader;
-import de.embl.cba.bdp2.open.files.FileInfos;
+import de.embl.cba.bdp2.read.CachedCellImgReader;
+import de.embl.cba.bdp2.read.FileInfos;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.log.progress.Progress;
@@ -15,6 +15,7 @@ import de.embl.cba.bdp2.dialog.DisplaySettings;
 import de.embl.cba.bdp2.shift.ChannelShifter;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import loci.common.DebugTools;
 import net.imglib2.*;
 import net.imglib2.cache.img.CachedCellImg;
 import net.imglib2.converter.Converters;
@@ -72,11 +73,11 @@ public class BigDataProcessor2
     public static < R extends RealType< R > & NativeType< R > >
     Image< R > openImage(
             String directory,
-            String fileInfosLoadingScheme,
+            String namingScheme,
             String filterPattern )
     {
         FileInfos fileInfos =
-                new FileInfos( directory, fileInfosLoadingScheme, filterPattern );
+                new FileInfos( directory, namingScheme, filterPattern );
 
         final Image< R > image = CachedCellImgReader.loadImage( fileInfos );
 
@@ -86,11 +87,13 @@ public class BigDataProcessor2
     public static < R extends RealType< R > & NativeType< R > >
     Image< R > openImage(
             String directory,
-            String fileInfosLoadingScheme,
+            String loadingScheme,
             String filterPattern,
             String hdf5DataSetName)
     {
-        FileInfos fileInfos = new FileInfos( directory, fileInfosLoadingScheme, filterPattern,hdf5DataSetName );
+        DebugTools.setRootLevel( "OFF" ); // Bio-Formats
+
+        FileInfos fileInfos = new FileInfos( directory, loadingScheme, filterPattern, hdf5DataSetName );
 
         final Image< R > image = CachedCellImgReader.loadImage( fileInfos );
 
@@ -141,7 +144,6 @@ public class BigDataProcessor2
     {
         return new BdvImageViewer( image, true, BdvImageViewer.disableArbitraryPlaneSlicing );
     }
-
 
     // TODO: Return futures from the image saver
     public static < R extends RealType< R > & NativeType< R > >

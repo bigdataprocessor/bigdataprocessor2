@@ -1,6 +1,7 @@
 import bdv.util.*;
-import de.embl.cba.bdp2.open.CachedCellImgReader;
-import de.embl.cba.bdp2.open.files.FileInfos;
+import de.embl.cba.bdp2.read.CachedCellImgReader;
+import de.embl.cba.bdp2.read.FileInfos;
+import de.embl.cba.bdp2.read.NamingScheme;
 import de.embl.cba.bdp2.viewers.BdvTransformEventHandler;
 import net.imglib2.cache.img.CachedCellImg;
 
@@ -11,7 +12,7 @@ public class TestOpenTwoChannelTiffSeriesWithUI
     {
 
         final String directory = "src\\test\\resources\\tiff-nc2-nt2\\";
-        final FileInfos fileInfos = new FileInfos(directory, FileInfos.LOAD_CHANNELS_FROM_FOLDERS,".*","");
+        final FileInfos fileInfos = new FileInfos(directory, NamingScheme.LOAD_CHANNELS_FROM_FOLDERS,".*","");
         CachedCellImg myImg = new CachedCellImgReader().createCachedCellImg( fileInfos );
         double [] voxelSpacing = new double[]{0,0};
         final BdvStackSource bdvStackSource = BdvFunctions.show(myImg,"stream", BdvOptions.options().axisOrder(AxisOrder.XYCZT)

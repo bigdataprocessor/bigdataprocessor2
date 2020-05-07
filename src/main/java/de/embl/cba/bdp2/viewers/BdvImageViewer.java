@@ -2,6 +2,7 @@ package de.embl.cba.bdp2.viewers;
 
 import bdv.tools.brightness.ConverterSetup;
 import bdv.tools.brightness.MinMaxGroup;
+import bdv.tools.brightness.SetupAssignments;
 import bdv.util.*;
 import bdv.viewer.DisplayMode;
 import bdv.viewer.SourceAndConverter;
@@ -11,7 +12,7 @@ import de.embl.cba.bdp2.service.BdvService;
 import de.embl.cba.bdp2.service.ImageService;
 import de.embl.cba.bdp2.track.ThresholdFloodFillOverlapTracker;
 import de.embl.cba.bdp2.track.Track;
-import de.embl.cba.bdp2.BdpMenuActions;
+import de.embl.cba.bdp2.ui.MenuActions;
 import de.embl.cba.bdp2.dialog.DisplaySettings;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.volatiles.VolatileCachedCellImg;
@@ -60,7 +61,7 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
 
         show( autoContrast );
 
-        this.addMenus( new BdpMenuActions() );
+        this.addMenus( new MenuActions() );
 
         this.installBehaviours( );
     }
@@ -198,7 +199,7 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
         }
     }
 
-    public void addMenus( BdpMenuActions menus )
+    public void addMenus( MenuActions menus )
     {
         menus.setViewer(this);
 
@@ -218,14 +219,15 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
         final boolean groupingEnabled = bdvHandle.getViewerPanel().getVisibilityAndGrouping().isGroupingEnabled();
         final DisplayMode displayMode = bdvHandle.getViewerPanel().getVisibilityAndGrouping().getDisplayMode();
 
-        final List< ConverterSetup > converterSetups = bdvHandle.getSetupAssignments().getConverterSetups();
+        final SetupAssignments setupAssignments = bdvHandle.getSetupAssignments();
 
+        final List< ConverterSetup > converterSetups = setupAssignments.getConverterSetups();
         final ConverterSetup converterSetup = converterSetups.get( channel );
+
+        setupAssignments.removeSetupFromGroup( converterSetup,  setupAssignments.getMinMaxGroup( converterSetup ) );
+
         converterSetup.setDisplayRange( min, max );
-
-        final MinMaxGroup minMaxGroup =
-                getBdvHandle().getSetupAssignments().getMinMaxGroup( converterSetup );
-
+        final MinMaxGroup minMaxGroup = setupAssignments.getMinMaxGroup( converterSetup );
         minMaxGroup.getMinBoundedValue().setCurrentValue( min );
         minMaxGroup.getMaxBoundedValue().setCurrentValue( max );
     }
@@ -412,6 +414,7 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
                 VolatileViews.wrapAsVolatile( cachedCellImg ),
                 image.getName(),
                 options );
+
 
 //        if ( volatileRai == null )
 //        {

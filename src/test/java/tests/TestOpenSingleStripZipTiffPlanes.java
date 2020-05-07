@@ -1,8 +1,8 @@
 package tests;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.open.files.FileInfos;
 import de.embl.cba.bdp2.BigDataProcessor2;
+import de.embl.cba.bdp2.read.NamingScheme;
 import loci.common.DebugTools;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -19,7 +19,7 @@ public class TestOpenSingleStripZipTiffPlanes
 
 		final Image< R > image = BigDataProcessor2.openImage(
 				"/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-data/em-slices-zip-strips",
-				FileInfos.TIFF_SLICES,
+				NamingScheme.TIFF_SLICES,
 				".*.tif" );
 
 		if ( showImages ) BigDataProcessor2.showImage( image);

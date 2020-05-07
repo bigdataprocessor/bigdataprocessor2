@@ -3,8 +3,8 @@ package de.embl.cba.bdp2.crop;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
+import de.embl.cba.bdp2.open.AbstractOpenCommand;
 import de.embl.cba.bdp2.record.MacroRecorder;
-import de.embl.cba.bdp2.scijava.command.AbstractProcessingCommand;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.FinalInterval;
@@ -35,7 +35,7 @@ public class CropDialog< R extends RealType< R > & NativeType< R > >
 
 	private void recordMacro( Image< R > inputImage, Image< R > outputImage, FinalInterval intervalXYZCT )
 	{
-		final MacroRecorder< R > recorder = new MacroRecorder<>( CropCommand.COMMAND_NAME, inputImage, outputImage, AbstractProcessingCommand.SHOW_IN_NEW_VIEWER );
+		final MacroRecorder< R > recorder = new MacroRecorder<>( CropCommand.COMMAND_FULL_NAME, inputImage, outputImage, AbstractOpenCommand.SHOW_IN_NEW_VIEWER );
 		
 		recorder.addOption( "minX", intervalXYZCT.min(0 ) );
 		recorder.addOption( "minY", intervalXYZCT.min(1 ) );

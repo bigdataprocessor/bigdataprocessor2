@@ -1,8 +1,8 @@
 package users.gustavo;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.open.files.FileInfos;
 import de.embl.cba.bdp2.BigDataProcessor2;
+import de.embl.cba.bdp2.read.NamingScheme;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
@@ -12,7 +12,7 @@ public class TestTiffLoading
 	{
 		final Image< R > image = BigDataProcessor2.openImage(
 				"/Users/tischer/Documents/gustavo/bdp2-errors/error001",
-				FileInfos.SINGLE_CHANNEL_TIMELAPSE,
+				NamingScheme.SINGLE_CHANNEL_TIMELAPSE,
 				".*.tif"
 		);
 

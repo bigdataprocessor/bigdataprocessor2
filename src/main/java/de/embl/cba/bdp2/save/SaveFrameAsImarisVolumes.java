@@ -61,7 +61,7 @@ public class SaveFrameAsImarisVolumes< R extends RealType< R > & NativeType< R >
 //                image.dimension(FileInfoConstants.Z) *
 //                image.dimension(FileInfoConstants.C) *
 //                image.dimension(FileInfoConstants.T) *
-//                files.bitDepth / 8;
+//                file.bitDepth / 8;
 //
 //        if (numBytesOfImage > 1.5 * freeMemoryInBytes) {
 //            // TODO: do something...
@@ -111,7 +111,7 @@ public class SaveFrameAsImarisVolumes< R extends RealType< R > & NativeType< R >
             counter.incrementAndGet();
 
 //            if (!stop.get())
-//                ProgressHelpers.logProgress( totalFiles, counter, startTime, "Saved files " );
+//                ProgressHelpers.logProgress( totalFiles, counter, startTime, "Saved file " );
 
             imagePlus = null;
             System.gc();

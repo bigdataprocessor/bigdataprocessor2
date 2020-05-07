@@ -1,8 +1,8 @@
 package tests;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.open.files.FileInfos;
 import de.embl.cba.bdp2.BigDataProcessor2;
+import de.embl.cba.bdp2.read.NamingScheme;
 import loci.common.DebugTools;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -18,7 +18,7 @@ public class TestFolderPatternOpening
 
 		final Image< R > image = BigDataProcessor2.openImage(
 				"/Volumes/cba/exchange/Isabell_Schneider/3-Color",
-				FileInfos.LOAD_CHANNELS_FROM_FOLDERS,
+				NamingScheme.LOAD_CHANNELS_FROM_FOLDERS,
 				"stack_10_.*/.*" );
 
 		// bdp.showImage( image );

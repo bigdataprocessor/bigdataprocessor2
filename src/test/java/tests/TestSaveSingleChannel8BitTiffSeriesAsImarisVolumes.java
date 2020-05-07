@@ -1,11 +1,10 @@
 package tests;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.open.files.FileInfos;
+import de.embl.cba.bdp2.read.NamingScheme;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import loci.common.DebugTools;
-import org.junit.Test;
 
 import java.io.File;
 
@@ -23,7 +22,7 @@ public class TestSaveSingleChannel8BitTiffSeriesAsImarisVolumes
         final String directory =
                 "/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-data/nc1-nt3-calibrated-8bit-tiff";
 
-        final String loadingScheme = FileInfos.SINGLE_CHANNEL_TIMELAPSE;
+        final String loadingScheme = NamingScheme.SINGLE_CHANNEL_TIMELAPSE;
         final String filterPattern = ".*.tif";
 
         final Image image = bdp.openImage(

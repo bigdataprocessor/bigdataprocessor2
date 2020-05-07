@@ -67,7 +67,7 @@ public class SaveFrameAsTIFFStacks< R extends RealType< R > & NativeType< R > > 
 //                    image.dimension(FileInfoConstants.Z) *
 //                    image.dimension(FileInfoConstants.C) *
 //                    image.dimension(FileInfoConstants.T) *
-//                    files.bitDepth / 8;
+//                    file.bitDepth / 8;
 //
 //            if (numBytesOfImage > 1.5 * freeMemoryInBytes) {
 //                // TODO: do something...

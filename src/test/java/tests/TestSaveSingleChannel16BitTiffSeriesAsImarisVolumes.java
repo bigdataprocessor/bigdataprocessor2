@@ -3,11 +3,10 @@ package tests;
 import bdv.img.imaris.Imaris;
 import bdv.util.BdvFunctions;
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.open.files.FileInfos;
+import de.embl.cba.bdp2.read.NamingScheme;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import loci.common.DebugTools;
-import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,7 +26,7 @@ public class TestSaveSingleChannel16BitTiffSeriesAsImarisVolumes
         final String directory =
                 TestConstants.TEST_FOLDER + "test-data/nc1-nt3-calibrated-16bit-tiff";
 
-        final String loadingScheme = FileInfos.SINGLE_CHANNEL_TIMELAPSE;
+        final String loadingScheme = NamingScheme.SINGLE_CHANNEL_TIMELAPSE;
         final String filterPattern = ".*.tif";
 
         final Image image = bdp.openImage(

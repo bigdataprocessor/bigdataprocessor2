@@ -19,10 +19,13 @@ import java.io.File;
  *
  * @param <R>
  */
-@Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>Save>" + SaveAdvancedCommand.COMMAND_NAME )
+@Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>" + SaveAdvancedCommand.COMMAND_SAVE_PATH + SaveAdvancedCommand.COMMAND_FULL_NAME )
 public class SaveAdvancedCommand< R extends RealType< R > & NativeType< R > > implements Command
 {
-    public static final String COMMAND_NAME = Utils.COMMAND_PREFIX + "Save As...";
+    public static final String COMMAND_SAVE_PATH = "Commands>Save>";
+
+    public static final String COMMAND_NAME = "Save As...";
+    public static final String COMMAND_FULL_NAME = Utils.COMMAND_BDP_PREFIX + COMMAND_NAME;
 
     @Parameter(label = "Input image name", persist = true)
     protected Image< R > inputImage = ImageService.nameToImage.values().iterator().next();

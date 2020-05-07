@@ -2,7 +2,7 @@ package publication;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.open.files.FileInfos;
+import de.embl.cba.bdp2.read.NamingScheme;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imagej.ImageJ;
 import net.imglib2.FinalInterval;
@@ -19,8 +19,8 @@ public class FigureCreator
 		imageJ.ui().showUI();
 
 		final Image image = BigDataProcessor2.openHdf5Image( "/Volumes/USB Drive/tim2020/luxendo-two-channel-movie",
-				FileInfos.LOAD_CHANNELS_FROM_FOLDERS,
-				FileInfos.PATTERN_LUXENDO,
+				NamingScheme.LOAD_CHANNELS_FROM_FOLDERS,
+				NamingScheme.PATTERN_LUXENDO,
 				"Data"
 		);
 		image.setName( "raw" );

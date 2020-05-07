@@ -1,6 +1,6 @@
 package run;
 
-import de.embl.cba.bdp2.scijava.command.*;
+import de.embl.cba.bdp2.batch.LuxendoBatchMergeSplitChipCommand;
 import net.imagej.ImageJ;
 
 public class RunBatchMergeSplitChipCommand

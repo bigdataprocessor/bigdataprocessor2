@@ -1,9 +1,10 @@
 package benchmark;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.open.CachedCellImgReader;
-import de.embl.cba.bdp2.open.files.FileInfos;
+import de.embl.cba.bdp2.read.CachedCellImgReader;
+import de.embl.cba.bdp2.read.FileInfos;
 import de.embl.cba.bdp2.bin.Binner;
+import de.embl.cba.bdp2.read.NamingScheme;
 import de.embl.cba.bdp2.save.CachedCellImgReplacer;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.BigDataProcessor2;
@@ -23,7 +24,7 @@ public class SaveSingleChanneHdf5SeriesAsImaris
 
         final int numIOThreads = 4; // TODO
 
-        final String loadingScheme = FileInfos.SINGLE_CHANNEL_TIMELAPSE;
+        final String loadingScheme = NamingScheme.SINGLE_CHANNEL_TIMELAPSE;
         final String filterPattern = ".*.h5";
         final String dataset = "Data";
 

@@ -1,9 +1,9 @@
 package users.isabell;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.open.files.FileInfos;
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.splitviewmerge.SplitViewMerger;
+import de.embl.cba.bdp2.read.NamingScheme;
+import de.embl.cba.bdp2.splitchip.SplitViewMerger;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import net.imagej.ImageJ;
@@ -49,7 +49,7 @@ public class MergeSplitChipWorkflow
         {
             final Image< R > image = BigDataProcessor2.openHdf5Image(
                     directory.toString(),
-                    FileInfos.SINGLE_CHANNEL_TIMELAPSE,
+                    NamingScheme.SINGLE_CHANNEL_TIMELAPSE,
                     ".*.h5",
                     "Data" );
             image.setVoxelUnit( voxelUnit );
@@ -82,7 +82,7 @@ public class MergeSplitChipWorkflow
             final String directory = directories.get( i ).toString();
             final Image< R > image = BigDataProcessor2.openHdf5Image(
                     directory,
-                    FileInfos.SINGLE_CHANNEL_TIMELAPSE,
+                    NamingScheme.SINGLE_CHANNEL_TIMELAPSE,
                     ".*.h5",
                     "Data" );
 

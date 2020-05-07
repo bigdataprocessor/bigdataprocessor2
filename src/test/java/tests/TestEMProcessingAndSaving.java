@@ -1,8 +1,8 @@
 package tests;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.open.files.FileInfos;
 import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
+import de.embl.cba.bdp2.read.NamingScheme;
 import de.embl.cba.bdp2.register.RegisteredViews;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.BigDataProcessor2;
@@ -10,7 +10,6 @@ import loci.common.DebugTools;
 import net.imagej.ImageJ;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
-import org.junit.Test;
 
 public class TestEMProcessingAndSaving< R extends RealType< R > & NativeType< R > >
 {
@@ -24,7 +23,7 @@ public class TestEMProcessingAndSaving< R extends RealType< R > & NativeType< R 
 
 		Image< R > image = BigDataProcessor2.openImage(
 				"/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-data/em-2d-sift-align-01",
-				FileInfos.TIFF_SLICES,
+				NamingScheme.TIFF_SLICES,
 				".*.tif" );
 
 //		image = align( image );
@@ -38,7 +37,7 @@ public class TestEMProcessingAndSaving< R extends RealType< R > & NativeType< R 
 		BigDataProcessor2.saveImage(
 				image,
 				savingSettings,
-				new LoggingProgressListener( "Saved files" ));
+				new LoggingProgressListener( "Saved file" ));
 
 	}
 

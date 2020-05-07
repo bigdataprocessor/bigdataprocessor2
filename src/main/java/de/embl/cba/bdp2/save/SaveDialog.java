@@ -238,7 +238,7 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > >  extends JF
 
     private void recordMacro()
     {
-        final MacroRecorder recorder = new MacroRecorder( SaveAdvancedCommand.COMMAND_NAME, inputImage );
+        final MacroRecorder recorder = new MacroRecorder( SaveAdvancedCommand.COMMAND_FULL_NAME, inputImage );
 
         recorder.addOption( SaveAdvancedCommand.DIRECTORY_PARAMETER, tfDirectory.getText() );
         recorder.addOption( SaveAdvancedCommand.NUM_IO_THREADS_PARAMETER, savingSettings.numIOThreads );

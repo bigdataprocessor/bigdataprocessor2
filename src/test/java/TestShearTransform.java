@@ -1,9 +1,10 @@
-import de.embl.cba.bdp2.open.CachedCellImgReader;
+import de.embl.cba.bdp2.read.CachedCellImgReader;
+import de.embl.cba.bdp2.read.NamingScheme;
 import de.embl.cba.bdp2.shear.ImageShearer;
 import de.embl.cba.bdp2.shear.RaiNDShearer;
 import de.embl.cba.bdp2.shear.ShearMenuDialog;
 import de.embl.cba.bdp2.shear.ShearingSettings;
-import de.embl.cba.bdp2.open.files.FileInfos;
+import de.embl.cba.bdp2.read.FileInfos;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.cache.img.CachedCellImg;
@@ -14,7 +15,7 @@ public class TestShearTransform {
     public static void main(String[] args)
     {
         String imageDirectory = "src/test/resources/shear_transform_test";
-        final FileInfos fileInfos = new FileInfos( imageDirectory, FileInfos.SINGLE_CHANNEL_TIMELAPSE,
+        final FileInfos fileInfos = new FileInfos( imageDirectory, NamingScheme.SINGLE_CHANNEL_TIMELAPSE,
                 ".*", "");
         CachedCellImg cachedCellImg = CachedCellImgReader.createCachedCellImg( fileInfos );
 

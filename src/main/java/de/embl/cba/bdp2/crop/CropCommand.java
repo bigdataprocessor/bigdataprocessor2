@@ -1,6 +1,6 @@
 package de.embl.cba.bdp2.crop;
 
-import de.embl.cba.bdp2.scijava.command.AbstractProcessingCommand;
+import de.embl.cba.bdp2.process.AbstractProcessingCommand;
 import de.embl.cba.bdp2.service.ImageService;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.utils.Utils;
@@ -12,10 +12,11 @@ import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
-@Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>Process>" + CropCommand.COMMAND_NAME )
+@Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>" + AbstractProcessingCommand.COMMAND_PROCESS_PATH + CropCommand.COMMAND_FULL_NAME )
 public class CropCommand< R extends RealType< R > & NativeType< R > > extends AbstractProcessingCommand< R >
 {
-    public static final String COMMAND_NAME = Utils.COMMAND_PREFIX + "Crop...";
+    public static final String COMMAND_NAME = "Crop...";
+    public static final String COMMAND_FULL_NAME = Utils.COMMAND_BDP_PREFIX + COMMAND_NAME;
 
     long minX = 0;
 

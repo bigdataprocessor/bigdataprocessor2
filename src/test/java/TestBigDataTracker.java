@@ -1,5 +1,6 @@
-import de.embl.cba.bdp2.open.CachedCellImgReader;
-import de.embl.cba.bdp2.open.files.FileInfos;
+import de.embl.cba.bdp2.read.CachedCellImgReader;
+import de.embl.cba.bdp2.read.FileInfos;
+import de.embl.cba.bdp2.read.NamingScheme;
 import de.embl.cba.bdp2.track.BigDataTracker;
 import de.embl.cba.bdp2.track.TrackingSettings;
 import de.embl.cba.bdp2.utils.Utils;
@@ -13,7 +14,7 @@ public class TestBigDataTracker {
     public static void main(String[] args) {
 
         String imageDirectory = "src/test/resources/tiff-nc2-nt3-track/";
-        final FileInfos fileInfos = new FileInfos(imageDirectory, FileInfos.LOAD_CHANNELS_FROM_FOLDERS,
+        final FileInfos fileInfos = new FileInfos(imageDirectory, NamingScheme.LOAD_CHANNELS_FROM_FOLDERS,
                 ".*", "");
         CachedCellImg cachedCellImg = CachedCellImgReader.createCachedCellImg( fileInfos );
 

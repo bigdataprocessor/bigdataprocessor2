@@ -1,8 +1,8 @@
 package users.alessandro;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.open.files.FileInfos;
 import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
+import de.embl.cba.bdp2.read.NamingScheme;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.BigDataProcessor2;
 
@@ -11,8 +11,8 @@ public class OpenAndSaveLargeStacks202002
 	public static void main( String[] args )
 	{
 		final Image image = BigDataProcessor2.openHdf5Image( "/Users/tischer/Desktop/2020-02-11_124401/stack_0_channel_4",
-				FileInfos.SINGLE_CHANNEL_TIMELAPSE,
-				FileInfos.PATTERN_LUXENDO_LEFT_CAM,
+				NamingScheme.SINGLE_CHANNEL_TIMELAPSE,
+				NamingScheme.PATTERN_LUXENDO_LEFT_CAM,
 				"Data"
 		);
 

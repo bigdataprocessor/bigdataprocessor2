@@ -1,7 +1,7 @@
 package explore;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.open.files.FileInfos;
+import de.embl.cba.bdp2.read.NamingScheme;
 import de.embl.cba.bdp2.shear.ImageShearer;
 import de.embl.cba.bdp2.shear.ShearMenuDialog;
 import de.embl.cba.bdp2.shear.ShearingSettings;
@@ -17,7 +17,7 @@ public class ExploreShearing < R extends RealType< R > & NativeType< R > >
 	{
 		final Image< R > image = BigDataProcessor2.openImage(
 				"src/test/resources/shear_transform_test",
-				FileInfos.SINGLE_CHANNEL_TIMELAPSE,
+				NamingScheme.SINGLE_CHANNEL_TIMELAPSE,
 				".*");
 
 		final BdvImageViewer bdvImageViewer = BigDataProcessor2.showImage( image);

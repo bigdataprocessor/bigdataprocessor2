@@ -1,7 +1,7 @@
 package users.giulia;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.open.files.FileInfos;
+import de.embl.cba.bdp2.read.NamingScheme;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import net.imagej.ImageJ;
@@ -18,7 +18,7 @@ public class ProcessEMfromServer
 	{
 		final Image< R > image = BigDataProcessor2.openImage(
 				"/Volumes/emcf/Mizzon/projects/Julian_FIBSEM/fib-SEM/20190730_batch6-blockB-prep/20190730_02UA_01GA_cell1",
-				FileInfos.TIFF_SLICES,
+				NamingScheme.TIFF_SLICES,
 				".*.tif" );
 
 		BigDataProcessor2.showImage( image);

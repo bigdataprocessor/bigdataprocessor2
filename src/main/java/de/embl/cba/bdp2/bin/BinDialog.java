@@ -38,7 +38,7 @@ public class BinDialog< T extends RealType< T > & NativeType< T > > extends Abst
 	@Override
 	protected void recordMacro()
 	{
-		final MacroRecorder recorder = new MacroRecorder( BinCommand.COMMAND_NAME, inputImage, outputImage );
+		final MacroRecorder recorder = new MacroRecorder( BinCommand.COMMAND_FULL_NAME, inputImage, outputImage );
 
 		recorder.addOption( "binWidthXPixels",  span[ 0 ] );
 		recorder.addOption( "binWidthYPixels",  span[ 1 ] );

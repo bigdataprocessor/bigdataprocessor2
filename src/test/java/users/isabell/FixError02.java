@@ -1,6 +1,6 @@
 package users.isabell;
 
-import de.embl.cba.bdp2.scijava.command.LuxendoBatchMergeSplitChipCommand;
+import de.embl.cba.bdp2.batch.LuxendoBatchMergeSplitChipCommand;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 

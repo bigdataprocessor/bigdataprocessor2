@@ -2,8 +2,8 @@ import bdv.util.AxisOrder;
 import bdv.util.BdvFunctions;
 import bdv.util.BdvOptions;
 import bdv.util.BdvStackSource;
-import de.embl.cba.bdp2.open.CachedCellImgReader;
-import de.embl.cba.bdp2.open.files.FileInfos;
+import de.embl.cba.bdp2.read.CachedCellImgReader;
+import de.embl.cba.bdp2.read.FileInfos;
 import de.embl.cba.bdp2.viewers.BdvTransformEventHandler;
 import net.imglib2.img.Img;
 
