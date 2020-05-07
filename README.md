@@ -4,6 +4,17 @@
 
 Interactive processing of TB-sized image data within [Fiji](http://fiji.sc/), on your laptop.
 
+## Installation
+
+BigDataProcessor2 is a Fiji Plugin.
+
+- Please install [Fiji](fiji.sc)
+- Within Fiji, please enable the following [Update Site](https://imagej.net/Update_Sites): 
+    - [X] EMBL-CBA
+- Restart Fiji
+- BigDataProcessor2 can be found in the Plugins menu (as it is an ImageJ2 plugin you have to scroll all the way to the bottom).
+<img width="500" alt="image" src="https://user-images.githubusercontent.com/2157566/79339050-8da45d00-7f28-11ea-916c-7c8deaa4b77a.png">
+
 ## Overview and examples
 
 ### Opening TB-sized Tiff or Hdf5 based raw data
@@ -70,11 +81,6 @@ The BigDataProcessor2 is a new version of the **BigDataTools** plugin, a.k.a [Bi
 - Multi-stack HDF
 - Multi-stack IMARIS HDF
 
- 
-## Installation
-Within ImageJ/Fiji you can install the plugin using the `Help > Update > Manage Update Sites` and select the `EMBL-CBA` site.
-
-Note: The plugins need Java 1.8 if you see error messages popping up that might be caused by an older Java version.
 
 ## Contributors
 
@@ -84,8 +90,7 @@ ashis.r91@gmail.com&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;christian.tischer@embl.de
 
 ## User Documentation
 
-
-## Image viewing
+### Image viewing
 
 Images are displayed in a slicing mode. The initial view is a slice perpendicular to the z axis (i.e. an xy plane). The currently viewed plane can be changed by the following keyboard shortcuts:
 - **[ Shift X ]** Shows a yz plane
@@ -95,11 +100,11 @@ Images are displayed in a slicing mode. The initial view is a slice perpendicula
 - **[ Shift , ]** or **[ Shift . ]** Change plane fast
 - You can also drag the mouse while keeping the left mouse button pressed to inspect the data at oblique views.
 
-### Tip 
+#### Tip 
 
 - Due the way most data are layout on disc, it is faster to inspect the data only using the **[ Shift Y ]** and **[ Shift Z ]** views, as the **[ Shift X ]** view will render much slower.
 
 
-## More 
+### Processing operations 
 
-*Coming soon*
+
