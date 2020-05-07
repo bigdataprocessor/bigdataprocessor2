@@ -4,6 +4,7 @@ import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.dialog.HelpDialog;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.service.ImageService;
+import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;
@@ -19,6 +20,9 @@ public abstract class AbstractOpenCommand< R extends RealType< R > & NativeType<
     public static final String DO_NOT_SHOW = "Do not show image";
     public static final String SHOW_IN_CURRENT_VIEWER = "Show image in current viewer";
     public static final String SHOW_IN_NEW_VIEWER = "Show image in new viewer";
+
+    // TODO: this is not concurrency save
+    public static BdvImageViewer parentBdvImageViewer = null;
 
     @Parameter(label = "Image data directory", style = "directory")
     File directory;
@@ -48,11 +52,15 @@ public abstract class AbstractOpenCommand< R extends RealType< R > & NativeType<
         {
             BigDataProcessor2.showImage( outputImage, autoContrast, disableArbitraryPlaneSlicing );
         }
-//        else if ( outputModality.equals( REPLACE_IN_VIEWER ))
-//        {
-//            final BdvImageViewer viewer = BdvService.imageNameToBdv.get( inputImage.getName() );
-//            viewer.replaceImage( outputImage, autoContrast, keepViewerTransform );
-//        }
+        else if ( viewingModality.equals( SHOW_IN_CURRENT_VIEWER ))
+        {
+            final BdvImageViewer viewer = parentBdvImageViewer;
+            if ( viewer != null )
+                viewer.replaceImage( outputImage, autoContrast, keepViewerTransform );
+            else
+                BigDataProcessor2.showImage( outputImage, autoContrast, disableArbitraryPlaneSlicing );
+
+        }
         else if ( viewingModality.equals( DO_NOT_SHOW ) )
         {
             // do nothing

@@ -1,9 +1,12 @@
 package de.embl.cba.bdp2;
 
+import bdv.viewer.animate.TextOverlayAnimator;
 import de.embl.cba.bdp2.calibrate.CalibrationUtils;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.open.AbstractOpenCommand;
 import de.embl.cba.bdp2.read.NamingScheme;
+import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import ij.IJ;
 import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -39,7 +42,12 @@ public class BigDataProcessor2Command< R extends RealType< R > & NativeType< R >
                     new double[]{ 1, 1, 1 },
                     "micrometer" );
 
-            BigDataProcessor2.showImage( image );
+            final BdvImageViewer viewer = BigDataProcessor2.showImage( image );
+
+            new Thread( () ->  {
+                IJ.wait( 3000 );
+                viewer.getBdvHandle().getViewerPanel().addOverlayAnimator ( new TextOverlayAnimator( "Go to Menu > BigDataProcessor2 > Open", 10000, TextOverlayAnimator.TextPosition.CENTER ) );
+            }).start();
 
         } );
     }

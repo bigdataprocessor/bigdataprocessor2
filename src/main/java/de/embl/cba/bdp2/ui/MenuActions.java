@@ -12,10 +12,7 @@ import de.embl.cba.bdp2.dialog.Utils;
 import de.embl.cba.bdp2.image.ImageRenameCommand;
 import de.embl.cba.bdp2.image.ImageRenameDialog;
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.open.OpenAdvancedCommand;
-import de.embl.cba.bdp2.open.OpenLeicaDSLTiffPlanesCommand;
-import de.embl.cba.bdp2.open.OpenLuxendoInViCommand;
-import de.embl.cba.bdp2.open.OpenLuxendoMuViCommand;
+import de.embl.cba.bdp2.open.*;
 import de.embl.cba.bdp2.save.SaveDialog;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.scijava.Services;
@@ -206,6 +203,7 @@ public class MenuActions implements ActionListener {
         {
             BigDataProcessor2.generalThreadPool.submit(() ->
             {
+                AbstractOpenCommand.parentBdvImageViewer = viewer;
                 Services.commandService.run( OpenAdvancedCommand.class, true );
             });
         }
@@ -213,6 +211,7 @@ public class MenuActions implements ActionListener {
         {
             BigDataProcessor2.generalThreadPool.submit(() ->
             {
+                AbstractOpenCommand.parentBdvImageViewer = viewer;
                 Services.commandService.run( OpenLeicaDSLTiffPlanesCommand.class, true );
             });
         }
@@ -220,6 +219,7 @@ public class MenuActions implements ActionListener {
         {
             BigDataProcessor2.generalThreadPool.submit(() ->
             {
+                AbstractOpenCommand.parentBdvImageViewer = viewer;
                 Services.commandService.run( OpenLuxendoMuViCommand.class, true );
             });
         }
@@ -227,6 +227,7 @@ public class MenuActions implements ActionListener {
         {
             BigDataProcessor2.generalThreadPool.submit(() ->
             {
+                AbstractOpenCommand.parentBdvImageViewer = viewer;
                 Services.commandService.run( OpenLuxendoInViCommand.class, true );
             });
         }

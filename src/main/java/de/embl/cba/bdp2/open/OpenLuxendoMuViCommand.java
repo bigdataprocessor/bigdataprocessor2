@@ -40,7 +40,6 @@ public class  OpenLuxendoMuViCommand< R extends RealType< R > & NativeType< R > 
             if ( camera.equals( LEFT ) ) regExp = regExp.replace( "/Cam_(.*)", "/Cam_Left" );
             if ( camera.equals( RIGHT ) ) regExp = regExp.replace( "/Cam_(.*)", "/Cam_Right" );
 
-
             outputImage =
                         BigDataProcessor2.openImage(
                                 directory.toString(),
