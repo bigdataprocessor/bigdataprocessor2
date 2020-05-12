@@ -60,8 +60,8 @@ public class SaveSingleChanneHdf5SeriesAsImaris
         final Image volumeLoaderBinnedImage = new Image<>(
                 replaced,
                 fileInfos.directory,
-                fileInfos.voxelSpacing,
-                fileInfos.voxelUnit );
+				fileInfos.channelNames, fileInfos.voxelSpacing,
+                fileInfos.voxelUnit, fileInfos );
 
         final File out = new File( "/Users/tischer/Desktop/stack_0_channel_0-asImaris-bdp2/im");
 

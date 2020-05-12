@@ -149,12 +149,4 @@ public class BigDataTrackerCommand < R extends RealType< R > & NativeType< R > >
         } else { /* TODO: error handling */ }
     }
 
-    public static void main(final String... args) throws Exception {
-        // Test using DummyBdvImageViewer
-        final ImageJ ij = new ImageJ();
-        ij.launch(args);
-        double [] voxelSpacing = new double[]{0,0};
-       BdvImageViewer img = new BdvImageViewer( null, "dummy", voxelSpacing, "pixel" );
-        ij.command().run(BigDataTrackerCommand.class, true, "imageViewer", img);
-    }
 }

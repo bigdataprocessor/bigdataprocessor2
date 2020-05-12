@@ -138,9 +138,10 @@ public class CachedCellImgReader
 
     public static Image asImage( FileInfos fileInfos, CachedCellImg cachedCellImg )
     {
-        return new Image<>(
+        return new Image(
                 cachedCellImg,
                 new File( fileInfos.directory ).getName(),
+                fileInfos.channelNames,
                 fileInfos.voxelSpacing,
                 fileInfos.voxelUnit,
                 fileInfos

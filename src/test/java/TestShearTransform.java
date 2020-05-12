@@ -18,28 +18,28 @@ public class TestShearTransform {
         final FileInfos fileInfos = new FileInfos( imageDirectory, NamingScheme.SINGLE_CHANNEL_TIMELAPSE,
                 ".*", "");
         CachedCellImg cachedCellImg = CachedCellImgReader.createCachedCellImg( fileInfos );
-
-        BdvImageViewer imageViewer = new BdvImageViewer<UnsignedShortType>(
-                cachedCellImg,
-                "input",
-                new double[]{1.0, 1.0, 1.0},
-                "pixel");
-        imageViewer.show( true );
-        imageViewer.setDisplayRange( 0, 800, 0 );
-
-
-        /**
-         * Get sheared image and replaceImage it in same viewer
-         * (replacing the input image);
-         */
-        RandomAccessibleInterval sheared = getShearedImage( cachedCellImg, imageViewer );
-
-        imageViewer.replaceImage( imageViewer.getImage().newImage( sheared ), false, true );
-
-        /**
-         * Compute shearing using a 5D Affine Transform.
-         * This is much simpler, but also much  slower to compute
-         */
+//
+//        BdvImageViewer imageViewer = new BdvImageViewer<UnsignedShortType>(
+//                cachedCellImg,
+//                "input",
+//                new double[]{1.0, 1.0, 1.0},
+//                "pixel");
+//        imageViewer.show( true );
+//        imageViewer.setDisplayRange( 0, 800, 0 );
+//
+//
+//        /**
+//         * Get sheared image and replaceImage it in same viewer
+//         * (replacing the input image);
+//         */
+//        RandomAccessibleInterval sheared = getShearedImage( cachedCellImg, imageViewer );
+//
+//        imageViewer.replaceImage( imageViewer.getImage().newImage( sheared ), false, true );
+//
+//        /**
+//         * Compute shearing using a 5D Affine Transform.
+//         * This is much simpler, but also much  slower to compute
+//         */
     //        RandomAccessibleInterval sheared5D = getShearedImage5D( cachedCellImg, imageViewer );
     //       BdvImageViewer imageViewer2 = new BdvImageViewer<UnsignedShortType>(
     //                sheared5D,

@@ -17,11 +17,11 @@ import net.imglib2.type.numeric.real.FloatType;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 
 public class FileInfos
 {
-
     public static final int PROGRESS_UPDATE_MILLISECONDS = 100;
 	public static final int TOTAL_AXES = 5;
 	public static final AxisType[] AXES_ORDER = { Axes.X, Axes.Y, Axes.Z, Axes.CHANNEL, Axes.TIME};
@@ -57,6 +57,7 @@ public class FileInfos
     public double min_pixel_val;
     public int compression;
     public int numTiffStrips;
+    public String[] channelNames;
 
     public FileInfos(
             String directory,
@@ -78,6 +79,7 @@ public class FileInfos
         directory = Utils.fixDirectoryFormat( directory );
 
         this.directory = directory;
+        this.h5DataSetName = h5DataSetName;
 
         if ( loadingScheme.contains("<Z") )
         {
@@ -85,7 +87,6 @@ public class FileInfos
         }
         else
         {
-            this.h5DataSetName = h5DataSetName;
             FileInfosHelper.setFileInfos(
                     this,
                     directory,

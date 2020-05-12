@@ -17,6 +17,7 @@ import de.embl.cba.bdp2.dialog.DisplaySettings;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.volatiles.VolatileCachedCellImg;
 import de.embl.cba.bdp2.volatiles.VolatileViews;
+import de.embl.cba.bdv.utils.BdvUtils;
 import net.imglib2.*;
 import net.imglib2.cache.img.CachedCellImg;
 import net.imglib2.realtransform.AffineTransform3D;
@@ -41,9 +42,7 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
     public static boolean disableArbitraryPlaneSlicing = false;
 
     private Image< R > image;
-    private boolean autoContrast;
-    private BdvStackSource< ? > bdvStackSource;
-    private BdvGrayValuesOverlay overlay;
+    private ArrayList< BdvStackSource< R > > channelSources;
     private BdvHandle bdvHandle;
     private Map< String, Track > tracks;
     private int numRenderingThreads = Runtime.getRuntime().availableProcessors(); // TODO
@@ -56,13 +55,12 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
     public BdvImageViewer( final Image< R > image, final boolean autoContrast, final boolean disableArbitraryPlaneSlicing )
     {
         this.image = image;
-        this.autoContrast = autoContrast;
         this.disableArbitraryPlaneSlicing = disableArbitraryPlaneSlicing;
+        this.channelSources = new ArrayList<>(  );
 
         show( autoContrast );
 
         this.addMenus( new MenuActions() );
-
         this.installBehaviours( );
     }
 
@@ -95,15 +93,6 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
                 "Stop image processing", "ctrl S"  ) ;
     }
 
-
-    public BdvImageViewer( RandomAccessibleInterval< R > rai,
-                           String name,
-                           double[] voxelSpacing,
-                           String voxelUnit )
-    {
-        this.image = new Image<>( rai, name, voxelSpacing, voxelUnit  );
-    }
-
     public void close()
     {
         bdvHandle.close();
@@ -128,11 +117,11 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
     }
 
     public void repaint(AffineTransform3D viewerTransform) {
-        this.bdvStackSource.getBdvHandle().getViewerPanel().setCurrentViewerTransform(viewerTransform);
+        this.bdvHandle.getViewerPanel().setCurrentViewerTransform(viewerTransform);
     }
 
     public void repaint() {
-        this.bdvStackSource.getBdvHandle().getViewerPanel().requestRepaint();
+        this.bdvHandle.getViewerPanel().requestRepaint();
     }
 
     // TODO: get rid of this method
@@ -146,7 +135,7 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
         final AffineTransform3D viewerTransform = getViewerTransform();
         final List< DisplaySettings > displaySettings = getDisplaySettings();
 
-        if ( bdvStackSource != null ) removeAllSourcesFromBdv();
+        if ( channelSources.size() > 0 ) removeAllSourcesFromBdv();
 
         showImage( image, autoContrast );
 
@@ -259,6 +248,12 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
     {
         double min, max;
 
+        final AffineTransform3D affineTransform3D = new AffineTransform3D();
+        bdvHandle.getViewerPanel().getState().getViewerTransform( affineTransform3D );
+        final RealPoint globalPosition = new RealPoint( 0, 0, 0 );
+        affineTransform3D.inverse().apply( new RealPoint( 0, 0, 0 ), globalPosition );
+        final long[] positionInSource = BdvUtils.getPositionInSource( channelSources.get( channel ).getSources().get( 0 ).getSpimSource(), globalPosition, 0, 0 );
+
         if ( image != null)
         {
             RandomAccessibleInterval raiXYZ = Views.hyperSlice(
@@ -266,14 +261,15 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
                     DimensionOrder.C,
                     channel);
 
-            final long stackCenter =
-                    (long) Math.ceil( ( raiXYZ.max( DimensionOrder.Z ) - raiXYZ.min( DimensionOrder.Z ) ) / 2.0 )
-                            + raiXYZ.min( DimensionOrder.Z ) + 1;
+//            final long stackCenter =
+//                    (long) Math.ceil( ( raiXYZ.max( DimensionOrder.Z ) - raiXYZ.min( DimensionOrder.Z ) ) / 2.0 )
+//                            + raiXYZ.min( DimensionOrder.Z ) + 1;
+
 
             IntervalView< R > raiXY = Views.hyperSlice(
                     raiXYZ,
                     DimensionOrder.Z,
-                    stackCenter );
+                    positionInSource[ 2 ] );
 
             Cursor< R > cursor = Views.iterable( raiXY ).cursor();
             min = Double.MAX_VALUE;
@@ -312,24 +308,15 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
 
     public AffineTransform3D getViewerTransform()
     {
-        if ( bdvStackSource != null )
-        {
-            final AffineTransform3D transform3D = new AffineTransform3D();
-            bdvStackSource.getBdvHandle().getViewerPanel()
-                    .getState().getViewerTransform( transform3D );
-            return transform3D.copy();
-        }
-        else
-           return null;
+        final AffineTransform3D transform3D = new AffineTransform3D();
+        bdvHandle.getViewerPanel().getState().getViewerTransform( transform3D );
+        return transform3D; //  transform3D.copy();
     }
 
     public void setViewerTransform( AffineTransform3D viewerTransform )
     {
-        bdvStackSource.getBdvHandle().getViewerPanel()
+        bdvHandle.getViewerPanel()
                 .setCurrentViewerTransform( viewerTransform );
-
-        bdvStackSource.getBdvHandle().getViewerPanel()
-                .requestRepaint();
     }
 
     public void replicateViewerContrast( BdvImageViewer newImageViewer ) {
@@ -351,23 +338,19 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
     }
 
     public int getCurrentTimePoint() {
-        return this.bdvStackSource.getBdvHandle().getViewerPanel().getState().getCurrentTimepoint();
+        return this.bdvHandle.getViewerPanel().getState().getCurrentTimepoint();
     }
 
     
     public void shiftImageToCenter(double[] centerCoordinates) {
         AffineTransform3D sourceTransform = new AffineTransform3D();
-        int width = this.bdvStackSource.getBdvHandle().getViewerPanel().getWidth();
-        int height = this.bdvStackSource.getBdvHandle().getViewerPanel().getHeight();
+        int width = this.bdvHandle.getViewerPanel().getWidth();
+        int height = this.bdvHandle.getViewerPanel().getHeight();
         centerCoordinates[0] = (width / 2.0 + centerCoordinates[0]);
         centerCoordinates[1] = (height / 2.0 - centerCoordinates[1]);
         centerCoordinates[2] = -centerCoordinates[2];
         sourceTransform.translate(centerCoordinates);
         repaint(sourceTransform);
-    }
-
-    public BdvStackSource< ? > getBdvStackSource() {
-        return bdvStackSource;
     }
 
     public BdvHandle getBdvHandle()
@@ -382,71 +365,53 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
         BdvService.imageNameToBdv.put( image.getName(), this );
         ImageService.nameToImage.put( image.getName(), image );
 
-        bdvStackSource = addToBdv( image );
-        bdvHandle = bdvStackSource.getBdvHandle();
+        addToBdv( image );
+
         //bdvHandle.getViewerPanel().setInterpolation( Interpolation.NLINEAR );
         //setTransform();
         setAutoColors();
         if ( autoContrast ) autoContrastPerChannel();
     }
 
-    private BdvStackSource< ? > addToBdv( Image< R > image )
+    private void addToBdv( Image< R > image )
     {
         final AffineTransform3D scaling = getScalingTransform( image.getVoxelSpacing() );
-
-//        final RandomAccessibleInterval< Volatile< R > > volatileRai =
-//                asVolatile( image.getRai() );
-
         CachedCellImg cachedCellImg = VolatileCachedCellImg.getVolatileCachedCellImg( image );
+        BdvOptions options = getBdvOptions( image, scaling );
 
-        BdvOptions options = BdvOptions.options().axisOrder( AxisOrder.XYZCT )
+        final long numChannels = cachedCellImg.dimension( DimensionOrder.C );
+        final String[] channelNames = image.getChannelNames();
+
+        this.channelSources = new ArrayList<>(  );
+
+        for ( int channelIndex = 0; channelIndex < numChannels; channelIndex++ )
+        {
+            final IntervalView channelView = Views.hyperSlice( cachedCellImg, DimensionOrder.C, channelIndex );
+
+            final BdvStackSource stackSource = BdvFunctions.show(
+                    channelView,
+                    channelNames[ channelIndex ],
+                    options );
+
+            this.bdvHandle = stackSource.getBdvHandle();
+            options = options.addTo( bdvHandle );
+            this.channelSources.add( stackSource );
+        }
+    }
+
+    private BdvOptions getBdvOptions( Image< R > image, AffineTransform3D scaling )
+    {
+        BdvOptions options = BdvOptions.options().axisOrder( AxisOrder.XYZT )
                 .addTo( bdvHandle )
                 .sourceTransform( scaling )
                 .numRenderingThreads( numRenderingThreads )
-                .frameTitle( "BigDataProcessor2" );
+                .frameTitle( "BigDataProcessor2: " + image.getName() );
 
         if ( disableArbitraryPlaneSlicing )
         {
             options = options.transformEventHandlerFactory( new BehaviourTransformEventHandler3DWithoutRotation.BehaviourTransformEventHandler3DFactory() );
         }
-
-        bdvStackSource = BdvFunctions.show(
-                VolatileViews.wrapAsVolatile( cachedCellImg ),
-                image.getName(),
-                options );
-
-
-//        if ( volatileRai == null )
-//        {
-//            Logger.error( "Could not convert to volatile!\n" +
-//                    "Image viewing might not be very smooth..." );
-//
-//            bdvStackSource = BdvFunctions.show(
-//                    image.getRai(),
-//                    image.getName(),
-//                    BdvOptions.options().axisOrder( AxisOrder.XYZCT )
-//                            .addTo( bdvHandle )
-//                            .sourceTransform( scaling )
-//                            .numRenderingThreads( numRenderingThreads ) );
-//        }
-//        else
-//        {
-//            bdvStackSource = BdvFunctions.show(
-//                    volatileRai,
-//                    image.getName(),
-//                    BdvOptions.options().axisOrder( AxisOrder.XYZCT )
-//                            .addTo( bdvHandle )
-//                            .sourceTransform( scaling )
-//                            .numRenderingThreads( numRenderingThreads ) );
-//        }
-
-        return bdvStackSource;
-    }
-
-    private void setTransform()
-    {
-        AffineTransform3D transform3D = getViewerTransform();
-        if ( transform3D != null ) setViewerTransform( transform3D );
+        return options;
     }
 
     private AffineTransform3D getScalingTransform( double[] voxelSpacing )
@@ -460,18 +425,17 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
 
     private void setAutoColors()
     {
-        final int numSources = bdvStackSource.getSources().size();
-        if ( numSources > 1 )
+        final int numSources = channelSources.size();
+
+        if ( numSources > 0 )
         {
             for ( int sourceIndex = 0; sourceIndex < numSources; sourceIndex++ )
             {
                 final ConverterSetup converterSetup =
-                        bdvStackSource.getBdvHandle().
-                                getSetupAssignments().getConverterSetups().get( sourceIndex );
+                        bdvHandle.getSetupAssignments().getConverterSetups().get( sourceIndex );
 
                 converterSetup.setColor( getAutoColor( sourceIndex, numSources ) );
             }
-
         }
     }
 
@@ -533,5 +497,10 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
     public Map< String, Track > getTracks()
     {
         return tracks;
+    }
+
+    public void getSourceTransform( AffineTransform3D transform )
+    {
+        channelSources.get( 0 ).getSources().get( 0 ).getSpimSource().getSourceTransform( 0,0, transform );
     }
 }

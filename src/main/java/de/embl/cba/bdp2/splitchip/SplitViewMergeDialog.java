@@ -232,10 +232,7 @@ public class SplitViewMergeDialog< R extends RealType< R > & NativeType< R > > e
 					@Override
 					public void getTransform( final AffineTransform3D transform )
 					{
-						viewer.getBdvStackSource()
-								.getSources().get( 0 )
-								.getSpimSource()
-								.getSourceTransform( 0, 0, transform );
+						viewer.getSourceTransform( transform );
 					}
 
 					@Override
@@ -249,8 +246,7 @@ public class SplitViewMergeDialog< R extends RealType< R > & NativeType< R > > e
 		transformedBoxOverlay.boxDisplayMode().set(
 				TransformedBoxOverlay.BoxDisplayMode.SECTION );
 
-		final ViewerPanel viewerPanel = viewer.getBdvStackSource()
-				.getBdvHandle().getViewerPanel();
+		final ViewerPanel viewerPanel = viewer.getBdvHandle().getViewerPanel();
 		viewerPanel.getDisplay().addOverlayRenderer(transformedBoxOverlay);
 		viewerPanel.addRenderTransformListener(transformedBoxOverlay);
 	}

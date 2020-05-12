@@ -1,3 +1,4 @@
+import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.read.CachedCellImgReader;
 import de.embl.cba.bdp2.read.FileInfos;
 import de.embl.cba.bdp2.read.NamingScheme;
@@ -13,23 +14,32 @@ public class TestBigDataTracker {
 
     public static void main(String[] args) {
 
-        String imageDirectory = "src/test/resources/tiff-nc2-nt3-track/";
-        final FileInfos fileInfos = new FileInfos(imageDirectory, NamingScheme.LOAD_CHANNELS_FROM_FOLDERS,
-                ".*", "");
-        CachedCellImg cachedCellImg = CachedCellImgReader.createCachedCellImg( fileInfos );
-
-        BdvImageViewer imageViewer = new BdvImageViewer< UnsignedShortType >(
-                cachedCellImg,
-                "input",
-                new double[]{1.0, 1.0, 1.0},
-                "pixel");
-        imageViewer.show( true );
-
-        BigDataTracker bdt = new BigDataTracker();
-        TrackingSettings< ? > trackingSettings = createTrackingSettings(imageViewer);
-        //Test for CROSS_CORRELATION track
-        trackingSettings.trackingMethod = TrackingSettings.PHASE_CORRELATION;
-        bdt.trackObject(trackingSettings, imageViewer);
+//        String imageDirectory = "src/test/resources/tiff-nc2-nt3-track/";
+//        final FileInfos fileInfos = new FileInfos(imageDirectory, NamingScheme.LOAD_CHANNELS_FROM_FOLDERS,
+//                ".*", "");
+//        CachedCellImg cachedCellImg = CachedCellImgReader.createCachedCellImg( fileInfos );
+//
+//        final Image< UnsignedShortType > rImage = (Image< UnsignedShortType >)
+//                new Image(
+//                        cachedCellImg,
+//                        "name",
+//                        new String[]{ "channel1", "channel2" },
+//                        new double[]{ 1.0, 1.0, 1.0 },
+//                "pixel",
+//                        fileInfos );
+//
+//        BdvImageViewer imageViewer = new BdvImageViewer< UnsignedShortType >(
+//                cachedCellImg,
+//                "input",
+//                new double[]{1.0, 1.0, 1.0},
+//                "pixel");
+//        imageViewer.show( true );
+//
+//        BigDataTracker bdt = new BigDataTracker();
+//        TrackingSettings< ? > trackingSettings = createTrackingSettings(imageViewer);
+//        //Test for CROSS_CORRELATION track
+//        trackingSettings.trackingMethod = TrackingSettings.PHASE_CORRELATION;
+//        bdt.trackObject(trackingSettings, imageViewer);
         //Test for CENTER of MASS track
 //        trackingSettings.trackingMethod = TrackingSettings.CENTER_OF_MASS;
 //        bdt.trackObject(trackingSettings, imageViewer);

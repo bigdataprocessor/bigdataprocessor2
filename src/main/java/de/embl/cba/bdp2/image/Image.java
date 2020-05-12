@@ -16,6 +16,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 
 	private RandomAccessibleInterval< R > raiXYZCT;
 	private String name;
+	private final String[] channelNames;
 	private double[] voxelSpacing;
 	private String voxelUnit;
 	private FileInfos fileInfos;
@@ -23,23 +24,22 @@ public class Image< R extends RealType< R > & NativeType< R > >
 
 	public Image( RandomAccessibleInterval< R > raiXYZCT,
 				  String name,
-				  double[] voxelSpacing,
-				  String voxelUnit )
-	{
-		this.raiXYZCT = raiXYZCT;
-		this.name = name;
-		this.voxelSpacing = voxelSpacing;
-		this.voxelUnit = voxelUnit;
-	}
-
-	public Image( RandomAccessibleInterval< R > raiXYZCT,
-				  String name,
+				  String[] channelNames,
 				  double[] voxelSpacing,
 				  String voxelUnit,
 				  FileInfos fileInfos )
 	{
-		this( raiXYZCT, name, voxelSpacing, voxelUnit );
+		this.raiXYZCT = raiXYZCT;
+		this.name = name;
+		this.channelNames = channelNames;
+		this.voxelSpacing = voxelSpacing;
+		this.voxelUnit = voxelUnit;
 		this.fileInfos = fileInfos;
+	}
+
+	public String[] getChannelNames()
+	{
+		return channelNames;
 	}
 
 	public FileInfos getFileInfos()
@@ -94,7 +94,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 
 	public Image< R > newImage( RandomAccessibleInterval< R > raiXYZCT )
 	{
-		return new Image<>( raiXYZCT, getName(), getVoxelSpacing(), getVoxelUnit(), getFileInfos() );
+		return new Image<>( raiXYZCT, getName(), getChannelNames(), getVoxelSpacing(), getVoxelUnit(), getFileInfos() );
 	}
 
 	public long numTimePoints()

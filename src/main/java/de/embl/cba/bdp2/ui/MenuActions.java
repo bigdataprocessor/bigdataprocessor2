@@ -3,9 +3,11 @@ package de.embl.cba.bdp2.ui;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.bin.BinCommand;
 import de.embl.cba.bdp2.bin.BinDialog;
+import de.embl.cba.bdp2.calibrate.CalibrateCommand;
 import de.embl.cba.bdp2.calibrate.CalibrationDialog;
 import de.embl.cba.bdp2.convert.ConvertToUnsignedByteTypeCommand;
 import de.embl.cba.bdp2.convert.UnsignedByteTypeConversionDialog;
+import de.embl.cba.bdp2.crop.CropCommand;
 import de.embl.cba.bdp2.crop.CropDialog;
 import de.embl.cba.bdp2.dialog.MiscMenu;
 import de.embl.cba.bdp2.dialog.Utils;
@@ -87,15 +89,13 @@ public class MenuActions implements ActionListener {
                 saveDialog.setVisible(true);
             });
         }
-        else if (e.getActionCommand().equalsIgnoreCase(
-                Menu.CALIBRATE_MENU_ITEM ))
+        else if (e.getActionCommand().equalsIgnoreCase( CalibrateCommand.COMMAND_NAME ))
         {
             BigDataProcessor2.generalThreadPool.submit(() -> {
                 new CalibrationDialog< >( viewer );
             });
         }
-        else if (e.getActionCommand().equalsIgnoreCase(
-                Menu.OBLIQUE_MENU_ITEM ))
+        else if (e.getActionCommand().equalsIgnoreCase( Menu.OBLIQUE_MENU_ITEM ))
         {
             BigDataProcessor2.generalThreadPool.submit(() -> {
                 ShearMenuDialog shearMenuDialog = new ShearMenuDialog( viewer );
@@ -137,8 +137,7 @@ public class MenuActions implements ActionListener {
                 RegisteredViews.createAlignedMovieView( viewer, Registration.PHASE_CORRELATION, 0 );
             });
         }
-        else if(e.getActionCommand().equalsIgnoreCase(
-        		Menu.CROP_MENU_ITEM ))
+        else if(e.getActionCommand().equalsIgnoreCase( CropCommand.COMMAND_NAME ))
         {
         	new Thread( () ->  {
         	    new CropDialog<>( viewer );
@@ -231,8 +230,5 @@ public class MenuActions implements ActionListener {
                 Services.commandService.run( OpenLuxendoInViCommand.class, true );
             });
         }
-
-
     }
-
 }

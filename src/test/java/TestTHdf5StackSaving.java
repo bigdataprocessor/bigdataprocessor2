@@ -1,3 +1,4 @@
+import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.read.CachedCellImgReader;
 import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.BigDataProcessor2;
@@ -18,23 +19,24 @@ public class TestTHdf5StackSaving
                 ".*", "");
         CachedCellImg cachedCellImg = CachedCellImgReader.createCachedCellImg( fileInfos );
 
-       BdvImageViewer imageViewer = new BdvImageViewer<UnsignedShortType>(
-                cachedCellImg,
-                "input",
-                new double[]{1.0, 1.0, 1.0},
-                "pixel");
-        imageViewer.show( true );
-        imageViewer.setDisplayRange( 0, 800, 0 );
-
-        /**
-		 * Save as HDF5_STACKS Stacks
-         */
-        final SavingSettings defaults = SavingSettings.getDefaults();
-        defaults.fileType = SavingSettings.FileType.HDF5_VOLUMES;
-        defaults.numIOThreads = 3;
-        defaults.voxelSpacing =imageViewer.getImage().getVoxelSpacing();
-        defaults.voxelUnit = imageViewer.getImage().getVoxelUnit();
-        new BigDataProcessor2().saveImage( imageViewer.getImage(), defaults, new LoggingProgressListener( "Files saved" ) );
+//        new Image< UnsignedShortType >
+//        BdvImageViewer imageViewer = new BdvImageViewer<UnsignedShortType>(
+//                cachedCellImg,
+//                "input",
+//                new double[]{1.0, 1.0, 1.0},
+//                "pixel");
+//        imageViewer.show( true );
+//        imageViewer.setDisplayRange( 0, 800, 0 );
+//
+//        /**
+//		 * Save as HDF5_STACKS Stacks
+//         */
+//        final SavingSettings defaults = SavingSettings.getDefaults();
+//        defaults.fileType = SavingSettings.FileType.HDF5_VOLUMES;
+//        defaults.numIOThreads = 3;
+//        defaults.voxelSpacing =imageViewer.getImage().getVoxelSpacing();
+//        defaults.voxelUnit = imageViewer.getImage().getVoxelUnit();
+//        new BigDataProcessor2().saveImage( imageViewer.getImage(), defaults, new LoggingProgressListener( "Files saved" ) );
 
     }
 

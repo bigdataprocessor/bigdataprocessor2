@@ -50,8 +50,7 @@ public class BoundingBoxSelection
 			@Override
 			public void getTransform( final AffineTransform3D transform )
 			{
-				viewer.getBdvStackSource().getSources().get( 0 )
-						.getSpimSource().getSourceTransform( 0, 0, transform );
+				viewer.getSourceTransform( transform );
 
 			}
 
@@ -64,7 +63,7 @@ public class BoundingBoxSelection
 
 		transformedBoxOverlay.boxDisplayMode().set( TransformedBoxOverlay.BoxDisplayMode.SECTION );
 
-		final ViewerPanel viewerPanel = viewer.getBdvStackSource().getBdvHandle().getViewerPanel();
+		final ViewerPanel viewerPanel = viewer.getBdvHandle().getViewerPanel();
 		viewerPanel.getDisplay().addOverlayRenderer(transformedBoxOverlay);
 		viewerPanel.addRenderTransformListener(transformedBoxOverlay);
 
@@ -77,7 +76,7 @@ public class BoundingBoxSelection
 	public static void showBox( BdvImageViewer viewer, FinalRealInterval finalInterval, String title )
 	{
 		final TransformedRealBoxSelectionDialog.Result result = BdvFunctions.selectRealBox(
-				viewer.getBdvStackSource().getBdvHandle(),
+				viewer.getBdvHandle(),
 				new AffineTransform3D(),
 				finalInterval,
 				finalInterval,

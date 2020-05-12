@@ -45,6 +45,7 @@ public class Binner
 		return ( Image< T > ) new Image(
 					binnedRai,
 					inputImage.getName(),
+					inputImage.getChannelNames(),
 					getBinnedVoxelSize( span, inputImage.getVoxelSpacing() ),
 					inputImage.getVoxelUnit(),
 					inputImage.getFileInfos()

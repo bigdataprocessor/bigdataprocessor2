@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class FileInfosHelper
 {
@@ -251,7 +252,8 @@ public class FileInfosHelper
         if ( ! namingScheme.equals( NamingScheme.LOAD_CHANNELS_FROM_FOLDERS) )
         {
             fileInfos.channelFolders = new String[ fileInfos.nC ];
-            for ( int c = 0; c < fileInfos.nC; c++) fileInfos.channelFolders[ c ] = "";
+            for ( int c = 0; c < fileInfos.nC; c++)
+                fileInfos.channelFolders[ c ] = "";
         }
     }
 
@@ -265,12 +267,13 @@ public class FileInfosHelper
             {
                 fileInfos.nC = fileInfos.channelFolders.length;
                 fileInfos.nT = fileLists[ 0 ].length;
+                fileInfos.channelNames = fileInfos.channelFolders;
             }
             else if ( namingScheme.equalsIgnoreCase( NamingScheme.SINGLE_CHANNEL_TIMELAPSE ) )
             {
                 fileInfos.nC = 1;
                 fileInfos.nT = fileLists[ 0 ].length;
-
+                fileInfos.channelNames = new String[]{ new File( fileInfos.directory ).getParent() };
             }
             else if ( namingScheme.equals( NamingScheme.TIFF_SLICES ) )
             {
@@ -278,6 +281,7 @@ public class FileInfosHelper
                 fileInfos.nT = 1;
                 fileInfos.nZ = fileLists[ 0 ].length;
                 fileInfos.fileType = Utils.FileType.SINGLE_PLANE_TIFF.toString();
+                fileInfos.channelNames = new String[]{ new File( fileInfos.directory ).getParent() };
             }
 
             fixChannelFolders( fileInfos, namingScheme );
@@ -312,6 +316,8 @@ public class FileInfosHelper
             List< String > timepoints = new ArrayList< >( timepointsHS );
             Collections.sort(timepoints);
             fileInfos.nT = timepoints.size() ;
+
+            fileInfos.channelNames = channels.stream().toArray( String[]::new );
 
             fixChannelFolders( fileInfos, namingScheme );
             setImageMetadata( fileInfos, fileInfos.directory, namingScheme, fileLists[ 0 ] );
@@ -357,6 +363,8 @@ public class FileInfosHelper
             List< String > timepoints = new ArrayList< >( timepointsHS );
             Collections.sort(timepoints);
             fileInfos.nT = timepoints.size() ;
+
+            fileInfos.channelNames = channels.stream().toArray( String[]::new );
 
             fixChannelFolders( fileInfos, namingScheme );
             setImageMetadata( fileInfos, fileInfos.directory + fileInfos.channelFolders[ 0 ], namingScheme, fileLists[ 0 ] );

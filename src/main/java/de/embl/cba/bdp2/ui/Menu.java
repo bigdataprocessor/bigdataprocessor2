@@ -16,15 +16,9 @@ import javax.swing.*;
 
 public class Menu extends JMenu
 {
-    public static final String EIGHT_BIT_CONVERSION_MENU_ITEM = "8-bit...";
-    public static final String BINNING_MENU_ITEM = "Bin...";
-    public static final String CHROMATIC_SHIFT_CORRECTION_MENU_ITEM = "Align Channels... ";
-    public static final String SPLIT_VIEW_MENU_ITEM = "Align Channels Split Chip...";
     public static final String CONFIGURE_LOGGING_MENU_ITEM = "Configure Logging...";
-    public static final String VIEW_IN_3D_VIEWER = "3D Viewer..."; // TODO
     // Development (alpha stage)
     public static final String IMAGEJ_VIEW_MENU_ITEM = "Show in ImageJ Viewer";
-    public static final String CORRECT_MOTION_MENU_ITEM = "Correct Motion... (Under Development)";
     public static final String APPLY_TRACK_MENU_ITEM = "Apply Track...";
     public static final String REGISTER_VOLUME_SIFT_MENU_ITEM = "Correct Lateral Slice Drift in Volume (SIFT)...";
     public static final String REGISTER_MOVIE_SIFT_MENU_ITEM = "Correct Lateral Frame Drift in Time-lapse (SIFT)...";
@@ -33,10 +27,9 @@ public class Menu extends JMenu
     public static final String SAVE_AS_IMARIS_VOLUMES_MENU_ITEM = "Save as Imaris Volumes...";
     public static final String SAVE_AS_TIFF_VOLUMES_MENU_ITEM = "Save as Tiff Volumes...";
     public static final String SAVE_AS_TIFF_PLANES_MENU_ITEM = "Save as Tiff Planes...";
-    public static final String CALIBRATE_MENU_ITEM = "Calibrate...";
 
     public static final String OBLIQUE_MENU_ITEM = "Shear..."; // TODO: ?
-    public static final String CROP_MENU_ITEM = "Crop...";
+
     // Menus
     public static final String MISC_MENU = "Misc";
     public static final String DEVELOPMENT_MENU_DISPLAY_TEXT = "Development";

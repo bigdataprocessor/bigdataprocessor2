@@ -16,24 +16,24 @@ public class TestTHdf5ImarisSaving {
                 ".*", "");
         CachedCellImg cachedCellImg = CachedCellImgReader.createCachedCellImg( fileInfos );
 
-       BdvImageViewer imageViewer = new BdvImageViewer<UnsignedShortType>(
-                cachedCellImg,
-                "input",
-                new double[]{1.0, 1.0, 1.0},
-                "pixel");
-        imageViewer.show( true );
-        imageViewer.setDisplayRange(0, 800, 0);
-
-        /**
-         * Save as IMARIS_STACKS Stacks
-         */
-        final SavingSettings defaults = SavingSettings.getDefaults();
-        defaults.fileType = SavingSettings.FileType.IMARIS_VOLUMES;
-
-        defaults.voxelSpacing = imageViewer.getImage().getVoxelSpacing();
-        defaults.voxelUnit = imageViewer.getImage().getVoxelUnit();
-
-        new BigDataProcessor2().saveImage( imageViewer.getImage(), defaults, new LoggingProgressListener( "Files saved" ) );
+//       BdvImageViewer imageViewer = new BdvImageViewer<UnsignedShortType>(
+//                cachedCellImg,
+//                "input",
+//                new double[]{1.0, 1.0, 1.0},
+//                "pixel");
+//        imageViewer.show( true );
+//        imageViewer.setDisplayRange(0, 800, 0);
+//
+//        /**
+//         * Save as IMARIS_STACKS Stacks
+//         */
+//        final SavingSettings defaults = SavingSettings.getDefaults();
+//        defaults.fileType = SavingSettings.FileType.IMARIS_VOLUMES;
+//
+//        defaults.voxelSpacing = imageViewer.getImage().getVoxelSpacing();
+//        defaults.voxelUnit = imageViewer.getImage().getVoxelUnit();
+//
+//        new BigDataProcessor2().saveImage( imageViewer.getImage(), defaults, new LoggingProgressListener( "Files saved" ) );
     }
 
 }
