@@ -25,7 +25,6 @@ public class Hdf5DataCubeReader
 		HDF5DataSetInformation dsInfo = reader.getDataSetInformation( h5DataSet );
 		String dsTypeString = hdf5InfoToString(dsInfo);
 
-
 		final long[] longDimensions = {
 				interval.dimension( 2 ),
 				interval.dimension( 1 ),
@@ -46,7 +45,6 @@ public class Hdf5DataCubeReader
 		final MDShortArray mdShortArray = new MDShortArray(
 				array,
 				longDimensions );
-
 
 		if ( dsTypeString.equals("int16") )
 		{

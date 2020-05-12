@@ -9,7 +9,10 @@ import net.imglib2.cache.img.ReadOnlyCachedCellImgFactory;
 import net.imglib2.cache.img.ReadOnlyCachedCellImgOptions;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.integer.UnsignedByteType;
+import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.util.Intervals;
+import net.imglib2.util.Util;
 
 import java.io.File;
 
@@ -43,18 +46,28 @@ public class CachedCellImgReader
     public static int[] getCellDimsXYZCT( FileInfos fileInfos )
     {
         final int[] imageDimsXYZCT = { fileInfos.nX, fileInfos.nY, fileInfos.nZ, 1, 1 };
-        return getCellDimsXYZCT( imageDimsXYZCT );
+        return getCellDimsXYZCT( fileInfos.bitDepth, imageDimsXYZCT );
     }
 
-    public static int[] getCellDimsXYZCT( int[] imageDimsXYZCT )
+    public static int[] getCellDimsXYZCT( int bitDepth, int[] imageDimsXYZCT )
     {
         int[] cellDimsXYZCT = new int[ 5 ];
 
         // load whole rows
         cellDimsXYZCT[ 0 ] = imageDimsXYZCT[ 0 ];
 
-        // load whole columns
-        cellDimsXYZCT[ 1 ] = imageDimsXYZCT[ 1 ];
+        final int bytesPerRow = imageDimsXYZCT[ 0 ] * bitDepth / 8;
+
+        final int numRowsPerFileSystemBlock = 4096 / bytesPerRow;
+
+        if ( numRowsPerFileSystemBlock < 10 )
+        {
+            cellDimsXYZCT[ 1 ] = imageDimsXYZCT[ 1 ] / 10; //  Math.min( 10, imageDimsXYZCT[ 1 ] );
+        }
+        else
+        {
+            cellDimsXYZCT[ 1 ] = imageDimsXYZCT[ 1 ];
+        }
 
         //cellDimsXYZCT[ 1 ] = ( int ) Math.ceil( imageDimsXYZCT[ 1 ] / 10 );
 
@@ -150,7 +163,21 @@ public class CachedCellImgReader
 
     public static int[] getCellDimsXYZCT( RandomAccessibleInterval< ? > raiXYZCT )
     {
+        int bitDepth = getBitDepth( raiXYZCT );
         final int[] imageDims = Intervals.dimensionsAsIntArray( raiXYZCT );
-        return getCellDimsXYZCT( imageDims );
+        return getCellDimsXYZCT( bitDepth, imageDims );
+    }
+
+    public static int getBitDepth( RandomAccessibleInterval< ? > raiXYZCT )
+    {
+        int bitDepth;
+        final Object typeFromInterval = Util.getTypeFromInterval( raiXYZCT );
+        if ( typeFromInterval instanceof UnsignedByteType )
+            bitDepth = 8;
+        else if ( typeFromInterval instanceof UnsignedShortType )
+            bitDepth = 16;
+        else
+            throw new UnsupportedOperationException( "Type not supported: " + typeFromInterval );
+        return bitDepth;
     }
 }

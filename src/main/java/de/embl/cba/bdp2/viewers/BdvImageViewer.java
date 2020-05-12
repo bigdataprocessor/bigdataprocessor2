@@ -24,6 +24,7 @@ import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.util.Intervals;
 import net.imglib2.util.Util;
 import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
@@ -271,7 +272,14 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
                     DimensionOrder.Z,
                     positionInSource[ 2 ] );
 
-            Cursor< R > cursor = Views.iterable( raiXY ).cursor();
+            final long nx = raiXY.dimension( 0 );
+            final long ny = raiXY.dimension( 1 );
+
+            final FinalInterval crop = Intervals.expand( raiXY, -nx / 3, -ny / 3 );
+
+            final IntervalView< R > cropped = Views.interval( raiXY, crop );
+
+            Cursor< R > cursor = Views.iterable( cropped ).cursor();
             min = Double.MAX_VALUE;
             max = -Double.MAX_VALUE;
             double value;
@@ -370,7 +378,11 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
         //bdvHandle.getViewerPanel().setInterpolation( Interpolation.NLINEAR );
         //setTransform();
         setAutoColors();
-        if ( autoContrast ) autoContrastPerChannel();
+
+        if ( autoContrast )
+        {
+            new Thread( () -> autoContrastPerChannel() ).start();
+        }
     }
 
     private void addToBdv( Image< R > image )
@@ -389,7 +401,7 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
             final IntervalView channelView = Views.hyperSlice( cachedCellImg, DimensionOrder.C, channelIndex );
 
             final BdvStackSource stackSource = BdvFunctions.show(
-                    channelView,
+                    VolatileViews.wrapAsVolatile( channelView ),
                     channelNames[ channelIndex ],
                     options );
 

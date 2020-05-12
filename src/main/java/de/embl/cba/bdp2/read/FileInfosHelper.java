@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class FileInfosHelper
 {
@@ -182,7 +181,6 @@ public class FileInfosHelper
             String namingScheme,
             String filterPattern)
     {
-
         String[][] fileLists =
                 getFilesInFolders( fileInfos, directory, namingScheme, filterPattern );
 
@@ -200,13 +198,11 @@ public class FileInfosHelper
 
             FileInfosLeicaHelper.initLeicaSinglePlaneTiffData(
                     fileInfos, dataDirectory, filterPattern, fileLists[ 0 ], fileInfos.nC, fileInfos.nZ );
-
         }
         else // tiff or h5
         {
             setFileInfos( fileInfos, namingScheme, fileLists );
         }
-
     }
 
     private static void setImageMetadata( FileInfos fileInfos, String directory, String namingScheme, String[] fileList )
@@ -290,13 +286,15 @@ public class FileInfosHelper
         }
         else if ( namingScheme.contains( NamingScheme.LUXENDO_REGEXP_ID ) )
         {
-            // we have no simple channels in folders logic
+            // we have no simple "channels in folders" logic
             fileInfos.channelFolders = new String[]{""};
 
             HashSet<String> channelsHS = new HashSet();
             HashSet<String> timepointsHS = new HashSet();
 
-            Pattern patternCT = Pattern.compile( namingScheme );
+            final String pattern = namingScheme.replace( "/", Pattern.quote( File.separator ) );
+
+            Pattern patternCT = Pattern.compile( pattern );
 
             for ( String fileName : fileLists[ 0 ] )
             {
@@ -313,9 +311,15 @@ public class FileInfosHelper
             Collections.sort( channels );
             fileInfos.nC = channels.size();
 
+            if ( fileInfos.nC == 0 )
+                throw new UnsupportedOperationException( "No channels found!" );
+
             List< String > timepoints = new ArrayList< >( timepointsHS );
             Collections.sort(timepoints);
             fileInfos.nT = timepoints.size() ;
+
+            if ( fileInfos.nT == 0 )
+                throw new UnsupportedOperationException( "No time-points found!" );
 
             fileInfos.channelNames = channels.stream().toArray( String[]::new );
 
@@ -475,17 +479,27 @@ public class FileInfosHelper
             Logger.error("Directory not found: " + directory );
             return null;
         }
+        else
+        {
+            Logger.info( "Parsing directory: " + directory );
+        }
 
         String[][] fileLists;
 
-        if ( namingScheme.equals( NamingScheme.LOAD_CHANNELS_FROM_FOLDERS ) )
+        final String fileFilter = getFileFilter( filterPattern );
+        final String folderPattern = getFolderPattern( filterPattern );
+
+        Logger.info( "Sub-folder name pattern: " + folderPattern );
+        Logger.info( "File name pattern: " + fileFilter );
+
+         if ( namingScheme.equals( NamingScheme.LOAD_CHANNELS_FROM_FOLDERS ) )
         {
             //
             // Check for sub-folders
             //
             Logger.info("Checking for sub-folders...");
 
-            fileInfos.channelFolders = getSubFolders( directory, getFolderFilter( filterPattern ) );
+            fileInfos.channelFolders = getSubFolders( directory, folderPattern );
 
             if ( fileInfos.channelFolders != null )
             {
@@ -493,7 +507,7 @@ public class FileInfosHelper
                 for (int i = 0; i < fileInfos.channelFolders.length; i++)
                 {
                     fileLists[i] = getFilesInFolder(
-                            directory + fileInfos.channelFolders[ i ], getFileFilter( filterPattern ));
+                            directory + fileInfos.channelFolders[ i ], fileFilter );
 
                     if ( fileLists[i] == null )
                     {
@@ -511,39 +525,44 @@ public class FileInfosHelper
                         "the channels");
                 fileLists = null;
             }
-
         }
         else if ( namingScheme.contains( NamingScheme.LUXENDO_REGEXP_ID ) )
         {
-            Logger.info("Checking for sub-folders...");
+            final String[] subFolders = getSubFolders( directory, folderPattern );
 
-            final String[] subFolders = getSubFolders( directory, getFolderFilter( filterPattern ) );
-
-            String[] files = new String[]{};
-            if ( subFolders != null )
+            if ( subFolders == null )
             {
-                for (int i = 0; i < subFolders.length; i++)
-                {
-                    String[] filesInFolder = getFilesInFolder(
-                            directory + subFolders[ i ], getFileFilter( filterPattern ) );
-
-                    if ( filesInFolder == null )
-                    {
-                        throw new UnsupportedOperationException( "No file found in folder: " + directory + fileInfos.channelFolders[ i ]);
-                    }
-
-                    final int j = i;
-                    filesInFolder = Arrays.stream( filesInFolder ).map( x -> subFolders[ j ] + File.separator + x ).toArray( String[]::new );
-                    files = (String[]) ArrayUtils.addAll(files, filesInFolder );
-                }
-
-                fileLists = new String[1][];
-                fileLists[ 0 ] = files;
+                throw new UnsupportedOperationException( "No sub-folders found; please make sure to select the stack's parent folder." );
             }
             else
             {
-                throw new UnsupportedOperationException( "No sub-folders found; please make sure to select the stack's parent folder.");
+                Logger.info( "Found " + subFolders.length + " sub-folders" );
             }
+
+            String[] files = new String[]{};
+            for (int i = 0; i < subFolders.length; i++)
+            {
+                final String subFolder = directory + subFolders[ i ];
+                Logger.info( "Fetching files in " + subFolder  );
+
+                String[] filesInFolder = getFilesInFolder( subFolder, fileFilter );
+
+                if ( filesInFolder == null )
+                {
+                    throw new UnsupportedOperationException( "No files found in folder: " + subFolder);
+                }
+                else
+                {
+                    Logger.info( "Found " + filesInFolder.length + " files in folder: " + subFolder);
+                }
+
+                final int j = i;
+                filesInFolder = Arrays.stream( filesInFolder ).map( x -> subFolders[ j ] + File.separator + x ).toArray( String[]::new );
+                files = (String[]) ArrayUtils.addAll(files, filesInFolder );
+            }
+
+            fileLists = new String[1][];
+            fileLists[ 0 ] = files;
         }
         else
         {   //
@@ -564,13 +583,15 @@ public class FileInfosHelper
         return fileLists;
     }
 
-    public static String getFolderFilter( String filterPattern )
+    public static String getFolderPattern( String filterPattern )
     {
         if ( filterPattern != null )
         {
             //final String savePattern = toWindowsSplitSavePattern( filterPattern );
             //final String[] split = savePattern.split( Pattern.quote( File.separator ) );
-            final String[] split = filterPattern.split( Pattern.quote( File.separator ) + "(?!d\\))" );
+            //final String[] split = filterPattern.split( Pattern.quote( File.separator ) + "(?!d\\))" );
+            final String[] split = filterPattern.split( "/" );
+
             if ( split.length > 1 )
             {
                 final String folder = split[ 0 ];
@@ -589,15 +610,13 @@ public class FileInfosHelper
     {
         if ( filterPattern != null )
         {
-            //final String savePattern = toWindowsSplitSavePattern( filterPattern );
-            //final String[] split = savePattern.split( Pattern.quote( File.separator )  );
-            final String[] split = filterPattern.split( Pattern.quote( File.separator ) + "(?!d\\))" );
+            //final String separator = Pattern.quote( File.separator );
+            //final String[] split = filterPattern.split( separator + "(?!d\\))" );
+            final String[] split = filterPattern.split( "/" );
             if ( split.length > 1 )
                 return split[ 1 ];
-                //filter = fromWindowsSplitSavePattern( split[ 1 ] );
             else
                 return split[ 0 ];
-                //filter = fromWindowsSplitSavePattern( split[ 0 ] );
         }
         else
         {
@@ -704,7 +723,6 @@ public class FileInfosHelper
         }
     }
 
-
     private static String[] getFilesInFolder(String directory, String filterPattern)
     {
         // TODO: can getting the file-list be faster?
@@ -731,18 +749,18 @@ public class FileInfosHelper
         else return ( list );
     }
 
-    private static String[] getSubFolders( String parentFolder, String subFolderFilter )
+    private static String[] getSubFolders( String parentFolder, String subFolderPattern )
     {
         String[] list = new File(parentFolder).list( new FilenameFilter()
         {
             @Override
-            public boolean accept(File parentFolder, String fileName)
+            public boolean accept(File parentFolder, String subFolder)
             {
-                if ( ! new File(parentFolder, fileName).isDirectory() ) return false;
+                if ( ! new File(parentFolder, subFolder).isDirectory() ) return false;
 
-                Pattern.compile( subFolderFilter ).matcher( fileName );
+                Pattern.compile( subFolderPattern ).matcher( subFolder );
 
-                if ( ! Pattern.compile( subFolderFilter ).matcher( fileName ).matches() ) return false;
+                if ( ! Pattern.compile( subFolderPattern ).matcher( subFolder ).matches() ) return false;
 
                 return true;
             }

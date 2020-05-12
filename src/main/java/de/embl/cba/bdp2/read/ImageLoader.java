@@ -122,7 +122,7 @@ public class ImageLoader< T extends NativeType< T > > implements CellLoader< T >
     }
 
     @Override
-    public void load( final SingleCellArrayImg< T, ? > cell )
+    public synchronized void load( final SingleCellArrayImg< T, ? > cell )
     {
         long[] min = new long[ FileInfos.TOTAL_AXES ];
         long[] max = new long[ FileInfos.TOTAL_AXES ];
