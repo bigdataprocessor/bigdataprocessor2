@@ -37,8 +37,10 @@ public class OpenLuxendoInViCommand< R extends RealType< R > & NativeType< R > >
 
             String regExp = LUXENDO_REGEXP.replace( "STACK", "" + stackIndex );
 
-            if ( camera.equals( LONG ) ) regExp = regExp.replace( "/Cam_(.*)", "/Cam_Left" );
-            if ( camera.equals( SHORT ) ) regExp = regExp.replace( "/Cam_(.*)", "/Cam_Right" );
+            if ( camera.equals( LONG ) )
+                regExp = regExp.replace( "?<C2>.*", "?<C2>Long" );
+            if ( camera.equals( SHORT ) )
+                regExp = regExp.replace( "?<C2>.*", "?<C2>Short" );
 
 
             outputImage =

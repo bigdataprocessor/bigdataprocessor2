@@ -17,7 +17,6 @@ import net.imglib2.type.numeric.real.FloatType;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.Objects;
 
 public class FileInfos
@@ -76,9 +75,9 @@ public class FileInfos
         Logger.info( "" );
         Logger.info( "" );
         Logger.info( "Configuring file load from: " + directory );
-        directory = Utils.fixDirectoryFormat( directory );
+        directory = Utils.fixDirectoryFormatAndAppendFileSeparator( directory );
 
-        this.directory = directory;
+        this.directory = directory; // contains File separator!
         this.h5DataSetName = h5DataSetName;
 
         if ( loadingScheme.contains("<Z") )
@@ -182,7 +181,7 @@ public class FileInfos
         if (fileType.equals(Utils.FileType.TIFF_STACKS.toString())) {
             setInfosFromFile(channel, time, z, true);
         }
-        else if (fileType.equals(Utils.FileType.HDF5.toString())) {     //TODO: If TIFF and HDF5_STACKS have the same code then merge it after verification. -- ashis
+        else if (fileType.equals(Utils.FileType.HDF5.toString())) {
             setInfosFromFile(channel, time, z, true);
         }
         else if (fileType.equals(Utils.FileType.SINGLE_PLANE_TIFF.toString())) {
@@ -194,25 +193,27 @@ public class FileInfos
         return infos[channel][time];
     }
 
-    private void setInfosFromFile( final int c, final int t, final int z, boolean throwError ) {
+    private void setInfosFromFile( final int c, final int t, final int z, boolean throwError )
+    {
         SerializableFileInfo[] info = null;
         SerializableFileInfo[] infoCT;
         FastTiffDecoder ftd;
-        File f = new File(directory + channelFolders[c] + "/" + ctzFileList[c][t][z]);
+        File f = new File(directory + channelFolders[c], ctzFileList[c][t][z] );
         if ( f.exists() )
         {
-            if ( fileType.equals(Utils.FileType.TIFF_STACKS.toString() ) ) {
+            if ( fileType.equals(Utils.FileType.TIFF_STACKS.toString() ) )
+            {
                 ftd = new FastTiffDecoder(directory + channelFolders[c], ctzFileList[c][t][0]);
                 try {
                     info = ftd.getTiffInfo();
                 }
                 catch (Exception e) {
-                    Logger.error("Error parsing: "+ directory + channelFolders[c] + "/" + ctzFileList[c][t][z]);
+                    Logger.error("Error parsing: " + f.getAbsolutePath() );
                     Logger.warning("setInfoFromFile: " + e.toString());
                 }
 
                 if( info.length != nZ ) {// TODO : Handle exceptions properly --ashis
-                    Logger.error("Inconsistent number of z-planes in: "+ directory + channelFolders[c] + "/" + ctzFileList[c][t][z]);
+                    Logger.error("Inconsistent number of z-planes in: " + f.getAbsolutePath());
                 }
 
                 // add missing information to first IFD
@@ -232,7 +233,8 @@ public class FileInfos
 
                 infos[c][t] = infoCT;
             }
-            else if ( fileType.equals(Utils.FileType.HDF5.toString() ) ) {
+            else if ( fileType.equals(Utils.FileType.HDF5.toString() ) )
+            {
                 //
                 // construct a FileInfoSer
                 // todo: this could be much leaner
@@ -241,7 +243,7 @@ public class FileInfos
 
                 int bytesPerPixel = 0;
 
-                IHDF5Reader reader = HDF5Factory.openForReading(directory + channelFolders[c] + "/" + ctzFileList[c][t][0]);
+                IHDF5Reader reader = HDF5Factory.openForReading( f.getAbsolutePath() );
                 HDF5DataSetInformation dsInfo = reader.getDataSetInformation( h5DataSetName );
                 //String dsTypeString = OpenerExtension.hdf5InfoToString(dsInfo);
                 String dsTypeString = FileInfosHDF5Helper.dsInfoToTypeString(dsInfo); //TODO: Check if OpenerExtension.hdf5InfoToString can be made public and called.
@@ -260,7 +262,7 @@ public class FileInfos
                 for ( int z2 = 0; z2 < nZ; z2++){
                     infoCT[z2] = new SerializableFileInfo();
                     infoCT[z2].fileName = ctzFileList[c][t][z2];
-                    infoCT[z2].directory = channelFolders[c] + "/";
+                    infoCT[z2].directory = channelFolders[c];
                     infoCT[z2].width = nX;
                     infoCT[z2].height = nY;
                     infoCT[z2].bytesPerPixel = bytesPerPixel; // todo: how to get the bit-depth from the info?
@@ -269,7 +271,8 @@ public class FileInfos
                 }
                 infos[c][t] = infoCT;
             }
-            else if ( fileType.equals(Utils.FileType.SINGLE_PLANE_TIFF.toString())){
+            else if ( fileType.equals(Utils.FileType.SINGLE_PLANE_TIFF.toString()))
+            {
                 ftd = new FastTiffDecoder(directory + channelFolders[c], ctzFileList[c][t][z]);
                 try{
                     infos[c][t][z] = ftd.getTiffInfo()[0];
@@ -277,16 +280,19 @@ public class FileInfos
                 catch ( IOException e ){// TODO : Handle exceptions properly --ashis
                     System.out.print( e.toString() );
                 }
-                infos[c][t][z].directory = channelFolders[c] + "/"; // relative path to main directory
+                infos[c][t][z].directory = channelFolders[c];
                 infos[c][t][z].fileName = ctzFileList[c][t][z];
                 infos[c][t][z].fileTypeString = fileType;
             }
         }
         else
         {
-            if( throwError ){// TODO : Handle exceptions properly --ashis
-                Logger.error("Error opening: " + directory + channelFolders[c] + "/" + ctzFileList[c][t][z]);
-            }
+            Logger.error( "File does not exist [ c, t, z ] : " + c + ", " + t + ", " + z+
+                            "\npath:" + f.getAbsolutePath()  +
+                            "\ndirectory: " + directory +
+                            "\nchannel-folder: " + channelFolders[ c ] +
+                            "\nfilename: " + ctzFileList[c][t][z] );
+            throw new UnsupportedOperationException( "File does not exist " + f.getAbsolutePath() );
         }
 
     }

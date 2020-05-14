@@ -419,7 +419,7 @@ public class Utils {
         return imp;
     }
 
-    public static String fixDirectoryFormat(String directory){
+    public static String fixDirectoryFormatAndAppendFileSeparator( String directory){
         directory = directory.trim();
 	    char last = directory.charAt(directory.length()-1);
 	    if(last != File.separatorChar){

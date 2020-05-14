@@ -325,7 +325,7 @@ public class FileInfosHelper
 
             fixChannelFolders( fileInfos, namingScheme );
             setImageMetadata( fileInfos, fileInfos.directory, namingScheme, fileLists[ 0 ] );
-            populateFileInfosFromLuxendoChannelTimePattern( fileInfos, namingScheme, fileLists[ 0 ], channels, timepoints );
+            populateFileInfosFromLuxendoChannelTimePattern( fileInfos, pattern, fileLists[ 0 ], channels, timepoints );
         }
         else
         {
@@ -433,7 +433,6 @@ public class FileInfosHelper
         }
     }
 
-
     private static void populateFileInfosFromLuxendoChannelTimePattern(
             FileInfos fileInfos,
             String namingScheme,
@@ -443,27 +442,23 @@ public class FileInfosHelper
     {
         fileInfos.ctzFileList = new String[ fileInfos.nC ][ fileInfos.nT ][ fileInfos.nZ ];
 
-        Pattern patternCT = Pattern.compile( namingScheme );
+        Pattern pattern = Pattern.compile( namingScheme );
 
         for ( String fileName : fileList )
         {
-            Matcher matcherCT = patternCT.matcher( fileName );
-            if ( matcherCT.matches() ) {
-                try {
-                    int c = channels.indexOf( matcherCT.group( "C1" ) + "_" + matcherCT.group( "C2" ) );
-                    int t = timepoints.indexOf( matcherCT.group("T") );
-                    for ( int z = 0; z < fileInfos.nZ; z++) {
-                        fileInfos.ctzFileList[c][t][z] = fileName; // all z with same file-name, because it is stacks
-                    }
+            Matcher matcher = pattern.matcher( fileName );
+            if ( matcher.matches() ) {
+                int c = channels.indexOf( matcher.group( "C1" ) + "_" + matcher.group( "C2" ) );
+                int t = timepoints.indexOf( matcher.group("T") );
+                for ( int z = 0; z < fileInfos.nZ; z++) {
+                    fileInfos.ctzFileList[c][t][z] = fileName; // all z with same file-name, because it is stacks
                 }
-                catch (Exception e)
-                {
-                    Logger.error("The multi-channel load did not match the filenames.\n" +
-                            "Please change the pattern.\n\n" +
-                            "The Java error message was:\n" +
-                            e.toString());
-                    fileInfos = null;
-                }
+            }
+            else
+            {
+                throw new UnsupportedOperationException( "Could not match file: " + fileName
+                        + "\nNaming scheme: " + namingScheme
+                        + "\nPattern: " + pattern.toString() );
             }
         }
     }
@@ -532,7 +527,9 @@ public class FileInfosHelper
 
             if ( subFolders == null )
             {
-                throw new UnsupportedOperationException( "No sub-folders found; please make sure to select the stack's parent folder." );
+                throw new UnsupportedOperationException( "No sub-folders found; please make sure to select the stack's parent folder."
+                        + "\nParent folder: " + directory
+                        + "\nSub-folder pattern: " + folderPattern );
             }
             else
             {

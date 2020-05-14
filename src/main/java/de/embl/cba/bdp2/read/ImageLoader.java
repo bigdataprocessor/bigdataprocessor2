@@ -187,8 +187,7 @@ public class ImageLoader< T extends NativeType< T > > implements CellLoader< T >
 
     public String getFilePath( SerializableFileInfo fileInfo )
     {
-        return directory + File.separator
-                + fileInfo.directory + File.separator + fileInfo.fileName;
+        return directory + File.separator + fileInfo.directory + File.separator + fileInfo.fileName;
     }
 
     public long[] getDimensions() {

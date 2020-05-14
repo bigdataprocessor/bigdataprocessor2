@@ -37,8 +37,10 @@ public class  OpenLuxendoMuViCommand< R extends RealType< R > & NativeType< R > 
 
             String regExp = LUXENDO_REGEXP.replace( "STACK", "" + stackIndex );
 
-            if ( camera.equals( LEFT ) ) regExp = regExp.replace( "/Cam_(.*)", "/Cam_Left" );
-            if ( camera.equals( RIGHT ) ) regExp = regExp.replace( "/Cam_(.*)", "/Cam_Right" );
+            if ( camera.equals( LEFT ) )
+                regExp = regExp.replace( "?<C2>.*", "?<C2>Left" );
+            if ( camera.equals( RIGHT ) )
+                regExp = regExp.replace( "?<C2>.*", "?<C2>Right" );
 
             outputImage =
                         BigDataProcessor2.openImage(
