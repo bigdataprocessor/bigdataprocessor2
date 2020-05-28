@@ -8,6 +8,7 @@ import ij.ImageStack;
 import ij.io.FileSaver;
 import loci.common.DebugTools;
 import loci.common.services.ServiceFactory;
+import loci.formats.FormatTools;
 import loci.formats.ImageWriter;
 import loci.formats.meta.IMetadata;
 import loci.formats.out.TiffWriter;
@@ -213,8 +214,13 @@ public class SaveFrameAsTIFFStacks< R extends RealType< R > & NativeType< R > > 
                 meta.setPixelsSizeC(new PositiveInteger(1), 0);
                 meta.setPixelsSizeT(new PositiveInteger(1), 0);
 
-                // TODO: add image calibration
-                //meta.setPixelsPhysicalSizeX( new Length( imp.getCalibration().pixelWidth );
+                Length physicalSizeX = FormatTools.getPhysicalSizeX(imp.getCalibration().pixelWidth, imp.getCalibration().getXUnit());
+                Length physicalSizeY = FormatTools.getPhysicalSizeY(imp.getCalibration().pixelHeight, imp.getCalibration().getYUnit());
+                Length physicalSizeZ = FormatTools.getPhysicalSizeZ(imp.getCalibration().pixelDepth, imp.getCalibration().getZUnit());
+
+                meta.setPixelsPhysicalSizeX(physicalSizeX, 0);
+                meta.setPixelsPhysicalSizeY(physicalSizeY, 0);
+                meta.setPixelsPhysicalSizeZ(physicalSizeZ, 0);
 
                 int channel = 0;
                 meta.setChannelID("Channel:0:" + channel, 0, channel);
