@@ -31,7 +31,7 @@ public class AlignChannelsCommand< R extends RealType< R > & NativeType< R > > e
 
     private void process()
     {
-        final List< long[] > longs = Utils.delimitedStringToLongs( shifts );
+        final List< long[] > longs = Utils.delimitedStringToLongs( shifts, ";" );
 
         final ChannelShifter< R > shifter = new ChannelShifter< R >( inputImage.getRai() );
         outputImage = inputImage.newImage( shifter.getShiftedRai( longs ) );

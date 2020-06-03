@@ -18,10 +18,11 @@ import org.scijava.plugin.Plugin;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import static de.embl.cba.bdp2.dialog.Utils.selectDirectories;
 
-@Plugin(type = Command.class, menuPath = "Plugins>BigDataTools>Luxendo>Batch Merge Split Chip", initializer = "init")
+@Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>Special>Ellenberg Batch Merge Split Chip", initializer = "init")
 public class LuxendoBatchMergeSplitChipCommand< R extends RealType< R > & NativeType< R > > implements Command
 {
     @Parameter(label = "Voxel Unit")
@@ -42,7 +43,8 @@ public class LuxendoBatchMergeSplitChipCommand< R extends RealType< R > & Native
     @Parameter(label = "Channel Regions [ minX, minY, sizeX, sizeY, channel; ... ]")
     public String intervalsString = "896, 46, 1000, 1000, 0; 22, 643, 1000, 1000, 0";
 
-    @Parameter(label = "Tiff Output Compression", choices = { SavingSettings.COMPRESSION_NONE,
+    @Parameter(label = "Tiff Output Compression", choices =
+            { SavingSettings.COMPRESSION_NONE,
             SavingSettings.COMPRESSION_ZLIB,
             SavingSettings.COMPRESSION_LZW } )
     public String compression = SavingSettings.COMPRESSION_NONE;
@@ -63,16 +65,7 @@ public class LuxendoBatchMergeSplitChipCommand< R extends RealType< R > & Native
         savingSettings.fileType = SavingSettings.FileType.TIFF_VOLUMES;
         savingSettings.numIOThreads = Runtime.getRuntime().availableProcessors();
 
-        final SplitViewMerger merger = new SplitViewMerger();
-
-        final String[] intervals =
-                Utils.delimitedStringToStringArray( intervalsString, ";" );
-
-        for ( String interval : intervals )
-        {
-            final int[] ints = Utils.delimitedStringToIntegerArray( interval, "," );
-            merger.addIntervalXYC( ints[ 0 ], ints[ 1 ], ints[ 2 ], ints[ 3 ], ints[ 4 ] );
-        }
+        final List< long[] > intervalsXYC = Utils.delimitedStringToLongs( intervalsString, ";" );
 
         /*
          * Get cropping intervals from user
@@ -89,7 +82,7 @@ public class LuxendoBatchMergeSplitChipCommand< R extends RealType< R > & Native
                         voxelSpacingMicrometerX,
                         voxelSpacingMicrometerY,
                         voxelSpacingMicrometerZ,
-                        merger,
+                        intervalsXYC,
                         directory );
 
                 final BdvImageViewer viewer = BigDataProcessor2.showImage( merge );
@@ -119,7 +112,7 @@ public class LuxendoBatchMergeSplitChipCommand< R extends RealType< R > & Native
                     voxelSpacingMicrometerX,
                     voxelSpacingMicrometerY,
                     voxelSpacingMicrometerZ,
-                    merger,
+                    intervalsXYC,
                     new File( directory ) );
 
             final String outputDirectoryStump = directory.replace( "_channel_0", "" );

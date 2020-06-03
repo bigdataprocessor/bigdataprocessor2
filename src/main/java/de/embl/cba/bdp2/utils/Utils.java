@@ -32,10 +32,10 @@ package de.embl.cba.bdp2.utils;
 
 import bdv.util.Bdv;
 import bdv.viewer.animate.SimilarityTransformAnimator;
+import de.embl.cba.bdp2.align.splitchip.SplitViewMerger;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.read.NamingScheme;
-import de.embl.cba.bdp2.align.splitchip.SplitViewMerger;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.dialog.DisplaySettings;
 import ij.IJ;
@@ -154,7 +154,7 @@ public class Utils {
 			double voxelSpacingMicrometerX,
 			double voxelSpacingMicrometerY,
 			double voxelSpacingMicrometerZ,
-			SplitViewMerger merger,
+			List< long[] > intervalsXYC,
 			File directory )
 	{
 		final String subFolderPattern = directory.getName().replace( "channel_0", "channel_.*" );
@@ -172,7 +172,9 @@ public class Utils {
 				voxelSpacingMicrometerY,
 				voxelSpacingMicrometerZ );
 
-		return merger.mergeIntervalsXYC( image );
+		final SplitViewMerger merger = new SplitViewMerger();
+
+		return merger.mergeIntervalsXYC( image, intervalsXYC );
 	}
 
 	public static < R extends RealType< R > & NativeType< R > >
@@ -223,9 +225,9 @@ public class Utils {
 		return collect;
 	}
 
-	public static List< long[] > delimitedStringToLongs( String string )
+	public static List< long[] > delimitedStringToLongs( String string, String delim )
 	{
-		final List< long[] > shifts = Arrays.stream( string.split( ";" ) )
+		final List< long[] > shifts = Arrays.stream( string.split( delim ) )
 				.map( t -> Arrays.stream( t.split( "," ) )
 						.mapToLong( Long::parseLong )
 						.toArray()

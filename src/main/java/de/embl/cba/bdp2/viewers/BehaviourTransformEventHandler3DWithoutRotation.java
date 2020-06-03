@@ -97,7 +97,7 @@ public class BehaviourTransformEventHandler3DWithoutRotation implements Behaviou
 
 		final double[] speed =      { 1.0,     10.0,     0.1 };
 		final String[] SPEED_NAME = {  "",  " fast", " slow" };
-		final String[] speedMod =   {  "", "align ", "ctrl " };
+		final String[] speedMod =   {  "", "shift ", "ctrl " };
 
 		final String DRAG_ROTATE = "drag rotate";
 		final String SCROLL_Z = "scroll browse z";
@@ -111,7 +111,7 @@ public class BehaviourTransformEventHandler3DWithoutRotation implements Behaviou
 		behaviours = new Behaviours( config, "bdv" );
 
 		behaviours.behaviour( new TranslateXY(), DRAG_TRANSLATE, "button2", "button3" );
-		behaviours.behaviour( new Zoom( speed[ 0 ] ), ZOOM_NORMAL, "meta scroll", "ctrl align scroll" );
+		behaviours.behaviour( new Zoom( speed[ 0 ] ), ZOOM_NORMAL, "meta scroll", "ctrl shift scroll" );
 		behaviours.behaviour( new SelectRotationAxis( 0 ), SELECT_AXIS_X, "X" );
 		behaviours.behaviour( new SelectRotationAxis( 1 ), SELECT_AXIS_Y, "Y" );
 		behaviours.behaviour( new SelectRotationAxis( 2 ), SELECT_AXIS_Z, "Z" );

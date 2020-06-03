@@ -28,7 +28,7 @@ public class AlignChannelsSplitChipCommand< R extends RealType< R > & NativeType
     public void process()
     {
         final SplitViewMerger merger = new SplitViewMerger();
-        final List< long[] > intervalsXYMinXYSpanC = Utils.delimitedStringToLongs( intervalsString );
+        final List< long[] > intervalsXYMinXYSpanC = Utils.delimitedStringToLongs( intervalsString, ";" );
         outputImage = merger.mergeIntervalsXYC( inputImage, intervalsXYMinXYSpanC );
     }
 
