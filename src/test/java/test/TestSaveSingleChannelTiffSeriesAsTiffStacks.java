@@ -1,4 +1,4 @@
-package tests;
+package test;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.read.NamingScheme;

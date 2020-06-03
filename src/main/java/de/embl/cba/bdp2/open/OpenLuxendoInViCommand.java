@@ -24,7 +24,7 @@ public class OpenLuxendoInViCommand< R extends RealType< R > & NativeType< R > >
     @Parameter(label = "Stack index"  )
     protected int stackIndex = 0;
 
-    @Parameter(label = "Open Camera", choices = {
+    @Parameter(label = "Camera", choices = {
             LONG,
             SHORT,
             BOTH

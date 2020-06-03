@@ -37,8 +37,8 @@ public abstract class AbstractOpenCommand< R extends RealType< R > & NativeType<
             SHOW_IN_NEW_VIEWER,
             DO_NOT_SHOW };
 
-    @Parameter(label = "Disable arbitrary plane slicing", required = false)
-    protected boolean disableArbitraryPlaneSlicing = true;
+    @Parameter(label = "Enable arbitrary plane slicing", required = false)
+    protected boolean enableArbitraryPlaneSlicing = false;
 
     protected boolean autoContrast = true;
 
@@ -50,7 +50,7 @@ public abstract class AbstractOpenCommand< R extends RealType< R > & NativeType<
 
         if ( viewingModality.equals( SHOW_IN_NEW_VIEWER ) )
         {
-            BigDataProcessor2.showImage( outputImage, autoContrast, disableArbitraryPlaneSlicing );
+            BigDataProcessor2.showImage( outputImage, autoContrast, !enableArbitraryPlaneSlicing );
         }
         else if ( viewingModality.equals( SHOW_IN_CURRENT_VIEWER ))
         {
@@ -58,7 +58,7 @@ public abstract class AbstractOpenCommand< R extends RealType< R > & NativeType<
             if ( viewer != null )
                 viewer.replaceImage( outputImage, autoContrast, keepViewerTransform );
             else
-                BigDataProcessor2.showImage( outputImage, autoContrast, disableArbitraryPlaneSlicing );
+                BigDataProcessor2.showImage( outputImage, autoContrast, !enableArbitraryPlaneSlicing );
 
         }
         else if ( viewingModality.equals( DO_NOT_SHOW ) )

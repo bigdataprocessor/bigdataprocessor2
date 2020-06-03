@@ -1,4 +1,4 @@
-package tests;
+package test;
 
 import bdv.img.imaris.Imaris;
 import bdv.util.BdvFunctions;

@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.shift;
+package de.embl.cba.bdp2.align;
 
 import bdv.tools.brightness.SliderPanel;
 import bdv.util.BoundedValue;

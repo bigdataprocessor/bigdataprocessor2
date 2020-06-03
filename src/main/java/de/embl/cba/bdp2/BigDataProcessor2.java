@@ -12,7 +12,7 @@ import de.embl.cba.bdp2.log.progress.Progress;
 import de.embl.cba.bdp2.log.progress.ProgressListener;
 import de.embl.cba.bdp2.save.*;
 import de.embl.cba.bdp2.dialog.DisplaySettings;
-import de.embl.cba.bdp2.shift.ChannelShifter;
+import de.embl.cba.bdp2.align.ChannelShifter;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import loci.common.DebugTools;
@@ -126,23 +126,21 @@ public class BigDataProcessor2
     }
     
     public static < R extends RealType< R > & NativeType< R > >
-    BdvImageViewer showImage( Image< R > image, boolean autoContrast, boolean disableArbitraryPlaneSlicing )
+    BdvImageViewer showImage( Image< R > image, boolean autoContrast, boolean enableArbitraryPlaneSlicing )
     {
-        BdvImageViewer.disableArbitraryPlaneSlicing = disableArbitraryPlaneSlicing;
-
-        return new BdvImageViewer( image, autoContrast, disableArbitraryPlaneSlicing );
+        return new BdvImageViewer( image, autoContrast, enableArbitraryPlaneSlicing );
     }
 
     public static < R extends RealType< R > & NativeType< R > >
     BdvImageViewer showImage( Image< R > image, boolean autoContrast )
     {
-        return new BdvImageViewer( image, autoContrast, BdvImageViewer.disableArbitraryPlaneSlicing );
+        return new BdvImageViewer( image, autoContrast, BdvImageViewer.enableArbitraryPlaneSlicing );
     }
 
     public static < R extends RealType< R > & NativeType< R > >
     BdvImageViewer showImage( Image< R > image )
     {
-        return new BdvImageViewer( image, true, BdvImageViewer.disableArbitraryPlaneSlicing );
+        return new BdvImageViewer( image, true, BdvImageViewer.enableArbitraryPlaneSlicing );
     }
 
     // TODO: Return futures from the image saver

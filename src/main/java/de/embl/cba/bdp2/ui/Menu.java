@@ -9,8 +9,8 @@ import de.embl.cba.bdp2.open.OpenEMTiffPlanesCommand;
 import de.embl.cba.bdp2.open.OpenLeicaDSLTiffPlanesCommand;
 import de.embl.cba.bdp2.open.OpenLuxendoInViCommand;
 import de.embl.cba.bdp2.open.OpenLuxendoMuViCommand;
-import de.embl.cba.bdp2.shift.AlignChannelsCommand;
-import de.embl.cba.bdp2.splitchip.AlignChannelsSplitChipCommand;
+import de.embl.cba.bdp2.align.AlignChannelsCommand;
+import de.embl.cba.bdp2.align.splitchip.AlignChannelsSplitChipCommand;
 
 import javax.swing.*;
 

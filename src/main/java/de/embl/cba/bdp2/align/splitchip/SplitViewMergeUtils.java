@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.splitchip;
+package de.embl.cba.bdp2.align.splitchip;
 
 import net.imglib2.FinalInterval;
 import net.imglib2.RealInterval;

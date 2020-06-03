@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.splitchip;
+package de.embl.cba.bdp2.align.splitchip;
 
 import bdv.util.ModifiableInterval;
 import de.embl.cba.bdp2.image.Image;

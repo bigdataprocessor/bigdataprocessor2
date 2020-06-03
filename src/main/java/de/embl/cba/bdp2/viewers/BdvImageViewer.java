@@ -40,7 +40,7 @@ import java.util.Map;
 
 public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
 {
-    public static boolean disableArbitraryPlaneSlicing = false;
+    public static boolean enableArbitraryPlaneSlicing = false;
 
     private Image< R > image;
     private ArrayList< BdvStackSource< R > > channelSources;
@@ -53,10 +53,10 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
         this( image, true, false );
     }
 
-    public BdvImageViewer( final Image< R > image, final boolean autoContrast, final boolean disableArbitraryPlaneSlicing )
+    public BdvImageViewer( final Image< R > image, final boolean autoContrast, final boolean enableArbitraryPlaneSlicing )
     {
         this.image = image;
-        this.disableArbitraryPlaneSlicing = disableArbitraryPlaneSlicing;
+        this.enableArbitraryPlaneSlicing = enableArbitraryPlaneSlicing;
         this.channelSources = new ArrayList<>(  );
 
         show( autoContrast );
@@ -419,7 +419,7 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
                 .numRenderingThreads( numRenderingThreads )
                 .frameTitle( "BigDataProcessor2: " + image.getName() );
 
-        if ( disableArbitraryPlaneSlicing )
+        if ( ! enableArbitraryPlaneSlicing )
         {
             options = options.transformEventHandlerFactory( new BehaviourTransformEventHandler3DWithoutRotation.BehaviourTransformEventHandler3DFactory() );
         }

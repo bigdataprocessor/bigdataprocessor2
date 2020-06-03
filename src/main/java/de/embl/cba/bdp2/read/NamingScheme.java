@@ -2,7 +2,7 @@ package de.embl.cba.bdp2.read;
 
 public abstract class NamingScheme
 {
-	public static final String SINGLE_CHANNEL_TIMELAPSE = "Single Channel Movie";
+	public static final String SINGLE_CHANNEL_TIMELAPSE = "Single Channel Movie"; // TODO: get rid of this and replace by regExp
 	public static final String PATTERN_LUXENDO_LEFT_CAM = "Cam_Left_(\\d)+.h5$";
 	public static final String PATTERN_LUXENDO_RIGHT_CAM = "Cam_Right_(\\d)+.h5$";
 	public static final String PATTERN_LUXENDO_LONG_CAM = "Cam_long_(\\d)+.h5$";

@@ -111,9 +111,9 @@ public class ThresholdFloodFillOverlapTracker< R extends RealType< R > & NativeT
 
 			final double[] centroid = computeCentroid( positions );
 
-			//System.out.println( t + " -> " + ( t + 1 ) + ": " + Arrays.toString( shift ) );
+			//System.out.println( t + " -> " + ( t + 1 ) + ": " + Arrays.toString( align ) );
 
-			//final long[] shiftedPosition = getShiftedPosition( shift, position );
+			//final long[] shiftedPosition = getShiftedPosition( align, position );
 
 			track.setPosition( t, centroid );
 

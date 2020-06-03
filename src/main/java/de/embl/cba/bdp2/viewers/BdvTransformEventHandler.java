@@ -42,7 +42,7 @@ public class BdvTransformEventHandler implements BehaviourTransformEventHandler<
         //double[] speed = new double[]{1.0D, 10.0D, 0.1D};
         double[] speed = new double[]{0.5, 2, 0.1};
         String[] SPEED_NAME = new String[]{"", " fast", " slow"};
-        String[] speedMod = new String[]{"", "shift ", "ctrl "};
+        String[] speedMod = new String[]{"", "align ", "ctrl "};
         String DRAG_ROTATE = "drag rotate";
         String SCROLL_Z = "scroll browse z";
         String ROTATE_LEFT = "rotate left";
@@ -53,7 +53,7 @@ public class BdvTransformEventHandler implements BehaviourTransformEventHandler<
         String KEY_BACKWARD_Z = "backward z";
         this.behaviours = new Behaviours(config, new String[]{"bdv"});
         this.behaviours.behaviour(new BdvTransformEventHandler.TranslateXY(), "drag translate", new String[]{"button1", "button3"});
-        this.behaviours.behaviour(new BdvTransformEventHandler.Zoom(speed[0]), "scroll zoom", new String[]{"meta scroll", "ctrl shift scroll"});
+        this.behaviours.behaviour(new BdvTransformEventHandler.Zoom(speed[0]), "scroll zoom", new String[]{"meta scroll", "ctrl align scroll"});
         this.behaviours.behaviour(new BdvTransformEventHandler.SelectRotationAxis(0), SELECT_AXIS_X, new String[]{"X"});
         this.behaviours.behaviour(new BdvTransformEventHandler.SelectRotationAxis(1), SELECT_AXIS_Y, new String[]{"Y"});
         this.behaviours.behaviour(new BdvTransformEventHandler.SelectRotationAxis(2), SELECT_AXIS_Z, new String[]{"Z"});

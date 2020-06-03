@@ -31,7 +31,7 @@ public class FigureCreator
 		//
 		final Image crop = BigDataProcessor2.crop( image, new FinalInterval( new long[]{ 477, 487, 31, 0, 0 }, new long[]{ 1567, 1491, 143, 1, 1 } ) );
 
-		// correct chromatic shift
+		// correct chromatic align
 		//
 		final ArrayList< long[] > shifts = new ArrayList<>();
 		shifts.add( new long[]{0,0,0,0} );

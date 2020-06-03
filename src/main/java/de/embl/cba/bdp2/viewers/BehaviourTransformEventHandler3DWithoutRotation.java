@@ -97,7 +97,7 @@ public class BehaviourTransformEventHandler3DWithoutRotation implements Behaviou
 
 		final double[] speed =      { 1.0,     10.0,     0.1 };
 		final String[] SPEED_NAME = {  "",  " fast", " slow" };
-		final String[] speedMod =   {  "", "shift ", "ctrl " };
+		final String[] speedMod =   {  "", "align ", "ctrl " };
 
 		final String DRAG_ROTATE = "drag rotate";
 		final String SCROLL_Z = "scroll browse z";
@@ -111,7 +111,7 @@ public class BehaviourTransformEventHandler3DWithoutRotation implements Behaviou
 		behaviours = new Behaviours( config, "bdv" );
 
 		behaviours.behaviour( new TranslateXY(), DRAG_TRANSLATE, "button2", "button3" );
-		behaviours.behaviour( new Zoom( speed[ 0 ] ), ZOOM_NORMAL, "meta scroll", "ctrl shift scroll" );
+		behaviours.behaviour( new Zoom( speed[ 0 ] ), ZOOM_NORMAL, "meta scroll", "ctrl align scroll" );
 		behaviours.behaviour( new SelectRotationAxis( 0 ), SELECT_AXIS_X, "X" );
 		behaviours.behaviour( new SelectRotationAxis( 1 ), SELECT_AXIS_Y, "Y" );
 		behaviours.behaviour( new SelectRotationAxis( 2 ), SELECT_AXIS_Z, "Z" );
@@ -229,14 +229,14 @@ public class BehaviourTransformEventHandler3DWithoutRotation implements Behaviou
 
 	private void scale( final double s, final double x, final double y )
 	{
-		// center shift
+		// center align
 		affine.set( affine.get( 0, 3 ) - x, 0, 3 );
 		affine.set( affine.get( 1, 3 ) - y, 1, 3 );
 
 		// scale
 		affine.scale( s );
 
-		// center un-shift
+		// center un-align
 		affine.set( affine.get( 0, 3 ) + x, 0, 3 );
 		affine.set( affine.get( 1, 3 ) + y, 1, 3 );
 	}
@@ -247,14 +247,14 @@ public class BehaviourTransformEventHandler3DWithoutRotation implements Behaviou
 	 */
 	private void rotate( final int axis, final double d )
 	{
-		// center shift
+		// center align
 		affine.set( affine.get( 0, 3 ) - centerX, 0, 3 );
 		affine.set( affine.get( 1, 3 ) - centerY, 1, 3 );
 
 		// rotate
 		affine.rotate( axis, d );
 
-		// center un-shift
+		// center un-align
 		affine.set( affine.get( 0, 3 ) + centerX, 0, 3 );
 		affine.set( affine.get( 1, 3 ) + centerY, 1, 3 );
 	}
@@ -289,7 +289,7 @@ public class BehaviourTransformEventHandler3DWithoutRotation implements Behaviou
 
 				affine.set( affineDragStart );
 
-				// center shift
+				// center align
 				affine.set( affine.get( 0, 3 ) - oX, 0, 3 );
 				affine.set( affine.get( 1, 3 ) - oY, 1, 3 );
 
@@ -297,7 +297,7 @@ public class BehaviourTransformEventHandler3DWithoutRotation implements Behaviou
 				affine.rotate( 0, -dY * v );
 				affine.rotate( 1, dX * v );
 
-				// center un-shift
+				// center un-align
 				affine.set( affine.get( 0, 3 ) + oX, 0, 3 );
 				affine.set( affine.get( 1, 3 ) + oY, 1, 3 );
 				notifyListener();

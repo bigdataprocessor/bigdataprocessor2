@@ -64,4 +64,14 @@ public class Utils
 		channel = gd.getNextChoiceIndex();
 		return channel;
 	}
+
+	public static void setOutputViewerPosition( BdvImageViewer viewer, BdvImageViewer outputViewer )
+	{
+		JFrame inputViewerFrame = ( JFrame ) SwingUtilities.getWindowAncestor( viewer.getBdvHandle().getViewerPanel() );
+		final int x = inputViewerFrame.getLocationOnScreen().x + inputViewerFrame.getWidth() + 10;
+		final int y = inputViewerFrame.getLocationOnScreen().y;
+
+		JFrame outputViewerFrame = ( JFrame ) SwingUtilities.getWindowAncestor( outputViewer.getBdvHandle().getViewerPanel() );
+		outputViewerFrame.setLocation( x, y );
+	}
 }

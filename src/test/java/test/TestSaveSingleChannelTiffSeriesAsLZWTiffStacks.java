@@ -1,4 +1,4 @@
-package tests;
+package test;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.read.NamingScheme;
@@ -8,9 +8,10 @@ import loci.common.DebugTools;
 
 import java.io.File;
 
+import static de.embl.cba.bdp2.utils.FileUtils.createOrEmptyDirectory;
 import static junit.framework.TestCase.assertTrue;
 
-public class TestSaveSingleChannel8BitTiffSeriesAsImarisVolumes
+public class TestSaveSingleChannelTiffSeriesAsLZWTiffStacks
 {
     //@Test
     public void test( )
@@ -30,34 +31,35 @@ public class TestSaveSingleChannel8BitTiffSeriesAsImarisVolumes
                 loadingScheme,
                 filterPattern );
 
-        // bdp.showImage( image );
-
+//        bdp.showImage( image );
+//
         final SavingSettings savingSettings = SavingSettings.getDefaults();
-        savingSettings.fileType = SavingSettings.FileType.IMARIS_VOLUMES;
+        savingSettings.fileType = SavingSettings.FileType.TIFF_VOLUMES;
         savingSettings.numIOThreads = 1;
         savingSettings.numProcessingThreads = 4;
-        savingSettings.saveProjections = true;
-        savingSettings.volumesFilePathStump =
-                "/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-output/nc1-nt3-calibrated-8bit-tiff-imaris-volumes/volume";
+        savingSettings.saveProjections = false;
         savingSettings.saveVolumes = true;
-        savingSettings.projectionsFilePathStump =
-                "/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-output/nc1-nt3-calibrated-8bit-tiff-imaris-projections/projection";
+        savingSettings.compression = SavingSettings.COMPRESSION_LZW;
+        savingSettings.rowsPerStrip = 1000; // just whole plane
 
-        final File testVolumeFile = new File( savingSettings.volumesFilePathStump + "--C00--T00000.h5" );
+        final String outputDirectory = "/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-output/nc1-nt3-calibrated-8bit-tiff-lzw";
+
+        createOrEmptyDirectory( outputDirectory );
+
+        savingSettings.volumesFilePathStump =
+                outputDirectory + "/volume";
+
+        final File testVolumeFile = new File( savingSettings.volumesFilePathStump + "--C00--T00000.ome.tif" );
         if ( testVolumeFile.exists() ) testVolumeFile.delete();
-
-        final File testProjectionsFile = new File( savingSettings.projectionsFilePathStump + "--xyz-max-projection--C00--T00002.tif" );
-        if ( testProjectionsFile.exists() ) testProjectionsFile.delete();
 
         BigDataProcessor2.saveImageAndWaitUntilDone( image, savingSettings );
 
         assertTrue( testVolumeFile.exists() );
-        assertTrue( testProjectionsFile.exists() );
     }
 
     public static void main( String[] args )
     {
-        new TestSaveSingleChannel8BitTiffSeriesAsImarisVolumes().test();
+        new TestSaveSingleChannelTiffSeriesAsLZWTiffStacks().test();
     }
 
 }

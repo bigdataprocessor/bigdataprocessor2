@@ -10,7 +10,6 @@ import net.imglib2.type.numeric.integer.UnsignedShortType;
 
 public class TestTiffPlaneSaving
 {
-
     public static void main(String[] args)
     {
         String imageDirectory = "src/test/resources/shear_transform_test";

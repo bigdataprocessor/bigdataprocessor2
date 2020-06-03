@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.splitchip;
+package de.embl.cba.bdp2.align.splitchip;
 
 import de.embl.cba.bdp2.process.AbstractProcessingCommand;
 import de.embl.cba.bdp2.utils.Utils;
@@ -28,17 +28,8 @@ public class AlignChannelsSplitChipCommand< R extends RealType< R > & NativeType
     public void process()
     {
         final SplitViewMerger merger = new SplitViewMerger();
-        addIntervals( merger );
-        outputImage = merger.mergeIntervalsXYC( inputImage );
+        final List< long[] > intervalsXYMinXYSpanC = Utils.delimitedStringToLongs( intervalsString );
+        outputImage = merger.mergeIntervalsXYC( inputImage, intervalsXYMinXYSpanC );
     }
 
-    private void addIntervals( SplitViewMerger merger )
-    {
-        final List< long[] > longs = Utils.delimitedStringToLongs( intervalsString );
-
-        for ( long[] interval : longs )
-        {
-            merger.addIntervalXYC( interval );
-        }
-    }
 }

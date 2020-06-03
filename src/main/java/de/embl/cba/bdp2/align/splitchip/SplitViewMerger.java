@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.splitchip;
+package de.embl.cba.bdp2.align.splitchip;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
@@ -12,8 +12,9 @@ import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import static de.embl.cba.bdp2.splitchip.SplitViewMergeUtils.asIntervalXYC;
+import static de.embl.cba.bdp2.align.splitchip.SplitViewMergeUtils.asIntervalXYC;
 import static de.embl.cba.bdp2.utils.DimensionOrder.C;
 
 public class SplitViewMerger
@@ -33,20 +34,42 @@ public class SplitViewMerger
 			channel ) );
 	}
 
-	public void addIntervalXYC( long[] longs )
+	public void addIntervalXYC( long[] intervalXYMinXYSpanC )
 	{
 		intervalsXYC.add( asIntervalXYC(
-				new long[]{ longs[ 0 ], longs[ 1] },
-				new long[]{ longs[ 2 ], longs[ 3 ] },
-				longs[ 4] ) );
+				new long[]{ intervalXYMinXYSpanC[ 0 ], intervalXYMinXYSpanC[ 1] },
+				new long[]{ intervalXYMinXYSpanC[ 2 ], intervalXYMinXYSpanC[ 3 ] },
+				intervalXYMinXYSpanC[ 4] ) );
 	}
 
 	public < R extends RealType< R > & NativeType< R > >
-	Image< R > mergeIntervalsXYC( Image< R > image )
+	Image< R > mergeIntervalsXYC( Image< R > image, List< long [] > intervalsXYMinXYSpanC )
 	{
+		// TODO: factor out the code to generate the channel names and use everywhere
+		final String[] newChannelNames = new String[ intervalsXYMinXYSpanC.size() ];
+
+		for ( int outputChannel = 0; outputChannel < intervalsXYMinXYSpanC.size(); outputChannel++ )
+		{
+			final long[] longs = intervalsXYMinXYSpanC.get( outputChannel );
+			final long inputChannel = longs[ 4 ];
+			final long xMin = longs[ 0 ];
+			final long yMin = longs[ 1 ];
+			intervalsXYC.add( asIntervalXYC(
+					new long[]{ xMin, yMin },
+					new long[]{ longs[ 2 ], longs[ 3 ] },
+					inputChannel ) );
+			newChannelNames[ outputChannel ] = image.getChannelNames()[ (int) inputChannel ] + "_x" + xMin + "_y" + yMin;
+		}
+
 		final RandomAccessibleInterval< R > merge = mergeIntervalsXYC( image.getRai(), intervalsXYC );
 
-		final Image< R > mergeImage = image.newImage( merge );
+		final Image< R > mergeImage = new Image(
+				merge,
+				image.getName() + "_merged",
+				newChannelNames,
+				image.getVoxelSpacing(),
+				image.getVoxelUnit(),
+				image.getFileInfos() );
 
 		return mergeImage;
 	}

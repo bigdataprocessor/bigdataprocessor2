@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.shift;
+package de.embl.cba.bdp2.align;
 
 import de.embl.cba.bdp2.process.AbstractProcessingCommand;
 import de.embl.cba.bdp2.service.ImageService;

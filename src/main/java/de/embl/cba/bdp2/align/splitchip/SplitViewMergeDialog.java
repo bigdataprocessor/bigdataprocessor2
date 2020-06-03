@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.splitchip;
+package de.embl.cba.bdp2.align.splitchip;
 
 import bdv.tools.boundingbox.TransformedBox;
 import bdv.tools.boundingbox.TransformedBoxOverlay;
@@ -8,6 +8,8 @@ import bdv.util.ModifiableInterval;
 import bdv.viewer.ViewerPanel;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.dialog.AbstractProcessingDialog;
+import de.embl.cba.bdp2.dialog.DisplaySettings;
+import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.record.MacroRecorder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
@@ -24,7 +26,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.embl.cba.bdp2.splitchip.RegionOptimiser.adjustModifiableInterval;
+import static de.embl.cba.bdp2.dialog.Utils.setOutputViewerPosition;
+import static de.embl.cba.bdp2.align.splitchip.RegionOptimiser.adjustModifiableInterval;
 
 
 public class SplitViewMergeDialog< R extends RealType< R > & NativeType< R > > extends AbstractProcessingDialog< R >
@@ -39,7 +42,8 @@ public class SplitViewMergeDialog< R extends RealType< R > & NativeType< R > > e
 	private SelectionUpdateListener updateListener;
 	private JPanel panel;
 	private ArrayList< ModifiableInterval > intervals3D;
-	private BdvImageViewer outputImageViewer;
+	private BdvImageViewer outputViewer;
+	private int numChannelsAfterMerge;
 
 	public SplitViewMergeDialog( final BdvImageViewer< R > viewer )
 	{
@@ -98,6 +102,7 @@ public class SplitViewMergeDialog< R extends RealType< R > & NativeType< R > > e
 		{
 			intervals3D.add( createInterval( c, margin ) );
 		}
+		numChannelsAfterMerge = intervals3D.size();
 	}
 
 	private JPanel createContent()
@@ -145,22 +150,56 @@ public class SplitViewMergeDialog< R extends RealType< R > & NativeType< R > > e
 
 	private void showMerge()
 	{
+		createOutputImage();
+		showOutputImage();
+	}
+
+	private void createOutputImage()
+	{
 		final RandomAccessibleInterval< R > merge =
 				SplitViewMerger.mergeIntervalsXYZ(
 						inputImage.getRai(),
-						intervals3D,
+						intervals3D, // in the UI this contains 2 channels
 						CHANNEL ); // TODO: Could be different channel?
 
-		outputImage = inputImage.newImage( merge );
-		showOutputImage();
+		outputImage = new Image(
+				merge,
+				inputImage.getName() + "_merged",
+				createMergedChannelNames(),
+				inputImage.getVoxelSpacing(),
+				inputImage.getVoxelUnit(),
+				inputImage.getFileInfos() );
+	}
+
+	private String[] createMergedChannelNames()
+	{
+		final String channelName = inputImage.getChannelNames()[ CHANNEL ];
+		final String[] mergedChannelNames = new String[ numChannelsAfterMerge ];
+		for ( int c = 0; c < numChannelsAfterMerge; c++ )
+		{
+			mergedChannelNames[ c ] = channelName + "_region" + c;
+		}
+		return mergedChannelNames;
 	}
 
 	private void showOutputImage()
 	{
-		if ( outputImageViewer == null )
-			outputImageViewer = BigDataProcessor2.showImage( outputImage, false );
+		if ( outputViewer == null )
+		{
+			outputViewer = BigDataProcessor2.showImage( outputImage, false );
+
+			setOutputViewerPosition( viewer, outputViewer );
+
+			final DisplaySettings displaySettings = viewer.getDisplaySettings().get( CHANNEL );
+			for ( int c = 0; c < numChannelsAfterMerge; c++ )
+			{
+				outputViewer.setDisplayRange( displaySettings.getDisplayRangeMin(), displaySettings.getDisplayRangeMax(), c );
+			}
+		}
 		else
-			outputImageViewer.replaceImage( outputImage, false, false );
+		{
+			outputViewer.replaceImage( outputImage, false, false );
+		}
 	}
 
 	private void addRegionSliders()

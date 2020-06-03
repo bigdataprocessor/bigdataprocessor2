@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.shift;
+package de.embl.cba.bdp2.align;
 
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import net.imglib2.Interval;
