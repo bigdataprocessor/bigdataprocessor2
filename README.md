@@ -25,6 +25,10 @@ Note: You do not need to use the Commands, they are just there to enable macro-r
 
 ### Macro recording
 
+All actions can be macro recorded. To enable this please:
+
+![image](https://user-images.githubusercontent.com/2157566/83620230-51d35e80-a58d-11ea-919e-5c6e2c5890eb.png)
+
 ## Open datasets
 
 In the BigDataViewer window, go to the menu bar and use the menu items in [ BigDataProcessor2 > Open ].
