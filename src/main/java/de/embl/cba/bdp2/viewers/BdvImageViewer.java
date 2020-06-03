@@ -40,6 +40,7 @@ import java.util.Map;
 
 public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
 {
+    public static final String VIEWER_TITLE_STUMP = "BigDataProcessor2: ";
     public static boolean enableArbitraryPlaneSlicing = false;
 
     private Image< R > image;
@@ -139,6 +140,7 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
         if ( channelSources.size() > 0 ) removeAllSourcesFromBdv();
 
         showImage( image, autoContrast );
+
 
         if ( keepViewerTransform )
             bdvHandle.getViewerPanel().setCurrentViewerTransform( viewerTransform );
@@ -383,6 +385,9 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
         {
             new Thread( () -> autoContrastPerChannel() ).start();
         }
+
+        JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(bdvHandle.getViewerPanel());
+        topFrame.setTitle( VIEWER_TITLE_STUMP + image.getName() );
     }
 
     private void addToBdv( Image< R > image )
@@ -417,7 +422,7 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
                 .addTo( bdvHandle )
                 .sourceTransform( scaling )
                 .numRenderingThreads( numRenderingThreads )
-                .frameTitle( "BigDataProcessor2: " + image.getName() );
+                .frameTitle( VIEWER_TITLE_STUMP + image.getName() );
 
         if ( ! enableArbitraryPlaneSlicing )
         {
