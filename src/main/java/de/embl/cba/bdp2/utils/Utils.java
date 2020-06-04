@@ -229,6 +229,7 @@ public class Utils {
 	{
 		final List< long[] > shifts = Arrays.stream( string.split( delim ) )
 				.map( t -> Arrays.stream( t.split( "," ) )
+						.map( String::trim )
 						.mapToLong( Long::parseLong )
 						.toArray()
 				).collect( Collectors.toList() );

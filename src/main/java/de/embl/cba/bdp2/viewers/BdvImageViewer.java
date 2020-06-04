@@ -141,7 +141,6 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
 
         showImage( image, autoContrast );
 
-
         if ( keepViewerTransform )
             bdvHandle.getViewerPanel().setCurrentViewerTransform( viewerTransform );
 
