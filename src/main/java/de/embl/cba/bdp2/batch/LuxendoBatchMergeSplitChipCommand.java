@@ -118,9 +118,9 @@ public class LuxendoBatchMergeSplitChipCommand< R extends RealType< R > & Native
             final String outputDirectoryStump = directory.replace( "_channel_0", "" );
 
             // save full volume
-            savingSettings.volumesFilePathStump = outputDirectoryStump + "-stacks/stack";
+            savingSettings.volumesFilePathStump = outputDirectoryStump + "-stacks" + File.separator + "stack";
             savingSettings.projectionsFilePathStump =
-                    outputDirectoryStump + "-projections/projection";
+                    outputDirectoryStump + "-projections" + File.separator + "projection";
             savingSettings.saveProjections = ! doCrop; // when not cropping, save full projections
             savingSettings.numIOThreads = 3;
             savingSettings.compression = compression;
@@ -130,10 +130,10 @@ public class LuxendoBatchMergeSplitChipCommand< R extends RealType< R > & Native
             {
                 // crop & save cropped volume
                 final Image< R > crop = Cropper.crop5D( merge, croppingIntervals.get( i ) );
-                savingSettings.volumesFilePathStump = outputDirectoryStump + "-crop-stacks/stack";
+                savingSettings.volumesFilePathStump = outputDirectoryStump + "-crop-stacks" + File.separator + "stack";
                 savingSettings.saveProjections = true;
                 savingSettings.projectionsFilePathStump =
-                        outputDirectoryStump + "-crop-projections/projection";
+                        outputDirectoryStump + "-crop-projections" + File.separator + "projection";
                 BigDataProcessor2.saveImageAndWaitUntilDone( crop, savingSettings);
             }
         }
