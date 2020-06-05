@@ -19,6 +19,8 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.ui.InteractiveDisplayCanvasComponent;
+import net.imglib2.ui.OverlayRenderer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,16 +46,32 @@ public class SplitViewMergeDialog< R extends RealType< R > & NativeType< R > > e
 	private ArrayList< ModifiableInterval > intervals3D;
 	private BdvImageViewer outputViewer;
 	private int numChannelsAfterMerge;
+	private ArrayList< OverlayRenderer > overlayRenderers;
 
 	public SplitViewMergeDialog( final BdvImageViewer< R > viewer )
 	{
 		this.viewer = viewer;
 		this.inputImage = viewer.getImage();
 
+		overlayRenderers = new ArrayList<>();
+
 		initIntervals();
 		showIntervalOverlays();
 		showMerge();
 		showDialog( createContent() );
+	}
+
+	@Override
+	protected void ok(){
+		viewer.close();
+		this.dispose();
+	}
+
+	@Override
+	protected void cancel(){
+		removeOverlays();
+		outputViewer.close();
+		this.dispose();
 	}
 
 	public void showIntervalOverlays()
@@ -286,8 +304,19 @@ public class SplitViewMergeDialog< R extends RealType< R > & NativeType< R > > e
 				TransformedBoxOverlay.BoxDisplayMode.SECTION );
 
 		final ViewerPanel viewerPanel = viewer.getBdvHandle().getViewerPanel();
-		viewerPanel.getDisplay().addOverlayRenderer(transformedBoxOverlay);
-		viewerPanel.addRenderTransformListener(transformedBoxOverlay);
+		viewerPanel.getDisplay().addOverlayRenderer( transformedBoxOverlay );
+		viewerPanel.addRenderTransformListener( transformedBoxOverlay );
+
+		overlayRenderers.add( transformedBoxOverlay );
+	}
+
+	private void removeOverlays()
+	{
+		final InteractiveDisplayCanvasComponent< AffineTransform3D > display = viewer.getBdvHandle().getViewerPanel().getDisplay();
+		for ( OverlayRenderer overlayRenderer : overlayRenderers )
+		{
+			display.removeOverlayRenderer( overlayRenderer );
+		}
 	}
 
 	private FinalInterval getInitial3DInterval(

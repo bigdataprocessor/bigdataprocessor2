@@ -130,6 +130,12 @@
 			<artifactId>bigdataviewer_fiji</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>sc.fiji</groupId>
+			<artifactId>bigdataviewer-core</artifactId>
+			<version>8.0.2-platybrowser</version>
+		</dependency>
+
+		<dependency>
 			<groupId>net.imagej</groupId>
 			<artifactId>imagej-legacy</artifactId>
 			<version>0.37.3-SNAPSHOT</version>
@@ -186,20 +192,16 @@
 			<groupId>net.imagej</groupId>
 			<artifactId>imagej-plugins-commands</artifactId>
 		</dependency>
+		<!-- For tracking -->
 		<dependency>
 			<groupId>net.preibisch</groupId>
 			<artifactId>BigStitcher</artifactId>
 		</dependency>
+		<!-- Comes with Fiji -->
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 		</dependency>
-		<!--		<dependency>-->
-		<!--			<groupId>net.haesleinhuepf</groupId>-->
-		<!--			<artifactId>clij_</artifactId>-->
-		<!--			<version>0.20.0</version>-->
-		<!--		</dependency>-->
-		<!-- CBA -->
 		<dependency>
 			<groupId>de.embl.cba</groupId>
 			<artifactId>imaris-writer</artifactId>
@@ -209,13 +211,5 @@
 			<artifactId>imagej-utils</artifactId>
 			<version>0.5.0</version>
 		</dependency>
-<!--		<dependency>-->
-<!--			<groupId>de.embl.cba</groupId>-->
-<!--			<artifactId>imglib2-lazy-algorithm</artifactId>-->
-<!--		</dependency>-->
-<!--		<dependency>-->
-<!--			<groupId>de.embl.cba</groupId>-->
-<!--			<artifactId>transforms-utils</artifactId>-->
-<!--		</dependency>-->
 	</dependencies>
 </project>

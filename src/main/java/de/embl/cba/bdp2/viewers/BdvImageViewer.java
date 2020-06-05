@@ -385,7 +385,7 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
             new Thread( () -> autoContrastPerChannel() ).start();
         }
 
-        JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(bdvHandle.getViewerPanel());
+        JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor( bdvHandle.getViewerPanel() );
         topFrame.setTitle( VIEWER_TITLE_STUMP + image.getName() );
     }
 

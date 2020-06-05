@@ -110,7 +110,7 @@ public class BehaviourTransformEventHandler3DWithoutRotation implements Behaviou
 
 		behaviours = new Behaviours( config, "bdv" );
 
-		behaviours.behaviour( new TranslateXY(), DRAG_TRANSLATE, "button2", "button3" );
+		behaviours.behaviour( new TranslateXY(), DRAG_TRANSLATE, "button1", "button2", "button3" );
 		behaviours.behaviour( new Zoom( speed[ 0 ] ), ZOOM_NORMAL, "meta scroll", "ctrl shift scroll" );
 		behaviours.behaviour( new SelectRotationAxis( 0 ), SELECT_AXIS_X, "X" );
 		behaviours.behaviour( new SelectRotationAxis( 1 ), SELECT_AXIS_Y, "Y" );
