@@ -35,7 +35,7 @@ import bdv.viewer.animate.SimilarityTransformAnimator;
 import de.embl.cba.bdp2.align.splitchip.SplitViewMerger;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.read.NamingScheme;
+import de.embl.cba.bdp2.luxendo.Luxendos;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.dialog.DisplaySettings;
 import ij.IJ;
@@ -73,6 +73,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
+
+import static de.embl.cba.bdp2.read.NamingScheme.LUXENDO_REGEXP;
 
 /**
  * Created by tischi on 06/11/16.
@@ -148,6 +150,18 @@ public class Utils {
         }
     }
 
+	/**
+	 *
+	 *
+	 * @param voxelUnit
+	 * @param voxelSpacingMicrometerX
+	 * @param voxelSpacingMicrometerY
+	 * @param voxelSpacingMicrometerZ
+	 * @param intervalsXYC
+	 * @param directoryOfChannel0
+	 * @param <R>
+	 * @return
+	 */
     public static < R extends RealType< R > & NativeType< R > >
     Image< R > openMergedImageFromLuxendoChannelFolders(
 			String voxelUnit,
@@ -155,16 +169,17 @@ public class Utils {
 			double voxelSpacingMicrometerY,
 			double voxelSpacingMicrometerZ,
 			List< long[] > intervalsXYC,
-			File directory )
+			File directoryOfChannel0 )
 	{
-		final String subFolderPattern = directory.getName().replace( "channel_0", "channel_.*" );
-		final String parentFolder = directory.getParent();
+		String stackIndex = Luxendos.extractStackIndex( directoryOfChannel0.getName() );
+		String regExp = LUXENDO_REGEXP.replace( "STACK", "" + stackIndex );
 
-		final Image< R > image = BigDataProcessor2.openHdf5Image(
-				parentFolder,
-				NamingScheme.LOAD_CHANNELS_FROM_FOLDERS,
-				subFolderPattern + File.separator + NamingScheme.PATTERN_LUXENDO ,
-				"Data" );
+		final Image< R > image =
+				BigDataProcessor2.openImage(
+						directoryOfChannel0.getParent(),
+						regExp,
+						regExp,
+						"Data" );
 
 		image.setVoxelUnit( voxelUnit );
 		image.setVoxelSpacing(
