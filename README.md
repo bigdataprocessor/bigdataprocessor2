@@ -4,7 +4,7 @@
 
 Interactive processing of TB-sized image data within [Fiji](http://fiji.sc/), on your laptop.
 
-## Installation
+## Install
 
 BigDataProcessor2 is a Fiji Plugin.
 
@@ -12,10 +12,36 @@ BigDataProcessor2 is a Fiji Plugin.
 - Within Fiji, please enable the following [Update Site](https://imagej.net/Update_Sites): 
     - [X] EMBL-CBA
 - Restart Fiji
-- BigDataProcessor2 can be found in the Plugins menu (as it is an ImageJ2 plugin you have to scroll all the way to the bottom).
-<img width="500" alt="image" src="https://user-images.githubusercontent.com/2157566/79339050-8da45d00-7f28-11ea-916c-7c8deaa4b77a.png">
 
-## Overview and examples
+## Start
+
+In the Fiji Plugins menu scroll far down and start BigDataProcessor2:
+
+![image](https://user-images.githubusercontent.com/2157566/83620048-0d47c300-a58d-11ea-8213-306598048e9e.png)
+
+This opens up an empty BigDataViewer window with additional menu entries.
+
+Note: You do not need to use the Commands, they are just there to enable macro-recording.
+
+### Macro recording
+
+All actions can be macro recorded. To enable this please:
+
+![image](https://user-images.githubusercontent.com/2157566/83620230-51d35e80-a58d-11ea-919e-5c6e2c5890eb.png)
+
+## Open datasets
+
+In the BigDataViewer window, go to the menu bar and use the menu items in [ BigDataProcessor2 > Open ].
+
+![image](https://user-images.githubusercontent.com/2157566/83619635-72e77f80-a58c-11ea-9602-c4eeb05bfd2f.png)
+
+
+## Process
+
+TODO ...
+
+
+# DEPRECATED DOCUMENTATION:
 
 ### Opening TB-sized Tiff or Hdf5 based raw data
 
