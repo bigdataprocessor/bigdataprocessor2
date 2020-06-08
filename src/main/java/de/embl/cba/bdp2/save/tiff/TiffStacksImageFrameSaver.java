@@ -1,35 +1,41 @@
-package de.embl.cba.bdp2.save;
+package de.embl.cba.bdp2.save.tiff;
 
 import de.embl.cba.bdp2.log.Logger;
+import de.embl.cba.bdp2.save.ProjectionXYZ;
+import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.utils.IntervalImageViews;
 import de.embl.cba.bdp2.utils.Utils;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.io.FileSaver;
 import loci.common.DebugTools;
+import loci.common.services.DependencyException;
+import loci.common.services.ServiceException;
 import loci.common.services.ServiceFactory;
+import loci.formats.FormatException;
 import loci.formats.FormatTools;
 import loci.formats.ImageWriter;
 import loci.formats.meta.IMetadata;
 import loci.formats.out.TiffWriter;
 import loci.formats.services.OMEXMLService;
+import loci.formats.tiff.IFD;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import ome.units.quantity.Length;
-import ome.units.unit.Unit;
 import ome.xml.model.enums.DimensionOrder;
 import ome.xml.model.enums.PixelType;
 import ome.xml.model.primitives.PositiveInteger;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static de.embl.cba.bdp2.save.SavingUtils.ShortToByteBigEndian;
+import static de.embl.cba.bdp2.save.tiff.TiffUtils.ShortToByteBigEndian;
 import static de.embl.cba.bdp2.utils.DimensionOrder.*;
 
-public class SaveFrameAsTIFFStacks< R extends RealType< R > & NativeType< R > > implements Runnable {
+public class TiffStacksImageFrameSaver< R extends RealType< R > & NativeType< R > > implements Runnable {
     private final int t;
     private final AtomicInteger counter;
     private final SavingSettings settings;
@@ -37,11 +43,11 @@ public class SaveFrameAsTIFFStacks< R extends RealType< R > & NativeType< R > > 
     private final AtomicBoolean stop;
 
     // TODO: feed back to progress listener
-    public SaveFrameAsTIFFStacks( int t,
-                                  SavingSettings settings,
-                                  AtomicInteger counter,
-                                  final long startTime,
-                                  AtomicBoolean stop) {
+    public TiffStacksImageFrameSaver( int t,
+                                      SavingSettings settings,
+                                      AtomicInteger counter,
+                                      final long startTime,
+                                      AtomicBoolean stop) {
         this.t = t;
         this.settings = settings;
         this.counter = counter;
@@ -97,12 +103,13 @@ public class SaveFrameAsTIFFStacks< R extends RealType< R > & NativeType< R > > 
                         settings.voxelUnit,
                         "" );
 
-                saveAsTiff( imp, c, t,
-                        settings.compression, settings.rowsPerStrip, settings.volumesFilePathStump );
+                saveAsTiff( imp, c, t, settings.compression, settings.rowsPerStrip, settings.volumesFilePathStump );
             }
 
             if ( settings.saveProjections )
+            {
                 saveProjections( raiXYZ, c );
+            }
 
             counter.incrementAndGet();
 
@@ -173,104 +180,132 @@ public class SaveFrameAsTIFFStacks< R extends RealType< R > & NativeType< R > > 
 
         if ( compression.equals( SavingSettings.COMPRESSION_NONE ) )
         {
-            // no compression: use ImageJ's FileSaver, as it is faster than BioFormats
-            if ( stop.get() )
-            {
-                settings.saveProjections = false;
-                Logger.progress( "Stopped save thread: ", "" + t );
-                return;
-            }
-
-            FileSaver fileSaver = new FileSaver( imp );
-            String pathCT = path + "--C" + sC + "--T" + sT + ".tif";
-
-            fileSaver.saveAsTiffStack( pathCT );
+            saveWithImageJ( imp, t, path, sC, sT );
         }
         else
         {
-            // Use Bio-Formats for compressing the data
-
-            String pathCT = path + "--C" + sC + "--T" + sT + ".ome.tif";
-
-            if ( new File( pathCT ).exists() ) new File( pathCT ).delete();
-
-            try
-            {
-                ServiceFactory factory = new ServiceFactory();
-                OMEXMLService service = factory.getInstance(OMEXMLService.class);
-                IMetadata meta = service.createOMEXMLMetadata();
-                meta.setImageID("Image:0", 0);
-                meta.setPixelsID("Pixels:0", 0);
-                meta.setPixelsBinDataBigEndian(Boolean.TRUE, 0, 0);
-                meta.setPixelsDimensionOrder(DimensionOrder.XYZCT, 0);
-                if (imp.getBytesPerPixel() == 2) {
-                    meta.setPixelsType(PixelType.UINT16, 0);
-                } else if (imp.getBytesPerPixel() == 1) {
-                    meta.setPixelsType(PixelType.UINT8, 0);
-                }
-                meta.setPixelsSizeX(new PositiveInteger(imp.getWidth()), 0);
-                meta.setPixelsSizeY(new PositiveInteger(imp.getHeight()), 0);
-                meta.setPixelsSizeZ(new PositiveInteger(imp.getNSlices()), 0);
-                meta.setPixelsSizeC(new PositiveInteger(1), 0);
-                meta.setPixelsSizeT(new PositiveInteger(1), 0);
-
-                Length physicalSizeX = FormatTools.getPhysicalSizeX(imp.getCalibration().pixelWidth, imp.getCalibration().getXUnit());
-                Length physicalSizeY = FormatTools.getPhysicalSizeY(imp.getCalibration().pixelHeight, imp.getCalibration().getYUnit());
-                Length physicalSizeZ = FormatTools.getPhysicalSizeZ(imp.getCalibration().pixelDepth, imp.getCalibration().getZUnit());
-
-                meta.setPixelsPhysicalSizeX(physicalSizeX, 0);
-                meta.setPixelsPhysicalSizeY(physicalSizeY, 0);
-                meta.setPixelsPhysicalSizeZ(physicalSizeZ, 0);
-
-                int channel = 0;
-                meta.setChannelID("Channel:0:" + channel, 0, channel);
-                meta.setChannelSamplesPerPixel(new PositiveInteger(1), 0, channel);
-
-                ImageWriter writer = new ImageWriter();
-                writer.setValidBitsPerPixel( imp.getBytesPerPixel() * 8 );
-                writer.setMetadataRetrieve( meta );
-                writer.setId( pathCT );
-                writer.setWriteSequentially( true ); // ? is this necessary
-
-                if ( settings.compression.equals( SavingSettings.COMPRESSION_ZLIB ) )
-                    writer.setCompression( TiffWriter.COMPRESSION_ZLIB );
-                else if ( settings.compression.equals( SavingSettings.COMPRESSION_LZW ) )
-                    writer.setCompression( TiffWriter.COMPRESSION_LZW );
-
-                TiffWriter tiffWriter = (TiffWriter) writer.getWriter();
-
-                long[] rowsPerStripArray = new long[]{ rowsPerStrip };
-
-                for (int z = 0; z < imp.getNSlices(); z++)
-                {
-                    if ( stop.get() )
-                    {
-                        Logger.progress("Stopped save thread: ", "" + t);
-                        settings.saveProjections = false;
-                        return;
-                    }
-
-                    // save using planes for compression
-                    if (imp.getBytesPerPixel() == 2)
-                        writer.saveBytes( z, ShortToByteBigEndian((short[]) imp.getStack().getProcessor(z + 1).getPixels() ) );
-                    else if (imp.getBytesPerPixel() == 1)
-                        writer.saveBytes( z, (byte[]) (imp.getStack().getProcessor(z + 1).getPixels() ) );
-
-                    // save using strips for compression
-//                    IFD ifd = new IFD();
-//                    ifd.put( IFD.ROWS_PER_STRIP, rowsPerStripArray );
-//                    if (imp.getBytesPerPixel() == 2) {
-//                        tiffWriter.saveBytes(z, SavingUtils.ShortToByteBigEndian((short[]) imp.getStack().getProcessor(z + 1).getPixels()), ifd);
-//                    } else if (imp.getBytesPerPixel() == 1) {
-//                        tiffWriter.saveBytes(z, (byte[]) (imp.getStack().getProcessor(z + 1).getPixels()), ifd);
-//                    }
-                }
-                writer.close();
-
-            } catch (Exception e) {
-                Logger.error(e.toString());
-            }
+            saveWithBioFormats( imp, t, rowsPerStrip, path, sC, sT );
         }
+    }
+
+    private void saveWithBioFormats( ImagePlus imp, int t, int rowsPerStrip, String path, String sC, String sT )
+    {
+        // Use Bio-Formats for compressing the data
+
+        String pathCT = path + "--C" + sC + "--T" + sT + ".ome.tif";
+
+        if ( new File( pathCT ).exists() ) new File( pathCT ).delete();
+
+        try
+        {
+            ImageWriter writer = getImageWriter( imp, pathCT );
+
+            if ( settings.compression.equals( SavingSettings.COMPRESSION_ZLIB ) )
+                writer.setCompression( TiffWriter.COMPRESSION_ZLIB );
+            else if ( settings.compression.equals( SavingSettings.COMPRESSION_LZW ) )
+                writer.setCompression( TiffWriter.COMPRESSION_LZW );
+
+            TiffWriter tiffWriter = (TiffWriter) writer.getWriter();
+
+            long[] rowsPerStripArray = new long[]{ rowsPerStrip };
+
+            for (int z = 0; z < imp.getNSlices(); z++)
+            {
+                if ( stop.get() )
+                {
+                    Logger.progress("Stopped save thread: ", "" + t);
+                    settings.saveProjections = false;
+                    return;
+                }
+
+                // save using single strips for compression
+                // TODO: in BioFormats below code appears to compress each strip on its own :-(
+//                if (imp.getBytesPerPixel() == 2)
+//                {
+//                    final short[] pixels = ( short[] ) imp.getStack().getProcessor( z + 1 ).getPixels();
+//                    final byte[] buf = ShortToByteBigEndian( pixels );
+//                    writer.saveBytes( z, buf );
+//                }
+//                else if (imp.getBytesPerPixel() == 1)
+//                {
+//                    writer.saveBytes( z, (byte[]) (imp.getStack().getProcessor(z + 1).getPixels() ) );
+//                }
+
+                // save using strips for compression
+                IFD ifd = new IFD();
+                ifd.put( IFD.ROWS_PER_STRIP, rowsPerStripArray );
+                if (imp.getBytesPerPixel() == 2)
+                {
+                    tiffWriter.saveBytes(z, ShortToByteBigEndian( (short[]) imp.getStack().getProcessor(z + 1).getPixels()), ifd);
+                }
+                else if (imp.getBytesPerPixel() == 1)
+                {
+                    tiffWriter.saveBytes(z, (byte[]) (imp.getStack().getProcessor(z + 1).getPixels()), ifd);
+                }
+            }
+            writer.close();
+            System.gc();
+        }
+        catch (Exception e)
+        {
+            Logger.error(e.toString());
+        }
+    }
+
+    private ImageWriter getImageWriter( ImagePlus imp, String pathCT ) throws DependencyException, ServiceException, FormatException, IOException
+    {
+        ServiceFactory factory = new ServiceFactory();
+        OMEXMLService service = factory.getInstance(OMEXMLService.class);
+        IMetadata meta = service.createOMEXMLMetadata();
+        meta.setImageID("Image:0", 0);
+        meta.setPixelsID("Pixels:0", 0);
+        meta.setPixelsBinDataBigEndian(Boolean.TRUE, 0, 0);
+        meta.setPixelsDimensionOrder( DimensionOrder.XYZCT, 0);
+        if (imp.getBytesPerPixel() == 2) {
+            meta.setPixelsType( PixelType.UINT16, 0);
+        } else if (imp.getBytesPerPixel() == 1) {
+            meta.setPixelsType(PixelType.UINT8, 0);
+        }
+        meta.setPixelsSizeX(new PositiveInteger(imp.getWidth()), 0);
+        meta.setPixelsSizeY(new PositiveInteger(imp.getHeight()), 0);
+        meta.setPixelsSizeZ(new PositiveInteger(imp.getNSlices()), 0);
+        meta.setPixelsSizeC(new PositiveInteger(1), 0);
+        meta.setPixelsSizeT(new PositiveInteger(1), 0);
+
+        Length physicalSizeX = FormatTools.getPhysicalSizeX(imp.getCalibration().pixelWidth, imp.getCalibration().getXUnit());
+        Length physicalSizeY = FormatTools.getPhysicalSizeY(imp.getCalibration().pixelHeight, imp.getCalibration().getYUnit());
+        Length physicalSizeZ = FormatTools.getPhysicalSizeZ(imp.getCalibration().pixelDepth, imp.getCalibration().getZUnit());
+
+        meta.setPixelsPhysicalSizeX(physicalSizeX, 0);
+        meta.setPixelsPhysicalSizeY(physicalSizeY, 0);
+        meta.setPixelsPhysicalSizeZ(physicalSizeZ, 0);
+
+        int channel = 0;
+        meta.setChannelID("Channel:0:" + channel, 0, channel);
+        meta.setChannelSamplesPerPixel(new PositiveInteger(1), 0, channel);
+
+        ImageWriter writer = new ImageWriter();
+        writer.setValidBitsPerPixel( imp.getBytesPerPixel() * 8 );
+        writer.setMetadataRetrieve( meta );
+        writer.setId( pathCT );
+        writer.setWriteSequentially( true ); // ? is this necessary
+        return writer;
+    }
+
+    private void saveWithImageJ( ImagePlus imp, int t, String path, String sC, String sT )
+    {
+        // no compression: use ImageJ's FileSaver, as it is faster than BioFormats
+        if ( stop.get() )
+        {
+            settings.saveProjections = false;
+            Logger.progress( "Stopped save thread: ", "" + t );
+            return;
+        }
+
+        FileSaver fileSaver = new FileSaver( imp );
+        String pathCT = path + "--C" + sC + "--T" + sT + ".tif";
+
+        fileSaver.saveAsTiffStack( pathCT );
     }
 
     private static void gate(ImagePlus imp, int min, int max) //TODO: May be this can goto a new SaveHelper class

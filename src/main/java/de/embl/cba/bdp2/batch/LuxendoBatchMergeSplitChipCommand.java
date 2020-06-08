@@ -6,6 +6,7 @@ import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.align.splitchip.SplitViewMerger;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.BigDataProcessor2;
+import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.FinalInterval;
@@ -15,6 +16,7 @@ import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
+import weka.Run;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -51,6 +53,7 @@ public class LuxendoBatchMergeSplitChipCommand< R extends RealType< R > & Native
 
     @Parameter( label = "Crop")
     public boolean doCrop = true;
+    private int numIOThreads;
 
     @Override
     public void run()
@@ -63,7 +66,8 @@ public class LuxendoBatchMergeSplitChipCommand< R extends RealType< R > & Native
     {
         final SavingSettings savingSettings = SavingSettings.getDefaults();
         savingSettings.fileType = SavingSettings.FileType.TIFF_VOLUMES;
-        savingSettings.numIOThreads = Runtime.getRuntime().availableProcessors();
+        savingSettings.numIOThreads = 1; // input is hdf5 => single threaded
+        savingSettings.numProcessingThreads = Runtime.getRuntime().availableProcessors();
 
         final List< long[] > intervalsXYC = Utils.delimitedStringToLongs( intervalsString, ";" );
 
@@ -122,8 +126,8 @@ public class LuxendoBatchMergeSplitChipCommand< R extends RealType< R > & Native
             savingSettings.projectionsFilePathStump =
                     outputDirectoryStump + "-projections" + File.separator + "projection";
             savingSettings.saveProjections = ! doCrop; // when not cropping, save full projections
-            savingSettings.numIOThreads = 3;
             savingSettings.compression = compression;
+            savingSettings.rowsPerStrip = (int) merge.getRai().dimension( DimensionOrder.Y );
             BigDataProcessor2.saveImageAndWaitUntilDone( merge, savingSettings );
 
             if ( doCrop )
@@ -134,6 +138,7 @@ public class LuxendoBatchMergeSplitChipCommand< R extends RealType< R > & Native
                 savingSettings.saveProjections = true;
                 savingSettings.projectionsFilePathStump =
                         outputDirectoryStump + "-crop-projections" + File.separator + "projection";
+                savingSettings.rowsPerStrip = (int) crop.getRai().dimension( DimensionOrder.Y );
                 BigDataProcessor2.saveImageAndWaitUntilDone( crop, savingSettings);
             }
         }

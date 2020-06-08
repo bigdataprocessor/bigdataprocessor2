@@ -1,25 +1,29 @@
 package de.embl.cba.bdp2.save;
 
+import de.embl.cba.bdp2.save.tiff.TiffPlanesSaver;
+import de.embl.cba.bdp2.save.tiff.TiffStacksImageSaver;
+
 import java.util.concurrent.ExecutorService;
 
 public class ImgSaverFactory {
 
-    public AbstractImgSaver getSaver(SavingSettings savingSettings, ExecutorService es) {
+    public AbstractImgSaver getSaver(SavingSettings savingSettings, ExecutorService es)
+    {
         if (savingSettings.fileType.equals(SavingSettings.FileType.TIFF_PLANES))
         {
-            return new SaveTiffAsPlanes(savingSettings, es);
+            return new TiffPlanesSaver(savingSettings, es);
         }
         else if (savingSettings.fileType.equals(SavingSettings.FileType.TIFF_VOLUMES ))
         {
-            return new SaveTiffAsStacks(savingSettings, es);
+            return new TiffStacksImageSaver(savingSettings, es);
         }
         else if (savingSettings.fileType.equals(SavingSettings.FileType.HDF5_VOLUMES ))
         {
-            return new SaveHDF5AsStacks(savingSettings, es);
+            return new HDF5StacksSaver(savingSettings, es);
         }
         else if (savingSettings.fileType.equals(SavingSettings.FileType.IMARIS_VOLUMES ))
         {
-            return new SaveImarisAsStacks(savingSettings, es);
+            return new ImarisStacksSaver(savingSettings, es);
         }
         else
             {

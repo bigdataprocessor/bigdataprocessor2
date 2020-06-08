@@ -5,6 +5,8 @@ import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.log.progress.ProgressListener;
 import de.embl.cba.bdp2.record.MacroRecorder;
+import de.embl.cba.bdp2.utils.DimensionOrder;
+import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import ij.IJ;
 import net.imglib2.type.NativeType;
@@ -103,10 +105,21 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > >  extends JF
 
         panelIndex = addTiffCompressionPanel( panelIndex );
 
-        panels.add(new JPanel());
-        panels.get(panelIndex).add(new JLabel("I/O Threads"));
-        panels.get(panelIndex).add( tfNumIOThreads );
-        mainPanel.add( panels.get(panelIndex++));
+        if ( ( fileType.equals( SavingSettings.FileType.TIFF_PLANES ) ||
+                fileType.equals( SavingSettings.FileType.TIFF_VOLUMES ) )
+                && ! viewer.getImage().getFileInfos().fileType.equals( Utils.FileType.HDF5.toString() ) )
+        {
+            panels.add( new JPanel() );
+            panels.get( panelIndex ).add( new JLabel( "I/O Threads" ) );
+            panels.get( panelIndex ).add( tfNumIOThreads );
+            mainPanel.add( panels.get( panelIndex++ ) );
+        }
+        else
+        {
+            // either input or output format are hdf5
+            tfNumIOThreads.setText( "1" );
+        }
+
 
         panels.add(new JPanel());
         panels.get(panelIndex).add(new JLabel("Processing Threads"));
@@ -203,13 +216,16 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > >  extends JF
 
         savingSettings.fileType = fileType;
 
-        savingSettings.compression = ( String ) comboCompression.getSelectedItem();
-        savingSettings.rowsPerStrip = Integer.parseInt( tfRowsPerStrip.getText() );
+        savingSettings.compression = (String) comboCompression.getSelectedItem();
+
+        // compress plane wise
+        savingSettings.rowsPerStrip = (int) viewer.getImage().getRai().dimension( DimensionOrder.Y );  //Integer.parseInt( tfRowsPerStrip.getText() );
         savingSettings.saveVolumes = cbSaveVolume.isSelected();
         savingSettings.volumesFilePathStump = tfDirectory.getText() + File.separator + "volumes" + File.separator + "volume";
 
         savingSettings.saveProjections = cbSaveProjection.isSelected();
         savingSettings.projectionsFilePathStump = tfDirectory.getText() + File.separator + "projections" + File.separator + "projection";
+
         savingSettings.numIOThreads = Integer.parseInt( tfNumIOThreads.getText() );
         savingSettings.numProcessingThreads = Integer.parseInt( tfNumProcessingThreads.getText() );
 

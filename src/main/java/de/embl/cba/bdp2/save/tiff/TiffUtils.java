@@ -1,8 +1,8 @@
-package de.embl.cba.bdp2.save;
+package de.embl.cba.bdp2.save.tiff;
 
-public class SavingUtils
+public class TiffUtils
 {
-	static byte[] ShortToByteBigEndian( short[] input ) {
+	public static byte[] ShortToByteBigEndian( short[] input ) {
 		int short_index, byte_index;
 		int iterations = input.length;
 

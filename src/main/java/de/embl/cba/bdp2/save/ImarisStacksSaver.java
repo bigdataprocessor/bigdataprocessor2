@@ -23,12 +23,12 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class SaveImarisAsStacks extends AbstractImgSaver {
+public class ImarisStacksSaver extends AbstractImgSaver {
     private SavingSettings savingSettings;
     private ExecutorService es;
     private AtomicBoolean stop;
 
-    public SaveImarisAsStacks(SavingSettings savingSettings, ExecutorService es) {
+    public ImarisStacksSaver( SavingSettings savingSettings, ExecutorService es) {
         this.savingSettings = savingSettings;
         this.es = es;
         this.stop = new AtomicBoolean(false);

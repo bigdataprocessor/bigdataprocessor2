@@ -1,6 +1,8 @@
-package de.embl.cba.bdp2.save;
+package de.embl.cba.bdp2.save.tiff;
 
 import de.embl.cba.bdp2.read.FileInfos;
+import de.embl.cba.bdp2.save.AbstractImgSaver;
+import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.log.progress.Progress;
 import de.embl.cba.bdp2.utils.Utils;
@@ -12,12 +14,13 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class SaveTiffAsStacks extends AbstractImgSaver {
+public class TiffStacksImageSaver extends AbstractImgSaver
+{
     private SavingSettings savingSettings;
     private ExecutorService es;
     private AtomicBoolean stop;
 
-    public SaveTiffAsStacks( SavingSettings savingSettings, ExecutorService es ) {
+    public TiffStacksImageSaver( SavingSettings savingSettings, ExecutorService es ) {
         this.savingSettings = savingSettings;
         this.es = es;
         this.stop = new AtomicBoolean(false);
@@ -35,7 +38,7 @@ public class SaveTiffAsStacks extends AbstractImgSaver {
         {
             futures.add(
                     es.submit(
-                            new SaveFrameAsTIFFStacks(
+                            new TiffStacksImageFrameSaver(
                                     t,
                                     savingSettings,
                                     counter,

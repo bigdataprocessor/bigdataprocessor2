@@ -1,6 +1,8 @@
-package de.embl.cba.bdp2.save;
+package de.embl.cba.bdp2.save.tiff;
 
 import de.embl.cba.bdp2.read.FileInfos;
+import de.embl.cba.bdp2.save.AbstractImgSaver;
+import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.log.progress.Progress;
 import de.embl.cba.bdp2.utils.Utils;
@@ -11,13 +13,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class SaveTiffAsPlanes extends AbstractImgSaver {
+public class TiffPlanesSaver extends AbstractImgSaver
+{
 
     private SavingSettings savingSettings;
     private ExecutorService es;
     private AtomicBoolean stop;
 
-    public SaveTiffAsPlanes( SavingSettings savingSettings, ExecutorService es ) {
+    public TiffPlanesSaver( SavingSettings savingSettings, ExecutorService es ) {
         this.savingSettings = savingSettings;
         this.es = es;
         this.stop = new AtomicBoolean(false);
@@ -33,7 +36,7 @@ public class SaveTiffAsPlanes extends AbstractImgSaver {
             for (int t = 0; t < numFrames; t++) {
                 for (int z = 0; z < numPlanes; z++) {
                     futures.add( es.submit(
-                            new SaveTiffPlane( c, t, z, savingSettings, stop )
+                            new TiffPlaneSaver( c, t, z, savingSettings, stop )
                     ));
                 }
             }

@@ -1,6 +1,7 @@
-package de.embl.cba.bdp2.save;
+package de.embl.cba.bdp2.save.tiff;
 
 import de.embl.cba.bdp2.log.Logger;
+import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import ij.ImagePlus;
 import ij.io.FileSaver;
@@ -17,9 +18,9 @@ import ome.xml.model.primitives.PositiveInteger;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static de.embl.cba.bdp2.utils.IntervalImageViews.getNonVolatilePlaneCopy;
-import static de.embl.cba.bdp2.save.SavingUtils.ShortToByteBigEndian;
+import static de.embl.cba.bdp2.save.tiff.TiffUtils.ShortToByteBigEndian;
 
-public class SaveTiffPlane implements Runnable {
+public class TiffPlaneSaver implements Runnable {
 
     private final int c;
     private final int t;
@@ -27,11 +28,11 @@ public class SaveTiffPlane implements Runnable {
     private final SavingSettings savingSettings;
     private final AtomicBoolean stop;
 
-    public SaveTiffPlane( int c,
-						  int t,
-						  int z,
-						  SavingSettings savingSettings,
-						  AtomicBoolean stop) {
+    public TiffPlaneSaver( int c,
+                           int t,
+                           int z,
+                           SavingSettings savingSettings,
+                           AtomicBoolean stop) {
         this.c = c;
         this.z = z;
         this.t = t;
