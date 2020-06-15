@@ -25,18 +25,18 @@ import static de.embl.cba.bdp2.utils.Utils.COMMAND_BDP_PREFIX;
 @Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>" + AbstractOpenCommand.COMMAND_OPEN_PATH + OpenAdvancedCommand.COMMAND_FULL_NAME )
 public class OpenAdvancedCommand< R extends RealType< R > & NativeType< R > > extends AbstractOpenCommand< R >
 {
-    public static final String COMMAND_NAME = "Open Advanced...";
+    public static final String COMMAND_NAME = "Open...";
     public static final String COMMAND_FULL_NAME = COMMAND_BDP_PREFIX + COMMAND_NAME;
 
-    @Parameter(label = "Subset file using regular expression" )
-    String filterPattern = ".*";
+    //@Parameter(label = "Subset file using regular expression" )
+    //String filterPattern = ".*";
 
     //@Parameter(label = "Regular expression help", callback = "showRegExpHelp", required = false)
     //Button regExpHelpButton;
 
-    @Parameter(label = "Image naming scheme",
+    @Parameter(label = "Naming scheme",
             choices = {
-                    NamingScheme.SINGLE_CHANNEL_TIMELAPSE,
+                    NamingScheme.SINGLE_CHANNEL_TIFF_VOLUMES,
                     NamingScheme.LEICA_LIGHT_SHEET_TIFF,
                     NamingScheme.LOAD_CHANNELS_FROM_FOLDERS,
                     NamingScheme.TIFF_SLICES,
@@ -54,10 +54,22 @@ public class OpenAdvancedCommand< R extends RealType< R > & NativeType< R > > ex
     public void run()
     {
         SwingUtilities.invokeLater( () ->  {
-            outputImage = BigDataProcessor2.openImage(
-                    directory.toString(),
-                    namingScheme,
-                    filterPattern );
+
+            if ( namingScheme.endsWith( ".h5" ) )
+            {
+                outputImage = BigDataProcessor2.openImageFromHdf5(
+                        directory.toString(),
+                        namingScheme,
+                        ".*",
+                        hdf5DataSetName );
+            }
+            else if ( namingScheme.contains( ".tif" ) ) // .tiff .ome.tif
+            {
+                outputImage = BigDataProcessor2.openImage(
+                        directory.toString(),
+                        namingScheme,
+                        ".*" );
+            }
 
             fixVoxelSpacing( outputImage );
 

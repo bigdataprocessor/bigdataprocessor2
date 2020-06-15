@@ -74,7 +74,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
-import static de.embl.cba.bdp2.read.NamingScheme.LUXENDO_REGEXP;
+import static de.embl.cba.bdp2.read.NamingScheme.SINGLE_CHANNEL_TIFF_VOLUMES;
 
 /**
  * Created by tischi on 06/11/16.
@@ -172,10 +172,10 @@ public class Utils {
 			File directoryOfChannel0 )
 	{
 		String stackIndex = Luxendos.extractStackIndex( directoryOfChannel0.getName() );
-		String regExp = LUXENDO_REGEXP.replace( "STACK", "" + stackIndex );
+		String regExp = SINGLE_CHANNEL_TIFF_VOLUMES.replace( "STACK", "" + stackIndex );
 
 		final Image< R > image =
-				BigDataProcessor2.openImage(
+				BigDataProcessor2.openImageFromHdf5(
 						directoryOfChannel0.getParent(),
 						regExp,
 						regExp,

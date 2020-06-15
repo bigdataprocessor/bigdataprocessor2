@@ -18,7 +18,7 @@ public class FigureCreator
 		final ImageJ imageJ = new ImageJ();
 		imageJ.ui().showUI();
 
-		final Image image = BigDataProcessor2.openHdf5Image( "/Volumes/USB Drive/tim2020/luxendo-two-channel-movie",
+		final Image image = BigDataProcessor2.openImageFromHdf5( "/Volumes/USB Drive/tim2020/luxendo-two-channel-movie",
 				NamingScheme.LOAD_CHANNELS_FROM_FOLDERS,
 				NamingScheme.PATTERN_LUXENDO,
 				"Data"

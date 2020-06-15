@@ -8,7 +8,7 @@ public class OpenLuxendoSplitChipMovie
 {
 	public static void main( String[] args )
 	{
-		final Image image = BigDataProcessor2.openHdf5Image( "/g/cba/exchange/bigdataprocessor/data/tim2020/luxendo-split-chip-movie",
+		final Image image = BigDataProcessor2.openImageFromHdf5( "/g/cba/exchange/bigdataprocessor/data/tim2020/luxendo-split-chip-movie",
 				NamingScheme.SINGLE_CHANNEL_TIMELAPSE,
 				NamingScheme.PATTERN_LUXENDO,
 				"Data"

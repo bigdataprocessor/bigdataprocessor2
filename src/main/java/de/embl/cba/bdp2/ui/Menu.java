@@ -5,10 +5,7 @@ import de.embl.cba.bdp2.calibrate.CalibrateCommand;
 import de.embl.cba.bdp2.convert.ConvertToUnsignedByteTypeCommand;
 import de.embl.cba.bdp2.crop.CropCommand;
 import de.embl.cba.bdp2.image.ImageRenameCommand;
-import de.embl.cba.bdp2.open.OpenEMTiffPlanesCommand;
-import de.embl.cba.bdp2.open.OpenLeicaDSLTiffPlanesCommand;
-import de.embl.cba.bdp2.open.OpenLuxendoInViCommand;
-import de.embl.cba.bdp2.open.OpenLuxendoMuViCommand;
+import de.embl.cba.bdp2.open.*;
 import de.embl.cba.bdp2.align.AlignChannelsCommand;
 import de.embl.cba.bdp2.align.splitchip.AlignChannelsSplitChipCommand;
 
@@ -42,7 +39,7 @@ public class Menu extends JMenu
         setText( "BigDataProcessor2" );
 
         final JMenu openMenu = addMenu( "Open" );
-        //addMenuItem( openMenu, OpenAdvancedCommand.COMMAND_NAME );
+        addMenuItem( openMenu, OpenAdvancedCommand.COMMAND_NAME );
         addMenuItem( openMenu, OpenEMTiffPlanesCommand.COMMAND_NAME );
         addMenuItem( openMenu, OpenLuxendoMuViCommand.COMMAND_NAME );
         addMenuItem( openMenu, OpenLuxendoInViCommand.COMMAND_NAME );

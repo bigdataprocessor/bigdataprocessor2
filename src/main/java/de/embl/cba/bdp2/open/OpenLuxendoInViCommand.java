@@ -9,7 +9,7 @@ import org.scijava.plugin.Plugin;
 
 import javax.swing.*;
 
-import static de.embl.cba.bdp2.read.NamingScheme.LUXENDO_REGEXP;
+import static de.embl.cba.bdp2.read.NamingScheme.SINGLE_CHANNEL_TIFF_VOLUMES;
 import static de.embl.cba.bdp2.utils.Utils.COMMAND_BDP_PREFIX;
 
 @Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>" + AbstractOpenCommand.COMMAND_OPEN_PATH + OpenLuxendoInViCommand.COMMAND_FULL_NAME )
@@ -35,7 +35,7 @@ public class OpenLuxendoInViCommand< R extends RealType< R > & NativeType< R > >
     {
         SwingUtilities.invokeLater( () ->  {
 
-            String regExp = LUXENDO_REGEXP.replace( "STACK", "" + stackIndex );
+            String regExp = SINGLE_CHANNEL_TIFF_VOLUMES.replace( "STACK", "" + stackIndex );
 
             if ( camera.equals( LONG ) )
                 regExp = regExp.replace( "?<C2>.*", "?<C2>Long" );
@@ -44,7 +44,7 @@ public class OpenLuxendoInViCommand< R extends RealType< R > & NativeType< R > >
 
 
             outputImage =
-                        BigDataProcessor2.openImage(
+                        BigDataProcessor2.openImageFromHdf5(
                                 directory.toString(),
                                 regExp,
                                 regExp,

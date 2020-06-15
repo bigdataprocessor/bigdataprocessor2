@@ -76,24 +76,7 @@ public class BigDataProcessor2
             String namingScheme,
             String filterPattern )
     {
-        FileInfos fileInfos =
-                new FileInfos( directory, namingScheme, filterPattern );
-
-        final Image< R > image = CachedCellImgReader.loadImage( fileInfos );
-
-        return image;
-    }
-
-    public static < R extends RealType< R > & NativeType< R > >
-    Image< R > openImage(
-            String directory,
-            String loadingScheme,
-            String filterPattern,
-            String hdf5DataSetName)
-    {
-        DebugTools.setRootLevel( "OFF" ); // Bio-Formats
-
-        FileInfos fileInfos = new FileInfos( directory, loadingScheme, filterPattern, hdf5DataSetName );
+        FileInfos fileInfos = new FileInfos( directory, namingScheme, filterPattern );
 
         final Image< R > image = CachedCellImgReader.loadImage( fileInfos );
 
@@ -107,24 +90,21 @@ public class BigDataProcessor2
     }
 
     public static < R extends RealType< R > & NativeType< R > >
-    Image< R > openHdf5Image(
+    Image< R > openImageFromHdf5(
             String directory,
             String loadingScheme,
             String filterPattern,
             String hdf5DataSetName )
     {
-        FileInfos fileInfos =
-				new FileInfos(
-				        directory,
-                        loadingScheme,
-                        filterPattern,
-                        hdf5DataSetName );
+        DebugTools.setRootLevel( "OFF" ); // Bio-Formats
+
+        FileInfos fileInfos = new FileInfos( directory, loadingScheme, filterPattern, hdf5DataSetName );
 
         final Image< R > image = CachedCellImgReader.loadImage( fileInfos );
-        
+
         return image;
     }
-    
+
     public static < R extends RealType< R > & NativeType< R > >
     BdvImageViewer showImage( Image< R > image, boolean autoContrast, boolean enableArbitraryPlaneSlicing )
     {

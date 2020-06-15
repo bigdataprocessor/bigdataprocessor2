@@ -69,7 +69,7 @@ public class LuxendoBatchConvertAndCropCommand< R extends RealType< R > & Native
             for ( File directory : directories )
             {
                 // Open
-                final Image< R > image = BigDataProcessor2.openHdf5Image(
+                final Image< R > image = BigDataProcessor2.openImageFromHdf5(
                         directory.getAbsolutePath(),
                         NamingScheme.PATTERN_6,
                         NamingScheme.PATTERN_LUXENDO,
@@ -99,7 +99,7 @@ public class LuxendoBatchConvertAndCropCommand< R extends RealType< R > & Native
         {
             // open
             final String directory = directories.get( i ).getAbsolutePath();
-            final Image< R > image = BigDataProcessor2.openHdf5Image(
+            final Image< R > image = BigDataProcessor2.openImageFromHdf5(
                     directory,
                     NamingScheme.PATTERN_6,
                     NamingScheme.PATTERN_LUXENDO,

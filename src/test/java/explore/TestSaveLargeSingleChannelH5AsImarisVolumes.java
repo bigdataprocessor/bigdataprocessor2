@@ -22,7 +22,7 @@ public class TestSaveLargeSingleChannelH5AsImarisVolumes
         final String loadingScheme = NamingScheme.SINGLE_CHANNEL_TIMELAPSE;
         final String filterPattern = ".*.h5";
 
-        final Image image = bdp.openHdf5Image(
+        final Image image = bdp.openImageFromHdf5(
                 directory,
                 loadingScheme,
                 filterPattern,

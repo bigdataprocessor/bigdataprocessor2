@@ -22,7 +22,7 @@ public class OpenLuxendoSingleChannel< R extends RealType< R > & NativeType< R >
     {
         SwingUtilities.invokeLater( () ->  {
             outputImage =
-                    BigDataProcessor2.openImage(
+                    BigDataProcessor2.openImageFromHdf5(
                             directory.toString(),
                             NamingScheme.SINGLE_CHANNEL_TIMELAPSE,
                             NamingScheme.PATTERN_LUXENDO,

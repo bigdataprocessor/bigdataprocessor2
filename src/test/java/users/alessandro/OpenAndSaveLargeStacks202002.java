@@ -10,7 +10,7 @@ public class OpenAndSaveLargeStacks202002
 {
 	public static void main( String[] args )
 	{
-		final Image image = BigDataProcessor2.openHdf5Image( "/Users/tischer/Desktop/2020-02-11_124401/stack_0_channel_4",
+		final Image image = BigDataProcessor2.openImageFromHdf5( "/Users/tischer/Desktop/2020-02-11_124401/stack_0_channel_4",
 				NamingScheme.SINGLE_CHANNEL_TIMELAPSE,
 				NamingScheme.PATTERN_LUXENDO_LEFT_CAM,
 				"Data"

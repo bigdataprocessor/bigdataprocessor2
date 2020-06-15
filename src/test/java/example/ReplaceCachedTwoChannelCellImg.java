@@ -21,7 +21,7 @@ public class ReplaceCachedTwoChannelCellImg
 		final String filterPattern = ".*.h5";
 		final String dataset = "Data";
 
-		final Image image = bdp.openHdf5Image(
+		final Image image = bdp.openImageFromHdf5(
 				directory,
 				loadingScheme,
 				filterPattern,

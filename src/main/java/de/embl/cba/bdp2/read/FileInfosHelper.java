@@ -7,9 +7,12 @@ import org.apache.commons.lang.ArrayUtils;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static de.embl.cba.bdp2.read.NamingScheme.SINGLE_CHANNEL_TIFF_VOLUMES;
 
 public class FileInfosHelper
 {
@@ -181,8 +184,7 @@ public class FileInfosHelper
             String namingScheme,
             String filterPattern)
     {
-        String[][] fileLists =
-                getFilesInFolders( fileInfos, directory, namingScheme, filterPattern );
+        String[][] fileLists = getFilesInFolders( fileInfos, directory, namingScheme, filterPattern );
 
         if ( fileLists == null )
         {
@@ -284,48 +286,77 @@ public class FileInfosHelper
             setImageMetadata( fileInfos, fileInfos.directory + fileInfos.channelFolders[ 0 ], namingScheme, fileLists[ 0 ] );
             populateFileList( fileInfos, namingScheme, fileLists );
         }
-        else if ( namingScheme.contains( NamingScheme.LUXENDO_REGEXP_ID ) )
+        else if ( namingScheme.contains( NamingScheme.LUXENDO_REGEXP_ID )
+                || namingScheme.equals( SINGLE_CHANNEL_TIFF_VOLUMES ) )
         {
-            // we have no simple "channels in folders" logic
+            // we have no simple "channels in folders" logic: TODO: get rid of channelFolders alltogether!
             fileInfos.channelFolders = new String[]{""};
 
-            HashSet<String> channelsHS = new HashSet();
-            HashSet<String> timepointsHS = new HashSet();
+            HashSet<String> channels = new HashSet();
+            HashSet<String> timepoints = new HashSet();
 
             final String pattern = namingScheme.replace( "/", Pattern.quote( File.separator ) );
 
             Pattern patternCT = Pattern.compile( pattern );
+
+            final Map< String, Integer > groupIndexToGroupName = getGroupIndexToGroupName( patternCT );
+            final ArrayList< Integer > channelGroups = new ArrayList<>();
+            final ArrayList< Integer > timeGroups = new ArrayList<>();
+            for ( Map.Entry< String, Integer > entry : groupIndexToGroupName.entrySet() )
+            {
+                if ( entry.getKey().contains( "C" ) )
+                {
+                    channelGroups.add( entry.getValue() );
+                }
+                else if ( entry.getKey().contains( "T" ) )
+                {
+                    timeGroups.add( entry.getValue() );
+                }
+            }
 
             for ( String fileName : fileLists[ 0 ] )
             {
                 Matcher matcherCT = patternCT.matcher( fileName );
                 if ( matcherCT.matches() )
                 {
-                    channelsHS.add( matcherCT.group( "C1" ) + "_" + matcherCT.group( "C2" ) );
-                    timepointsHS.add( matcherCT.group( "T" ) );
+                    String channelId = getId( channelGroups, matcherCT );
+                    channels.add( channelId );
+
+                    String timeId = getId( timeGroups, matcherCT );
+
+                    timepoints.add( timeId );
                 }
             }
 
-            // convert HashLists to sorted Lists
-            List< String > channels = new ArrayList< >( channelsHS );
-            Collections.sort( channels );
-            fileInfos.nC = channels.size();
+            // convert Sets to sorted Lists
+            List< String > sortedChannels = new ArrayList< >( channels );
+            Collections.sort( sortedChannels );
+            fileInfos.nC = sortedChannels.size();
 
             if ( fileInfos.nC == 0 )
                 throw new UnsupportedOperationException( "No channels found!" );
 
-            List< String > timepoints = new ArrayList< >( timepointsHS );
-            Collections.sort(timepoints);
-            fileInfos.nT = timepoints.size() ;
+            List< String > sortedTimepoints = new ArrayList< >( timepoints );
+            Collections.sort( sortedTimepoints );
+            fileInfos.nT = sortedTimepoints.size() ;
 
             if ( fileInfos.nT == 0 )
                 throw new UnsupportedOperationException( "No time-points found!" );
 
-            fileInfos.channelNames = channels.stream().toArray( String[]::new );
+            fileInfos.channelNames = sortedChannels.stream().toArray( String[]::new );
 
-            fixChannelFolders( fileInfos, namingScheme );
+            fixChannelFolders( fileInfos, namingScheme ); // TODO: remove
+
             setImageMetadata( fileInfos, fileInfos.directory, namingScheme, fileLists[ 0 ] );
-            populateFileInfosFromLuxendoChannelTimePattern( fileInfos, pattern, fileLists[ 0 ], channels, timepoints );
+
+            populateFileInfosFromChannelTimeRegExp(
+                    fileInfos,
+                    pattern,
+                    fileLists[ 0 ],
+                    sortedChannels,
+                    sortedTimepoints,
+                    channelGroups,
+                    timeGroups);
         }
         else
         {
@@ -375,6 +406,31 @@ public class FileInfosHelper
             populateFileInfosFromChannelTimePattern( fileInfos, namingSchemeRegExp, fileLists[ 0 ], channels, timepoints );
         }
 
+    }
+
+    private static String getId( ArrayList< Integer > channelGroups, Matcher matcherCT )
+    {
+        String channelId = "";
+        for ( Integer channelGroup : channelGroups )
+        {
+            channelId += matcherCT.group( channelGroup );
+        }
+        return channelId;
+    }
+
+    private static Map< String, Integer > getGroupIndexToGroupName( Pattern pattern )
+    {
+        final Field namedGroups;
+        try
+        {
+            namedGroups = pattern.getClass().getDeclaredField("namedGroups");
+            namedGroups.setAccessible(true);
+            return (Map<String, Integer>) namedGroups.get( pattern );
+        } catch ( Exception e )
+        {
+            e.printStackTrace();
+            throw new UnsupportedOperationException( "Could not extract group names from pattern: " + pattern );
+        }
     }
 
     private static void populateFileList(
@@ -433,12 +489,14 @@ public class FileInfosHelper
         }
     }
 
-    private static void populateFileInfosFromLuxendoChannelTimePattern(
+    private static void populateFileInfosFromChannelTimeRegExp(
             FileInfos fileInfos,
             String namingScheme,
             String[] fileList,
             List< String > channels,
-            List< String > timepoints )
+            List< String > timepoints,
+            ArrayList< Integer > channelGroups,
+            ArrayList< Integer > timeGroups )
     {
         fileInfos.ctzFileList = new String[ fileInfos.nC ][ fileInfos.nT ][ fileInfos.nZ ];
 
@@ -447,10 +505,12 @@ public class FileInfosHelper
         for ( String fileName : fileList )
         {
             Matcher matcher = pattern.matcher( fileName );
-            if ( matcher.matches() ) {
-                int c = channels.indexOf( matcher.group( "C1" ) + "_" + matcher.group( "C2" ) );
-                int t = timepoints.indexOf( matcher.group("T") );
-                for ( int z = 0; z < fileInfos.nZ; z++) {
+            if ( matcher.matches() )
+            {
+                int c = channels.indexOf( getId( channelGroups, matcher ) );
+                int t = timepoints.indexOf( getId( timeGroups, matcher ) );
+                for ( int z = 0; z < fileInfos.nZ; z++)
+                {
                     fileInfos.ctzFileList[c][t][z] = fileName; // all z with same file-name, because it is stacks
                 }
             }
@@ -487,7 +547,7 @@ public class FileInfosHelper
         Logger.info( "Sub-folder name pattern: " + folderPattern );
         Logger.info( "File name pattern: " + fileFilter );
 
-         if ( namingScheme.equals( NamingScheme.LOAD_CHANNELS_FROM_FOLDERS ) )
+        if ( namingScheme.equals( NamingScheme.LOAD_CHANNELS_FROM_FOLDERS ) )
         {
             //
             // Check for sub-folders
@@ -521,7 +581,8 @@ public class FileInfosHelper
                 fileLists = null;
             }
         }
-        else if ( namingScheme.contains( NamingScheme.LUXENDO_REGEXP_ID ) )
+        else if ( namingScheme.contains( NamingScheme.LUXENDO_REGEXP_ID )
+                 || namingScheme.equals( SINGLE_CHANNEL_TIFF_VOLUMES ))
         {
             final String[] subFolders = getSubFolders( directory, folderPattern );
 
@@ -643,7 +704,8 @@ public class FileInfosHelper
         return dataDirectory;
     }
 
-    private static String[] sortAndFilterFileList(String[] rawlist, String filterPattern)
+    // TODO: Do I need the filterPattern?
+    private static String[] sortAndFilterFileList( String[] rawlist, String filterPattern )
     {
         int count = 0;
 
@@ -654,7 +716,7 @@ public class FileInfosHelper
             String name = rawlist[i];
             if ( ! patternFilter.matcher( name ).matches() )
                 rawlist[i] = null;
-            else if (name.endsWith(".tif") || name.endsWith(".h5"))
+            else if ( name.endsWith(".tif") || name.endsWith(".h5") )
                 count++;
             else
                 rawlist[i] = null;
