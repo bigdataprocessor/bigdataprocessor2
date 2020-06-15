@@ -11,7 +11,7 @@ public class TestTiffLoading
 	public static  < R extends RealType< R > & NativeType< R > > void main( String[] args )
 	{
 		final Image< R > image = BigDataProcessor2.openImage(
-				"/Users/tischer/Documents/gustavo/bdp2-errors",
+				"/Users/tischer/Documents/gustavo/bdp2-errors/error001",
 				NamingScheme.SINGLE_CHANNEL_TIFF_VOLUMES,
 				".*"
 		);

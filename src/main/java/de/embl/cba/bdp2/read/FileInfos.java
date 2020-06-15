@@ -51,7 +51,7 @@ public class FileInfos
     public String h5DataSetName;
     public String[] channelFolders;
     public String[][][] ctzFileList;
-    public final String directory;
+    public String directory;
     public double max_pixel_val;
     public double min_pixel_val;
     public int compression;
@@ -68,7 +68,7 @@ public class FileInfos
 
     public FileInfos(
             String directory,
-            String loadingScheme,
+            String namingScheme,
             String filterPattern,
             String h5DataSetName)
     {
@@ -80,16 +80,25 @@ public class FileInfos
         this.directory = directory; // contains File separator!
         this.h5DataSetName = h5DataSetName;
 
-        if ( loadingScheme.contains("<Z") )
+        if ( namingScheme.contains("<Z") )
         {
-            FileInfosHelper.setFileInfos(this, directory, loadingScheme );
+            FileInfosHelper.setFileInfos(this, directory, namingScheme );
         }
         else
         {
+            if ( ! namingScheme.contains( "?<C" ) )
+            {
+                // make the folder the channel
+                final String folder = new File( directory ).getName();
+                this.directory = new File( directory ).getParent() + "/";
+                namingScheme = "(?<C>"+folder+")/" + namingScheme;
+                filterPattern = folder + "/" + filterPattern;
+            }
+
             FileInfosHelper.setFileInfos(
                     this,
-                    directory,
-                    loadingScheme,
+                    this.directory,
+                    namingScheme,
                     filterPattern );
         }
 

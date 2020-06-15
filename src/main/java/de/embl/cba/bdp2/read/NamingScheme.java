@@ -12,7 +12,8 @@ public abstract class NamingScheme
 	 * Use containing folder as the channel id.
 	 * Users: Gustavo
 	 */
-	public static final String SINGLE_CHANNEL_TIFF_VOLUMES = "(?<C>.*)/T(?<T>\\d+).tif";
+//	public static final String SINGLE_CHANNEL_TIFF_VOLUMES = "(?<C>.*)/T(?<T>\\d+).tif";
+	public static final String SINGLE_CHANNEL_TIFF_VOLUMES = "T(?<T>\\d+).tif";
 
 	public static final String LUXENDO_REGEXP = ".*stack_STACK_channel_(?<C1>\\d+)/Cam_(?<C2>.*)_(?<T>\\d+).h5";
 	public static final String LUXENDO_STACKINDEX_REGEXP = ".*stack_(?<StackIndex>\\d+)_channel_.*";

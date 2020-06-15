@@ -286,8 +286,7 @@ public class FileInfosHelper
             setImageMetadata( fileInfos, fileInfos.directory + fileInfos.channelFolders[ 0 ], namingScheme, fileLists[ 0 ] );
             populateFileList( fileInfos, namingScheme, fileLists );
         }
-        else if ( namingScheme.contains( NamingScheme.LUXENDO_REGEXP_ID )
-                || namingScheme.equals( SINGLE_CHANNEL_TIFF_VOLUMES ) )
+        else
         {
             // we have no simple "channels in folders" logic: TODO: get rid of channelFolders alltogether!
             fileInfos.channelFolders = new String[]{""};
@@ -295,11 +294,11 @@ public class FileInfosHelper
             HashSet<String> channels = new HashSet();
             HashSet<String> timepoints = new HashSet();
 
-            final String pattern = namingScheme.replace( "/", Pattern.quote( File.separator ) );
+            final String regExp = namingScheme.replace( "/", Pattern.quote( File.separator ) );
+            Pattern pattern = Pattern.compile( regExp );
 
-            Pattern patternCT = Pattern.compile( pattern );
-
-            final Map< String, Integer > groupIndexToGroupName = getGroupIndexToGroupName( patternCT );
+            // get channel and time groups
+            final Map< String, Integer > groupIndexToGroupName = getGroupIndexToGroupName( pattern );
             final ArrayList< Integer > channelGroups = new ArrayList<>();
             final ArrayList< Integer > timeGroups = new ArrayList<>();
             for ( Map.Entry< String, Integer > entry : groupIndexToGroupName.entrySet() )
@@ -316,14 +315,13 @@ public class FileInfosHelper
 
             for ( String fileName : fileLists[ 0 ] )
             {
-                Matcher matcherCT = patternCT.matcher( fileName );
-                if ( matcherCT.matches() )
+                Matcher matcher = pattern.matcher( fileName );
+                if ( matcher.matches() )
                 {
-                    String channelId = getId( channelGroups, matcherCT );
+                    String channelId = getId( channelGroups, matcher );
                     channels.add( channelId );
 
-                    String timeId = getId( timeGroups, matcherCT );
-
+                    String timeId = getId( timeGroups, matcher );
                     timepoints.add( timeId );
                 }
             }
@@ -351,71 +349,24 @@ public class FileInfosHelper
 
             populateFileInfosFromChannelTimeRegExp(
                     fileInfos,
-                    pattern,
+                    regExp,
                     fileLists[ 0 ],
                     sortedChannels,
                     sortedTimepoints,
                     channelGroups,
                     timeGroups);
         }
-        else
-        {
-            String namingSchemeRegExp;
-            if ( ( namingScheme.contains("<c>") && namingScheme.contains("<t>") ) )
-            {
-                // replace shortcuts by actual regexp
-                namingSchemeRegExp = namingScheme.replace( "<c>", "(?<C>.*)" );
-                namingSchemeRegExp = namingSchemeRegExp.replace( "<t>", "(?<T>.*)" );
-            }
-            else
-            {
-                namingSchemeRegExp = namingScheme;
-            }
-
-            // we have no simple channels in folders logic
-            fileInfos.channelFolders = new String[]{""};
-
-            HashSet<String> channelsHS = new HashSet();
-            HashSet<String> timepointsHS = new HashSet();
-
-            Pattern patternCT = Pattern.compile( namingSchemeRegExp );
-
-            for ( String fileName : fileLists[0] )
-            {
-                Matcher matcherCT = patternCT.matcher(fileName);
-                if (matcherCT.matches())
-                {
-                    channelsHS.add(matcherCT.group("C"));
-                    timepointsHS.add(matcherCT.group("T"));
-                }
-            }
-
-            // convert HashLists to sorted Lists
-            List< String > channels = new ArrayList< >( channelsHS );
-            Collections.sort( channels );
-            fileInfos.nC = channels.size();
-
-            List< String > timepoints = new ArrayList< >( timepointsHS );
-            Collections.sort(timepoints);
-            fileInfos.nT = timepoints.size() ;
-
-            fileInfos.channelNames = channels.stream().toArray( String[]::new );
-
-            fixChannelFolders( fileInfos, namingScheme );
-            setImageMetadata( fileInfos, fileInfos.directory + fileInfos.channelFolders[ 0 ], namingScheme, fileLists[ 0 ] );
-            populateFileInfosFromChannelTimePattern( fileInfos, namingSchemeRegExp, fileLists[ 0 ], channels, timepoints );
-        }
-
     }
 
-    private static String getId( ArrayList< Integer > channelGroups, Matcher matcherCT )
+    private static String getId( ArrayList< Integer > groups, Matcher matcher )
     {
-        String channelId = "";
-        for ( Integer channelGroup : channelGroups )
+        String id = "";
+        for ( Integer group : groups )
         {
-            channelId += matcherCT.group( channelGroup );
+            id += matcher.group( group );
         }
-        return channelId;
+
+        return id;
     }
 
     private static Map< String, Integer > getGroupIndexToGroupName( Pattern pattern )
@@ -491,7 +442,7 @@ public class FileInfosHelper
 
     private static void populateFileInfosFromChannelTimeRegExp(
             FileInfos fileInfos,
-            String namingScheme,
+            String regExp,
             String[] fileList,
             List< String > channels,
             List< String > timepoints,
@@ -500,7 +451,7 @@ public class FileInfosHelper
     {
         fileInfos.ctzFileList = new String[ fileInfos.nC ][ fileInfos.nT ][ fileInfos.nZ ];
 
-        Pattern pattern = Pattern.compile( namingScheme );
+        Pattern pattern = Pattern.compile( regExp );
 
         for ( String fileName : fileList )
         {
@@ -517,7 +468,7 @@ public class FileInfosHelper
             else
             {
                 throw new UnsupportedOperationException( "Could not match file: " + fileName
-                        + "\nNaming scheme: " + namingScheme
+                        + "\nNaming scheme: " + regExp
                         + "\nPattern: " + pattern.toString() );
             }
         }
@@ -547,43 +498,42 @@ public class FileInfosHelper
         Logger.info( "Sub-folder name pattern: " + folderPattern );
         Logger.info( "File name pattern: " + fileFilter );
 
-        if ( namingScheme.equals( NamingScheme.LOAD_CHANNELS_FROM_FOLDERS ) )
-        {
-            //
-            // Check for sub-folders
-            //
-            Logger.info("Checking for sub-folders...");
-
-            fileInfos.channelFolders = getSubFolders( directory, folderPattern );
-
-            if ( fileInfos.channelFolders != null )
-            {
-                fileLists = new String[fileInfos.channelFolders.length][];
-                for (int i = 0; i < fileInfos.channelFolders.length; i++)
-                {
-                    fileLists[i] = getFilesInFolder(
-                            directory + fileInfos.channelFolders[ i ], fileFilter );
-
-                    if ( fileLists[i] == null )
-                    {
-                        Logger.error("No file found in folder: " + directory + fileInfos.channelFolders[ i ]);
-                        fileLists = null;
-                        break;
-                    }
-                }
-                Logger.info( "Found sub-folders => load channels from sub-folders." );
-            }
-            else
-            {
-                Logger.error("No sub-folders found; " +
-                        "please specify different options for load " +
-                        "the channels");
-                fileLists = null;
-            }
-        }
-        else if ( namingScheme.contains( NamingScheme.LUXENDO_REGEXP_ID )
-                 || namingScheme.equals( SINGLE_CHANNEL_TIFF_VOLUMES ))
-        {
+//        if ( namingScheme.equals( NamingScheme.LOAD_CHANNELS_FROM_FOLDERS ) )
+//        {
+//            //
+//            // Check for sub-folders
+//            //
+//            Logger.info("Checking for sub-folders...");
+//
+//            fileInfos.channelFolders = getSubFolders( directory, folderPattern );
+//
+//            if ( fileInfos.channelFolders != null )
+//            {
+//                fileLists = new String[fileInfos.channelFolders.length][];
+//                for (int i = 0; i < fileInfos.channelFolders.length; i++)
+//                {
+//                    fileLists[i] = getFilesInFolder( directory + fileInfos.channelFolders[ i ], fileFilter );
+//
+//                    if ( fileLists[i] == null )
+//                    {
+//                        Logger.error("No file found in folder: " + directory + fileInfos.channelFolders[ i ]);
+//                        fileLists = null;
+//                        break;
+//                    }
+//                }
+//                Logger.info( "Found sub-folders => load channels from sub-folders." );
+//            }
+//            else
+//            {
+//                Logger.error("No sub-folders found; " +
+//                        "please specify different options for load " +
+//                        "the channels");
+//                fileLists = null;
+//            }
+//        }
+//        else if ( namingScheme.contains( NamingScheme.LUXENDO_REGEXP_ID )
+//                 || namingScheme.equals( SINGLE_CHANNEL_TIFF_VOLUMES ))
+//        {
             final String[] subFolders = getSubFolders( directory, folderPattern );
 
             if ( subFolders == null )
@@ -614,30 +564,35 @@ public class FileInfosHelper
                     Logger.info( "Found " + filesInFolder.length + " files in folder: " + subFolder);
                 }
 
-                final int j = i;
-                filesInFolder = Arrays.stream( filesInFolder ).map( x -> subFolders[ j ] + File.separator + x ).toArray( String[]::new );
-                files = (String[]) ArrayUtils.addAll(files, filesInFolder );
+                if ( ! subFolders[ i ].equals( "" ) )
+                {
+                    // prepend subfolder
+                    final int j = i;
+                    filesInFolder = Arrays.stream( filesInFolder ).map( x -> subFolders[ j ] + File.separator + x ).toArray( String[]::new );
+                }
+
+                files = (String[]) ArrayUtils.addAll( files, filesInFolder );
             }
 
             fileLists = new String[1][];
             fileLists[ 0 ] = files;
-        }
-        else
-        {   //
-            // Get file in main directory
-            //
-            Logger.info("Searching file in folder: " + directory);
-            fileLists = new String[ 1 ][ ];
-            fileLists[ 0 ] = getFilesInFolder( directory, filterPattern );
-            Logger.info("Number of file in main folder matching the filter pattern: " + fileLists[0].length );
-
-            if ( fileLists[0] == null || fileLists[0].length == 0 )
-            {
-                Logger.warning("No file matching this pattern were found: " + filterPattern);
-                fileLists = null;
-            }
-
-        }
+//        }
+//        else
+//        {   //
+//            // Get file in main directory
+//            //
+//            Logger.info("Searching file in folder: " + directory);
+//            fileLists = new String[ 1 ][ ];
+//            fileLists[ 0 ] = getFilesInFolder( directory, filterPattern );
+//            Logger.info("Number of file in main folder matching the filter pattern: " + fileLists[0].length );
+//
+//            if ( fileLists[0] == null || fileLists[0].length == 0 )
+//            {
+//                Logger.warning("No file matching this pattern were found: " + filterPattern);
+//                fileLists = null;
+//            }
+//
+//        }
         return fileLists;
     }
 
@@ -810,12 +765,12 @@ public class FileInfosHelper
 
     private static String[] getSubFolders( String parentFolder, String subFolderPattern )
     {
-        String[] list = new File(parentFolder).list( new FilenameFilter()
+        String[] list = new File( parentFolder ).list( new FilenameFilter()
         {
             @Override
-            public boolean accept(File parentFolder, String subFolder)
+            public boolean accept( File parentFolder, String subFolder )
             {
-                if ( ! new File(parentFolder, subFolder).isDirectory() ) return false;
+                if ( ! new File( parentFolder, subFolder ).isDirectory() ) return false;
 
                 Pattern.compile( subFolderPattern ).matcher( subFolder );
 
@@ -825,8 +780,8 @@ public class FileInfosHelper
             }
         });
 
-        if (list == null || list.length == 0)
-            return null;
+        if ( list == null || list.length == 0 )
+            return new String[]{""};
 
         Arrays.sort( list );
 
