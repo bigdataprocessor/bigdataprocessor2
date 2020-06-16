@@ -21,7 +21,7 @@ In the Fiji Plugins menu scroll far down and start BigDataProcessor2:
 
 This opens up an empty BigDataViewer window with additional menu entries.
 
-Note: You do not need to use the Commands, they are just there to enable macro-recording.
+Note: **Don't use the Commands**, they are just there to enable macro-recording.
 
 ### Macro recording
 
