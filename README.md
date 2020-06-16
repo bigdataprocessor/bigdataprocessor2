@@ -1,5 +1,3 @@
-<img src="https://www.huber.embl.de/courses/images/BioIT_logo.jpeg" width="200">
-
 # BigDataProcessor2
 
 Interactive processing of TB-sized image data within [Fiji](http://fiji.sc/), on your laptop.
@@ -23,13 +21,13 @@ This opens up an empty BigDataViewer window with additional menu entries.
 
 Note: **Don't use the Commands**, they are just there to enable macro-recording.
 
-### Macro recording
+## Record macros
 
-All actions can be macro recorded. To enable this please:
+All actions can be recorded as ImageJ macros. To enable this please:
 
 <img src="https://user-images.githubusercontent.com/2157566/83620230-51d35e80-a58d-11ea-919e-5c6e2c5890eb.png" width="500">
 
-## Open datasets
+## Open a dataset
 
 In the BigDataViewer window, go to the menu bar and use the menu items in [ BigDataProcessor2 > Open ].
 
