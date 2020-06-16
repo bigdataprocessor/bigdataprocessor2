@@ -10,7 +10,7 @@ BigDataProcessor2 is a Fiji Plugin.
 
 - Please install [Fiji](fiji.sc)
 - Within Fiji, please enable the following [Update Site](https://imagej.net/Update_Sites): 
-    - [X] EMBL-CBA
+    - [X] BigDataProcessor2
 - Restart Fiji
 
 ## Start
