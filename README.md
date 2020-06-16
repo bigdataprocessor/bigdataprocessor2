@@ -17,7 +17,7 @@ BigDataProcessor2 is a Fiji Plugin.
 
 In the Fiji Plugins menu scroll far down and start BigDataProcessor2:
 
-![image](https://user-images.githubusercontent.com/2157566/83620048-0d47c300-a58d-11ea-8213-306598048e9e.png)
+<img src="https://user-images.githubusercontent.com/2157566/83620048-0d47c300-a58d-11ea-8213-306598048e9e.png" width="460">
 
 This opens up an empty BigDataViewer window with additional menu entries.
 
@@ -27,13 +27,13 @@ Note: **Don't use the Commands**, they are just there to enable macro-recording.
 
 All actions can be macro recorded. To enable this please:
 
-![image](https://user-images.githubusercontent.com/2157566/83620230-51d35e80-a58d-11ea-919e-5c6e2c5890eb.png)
+<img src="https://user-images.githubusercontent.com/2157566/83620230-51d35e80-a58d-11ea-919e-5c6e2c5890eb.png" width="500">
 
 ## Open datasets
 
 In the BigDataViewer window, go to the menu bar and use the menu items in [ BigDataProcessor2 > Open ].
 
-![image](https://user-images.githubusercontent.com/2157566/83619635-72e77f80-a58c-11ea-9602-c4eeb05bfd2f.png)
+<img src="https://user-images.githubusercontent.com/2157566/83619635-72e77f80-a58c-11ea-9602-c4eeb05bfd2f.png" width="600">
 
 
 ## Process
