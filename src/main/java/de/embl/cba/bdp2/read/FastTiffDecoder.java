@@ -244,9 +244,10 @@ public class FastTiffDecoder {
         }
         else
         {
-            return ((long) getInt() << 32) + ((long) getInt() & 0xffffffffL);
+            return ((long)getInt()<<32) + ((long)getInt()&0xffffffffL);
         }
-        //return in.read()+(in.read()<<8)+(in.read()<<16)+(in.read()<<24)+(in.read()<<32)+(in.read()<<40)+(in.read()<<48)+(in.read()<<56);
+        // return in.read()+(in.read()<<8)+(in.read()<<16)+(in.read()<<24)+(in.read()<<32)+(in.read()<<40)+(in.read()<<48)+(in.read()<<56);
+
     }
 
     final double readDouble() throws IOException {

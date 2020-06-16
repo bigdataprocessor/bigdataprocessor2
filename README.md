@@ -58,7 +58,7 @@ For camera based microscopy systems the pixel size cannot be freely chosen durin
 Thus, the user is often forced to over-sample in order not to lose important information. 
 However, this leads to large data volumes with noise since the information is spread across many pixels and therefore resulting in 
 (vastly) increased image processing times.  
-The BigDataProcessor2 makes it possible to explore different binnings interactively, thereby providing an efficient means to 
+The BigDataProcessor2 makes it possible to playground different binnings interactively, thereby providing an efficient means to 
 attain a binning at which the corresponding scientific question can be efficiently addressed.*(click below to play the movie)*
 
 [<img width="1000" alt="image" src="./docs/images/2.png">](https://drive.google.com/open?id=1AVFW3M5QYEDH9XUgR-q2LWUsuy16zF1A)
@@ -79,7 +79,7 @@ Choosing a mapping of 65535 => 255 and 0 => 0 can lead to a low dynamic range in
 only a subset of the full 16-bit range. Furthermore, choosing `max` => 255 and `min` => 0, can be sub-optimal if 
 there are spurious pixels with very high values, making the `max` value very high, again leading to a low dynamic range for the relevant grey values 
 in the 8-bit converted data.  
-The below movie *(click below to play)* demonstrates interactive 8-bit conversion, where the user can interactively explore different mappings while browsing the entire data. 
+The below movie *(click below to play)* demonstrates interactive 8-bit conversion, where the user can interactively playground different mappings while browsing the entire data. 
 This is done lazily, i.e. the data on disk is not altered at this stage.
 
 [<img width="1000" alt="image" src="./docs/images/4.png">](https://drive.google.com/open?id=1jRZEepD1C8rM5t2gDi7tYnFh092vUztm)
@@ -92,7 +92,7 @@ BigDataProcessor2 is based on [BigDataViewer](https://imagej.net/BigDataViewer) 
 
 BigDataProcessor2 implements a [Lazy Loading design pattern](https://en.wikipedia.org/wiki/Lazy_loading) to render Terabyte sized big data image data produced by light-sheet and electron microscopy, also on laptops with limited RAM. 
 
-The plugin facilitates loading & saving of TIFF, HDF5 and Imaris file formats meanwhile allowing the user to shear, crop or bin. *(check out the User Documentation section below to explore what more you can do!)*
+The plugin facilitates loading & saving of TIFF, HDF5 and Imaris file formats meanwhile allowing the user to shear, crop or bin. *(check out the User Documentation section below to playground what more you can do!)*
 
 The plugin also encloses **BigDataTracker**, an object tracker tool for the big data images and also allowing to view and save just the tracked regions.
 

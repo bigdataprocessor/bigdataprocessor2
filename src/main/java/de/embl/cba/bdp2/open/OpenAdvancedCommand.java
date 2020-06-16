@@ -4,7 +4,6 @@ import de.embl.cba.bdp2.calibrate.CalibrationUtils;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.read.NamingScheme;
-import loci.common.DebugTools;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;
@@ -13,6 +12,7 @@ import org.scijava.plugin.Plugin;
 
 import javax.swing.*;
 
+import static de.embl.cba.bdp2.read.NamingScheme.*;
 import static de.embl.cba.bdp2.utils.Utils.COMMAND_BDP_PREFIX;
 
 
@@ -27,6 +27,7 @@ public class OpenAdvancedCommand< R extends RealType< R > & NativeType< R > > ex
 {
     public static final String COMMAND_NAME = "Open...";
     public static final String COMMAND_FULL_NAME = COMMAND_BDP_PREFIX + COMMAND_NAME;
+    public static final String USE_CUSTOM = "Use custom";
 
     //@Parameter(label = "Subset file using regular expression" )
     //String filterPattern = ".*";
@@ -34,19 +35,16 @@ public class OpenAdvancedCommand< R extends RealType< R > & NativeType< R > > ex
     //@Parameter(label = "Regular expression help", callback = "showRegExpHelp", required = false)
     //Button regExpHelpButton;
 
-    @Parameter(label = "Naming scheme",
+    @Parameter(label = "Regular expression templates",
             choices = {
-                    NamingScheme.SINGLE_CHANNEL_TIFF_VOLUMES,
-                    NamingScheme.LEICA_LIGHT_SHEET_TIFF,
-                    NamingScheme.LOAD_CHANNELS_FROM_FOLDERS,
-                    NamingScheme.TIFF_SLICES,
-                    NamingScheme.PATTERN_1,
-                    NamingScheme.PATTERN_2,
-                    NamingScheme.PATTERN_3,
-                    NamingScheme.PATTERN_4,
-                    NamingScheme.PATTERN_5,
-                    NamingScheme.PATTERN_6})
-    String namingScheme = NamingScheme.SINGLE_CHANNEL_TIMELAPSE;
+                    USE_CUSTOM,
+                    MULTI_CHANNEL_TIFF_VOLUMES_FROM_SUBFOLDERS,
+                    MULTI_CHANNEL_OME_TIFF_VOLUMES,
+                    MULTI_CHANNEL_TIFF_VOLUMES })
+    String regExpTemplate = NamingScheme.SINGLE_CHANNEL_TIMELAPSE;
+
+    @Parameter(label = "Custom regular expression")
+    String regExp = MULTI_CHANNEL_TIFF_VOLUMES_FROM_SUBFOLDERS;
 
     @Parameter(label = "Hdf5 data set name (optional)", required = false)
     String hdf5DataSetName = "Data";
@@ -55,19 +53,24 @@ public class OpenAdvancedCommand< R extends RealType< R > & NativeType< R > > ex
     {
         SwingUtilities.invokeLater( () ->  {
 
-            if ( namingScheme.endsWith( ".h5" ) )
+            if ( ! regExpTemplate.equals( USE_CUSTOM ) )
+            {
+                regExp = regExpTemplate;
+            }
+
+            if ( regExp.endsWith( ".h5" ) )
             {
                 outputImage = BigDataProcessor2.openImageFromHdf5(
                         directory.toString(),
-                        namingScheme,
+                        regExp,
                         ".*",
                         hdf5DataSetName );
             }
-            else if ( namingScheme.contains( ".tif" ) ) // .tiff .ome.tif
+            else if ( regExp.contains( ".tif" ) ) // .tiff .ome.tif
             {
                 outputImage = BigDataProcessor2.openImage(
                         directory.toString(),
-                        namingScheme,
+                        regExp,
                         ".*" );
             }
 

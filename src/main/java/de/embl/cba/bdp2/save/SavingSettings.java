@@ -35,11 +35,10 @@ public class SavingSettings {
     public boolean convertTo16Bit;
     public boolean gate;
     public int gateMin, gateMax;
-    public String parentDirectory;
     public FileType fileType;
     public String compression;
     public int compressionLevel;
-    public int rowsPerStrip;
+    public int rowsPerStrip = -1;
     public int numIOThreads = 1;
     public int numProcessingThreads = 1;
 

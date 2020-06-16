@@ -12,8 +12,6 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static de.embl.cba.bdp2.read.NamingScheme.SINGLE_CHANNEL_TIFF_VOLUMES;
-
 public class FileInfosHelper
 {
 
@@ -544,7 +542,9 @@ public class FileInfosHelper
             }
             else
             {
-                Logger.info( "Found " + subFolders.length + " sub-folders" );
+                // TODO: Clean this up
+                if ( subFolders.length > 1 && ! subFolders[ 0 ].equals( "" ) )
+                    Logger.info( "Found " + subFolders.length + " sub-folders" );
             }
 
             String[] files = new String[]{};

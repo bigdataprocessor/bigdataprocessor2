@@ -207,6 +207,9 @@ public class TiffStacksImageFrameSaver< R extends RealType< R > & NativeType< R 
 
             TiffWriter tiffWriter = (TiffWriter) writer.getWriter();
 
+            if ( rowsPerStrip == -1 )
+                rowsPerStrip = imp.getHeight(); // use all rows
+
             long[] rowsPerStripArray = new long[]{ rowsPerStrip };
 
             for (int z = 0; z < imp.getNSlices(); z++)

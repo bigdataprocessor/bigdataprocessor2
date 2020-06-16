@@ -12,16 +12,14 @@ public class ProgressHelpers
 		logProgress( total, counter, startTimeMillis, "" );
 	}
 
-	public static void logProgress(
-			long total, AtomicInteger counter, final long startTimeMillis, String msg )
+	public static void logProgress( long total, AtomicInteger counter, final long startTimeMillis, String msg )
 	{
-		double secondsSpent = (1.0 * System.currentTimeMillis() - startTimeMillis ) / (1000.0);
-		double secondsPerTask = secondsSpent / counter.get();
-		double secondsLeft = (total - counter.get()) * secondsPerTask;
+		Double secondsSpent = (1.0 * System.currentTimeMillis() - startTimeMillis ) / (1000.0);
+		Double secondsPerTask = counter.get() > 0 ? secondsSpent / counter.get() : Double.NaN ;
+		Double secondsLeft = (total - counter.get()) * secondsPerTask;
 
 		String unit = "s";
 		double divisor = 1;
-
 		if ( secondsSpent > 3 * 60 )
 		{
 			unit = "min";

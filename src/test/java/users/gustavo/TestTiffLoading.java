@@ -18,6 +18,7 @@ public class TestTiffLoading
 
 		BigDataProcessor2.showImage( image, true );
 
+
 //		final ImagePlus imagePlus = IJ.openImage( "/Users/tischer/Desktop/gustavo/P12_Ch1-registered-T0006.tif" );
 
 	}

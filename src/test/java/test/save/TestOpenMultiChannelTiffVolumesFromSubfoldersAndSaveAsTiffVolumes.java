@@ -3,27 +3,25 @@ package test.save;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
-import de.embl.cba.bdp2.read.CachedCellImgReader;
-import de.embl.cba.bdp2.read.FileInfos;
 import de.embl.cba.bdp2.read.NamingScheme;
 import de.embl.cba.bdp2.save.SavingSettings;
-import de.embl.cba.bdp2.viewers.BdvImageViewer;
-import net.imglib2.type.numeric.integer.UnsignedShortType;
 
-public class TestCompressed16bitTiffStackSaving
+public class TestOpenMultiChannelTiffVolumesFromSubfoldersAndSaveAsTiffVolumes
 {
     public static void main(String[] args)
     {
-        String imageDirectory = "src/test/resources/test-data/nc1-nt3-calibrated-16bit-tiff";
-        final FileInfos fileInfos = new FileInfos(
-                imageDirectory,
-                NamingScheme.SINGLE_CHANNEL_TIMELAPSE,
-                ".*",
-                 "");
+        final String directory = "/Users/tischer/Documents/bigdataprocessor2/src/test/resources/test/tiff-nc2-nt3-subfolders";
 
-        final Image image = CachedCellImgReader.loadImage( fileInfos );
+        final Image image = BigDataProcessor2.openImage(
+                directory,
+                NamingScheme.MULTI_CHANNEL_TIFF_VOLUMES_FROM_SUBFOLDERS,
+                ".*"
+        );
+
+        BigDataProcessor2.showImage( image, true );
 
         final SavingSettings settings = SavingSettings.getDefaults();
+        settings.volumesFilePathStump = "/Users/tischer/Documents/bigdataprocessor2/src/test/resources/test/tiff-nc2-nt3/image";
         settings.fileType = SavingSettings.FileType.TIFF_VOLUMES;
         settings.numIOThreads = 3;
         settings.voxelSpacing = image.getVoxelSpacing();
@@ -32,5 +30,4 @@ public class TestCompressed16bitTiffStackSaving
 
         BigDataProcessor2.saveImage( image, settings, new LoggingProgressListener( "Files saved" ) );
     }
-
 }

@@ -74,7 +74,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
-import static de.embl.cba.bdp2.read.NamingScheme.SINGLE_CHANNEL_TIFF_VOLUMES;
+import static de.embl.cba.bdp2.read.NamingScheme.MULTI_CHANNEL_TIFF_VOLUMES_FROM_SUBFOLDERS;
 
 /**
  * Created by tischi on 06/11/16.
@@ -172,7 +172,7 @@ public class Utils {
 			File directoryOfChannel0 )
 	{
 		String stackIndex = Luxendos.extractStackIndex( directoryOfChannel0.getName() );
-		String regExp = SINGLE_CHANNEL_TIFF_VOLUMES.replace( "STACK", "" + stackIndex );
+		String regExp = MULTI_CHANNEL_TIFF_VOLUMES_FROM_SUBFOLDERS.replace( "STACK", "" + stackIndex );
 
 		final Image< R > image =
 				BigDataProcessor2.openImageFromHdf5(
