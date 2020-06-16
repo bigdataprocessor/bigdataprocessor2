@@ -9,7 +9,7 @@
 * GNU General Public License for more details.
 */
 
-package de.embl.cba.bdp2.read;
+package de.embl.cba.bdp2.open.core;
 
 import ch.systemsx.cisd.base.mdarray.MDByteArray;
 import ch.systemsx.cisd.base.mdarray.MDShortArray;
@@ -173,7 +173,7 @@ public class OpenerExtension extends Opener {
 
         if (dz == 1 && readInOneGo) {
 
-            // read everything in one go
+            // core everything in one go
             //
 
             /*
@@ -231,7 +231,7 @@ public class OpenerExtension extends Opener {
         {
             // todo: make a fast version for too large data sets (check code from Ronnerberger)
 
-            // read plane wise
+            // core plane wise
             // - sub-sampling in z possible
             // - no java indexing issue for the asFlatArray
             int z = zs;
@@ -263,7 +263,7 @@ public class OpenerExtension extends Opener {
             Logger.info("h5 readingPixelsTime [ms]: " + readingPixelsTime);
             Logger.info("h5 settingPixelsIntoImageStackTime [ms]: " + settingTime);
             Logger.info("h5 totalTime [ms]: " + totalTime);
-            Logger.info("pixels read: " + asFlatArray.length);
+            Logger.info("pixels core: " + asFlatArray.length);
             Logger.info("effective reading speed [MB/s]: " + (double) nz * nx * ny * fi.bytesPerPixel / (
                     (totalTime + 0.001) * 1000));
 
@@ -324,7 +324,7 @@ public class OpenerExtension extends Opener {
 
         if (dz == 1 && readInOneGo) {
 
-            // read everything in one go
+            // core everything in one go
             //
 
         /*
@@ -380,7 +380,7 @@ public class OpenerExtension extends Opener {
         }
         else
         {
-            // read plane wise
+            // core plane wise
             // - sub-sampling in z possible
             // - no java indexing issue for the asFlatArray
             int z = zs;
@@ -411,7 +411,7 @@ public class OpenerExtension extends Opener {
             Logger.info("h5 readingPixelsTime [ms]: " + readingPixelsTime);
             Logger.info("h5 settingPixelsIntoImageStackTime [ms]: " + settingTime);
             Logger.info("h5 totalTime [ms]: " + totalTime);
-            Logger.info("pixels read: " + asFlatArray.length);
+            Logger.info("pixels core: " + asFlatArray.length);
             Logger.info("effective reading speed [MB/s]: " + (double) nz * nx * ny * fi.bytesPerPixel / (
                     (totalTime + 0.001) * 1000));
 
@@ -466,7 +466,7 @@ public class OpenerExtension extends Opener {
             {
 
                 if ( null != es ) {
-                    // read plane wise, multi-threaded
+                    // core plane wise, multi-threaded
                     //
                     //ExecutorService es = Executors.newFixedThreadPool( numThreads );
                     List<Future> futures = new ArrayList<>();
@@ -488,7 +488,7 @@ public class OpenerExtension extends Opener {
                         );
                     }
 
-                    // wait until all z-planes are read
+                    // wait until all z-planes are core
                     for (Future future : futures)
                     {
                         future.get();
@@ -497,7 +497,7 @@ public class OpenerExtension extends Opener {
                     //es.shutdown();
 
                 }else                {
-                    // read with single thread (invoking no threads at all)
+                    // core with single thread (invoking no threads at all)
                     for (int iz = 0, z = zs; iz < nz; iz++, z += dz)
                     {
 
@@ -693,7 +693,7 @@ public class OpenerExtension extends Opener {
 
             if ( hasStrips )
             {
-                // check what we have read
+                // check what we have core
                 int rps = fi.rowsPerStrip;
                 int ss = ys / rps; // the int is doing a floor()
                 int se = ye / rps;
@@ -714,7 +714,7 @@ public class OpenerExtension extends Opener {
                         int stripLength = ( int ) fi.stripLengths[ s ];
                         byte[] strip = new byte[ stripLength ];
 
-                        // get strip from read data
+                        // get strip from core data
                         try
                         {
                             System.arraycopy( buffer[ ( z - zs ) / dz ], pos, strip, 0, stripLength );
@@ -761,7 +761,7 @@ public class OpenerExtension extends Opener {
                         int stripLength = ( int ) fi.stripLengths[ s ];
                         byte[] strip = new byte[ stripLength ];
 
-                        // get strip from read data
+                        // get strip from core data
                         try
                         {
                             System.arraycopy( buffer[ ( z - zs ) / dz ], pos, strip, 0, stripLength );
@@ -807,7 +807,7 @@ public class OpenerExtension extends Opener {
                         int compressedStripLength = ( int ) fi.stripLengths[ s ];
                         byte[] strip = new byte[ compressedStripLength ];
 
-                        // get strip from read data
+                        // get strip from core data
                         try
                         {
                             System.arraycopy( buffer[ ( z - zs ) / dz ], pos, strip, 0, compressedStripLength );
@@ -1327,13 +1327,13 @@ public class OpenerExtension extends Opener {
             {
                 if ( fi.compression == ZIP || fi.compression == LZW || fi.compression == PACK_BITS )
                 {
-                    // read all data
+                    // core all data
                     readStart = fi.offset;
                     readLength = ( int ) fi.stripLengths[ 0 ];
                 }
                 else
                 {
-                    // read subset
+                    // core subset
                     // convert rows to bytes
                     readStart = fi.offset + ys * fi.width * fi.bytesPerPixel;
                     readLength = ( ( ye - ys ) + 1 ) * fi.width * fi.bytesPerPixel; // ye is -1 sometimes why?
@@ -1344,8 +1344,8 @@ public class OpenerExtension extends Opener {
             {
                 Logger.warning( "file type: Tiff" );
                 Logger.warning( "hasStrips: " + hasStrips );
-                Logger.warning( "read from [bytes]: " + readStart );
-                Logger.warning( "read to [bytes]: " + ( readStart + readLength - 1 ) );
+                Logger.warning( "core from [bytes]: " + readStart );
+                Logger.warning( "core to [bytes]: " + ( readStart + readLength - 1 ) );
                 Logger.warning( "ys: " + ys );
                 Logger.warning( "ye: " + ye );
                 Logger.warning( "fileInfo.compression: " + fi.compression );
@@ -1364,11 +1364,11 @@ public class OpenerExtension extends Opener {
                     in.readFully( buffer );
                 } else
                 {
-                    Logger.warning( "The requested data exceeds the file length; no data was read." );
+                    Logger.warning( "The requested data exceeds the file length; no data was core." );
                     Logger.warning( "file type: Tiff" );
                     Logger.warning( "hasStrips: " + hasStrips );
                     Logger.warning( "file length [bytes]: " + in.length() );
-                    Logger.warning( "attempt to read until [bytes]: " + ( readStart + readLength - 1 ) );
+                    Logger.warning( "attempt to core until [bytes]: " + ( readStart + readLength - 1 ) );
                     Logger.warning( "ys: " + ys );
                     Logger.warning( "ye: " + ye );
                     Logger.warning( "fileInfo.compression: " + fi.compression );
@@ -1447,7 +1447,7 @@ public class OpenerExtension extends Opener {
                         element_size_um = reader.float32().getArrayAttr(dsetName, "element_size_um");
                     }
                     catch (HDF5Exception err) {
-                        IJ.log("Warning: Can't read attribute 'element_size_um' from file '" + filename
+                        IJ.log("Warning: Can't core attribute 'element_size_um' from file '" + filename
                                 + "', dataset '" + dsetName + "':\n"
                                 + err + "\n"
                                 + "Assuming element size of 1 x 1 x 1 um^3");

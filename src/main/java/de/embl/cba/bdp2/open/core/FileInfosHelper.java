@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.read;
+package de.embl.cba.bdp2.open.core;
 
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.utils.Utils;
@@ -182,7 +182,7 @@ public class FileInfosHelper
             String namingScheme,
             String filterPattern)
     {
-        String[][] fileLists = getFilesInFolders( fileInfos, directory, namingScheme, filterPattern );
+        String[][] fileLists = getFilesInFolders( directory, filterPattern );
 
         if ( fileLists == null )
         {
@@ -196,8 +196,7 @@ public class FileInfosHelper
 
             String dataDirectory = getFirstChannelDirectory( fileInfos, directory );
 
-            FileInfosLeicaHelper.initLeicaSinglePlaneTiffData(
-                    fileInfos, dataDirectory, filterPattern, fileLists[ 0 ], fileInfos.nC, fileInfos.nZ );
+            FileInfosLeicaHelper.initLeicaSinglePlaneTiffData( fileInfos, dataDirectory, filterPattern, fileLists[ 0 ], fileInfos.nC, fileInfos.nZ );
         }
         else // tiff or h5
         {
@@ -255,30 +254,28 @@ public class FileInfosHelper
 
     private static void setFileInfos( FileInfos fileInfos, String namingScheme, String[][] fileLists )
     {
-        if ( namingScheme.equals( NamingScheme.LOAD_CHANNELS_FROM_FOLDERS )
-            || namingScheme.equalsIgnoreCase( NamingScheme.SINGLE_CHANNEL_TIMELAPSE )
-            || namingScheme.equals( NamingScheme.TIFF_SLICES ) )
+        if ( namingScheme.equals( NamingScheme.TIFF_SLICES ) )
         {
-            if ( namingScheme.equals( NamingScheme.LOAD_CHANNELS_FROM_FOLDERS ) )
-            {
-                fileInfos.nC = fileInfos.channelFolders.length;
-                fileInfos.nT = fileLists[ 0 ].length;
-                fileInfos.channelNames = fileInfos.channelFolders;
-            }
-            else if ( namingScheme.equalsIgnoreCase( NamingScheme.SINGLE_CHANNEL_TIMELAPSE ) )
-            {
-                fileInfos.nC = 1;
-                fileInfos.nT = fileLists[ 0 ].length;
-                fileInfos.channelNames = new String[]{ new File( fileInfos.directory ).getParent() };
-            }
-            else if ( namingScheme.equals( NamingScheme.TIFF_SLICES ) )
-            {
+//            if ( namingScheme.equals( NamingScheme.LOAD_CHANNELS_FROM_FOLDERS ) )
+//            {
+//                fileInfos.nC = fileInfos.channelFolders.length;
+//                fileInfos.nT = fileLists[ 0 ].length;
+//                fileInfos.channelNames = fileInfos.channelFolders;
+//            }
+//            else if ( namingScheme.equalsIgnoreCase( NamingScheme.SINGLE_CHANNEL_TIMELAPSE ) )
+//            {
+//                fileInfos.nC = 1;
+//                fileInfos.nT = fileLists[ 0 ].length;
+//                fileInfos.channelNames = new String[]{ new File( fileInfos.directory ).getParent() };
+//            }
+//            else if ( namingScheme.equals( NamingScheme.TIFF_SLICES ) )
+//            {
                 fileInfos.nC = 1;
                 fileInfos.nT = 1;
                 fileInfos.nZ = fileLists[ 0 ].length;
                 fileInfos.fileType = Utils.FileType.SINGLE_PLANE_TIFF.toString();
                 fileInfos.channelNames = new String[]{ new File( fileInfos.directory ).getParent() };
-            }
+//            }
 
             fixChannelFolders( fileInfos, namingScheme );
             setImageMetadata( fileInfos, fileInfos.directory + fileInfos.channelFolders[ 0 ], namingScheme, fileLists[ 0 ] );
@@ -286,7 +283,7 @@ public class FileInfosHelper
         }
         else
         {
-            // we have no simple "channels in folders" logic: TODO: get rid of channelFolders alltogether!
+            // TODO: get rid of channelFolders!
             fileInfos.channelFolders = new String[]{""};
 
             HashSet<String> channels = new HashSet();
@@ -472,11 +469,7 @@ public class FileInfosHelper
         }
     }
 
-    private static String[][] getFilesInFolders(
-            FileInfos fileInfos,
-            String directory,
-            String namingScheme,
-            String filterPattern )
+    private static String[][] getFilesInFolders( String directory, String filterPattern )
     {
         if ( ! new File( directory ).exists() )
         {

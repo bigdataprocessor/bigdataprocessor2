@@ -198,12 +198,12 @@ public class MenuActions implements ActionListener {
                 new ImageRenameDialog<>( viewer );
             });
         }
-        else if( e.getActionCommand().equalsIgnoreCase( OpenAdvancedCommand.COMMAND_NAME ) )
+        else if( e.getActionCommand().equalsIgnoreCase( OpenCommand.COMMAND_NAME ) )
         {
             BigDataProcessor2.generalThreadPool.submit(() ->
             {
                 AbstractOpenCommand.parentBdvImageViewer = viewer;
-                Services.commandService.run( OpenAdvancedCommand.class, true );
+                Services.commandService.run( OpenCommand.class, true );
             });
         }
         else if( e.getActionCommand().equalsIgnoreCase( OpenLeicaDSLTiffPlanesCommand.COMMAND_NAME ) )

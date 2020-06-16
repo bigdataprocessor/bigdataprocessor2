@@ -29,7 +29,7 @@
  */
 
 
-package de.embl.cba.bdp2.read;
+package de.embl.cba.bdp2.open.core;
 
 
 import de.embl.cba.bdp2.log.Logger;
@@ -246,7 +246,7 @@ public class FastTiffDecoder {
         {
             return ((long)getInt()<<32) + ((long)getInt()&0xffffffffL);
         }
-        // return in.read()+(in.read()<<8)+(in.read()<<16)+(in.read()<<24)+(in.read()<<32)+(in.read()<<40)+(in.read()<<48)+(in.read()<<56);
+        // return in.core()+(in.core()<<8)+(in.core()<<16)+(in.core()<<24)+(in.core()<<32)+(in.core()<<40)+(in.core()<<48)+(in.core()<<56);
 
     }
 
@@ -1061,7 +1061,7 @@ public class FastTiffDecoder {
             // is the location where the strips are stored
             in.seek(value);
 
-            // and read the values
+            // and core the values
             if ( fieldType == SHORT )
             {
                 buffer = new byte[(int)count * 2];
@@ -1116,7 +1116,7 @@ public class FastTiffDecoder {
             // go to where the actual strips are stored
             in.seek(value);
 
-            // and read the values
+            // and core the values
             if ( fieldType == SHORT )
             {
                 buffer = new byte[(int)count * 2];

@@ -1,16 +1,9 @@
 package playground;
 
-import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.read.CachedCellImgReader;
-import de.embl.cba.bdp2.read.FileInfos;
-import de.embl.cba.bdp2.read.NamingScheme;
-import de.embl.cba.bdp2.track.BigDataTracker;
 import de.embl.cba.bdp2.track.TrackingSettings;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import de.embl.cba.bdp2.utils.Point3D;
-import net.imglib2.cache.img.CachedCellImg;
-import net.imglib2.type.numeric.integer.UnsignedShortType;
 
 public class TestBigDataTracker {
 

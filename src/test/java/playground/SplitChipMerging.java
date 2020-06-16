@@ -1,9 +1,9 @@
 package playground;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.read.FileInfos;
-import de.embl.cba.bdp2.read.CachedCellImgReader;
-import de.embl.cba.bdp2.read.NamingScheme;
+import de.embl.cba.bdp2.open.core.FileInfos;
+import de.embl.cba.bdp2.open.core.CachedCellImgReader;
+import de.embl.cba.bdp2.open.core.NamingScheme;
 import de.embl.cba.bdp2.align.splitchip.SplitViewMergeDialog;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.type.NativeType;

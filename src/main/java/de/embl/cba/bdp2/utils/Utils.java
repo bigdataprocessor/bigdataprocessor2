@@ -74,7 +74,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
-import static de.embl.cba.bdp2.read.NamingScheme.MULTI_CHANNEL_TIFF_VOLUMES_FROM_SUBFOLDERS;
+import static de.embl.cba.bdp2.open.core.NamingScheme.MULTI_CHANNEL_TIFF_VOLUMES_FROM_SUBFOLDERS;
 
 /**
  * Created by tischi on 06/11/16.

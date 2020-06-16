@@ -1,7 +1,7 @@
 package de.embl.cba.bdp2.save;
 
 import ch.systemsx.cisd.hdf5.hdf5lib.HDF5Constants;
-import de.embl.cba.bdp2.read.FileInfos;
+import de.embl.cba.bdp2.open.core.FileInfos;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;

@@ -1,10 +1,10 @@
 package benchmark;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.read.CachedCellImgReader;
-import de.embl.cba.bdp2.read.FileInfos;
+import de.embl.cba.bdp2.open.core.CachedCellImgReader;
+import de.embl.cba.bdp2.open.core.FileInfos;
 import de.embl.cba.bdp2.bin.Binner;
-import de.embl.cba.bdp2.read.NamingScheme;
+import de.embl.cba.bdp2.open.core.NamingScheme;
 import de.embl.cba.bdp2.save.CachedCellImgReplacer;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.BigDataProcessor2;

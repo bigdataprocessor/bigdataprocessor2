@@ -1,6 +1,6 @@
 package playground;
 
-import de.embl.cba.bdp2.open.OpenAdvancedCommand;
+import de.embl.cba.bdp2.open.OpenCommand;
 import ij.plugin.frame.Recorder;
 import net.imagej.ImageJ;
 
@@ -14,6 +14,6 @@ public class ExploreMacroRecording
 		final Recorder recorder = new Recorder();
 
 		// invoke the plugin
-		ij.command().run( OpenAdvancedCommand.class, true );
+		ij.command().run( OpenCommand.class, true );
 	}
 }

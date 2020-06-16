@@ -1,7 +1,7 @@
 package playground;
 
-import de.embl.cba.bdp2.read.FileInfos;
-import de.embl.cba.bdp2.read.NamingScheme;
+import de.embl.cba.bdp2.open.core.FileInfos;
+import de.embl.cba.bdp2.open.core.NamingScheme;
 import ij.IJ;
 import ij.ImageJ;
 import ij.io.FileInfo;

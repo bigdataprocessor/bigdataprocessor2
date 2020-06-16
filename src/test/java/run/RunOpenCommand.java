@@ -1,6 +1,6 @@
 package run;
 
-import de.embl.cba.bdp2.open.OpenAdvancedCommand;
+import de.embl.cba.bdp2.open.OpenCommand;
 import de.embl.cba.bdp2.scijava.Services;
 import ij.plugin.frame.Recorder;
 import net.imagej.ImageJ;
@@ -16,6 +16,6 @@ public class RunOpenCommand
 
 		Services.commandService = ij.command();
 
-		ij.command().run( OpenAdvancedCommand.class, true );
+		ij.command().run( OpenCommand.class, true );
 	}
 }

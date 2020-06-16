@@ -1,16 +1,15 @@
 package playground;
 
-import de.embl.cba.bdp2.read.CachedCellImgReader;
-import de.embl.cba.bdp2.read.NamingScheme;
+import de.embl.cba.bdp2.open.core.CachedCellImgReader;
+import de.embl.cba.bdp2.open.core.NamingScheme;
 import de.embl.cba.bdp2.shear.ImageShearer;
 import de.embl.cba.bdp2.shear.RaiNDShearer;
 import de.embl.cba.bdp2.shear.ShearMenuDialog;
 import de.embl.cba.bdp2.shear.ShearingSettings;
-import de.embl.cba.bdp2.read.FileInfos;
+import de.embl.cba.bdp2.open.core.FileInfos;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.cache.img.CachedCellImg;
-import net.imglib2.type.numeric.integer.UnsignedShortType;
 
 public class TestShearTransform {
 

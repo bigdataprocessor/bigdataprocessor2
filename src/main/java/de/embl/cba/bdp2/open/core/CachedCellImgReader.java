@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.read;
+package de.embl.cba.bdp2.open.core;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
@@ -16,7 +16,7 @@ import net.imglib2.util.Util;
 
 import java.io.File;
 
-import static de.embl.cba.bdp2.read.OpenerExtension.readCroppedPlaneFromTiffIntoImageStack.COMPRESSION_NONE;
+import static de.embl.cba.bdp2.open.core.OpenerExtension.readCroppedPlaneFromTiffIntoImageStack.COMPRESSION_NONE;
 import static net.imglib2.cache.img.ReadOnlyCachedCellImgOptions.options;
 
 public class CachedCellImgReader

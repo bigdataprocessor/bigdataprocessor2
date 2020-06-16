@@ -10,7 +10,7 @@ import ch.systemsx.cisd.hdf5.HDF5Factory;
 import ch.systemsx.cisd.hdf5.HDF5FloatStorageFeatures;
 import ch.systemsx.cisd.hdf5.HDF5IntStorageFeatures;
 import ch.systemsx.cisd.hdf5.IHDF5Writer;
-import de.embl.cba.bdp2.read.FileInfos;
+import de.embl.cba.bdp2.open.core.FileInfos;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.log.progress.ProgressHelpers;
 import de.embl.cba.bdp2.utils.DimensionOrder;

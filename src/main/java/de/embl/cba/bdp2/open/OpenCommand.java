@@ -3,7 +3,7 @@ package de.embl.cba.bdp2.open;
 import de.embl.cba.bdp2.calibrate.CalibrationUtils;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.BigDataProcessor2;
-import de.embl.cba.bdp2.read.NamingScheme;
+import de.embl.cba.bdp2.open.core.NamingScheme;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;
@@ -12,7 +12,7 @@ import org.scijava.plugin.Plugin;
 
 import javax.swing.*;
 
-import static de.embl.cba.bdp2.read.NamingScheme.*;
+import static de.embl.cba.bdp2.open.core.NamingScheme.*;
 import static de.embl.cba.bdp2.utils.Utils.COMMAND_BDP_PREFIX;
 
 
@@ -22,12 +22,12 @@ import static de.embl.cba.bdp2.utils.Utils.COMMAND_BDP_PREFIX;
  *
  * @param <R>
  */
-@Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>" + AbstractOpenCommand.COMMAND_OPEN_PATH + OpenAdvancedCommand.COMMAND_FULL_NAME )
-public class OpenAdvancedCommand< R extends RealType< R > & NativeType< R > > extends AbstractOpenCommand< R >
+@Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>" + AbstractOpenCommand.COMMAND_OPEN_PATH + OpenCommand.COMMAND_FULL_NAME )
+public class OpenCommand< R extends RealType< R > & NativeType< R > > extends AbstractOpenCommand< R >
 {
     public static final String COMMAND_NAME = "Open...";
     public static final String COMMAND_FULL_NAME = COMMAND_BDP_PREFIX + COMMAND_NAME;
-    public static final String USE_CUSTOM = "Use custom";
+    public static final String USE_CUSTOM = "Use below custom regular expression";
 
     //@Parameter(label = "Subset file using regular expression" )
     //String filterPattern = ".*";
@@ -43,7 +43,7 @@ public class OpenAdvancedCommand< R extends RealType< R > & NativeType< R > > ex
                     MULTI_CHANNEL_TIFF_VOLUMES })
     String regExpTemplate = NamingScheme.SINGLE_CHANNEL_TIMELAPSE;
 
-    @Parameter(label = "Custom regular expression")
+    @Parameter(label = "Custom regular expression (optional)", required = false)
     String regExp = MULTI_CHANNEL_TIFF_VOLUMES_FROM_SUBFOLDERS;
 
     @Parameter(label = "Hdf5 data set name (optional)", required = false)

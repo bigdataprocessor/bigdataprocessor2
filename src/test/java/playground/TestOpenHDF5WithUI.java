@@ -6,9 +6,9 @@ import bdv.util.BdvFunctions;
 import bdv.util.BdvOptions;
 import bdv.util.BdvSource;
 import bdv.util.volatiles.VolatileViews;
-import de.embl.cba.bdp2.read.CachedCellImgReader;
-import de.embl.cba.bdp2.read.FileInfos;
-import de.embl.cba.bdp2.read.NamingScheme;
+import de.embl.cba.bdp2.open.core.CachedCellImgReader;
+import de.embl.cba.bdp2.open.core.FileInfos;
+import de.embl.cba.bdp2.open.core.NamingScheme;
 import net.imglib2.img.Img;
 
 public class TestOpenHDF5WithUI {

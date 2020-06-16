@@ -1,7 +1,7 @@
 package test;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.read.NamingScheme;
+import de.embl.cba.bdp2.open.core.NamingScheme;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import loci.common.DebugTools;

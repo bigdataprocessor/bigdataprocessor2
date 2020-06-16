@@ -39,7 +39,7 @@ public class Menu extends JMenu
         setText( "BigDataProcessor2" );
 
         final JMenu openMenu = addMenu( "Open" );
-        addMenuItem( openMenu, OpenAdvancedCommand.COMMAND_NAME );
+        addMenuItem( openMenu, OpenCommand.COMMAND_NAME );
         addMenuItem( openMenu, OpenEMTiffPlanesCommand.COMMAND_NAME );
         addMenuItem( openMenu, OpenLuxendoMuViCommand.COMMAND_NAME );
         addMenuItem( openMenu, OpenLuxendoInViCommand.COMMAND_NAME );

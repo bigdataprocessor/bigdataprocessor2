@@ -10,7 +10,7 @@
 	<artifactId>bigDataProcessor2</artifactId>
 	<version>0.5.0</version>
 	<url>https://github.com/tischi/fiji-plugin-bigDataProcessor2</url>
-	<name>Fiji Plugin BigDataProcessor2</name>
+	<name>BigDataProcessor2</name>
 	<description>TODO</description>
 	<inceptionYear>2018</inceptionYear>
 	<organization>

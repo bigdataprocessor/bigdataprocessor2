@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.read;
+package de.embl.cba.bdp2.open.core;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;

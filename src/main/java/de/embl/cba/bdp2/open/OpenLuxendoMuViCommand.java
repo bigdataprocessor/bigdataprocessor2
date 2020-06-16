@@ -9,7 +9,7 @@ import org.scijava.plugin.Plugin;
 
 import javax.swing.*;
 
-import static de.embl.cba.bdp2.read.NamingScheme.MULTI_CHANNEL_TIFF_VOLUMES_FROM_SUBFOLDERS;
+import static de.embl.cba.bdp2.open.core.NamingScheme.MULTI_CHANNEL_TIFF_VOLUMES_FROM_SUBFOLDERS;
 import static de.embl.cba.bdp2.utils.Utils.COMMAND_BDP_PREFIX;
 
 @Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>" + AbstractOpenCommand.COMMAND_OPEN_PATH + OpenLuxendoMuViCommand.COMMAND_FULL_NAME )

@@ -1,7 +1,7 @@
 package headless;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.read.NamingScheme;
+import de.embl.cba.bdp2.open.core.NamingScheme;
 import de.embl.cba.bdp2.align.ChromaticShiftDialog;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;

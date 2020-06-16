@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.read;
+package de.embl.cba.bdp2.open.core;
 
 import ch.systemsx.cisd.hdf5.HDF5DataSetInformation;
 import ch.systemsx.cisd.hdf5.HDF5Factory;
@@ -237,7 +237,7 @@ public class FileInfos
                     infoCT[z2].offset = info[z2].offset;
                     infoCT[z2].stripLengths = info[z2].stripLengths;
                     infoCT[z2].stripOffsets = info[z2].stripOffsets;
-                    //infoCT[z].rowsPerStrip = info[z].rowsPerStrip; // only read for first IFD!
+                    //infoCT[z].rowsPerStrip = info[z].rowsPerStrip; // only core for first IFD!
                 }
 
                 infos[c][t] = infoCT;
