@@ -65,24 +65,21 @@ public class MenuActions implements ActionListener {
     @Override
     public synchronized void actionPerformed(ActionEvent e)
     {
-        if (e.getActionCommand().equalsIgnoreCase(
-                Menu.SAVE_AS_IMARIS_VOLUMES_MENU_ITEM ))
+        if (e.getActionCommand().equalsIgnoreCase( Menu.SAVE_AS_IMARIS_VOLUMES_MENU_ITEM ))
         {
             BigDataProcessor2.generalThreadPool.submit(() -> {
                 SaveDialog saveDialog = new SaveDialog( viewer, SavingSettings.FileType.IMARIS_VOLUMES );
                 saveDialog.setVisible(true);
             });
         }
-        else if (e.getActionCommand().equalsIgnoreCase(
-                Menu.SAVE_AS_TIFF_VOLUMES_MENU_ITEM ))
+        else if (e.getActionCommand().equalsIgnoreCase( Menu.SAVE_AS_TIFF_VOLUMES_MENU_ITEM ))
         {
             BigDataProcessor2.generalThreadPool.submit(() -> {
                 SaveDialog saveDialog = new SaveDialog( viewer, SavingSettings.FileType.TIFF_VOLUMES );
                 saveDialog.setVisible(true);
             });
         }
-        else if (e.getActionCommand().equalsIgnoreCase(
-                Menu.SAVE_AS_TIFF_PLANES_MENU_ITEM ))
+        else if (e.getActionCommand().equalsIgnoreCase( Menu.SAVE_AS_TIFF_PLANES_MENU_ITEM ))
         {
             BigDataProcessor2.generalThreadPool.submit(() -> {
                 SaveDialog saveDialog = new SaveDialog( viewer, SavingSettings.FileType.TIFF_PLANES );
@@ -102,15 +99,13 @@ public class MenuActions implements ActionListener {
                 shearMenuDialog.setVisible(true);
             });
         }
-        else if (e.getActionCommand().equalsIgnoreCase(
-        		Menu.APPLY_TRACK_MENU_ITEM ))
+        else if (e.getActionCommand().equalsIgnoreCase( Menu.APPLY_TRACK_MENU_ITEM ))
         {
             BigDataProcessor2.generalThreadPool.submit(() -> {
                 new ApplyTrackDialog( viewer );
             });
         }
-        else if (e.getActionCommand().equalsIgnoreCase(
-        		Menu.REGISTER_VOLUME_SIFT_MENU_ITEM ))
+        else if (e.getActionCommand().equalsIgnoreCase( Menu.REGISTER_VOLUME_SIFT_MENU_ITEM ))
         {
             BigDataProcessor2.generalThreadPool.submit(() ->
 			{
@@ -119,8 +114,7 @@ public class MenuActions implements ActionListener {
                 RegisteredViews.showSIFTVolumeAlignedBdvView( viewer );
             });
         }
-        else if (e.getActionCommand().equalsIgnoreCase(
-        		Menu.REGISTER_MOVIE_SIFT_MENU_ITEM ))
+        else if (e.getActionCommand().equalsIgnoreCase( Menu.REGISTER_MOVIE_SIFT_MENU_ITEM ))
         {
             BigDataProcessor2.generalThreadPool.submit(() -> {
                 Integer channel = Utils.getChannel( viewer );
@@ -128,8 +122,7 @@ public class MenuActions implements ActionListener {
                 RegisteredViews.createAlignedMovieView( viewer, Registration.SIFT_CORRESPONDENCES, channel );
             });
         }
-        else if (e.getActionCommand().equalsIgnoreCase(
-        		Menu.REGISTER_MOVIE_PHASE_CORRELATION_MENU_ITEM ))
+        else if (e.getActionCommand().equalsIgnoreCase( Menu.REGISTER_MOVIE_PHASE_CORRELATION_MENU_ITEM ))
         {
             BigDataProcessor2.generalThreadPool.submit(() -> {
                 Integer channel = Utils.getChannel( viewer );
@@ -143,8 +136,7 @@ public class MenuActions implements ActionListener {
         	    new CropDialog<>( viewer );
             }).start();
         }
-        else if(e.getActionCommand().equalsIgnoreCase(
-        		Menu.IMAGEJ_VIEW_MENU_ITEM ))
+        else if(e.getActionCommand().equalsIgnoreCase( Menu.IMAGEJ_VIEW_MENU_ITEM ))
         {
             new Thread( () -> {
                 // TODO:
@@ -196,6 +188,13 @@ public class MenuActions implements ActionListener {
             BigDataProcessor2.generalThreadPool.submit(() ->
             {
                 new ImageRenameDialog<>( viewer );
+            });
+        }
+        else if( e.getActionCommand().equalsIgnoreCase( RegExpHelpCommand.COMMAND_NAME ) )
+        {
+            BigDataProcessor2.generalThreadPool.submit(() ->
+            {
+                Services.commandService.run( RegExpHelpCommand.class, true );
             });
         }
         else if( e.getActionCommand().equalsIgnoreCase( OpenCommand.COMMAND_NAME ) )

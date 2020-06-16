@@ -13,10 +13,9 @@ public abstract class NamingScheme
 	 * Users: Gustavo
 	 */
 //	public static final String SINGLE_CHANNEL_TIFF_VOLUMES = "(?<C>.*)/T(?<T>\\d+).tif";
-	public static final String SINGLE_CHANNEL_TIFF_VOLUMES = ".*T(?<T>\\d+).tif";
-	public static final String MULTI_CHANNEL_TIFF_VOLUMES_FROM_SUBFOLDERS = "(?<C>.*)/.*T(?<T>\\d+).tif";
-	public static final String MULTI_CHANNEL_OME_TIFF_VOLUMES = ".*--C(?<C>.*)--T(?<T>\\d+).ome.tif";
-	public static final String MULTI_CHANNEL_TIFF_VOLUMES = ".*--C(?<C>.*)--T(?<T>\\d+).tif";
+	public static final String SINGLE_CHANNEL_VOLUMES = ".*T(?<T>\\d+)";
+	public static final String MULTI_CHANNEL_VOLUMES_FROM_SUBFOLDERS = "(?<C>.*)/.*T(?<T>\\d+)";
+	public static final String MULTI_CHANNEL_VOLUMES = ".*--C(?<C>.*)--T(?<T>\\d+)";
 
 	public static final String LUXENDO_REGEXP = ".*stack_STACK_channel_(?<C1>\\d+)/Cam_(?<C2>.*)_(?<T>\\d+).h5";
 	public static final String LUXENDO_STACKINDEX_REGEXP = ".*stack_(?<StackIndex>\\d+)_channel_.*";
@@ -32,4 +31,10 @@ public abstract class NamingScheme
 	public static final String TIFF_SLICES = "Tiff Slices";
 	public static final String LEICA_LIGHT_SHEET_TIFF = "Leica Light Sheet Tiff";
 	public static final String LUXENDO_REGEXP_ID = "+)/Cam_";
+
+	// File extensions
+	public static final String TIF = ".tif";
+	public static final String OME_TIF = ".ome.tif";
+	public static final String TIFF = ".tiff";
+	public static final String H_5 = ".h5";
 }

@@ -3,7 +3,12 @@
 <style TYPE="text/css">
 h2
 {
+  font-size: 24px;
   margin-bottom: 0px;
+}
+p
+{
+  font-size: 14px;
 }
 table, tr, td
 {
@@ -18,6 +23,7 @@ table
 }
 td
 {
+  font-size: 14px;
   padding:5px;
   padding-right:10px;
   padding-left:10px;
@@ -34,45 +40,34 @@ body
   margin-left:10px;
 }
 </style>
-<p>
+
+
 <h2>Regular expression help</h2>
+<p>Regular expressions are a powerful way to subset and group files.</p>
+<p><a href="https://www.freeformatter.com/java-regex-tester.html#documentation">Regular expression documentation</a></p>
+<p><a href="https://www.freeformatter.com/java-regex-tester.html">Test regular expressions</a></p>
+<p>"(?&lt;C&gt;)" and "(?&lt;T&gt;)" denote the channel and timepoint groups, respectively.<br></p>
+<p>".*" matches anything</p>
+<p>"\d+" matches a sequence of numbers, e.g. 001</p>
+<br>
+
+<h2>Examples</h2>
 <p>
-  Regular expressions are a powerful way to subset files.
-  They are not only used here in the BigDataProcessor2 but are widely used in many software packages.<br><br>
-  <a href="https://www.freeformatter.com/java-regex-tester.html#documentation">Regular expression documentation</a><br><br>
-  <a href="https://www.freeformatter.com/java-regex-tester.html">Test regular expressions</a><br><br>
+Please note that below examples are on purpose without file extensions.
+The file extensions can be selected via a drop down in the "Open..." menu item and will
+be added to the regular expression automatically.
 </p>
-<p></p>
-
-<h2>Useful examples</h2>
-
-
 <p>
 <table border="1">
 <tr>
-  <td class="a"><b>.*</b></td>
-  <td>Selects all files</td>
+  <td class="a"><b>.*--C(?&lt;C&gt;\d+)--T(?&lt;T&gt;\d+)</b></td>
+  <td>Channel and timepoint encoded in filenames such as "image--C00--T000"</td>
 </tr><tr>
-  <td class="a"><b>.*.tif$</b></td>
-  <td>Only open files ending with .tif</td>
+  <td class="a"><b>(?&lt;C&gt;.*)/.*T(?&lt;T&gt;\d+)</b></td>
+  <td>Channels are specified by subfolders such as "gfp/T000" and "rfp/T000"</td>
 </tr><tr>
-  <td class="a"><b>.*.h5$</b></td>
-  <td>Only open files ending with .h5</td>
-</tr><tr>
-  <td class="a"><b>"^Cam_.*_(\d)+.h5$"</b></td>
-  <td>Luxendo: Open files starting with "Cam", ending on "h5" and containing numbers.</td>
-</tr><tr>
-  <td class="a"><b>^Cam_Left_(\d)+.h5$</b></td>
-  <td>Luxendo: Open all "Left" camera images.</td>
-</tr><tr>
-  <td class="a"><b>^Cam_Right_(\d)+.h5$</b></td>
-  <td>Luxendo: Open all "Right" camera images.</td>
-</tr><tr>
-  <td class="a"><b>...</b></td>
-  <td>Leica DSL: ...</td>
-</tr><tr>
-  <td class="a"><b>...</b></td>
-  <td>Leica DSL: ...</td>
+  <td class="a"><b>".*T(?&lt;T&gt;\d+)"</b></td>
+  <td>No channel grouping specified, e.g. "T0000", "T0001", etc.</td>
 </tr>
 </table>
 <br/>

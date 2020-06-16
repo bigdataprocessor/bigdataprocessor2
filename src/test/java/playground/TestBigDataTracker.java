@@ -9,7 +9,7 @@ public class TestBigDataTracker {
 
     public static void main(String[] args) {
 
-//        String imageDirectory = "src/test/resources/tiff-nc2-nt3-track/";
+//        String imageDirectory = "src/test/resources/tiff-nc2-nt6-track/";
 //        final FileInfos fileInfos = new FileInfos(imageDirectory, NamingScheme.LOAD_CHANNELS_FROM_FOLDERS,
 //                ".*", "");
 //        CachedCellImg cachedCellImg = CachedCellImgReader.createCachedCellImg( fileInfos );

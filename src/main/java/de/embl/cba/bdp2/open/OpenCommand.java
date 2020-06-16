@@ -25,7 +25,7 @@ import static de.embl.cba.bdp2.utils.Utils.COMMAND_BDP_PREFIX;
 @Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>" + AbstractOpenCommand.COMMAND_OPEN_PATH + OpenCommand.COMMAND_FULL_NAME )
 public class OpenCommand< R extends RealType< R > & NativeType< R > > extends AbstractOpenCommand< R >
 {
-    public static final String COMMAND_NAME = "Open...";
+    public static final String COMMAND_NAME = "Open Custom...";
     public static final String COMMAND_FULL_NAME = COMMAND_BDP_PREFIX + COMMAND_NAME;
     public static final String USE_CUSTOM = "Use below custom regular expression";
 
@@ -35,16 +35,11 @@ public class OpenCommand< R extends RealType< R > & NativeType< R > > extends Ab
     //@Parameter(label = "Regular expression help", callback = "showRegExpHelp", required = false)
     //Button regExpHelpButton;
 
-    @Parameter(label = "Regular expression templates",
-            choices = {
-                    USE_CUSTOM,
-                    MULTI_CHANNEL_TIFF_VOLUMES_FROM_SUBFOLDERS,
-                    MULTI_CHANNEL_OME_TIFF_VOLUMES,
-                    MULTI_CHANNEL_TIFF_VOLUMES })
-    String regExpTemplate = NamingScheme.SINGLE_CHANNEL_TIMELAPSE;
+    @Parameter( label = "File extension", choices = { TIF, OME_TIF, TIFF, H_5 } )
+    String fileExtension = ".tif";
 
-    @Parameter(label = "Custom regular expression (optional)", required = false)
-    String regExp = MULTI_CHANNEL_TIFF_VOLUMES_FROM_SUBFOLDERS;
+    @Parameter(label = "Regular expression (excluding file extension)", required = false)
+    String regExp = MULTI_CHANNEL_VOLUMES_FROM_SUBFOLDERS;
 
     @Parameter(label = "Hdf5 data set name (optional)", required = false)
     String hdf5DataSetName = "Data";
@@ -53,10 +48,7 @@ public class OpenCommand< R extends RealType< R > & NativeType< R > > extends Ab
     {
         SwingUtilities.invokeLater( () ->  {
 
-            if ( ! regExpTemplate.equals( USE_CUSTOM ) )
-            {
-                regExp = regExpTemplate;
-            }
+            regExp += fileExtension;
 
             if ( regExp.endsWith( ".h5" ) )
             {

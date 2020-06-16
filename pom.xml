@@ -2,16 +2,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>de.embl.cba</groupId>
-		<artifactId>pom-embl-cba</artifactId>
-		<version>0.3.12</version>
+		<groupId>org.scijava</groupId>
+		<artifactId>pom-scijava</artifactId>
+		<version>27.0.1</version>
 	</parent>
 	<groupId>de.embl.cba</groupId>
 	<artifactId>bigDataProcessor2</artifactId>
 	<version>0.5.0</version>
-	<url>https://github.com/tischi/fiji-plugin-bigDataProcessor2</url>
+	<url>https://github.com/embl-cba/bigDataProcessor2</url>
 	<name>BigDataProcessor2</name>
-	<description>TODO</description>
+	<description>Fiji plugin for inspection and processing of big image data</description>
 	<inceptionYear>2018</inceptionYear>
 	<organization>
 		<name>EMBL</name>
@@ -60,14 +60,14 @@
 		</mailingList>
 	</mailingLists>
 	<scm>
-		<connection>scm:git:git@github.com:tischi/fiji-plugin-bigDataProcessor2</connection>
-		<developerConnection>scm:git:git@github.com:tischi/fiji-plugin-bigDataProcessor2</developerConnection>
+		<connection>scm:git:git@github.com:tischi/bigDataProcessor2</connection>
+		<developerConnection>scm:git:git@github.com:tischi/bigDataProcessor2</developerConnection>
 		<tag>HEAD</tag>
-		<url>https://github.com/tischi/fiji-plugin-bigDataProcessor2</url>
+		<url>https://github.com/embl-cba/bigDataProcessor2</url>
 	</scm>
 	<issueManagement>
 		<system>GitHub</system>
-		<url>https://github.com/tischi/fiji-plugin-bigDataProcessor2/issues</url>
+		<url>https://github.com/embl-cba/bigDataProcessor2/issues</url>
 	</issueManagement>
 	<ciManagement>
 		<system>None</system>
@@ -80,19 +80,7 @@
 		<enforcer.skip>true</enforcer.skip>
 		<bioformats.version>6.1.0-m2</bioformats.version>
 	</properties>
-	<!--	<plugin>-->
-	<!--	<configuration>-->
-	<!--		<rules>-->
-	<!--			<requireReleaseDeps>-->
-	<!--				<message>No Snapshots Allowed!</message>-->
-	<!--				<excludes>-->
-	<!--					<exclude>sc.fiji:bigdataviewer-vistools</exclude>-->
-	<!--				</excludes>-->
-	<!--			</requireReleaseDeps>-->
-	<!--		</rules>-->
-	<!--		<fail>true</fail>-->
-	<!--	</configuration>-->
-	<!--	</plugin>-->
+
 	<repositories>
 		<repository>
 			<id>imagej.public</id>
@@ -111,11 +99,8 @@
 			<url>https://dl.bintray.com/image-transform-converters/image-transform-converters</url>
 		</repository>
 	</repositories>
+
 	<dependencies>
-		<!--		<dependency>-->
-		<!--			<groupId>cisd</groupId>-->
-		<!--			<artifactId>jhdf5</artifactId>-->
-		<!--		</dependency>-->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -134,11 +119,15 @@
 			<artifactId>bigdataviewer-core</artifactId>
 			<version>8.0.2-platybrowser</version>
 		</dependency>
-
+		<dependency>
+			<groupId>sc.fiji</groupId>
+			<artifactId>bigdataviewer-vistools</artifactId>
+			<version>1.0.0-beta-18-platybrowser</version>
+		</dependency>
 		<dependency>
 			<groupId>net.imagej</groupId>
 			<artifactId>imagej-legacy</artifactId>
-			<version>0.37.3-SNAPSHOT</version>
+<!--			<version>0.37.3-SNAPSHOT</version>-->
 		</dependency>
 		<dependency>
 			<groupId>net.imagej</groupId>
@@ -153,16 +142,17 @@
 			<artifactId>ij</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>net.imagej</groupId>
+			<artifactId>imagej-plugins-commands</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>net.imglib2</groupId>
 			<artifactId>imglib2-cache</artifactId>
 		</dependency>
+
 		<dependency>
-			<groupId>sc.fiji</groupId>
-			<artifactId>bigdataviewer-vistools</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>sc.fiji</groupId>
-			<artifactId>bigdataviewer-core</artifactId>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>ome</groupId>
@@ -184,27 +174,16 @@
 			<artifactId>ome-common</artifactId>
 			<version>6.0.1</version>
 		</dependency>
-		<!--		<dependency>-->
-		<!--			<groupId>ome</groupId>-->
-		<!--			<artifactId>bio-formats_plugins</artifactId>-->
-		<!--		</dependency>-->
-		<dependency>
-			<groupId>net.imagej</groupId>
-			<artifactId>imagej-plugins-commands</artifactId>
-		</dependency>
 		<!-- For tracking -->
 		<dependency>
 			<groupId>net.preibisch</groupId>
 			<artifactId>BigStitcher</artifactId>
 		</dependency>
-		<!-- Comes with Fiji -->
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-		</dependency>
+		<!-- CBA -->
 		<dependency>
 			<groupId>de.embl.cba</groupId>
 			<artifactId>imaris-writer</artifactId>
+			<version>0.2.1</version>
 		</dependency>
 		<dependency>
 			<groupId>de.embl.cba</groupId>
