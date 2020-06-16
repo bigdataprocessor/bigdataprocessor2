@@ -4,12 +4,13 @@ Interactive processing of TB-sized image data within [Fiji](http://fiji.sc/), on
 
 ## Install
 
-BigDataProcessor2 is a Fiji Plugin.
+BigDataProcessor2 is a Fiji plugin and can be installed via an update site.
 
 - Please install [Fiji](fiji.sc)
-- Within Fiji, please enable/ disable the following [Update Site](https://imagej.net/Update_Sites): 
+    - To avoid dependency issues we currently recommended to download a fresh Fiji (you can have multiple versions of Fiji on one computer, e.g. you could rename this one from 'Fiji.app' to 'Fiji-BDP2.app')
+- Within Fiji, please enable the following [Update Site](https://imagej.net/Update_Sites): 
     - [X] BigDataProcessor2
-    - [ ] EMBL-CBA (This one must not be checked because of conflicts!)
+    - (Note: The EMBL-CBA update site one must currently **not** be checked because of dependency issues!)
 - Restart Fiji
 
 ## Start
@@ -20,7 +21,7 @@ In the Fiji Plugins menu scroll far down and start BigDataProcessor2:
 
 This opens up an empty BigDataViewer window with additional menu entries.
 
-Note: **Don't use the Commands**, they are just there to enable macro-recording.
+Note: **Don't use the Commands**, they just serve the macro recording.
 
 ## Record macros
 
