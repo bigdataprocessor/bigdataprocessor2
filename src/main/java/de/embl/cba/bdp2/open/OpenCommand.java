@@ -35,11 +35,11 @@ public class OpenCommand< R extends RealType< R > & NativeType< R > > extends Ab
     //@Parameter(label = "Regular expression help", callback = "showRegExpHelp", required = false)
     //Button regExpHelpButton;
 
-    @Parameter( label = "File extension", choices = { TIF, OME_TIF, TIFF, H_5 } )
+    @Parameter(label = "File extension", choices = { TIF, OME_TIF, TIFF, H_5 })
     String fileExtension = ".tif";
 
-    @Parameter(label = "Regular expression (excluding file extension)", required = false)
-    String regExp = MULTI_CHANNEL_VOLUMES_FROM_SUBFOLDERS;
+    @Parameter(label = "Regular expression (excluding file extension)")
+    String regExp = MULTI_CHANNEL_VOLUMES;
 
     @Parameter(label = "Hdf5 data set name (optional)", required = false)
     String hdf5DataSetName = "Data";

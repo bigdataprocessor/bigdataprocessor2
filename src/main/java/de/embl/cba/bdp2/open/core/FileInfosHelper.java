@@ -476,10 +476,6 @@ public class FileInfosHelper
             Logger.error("Directory not found: " + directory );
             return null;
         }
-        else
-        {
-            Logger.info( "Parsing directory: " + directory );
-        }
 
         String[][] fileLists;
 

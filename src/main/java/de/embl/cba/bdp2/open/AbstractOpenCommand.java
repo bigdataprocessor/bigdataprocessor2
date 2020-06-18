@@ -17,9 +17,9 @@ public abstract class AbstractOpenCommand< R extends RealType< R > & NativeType<
 
     public static final String COMMAND_OPEN_PATH = "Commands>Open>";
 
-    public static final String DO_NOT_SHOW = "Do not show image";
-    public static final String SHOW_IN_CURRENT_VIEWER = "Show image in current viewer";
-    public static final String SHOW_IN_NEW_VIEWER = "Show image in new viewer";
+    public static final String DO_NOT_SHOW = "Do not show";
+    public static final String SHOW_IN_CURRENT_VIEWER = "Show in current viewer";
+    public static final String SHOW_IN_NEW_VIEWER = "Show in new viewer";
 
     // TODO: this is not concurrency save
     public static BdvImageViewer parentBdvImageViewer = null;

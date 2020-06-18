@@ -7,7 +7,7 @@ import java.util.concurrent.ExecutorService;
 
 public class ImgSaverFactory {
 
-    public AbstractImgSaver getSaver(SavingSettings savingSettings, ExecutorService es)
+    public AbstractImageSaver getSaver( SavingSettings savingSettings, ExecutorService es)
     {
         if (savingSettings.fileType.equals(SavingSettings.FileType.TIFF_PLANES))
         {

@@ -9,6 +9,7 @@ import de.embl.cba.bdp2.convert.ConvertToUnsignedByteTypeCommand;
 import de.embl.cba.bdp2.convert.UnsignedByteTypeConversionDialog;
 import de.embl.cba.bdp2.crop.CropCommand;
 import de.embl.cba.bdp2.crop.CropDialog;
+import de.embl.cba.bdp2.data.OpenSampleDataCommand;
 import de.embl.cba.bdp2.dialog.MiscMenu;
 import de.embl.cba.bdp2.dialog.Utils;
 import de.embl.cba.bdp2.image.ImageRenameCommand;
@@ -195,6 +196,14 @@ public class MenuActions implements ActionListener {
             BigDataProcessor2.generalThreadPool.submit(() ->
             {
                 Services.commandService.run( RegExpHelpCommand.class, true );
+            });
+        }
+        else if( e.getActionCommand().equalsIgnoreCase( OpenSampleDataCommand.COMMAND_NAME ) )
+        {
+            BigDataProcessor2.generalThreadPool.submit(() ->
+            {
+                OpenSampleDataCommand.parentBdvImageViewer = viewer;
+                Services.commandService.run( OpenSampleDataCommand.class, true );
             });
         }
         else if( e.getActionCommand().equalsIgnoreCase( OpenCommand.COMMAND_NAME ) )

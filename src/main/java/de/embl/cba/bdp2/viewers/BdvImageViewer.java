@@ -15,7 +15,7 @@ import de.embl.cba.bdp2.track.Track;
 import de.embl.cba.bdp2.ui.MenuActions;
 import de.embl.cba.bdp2.dialog.DisplaySettings;
 import de.embl.cba.bdp2.utils.DimensionOrder;
-import de.embl.cba.bdp2.volatiles.VolatileCachedCellImg;
+import de.embl.cba.bdp2.volatiles.VolatileCachedCellImgs;
 import de.embl.cba.bdp2.volatiles.VolatileViews;
 import de.embl.cba.bdv.utils.BdvUtils;
 import net.imglib2.*;
@@ -392,7 +392,7 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
     private void addToBdv( Image< R > image )
     {
         final AffineTransform3D scaling = getScalingTransform( image.getVoxelSpacing() );
-        CachedCellImg cachedCellImg = VolatileCachedCellImg.getVolatileCachedCellImg( image );
+        CachedCellImg cachedCellImg = VolatileCachedCellImgs.asVolatileCachedCellImg( image );
         BdvOptions options = getBdvOptions( image, scaling );
 
         final long numChannels = cachedCellImg.dimension( DimensionOrder.C );

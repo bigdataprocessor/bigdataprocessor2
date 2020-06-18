@@ -41,6 +41,7 @@ public class TiffStacksImageFrameSaver< R extends RealType< R > & NativeType< R 
     private final SavingSettings settings;
     private final long startTime;
     private final AtomicBoolean stop;
+    private RandomAccessibleInterval rai;
 
     // TODO: feed back to progress listener
     public TiffStacksImageFrameSaver( int t,
@@ -53,10 +54,12 @@ public class TiffStacksImageFrameSaver< R extends RealType< R > & NativeType< R 
         this.counter = counter;
         this.startTime = startTime;
         this.stop = stop;
+        rai = settings.rai;
     }
 
     @Override
     public void run() {
+
 
         // TODO:
         // - check whether enough RAM is available to execute current thread
@@ -64,10 +67,10 @@ public class TiffStacksImageFrameSaver< R extends RealType< R > & NativeType< R 
         // - estimate 3x more RAM then actually necessary
         // - if waiting takes to long somehoe terminate in a nice way
 
-        //long freeMemoryInBytes = IJ.maxMemory() - IJ.currentMemory();
-        RandomAccessibleInterval image = settings.rai;
+        // long freeMemoryInBytes = IJ.maxMemory() - IJ.currentMemory();
 
-        final long totalCubes = image.dimension( T ) * image.dimension( C );
+
+        final long totalCubes = rai.dimension( T ) * rai.dimension( C );
 
 //        long numBytesOfImage = image.dimension(FileInfoConstants.X) *
 //                    image.dimension(FileInfoConstants.Y) *
@@ -77,10 +80,10 @@ public class TiffStacksImageFrameSaver< R extends RealType< R > & NativeType< R 
 //                    file.bitDepth / 8;
 //
 //            if (numBytesOfImage > 1.5 * freeMemoryInBytes) {
-//                // TODO: do something...
+//                // TODO: handle this
 //            }
 
-        int totalChannels = Math.toIntExact( settings.rai.dimension( C ));
+        int totalChannels = Math.toIntExact( rai.dimension( C ));
 
         for (int c = 0; c < totalChannels; c++)
         {
@@ -93,7 +96,7 @@ public class TiffStacksImageFrameSaver< R extends RealType< R > & NativeType< R 
             System.out.println( "Saving started: Frame " + t + ", Channel " + c );
 
             RandomAccessibleInterval< R > raiXYZ =
-                    IntervalImageViews.getVolumeForSaving( image, c, t, settings.numProcessingThreads );
+                    IntervalImageViews.getVolumeForSaving( rai, c, t, settings.numProcessingThreads );
 
             if ( settings.saveVolumes )
             {
@@ -120,7 +123,6 @@ public class TiffStacksImageFrameSaver< R extends RealType< R > & NativeType< R 
             System.out.println( "Saving finished: Frame " + t + ", Channel " + c );
 
         }
-
     }
 
     private void saveProjections(

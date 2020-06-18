@@ -1,7 +1,6 @@
 package de.embl.cba.bdp2.track;
 
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
@@ -345,7 +344,7 @@ public class BigDataTrackerGUI < R extends RealType< R > & NativeType< R > >
 
        if (e.getActionCommand().equals("Select ROI")) {
             System.out.println(e.getActionCommand());
-           BigDataProcessor2.trackerThreadPool.submit(()-> {
+           BigDataTracker.trackerThreadPool.submit(()-> {
                System.out.println(e.getActionCommand());
                FinalInterval interval = imageViewer.getVoxelIntervalXYZCTDialog( true );
                trackingSettings.pMin = new Point3D((int)interval.min( DimensionOrder.X ),
@@ -404,7 +403,7 @@ public class BigDataTrackerGUI < R extends RealType< R > & NativeType< R > >
            buttons[1].setEnabled(false);
            buttons[2].setEnabled(true);
            pack();
-           BigDataProcessor2.trackerThreadPool.submit(()-> {
+           BigDataTracker.trackerThreadPool.submit(()-> {
                this.tracker =  bigDataTracker.trackObject(trackingSettings,imageViewer);
                this.tracker.setProgressListener( ( current, total ) ->{ //Progress bar
                    int progress = (int) ((current*100) / total);

@@ -74,7 +74,9 @@ public class FileInfos
     {
         Logger.info( "" );
         Logger.info( "" );
-        Logger.info( "Configuring file load from: " + directory );
+        Logger.info( "Directory: " + directory );
+        Logger.info( "Regular expression: " +  namingScheme );
+
         directory = Utils.fixDirectoryFormatAndAppendFileSeparator( directory );
 
         this.directory = directory; // contains File separator!

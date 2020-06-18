@@ -19,16 +19,9 @@ import net.imglib2.cache.ref.SoftRefLoaderCache;
 import net.imglib2.img.cell.Cell;
 import net.imglib2.util.Util;
 
-public class VolatileCachedCellImg
+public class VolatileCachedCellImgs
 {
-	/**
-	 * TODO: Make work for other than ShortType
-	 * @param raiXYZCT
-	 * @param grid
-	 * @return
-	 */
-	public static CachedCellImg< UnsignedShortType, VolatileShortArray > asVolatileShortTypeCachedCellImg(
-			RandomAccessibleInterval< UnsignedShortType > raiXYZCT, CellGrid grid )
+	public static CachedCellImg< UnsignedShortType, VolatileShortArray > asVolatileShortTypeCachedCellImg( RandomAccessibleInterval< UnsignedShortType > raiXYZCT, CellGrid grid )
 	{
 		final RandomAccessibleCacheLoader< UnsignedShortType, ShortArray, VolatileShortArray > loader = RandomAccessibleCacheLoader.get(
 				grid,
@@ -44,8 +37,7 @@ public class VolatileCachedCellImg
 		return cachedCellImg;
 	}
 
-	public static CachedCellImg< UnsignedByteType, VolatileByteArray > asVolatileByteTypeCachedCellImg(
-			RandomAccessibleInterval< UnsignedByteType > raiXYZCT, CellGrid grid )
+	public static CachedCellImg< UnsignedByteType, VolatileByteArray > asVolatileByteTypeCachedCellImg( RandomAccessibleInterval< UnsignedByteType > raiXYZCT, CellGrid grid )
 	{
 		final RandomAccessibleCacheLoader< UnsignedByteType, ByteArray, VolatileByteArray > loader = RandomAccessibleCacheLoader.get(
 				grid,
@@ -61,7 +53,7 @@ public class VolatileCachedCellImg
 		return cachedCellImg;
 	}
 
-	public static CachedCellImg getVolatileCachedCellImg( Image< ? > image )
+	public static CachedCellImg asVolatileCachedCellImg( Image< ? > image )
 	{
 		final Type typeFromInterval = Util.getTypeFromInterval( image.getRai() );
 		final CellGrid grid = new CellGrid(

@@ -23,7 +23,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class ImarisStacksSaver extends AbstractImgSaver {
+public class ImarisStacksSaver extends AbstractImageSaver
+{
     private SavingSettings savingSettings;
     private ExecutorService es;
     private AtomicBoolean stop;

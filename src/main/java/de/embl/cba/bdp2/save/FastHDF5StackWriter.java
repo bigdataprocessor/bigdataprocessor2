@@ -96,7 +96,7 @@ public class FastHDF5StackWriter<T extends RealType<T> & NativeType<T>> implemen
                     this.current_t};
             RandomAccessibleInterval newRai = Views.interval(image, minInterval, maxInterval);
             // Convert
-            newRai = SaveImgHelper.convertor(newRai, this.savingSettings);
+            newRai = SaveImgHelper.converter(newRai, this.savingSettings);
             Img<T> imgChannelTime;
             imgChannelTime = ImgView.wrap(newRai, new CellImgFactory(this.nativeType));
 

@@ -17,11 +17,9 @@ public class ImageCalibrationBdvVisualisationTest
 		final File file = new File(
 				ImageCalibrationBdvVisualisationTest.class.getResource( "nc1-nt1-calibrated-tiff" ).getFile() );
 
-		BigDataProcessor2 bigDataProcessor2 = new BigDataProcessor2();
-
 		String imageDirectory = file.toString();
 
-		final Image image = bigDataProcessor2.openImage(
+		final Image image = BigDataProcessor2.openImage(
 				imageDirectory.toString(),
 				NamingScheme.SINGLE_CHANNEL_TIMELAPSE,
 				".*" );

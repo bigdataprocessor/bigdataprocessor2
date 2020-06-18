@@ -1,12 +1,10 @@
 package de.embl.cba.bdp2.track;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import de.embl.cba.bdp2.utils.Point3D;
-import net.imagej.ImageJ;
 import net.imglib2.FinalInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -96,7 +94,7 @@ public class BigDataTrackerCommand < R extends RealType< R > & NativeType< R > >
 
     private void selectROI() {
         System.out.println("select");
-        BigDataProcessor2.trackerThreadPool.submit(() -> {
+        BigDataTracker.trackerThreadPool.submit(() -> {
             FinalInterval interval = imageViewer.getVoxelIntervalXYZCTDialog( true );
             trackingSettings.pMin = new Point3D((int) interval.min( DimensionOrder.X ),
                     (int) interval.min( DimensionOrder.Y ),
@@ -122,7 +120,7 @@ public class BigDataTrackerCommand < R extends RealType< R > & NativeType< R > >
         trackingSettings.trackingFactor = 1.0 + 2.0 * maxDisplacement.getX() / trackingSettings.objectSize.getX();
         trackingSettings.iterationsCenterOfMass =
                 (int) Math.ceil(Math.pow(trackingSettings.trackingFactor, 2));
-        BigDataProcessor2.trackerThreadPool.submit(() -> {
+        BigDataTracker.trackerThreadPool.submit(() -> {
             bigDataTracker.trackObject(trackingSettings, imageViewer);
         });
     }

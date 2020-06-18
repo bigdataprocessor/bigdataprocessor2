@@ -25,28 +25,15 @@ import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.util.Util;
 
+import java.io.File;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class BigDataProcessor2
 {
-    public static ExecutorService generalThreadPool =
-            Executors.newFixedThreadPool( Runtime.getRuntime().availableProcessors() * 2  );
-    public static ExecutorService trackerThreadPool; // Thread pool for track: TODO: remove?
-    public static Map<Integer, Integer> progressTracker = new ConcurrentHashMap<>();
+    public static ExecutorService generalThreadPool = Executors.newFixedThreadPool( Runtime.getRuntime().availableProcessors() * 2  );
     public static int MAX_THREAD_LIMIT = Runtime.getRuntime().availableProcessors() * 2;
-    public static Map<Integer, AtomicBoolean> saveTracker = new ConcurrentHashMap<>();
-
-    // TODO: do we ever need the constructor, maybe only static methods are more convenient?!
-    public BigDataProcessor2() {
-        //TODO: have separate shutdown for the executorService. It will not shutdown when dialog exeService is shut. --ashis (DONE but needs testing)
-        //Ref: https://stackoverflow.com/questions/23684189/java-how-to-make-an-executorservice-running-inside-another-executorservice-not
-        // kickOffThreadPack( Runtime.getRuntime().availableProcessors() * 2 );
-    }
 
     public static< R extends RealType< R > & NativeType< R > >
     void saveImageAndWaitUntilDone(
@@ -65,9 +52,13 @@ public class BigDataProcessor2
         return Binner.bin( image, spanXYZCT );
     }
 
-    private static void kickOffThreadPack( int numThreads ) {
-        if ( generalThreadPool == null)
-            generalThreadPool = Executors.newFixedThreadPool( numThreads );
+    public static < R extends RealType< R > & NativeType< R > >
+    Image< R > openImage(
+            File directory,
+            String namingScheme,
+            String filterPattern )
+    {
+        return openImage( directory.getAbsolutePath(), namingScheme, filterPattern);
     }
 
     public static < R extends RealType< R > & NativeType< R > >
@@ -123,64 +114,19 @@ public class BigDataProcessor2
         return new BdvImageViewer( image, true, BdvImageViewer.enableArbitraryPlaneSlicing );
     }
 
-    // TODO: Return futures from the image saver
-    public static < R extends RealType< R > & NativeType< R > >
-    ImgSaver saveImage(
-            Image< R > image,
-            SavingSettings savingSettings,
-            ProgressListener progressListener )
+    public static < R extends RealType< R > & NativeType< R > > ImageSaver saveImage( Image< R > image, SavingSettings savingSettings, ProgressListener progressListener )
     {
-        // TODO: refactor into a class
-        int nIOThread = Math.max( 1, Math.min( savingSettings.numIOThreads, MAX_THREAD_LIMIT ));
-        Logger.info( "Saving started; I/O threads: " + nIOThread );
-
-        ExecutorService saveExecutorService = Executors.newFixedThreadPool( nIOThread );
-
-        if ( ! savingSettings.fileType.equals( SavingSettings.FileType.TIFF_PLANES ) )
-        {
-            // TODO: this makes no sense for cropped images => only fully load the cropped region!
-            // TODO: this makes no sense for image where the input data is Tiff planes
-            Logger.info( "Saving: Configuring volume reader..." );
-
-            // TODO: The cell dimensions should be such that only the cropped region is loaded in one go, not the whole image!
-            final CachedCellImg< R, ? > volumeCachedCellImg
-                    = CachedCellImgReader.getVolumeCachedCellImg( image.getFileInfos() );
-            final RandomAccessibleInterval< R > volumeLoadedRAI =
-                    new CachedCellImgReplacer( image.getRai(), volumeCachedCellImg ).get();
-            savingSettings.rai = volumeLoadedRAI;
-        }
-        else
-        {
-            savingSettings.rai = image.getRai();
-        }
-
-        savingSettings.voxelSpacing = image.getVoxelSpacing();
-        savingSettings.voxelUnit = image.getVoxelUnit();
-        ImgSaverFactory factory = new ImgSaverFactory();
-
-        if ( savingSettings.saveVolumes )
-            Utils.createFilePathParentDirectories( savingSettings.volumesFilePathStump );
-
-        if ( savingSettings.saveProjections )
-            Utils.createFilePathParentDirectories( savingSettings.projectionsFilePathStump );
-
-        AbstractImgSaver saver = factory.getSaver( savingSettings, saveExecutorService );
-        saver.addProgressListener( progressListener );
+        final ImageSaver saver = new ImageSaverCreator<>( image, savingSettings, progressListener ).getSaver();
         saver.startSave();
-
         return saver;
     }
 
-    public static < R extends RealType< R > & NativeType< R > >
-    Image< R > convert( Image< R > image, double mapTo0, double mapTo255 )
+    public static < R extends RealType< R > & NativeType< R > > Image< R > convert( Image< R > image, double mapTo0, double mapTo255 )
     {
         return UnsignedByteTypeConversionDialog.convert( image, mapTo0, mapTo255 );
     }
 
-    public static <T extends RealType<T>> RandomAccessibleInterval
-    unsignedByteTypeConverter(
-            RandomAccessibleInterval rai,
-            DisplaySettings displaySettings)
+    public static <T extends RealType<T>> RandomAccessibleInterval unsignedByteTypeConverter( RandomAccessibleInterval rai, DisplaySettings displaySettings)
     {
         RandomAccessibleInterval<UnsignedByteType> newRai;
         if (!(Util.getTypeFromInterval(rai) instanceof UnsignedByteType)){

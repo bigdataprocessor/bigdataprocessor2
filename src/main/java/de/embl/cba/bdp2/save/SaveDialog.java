@@ -47,7 +47,7 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > >  extends JF
     protected final String MESSAGE_SAVE_FINISHED ="Saving Completed!";
     protected JProgressBar progressBar;
 
-    private ImgSaver saver;
+    private ImageSaver saver;
     private SavingSettings savingSettings;
     private JPanel mainPanel;
     private ArrayList< JPanel > panels;

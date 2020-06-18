@@ -4,6 +4,7 @@ import de.embl.cba.bdp2.bin.BinCommand;
 import de.embl.cba.bdp2.calibrate.CalibrateCommand;
 import de.embl.cba.bdp2.convert.ConvertToUnsignedByteTypeCommand;
 import de.embl.cba.bdp2.crop.CropCommand;
+import de.embl.cba.bdp2.data.OpenSampleDataCommand;
 import de.embl.cba.bdp2.image.ImageRenameCommand;
 import de.embl.cba.bdp2.open.*;
 import de.embl.cba.bdp2.align.AlignChannelsCommand;
@@ -25,7 +26,7 @@ public class Menu extends JMenu
     public static final String SAVE_AS_TIFF_VOLUMES_MENU_ITEM = "Save as Tiff Volumes...";
     public static final String SAVE_AS_TIFF_PLANES_MENU_ITEM = "Save as Tiff Planes...";
 
-    public static final String OBLIQUE_MENU_ITEM = "Shear..."; // TODO: ?
+    public static final String OBLIQUE_MENU_ITEM = "Shear...";
 
     // Menus
     public static final String MISC_MENU = "Misc";
@@ -40,6 +41,8 @@ public class Menu extends JMenu
 
         final JMenu openMenu = addMenu( "Open" );
         addMenuItem( openMenu, RegExpHelpCommand.COMMAND_NAME );
+        addMenuItem( openMenu, OpenSampleDataCommand.COMMAND_NAME );
+
         addMenuItem( openMenu, OpenCommand.COMMAND_NAME );
         addMenuItem( openMenu, OpenEMTiffPlanesCommand.COMMAND_NAME );
         addMenuItem( openMenu, OpenLuxendoMuViCommand.COMMAND_NAME );

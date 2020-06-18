@@ -1,6 +1,5 @@
 package de.embl.cba.bdp2.track;
 
-import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
@@ -16,9 +15,12 @@ import net.imglib2.view.Views;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class BigDataTracker< R extends RealType< R > & NativeType< R > > {
+
+	public static ExecutorService trackerThreadPool;
 
     public OldTrack< R > oldTrackResults;
     public TrackingSettings< R > trackingSettings;
@@ -28,14 +30,14 @@ public class BigDataTracker< R extends RealType< R > & NativeType< R > > {
     }
 
     public void kickOffThreadPack(int numThreads){
-        if(null == BigDataProcessor2.trackerThreadPool
-                ||  BigDataProcessor2.trackerThreadPool.isTerminated()){
-            BigDataProcessor2.trackerThreadPool = Executors.newFixedThreadPool(numThreads);
+        if(null == trackerThreadPool
+                ||  trackerThreadPool.isTerminated()){
+            trackerThreadPool = Executors.newFixedThreadPool(numThreads);
         }
     }
 
     public void shutdownThreadPack(){
-        Utils.shutdownThreadPack( BigDataProcessor2.trackerThreadPool,5);
+        Utils.shutdownThreadPack( trackerThreadPool,5);
     }
 
     // TODO:

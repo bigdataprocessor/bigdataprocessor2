@@ -1,7 +1,6 @@
 package de.embl.cba.bdp2.track;
 
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.utils.Point3D;
@@ -157,7 +156,7 @@ public class ObjectTracker < R extends RealType< R > & NativeType< R > > extends
             final double[] shift = PhaseCorrelationTranslationComputer.computeShift(
                     currentFrame,
                     nextFrame,
-                    BigDataProcessor2.trackerThreadPool );
+                    BigDataTracker.trackerThreadPool );
 
             if ( shift == null ) break;
 
@@ -181,8 +180,8 @@ public class ObjectTracker < R extends RealType< R > & NativeType< R > > extends
             RandomAccessibleInterval< R > currentFrame,
             RandomAccessibleInterval< R > nextFrame )
     {
-        Future future1 = BigDataProcessor2.trackerThreadPool.submit(() -> doIntensityGating( Utils.getCellImgFromInterval(currentFrame)));
-        Future future2 = BigDataProcessor2.trackerThreadPool.submit(() -> doIntensityGating(Utils.getCellImgFromInterval(nextFrame)));
+        Future future1 = BigDataTracker.trackerThreadPool.submit(() -> doIntensityGating( Utils.getCellImgFromInterval(currentFrame)));
+        Future future2 = BigDataTracker.trackerThreadPool.submit(() -> doIntensityGating(Utils.getCellImgFromInterval(nextFrame)));
         try {
             future1.get();
             future2.get();
@@ -210,7 +209,7 @@ public class ObjectTracker < R extends RealType< R > & NativeType< R > > extends
                 return new Point3D(0, 0, 0);
             }
             randomAccess.setPosition(channel, DimensionOrder.C );
-            Future<double[]> future = BigDataProcessor2.trackerThreadPool.submit(new ComputeCenterOfMassPerSliceParallel(randomAccess, z,
+            Future<double[]> future = BigDataTracker.trackerThreadPool.submit(new ComputeCenterOfMassPerSliceParallel(randomAccess, z,
                         xmin, xmax, ymin, ymax, gateIntensity));
             futures.add(future);
         }

@@ -1,7 +1,7 @@
 package de.embl.cba.bdp2.save.tiff;
 
 import de.embl.cba.bdp2.open.core.FileInfos;
-import de.embl.cba.bdp2.save.AbstractImgSaver;
+import de.embl.cba.bdp2.save.AbstractImageSaver;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.log.progress.Progress;
@@ -14,7 +14,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class TiffStacksImageSaver extends AbstractImgSaver
+public class TiffStacksImageSaver extends AbstractImageSaver
 {
     private SavingSettings savingSettings;
     private ExecutorService es;

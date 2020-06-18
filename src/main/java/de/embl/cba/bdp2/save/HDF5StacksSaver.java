@@ -17,7 +17,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class HDF5StacksSaver extends AbstractImgSaver {
+public class HDF5StacksSaver extends AbstractImageSaver
+{
 
     private SavingSettings savingSettings;
     private ExecutorService es;
