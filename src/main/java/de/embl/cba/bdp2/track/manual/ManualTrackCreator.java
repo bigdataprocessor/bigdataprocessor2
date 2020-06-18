@@ -24,14 +24,15 @@ public class ManualTrackCreator
 	{
 		final BdvHandle bdvHandle = viewer.getBdvHandle();
 
-		track = new Track( trackName );
+		track = new Track( trackName, viewer.getImage().getVoxelSpacing() );
 
 		TrackManager.getTracks().put( trackName, track );
 
 		Behaviours behaviours = new Behaviours( new InputTriggerConfig() );
 		behaviours.install( bdvHandle.getTriggerbindings(), "behaviours" );
 
-		behaviours.behaviour( ( ClickBehaviour ) ( x, y ) -> {
+		behaviours.behaviour( ( ClickBehaviour ) ( x, y ) ->
+		{
 			(new Thread( () -> {
 				final RealPoint point = BdvUtils.getGlobalMouseCoordinates( bdvHandle );
 				final int timepoint = bdvHandle.getViewerPanel().getState().getCurrentTimepoint();
@@ -39,7 +40,8 @@ public class ManualTrackCreator
 			} )).start();
 		}, "Add track position", "A"  ) ;
 
-		behaviours.behaviour( ( ClickBehaviour ) ( x, y ) -> {
+		behaviours.behaviour( ( ClickBehaviour ) ( x, y ) ->
+		{
 			(new Thread( () -> {
 				Services.commandService.run( CorrectDriftWithTrackCommand.class, true );
 			} )).start();
@@ -56,7 +58,7 @@ public class ManualTrackCreator
 
 	private void moveToTrackPosition( BdvHandle bdv, Track track, int t )
 	{
-		double[] position = track.getCalibratedPosition( t );
+		double[] position = track.getPosition( t );
 
 		if ( position == null )
 		{

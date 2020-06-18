@@ -32,7 +32,7 @@ public class TrackDisplayBehaviour
 
 	private void moveToTrackPosition( BdvHandle bdv, Track track, int t )
 	{
-		double[] position = track.getCalibratedPosition( t );
+		double[] position = track.getPosition( t );
 
 		if ( position == null )
 		{

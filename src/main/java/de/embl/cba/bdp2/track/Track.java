@@ -12,10 +12,11 @@ public class Track
 	private double[] voxelSpacings;
 	private HashMap< Integer, double[] > timeToPosition;
 
-	public Track( String trackName )
+	public Track( String trackName, double[] voxelSpacings )
 	{
 		this.trackName = trackName;
-		timeToPosition = new HashMap< Integer, double[] >();
+		this.voxelSpacings = voxelSpacings;
+		timeToPosition = new HashMap<>();
 	}
 
 	public void setVoxelSpacing( double[] voxelSpacings )
@@ -28,34 +29,29 @@ public class Track
 		return trackName;
 	}
 
-
-	// Does that make sense? Positions are always calibrated, or?
-	public double[] getCalibratedPosition( long t )
+	private long[] uncalibrate( double[] position )
 	{
-		if ( timeToPosition.containsKey( t ) )
-		{
-			final double[] position = timeToPosition.get( t );
-			return calibrate( position );
-		}
-		else
-		{
-			return null;
-		}
-	}
-
-	private double[] calibrate( double[] position )
-	{
-		double[] calibratedPosition = new double[ position.length ];
+		long[] voxelPosition = new long[ position.length ];
 		for ( int d = 0; d < position.length; d++ )
-			calibratedPosition[ d ] = position[ d ] * voxelSpacings[ d ];
-		return calibratedPosition;
+			voxelPosition[ d ] = ( long ) ( position[ d ] / voxelSpacings[ d ] );
+		return voxelPosition;
 	}
 
+	/**
+	 *
+	 * @param t frame
+	 * @param position calibrated
+	 */
 	public void setPosition( int t, double[] position )
 	{
 		timeToPosition.put( t, position );
 	}
 
+	/**
+	 *
+	 * @param t frame
+	 * @param realPoint calibrated
+	 */
 	public void setPosition( int t, RealPoint realPoint )
 	{
 		final double[] doubles = new double[ realPoint.numDimensions() ];
@@ -63,14 +59,31 @@ public class Track
 		timeToPosition.put( t, doubles );
 	}
 
+	/**
+	 *
+	 * @param t frame
+	 * @return calibrated position
+	 */
 	public double[] getPosition( int t )
 	{
 		return timeToPosition.get( t );
 	}
 
-	public long[] getLongPosition( int t )
+	/**
+	 *
+	 * @param t
+	 * @return voxel position
+	 */
+	public long[] getVoxelPosition( int t )
 	{
-		return Arrays.stream( timeToPosition.get( t ) ).mapToLong( x -> Math.round( x ) ).toArray();
+		if ( timeToPosition.containsKey( t ) )
+		{
+			return uncalibrate( timeToPosition.get( t ) );
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 	public HashMap< Integer, double[] > getTimeToPositionMap()

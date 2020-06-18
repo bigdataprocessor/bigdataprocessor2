@@ -44,15 +44,15 @@ public class TrackOverlay extends BdvOverlay
 		{
 			if ( timePoints.contains( t ) )
 			{
-				drawShape( g, currentTimepoint, Shape.Rectangle );
+				drawShape( g, t, Shape.Rectangle );
 				break;
 			}
 		}
 	}
 
-	private void drawShape( Graphics2D g, int currentTimepoint, Enum shape )
+	private void drawShape( Graphics2D g, int t, Enum shape )
 	{
-		final double[] position = track.getPosition( currentTimepoint );
+		final double[] position = track.getPosition( t );
 
 		final AffineTransform3D viewerTransform = new AffineTransform3D();
 		getCurrentTransform3D( viewerTransform );

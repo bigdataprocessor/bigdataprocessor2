@@ -38,14 +38,10 @@ public class TrackApplier< R extends RealType< R > & NativeType< R > >
 			final ArrayList< RandomAccessibleInterval< R > > channels = new ArrayList<>();
 			for ( int c = 0; c < image.numChannels(); c++ )
 			{
-				volumeView
-						= IntervalImageViews.getVolumeView( image.getRai(), c, t );
+				volumeView = IntervalImageViews.getVolumeView( image.getRai(), c, t );
 
-				RandomAccessible< R > extendBorder
-						= Views.extendBorder( volumeView );
-				RandomAccessible< R > translate
-						= Views.translate( extendBorder,
-						getTranslation( track, t ) );
+				RandomAccessible< R > extendBorder = Views.extendBorder( volumeView );
+				RandomAccessible< R > translate = Views.translate( extendBorder, getTranslation( track, t ) );
 				final IntervalView< R > intervalView = Views.interval( translate, union );
 
 				channels.add( intervalView );
@@ -61,14 +57,12 @@ public class TrackApplier< R extends RealType< R > & NativeType< R > >
 		return trackViewImage;
 	}
 
-	private static < R extends RealType< R > & NativeType< R > > Interval
-	getUnion( Track track, RandomAccessibleInterval< R > volumeView )
+	private static < R extends RealType< R > & NativeType< R > > Interval getUnion( Track track, RandomAccessibleInterval< R > volume )
 	{
 		Interval union = null;
 		for (int t = track.tMin(); t < track.tMax(); ++t)
 		{
-			Interval translateInterval = Views.translate( volumeView,
-					getTranslation( track, t ) );
+			Interval translateInterval = Views.translate( volume, getTranslation( track, t ) );
 			if ( union == null )
 				union = translateInterval;
 			else
@@ -79,7 +73,8 @@ public class TrackApplier< R extends RealType< R > & NativeType< R > >
 
 	private static long[] getTranslation( Track track, int t )
 	{
-		return Arrays.stream( track.getLongPosition( t ) ).map( x -> -x ).toArray();
+		final long[] voxelPosition = track.getVoxelPosition( t );
+		final long[] shifts = Arrays.stream( voxelPosition ).map( x -> -x ).toArray();
+		return shifts;
 	}
-
 }

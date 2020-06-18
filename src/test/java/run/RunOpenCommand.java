@@ -16,6 +16,6 @@ public class RunOpenCommand
 
 		Services.commandService = ij.command();
 
-		ij.command().run( OpenCommand.class, true );
+		Services.commandService.run( OpenCommand.class, true );
 	}
 }

@@ -34,8 +34,8 @@ public class TrackIO
 		{
 			sb.append( timePoint );
 			sb.append( delim );
-			Arrays.stream( track.getLongPosition( timePoint ) ).forEach( x -> sb.append( x + delim ) );
-			Arrays.stream( track.getCalibratedPosition( timePoint ) ).forEach( x -> sb.append( x + delim ) );
+			Arrays.stream( track.getVoxelPosition( timePoint ) ).forEach( x -> sb.append( x + delim ) );
+			Arrays.stream( track.getPosition( timePoint ) ).forEach( x -> sb.append( x + delim ) );
 			endLine( sb );
 		}
 

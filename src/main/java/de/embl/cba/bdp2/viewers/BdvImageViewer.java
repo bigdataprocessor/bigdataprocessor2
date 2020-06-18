@@ -392,7 +392,7 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
     private void addToBdv( Image< R > image )
     {
         final AffineTransform3D scaling = getScalingTransform( image.getVoxelSpacing() );
-        CachedCellImg cachedCellImg = VolatileCachedCellImgs.asVolatileCachedCellImg( image );
+        RandomAccessibleInterval cachedCellImg = VolatileCachedCellImgs.asVolatileCachedCellImg( image );
         BdvOptions options = getBdvOptions( image, scaling );
 
         final long numChannels = cachedCellImg.dimension( DimensionOrder.C );

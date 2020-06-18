@@ -36,8 +36,7 @@ public class StaticVolumePhaseCorrelationTracker < R extends RealType< R > & Nat
 		this.settings = settings;
 		this.id = id;
 		this.numDimensions = settings.initialPosition.length;
-		track = new Track( id );
-		track.setVoxelSpacing( image.getVoxelSpacing() );
+		track = new Track( id, image.getVoxelSpacing() );
 	}
 
 	public void track()
@@ -46,14 +45,14 @@ public class StaticVolumePhaseCorrelationTracker < R extends RealType< R > & Nat
 
 		for ( int t = settings.timeInterval[ 0 ]; t < settings.timeInterval[ 1 ]; t++ )
 		{
-			final long[] position = track.getLongPosition( t );
+			final long[] position = track.getVoxelPosition( t );
 
 			Logger.log( "Track: " + track.getTrackName() +
 					"; t = " + t +
-					"; pos = " + Arrays.toString( track.getCalibratedPosition( t ) ) ) ;
+					"; pos = " + Arrays.toString( track.getPosition( t ) ) ) ;
 
 			System.out.println( "Position [pixels]: " + Arrays.toString( position ) );
-			System.out.println( "Position [calibrated]: " + Arrays.toString( track.getCalibratedPosition( t ) ) );
+			System.out.println( "Position [calibrated]: " + Arrays.toString( track.getPosition( t ) ) );
 
 			final FinalInterval volume = getVolume( position );
 

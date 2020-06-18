@@ -8,13 +8,13 @@ import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
-@Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>" + AbstractProcessingCommand.COMMAND_PROCESS_PATH + ">Track>" + CorrectDriftWithTrackCommand.COMMAND_FULL_NAME )
+@Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>" + AbstractProcessingCommand.COMMAND_PROCESS_PATH  + CorrectDriftWithTrackCommand.COMMAND_FULL_NAME )
 public class CorrectDriftWithTrackCommand< R extends RealType< R > & NativeType< R > > extends AbstractProcessingCommand
 {
     public static final String COMMAND_NAME = "Correct Drift With Track...";
     public static final String COMMAND_FULL_NAME =  Utils.COMMAND_BDP_PREFIX + COMMAND_NAME;
 
-    @Parameter(label = "Track name")
+    @Parameter(label = "Track")
     Track track;
 
     public void run()

@@ -10,7 +10,7 @@ public class TrackingUtils
 	{
 		Logger.log( "Track: " + track.getTrackName() +
 				"; t = " + t +
-				"; pos [voxel] = " + Arrays.toString( track.getLongPosition( t ) ) +
-				"; pos [calibrated] = " + Arrays.toString( track.getCalibratedPosition( t ) ) );
+				"; pos [voxel] = " + Arrays.toString( track.getVoxelPosition( t ) ) +
+				"; pos [calibrated] = " + Arrays.toString( track.getPosition( t ) ) );
 	}
 }

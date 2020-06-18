@@ -42,8 +42,7 @@ public class ThresholdFloodFillOverlapTracker< R extends RealType< R > & NativeT
 		this.image = image;
 		this.settings = settings;
 		this.numDimensions = settings.initialPositionCalibrated.length;
-		track = new Track( settings.trackId );
-		track.setVoxelSpacing( image.getVoxelSpacing() );
+		track = new Track( settings.trackId, image.getVoxelSpacing()  );
 	}
 
 	public static < R extends RealType< R > & NativeType< R > > void trackObjectDialog(
@@ -162,7 +161,7 @@ public class ThresholdFloodFillOverlapTracker< R extends RealType< R > & NativeT
 		}
 		else
 		{
-			return track.getLongPosition( t );
+			return track.getVoxelPosition( t );
 		}
 	}
 

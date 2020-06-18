@@ -66,8 +66,8 @@ public class TestMicrogliaTracking
         while( ! tracker.isFinished() )
             IJ.wait(100 );
 
-        assertArrayEquals( new double[]{ 111.31,73.90,24.29 }, tracker.getTrack().getCalibratedPosition( 53 ), 1.0 );
-        assertArrayEquals( new double[]{ 38.27,36.69,20.81 }, tracker.getTrack().getCalibratedPosition( 120 ), 1.0 );
+        assertArrayEquals( new double[]{ 111.31,73.90,24.29 }, tracker.getTrack().getPosition( 53 ), 1.0 );
+        assertArrayEquals( new double[]{ 38.27,36.69,20.81 }, tracker.getTrack().getPosition( 120 ), 1.0 );
 
         TrackIO.saveTrack( new File( "/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/" +
                 "src/test/resources/test-data/microglia-track-nt123/track-thresholdFloodFillTracking.csv" ),
