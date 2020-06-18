@@ -35,7 +35,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static de.embl.cba.bdp2.save.tiff.TiffUtils.ShortToByteBigEndian;
 import static de.embl.cba.bdp2.utils.DimensionOrder.*;
 
-public class TiffStacksImageFrameSaver< R extends RealType< R > & NativeType< R > > implements Runnable {
+public class TiffVolumesFrameSaver< R extends RealType< R > & NativeType< R > > implements Runnable {
     private final int t;
     private final AtomicInteger counter;
     private final SavingSettings settings;
@@ -44,11 +44,11 @@ public class TiffStacksImageFrameSaver< R extends RealType< R > & NativeType< R 
     private RandomAccessibleInterval rai;
 
     // TODO: feed back to progress listener
-    public TiffStacksImageFrameSaver( int t,
-                                      SavingSettings settings,
-                                      AtomicInteger counter,
-                                      final long startTime,
-                                      AtomicBoolean stop) {
+    public TiffVolumesFrameSaver( int t,
+                                  SavingSettings settings,
+                                  AtomicInteger counter,
+                                  final long startTime,
+                                  AtomicBoolean stop) {
         this.t = t;
         this.settings = settings;
         this.counter = counter;
@@ -95,8 +95,7 @@ public class TiffStacksImageFrameSaver< R extends RealType< R > & NativeType< R 
 
             System.out.println( "Saving started: Frame " + t + ", Channel " + c );
 
-            RandomAccessibleInterval< R > raiXYZ =
-                    IntervalImageViews.getVolumeForSaving( rai, c, t, settings.numProcessingThreads );
+            RandomAccessibleInterval< R > raiXYZ = IntervalImageViews.getVolumeForSaving( rai, c, t, settings.numProcessingThreads );
 
             if ( settings.saveVolumes )
             {

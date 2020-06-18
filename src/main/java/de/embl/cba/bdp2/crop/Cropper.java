@@ -12,9 +12,8 @@ public class Cropper
 	public static < T extends RealType< T > & NativeType< T > >
 	Image< T > crop5D( Image< T > image, Interval intervalXYZCT )
 	{
-		final IntervalView< T > crop =
-				Views.zeroMin( Views.interval( image.getRai(), intervalXYZCT ) );
-
+		//final IntervalView< T > crop = Views.zeroMin( Views.interval( image.getRai(), intervalXYZCT ) );
+		final IntervalView< T > crop = Views.interval( image.getRai(), intervalXYZCT );
 		final Image< T > croppedImage = image.newImage( crop );
 		croppedImage.setName( image.getName() + "-crop" );
 		return croppedImage;

@@ -409,7 +409,6 @@ public class Utils {
         return imp;
     }
 
-
     public static ImagePlus wrap3DRaiToCalibratedImagePlus(
             RandomAccessibleInterval raiXYZ,
             double[] voxelSpacing,
@@ -422,9 +421,9 @@ public class Utils {
                                 0, 0 ),
                         0, 0 );
 
-        final IntervalView viewXYCZT =
-                Views.permute( viewXYZCT, DimensionOrder.Z, DimensionOrder.C );
+        final IntervalView viewXYCZT = Views.permute( viewXYZCT, DimensionOrder.Z, DimensionOrder.C );
 
+        // Note: this also works if viewXYCZT has a non-zero bounding interval
         ImagePlus imp = ImageJFunctions.wrap( viewXYCZT, name);
 
         final Calibration calibration = new Calibration();

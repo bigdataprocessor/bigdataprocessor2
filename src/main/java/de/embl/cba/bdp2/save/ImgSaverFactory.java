@@ -1,7 +1,7 @@
 package de.embl.cba.bdp2.save;
 
 import de.embl.cba.bdp2.save.tiff.TiffPlanesSaver;
-import de.embl.cba.bdp2.save.tiff.TiffStacksImageSaver;
+import de.embl.cba.bdp2.save.tiff.TiffVolumesSaver;
 
 import java.util.concurrent.ExecutorService;
 
@@ -15,7 +15,7 @@ public class ImgSaverFactory {
         }
         else if (savingSettings.fileType.equals(SavingSettings.FileType.TIFF_VOLUMES ))
         {
-            return new TiffStacksImageSaver(savingSettings, es);
+            return new TiffVolumesSaver(savingSettings, es);
         }
         else if (savingSettings.fileType.equals(SavingSettings.FileType.HDF5_VOLUMES ))
         {
