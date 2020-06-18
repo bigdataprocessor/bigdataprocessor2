@@ -51,7 +51,7 @@ public class TestMicrogliaTracking
 
         settings.initialPositionCalibrated = new double[]{ 168, 62, 42 };
         settings.channel = 0;
-        settings.timeInterval = new long[]{ 0, image.getRai().dimension( 4 ) - 1 };
+        settings.timeInterval = new int[]{ 0, (int) image.getRai().dimension( 4 ) - 1 };
         settings.threshold = 20;
         settings.trackId = "Track001";
 
@@ -59,7 +59,6 @@ public class TestMicrogliaTracking
                 new ThresholdFloodFillOverlapTracker< R >( image, settings );
 
         tracker.track();
-
 
         if ( showImages )
             new TrackDisplayBehaviour( viewer.getBdvHandle(), tracker.getTrack() );
@@ -70,13 +69,13 @@ public class TestMicrogliaTracking
         assertArrayEquals( new double[]{ 111.31,73.90,24.29 }, tracker.getTrack().getCalibratedPosition( 53 ), 1.0 );
         assertArrayEquals( new double[]{ 38.27,36.69,20.81 }, tracker.getTrack().getCalibratedPosition( 120 ), 1.0 );
 
-        TrackingIO.saveTrack( new File( "/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/" +
+        TrackIO.saveTrack( new File( "/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/" +
                 "src/test/resources/test-data/microglia-track-nt123/track-thresholdFloodFillTracking.csv" ),
                 tracker.getTrack() );
 
         if ( showImages )
         {
-            final Image< R > trackViewImage = TrackViews.applyTrack( image, tracker.getTrack() );
+            final Image< R > trackViewImage = new TrackApplier<>( image ).applyTrack( tracker.getTrack() );
             new BdvImageViewer<>( trackViewImage );
         }
     }
@@ -110,7 +109,7 @@ public class TestMicrogliaTracking
 
         settings.initialPositionCalibrated = new double[]{ 168, 62, 42 };
         settings.channel = 0;
-        settings.timeInterval = new long[]{ 0, 10 };
+        settings.timeInterval = new int[]{ 0, 10 };
         settings.threshold = 20;
         settings.trackId = "Track001";
 
@@ -122,7 +121,7 @@ public class TestMicrogliaTracking
         if ( showImages )
         {
             new TrackDisplayBehaviour( viewer.getBdvHandle(), tracker.getTrack() );
-            final Image< R > trackViewImage = TrackViews.applyTrack( image, tracker.getTrack() );
+            final Image< R > trackViewImage = new TrackApplier<>( image ).applyTrack( tracker.getTrack() );
 
             final BdvImageViewer< R > newViewer = new BdvImageViewer<>( trackViewImage );
             newViewer.setDisplaySettings( viewer.getDisplaySettings() );
@@ -162,7 +161,7 @@ public class TestMicrogliaTracking
 //        settings.centerStartingPosition = new long[]{ 65, 44, 25 };
         settings.initialPosition = new double[]{ 168, 62, 42 };
         settings.channel = 0;
-        settings.timeInterval = new long[]{ 0, 2 };
+        settings.timeInterval = new int[]{ 0, 2 };
         settings.volumeDimensions = new long[]{ 30, 30, 15 };
 
         final StaticVolumePhaseCorrelationTracker tracker =

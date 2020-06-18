@@ -14,19 +14,26 @@ import net.imglib2.view.Views;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class TrackViews< R extends RealType< R > & NativeType< R > >
+public class TrackApplier< R extends RealType< R > & NativeType< R > >
 {
-	public static < R extends RealType< R > & NativeType< R > >
-	Image< R > applyTrack( Image< R > image, Track track )
+	private final Image< R > image;
+
+	public TrackApplier( Image< R > image )
+	{
+		this.image = image;
+	}
+
+	public Image< R > applyTrack( Track track )
 	{
 		final ArrayList< RandomAccessibleInterval< R > > timePoints = new ArrayList<>();
 
-		RandomAccessibleInterval< R > volumeView
-				= IntervalImageViews.getVolumeView( image.getRai(), 0, 0 );
+		RandomAccessibleInterval< R > volumeView = IntervalImageViews.getVolumeView( image.getRai(), 0, 0 );
 
 		Interval union = getUnion( track, volumeView );
 
-		for (long t = track.tMin(); t < track.tMax(); ++t)
+		// TODO: interpolate missing time-points
+		// make user chose interpolation method
+		for (int t = track.tMin(); t < track.tMax(); ++t)
 		{
 			final ArrayList< RandomAccessibleInterval< R > > channels = new ArrayList<>();
 			for ( int c = 0; c < image.numChannels(); c++ )
@@ -50,7 +57,7 @@ public class TrackViews< R extends RealType< R > & NativeType< R > >
 		final RandomAccessibleInterval< R > trackView = Views.stack( timePoints );
 
 		final Image< R > trackViewImage = image.newImage( trackView );
-		trackViewImage.setName( track.getId() );
+		trackViewImage.setName( track.getTrackName() );
 		return trackViewImage;
 	}
 
@@ -58,7 +65,7 @@ public class TrackViews< R extends RealType< R > & NativeType< R > >
 	getUnion( Track track, RandomAccessibleInterval< R > volumeView )
 	{
 		Interval union = null;
-		for (long t = track.tMin(); t < track.tMax(); ++t)
+		for (int t = track.tMin(); t < track.tMax(); ++t)
 		{
 			Interval translateInterval = Views.translate( volumeView,
 					getTranslation( track, t ) );
@@ -70,7 +77,7 @@ public class TrackViews< R extends RealType< R > & NativeType< R > >
 		return union;
 	}
 
-	private static long[] getTranslation( Track track, long t )
+	private static long[] getTranslation( Track track, int t )
 	{
 		return Arrays.stream( track.getLongPosition( t ) ).map( x -> -x ).toArray();
 	}

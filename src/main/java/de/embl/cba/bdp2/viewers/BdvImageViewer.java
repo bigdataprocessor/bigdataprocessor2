@@ -507,7 +507,7 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
 
     public void addTrack( Track track )
     {
-        tracks.put( track.getId(), track );
+        tracks.put( track.getTrackName(), track );
     }
 
     public Map< String, Track > getTracks()

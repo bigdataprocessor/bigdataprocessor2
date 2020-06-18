@@ -1,19 +1,21 @@
 package de.embl.cba.bdp2.track;
 
+import net.imglib2.RealPoint;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Set;
 
 public class Track
 {
-	private final String id;
+	private final String trackName;
 	private double[] voxelSpacings;
-	private HashMap< Long, double[] > timeToPosition;
+	private HashMap< Integer, double[] > timeToPosition;
 
-	public Track( String id )
+	public Track( String trackName )
 	{
-		this.id = id;
-		timeToPosition = new HashMap< Long, double[] >();
+		this.trackName = trackName;
+		timeToPosition = new HashMap< Integer, double[] >();
 	}
 
 	public void setVoxelSpacing( double[] voxelSpacings )
@@ -21,11 +23,13 @@ public class Track
 		this.voxelSpacings = voxelSpacings;
 	}
 
-	public String getId()
+	public String getTrackName()
 	{
-		return id;
+		return trackName;
 	}
 
+
+	// Does that make sense? Positions are always calibrated, or?
 	public double[] getCalibratedPosition( long t )
 	{
 		if ( timeToPosition.containsKey( t ) )
@@ -47,27 +51,34 @@ public class Track
 		return calibratedPosition;
 	}
 
-	public void setPosition( long t, double[] position )
+	public void setPosition( int t, double[] position )
 	{
 		timeToPosition.put( t, position );
 	}
 
-	public double[] getPosition( long t )
+	public void setPosition( int t, RealPoint realPoint )
+	{
+		final double[] doubles = new double[ realPoint.numDimensions() ];
+		realPoint.localize( doubles );
+		timeToPosition.put( t, doubles );
+	}
+
+	public double[] getPosition( int t )
 	{
 		return timeToPosition.get( t );
 	}
 
-	public long[] getLongPosition( long t )
+	public long[] getLongPosition( int t )
 	{
-		return Arrays.stream(  timeToPosition.get( t ) ).mapToLong( x -> Math.round( x ) ).toArray();
+		return Arrays.stream( timeToPosition.get( t ) ).mapToLong( x -> Math.round( x ) ).toArray();
 	}
 
-	public HashMap< Long, double[] > getTimeToPositionMap()
+	public HashMap< Integer, double[] > getTimeToPositionMap()
 	{
 		return timeToPosition;
 	}
 
-	public Set< Long > getTimePoints()
+	public Set< Integer > getTimePoints()
 	{
 		return timeToPosition.keySet();
 	}
@@ -77,24 +88,27 @@ public class Track
 		return timeToPosition.values().iterator().next().length;
 	}
 
-	public long tMin()
+	public int tMin()
 	{
-		long tMin = Long.MAX_VALUE;
-		for ( long t : timeToPosition.keySet() )
+		int tMin = Integer.MAX_VALUE;
+		for ( int t : timeToPosition.keySet() )
 			if ( t < tMin ) tMin = t;
 
 		return tMin;
 	}
 
-	public long tMax()
+	public int tMax()
 	{
-		long tMax = Long.MIN_VALUE;
-		for ( long t : timeToPosition.keySet() )
+		int tMax = Integer.MIN_VALUE;
+		for ( int t : timeToPosition.keySet() )
 			if ( t > tMax ) tMax = t;
 
 		return tMax;
 	}
 
-
-
+	@Override
+	public String toString()
+	{
+		return trackName;
+	}
 }

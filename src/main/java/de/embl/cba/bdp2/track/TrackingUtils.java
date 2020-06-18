@@ -6,9 +6,9 @@ import java.util.Arrays;
 
 public class TrackingUtils
 {
-	public static void logTrackPosition( Track track, long t )
+	public static void logTrackPosition( Track track, int t )
 	{
-		Logger.log( "Track: " + track.getId() +
+		Logger.log( "Track: " + track.getTrackName() +
 				"; t = " + t +
 				"; pos [voxel] = " + Arrays.toString( track.getLongPosition( t ) ) +
 				"; pos [calibrated] = " + Arrays.toString( track.getCalibratedPosition( t ) ) );

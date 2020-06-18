@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Set;
 
-public class TrackingIO
+public class TrackIO
 {
 	public static String[] XYZ = new String[]{"X","Y","Z" };
 
@@ -18,7 +18,7 @@ public class TrackingIO
 		BufferedWriter br = new BufferedWriter(new FileWriter( file ));
 		StringBuilder sb = new StringBuilder();
 
-		final Set< Long > timePoints = track.getTimePoints();
+		final Set< Integer > timePoints = track.getTimePoints();
 
 		sb.append( "TimePoint" + delim );
 
@@ -30,7 +30,7 @@ public class TrackingIO
 
 		endLine( sb );
 
-		for ( long timePoint : timePoints )
+		for ( int timePoint : timePoints )
 		{
 			sb.append( timePoint );
 			sb.append( delim );

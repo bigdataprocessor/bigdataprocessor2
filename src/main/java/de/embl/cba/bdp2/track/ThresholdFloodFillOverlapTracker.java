@@ -28,7 +28,7 @@ public class ThresholdFloodFillOverlapTracker< R extends RealType< R > & NativeT
 	public static class Settings
 	{
 		public double[] initialPositionCalibrated = new double[ 3 ];
-		public long[] timeInterval = new long[]{ 0, 1 };
+		public int[] timeInterval = new int[]{ 0, 1 };
 		public long channel = 0;
 		public long maxNumObjectElements = 100 * 100 * 100;
 		public int numThreads = 1; // TODO: multithreaded?
@@ -64,7 +64,7 @@ public class ThresholdFloodFillOverlapTracker< R extends RealType< R > & NativeT
 		if ( gd.wasCanceled() ) return;
 		settings.trackId = gd.getNextString();
 		settings.channel = (long) gd.getNextNumber();
-		settings.timeInterval = new long[]{ (long) gd.getNextNumber(), (long) gd.getNextNumber() };
+		settings.timeInterval = new int[]{ (int) gd.getNextNumber(), (int) gd.getNextNumber() };
 		settings.threshold = gd.getNextNumber();
 
 		final ThresholdFloodFillOverlapTracker tracker =
@@ -87,7 +87,7 @@ public class ThresholdFloodFillOverlapTracker< R extends RealType< R > & NativeT
 
 		track.setPosition( settings.timeInterval[ 0 ], settings.initialPositionCalibrated );
 
-		for ( long t = settings.timeInterval[ 0 ]; t < settings.timeInterval[ 1 ]; t++ )
+		for ( int t = settings.timeInterval[ 0 ]; t < settings.timeInterval[ 1 ]; t++ )
 		{
 			final ThresholdFloodFill< R > fill = new ThresholdFloodFill<>(
 					IntervalImageViews.getVolumeView( image.getRai(), settings.channel, t ),
@@ -132,7 +132,7 @@ public class ThresholdFloodFillOverlapTracker< R extends RealType< R > & NativeT
 	 * @param t
 	 * @return
 	 */
-	private long[] getSeed( long t )
+	private long[] getSeed( int t )
 	{
 		if ( t > settings.timeInterval[ 0 ] )
 		{

@@ -14,7 +14,6 @@ public class ApplyTrackDialog< T extends RealType< T > & NativeType< T > >
 {
 	public ApplyTrackDialog( BdvImageViewer< T > viewer )
 	{
-
 		final Map< String, Track > tracks = viewer.getTracks();
 
 		if ( tracks.keySet().size() == 0 )
@@ -25,21 +24,18 @@ public class ApplyTrackDialog< T extends RealType< T > & NativeType< T > >
 
 		final NonBlockingGenericDialog gd = new NonBlockingGenericDialog( "Tracked View" );
 
-		gd.addChoice( "Track",
-				tracks.keySet().toArray( new String[]{} ), tracks.keySet().iterator().next() );
+		gd.addChoice( "Track", tracks.keySet().toArray( new String[]{} ), tracks.keySet().iterator().next() );
 
 		gd.showDialog();
 		if( gd.wasCanceled() ) return;
 
 		final String trackId = gd.getNextString();
 
-		final Image< T > image = TrackViews.applyTrack( viewer.getImage(), tracks.get( trackId ) );
+		final Image< T > image = new TrackApplier( viewer.getImage() ).applyTrack( tracks.get( trackId ) );
 
 		final BdvImageViewer< T > newViewer = new BdvImageViewer<>( image );
 		newViewer.setDisplaySettings( viewer.getDisplaySettings() );
 
 		BdvUtils.moveToPosition( newViewer.getBdvHandle(), new double[]{0,0,0}, 0, 100);
-
-
 	}
 }

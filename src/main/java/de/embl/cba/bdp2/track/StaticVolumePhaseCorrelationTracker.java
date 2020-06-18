@@ -23,7 +23,7 @@ public class StaticVolumePhaseCorrelationTracker < R extends RealType< R > & Nat
 	{
 		public long[] volumeDimensions; // voxels
 		public double[] initialPosition;
-		public long[] timeInterval = new long[]{ 0, 1 };
+		public int[] timeInterval = new int[]{ 0, 1 };
 		public long channel = 0;
 		public int numThreads = 1;
 	}
@@ -44,11 +44,11 @@ public class StaticVolumePhaseCorrelationTracker < R extends RealType< R > & Nat
 	{
 		track.setPosition( settings.timeInterval[ 0 ], settings.initialPosition );
 
-		for ( long t = settings.timeInterval[ 0 ]; t < settings.timeInterval[ 1 ]; t++ )
+		for ( int t = settings.timeInterval[ 0 ]; t < settings.timeInterval[ 1 ]; t++ )
 		{
 			final long[] position = track.getLongPosition( t );
 
-			Logger.log( "Track: " + track.getId() +
+			Logger.log( "Track: " + track.getTrackName() +
 					"; t = " + t +
 					"; pos = " + Arrays.toString( track.getCalibratedPosition( t ) ) ) ;
 
