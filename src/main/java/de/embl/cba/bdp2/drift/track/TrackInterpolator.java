@@ -18,6 +18,14 @@ public class TrackInterpolator
 	{
 		final ArrayList< Integer > timePoints = new ArrayList<>( track.getTimePoints() );
 
+		for ( int i = timePoints.size() - 1; i >= 0 ; i-- )
+		{
+			if ( track.getType( timePoints.get( i ) ).equals( Track.PositionType.Interpolated ) )
+			{
+				timePoints.remove( i );
+			}
+		}
+
 		for ( int i = 0; i < timePoints.size() - 1; i++ )
 		{
 			final Integer tCurrent = timePoints.get( i );
@@ -38,7 +46,7 @@ public class TrackInterpolator
 				final double[] pInterpolate = new double[ pCurrent.length ];
 				LinAlgHelpers.scale( dp, f, pInterpolate );
 				LinAlgHelpers.add( pCurrent, pInterpolate, pInterpolate );
-				track.setPosition( t, pInterpolate );
+				track.setPosition( t, pInterpolate, Track.PositionType.Interpolated );
 			}
 		}
 	}

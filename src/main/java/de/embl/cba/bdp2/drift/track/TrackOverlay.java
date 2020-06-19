@@ -16,8 +16,8 @@ public class TrackOverlay extends BdvOverlay
 
 	enum Shape
 	{
-		Circle,
-		Rectangle
+		Filled,
+		Empty
 	}
 
 	public TrackOverlay( BdvHandle bdvHandle, Track track, double depthOfField )
@@ -31,27 +31,33 @@ public class TrackOverlay extends BdvOverlay
 	@Override
 	protected void draw( final Graphics2D g )
 	{
+		final int numTimepoints = bdvHandle.getViewerPanel().getState().getNumTimepoints();
 		final int currentTimepoint = bdvHandle.getViewerPanel().getState().getCurrentTimepoint();
 
 		final ArrayList< Integer > timePoints = new ArrayList<>( track.getTimePoints() );
 
-		if ( timePoints.contains( currentTimepoint ) )
+		for ( int t = 0; t < numTimepoints ; t++ )
 		{
-			drawShape( g, currentTimepoint, Shape.Circle );
+			if ( t == currentTimepoint )
+				drawShape( g, t, Shape.Filled );
+			else
+				drawShape( g, t, Shape.Empty );
 		}
 
-		for ( int t = currentTimepoint - 1; t >= 0 ; t-- )
-		{
-			if ( timePoints.contains( t ) )
-			{
-				drawShape( g, t, Shape.Rectangle );
-				break;
-			}
-		}
+//		for ( int t = currentTimepoint - 1; t >= 0 ; t-- )
+//		{
+//			if ( timePoints.contains( t ) )
+//			{
+//				drawShape( g, t, Shape.Empty );
+//				break;
+//			}
+//		}
 	}
 
 	private void drawShape( Graphics2D g, int t, Enum shape )
 	{
+		if ( ! track.getTimePoints().contains( t ) ) return;
+
 		final double[] position = track.getPosition( t );
 
 		final AffineTransform3D viewerTransform = new AffineTransform3D();
@@ -62,22 +68,28 @@ public class TrackOverlay extends BdvOverlay
 		final int size = getSize( positionInViewer[ 2 ] );
 		final int x = ( int ) ( positionInViewer[ 0 ] - 0.5 * size );
 		final int y = ( int ) ( positionInViewer[ 1 ] - 0.5 * size );
-		g.setColor( getColor( positionInViewer[ 2 ] ) );
-		if ( shape.equals( Shape.Circle ) )
+		g.setColor( getColor( positionInViewer[ 2 ] , track.getType( t ) ) );
+
+		if ( shape.equals( Shape.Filled ) )
 			g.fillOval( x, y, size, size );
-		else if ( shape.equals( Shape.Rectangle ))
-			g.drawRect( x, y, size, size );
+		else if ( shape.equals( Shape.Empty ))
+			g.drawOval( x, y, size, size );
 
 	}
 
-	private Color getColor( final double depth )
+	private Color getColor( final double depth, Track.PositionType type )
 	{
 		int alpha = 255 - ( int ) Math.round( Math.abs( depth ) );
 
 		if ( alpha < 64 )
 			alpha = 64;
 
-		return new Color( 255, 0, 0, alpha );
+		if ( type.equals( Track.PositionType.Anchor ))
+			return new Color( 255, 255, 0, alpha );
+		else if ( type.equals( Track.PositionType.Interpolated ) )
+			return new Color( 0, 0, 255, alpha );
+		else
+			throw new RuntimeException( "Cannot color type: " + type );
 	}
 
 	private int getSize( final double depth )

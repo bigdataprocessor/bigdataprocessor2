@@ -9,13 +9,37 @@ public class Track
 {
 	private String trackName;
 	private double[] voxelSpacings;
-	private HashMap< Integer, double[] > timeToPosition;
+
+	private class TrackPoint
+	{
+		public double[] position;
+		public PositionType type;
+
+		public TrackPoint( double[] position, PositionType type )
+		{
+			this.position = position;
+			this.type = type;
+		}
+	}
+
+	private HashMap< Integer, TrackPoint > timeToTrackPoint;
+
+	public enum PositionType
+	{
+		Anchor,
+		Interpolated
+	}
 
 	public Track( String trackName, double[] voxelSpacings )
 	{
 		this.trackName = trackName;
 		this.voxelSpacings = voxelSpacings;
-		timeToPosition = new HashMap<>();
+		timeToTrackPoint = new HashMap<>();
+	}
+
+	public PositionType getType( int t )
+	{
+		return timeToTrackPoint.get( t ).type;
 	}
 
 	public void setVoxelSpacing( double[] voxelSpacings )
@@ -32,6 +56,7 @@ public class Track
 	{
 		this.trackName = trackName;
 	}
+
 	private long[] uncalibrate( double[] position )
 	{
 		long[] voxelPosition = new long[ position.length ];
@@ -47,7 +72,19 @@ public class Track
 	 */
 	public void setPosition( int t, double[] position )
 	{
-		timeToPosition.put( t, position );
+		setPosition( t, position, PositionType.Anchor );
+	}
+
+
+	/**
+	 *
+	 * @param t frame
+	 * @param position calibrated
+	 * @param positionType
+	 */
+	public void setPosition( int t, double[] position, PositionType positionType )
+	{
+		timeToTrackPoint.put( t, new TrackPoint( position, positionType ) );
 	}
 
 	/**
@@ -57,11 +94,22 @@ public class Track
 	 */
 	public void setPosition( int t, RealPoint realPoint )
 	{
-		final double[] doubles = new double[ realPoint.numDimensions() ];
-		realPoint.localize( doubles );
-		timeToPosition.put( t, doubles );
+		setPosition( t, realPoint, PositionType.Anchor );
 	}
 
+
+	/**
+	 *
+	 * @param t frame
+	 * @param realPoint calibrated
+	 * @param positionType
+	 */
+	public void setPosition( int t, RealPoint realPoint, PositionType positionType )
+	{
+		final double[] doubles = new double[ realPoint.numDimensions() ];
+		realPoint.localize( doubles );
+		setPosition( t, doubles, positionType );
+	}
 	/**
 	 *
 	 * @param t frame
@@ -69,7 +117,7 @@ public class Track
 	 */
 	public double[] getPosition( int t )
 	{
-		return timeToPosition.get( t );
+		return timeToTrackPoint.get( t ).position;
 	}
 
 	/**
@@ -79,9 +127,9 @@ public class Track
 	 */
 	public long[] getVoxelPosition( int t )
 	{
-		if ( timeToPosition.containsKey( t ) )
+		if ( timeToTrackPoint.containsKey( t ) )
 		{
-			return uncalibrate( timeToPosition.get( t ) );
+			return uncalibrate( timeToTrackPoint.get( t ).position );
 		}
 		else
 		{
@@ -89,25 +137,20 @@ public class Track
 		}
 	}
 
-	public HashMap< Integer, double[] > getTimeToPositionMap()
-	{
-		return timeToPosition;
-	}
-
 	public Set< Integer > getTimePoints()
 	{
-		return timeToPosition.keySet();
+		return timeToTrackPoint.keySet();
 	}
 
 	public int numDimensions()
 	{
-		return timeToPosition.values().iterator().next().length;
+		return timeToTrackPoint.values().iterator().next().position.length;
 	}
 
 	public int tMin()
 	{
 		int tMin = Integer.MAX_VALUE;
-		for ( int t : timeToPosition.keySet() )
+		for ( int t : timeToTrackPoint.keySet() )
 			if ( t < tMin ) tMin = t;
 
 		return tMin;
@@ -116,7 +159,7 @@ public class Track
 	public int tMax()
 	{
 		int tMax = Integer.MIN_VALUE;
-		for ( int t : timeToPosition.keySet() )
+		for ( int t : timeToTrackPoint.keySet() )
 			if ( t > tMax ) tMax = t;
 
 		return tMax;
