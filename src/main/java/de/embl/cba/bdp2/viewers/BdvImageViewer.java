@@ -99,14 +99,14 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
         bdvHandle.close();
     }
 
-    public Interval getVoxelIntervalXYZCTViaDialog( )
+    public FinalInterval getVoxelIntervalXYZCTViaDialog( )
     {
         BoundingBoxDialog boundingBoxDialog = new BoundingBoxDialog( bdvHandle, image );
         boundingBoxDialog.showVoxelBoxAndWaitForResult();
         return boundingBoxDialog.getVoxelSelectionInterval();
     }
 
-    public RealInterval getRealIntervalXYZCTViaDialog( )
+    public FinalRealInterval getRealIntervalXYZCTViaDialog( )
     {
         BoundingBoxDialog boundingBoxDialog = new BoundingBoxDialog( bdvHandle, image );
         boundingBoxDialog.showRealBoxAndWaitForResult();

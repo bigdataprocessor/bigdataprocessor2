@@ -11,7 +11,7 @@ import org.scijava.plugin.Plugin;
 @Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>" + AbstractProcessingCommand.COMMAND_PROCESS_PATH  + CorrectDriftWithTrackCommand.COMMAND_FULL_NAME )
 public class CorrectDriftWithTrackCommand< R extends RealType< R > & NativeType< R > > extends AbstractProcessingCommand
 {
-    public static final String COMMAND_NAME = "Correct Drift With Track...";
+    public static final String COMMAND_NAME = "Apply Track...";
     public static final String COMMAND_FULL_NAME =  Utils.COMMAND_BDP_PREFIX + COMMAND_NAME;
 
     @Parameter(label = "Track")

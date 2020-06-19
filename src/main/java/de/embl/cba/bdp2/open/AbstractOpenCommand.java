@@ -50,7 +50,7 @@ public abstract class AbstractOpenCommand< R extends RealType< R > & NativeType<
 
         if ( viewingModality.equals( SHOW_IN_NEW_VIEWER ) )
         {
-            BigDataProcessor2.showImage( outputImage, autoContrast, !enableArbitraryPlaneSlicing );
+            BigDataProcessor2.showImage( outputImage, autoContrast, enableArbitraryPlaneSlicing );
         }
         else if ( viewingModality.equals( SHOW_IN_CURRENT_VIEWER ))
         {
@@ -58,7 +58,7 @@ public abstract class AbstractOpenCommand< R extends RealType< R > & NativeType<
             if ( viewer != null )
                 viewer.replaceImage( outputImage, autoContrast, keepViewerTransform );
             else
-                BigDataProcessor2.showImage( outputImage, autoContrast, !enableArbitraryPlaneSlicing );
+                BigDataProcessor2.showImage( outputImage, autoContrast, enableArbitraryPlaneSlicing );
 
         }
         else if ( viewingModality.equals( DO_NOT_SHOW ) )

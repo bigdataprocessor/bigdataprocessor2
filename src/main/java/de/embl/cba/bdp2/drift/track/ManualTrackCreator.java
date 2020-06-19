@@ -4,7 +4,6 @@ import bdv.util.BdvFunctions;
 import bdv.util.BdvHandle;
 import bdv.util.BdvOptions;
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.scijava.Services;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import de.embl.cba.bdv.utils.BdvUtils;
 import de.embl.cba.tables.SwingUtils;
@@ -15,12 +14,15 @@ import org.scijava.ui.behaviour.util.Behaviours;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class ManualTrackCreator extends JFrame
 {
 	private Track track;
 	private final BdvHandle bdvHandle;
 	private final JPanel panel;
+	private boolean automaticLinearInterpolation = true;
 
 	public ManualTrackCreator( BdvImageViewer viewer, String trackName )
 	{
@@ -29,7 +31,13 @@ public class ManualTrackCreator extends JFrame
 
 		initTrackAndOverlay( viewer, trackName );
 		installBehaviours();
+		createAndShowDialog();
+	}
+
+	public void createAndShowDialog()
+	{
 		addHelpTextPanel();
+		addInterpolationCheckBoxPanel();
 		addSaveTrackPanel();
 		showFrame();
 	}
@@ -41,11 +49,29 @@ public class ManualTrackCreator extends JFrame
 		BdvFunctions.showOverlay( trackOverlay, "drift-overlay", BdvOptions.options().addTo( bdvHandle ) );
 	}
 
+	private void addInterpolationCheckBoxPanel()
+	{
+		final JPanel panel = SwingUtils.horizontalLayoutPanel();
+		final JCheckBox checkBox = new JCheckBox( "Automatically add missing points by linear interpolation");
+		checkBox.setSelected( automaticLinearInterpolation );
+		checkBox.addActionListener( new ActionListener()
+		{
+			@Override
+			public void actionPerformed( ActionEvent e )
+			{
+				automaticLinearInterpolation = checkBox.isSelected();
+			}
+		} );
+		panel.add( checkBox );
+		this.panel.add( panel );
+	}
+
 	private void addHelpTextPanel()
 	{
 		final JPanel panel = SwingUtils.horizontalLayoutPanel();
-		final JLabel label = new JLabel( "- Press [A] to create or move a track point\n" +
-				"- Pres ..." );
+		final JLabel label = new JLabel( "Press [ A ] to add or move a track point\n" +
+				"" );
+		panel.add( label );
 		this.panel.add( panel );
 	}
 
@@ -74,7 +100,6 @@ public class ManualTrackCreator extends JFrame
 		this.setVisible( true );
 	}
 
-
 	public void installBehaviours()
 	{
 		Behaviours behaviours = new Behaviours( new InputTriggerConfig() );
@@ -86,6 +111,11 @@ public class ManualTrackCreator extends JFrame
 				final RealPoint point = BdvUtils.getGlobalMouseCoordinates( bdvHandle );
 				final int timepoint = bdvHandle.getViewerPanel().getState().getCurrentTimepoint();
 				track.setPosition( timepoint, point );
+				if ( automaticLinearInterpolation )
+				{
+					final TrackInterpolator interpolator = new TrackInterpolator( track );
+					interpolator.run();
+				}
 			} )).start();
 		}, "Add track position", "A"  ) ;
 	}

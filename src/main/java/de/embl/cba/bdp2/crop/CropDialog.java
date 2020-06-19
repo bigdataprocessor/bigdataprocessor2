@@ -69,7 +69,7 @@ public class CropDialog< R extends RealType< R > & NativeType< R > >
 		// CT
 		for ( int d = 3; d < 5; d++ )
 		{
-			min[ d ] = (long) ( intervalXYZCT.realMin( d )  );
+			min[ d ] = (long) ( intervalXYZCT.realMin( d ) );
 			max[ d ] = (long) ( intervalXYZCT.realMax( d ) );
 		}
 

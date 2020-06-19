@@ -62,10 +62,8 @@ public class BoundingBoxDialog < R extends RealType< R > & NativeType< R > >
     {
         final RandomAccessibleInterval< R > rai = image.getRai();
 
-        //double[] voxelSpacing = getVoxelSpacings();
-
         double[] min = { selectedMin[ X ], selectedMin[ Y ], selectedMin[ Z ], rai.min( DimensionOrder.C), selectedMin[ T ] };
-        double[] max = { selectedMax[ X ], selectedMax[ Y ], selectedMax[ Z ], rai.min( DimensionOrder.C), selectedMax[ T ] };
+        double[] max = { selectedMax[ X ], selectedMax[ Y ], selectedMax[ Z ], rai.max( DimensionOrder.C), selectedMax[ T ] };
 
         return new FinalRealInterval( min, max );
     }
