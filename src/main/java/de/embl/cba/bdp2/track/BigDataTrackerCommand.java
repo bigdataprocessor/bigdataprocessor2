@@ -95,7 +95,7 @@ public class BigDataTrackerCommand < R extends RealType< R > & NativeType< R > >
     private void selectROI() {
         System.out.println("select");
         BigDataTracker.trackerThreadPool.submit(() -> {
-            FinalInterval interval = imageViewer.getVoxelIntervalXYZCTDialog( true );
+            FinalInterval interval = imageViewer.getVoxelIntervalXYZCTViaDialog( true );
             trackingSettings.pMin = new Point3D((int) interval.min( DimensionOrder.X ),
                     (int) interval.min( DimensionOrder.Y ),
                     (int) interval.min( DimensionOrder.Z ));

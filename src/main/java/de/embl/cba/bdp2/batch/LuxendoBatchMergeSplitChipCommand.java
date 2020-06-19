@@ -3,7 +3,6 @@ package de.embl.cba.bdp2.batch;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.crop.Cropper;
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.align.splitchip.SplitViewMerger;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.utils.DimensionOrder;
@@ -16,7 +15,6 @@ import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
-import weka.Run;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -91,7 +89,7 @@ public class LuxendoBatchMergeSplitChipCommand< R extends RealType< R > & Native
 
                 final BdvImageViewer viewer = BigDataProcessor2.showImage( merge );
 
-                final FinalInterval interval = viewer.getVoxelIntervalXYZCTDialog( false );
+                final FinalInterval interval = viewer.getVoxelIntervalXYZCTViaDialog( false );
 
                 Logger.log( "Data set: " + directory );
                 Logger.log( "Crop interval: " + interval.toString() );

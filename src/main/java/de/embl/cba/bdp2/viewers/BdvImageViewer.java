@@ -4,8 +4,10 @@ import bdv.tools.brightness.ConverterSetup;
 import bdv.tools.brightness.MinMaxGroup;
 import bdv.tools.brightness.SetupAssignments;
 import bdv.util.*;
+import bdv.util.volatiles.VolatileViews;
 import bdv.viewer.DisplayMode;
 import bdv.viewer.SourceAndConverter;
+import de.embl.cba.bdp2.dialog.DisplaySettings;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.boundingbox.BoundingBoxDialog;
 import de.embl.cba.bdp2.service.BdvService;
@@ -13,13 +15,10 @@ import de.embl.cba.bdp2.service.ImageService;
 import de.embl.cba.bdp2.track.ThresholdFloodFillOverlapTracker;
 import de.embl.cba.bdp2.track.Track;
 import de.embl.cba.bdp2.ui.MenuActions;
-import de.embl.cba.bdp2.dialog.DisplaySettings;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.volatiles.VolatileCachedCellImgs;
-import de.embl.cba.bdp2.volatiles.VolatileViews;
 import de.embl.cba.bdv.utils.BdvUtils;
 import net.imglib2.*;
-import net.imglib2.cache.img.CachedCellImg;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ARGBType;
@@ -100,25 +99,25 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
         bdvHandle.close();
     }
 
-    public FinalInterval getVoxelIntervalXYZCTDialog( boolean calibratedSelection )
+    public Interval getVoxelIntervalXYZCTViaDialog( )
     {
         BoundingBoxDialog boundingBoxDialog = new BoundingBoxDialog( bdvHandle, image );
+        boundingBoxDialog.showVoxelBoxAndWaitForResult();
+        return boundingBoxDialog.getVoxelSelectionInterval();
+    }
 
-        if ( calibratedSelection )
-            boundingBoxDialog.showCalibratedBoxAndWaitForResult();
-        else
-            boundingBoxDialog.showVoxelBoxAndWaitForResult();
-
-        FinalInterval interval = boundingBoxDialog.getVoxelUnitsSelectionInterval();
-
-        return interval;
+    public RealInterval getRealIntervalXYZCTViaDialog( )
+    {
+        BoundingBoxDialog boundingBoxDialog = new BoundingBoxDialog( bdvHandle, image );
+        boundingBoxDialog.showRealBoxAndWaitForResult();
+        return boundingBoxDialog.getRealSelectionInterval();
     }
 
     public Image< R > getImage() {
         return image;
     }
 
-    public void repaint(AffineTransform3D viewerTransform) {
+    public void repaint( AffineTransform3D viewerTransform) {
         this.bdvHandle.getViewerPanel().setCurrentViewerTransform(viewerTransform);
     }
 
@@ -165,10 +164,12 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
     {
         final int numChannels = displaySettings.size();
         for ( int c = 0; c < numChannels; c++ )
+        {
             setDisplayRange(
                     displaySettings.get( c ).getDisplayRangeMin(),
                     displaySettings.get( c ).getDisplayRangeMax(),
                     c );
+        }
     }
 
     private void removeAllSourcesFromBdv() {
@@ -225,17 +226,19 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
 
     public List< DisplaySettings > getDisplaySettings()
     {
-        final List< ConverterSetup > converterSetups =
-                bdvHandle.getSetupAssignments().getConverterSetups();
+        final List< ConverterSetup > converterSetups = bdvHandle.getSetupAssignments().getConverterSetups();
 
         final ArrayList< DisplaySettings > displaySettings = new ArrayList<>();
-        for ( int c = 0; c < converterSetups.size(); c++ )
+        for ( ConverterSetup converterSetup : converterSetups )
+        {
+            if ( converterSetup instanceof PlaceHolderConverterSetup ) continue;
+
             displaySettings.add(
                     new DisplaySettings(
-                            converterSetups.get( c ).getDisplayRangeMin(),
-                            converterSetups.get( c ).getDisplayRangeMax(),
-                            converterSetups.get( c ).getColor()) );
-
+                            converterSetup.getDisplayRangeMin(),
+                            converterSetup.getDisplayRangeMax(),
+                            converterSetup.getColor() ) );
+        }
 
         return displaySettings;
     }

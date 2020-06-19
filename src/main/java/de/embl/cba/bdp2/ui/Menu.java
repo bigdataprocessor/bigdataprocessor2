@@ -26,6 +26,9 @@ public class Menu extends JMenu
     public static final String SAVE_AS_TIFF_VOLUMES_MENU_ITEM = "Save as Tiff Volumes...";
     public static final String SAVE_AS_TIFF_PLANES_MENU_ITEM = "Save as Tiff Planes...";
 
+    public static final String CROP_CALIBRATED = "Crop (calibrated units)...";
+    public static final String CROP_VOXEL = "Crop (voxel units)...";
+
     public static final String OBLIQUE_MENU_ITEM = "Shear...";
 
     // Menus
@@ -52,6 +55,9 @@ public class Menu extends JMenu
         final JMenu processMenu = addMenu( "Process" );
         addMenuItem( processMenu, ImageRenameCommand.COMMAND_NAME );
         addMenuItem( processMenu, CalibrateCommand.COMMAND_NAME );
+        addMenuItem( processMenu, CROP_VOXEL );
+        addMenuItem( processMenu, CROP_CALIBRATED );
+
         addMenuItem( processMenu, CropCommand.COMMAND_NAME );
         addMenuItem( processMenu, BinCommand.COMMAND_NAME );
         addMenuItem( processMenu, ConvertToUnsignedByteTypeCommand.COMMAND_NAME );

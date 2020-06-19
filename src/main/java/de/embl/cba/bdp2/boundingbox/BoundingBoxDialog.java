@@ -41,11 +41,7 @@ public class BoundingBoxDialog < R extends RealType< R > & NativeType< R > >
     {
         final RandomAccessibleInterval< R > rai = image.getRai();
 
-        double[] voxelSpacing;
-        if ( selectionIsCalibrated )
-            voxelSpacing = image.getVoxelSpacing();
-        else
-            voxelSpacing = new double[]{ 1, 1, 1 };
+        double[] voxelSpacing = getVoxelSpacings();
 
         long[] minMax = {
                 (long) ( selectedMin[ X ] / voxelSpacing[ DimensionOrder.X] ),
@@ -62,7 +58,29 @@ public class BoundingBoxDialog < R extends RealType< R > & NativeType< R > >
         return Intervals.createMinMax(minMax);
     }
 
-    public FinalInterval getVoxelUnitsSelectionInterval( )
+    private FinalRealInterval getCalibrated5DInterval()
+    {
+        final RandomAccessibleInterval< R > rai = image.getRai();
+
+        //double[] voxelSpacing = getVoxelSpacings();
+
+        double[] min = { selectedMin[ X ], selectedMin[ Y ], selectedMin[ Z ], rai.min( DimensionOrder.C), selectedMin[ T ] };
+        double[] max = { selectedMax[ X ], selectedMax[ Y ], selectedMax[ Z ], rai.min( DimensionOrder.C), selectedMax[ T ] };
+
+        return new FinalRealInterval( min, max );
+    }
+
+    private double[] getVoxelSpacings()
+    {
+        double[] voxelSpacing;
+        if ( selectionIsCalibrated )
+            voxelSpacing = image.getVoxelSpacing();
+        else
+            voxelSpacing = new double[]{ 1, 1, 1 };
+        return voxelSpacing;
+    }
+
+    public FinalInterval getVoxelSelectionInterval( )
     {
         FinalInterval interval;
         if ( selectedMax != null && selectedMin != null ) {
@@ -73,7 +91,19 @@ public class BoundingBoxDialog < R extends RealType< R > & NativeType< R > >
         return interval;
     }
 
-    public void showCalibratedBoxAndWaitForResult() {
+    public FinalRealInterval getRealSelectionInterval( )
+    {
+        FinalRealInterval interval;
+        if ( selectedMax != null && selectedMin != null ) {
+            interval = getCalibrated5DInterval();
+        }else{
+            interval =  null;
+        }
+        return interval;
+    }
+
+
+    public void showRealBoxAndWaitForResult() {
 
         setInitialSelectionAndRange( true );
 

@@ -131,10 +131,16 @@ public class MenuActions implements ActionListener {
                 RegisteredViews.createAlignedMovieView( viewer, Registration.PHASE_CORRELATION, 0 );
             });
         }
-        else if(e.getActionCommand().equalsIgnoreCase( CropCommand.COMMAND_NAME ))
+        else if(e.getActionCommand().equalsIgnoreCase( Menu.CROP_VOXEL ))
         {
         	new Thread( () ->  {
-        	    new CropDialog<>( viewer );
+        	    new CropDialog<>( viewer, false );
+            }).start();
+        }
+        else if(e.getActionCommand().equalsIgnoreCase( Menu.CROP_CALIBRATED ))
+        {
+            new Thread( () ->  {
+                new CropDialog<>( viewer, true );
             }).start();
         }
         else if(e.getActionCommand().equalsIgnoreCase( Menu.IMAGEJ_VIEW_MENU_ITEM ))
