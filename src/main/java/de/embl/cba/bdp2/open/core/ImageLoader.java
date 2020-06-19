@@ -83,7 +83,7 @@ public class ImageLoader< T extends NativeType< T > > implements CellLoader< T >
                 1,
                 po,
                 ps,
-                BigDataProcessor2.generalThreadPool);
+                BigDataProcessor2.threadPool );
 
         return imagePlus;
     }

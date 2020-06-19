@@ -21,7 +21,7 @@ import static de.embl.cba.bdp2.data.SampleData.TIFF_VOLUMES_X_50_Y_50_Z_50_C_2_T
 @Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>Sample Data>" + OpenSampleDataCommand.COMMAND_FULL_NAME )
 public class OpenSampleDataCommand< R extends RealType< R > & NativeType< R > > implements Command
 {
-    public static final String COMMAND_NAME = "Open Sample Data...";
+    public static final String COMMAND_NAME = "Download and Open Sample Data...";
     public static final String COMMAND_FULL_NAME = "" + COMMAND_NAME;
     public static BdvImageViewer parentBdvImageViewer;
 

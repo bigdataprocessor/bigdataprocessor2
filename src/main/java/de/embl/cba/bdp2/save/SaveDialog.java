@@ -200,7 +200,7 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > >  extends JF
         progressBar.setVisible( true );
         pack();
         save.setEnabled( false );
-        BigDataProcessor2.generalThreadPool.submit( () -> {
+        BigDataProcessor2.threadPool.submit( () -> {
             this.saver = BigDataProcessor2.saveImage(
                     viewer.getImage(),
                     savingSettings,

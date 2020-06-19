@@ -32,7 +32,7 @@ import java.util.concurrent.Executors;
 
 public class BigDataProcessor2
 {
-    public static ExecutorService generalThreadPool = Executors.newFixedThreadPool( Runtime.getRuntime().availableProcessors() * 2  );
+    public static ExecutorService threadPool = Executors.newFixedThreadPool( Runtime.getRuntime().availableProcessors() * 2  );
     public static int MAX_THREAD_LIMIT = Runtime.getRuntime().availableProcessors() * 2;
 
     public static< R extends RealType< R > & NativeType< R > >

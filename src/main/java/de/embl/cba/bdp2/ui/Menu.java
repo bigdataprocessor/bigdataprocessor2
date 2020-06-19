@@ -37,6 +37,7 @@ public class Menu extends JMenu
     // Menus
     public static final String MISC_MENU = "Misc";
     public static final String DEVELOPMENT_MENU_DISPLAY_TEXT = "Development";
+    public static final String MACRO_RECORDING = "Macro Recording...";
 
     private final MenuActions menuActions;
 
@@ -44,6 +45,9 @@ public class Menu extends JMenu
     {
         this.menuActions = menuActions;
         setText( "BigDataProcessor2" );
+
+        final JMenu recordMenu = addMenu( "Record" );
+        addMenuItem( recordMenu, MACRO_RECORDING );
 
         final JMenu openMenu = addMenu( "Open" );
         addMenuItem( openMenu, RegExpHelpCommand.COMMAND_NAME );
