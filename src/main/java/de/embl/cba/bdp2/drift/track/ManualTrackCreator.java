@@ -39,8 +39,36 @@ public class ManualTrackCreator extends JFrame
 		addLegendPanels();
 		addHelpTextPanel();
 		//addInterpolationCheckBoxPanel();
+		addTrackNavigationPanel();
 		addSaveTrackPanel();
 		showFrame();
+	}
+
+	private void addTrackNavigationPanel()
+	{
+		final JPanel panel = getPanel();
+		final JLabel label = new JLabel( "Move" );
+		final JButton bwd = new JButton( "bwd" );
+		bwd.addActionListener( e -> {
+			final int currentTimepoint = bdvHandle.getViewerPanel().getState().getCurrentTimepoint();
+			final int t = currentTimepoint - 1;
+			if ( t >= 0 )
+				moveToTrackPosition( t );
+		} );
+
+		final JButton fwd = new JButton( "fwd" );
+		fwd.addActionListener( e -> {
+			final int currentTimepoint = bdvHandle.getViewerPanel().getState().getCurrentTimepoint();
+			final int t = currentTimepoint + 1;
+			if ( t < bdvHandle.getViewerPanel().getState().getNumTimepoints() )
+				moveToTrackPosition( t );
+		} );
+		panel.add( label );
+		panel.add( Box.createHorizontalGlue() );
+		panel.add( bwd );
+		panel.add( Box.createHorizontalGlue() );
+		panel.add( fwd );
+		this.panel.add( panel );
 	}
 
 	private void addLegendPanels()
@@ -209,16 +237,16 @@ public class ManualTrackCreator extends JFrame
 		return track;
 	}
 
-	private void moveToTrackPosition( BdvHandle bdv, Track track, int t )
+	private void moveToTrackPosition( int t )
 	{
-		double[] position = track.getPosition( t );
-
-		if ( position == null )
+		if ( track.getTimePoints().contains( t ) )
 		{
-			Logger.log( "Track: " + track.getName() + ": Time point: " + t + " => Position not (yet) available." );
-			return;
+			double[] position = track.getPosition( t );
+			BdvUtils.moveToPosition( bdvHandle, position, t, 500 );
 		}
-
-		BdvUtils.moveToPosition( bdv, position, t, 200 );
+		else
+		{
+			bdvHandle.getViewerPanel().setTimepoint( t );
+		}
 	}
 }
