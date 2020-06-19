@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.track;
+package de.embl.cba.bdp2.drift.track;
 
 import de.embl.cba.bdp2.log.Logger;
 
@@ -8,7 +8,7 @@ public class TrackingUtils
 {
 	public static void logTrackPosition( Track track, int t )
 	{
-		Logger.log( "Track: " + track.getTrackName() +
+		Logger.log( "Track: " + track.getName() +
 				"; t = " + t +
 				"; pos [voxel] = " + Arrays.toString( track.getVoxelPosition( t ) ) +
 				"; pos [calibrated] = " + Arrays.toString( track.getPosition( t ) ) );

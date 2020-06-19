@@ -1,6 +1,6 @@
 /*
  * #%L
- * Data streaming, track and cropping tools
+ * Data streaming, drift and cropping tools
  * %%
  * Copyright (C) 2017 Christian Tischer
  *

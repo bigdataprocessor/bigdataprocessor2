@@ -5,6 +5,7 @@ import de.embl.cba.bdp2.calibrate.CalibrateCommand;
 import de.embl.cba.bdp2.convert.ConvertToUnsignedByteTypeCommand;
 import de.embl.cba.bdp2.crop.CropCommand;
 import de.embl.cba.bdp2.data.OpenSampleDataCommand;
+import de.embl.cba.bdp2.drift.track.CorrectDriftWithTrackCommand;
 import de.embl.cba.bdp2.image.ImageRenameCommand;
 import de.embl.cba.bdp2.open.*;
 import de.embl.cba.bdp2.align.AlignChannelsCommand;
@@ -28,6 +29,8 @@ public class Menu extends JMenu
 
     public static final String CROP_CALIBRATED = "Crop (calibrated units)...";
     public static final String CROP_VOXEL = "Crop (voxel units)...";
+
+    public static final String CREATE_MANUAL_TRACK = "Create Manual Track...";
 
     public static final String OBLIQUE_MENU_ITEM = "Shear...";
 
@@ -58,6 +61,13 @@ public class Menu extends JMenu
         addMenuItem( processMenu, CROP_VOXEL );
         addMenuItem( processMenu, CROP_CALIBRATED );
 
+        final JMenu correctDriftMenu = new JMenu( "Correct Drift" );
+        addMenuItem( correctDriftMenu, CREATE_MANUAL_TRACK );
+        addMenuItem( correctDriftMenu, CorrectDriftWithTrackCommand.COMMAND_NAME );
+
+        processMenu.add( correctDriftMenu );
+
+
         addMenuItem( processMenu, CropCommand.COMMAND_NAME );
         addMenuItem( processMenu, BinCommand.COMMAND_NAME );
         addMenuItem( processMenu, ConvertToUnsignedByteTypeCommand.COMMAND_NAME );
@@ -80,17 +90,17 @@ public class Menu extends JMenu
 
     private JMenu addMenu( String name )
     {
-        final JMenu correctMotionMenu = new JMenu( name );
-        this.add( correctMotionMenu );
-        return correctMotionMenu;
+        final JMenu menu = new JMenu( name );
+        this.add( menu );
+        return menu;
     }
 
     private JMenuItem addMenuItem( String name )
     {
-        JMenuItem jMenuItem = new JMenuItem( name );
-        jMenuItem.addActionListener( menuActions );
-        this.add( jMenuItem );
-        return jMenuItem;
+        JMenuItem menuItem = new JMenuItem( name );
+        menuItem.addActionListener( menuActions );
+        this.add( menuItem );
+        return menuItem;
     }
 
     private JMenuItem addMenuItem( JMenu jMenu, String name )
@@ -100,6 +110,4 @@ public class Menu extends JMenu
         jMenu.add( jMenuItem );
         return jMenuItem;
     }
-
-
 }

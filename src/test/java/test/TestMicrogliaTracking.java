@@ -1,8 +1,12 @@
 package test;
 
+import de.embl.cba.bdp2.drift.devel.StaticVolumePhaseCorrelationTracker;
+import de.embl.cba.bdp2.drift.devel.ThresholdFloodFillOverlapTracker;
+import de.embl.cba.bdp2.drift.track.TrackApplier;
+import de.embl.cba.bdp2.drift.track.TrackDisplayBehaviour;
+import de.embl.cba.bdp2.drift.track.TrackIO;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.open.core.NamingScheme;
-import de.embl.cba.bdp2.track.*;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import de.embl.cba.bdv.utils.BdvUtils;
@@ -30,7 +34,7 @@ public class TestMicrogliaTracking
         DebugTools.setRootLevel("OFF"); // Bio-Formats
 
         String imageDirectory = "/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/" +
-                "src/test/resources/test-data/microglia-track-nt123/volumes";
+                "src/test/resources/test-data/microglia-drift-nt123/volumes";
 
         final Image< R > image = BigDataProcessor2.openImage(
                 imageDirectory,
@@ -70,7 +74,7 @@ public class TestMicrogliaTracking
         assertArrayEquals( new double[]{ 38.27,36.69,20.81 }, tracker.getTrack().getPosition( 120 ), 1.0 );
 
         TrackIO.saveTrack( new File( "/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/" +
-                "src/test/resources/test-data/microglia-track-nt123/track-thresholdFloodFillTracking.csv" ),
+                "src/test/resources/test-data/microglia-drift-nt123/drift-thresholdFloodFillTracking.csv" ),
                 tracker.getTrack() );
 
         if ( showImages )
@@ -88,7 +92,7 @@ public class TestMicrogliaTracking
         DebugTools.setRootLevel("OFF"); // Bio-Formats
 
         String imageDirectory = "/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/" +
-                "src/test/resources/test-data/microglia-track-nt123/volumes";
+                "src/test/resources/test-data/microglia-drift-nt123/volumes";
 
         final Image< R > image = BigDataProcessor2.openImage(
                 imageDirectory,
@@ -136,7 +140,7 @@ public class TestMicrogliaTracking
         DebugTools.setRootLevel("OFF"); // Bio-Formats
 
         String imageDirectory = "/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/" +
-                "src/test/resources/test-data/microglia-track-nt3/";
+                "src/test/resources/test-data/microglia-drift-nt3/";
 
         final Image< R > image = BigDataProcessor2.openImage(
                 imageDirectory,

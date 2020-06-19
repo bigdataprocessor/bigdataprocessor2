@@ -1,7 +1,7 @@
-package de.embl.cba.bdp2.track.scijava;
+package de.embl.cba.bdp2.drift.scijava;
 
-import de.embl.cba.bdp2.track.Track;
-import de.embl.cba.bdp2.track.TrackManager;
+import de.embl.cba.bdp2.drift.track.Track;
+import de.embl.cba.bdp2.drift.track.TrackManager;
 import org.scijava.Priority;
 import org.scijava.object.ObjectService;
 import org.scijava.plugin.Parameter;
@@ -11,7 +11,6 @@ import org.scijava.widget.InputWidget;
 import org.scijava.widget.WidgetModel;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 

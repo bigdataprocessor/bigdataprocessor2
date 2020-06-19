@@ -1,6 +1,6 @@
 /*
  * #%L
- * Data streaming, track and cropping tools
+ * Data streaming, drift and cropping tools
  * %%
  * Copyright (C) 2017 Christian Tischer
  *
@@ -28,9 +28,10 @@
  * #L%
  */
 
-package de.embl.cba.bdp2.track;
+package de.embl.cba.bdp2.drift.devel;
 
 
+import de.embl.cba.bdp2.drift.track.TrackingSettings;
 import de.embl.cba.bdp2.utils.Point3D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;

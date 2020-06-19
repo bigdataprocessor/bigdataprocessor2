@@ -14,7 +14,7 @@ public class TrackingUI
 		imageJ.ui().showUI();
 
 		String imageDirectory = "/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/" +
-				"src/test/resources/test-data/microglia-track-nt123/volumes";
+				"src/test/resources/test-data/microglia-drift-nt123/volumes";
 
 		final Image image = BigDataProcessor2.openImage(
 				imageDirectory,

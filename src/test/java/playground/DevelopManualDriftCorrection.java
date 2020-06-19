@@ -3,8 +3,7 @@ package playground;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.scijava.Services;
-import de.embl.cba.bdp2.track.CorrectDriftWithTrackCommand;
-import de.embl.cba.bdp2.track.manual.ManualTrackCreator;
+import de.embl.cba.bdp2.drift.track.ManualTrackCreator;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imagej.ImageJ;
 
@@ -29,6 +28,6 @@ public class DevelopManualDriftCorrection
 
         final BdvImageViewer viewer = BigDataProcessor2.showImage( image, true );
 
-        final ManualTrackCreator manualTrackCreator = new ManualTrackCreator( viewer, "track" );
+        final ManualTrackCreator manualTrackCreator = new ManualTrackCreator( viewer, "drift" );
     }
 }

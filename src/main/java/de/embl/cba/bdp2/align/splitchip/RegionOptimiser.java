@@ -3,7 +3,7 @@ package de.embl.cba.bdp2.align.splitchip;
 import bdv.util.ModifiableInterval;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.track.PhaseCorrelationTranslationComputer;
+import de.embl.cba.bdp2.drift.devel.PhaseCorrelationTranslationComputer;
 import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessibleInterval;

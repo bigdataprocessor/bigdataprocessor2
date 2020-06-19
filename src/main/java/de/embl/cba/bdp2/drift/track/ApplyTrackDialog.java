@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.track;
+package de.embl.cba.bdp2.drift.track;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;

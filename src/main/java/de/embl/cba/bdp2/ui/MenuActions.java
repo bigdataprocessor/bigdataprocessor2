@@ -7,11 +7,12 @@ import de.embl.cba.bdp2.calibrate.CalibrateCommand;
 import de.embl.cba.bdp2.calibrate.CalibrationDialog;
 import de.embl.cba.bdp2.convert.ConvertToUnsignedByteTypeCommand;
 import de.embl.cba.bdp2.convert.UnsignedByteTypeConversionDialog;
-import de.embl.cba.bdp2.crop.CropCommand;
 import de.embl.cba.bdp2.crop.CropDialog;
 import de.embl.cba.bdp2.data.OpenSampleDataCommand;
 import de.embl.cba.bdp2.dialog.MiscMenu;
 import de.embl.cba.bdp2.dialog.Utils;
+import de.embl.cba.bdp2.drift.track.CorrectDriftWithTrackCommand;
+import de.embl.cba.bdp2.drift.track.ManualTrackCreator;
 import de.embl.cba.bdp2.image.ImageRenameCommand;
 import de.embl.cba.bdp2.image.ImageRenameDialog;
 import de.embl.cba.bdp2.log.Logger;
@@ -26,7 +27,7 @@ import de.embl.cba.bdp2.align.ChromaticShiftDialog;
 import de.embl.cba.bdp2.register.RegisteredViews;
 import de.embl.cba.bdp2.register.Registration;
 import de.embl.cba.bdp2.shear.ShearMenuDialog;
-import de.embl.cba.bdp2.track.ApplyTrackDialog;
+import de.embl.cba.bdp2.drift.track.ApplyTrackDialog;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.RandomAccessibleInterval;
@@ -100,10 +101,16 @@ public class MenuActions implements ActionListener {
                 shearMenuDialog.setVisible(true);
             });
         }
-        else if (e.getActionCommand().equalsIgnoreCase( Menu.APPLY_TRACK_MENU_ITEM ))
+        else if (e.getActionCommand().equalsIgnoreCase( Menu.CREATE_MANUAL_TRACK ))
         {
             BigDataProcessor2.generalThreadPool.submit(() -> {
-                new ApplyTrackDialog( viewer );
+                new ManualTrackCreator( viewer, "" );
+            });
+        }
+        else if (e.getActionCommand().equalsIgnoreCase( CorrectDriftWithTrackCommand.COMMAND_NAME ))
+        {
+            BigDataProcessor2.generalThreadPool.submit(() -> {
+                Services.commandService.run( CorrectDriftWithTrackCommand.class, true );
             });
         }
         else if (e.getActionCommand().equalsIgnoreCase( Menu.REGISTER_VOLUME_SIFT_MENU_ITEM ))

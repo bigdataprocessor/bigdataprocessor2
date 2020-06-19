@@ -1,14 +1,13 @@
-package de.embl.cba.bdp2.track;
+package de.embl.cba.bdp2.drift.track;
 
 import net.imglib2.RealPoint;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Set;
 
 public class Track
 {
-	private final String trackName;
+	private String trackName;
 	private double[] voxelSpacings;
 	private HashMap< Integer, double[] > timeToPosition;
 
@@ -24,11 +23,15 @@ public class Track
 		this.voxelSpacings = voxelSpacings;
 	}
 
-	public String getTrackName()
+	public String getName()
 	{
 		return trackName;
 	}
 
+	public void setName( String trackName )
+	{
+		this.trackName = trackName;
+	}
 	private long[] uncalibrate( double[] position )
 	{
 		long[] voxelPosition = new long[ position.length ];

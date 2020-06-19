@@ -1,5 +1,6 @@
-package de.embl.cba.bdp2.track;
+package de.embl.cba.bdp2.drift.devel;
 
+import de.embl.cba.bdp2.drift.track.TrackingSettings;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
@@ -23,7 +24,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class ObjectTracker < R extends RealType< R > & NativeType< R > > extends AbstractObjectTracker{
+public class ObjectTracker < R extends RealType< R > & NativeType< R > > extends AbstractObjectTracker
+{
     private final TrackingSettings< R > trackingSettings;
     private Point3D pMin, pMax;
     private final int width;
@@ -81,7 +83,7 @@ public class ObjectTracker < R extends RealType< R > & NativeType< R > > extends
             Logger.info("Current time tracked " + t);
             randomAccess.setPosition(t, DimensionOrder.T );
             double trackingFraction;
-            // compute stack center and track radii
+            // compute stack center and drift radii
             // at each iteration, the center of mass is only computed for a subset of the data cube
             // this subset iteratively shifts every iteration according to the results of the center of mass computation
             for(int i=0; i<iterations; i++) {

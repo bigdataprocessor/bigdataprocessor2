@@ -1,5 +1,6 @@
-package de.embl.cba.bdp2.track;
+package de.embl.cba.bdp2.drift.devel;
 
+import de.embl.cba.bdp2.drift.track.Track;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.utils.IntervalImageViews;
@@ -47,7 +48,7 @@ public class StaticVolumePhaseCorrelationTracker < R extends RealType< R > & Nat
 		{
 			final long[] position = track.getVoxelPosition( t );
 
-			Logger.log( "Track: " + track.getTrackName() +
+			Logger.log( "Track: " + track.getName() +
 					"; t = " + t +
 					"; pos = " + Arrays.toString( track.getPosition( t ) ) ) ;
 

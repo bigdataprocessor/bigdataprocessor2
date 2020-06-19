@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.track;
+package de.embl.cba.bdp2.drift.track;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.utils.IntervalImageViews;
@@ -53,7 +53,7 @@ public class TrackApplier< R extends RealType< R > & NativeType< R > >
 		final RandomAccessibleInterval< R > trackView = Views.stack( timePoints );
 
 		final Image< R > trackViewImage = image.newImage( trackView );
-		trackViewImage.setName( track.getTrackName() );
+		trackViewImage.setName( track.getName() );
 		return trackViewImage;
 	}
 

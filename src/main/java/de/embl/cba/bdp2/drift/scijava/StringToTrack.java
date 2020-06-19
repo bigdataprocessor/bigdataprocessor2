@@ -1,7 +1,7 @@
-package de.embl.cba.bdp2.track.scijava;
+package de.embl.cba.bdp2.drift.scijava;
 
-import de.embl.cba.bdp2.track.Track;
-import de.embl.cba.bdp2.track.TrackManager;
+import de.embl.cba.bdp2.drift.track.Track;
+import de.embl.cba.bdp2.drift.track.TrackManager;
 import org.scijava.convert.AbstractConverter;
 import org.scijava.plugin.Plugin;
 

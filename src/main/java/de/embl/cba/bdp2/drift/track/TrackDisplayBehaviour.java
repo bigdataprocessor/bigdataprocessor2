@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.track;
+package de.embl.cba.bdp2.drift.track;
 
 import bdv.util.BdvHandle;
 import de.embl.cba.bdp2.log.Logger;
@@ -19,7 +19,7 @@ public class TrackDisplayBehaviour
 				moveToTrackPosition( bdv, track, bdv.getViewerPanel().getState().getCurrentTimepoint() + 1 );
 			} )).start();
 
-		}, "Move forward along track" + track.getTrackName(), "ctrl M"  ) ;
+		}, "Move forward along drift" + track.getName(), "ctrl M"  ) ;
 
 
 		behaviours.behaviour( ( ClickBehaviour ) ( x, y ) -> {
@@ -27,7 +27,7 @@ public class TrackDisplayBehaviour
 				moveToTrackPosition( bdv, track, bdv.getViewerPanel().getState().getCurrentTimepoint() - 1 );
 			} )).start();
 
-		}, "Move backward along track" + track.getTrackName(), "ctrl N"  ) ;
+		}, "Move backward along drift" + track.getName(), "ctrl N"  ) ;
 	}
 
 	private void moveToTrackPosition( BdvHandle bdv, Track track, int t )
@@ -36,7 +36,7 @@ public class TrackDisplayBehaviour
 
 		if ( position == null )
 		{
-			Logger.log( "Track: " + track.getTrackName() + ": Time point: " + t + " => Position not (yet) available." );
+			Logger.log( "Track: " + track.getName() + ": Time point: " + t + " => Position not (yet) available." );
 			return;
 		}
 

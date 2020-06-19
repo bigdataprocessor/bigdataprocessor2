@@ -1,11 +1,12 @@
-package de.embl.cba.bdp2.track;
+package de.embl.cba.bdp2.drift.devel;
 
+import de.embl.cba.bdp2.drift.track.TrackingSettings;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import de.embl.cba.bdp2.utils.Point3D;
-import net.imglib2.FinalInterval;
+import net.imglib2.Interval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.ItemVisibility;
@@ -41,7 +42,7 @@ public class BigDataTrackerCommand < R extends RealType< R > & NativeType< R > >
     @Parameter(label = "Intensity Gating [min,max]")
     private String gate = "-1,-1"; //default value
 
-    @Parameter(label = "Tracking Method", choices = {TrackingSettings.CENTER_OF_MASS, TrackingSettings.PHASE_CORRELATION })
+    @Parameter(label = "Tracking Method", choices = { TrackingSettings.CENTER_OF_MASS, TrackingSettings.PHASE_CORRELATION })
     String trackMethod = TrackingSettings.CENTER_OF_MASS; //default value
 
     @Parameter(label = "Track Selected Object", callback = "doTracking")
@@ -95,7 +96,7 @@ public class BigDataTrackerCommand < R extends RealType< R > & NativeType< R > >
     private void selectROI() {
         System.out.println("select");
         BigDataTracker.trackerThreadPool.submit(() -> {
-            FinalInterval interval = imageViewer.getVoxelIntervalXYZCTViaDialog( true );
+            Interval interval = imageViewer.getVoxelIntervalXYZCTViaDialog();
             trackingSettings.pMin = new Point3D((int) interval.min( DimensionOrder.X ),
                     (int) interval.min( DimensionOrder.Y ),
                     (int) interval.min( DimensionOrder.Z ));
@@ -108,7 +109,7 @@ public class BigDataTrackerCommand < R extends RealType< R > & NativeType< R > >
     }
 
     private void doTracking() {
-        // configure track
+        // configure drift
         trackingSettings.rai = image.getRai();
         if (length < -1) {
             length = -1;

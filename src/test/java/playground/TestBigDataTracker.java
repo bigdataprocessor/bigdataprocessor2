@@ -1,6 +1,6 @@
 package playground;
 
-import de.embl.cba.bdp2.track.TrackingSettings;
+import de.embl.cba.bdp2.drift.track.TrackingSettings;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import de.embl.cba.bdp2.utils.Point3D;
@@ -9,7 +9,7 @@ public class TestBigDataTracker {
 
     public static void main(String[] args) {
 
-//        String imageDirectory = "src/test/resources/tiff-nc2-nt6-track/";
+//        String imageDirectory = "src/test/resources/tiff-nc2-nt6-drift/";
 //        final FileInfos fileInfos = new FileInfos(imageDirectory, NamingScheme.LOAD_CHANNELS_FROM_FOLDERS,
 //                ".*", "");
 //        CachedCellImg cachedCellImg = CachedCellImgReader.createCachedCellImg( fileInfos );
@@ -32,10 +32,10 @@ public class TestBigDataTracker {
 //
 //        BigDataTracker bdt = new BigDataTracker();
 //        TrackingSettings< ? > trackingSettings = createTrackingSettings(imageViewer);
-//        //Test for CROSS_CORRELATION track
+//        //Test for CROSS_CORRELATION drift
 //        trackingSettings.trackingMethod = TrackingSettings.PHASE_CORRELATION;
 //        bdt.trackObject(trackingSettings, imageViewer);
-        //Test for CENTER of MASS track
+        //Test for CENTER of MASS drift
 //        trackingSettings.trackingMethod = TrackingSettings.CENTER_OF_MASS;
 //        bdt.trackObject(trackingSettings, imageViewer);
     }

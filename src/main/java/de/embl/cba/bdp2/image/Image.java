@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class Image< R extends RealType< R > & NativeType< R > >
 {
-	// TODO: keep track of the dimensions
+	// TODO: keep drift of the dimensions
 	//  of the image in the voxel space of the fileInfos
 
 	private RandomAccessibleInterval< R > raiXYZCT;
@@ -116,7 +116,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 	{
 		for ( Stopable stopable : stopables )
 		{
-			if ( stopable != null ) // might be old an Garbage collected already
+			if ( stopable != null ) // might be devel an Garbage collected already
 				stopable.stopThread();
 		}
 	}

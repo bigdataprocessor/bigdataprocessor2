@@ -12,8 +12,8 @@ import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.boundingbox.BoundingBoxDialog;
 import de.embl.cba.bdp2.service.BdvService;
 import de.embl.cba.bdp2.service.ImageService;
-import de.embl.cba.bdp2.track.ThresholdFloodFillOverlapTracker;
-import de.embl.cba.bdp2.track.Track;
+import de.embl.cba.bdp2.drift.devel.ThresholdFloodFillOverlapTracker;
+import de.embl.cba.bdp2.drift.track.Track;
 import de.embl.cba.bdp2.ui.MenuActions;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.volatiles.VolatileCachedCellImgs;
@@ -510,7 +510,7 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
 
     public void addTrack( Track track )
     {
-        tracks.put( track.getTrackName(), track );
+        tracks.put( track.getName(), track );
     }
 
     public Map< String, Track > getTracks()

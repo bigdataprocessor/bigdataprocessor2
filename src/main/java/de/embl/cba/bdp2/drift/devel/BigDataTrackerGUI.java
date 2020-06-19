@@ -1,5 +1,6 @@
-package de.embl.cba.bdp2.track;
+package de.embl.cba.bdp2.drift.devel;
 
+import de.embl.cba.bdp2.drift.track.TrackingSettings;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
@@ -40,7 +41,7 @@ public class BigDataTrackerGUI < R extends RealType< R > & NativeType< R > >
             //"dx(bin), dy(bin), dz(subsample), dt(subsample) [pixels, frames]",
             "Length [frames]",
             "Intensity gating [min, max]",
-            //"Show (processed) track regions [Num]",
+            //"Show (processed) drift regions [Num]",
             "Resize regions by [factor]"
     };
 
@@ -48,7 +49,7 @@ public class BigDataTrackerGUI < R extends RealType< R > & NativeType< R > >
             "Select ROI",
             //"Set z",
             "Track selected object",
-            "Stop track",
+            "Stop drift",
             //"Show table",
             //"Save table",
             //"Clear all tracks",
@@ -69,7 +70,7 @@ public class BigDataTrackerGUI < R extends RealType< R > & NativeType< R > >
     String[] comboNames = {
             //"Enhance image features",
             "Tracking method",
-            "Select Channel to track"
+            "Select Channel to drift"
     };
 
     String[][] comboChoices = new String[comboNames.length][];
@@ -80,7 +81,7 @@ public class BigDataTrackerGUI < R extends RealType< R > & NativeType< R > >
     protected final JLabel MESSAGE = new JLabel("");
     protected final String MESSAGE_TRACK_INTERRUPTED ="Tracking Interrupted!";
     protected final String MESSAGE_TRACK_FINISHED ="Tracking Completed!";
-    private  AbstractObjectTracker tracker;
+    private AbstractObjectTracker tracker;
     private RandomAccessibleInterval image;
     public final BdvImageViewer imageViewer;
 
@@ -383,10 +384,10 @@ public class BigDataTrackerGUI < R extends RealType< R > & NativeType< R > >
        }else if (e.getActionCommand().equals("Track selected object")) {
 
             System.out.println(e.getActionCommand());
-            // track selected object
+            // drift selected object
 
             //
-            // configure track
+            // configure drift
             //
            MESSAGE.setText(null);
             trackingSettings.rai = image;
@@ -420,7 +421,7 @@ public class BigDataTrackerGUI < R extends RealType< R > & NativeType< R > >
                });
            });
        }
-        else if ( e.getActionCommand().equals("Stop track") ) {
+        else if ( e.getActionCommand().equals("Stop drift") ) {
            tracker.stopTrack(); // Don't submit to thread pool. Let the main thread handle it.
            progressBar.setVisible(false);
            buttons[1].setEnabled(true);
@@ -526,7 +527,7 @@ public class BigDataTrackerGUI < R extends RealType< R > & NativeType< R > >
             JTextField source = (JTextField) e.getSource();
             trackingSettings.intensityGate = Utils.delimitedStringToIntegerArray( source.getText(), ",");
         }
-        else if ( e.getActionCommand().equals("Show (processed) track regions [Num]") )
+        else if ( e.getActionCommand().equals("Show (processed) drift regions [Num]") )
         {System.out.println(e.getActionCommand());
             //
             // Show processed image regions
@@ -555,7 +556,7 @@ public class BigDataTrackerGUI < R extends RealType< R > & NativeType< R > >
             trackingSettings.trackingMethod = (String)cb.getSelectedItem();
             System.out.println(trackingSettings.trackingMethod);
         }
-       else if ( e.getActionCommand().equals("Select Channel to track") )
+       else if ( e.getActionCommand().equals("Select Channel to drift") )
        {    // ObjectTracker method
            JComboBox cb = (JComboBox)e.getSource();
            trackingSettings.channel = Integer.parseInt((String)cb.getSelectedItem());
