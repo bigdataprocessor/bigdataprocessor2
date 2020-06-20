@@ -48,10 +48,12 @@ public class ManualTrackCreator extends JFrame
 	{
 		final JPanel panel = getPanel();
 		final JLabel label = new JLabel( "Move" );
+		final JTextField dt = new JTextField( "1" );
+
 		final JButton bwd = new JButton( "bwd" );
 		bwd.addActionListener( e -> {
 			final int currentTimepoint = bdvHandle.getViewerPanel().getState().getCurrentTimepoint();
-			final int t = currentTimepoint - 1;
+			final int t = currentTimepoint - Integer.parseInt( dt.getText() );
 			if ( t >= 0 )
 				moveToTrackPosition( t );
 		} );
@@ -59,11 +61,14 @@ public class ManualTrackCreator extends JFrame
 		final JButton fwd = new JButton( "fwd" );
 		fwd.addActionListener( e -> {
 			final int currentTimepoint = bdvHandle.getViewerPanel().getState().getCurrentTimepoint();
-			final int t = currentTimepoint + 1;
+			final int t = currentTimepoint + Integer.parseInt( dt.getText() );
 			if ( t < bdvHandle.getViewerPanel().getState().getNumTimepoints() )
 				moveToTrackPosition( t );
 		} );
+
 		panel.add( label );
+		panel.add( Box.createHorizontalGlue() );
+		panel.add( dt );
 		panel.add( Box.createHorizontalGlue() );
 		panel.add( bwd );
 		panel.add( Box.createHorizontalGlue() );

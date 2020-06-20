@@ -11,11 +11,22 @@ import java.lang.reflect.Field;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class FileInfosHelper
 {
 
-    public static boolean setFileInfos(
+    /**
+     * This used to be used in case of namingScheme.contains("<Z")
+     * Not sure I should still support this.
+     *
+     * @param infoSource
+     * @param directory
+     * @param namingPattern
+     * @return
+     */
+    @Deprecated
+    public static boolean setFileInfosDeprecated(
             FileInfos infoSource,
             String directory,
             String namingPattern)
@@ -176,12 +187,10 @@ public class FileInfosHelper
             fileInfos.voxelUnit = fileInfos.voxelUnit.trim();
     }
 
-    public static void setFileInfos(
-            FileInfos fileInfos,
-            String directory,
-            String namingScheme,
-            String filterPattern)
+    public static void setFileInfos( FileInfos fileInfos, String namingScheme, String filterPattern)
     {
+        String directory = fileInfos.directory;
+
         String[][] fileLists = getFilesInFolders( directory, filterPattern );
 
         if ( fileLists == null )
@@ -204,7 +213,7 @@ public class FileInfosHelper
         }
     }
 
-    private static void setImageMetadata( FileInfos fileInfos, String directory, String namingScheme, String[] fileList )
+    private static void fetchAndSetImageMetadata( FileInfos fileInfos, String directory, String namingScheme, String[] fileList )
     {
         if ( fileList[ 0 ].endsWith(".tif") )
         {
@@ -225,13 +234,8 @@ public class FileInfosHelper
         }
         else if ( fileList[0].endsWith(".h5") )
         {
-            if ( ! FileInfosHDF5Helper.setImageDataInfoFromH5(
-                    fileInfos,
-                    directory,
-                    fileList[ 0 ] ) ) return;
-            // TODO: this indicates something went wrong => pass on properly.
-            // maybe define or use some hdf5 initialisation error?
             fileInfos.fileType = Utils.FileType.HDF5.toString();
+            FileInfosHDF5Helper.setImageDataInfoFromH5( fileInfos, directory, fileList[ 0 ] );
         }
         else
         {
@@ -239,6 +243,7 @@ public class FileInfosHelper
         }
     }
 
+    @Deprecated
     private static void fixChannelFolders( FileInfos fileInfos, String namingScheme )
     {
         //
@@ -256,34 +261,17 @@ public class FileInfosHelper
     {
         if ( namingScheme.equals( NamingScheme.TIFF_SLICES ) )
         {
-//            if ( namingScheme.equals( NamingScheme.LOAD_CHANNELS_FROM_FOLDERS ) )
-//            {
-//                fileInfos.nC = fileInfos.channelFolders.length;
-//                fileInfos.nT = fileLists[ 0 ].length;
-//                fileInfos.channelNames = fileInfos.channelFolders;
-//            }
-//            else if ( namingScheme.equalsIgnoreCase( NamingScheme.SINGLE_CHANNEL_TIMELAPSE ) )
-//            {
-//                fileInfos.nC = 1;
-//                fileInfos.nT = fileLists[ 0 ].length;
-//                fileInfos.channelNames = new String[]{ new File( fileInfos.directory ).getParent() };
-//            }
-//            else if ( namingScheme.equals( NamingScheme.TIFF_SLICES ) )
-//            {
-                fileInfos.nC = 1;
-                fileInfos.nT = 1;
-                fileInfos.nZ = fileLists[ 0 ].length;
-                fileInfos.fileType = Utils.FileType.SINGLE_PLANE_TIFF.toString();
-                fileInfos.channelNames = new String[]{ new File( fileInfos.directory ).getParent() };
-//            }
-
+            fileInfos.nC = 1;
+            fileInfos.nT = 1;
+            fileInfos.nZ = fileLists[ 0 ].length;
+            fileInfos.fileType = Utils.FileType.SINGLE_PLANE_TIFF.toString();
+            fileInfos.channelNames = new String[]{ new File( fileInfos.directory ).getParent() };
             fixChannelFolders( fileInfos, namingScheme );
-            setImageMetadata( fileInfos, fileInfos.directory + fileInfos.channelFolders[ 0 ], namingScheme, fileLists[ 0 ] );
+            fetchAndSetImageMetadata( fileInfos, fileInfos.directory + fileInfos.channelFolders[ 0 ], namingScheme, fileLists[ 0 ] );
             populateFileList( fileInfos, namingScheme, fileLists );
         }
         else
         {
-            // TODO: get rid of channelFolders!
             fileInfos.channelFolders = new String[]{""};
 
             HashSet<String> channels = new HashSet();
@@ -321,26 +309,23 @@ public class FileInfosHelper
                 }
             }
 
-            // convert Sets to sorted Lists
-            List< String > sortedChannels = new ArrayList< >( channels );
-            Collections.sort( sortedChannels );
-            fileInfos.nC = sortedChannels.size();
-
-            if ( fileInfos.nC == 0 )
+            if ( channels.size() == 0 )
                 throw new UnsupportedOperationException( "No channels found!" );
 
-            List< String > sortedTimepoints = new ArrayList< >( timepoints );
-            Collections.sort( sortedTimepoints );
-            fileInfos.nT = sortedTimepoints.size() ;
-
-            if ( fileInfos.nT == 0 )
+            if ( timepoints.size() == 0 )
                 throw new UnsupportedOperationException( "No time-points found!" );
 
+            // sort channels
+            List< String > sortedChannels = sort( channels );
+            fileInfos.nC = sortedChannels.size();
             fileInfos.channelNames = sortedChannels.stream().toArray( String[]::new );
 
-            fixChannelFolders( fileInfos, namingScheme ); // TODO: remove
+            // sort timepoints
+            List< String > sortedTimepoints = sort( timepoints );
+            fileInfos.nT = sortedTimepoints.size() ;
 
-            setImageMetadata( fileInfos, fileInfos.directory, namingScheme, fileLists[ 0 ] );
+            fixChannelFolders( fileInfos, namingScheme );
+            fetchAndSetImageMetadata( fileInfos, fileInfos.directory, namingScheme, fileLists[ 0 ] );
 
             populateFileInfosFromChannelTimeRegExp(
                     fileInfos,
@@ -350,6 +335,23 @@ public class FileInfosHelper
                     sortedTimepoints,
                     channelGroups,
                     timeGroups);
+        }
+    }
+
+    public static List< String > sort( Set< String > strings )
+    {
+        try
+        {
+            final List< Integer > integers = strings.stream().mapToInt( Integer::parseInt ).boxed().collect( Collectors.toList() );
+            Collections.sort( integers );
+            final List< String > sorted = integers.stream().map( x -> "" + x ).collect( Collectors.toList() );
+            return sorted;
+        }
+        catch ( Exception e )
+        {
+            List< String > sorted = new ArrayList< >( strings );
+            Collections.sort( sorted );
+            return sorted;
         }
     }
 
@@ -479,109 +481,57 @@ public class FileInfosHelper
 
         String[][] fileLists;
 
-        final String fileFilter = getFileFilter( filterPattern );
+        final String filePattern = getFileFilter( filterPattern );
         final String folderPattern = getFolderPattern( filterPattern );
 
         Logger.info( "Sub-folder name pattern: " + folderPattern );
-        Logger.info( "File name pattern: " + fileFilter );
+        Logger.info( "File name pattern: " + filePattern );
 
-//        if ( namingScheme.equals( NamingScheme.LOAD_CHANNELS_FROM_FOLDERS ) )
-//        {
-//            //
-//            // Check for sub-folders
-//            //
-//            Logger.info("Checking for sub-folders...");
-//
-//            fileInfos.channelFolders = getSubFolders( directory, folderPattern );
-//
-//            if ( fileInfos.channelFolders != null )
-//            {
-//                fileLists = new String[fileInfos.channelFolders.length][];
-//                for (int i = 0; i < fileInfos.channelFolders.length; i++)
-//                {
-//                    fileLists[i] = getFilesInFolder( directory + fileInfos.channelFolders[ i ], fileFilter );
-//
-//                    if ( fileLists[i] == null )
-//                    {
-//                        Logger.error("No file found in folder: " + directory + fileInfos.channelFolders[ i ]);
-//                        fileLists = null;
-//                        break;
-//                    }
-//                }
-//                Logger.info( "Found sub-folders => load channels from sub-folders." );
-//            }
-//            else
-//            {
-//                Logger.error("No sub-folders found; " +
-//                        "please specify different options for load " +
-//                        "the channels");
-//                fileLists = null;
-//            }
-//        }
-//        else if ( namingScheme.contains( NamingScheme.LUXENDO_REGEXP_ID )
-//                 || namingScheme.equals( SINGLE_CHANNEL_TIFF_VOLUMES ))
-//        {
-            final String[] subFolders = getSubFolders( directory, folderPattern );
+        final String[] subFolders = getSubFolders( directory, folderPattern );
 
-            if ( subFolders == null )
+        if ( subFolders == null )
+        {
+            throw new UnsupportedOperationException( "No sub-folders found; please make sure to select the stack's parent folder."
+                    + "\nParent folder: " + directory
+                    + "\nSub-folder pattern: " + folderPattern );
+        }
+        else
+        {
+            // TODO: Clean this up
+            if ( subFolders.length > 1 && ! subFolders[ 0 ].equals( "" ) )
+                Logger.info( "Found " + subFolders.length + " sub-folders" );
+        }
+
+        String[] files = new String[]{};
+        for (int i = 0; i < subFolders.length; i++)
+        {
+            final String subFolder = directory + subFolders[ i ];
+            Logger.info( "Fetching files in " + subFolder  );
+
+            String[] filesInFolder = getFilesInFolder( subFolder, filePattern );
+
+            if ( filesInFolder == null )
             {
-                throw new UnsupportedOperationException( "No sub-folders found; please make sure to select the stack's parent folder."
-                        + "\nParent folder: " + directory
-                        + "\nSub-folder pattern: " + folderPattern );
+                throw new UnsupportedOperationException( "No files found in folder: " + subFolder);
             }
             else
             {
-                // TODO: Clean this up
-                if ( subFolders.length > 1 && ! subFolders[ 0 ].equals( "" ) )
-                    Logger.info( "Found " + subFolders.length + " sub-folders" );
+                Logger.info( "Found " + filesInFolder.length + " files in folder: " + subFolder);
             }
 
-            String[] files = new String[]{};
-            for (int i = 0; i < subFolders.length; i++)
+            if ( ! subFolders[ i ].equals( "" ) )
             {
-                final String subFolder = directory + subFolders[ i ];
-                Logger.info( "Fetching files in " + subFolder  );
-
-                String[] filesInFolder = getFilesInFolder( subFolder, fileFilter );
-
-                if ( filesInFolder == null )
-                {
-                    throw new UnsupportedOperationException( "No files found in folder: " + subFolder);
-                }
-                else
-                {
-                    Logger.info( "Found " + filesInFolder.length + " files in folder: " + subFolder);
-                }
-
-                if ( ! subFolders[ i ].equals( "" ) )
-                {
-                    // prepend subfolder
-                    final int j = i;
-                    filesInFolder = Arrays.stream( filesInFolder ).map( x -> subFolders[ j ] + File.separator + x ).toArray( String[]::new );
-                }
-
-                files = (String[]) ArrayUtils.addAll( files, filesInFolder );
+                // prepend subfolder
+                final int j = i;
+                filesInFolder = Arrays.stream( filesInFolder ).map( x -> subFolders[ j ] + File.separator + x ).toArray( String[]::new );
             }
 
-            fileLists = new String[1][];
-            fileLists[ 0 ] = files;
-//        }
-//        else
-//        {   //
-//            // Get file in main directory
-//            //
-//            Logger.info("Searching file in folder: " + directory);
-//            fileLists = new String[ 1 ][ ];
-//            fileLists[ 0 ] = getFilesInFolder( directory, filterPattern );
-//            Logger.info("Number of file in main folder matching the filter pattern: " + fileLists[0].length );
-//
-//            if ( fileLists[0] == null || fileLists[0].length == 0 )
-//            {
-//                Logger.warning("No file matching this pattern were found: " + filterPattern);
-//                fileLists = null;
-//            }
-//
-//        }
+            files = (String[]) ArrayUtils.addAll( files, filesInFolder );
+        }
+
+        fileLists = new String[1][];
+        fileLists[ 0 ] = files;
+
         return fileLists;
     }
 

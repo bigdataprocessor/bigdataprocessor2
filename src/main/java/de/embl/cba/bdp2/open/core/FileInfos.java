@@ -17,27 +17,21 @@ import net.imglib2.type.numeric.real.FloatType;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Objects;
 
 public class FileInfos
 {
     public static final int PROGRESS_UPDATE_MILLISECONDS = 100;
 	public static final int TOTAL_AXES = 5;
 	public static final AxisType[] AXES_ORDER = { Axes.X, Axes.Y, Axes.Z, Axes.CHANNEL, Axes.TIME};
-	public static final int MAX_ALLOWED_IMAGE_DIMS = AXES_ORDER.length;
-	public static final String UNSIGNED_BYTE_VIEW_NAME = "8-bit converted";
-	public static final String TRACKED_IMAGE_NAME = "tracked";
-	public static final String IMAGE_NAME = "image";
-	public static final long HDF5_BLOCK_SIZE_2D = 128;
-	public static final long HDF5_BLOCK_SIZE_3D = 32;
-	public static final String[] POSSIBLE_HDF5_DATASETNAMES = new String[] {"None",
-			"Data","Data111",
+    public static final String[] HDF5_DATASET_NAMES = new String[] {
+            "None", "Data", "Data111", "Data222", "Data444", // Luxendo
 			ImarisUtils.RESOLUTION_LEVEL +"0/Data",
 			ImarisUtils.RESOLUTION_LEVEL +"1/Data",
 			ImarisUtils.RESOLUTION_LEVEL +"2/Data",
 			ImarisUtils.RESOLUTION_LEVEL +"3/Data",
-			"ITKImage/0/VoxelData", "Data222", "Data444"};
-	private final SerializableFileInfo[][][] infos;
+			"ITKImage/0/VoxelData" // Elastix
+    };
+	private final SerializableFileInfo[][][] fileInfos;
     private final long[] dimensions;
     public int bitDepth;
     public int nC;
@@ -49,6 +43,7 @@ public class FileInfos
     public double[] voxelSpacing;
     public String fileType;
     public String h5DataSetName;
+    @Deprecated
     public String[] channelFolders;
     public String[][][] ctzFileList;
     public String directory;
@@ -67,52 +62,38 @@ public class FileInfos
     }
 
     public FileInfos(
-            String directory,
+            String aDirectory,
             String namingScheme,
             String filterPattern,
-            String h5DataSetName)
+            String h5DataSetName
+    )
     {
         Logger.info( "" );
         Logger.info( "" );
-        Logger.info( "Directory: " + directory );
+        Logger.info( "Directory: " + aDirectory );
         Logger.info( "Regular expression: " +  namingScheme );
 
-        directory = Utils.fixDirectoryFormatAndAppendFileSeparator( directory );
-
-        this.directory = directory; // contains File separator!
+        this.directory  = Utils.fixDirectoryFormatAndAppendFileSeparator( aDirectory );
         this.h5DataSetName = h5DataSetName;
 
-        if ( namingScheme.contains("<Z") )
+        if ( ! namingScheme.contains( "?<C" ) )
         {
-            FileInfosHelper.setFileInfos(this, directory, namingScheme );
-        }
-        else
-        {
-            if ( ! namingScheme.contains( "?<C" ) )
-            {
-                // make the folder the channel
-                final String folder = new File( directory ).getName();
-                this.directory = new File( directory ).getParent() + "/";
-                namingScheme = "(?<C>"+folder+")/" + namingScheme;
-                filterPattern = folder + "/" + filterPattern;
-            }
-
-            FileInfosHelper.setFileInfos(
-                    this,
-                    this.directory,
-                    namingScheme,
-                    filterPattern );
+            // assign containing folder as channel
+            final String channelFolder = new File( directory ).getName();
+            namingScheme = "(?<C>"+channelFolder+")/" + namingScheme;
+            filterPattern = channelFolder + "/" + filterPattern;
         }
 
-        infos = new SerializableFileInfo[nC][nT][nZ];
+        FileInfosHelper.setFileInfos( this, namingScheme, filterPattern );
+
+        fileInfos = new SerializableFileInfo[nC][nT][nZ];
         dimensions = new long[ 5 ];
         dimensions[ DimensionOrder.X ] = nX;
         dimensions[ DimensionOrder.Y ] = nY;
         dimensions[ DimensionOrder.Z ] = nZ;
         dimensions[ DimensionOrder.C ] = nC;
         dimensions[ DimensionOrder.T ] = nT;
-
-        if ( voxelUnit == null || Objects.equals( voxelUnit, "")) voxelUnit = "pixel";
+        if ( voxelUnit == null || voxelUnit.equals( "" ) ) voxelUnit = "pixel";
 
         Logger.info( this.toString() );
     }
@@ -201,7 +182,7 @@ public class FileInfos
                 setInfosFromFile(channel, time, z, true);
             }
         }
-        return infos[channel][time];
+        return fileInfos[channel][time];
     }
 
     private void setInfosFromFile( final int c, final int t, final int z, boolean throwError )
@@ -242,7 +223,7 @@ public class FileInfos
                     //infoCT[z].rowsPerStrip = info[z].rowsPerStrip; // only core for first IFD!
                 }
 
-                infos[c][t] = infoCT;
+                fileInfos[c][t] = infoCT;
             }
             else if ( fileType.equals(Utils.FileType.HDF5.toString() ) )
             {
@@ -280,20 +261,20 @@ public class FileInfos
                     infoCT[z2].h5DataSet = h5DataSetName;
                     infoCT[z2].fileTypeString = fileType;
                 }
-                infos[c][t] = infoCT;
+                fileInfos[c][t] = infoCT;
             }
             else if ( fileType.equals(Utils.FileType.SINGLE_PLANE_TIFF.toString()))
             {
                 ftd = new FastTiffDecoder(directory + channelFolders[c], ctzFileList[c][t][z]);
                 try{
-                    infos[c][t][z] = ftd.getTiffInfo()[0];
+                    fileInfos[c][t][z] = ftd.getTiffInfo()[0];
                 }
                 catch ( IOException e ){// TODO : Handle exceptions properly --ashis
                     System.out.print( e.toString() );
                 }
-                infos[c][t][z].directory = channelFolders[c];
-                infos[c][t][z].fileName = ctzFileList[c][t][z];
-                infos[c][t][z].fileTypeString = fileType;
+                fileInfos[c][t][z].directory = channelFolders[c];
+                fileInfos[c][t][z].fileName = ctzFileList[c][t][z];
+                fileInfos[c][t][z].fileTypeString = fileType;
             }
         }
         else

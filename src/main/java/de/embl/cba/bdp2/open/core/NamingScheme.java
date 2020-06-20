@@ -27,6 +27,7 @@ public abstract class NamingScheme
 	public static final String PATTERN_4= ".*_C<c>_T<t>.tif";
 	public static final String PATTERN_5= ".*--t<t>--Z<z>--C<c>.tif";
 	public static final String PATTERN_6= "Cam_<c>_<t>.h5";
+	@Deprecated
 	public static final String LOAD_CHANNELS_FROM_FOLDERS = "Channels from Subfolders";
 	public static final String TIFF_SLICES = "Tiff Slices";
 	public static final String LEICA_LIGHT_SHEET_TIFF = "Leica Light Sheet Tiff";

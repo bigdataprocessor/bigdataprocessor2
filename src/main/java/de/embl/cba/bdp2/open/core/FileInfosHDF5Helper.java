@@ -13,12 +13,15 @@ import java.util.stream.Collectors;
 
 public class FileInfosHDF5Helper
 {
-    public static boolean setImageDataInfoFromH5(
+    public static final String HDF5_PARSING_ERROR = "Error during hdf5 metadata extraction from ";
+
+    public static void setImageDataInfoFromH5(
             FileInfos imageDataInfo,
             String directory,
             String fileName)
     {
-        IHDF5Reader reader = HDF5Factory.openForReading(directory + "/" + fileName);
+        final String filePath = directory + "/" + fileName;
+        IHDF5Reader reader = HDF5Factory.openForReading( filePath );
 
         StringBuilder hdf5DataSetSB = new StringBuilder();
         if (imageDataInfo.h5DataSetName != null && !imageDataInfo.h5DataSetName.isEmpty()
@@ -36,13 +39,14 @@ public class FileInfosHDF5Helper
                 if ( ! hdf5DataSetExists(reader, hdf5DataSetSB ) )
                 {
                     if ( !setHDF5DatasetViaUI( reader, hdf5DataSetSB ) )
-                        return false;
+                        throw new RuntimeException( HDF5_PARSING_ERROR + filePath );
                 }
             }
         }
         else
         {
-            if( ! setHDF5DatasetViaUI(reader,hdf5DataSetSB) ) return false;
+            if( ! setHDF5DatasetViaUI(reader,hdf5DataSetSB) )
+                throw new RuntimeException( HDF5_PARSING_ERROR + filePath );
         }
 
         imageDataInfo.h5DataSetName = hdf5DataSetSB.toString();
@@ -62,9 +66,6 @@ public class FileInfosHDF5Helper
         // There is no standard way of retrieving voxelSpacings from h5 data....
         imageDataInfo.voxelSpacing = new double[]{1,1,1};
         imageDataInfo.voxelUnit = "micrometer";
-
-        return true;
-
     }
 
     private static int assignHDF5TypeToImagePlusBitdepth(HDF5DataSetInformation dsInfo) {
@@ -92,8 +93,8 @@ public class FileInfosHDF5Helper
         } else {
             List<String> hdf5Header = reader.getGroupMembers("/");
             hdf5Header.replaceAll(String::toUpperCase);
-            dataSetExists = Arrays.stream( FileInfos.POSSIBLE_HDF5_DATASETNAMES).parallel().anyMatch( x -> hdf5Header.contains(x.toUpperCase()));
-            List<String> head = Arrays.stream( FileInfos.POSSIBLE_HDF5_DATASETNAMES).parallel().filter( x -> hdf5Header.contains(x.toUpperCase())).collect(Collectors.toList());
+            dataSetExists = Arrays.stream( FileInfos.HDF5_DATASET_NAMES ).parallel().anyMatch( x -> hdf5Header.contains(x.toUpperCase()));
+            List<String> head = Arrays.stream( FileInfos.HDF5_DATASET_NAMES ).parallel().filter( x -> hdf5Header.contains(x.toUpperCase())).collect(Collectors.toList());
             hdf5DataSet.delete(0, hdf5DataSet.length());
             hdf5DataSet.append(head.get(0));
         }

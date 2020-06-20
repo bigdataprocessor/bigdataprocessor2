@@ -40,6 +40,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class FastHDF5StackWriter<T extends RealType<T> & NativeType<T>> implements Runnable {
+    private static final long HDF5_BLOCK_SIZE_2D = 128;
+    private static final long HDF5_BLOCK_SIZE_3D = 32;
     private final String dataset;
     private final int compressionLevel;
     private final int numFrames;
@@ -283,10 +285,10 @@ public class FastHDF5StackWriter<T extends RealType<T> & NativeType<T>> implemen
         long bSize;
         if (datasetDims[0] > 1) {
             // if z-axis is non-singleton use 32x32x32 chunk size. Change in BLOCK_SIZE_3D if needed.
-            bSize = FileInfos.HDF5_BLOCK_SIZE_3D;
+            bSize = HDF5_BLOCK_SIZE_3D;
         } else {
             // otherwise use 128x128 chunk size
-            bSize = FileInfos.HDF5_BLOCK_SIZE_2D;
+            bSize = HDF5_BLOCK_SIZE_2D;
         }
         int[] result = new int[datasetDims.length];
         for (int i = 0; i < datasetDims.length; i++) {
