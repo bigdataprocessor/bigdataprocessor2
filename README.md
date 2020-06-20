@@ -1,58 +1,44 @@
-<img src="https://www.huber.embl.de/courses/images/BioIT_logo.jpeg" width="200">
-
 # BigDataProcessor2
 
 Interactive processing of TB-sized image data within [Fiji](http://fiji.sc/), on your laptop.
 
 ## Install
 
-BigDataProcessor2 is a Fiji Plugin.
+BigDataProcessor2 is a Fiji plugin and can be installed via an update site.
 
 - Please install [Fiji](fiji.sc)
+    - To avoid dependency issues we currently recommended to download a fresh Fiji (you can have multiple versions of Fiji on one computer, e.g. you could rename this one from 'Fiji.app' to 'Fiji-BDP2.app')
 - Within Fiji, please enable the following [Update Site](https://imagej.net/Update_Sites): 
-    - [X] EMBL-CBA
+    - [X] BigDataProcessor2
+    - (Note: The EMBL-CBA update site one must currently **not** be checked because of dependency issues!)
 - Restart Fiji
 
 ## Start
 
 In the Fiji Plugins menu scroll far down and start BigDataProcessor2:
 
-![image](https://user-images.githubusercontent.com/2157566/83620048-0d47c300-a58d-11ea-8213-306598048e9e.png)
+<img src="https://user-images.githubusercontent.com/2157566/83620048-0d47c300-a58d-11ea-8213-306598048e9e.png" width="460">
 
 This opens up an empty BigDataViewer window with additional menu entries.
 
-Note: You do not need to use the Commands, they are just there to enable macro-recording.
+Note: **Don't use the Commands**, they just serve the macro recording.
 
-### Macro recording
+## Record macros
 
-All actions can be macro recorded. To enable this please:
+All actions can be recorded as ImageJ macros. To enable this please:
 
-![image](https://user-images.githubusercontent.com/2157566/83620230-51d35e80-a58d-11ea-919e-5c6e2c5890eb.png)
+<img src="https://user-images.githubusercontent.com/2157566/83620230-51d35e80-a58d-11ea-919e-5c6e2c5890eb.png" width="500">
 
-## Open datasets
+## Open a dataset
 
 In the BigDataViewer window, go to the menu bar and use the menu items in [ BigDataProcessor2 > Open ].
 
-![image](https://user-images.githubusercontent.com/2157566/83619635-72e77f80-a58c-11ea-9602-c4eeb05bfd2f.png)
+<img src="https://user-images.githubusercontent.com/2157566/83619635-72e77f80-a58c-11ea-9602-c4eeb05bfd2f.png" width="600">
 
 
 ## Process
 
-TODO ...
-
-
-# DEPRECATED DOCUMENTATION:
-
-### Opening TB-sized Tiff or Hdf5 based raw data
-
-Below movie demonstrates opening of 670 GB Hdf5 image data, acquired by light-sheet microscopy. 
-The data format is one volumetric Hdf5 file per time-point. As the data is needed to be streamed from the camera onto a disk efficiently, the Hdf5 files are neither specifically chunked for efficient 3D access nor do they contain a multi-resolution pyramid. 
-Also, there is no special header file linking the different time-points. Nevertheless, as the movie shows  *(click below to play)*, 
-the data can be opened and browsed within seconds. 
-
-[<img width="1000" alt="image" src="./docs/images/1.png">](https://drive.google.com/open?id=1wJgZb_Hd1S8ScTbKq9KOYyz-4lmS7-Sf)
-
-### Interactive binning
+### Bin
 
 For camera based microscopy systems the pixel size cannot be freely chosen during acquisition. 
 Thus, the user is often forced to over-sample in order not to lose important information. 
@@ -63,14 +49,14 @@ attain a binning at which the corresponding scientific question can be efficient
 
 [<img width="1000" alt="image" src="./docs/images/2.png">](https://drive.google.com/open?id=1AVFW3M5QYEDH9XUgR-q2LWUsuy16zF1A)
 
-### Interactive 3D+t Cropping
+### Crop
 
 Often, large volumes are acquired than required, e.g. to accommodate sample drift, motion, or growth. 
 Below movie shows *(click below to play)* how the BigDataProcessor2 can be interactively used to crop the data to only contain the relevant parts.
 
 [<img width="1000" alt="image" src="./docs/images/3.png">](https://drive.google.com/open?id=1iabVP9jbISI1WclMRjtDHvcNWxMTC95-)
 
-### Interactive conversion to 8-bit
+### Convert to 8-bit
 
 Cameras typically produce image data at 12, 14, or 16 bit-depths (12 and 14 bit are not common data formats they are often stored as 16 bit anyway). 
 For many image analysis tasks, 8-bit depth is usually sufficient affording the user to reduce data size as well as increase processing time by a factor of 2.
@@ -84,7 +70,11 @@ This is done lazily, i.e. the data on disk is not altered at this stage.
 
 [<img width="1000" alt="image" src="./docs/images/4.png">](https://drive.google.com/open?id=1jRZEepD1C8rM5t2gDi7tYnFh092vUztm)
 
-## Detailed information
+## Save
+
+TODO...
+
+## Additional information
 
 **BigDataProcessor2 (BDP2)**  is an [ImageJ](https://imagej.net) plugin designed for inspection, manipulation and conversion of big data image formats even on a basic laptop or a computer.
 
@@ -96,41 +86,19 @@ The plugin facilitates loading & saving of TIFF, HDF5 and Imaris file formats me
 
 The plugin also encloses **BigDataTracker**, an object tracker tool for the big data images and also allowing to view and save just the tracked regions.
 
+### History
 
-## History
 The BigDataProcessor2 is a new version of the **BigDataTools** plugin, a.k.a [BigDataProcessor](https://github.com/embl-cba/fiji-plugin-bigDataProcessor). BigDataProcessor2 is developed almost from scratch using the ImgLib2 framework.
 
-## Supported Formats
+### Supported Formats
 
 - Multi-stack TIFF
 - Single plane TIFF
 - Multi-stack HDF
 - Multi-stack IMARIS HDF
 
-
-## Contributors
+### Contributors
 
 Ashis Ravindran&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;Christian Tischer  
 ashis.r91@gmail.com&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;christian.tischer@embl.de
-
-## User Documentation
-
-### Image viewing
-
-Images are displayed in a slicing mode. The initial view is a slice perpendicular to the z axis (i.e. an xy plane). The currently viewed plane can be changed by the following keyboard shortcuts:
-- **[ Shift X ]** Shows a yz plane
-- **[ Shift Y ]** Shows a xz plane
-- **[ Shift Z ]** Shows a xy plane
-- **[ , ]** or **[ . ]** Change plane slowly
-- **[ Shift , ]** or **[ Shift . ]** Change plane fast
-- You can also drag the mouse while keeping the left mouse button pressed to inspect the data at oblique views.
-
-#### Tip 
-
-- Due the way most data are layout on disc, it is faster to inspect the data only using the **[ Shift Y ]** and **[ Shift Z ]** views, as the **[ Shift X ]** view will render much slower.
-
-
-### Processing operations 
-
-
