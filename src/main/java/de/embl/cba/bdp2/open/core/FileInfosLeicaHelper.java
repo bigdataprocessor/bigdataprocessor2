@@ -12,11 +12,11 @@ import java.util.regex.Pattern;
 public class FileInfosLeicaHelper
 {
     public static boolean initLeicaSinglePlaneTiffData(
-            FileInfos imageDataInfo, String directory, String filterPattern, String[] fileList, int nC, int nZ )
+            FileInfos fileInfos, String directory, String filterPattern, String[] fileList, int nC, int nZ )
     {
         int nT;
         int z,t,c;
-        imageDataInfo.fileType = Utils.FileType.SINGLE_PLANE_TIFF.toString();
+        fileInfos.fileType = Utils.FileType.SINGLE_PLANE_TIFF.toString();
 
         //
         // Do special stuff related to Leica file
@@ -72,8 +72,6 @@ public class FileInfosLeicaHelper
             slicesHS.add( new HashSet() );
         }
 
-        boolean hasMultiChannelNamingScheme = false;
-
         for (int iFileID = 0; iFileID < fileIDs.length; iFileID++)
         {
             Pattern patternFileID;
@@ -96,7 +94,6 @@ public class FileInfosLeicaHelper
                     if ( matcherC.matches() )
                     {
                         // has multi-channels
-                        hasMultiChannelNamingScheme = true;
                         channelsHS.get(iFileID).add( matcherC.group(1) );
                         matcherZ = patternZ.matcher( fileName );
                         if ( matcherZ.matches() )
@@ -158,29 +155,21 @@ public class FileInfosLeicaHelper
             nT += timepointsHS.get( iFileID ).size();
             tOffsets[iFileID + 1] = nT;
         }
-        //
-        // Create dummy channel folders, because no real ones exist
-        //
-
-        imageDataInfo.channelFolders = new String[nC];
-        for ( c = 0; c < nC; c++ ) imageDataInfo.channelFolders[c] = "";
 
         //
-        // sort into the final file list
+        // sort into  final file list
         //
 
-        imageDataInfo.ctzFileList = new String[nC][nT][nZ];
+        fileInfos.ctzFiles = new String[nC][nT][nZ];
 
         for (int iFileID = 0; iFileID < fileIDs.length; iFileID++)
         {
-
             Pattern patternFileID = Pattern.compile(".*" + fileIDs[iFileID] + ".*");
 
             for ( String fileName : fileList )
             {
                 if ( patternFileID.matcher(fileName).matches() )
                 {
-
                     // figure out which C,Z,T the file is
                     matcherC = patternC.matcher(fileName);
                     matcherT = patternT.matcher(fileName);
@@ -209,11 +198,11 @@ public class FileInfosLeicaHelper
                     {
                         if ( nC == 1 )
                         {
-                            c = 0; // hack to also make it work in case the channel string is not "C00", but e.g. "C01"
+                            c = 0; // in case the channel string is not "C00", but e.g. "C01"
                         }
                         else
                         {
-                            c = Integer.parseInt(  matcherC.group(1).toString() );
+                            c = Integer.parseInt(  matcherC.group(1) );
                         }
                     }
                     else
@@ -221,16 +210,20 @@ public class FileInfosLeicaHelper
                         c = 0;
                     }
 
-                    imageDataInfo.ctzFileList[ c ][ t ][ z ] = fileName;
-
+                    fileInfos.ctzFiles[ c ][ t ][ z ] = fileName;
                 }
             }
         }
 
-        FileInfosHelper.setImageMetadataFromTiff(imageDataInfo, directory, imageDataInfo.ctzFileList[0][0][0]);
-        imageDataInfo.nZ = nZ;
-        imageDataInfo.nC = nC;
-        imageDataInfo.nT = nT;
+        FileInfosHelper.setImageMetadataFromTiff(fileInfos, directory, fileInfos.ctzFiles[0][0][0]);
+        fileInfos.nZ = nZ;
+        fileInfos.nC = nC;
+        fileInfos.nT = nT;
+        fileInfos.channelNames = new String[ nC ];
+        for ( int channel = 0; channel < nC; channel++ )
+        {
+            fileInfos.channelNames[ channel ] = "channel " + channel;
+        }
 
         return true;
     }

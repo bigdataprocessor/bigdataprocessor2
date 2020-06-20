@@ -43,9 +43,7 @@ public class FileInfos
     public double[] voxelSpacing;
     public String fileType;
     public String h5DataSetName;
-    @Deprecated
-    public String[] channelFolders;
-    public String[][][] ctzFileList;
+    public String[][][] ctzFiles;
     public String directory;
     public double max_pixel_val;
     public double min_pixel_val;
@@ -76,12 +74,15 @@ public class FileInfos
         this.directory  = Utils.fixDirectoryFormatAndAppendFileSeparator( aDirectory );
         this.h5DataSetName = h5DataSetName;
 
-        if ( ! namingScheme.contains( "?<C" ) )
+        if ( ! namingScheme.equals( NamingScheme.LEICA_LIGHT_SHEET_TIFF ) )
         {
-            // assign containing folder as channel
-            final String channelFolder = new File( directory ).getName();
-            namingScheme = "(?<C>"+channelFolder+")/" + namingScheme;
-            filterPattern = channelFolder + "/" + filterPattern;
+            if ( ! namingScheme.contains( "?<C" ) )
+            {
+                // assign containing folder as channel
+                final String channelFolder = new File( directory ).getName();
+                namingScheme = "(?<C>" + channelFolder + ")/" + namingScheme;
+                filterPattern = channelFolder + "/" + filterPattern;
+            }
         }
 
         FileInfosHelper.setFileInfos( this, namingScheme, filterPattern );
@@ -177,7 +178,7 @@ public class FileInfos
             setInfosFromFile(channel, time, z, true);
         }
         else if (fileType.equals(Utils.FileType.SINGLE_PLANE_TIFF.toString())) {
-            int nZ = ctzFileList[channel][time].length;
+            int nZ = ctzFiles[channel][time].length;
             for (; z < nZ; ++z) {
                 setInfosFromFile(channel, time, z, true);
             }
@@ -190,27 +191,27 @@ public class FileInfos
         SerializableFileInfo[] info = null;
         SerializableFileInfo[] infoCT;
         FastTiffDecoder ftd;
-        File f = new File(directory + channelFolders[c], ctzFileList[c][t][z] );
-        if ( f.exists() )
+        File file = new File( directory, ctzFiles[c][t][z] );
+        if ( file.exists() )
         {
             if ( fileType.equals(Utils.FileType.TIFF_STACKS.toString() ) )
             {
-                ftd = new FastTiffDecoder(directory + channelFolders[c], ctzFileList[c][t][0]);
+                ftd = new FastTiffDecoder( directory, ctzFiles[c][t][0] );
                 try {
                     info = ftd.getTiffInfo();
                 }
                 catch (Exception e) {
-                    Logger.error("Error parsing: " + f.getAbsolutePath() );
+                    Logger.error("Error parsing: " + file.getAbsolutePath() );
                     Logger.warning("setInfoFromFile: " + e.toString());
                 }
 
                 if( info.length != nZ ) {// TODO : Handle exceptions properly --ashis
-                    Logger.error("Inconsistent number of z-planes in: " + f.getAbsolutePath());
+                    Logger.error("Inconsistent number of z-planes in: " + file.getAbsolutePath());
                 }
 
                 // add missing information to first IFD
-                info[0].fileName = ctzFileList[c][t][0];
-                info[0].directory = channelFolders[c] + "/"; // relative path to main directory
+                info[0].fileName = getName( c, t, 0 );
+                info[0].directory = getDirectory( c, t, 0 );
                 info[0].fileTypeString = fileType;
 
                 infoCT = new SerializableFileInfo[nZ];
@@ -235,7 +236,7 @@ public class FileInfos
 
                 int bytesPerPixel = 0;
 
-                IHDF5Reader reader = HDF5Factory.openForReading( f.getAbsolutePath() );
+                IHDF5Reader reader = HDF5Factory.openForReading( file.getAbsolutePath() );
                 HDF5DataSetInformation dsInfo = reader.getDataSetInformation( h5DataSetName );
                 //String dsTypeString = OpenerExtension.hdf5InfoToString(dsInfo);
                 String dsTypeString = FileInfosHDF5Helper.dsInfoToTypeString(dsInfo); //TODO: Check if OpenerExtension.hdf5InfoToString can be made public and called.
@@ -251,13 +252,14 @@ public class FileInfos
                 }
 
                 infoCT = new SerializableFileInfo[nZ];
-                for ( int z2 = 0; z2 < nZ; z2++){
+                for ( int z2 = 0; z2 < nZ; z2++)
+                {
                     infoCT[z2] = new SerializableFileInfo();
-                    infoCT[z2].fileName = ctzFileList[c][t][z2];
-                    infoCT[z2].directory = channelFolders[c];
+                    infoCT[z2].fileName = getName( c, t, z2 );
+                    infoCT[z2].directory = getDirectory( c, t, z2 );
                     infoCT[z2].width = nX;
                     infoCT[z2].height = nY;
-                    infoCT[z2].bytesPerPixel = bytesPerPixel; // todo: how to get the bit-depth from the info?
+                    infoCT[z2].bytesPerPixel = bytesPerPixel;
                     infoCT[z2].h5DataSet = h5DataSetName;
                     infoCT[z2].fileTypeString = fileType;
                 }
@@ -265,27 +267,41 @@ public class FileInfos
             }
             else if ( fileType.equals(Utils.FileType.SINGLE_PLANE_TIFF.toString()))
             {
-                ftd = new FastTiffDecoder(directory + channelFolders[c], ctzFileList[c][t][z]);
+                ftd = new FastTiffDecoder(directory, ctzFiles[c][t][z]);
                 try{
                     fileInfos[c][t][z] = ftd.getTiffInfo()[0];
                 }
                 catch ( IOException e ){// TODO : Handle exceptions properly --ashis
                     System.out.print( e.toString() );
                 }
-                fileInfos[c][t][z].directory = channelFolders[c];
-                fileInfos[c][t][z].fileName = ctzFileList[c][t][z];
+                fileInfos[c][t][z].fileName = getName( c, t, z );
+                fileInfos[c][t][z].directory = getDirectory( c, t, z );
                 fileInfos[c][t][z].fileTypeString = fileType;
             }
         }
         else
         {
             Logger.error( "File does not exist [ c, t, z ] : " + c + ", " + t + ", " + z+
-                            "\npath:" + f.getAbsolutePath()  +
+                            "\npath:" + file.getAbsolutePath()  +
                             "\ndirectory: " + directory +
-                            "\nchannel-folder: " + channelFolders[ c ] +
-                            "\nfilename: " + ctzFileList[c][t][z] );
-            throw new UnsupportedOperationException( "File does not exist " + f.getAbsolutePath() );
+                            "\nfile: " + ctzFiles[c][t][z] );
+            throw new UnsupportedOperationException( "File does not exist " + file.getAbsolutePath() );
         }
 
+    }
+
+    private String getName( int c, int t, int z )
+    {
+        return new File( ctzFiles[ c ][ t ][ z ] ).getName();
+    }
+
+    private String getDirectory( int c, int t, int z )
+    {
+        final String parent = new File( ctzFiles[ c ][ t ][ z ] ).getParent();
+
+        if ( parent == null )
+            return "";
+        else
+            return parent;
     }
 }

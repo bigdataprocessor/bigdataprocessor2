@@ -53,9 +53,6 @@ public class FileInfosHelper
             ctzMin[0] = ctzMax[0] = ctzPad[0] = 0;
         }
 
-        infoSource.channelFolders = new String[ctzMax[0] - ctzMin[0] + 1];
-        Arrays.fill(infoSource.channelFolders, "");
-
         // frames
         matcher = Pattern.compile(".*<T(\\d+)-(\\d+)>.*").matcher(namingPattern);
         if (matcher.matches()) {
@@ -87,7 +84,7 @@ public class FileInfosHelper
         infoSource.nT = ctzSize[1];
         infoSource.nZ = ctzSize[2];
 
-        infoSource.ctzFileList = new String[ctzSize[0]][ctzSize[1]][ctzSize[2]];
+        infoSource.ctzFiles = new String[ctzSize[0]][ctzSize[1]][ctzSize[2]];
 
         if (namingPattern.contains("<Z") && namingPattern.contains(".tif")) {
             infoSource.fileType = Utils.FileType.SINGLE_PLANE_TIFF.toString();
@@ -117,13 +114,14 @@ public class FileInfosHelper
                         fileName = fileName.replaceFirst("<T(\\d+)-(\\d+)>",String.format("%1$0" + ctzPad[1] + "d", t));
                     }
 
-                    infoSource.ctzFileList[c - ctzMin[0]][t - ctzMin[1]][z - ctzMin[2]] = fileName;
+                    infoSource.ctzFiles[c - ctzMin[0]][t - ctzMin[1]][z - ctzMin[2]] = fileName;
 
                     if (!isObtainedImageDataInfo) {
-                        File f = new File(directory + infoSource.channelFolders[c - ctzMin[0]] + "/" + fileName);
+                        File f = new File(directory, fileName);
 
-                        if (f.exists() && !f.isDirectory()) {
-                            setImageMetadataFromTiff(infoSource,directory + infoSource.channelFolders[c - ctzMin[0]],fileName);
+                        if (f.exists() && !f.isDirectory())
+                        {
+                            setImageMetadataFromTiff( infoSource, directory, fileName);
 
                             if (infoSource.fileType.equals(Utils.FileType.SINGLE_PLANE_TIFF.toString()))
                                 infoSource.nZ = ctzSize[2];
@@ -149,7 +147,7 @@ public class FileInfosHelper
     {
         SerializableFileInfo[] info;
 
-        FastTiffDecoder ftd = new FastTiffDecoder(directory, fileName);
+        FastTiffDecoder ftd = new FastTiffDecoder( directory, fileName );
         try
         {
             info = ftd.getTiffInfo();
@@ -203,9 +201,7 @@ public class FileInfosHelper
         {
             fileInfos.fileType = Utils.FileType.SINGLE_PLANE_TIFF.toString();
 
-            String dataDirectory = getFirstChannelDirectory( fileInfos, directory );
-
-            FileInfosLeicaHelper.initLeicaSinglePlaneTiffData( fileInfos, dataDirectory, filterPattern, fileLists[ 0 ], fileInfos.nC, fileInfos.nZ );
+            FileInfosLeicaHelper.initLeicaSinglePlaneTiffData( fileInfos, directory, filterPattern, fileLists[ 0 ], fileInfos.nC, fileInfos.nZ );
         }
         else // tiff or h5
         {
@@ -243,20 +239,6 @@ public class FileInfosHelper
         }
     }
 
-    @Deprecated
-    private static void fixChannelFolders( FileInfos fileInfos, String namingScheme )
-    {
-        //
-        // Create dummy channel folders, if no real ones exist
-        //
-        if ( ! namingScheme.equals( NamingScheme.LOAD_CHANNELS_FROM_FOLDERS) )
-        {
-            fileInfos.channelFolders = new String[ fileInfos.nC ];
-            for ( int c = 0; c < fileInfos.nC; c++)
-                fileInfos.channelFolders[ c ] = "";
-        }
-    }
-
     private static void setFileInfos( FileInfos fileInfos, String namingScheme, String[][] fileLists )
     {
         if ( namingScheme.equals( NamingScheme.TIFF_SLICES ) )
@@ -266,14 +248,11 @@ public class FileInfosHelper
             fileInfos.nZ = fileLists[ 0 ].length;
             fileInfos.fileType = Utils.FileType.SINGLE_PLANE_TIFF.toString();
             fileInfos.channelNames = new String[]{ new File( fileInfos.directory ).getParent() };
-            fixChannelFolders( fileInfos, namingScheme );
-            fetchAndSetImageMetadata( fileInfos, fileInfos.directory + fileInfos.channelFolders[ 0 ], namingScheme, fileLists[ 0 ] );
+            fetchAndSetImageMetadata( fileInfos, fileInfos.directory, namingScheme, fileLists[ 0 ] );
             populateFileList( fileInfos, namingScheme, fileLists );
         }
         else
         {
-            fileInfos.channelFolders = new String[]{""};
-
             HashSet<String> channels = new HashSet();
             HashSet<String> timepoints = new HashSet();
 
@@ -324,7 +303,6 @@ public class FileInfosHelper
             List< String > sortedTimepoints = sort( timepoints );
             fileInfos.nT = sortedTimepoints.size() ;
 
-            fixChannelFolders( fileInfos, namingScheme );
             fetchAndSetImageMetadata( fileInfos, fileInfos.directory, namingScheme, fileLists[ 0 ] );
 
             populateFileInfosFromChannelTimeRegExp(
@@ -342,9 +320,18 @@ public class FileInfosHelper
     {
         try
         {
-            final List< Integer > integers = strings.stream().mapToInt( Integer::parseInt ).boxed().collect( Collectors.toList() );
-            Collections.sort( integers );
-            final List< String > sorted = integers.stream().map( x -> "" + x ).collect( Collectors.toList() );
+            List< String > sorted = new ArrayList< >( strings );
+            Collections.sort( sorted, new Comparator< String >()
+            {
+                @Override
+                public int compare( String o1, String o2 )
+                {
+                    final Integer i1 = Integer.parseInt( o1 );
+                    final Integer i2 = Integer.parseInt( o2 );
+                    return i1.compareTo( i2 );
+                }
+            } );
+
             return sorted;
         }
         catch ( Exception e )
@@ -386,12 +373,12 @@ public class FileInfosHelper
             String namingScheme,
             String[][] fileLists )
     {
-        fileInfos.ctzFileList = new String[ fileInfos.nC ][ fileInfos.nT ][ fileInfos.nZ ];
+        fileInfos.ctzFiles = new String[ fileInfos.nC ][ fileInfos.nT ][ fileInfos.nZ ];
 
         if ( namingScheme.equals( NamingScheme.TIFF_SLICES ) )
         {
             for ( int z = 0; z < fileInfos.nZ; z++ )
-                fileInfos.ctzFileList[ 0 ][ 0 ][ z ] = fileLists[ 0 ][ z ];
+                fileInfos.ctzFiles[ 0 ][ 0 ][ z ] = fileLists[ 0 ][ z ];
         }
         else
         {
@@ -399,7 +386,7 @@ public class FileInfosHelper
                 for ( int t = 0; t < fileInfos.nT; t++ )
                     for ( int z = 0; z < fileInfos.nZ; z++ )
                         // all z with same file-name, because it is stacks
-                        fileInfos.ctzFileList[ c ][ t ][ z ] = fileLists[ c ][ t ];
+                        fileInfos.ctzFiles[ c ][ t ][ z ] = fileLists[ c ][ t ];
         }
     }
 
@@ -410,7 +397,7 @@ public class FileInfosHelper
             List< String > channels,
             List< String > timepoints )
     {
-        fileInfos.ctzFileList = new String[ fileInfos.nC ][ fileInfos.nT ][ fileInfos.nZ ];
+        fileInfos.ctzFiles = new String[ fileInfos.nC ][ fileInfos.nT ][ fileInfos.nZ ];
 
         Pattern patternCT = Pattern.compile( namingScheme );
 
@@ -422,7 +409,7 @@ public class FileInfosHelper
                     int c = channels.indexOf( matcherCT.group("C") );
                     int t = timepoints.indexOf( matcherCT.group("T") );
                     for ( int z = 0; z < fileInfos.nZ; z++) {
-                        fileInfos.ctzFileList[c][t][z] = fileName; // all z with same file-name, because it is stacks
+                        fileInfos.ctzFiles[c][t][z] = fileName; // all z with same file-name, because it is stacks
                     }
                 }
                 catch (Exception e)
@@ -446,7 +433,7 @@ public class FileInfosHelper
             ArrayList< Integer > channelGroups,
             ArrayList< Integer > timeGroups )
     {
-        fileInfos.ctzFileList = new String[ fileInfos.nC ][ fileInfos.nT ][ fileInfos.nZ ];
+        fileInfos.ctzFiles = new String[ fileInfos.nC ][ fileInfos.nT ][ fileInfos.nZ ];
 
         Pattern pattern = Pattern.compile( regExp );
 
@@ -459,7 +446,7 @@ public class FileInfosHelper
                 int t = timepoints.indexOf( getId( timeGroups, matcher ) );
                 for ( int z = 0; z < fileInfos.nZ; z++)
                 {
-                    fileInfos.ctzFileList[c][t][z] = fileName; // all z with same file-name, because it is stacks
+                    fileInfos.ctzFiles[c][t][z] = fileName; // all z with same file-name, because it is stacks
                 }
             }
             else
@@ -574,28 +561,6 @@ public class FileInfosHelper
         {
             return ".*";
         }
-    }
-
-
-    public static String fromWindowsSplitSavePattern( String pattern )
-    {
-        return pattern.replace( "(D)", "(\\d)" );
-    }
-
-    public static String toWindowsSplitSavePattern( String pattern )
-    {
-        return pattern.replace( "(\\d)", "(D)"  );
-    }
-
-    public static String getFirstChannelDirectory( FileInfos infoSource, String directory )
-    {
-        String dataDirectory;
-        if ( infoSource.channelFolders == null )
-            dataDirectory = directory;
-        else
-            dataDirectory = directory + infoSource.channelFolders[ 0 ];
-
-        return dataDirectory;
     }
 
     // TODO: Do I need the filterPattern?

@@ -125,7 +125,8 @@ public class FastTiffDecoder {
     long totalTime = 0;
 
 
-    public FastTiffDecoder( String directory, String name ) {
+    public FastTiffDecoder( String directory, String name )
+    {
         this.directory = directory;
         this.name = name;
     }
