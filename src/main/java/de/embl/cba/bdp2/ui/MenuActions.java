@@ -11,7 +11,7 @@ import de.embl.cba.bdp2.crop.CropDialog;
 import de.embl.cba.bdp2.data.OpenSampleDataCommand;
 import de.embl.cba.bdp2.dialog.MiscMenu;
 import de.embl.cba.bdp2.dialog.Utils;
-import de.embl.cba.bdp2.drift.track.CorrectDriftWithTrackCommand;
+import de.embl.cba.bdp2.drift.track.ApplyTrackCommand;
 import de.embl.cba.bdp2.drift.track.ManualTrackCreator;
 import de.embl.cba.bdp2.image.ImageRenameCommand;
 import de.embl.cba.bdp2.image.ImageRenameDialog;
@@ -113,10 +113,10 @@ public class MenuActions implements ActionListener {
                 new ManualTrackCreator( viewer, "" );
             });
         }
-        else if (e.getActionCommand().equalsIgnoreCase( CorrectDriftWithTrackCommand.COMMAND_NAME ))
+        else if (e.getActionCommand().equalsIgnoreCase( ApplyTrackCommand.COMMAND_NAME ))
         {
             BigDataProcessor2.threadPool.submit(() -> {
-                Services.commandService.run( CorrectDriftWithTrackCommand.class, true );
+                Services.commandService.run( ApplyTrackCommand.class, true );
             });
         }
         else if (e.getActionCommand().equalsIgnoreCase( Menu.REGISTER_VOLUME_SIFT_MENU_ITEM ))

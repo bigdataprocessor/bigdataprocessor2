@@ -31,8 +31,6 @@ public class TrackApplier< R extends RealType< R > & NativeType< R > >
 
 		Interval union = getUnion( track, volumeView );
 
-		// TODO: interpolate missing time-points
-		// make user chose interpolation method
 		for (int t = track.tMin(); t < track.tMax(); ++t)
 		{
 			final ArrayList< RandomAccessibleInterval< R > > channels = new ArrayList<>();
@@ -40,7 +38,7 @@ public class TrackApplier< R extends RealType< R > & NativeType< R > >
 			{
 				volumeView = IntervalImageViews.getVolumeView( image.getRai(), c, t );
 
-				RandomAccessible< R > extendBorder = Views.extendBorder( volumeView );
+				RandomAccessible< R > extendBorder = Views.extendZero( volumeView );
 				RandomAccessible< R > translate = Views.translate( extendBorder, getTranslation( track, t ) );
 				final IntervalView< R > intervalView = Views.interval( translate, union );
 

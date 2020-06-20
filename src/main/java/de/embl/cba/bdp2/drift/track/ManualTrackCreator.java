@@ -23,6 +23,8 @@ public class ManualTrackCreator extends JFrame
 	private final BdvHandle bdvHandle;
 	private final JPanel panel;
 	private boolean automaticLinearInterpolation = true;
+	private JTextField dt;
+	private Behaviours behaviours;
 
 	public ManualTrackCreator( BdvImageViewer viewer, String trackName )
 	{
@@ -48,23 +50,23 @@ public class ManualTrackCreator extends JFrame
 	{
 		final JPanel panel = getPanel();
 		final JLabel label = new JLabel( "Move" );
-		final JTextField dt = new JTextField( "1" );
+		dt = new JTextField( "1" );
 
-		final JButton bwd = new JButton( "bwd" );
+		final JButton bwd = new JButton( "Bwd [J]" );
+		bwd.setFont( new Font(Font.MONOSPACED, Font.PLAIN, 12)  );
 		bwd.addActionListener( e -> {
-			final int currentTimepoint = bdvHandle.getViewerPanel().getState().getCurrentTimepoint();
-			final int t = currentTimepoint - Integer.parseInt( dt.getText() );
-			if ( t >= 0 )
-				moveToTrackPosition( t );
+			moveBwd();
 		} );
 
-		final JButton fwd = new JButton( "fwd" );
+		behaviours.behaviour( ( ClickBehaviour ) ( x, y ) -> moveBwd(), "move bwd along track", "J" );
+
+		final JButton fwd = new JButton( "Fwd [K]" );
+		fwd.setFont( new Font(Font.MONOSPACED, Font.PLAIN, 12)  );
 		fwd.addActionListener( e -> {
-			final int currentTimepoint = bdvHandle.getViewerPanel().getState().getCurrentTimepoint();
-			final int t = currentTimepoint + Integer.parseInt( dt.getText() );
-			if ( t < bdvHandle.getViewerPanel().getState().getNumTimepoints() )
-				moveToTrackPosition( t );
+			moveFwd();
 		} );
+
+		behaviours.behaviour( ( ClickBehaviour ) ( x, y ) -> moveFwd(), "move fwd along track", "K" );
 
 		panel.add( label );
 		panel.add( Box.createHorizontalGlue() );
@@ -74,6 +76,22 @@ public class ManualTrackCreator extends JFrame
 		panel.add( Box.createHorizontalGlue() );
 		panel.add( fwd );
 		this.panel.add( panel );
+	}
+
+	private void moveFwd()
+	{
+		final int currentTimepoint = bdvHandle.getViewerPanel().getState().getCurrentTimepoint();
+		final int t = currentTimepoint + Integer.parseInt( dt.getText() );
+		if ( t < bdvHandle.getViewerPanel().getState().getNumTimepoints() )
+			moveToTrackPosition( t );
+	}
+
+	private void moveBwd()
+	{
+		final int currentTimepoint = bdvHandle.getViewerPanel().getState().getCurrentTimepoint();
+		final int t = currentTimepoint - Integer.parseInt( dt.getText() );
+		if ( t >= 0 )
+			moveToTrackPosition( t );
 	}
 
 	private void addLegendPanels()
@@ -219,7 +237,7 @@ public class ManualTrackCreator extends JFrame
 
 	public void installBehaviours()
 	{
-		Behaviours behaviours = new Behaviours( new InputTriggerConfig() );
+		behaviours = new Behaviours( new InputTriggerConfig() );
 		behaviours.install( bdvHandle.getTriggerbindings(), "behaviours" );
 
 		behaviours.behaviour( ( ClickBehaviour ) ( x, y ) ->
@@ -247,7 +265,7 @@ public class ManualTrackCreator extends JFrame
 		if ( track.getTimePoints().contains( t ) )
 		{
 			double[] position = track.getPosition( t );
-			BdvUtils.moveToPosition( bdvHandle, position, t, 500 );
+			BdvUtils.moveToPosition( bdvHandle, position, t, 0 );
 		}
 		else
 		{

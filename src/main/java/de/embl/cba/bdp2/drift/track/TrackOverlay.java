@@ -38,23 +38,11 @@ public class TrackOverlay extends BdvOverlay
 
 		for ( int t = 0; t < numTimepoints ; t++ )
 		{
-			if ( t == currentTimepoint )
-				drawShape( g, t, Shape.Filled );
-			else
-				drawShape( g, t, Shape.Empty );
+			drawShape( g, t );
 		}
-
-//		for ( int t = currentTimepoint - 1; t >= 0 ; t-- )
-//		{
-//			if ( timePoints.contains( t ) )
-//			{
-//				drawShape( g, t, Shape.Empty );
-//				break;
-//			}
-//		}
 	}
 
-	private void drawShape( Graphics2D g, int t, Enum shape )
+	private void drawShape( Graphics2D g, int t )
 	{
 		if ( ! track.getTimePoints().contains( t ) ) return;
 
@@ -68,13 +56,25 @@ public class TrackOverlay extends BdvOverlay
 		final int size = getSize( positionInViewer[ 2 ] );
 		final int x = ( int ) ( positionInViewer[ 0 ] - 0.5 * size );
 		final int y = ( int ) ( positionInViewer[ 1 ] - 0.5 * size );
-		g.setColor( getColor( positionInViewer[ 2 ] , track.getType( t ) ) );
+
+		final Color color = getColor( positionInViewer[ 2 ], track.getType( t ) );
+		g.setColor( color );
+
+		final Shape shape = getShape( t );
 
 		if ( shape.equals( Shape.Filled ) )
 			g.fillOval( x, y, size, size );
 		else if ( shape.equals( Shape.Empty ))
 			g.drawOval( x, y, size, size );
 
+	}
+
+	private Shape getShape( int t )
+	{
+		if ( t == bdvHandle.getViewerPanel().getState().getCurrentTimepoint() )
+			return Shape.Filled;
+		else
+			return Shape.Empty;
 	}
 
 	private Color getColor( final double depth, Track.PositionType type )

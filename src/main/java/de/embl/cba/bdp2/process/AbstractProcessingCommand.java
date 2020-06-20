@@ -33,23 +33,29 @@ public abstract class AbstractProcessingCommand< R extends RealType< R > & Nativ
 
     protected Image< R > outputImage;
 
-    protected void handleOutputImage( boolean autoContrast, boolean keepViewerTransform )
+    protected BdvImageViewer handleOutputImage( boolean autoContrast, boolean keepViewerTransform )
     {
         outputImage.setName( outputImageName );
         ImageService.nameToImage.put( outputImageName, outputImage );
 
         if ( viewingModality.equals( AbstractOpenCommand.SHOW_IN_NEW_VIEWER ) )
         {
-            BigDataProcessor2.showImage( outputImage, autoContrast );
+            return BigDataProcessor2.showImage( outputImage, autoContrast );
         }
         else if ( viewingModality.equals( AbstractOpenCommand.SHOW_IN_CURRENT_VIEWER ))
         {
             final BdvImageViewer viewer = BdvService.imageNameToBdv.get( inputImage.getName() );
             viewer.replaceImage( outputImage, autoContrast, keepViewerTransform );
+            return viewer;
         }
         else if ( viewingModality.equals( AbstractOpenCommand.DO_NOT_SHOW ))
         {
             // do nothing
+            return null;
+        }
+        else
+        {
+            throw new RuntimeException( "Unsupported viewing modality: " + viewingModality );
         }
     }
 }

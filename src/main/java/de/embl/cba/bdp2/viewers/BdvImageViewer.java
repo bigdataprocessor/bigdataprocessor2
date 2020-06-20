@@ -59,7 +59,7 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
         this.enableArbitraryPlaneSlicing = enableArbitraryPlaneSlicing;
         this.channelSources = new ArrayList<>(  );
 
-        show( autoContrast );
+        showImage( image, autoContrast );
 
         this.addMenus( new MenuActions() );
         this.installBehaviours( );
@@ -123,12 +123,6 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
 
     public void repaint() {
         this.bdvHandle.getViewerPanel().requestRepaint();
-    }
-
-    // TODO: get rid of this method
-    public void show( boolean autoContrast )
-    {
-        showImage( image, autoContrast );
     }
 
     public void replaceImage( Image image, boolean autoContrast, boolean keepViewerTransform )
@@ -253,11 +247,7 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
     {
         double min, max;
 
-        final AffineTransform3D affineTransform3D = new AffineTransform3D();
-        bdvHandle.getViewerPanel().getState().getViewerTransform( affineTransform3D );
-        final RealPoint globalPosition = new RealPoint( 0, 0, 0 );
-        affineTransform3D.inverse().apply( new RealPoint( 0, 0, 0 ), globalPosition );
-        final long[] positionInSource = BdvUtils.getPositionInSource( channelSources.get( channel ).getSources().get( 0 ).getSpimSource(), globalPosition, 0, 0 );
+        final long sliceIndex = getCurrentlyShownSliceIndex( channel );
 
         if ( image != null)
         {
@@ -266,20 +256,16 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
                     DimensionOrder.C,
                     channel);
 
-//            final long stackCenter =
-//                    (long) Math.ceil( ( raiXYZ.max( DimensionOrder.Z ) - raiXYZ.min( DimensionOrder.Z ) ) / 2.0 )
-//                            + raiXYZ.min( DimensionOrder.Z ) + 1;
-
-
             IntervalView< R > raiXY = Views.hyperSlice(
                     raiXYZ,
                     DimensionOrder.Z,
-                    positionInSource[ 2 ] );
+                    sliceIndex );
 
             final long nx = raiXY.dimension( 0 );
             final long ny = raiXY.dimension( 1 );
 
-            final FinalInterval crop = Intervals.expand( raiXY, -nx / 3, -ny / 3 );
+            // take only a central part to speed it up a bit
+            final FinalInterval crop = Intervals.expand( raiXY, 0, DimensionOrder.Y );
 
             final IntervalView< R > cropped = Views.interval( raiXY, crop );
 
@@ -303,7 +289,16 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
         return new DisplaySettings( min, max, null );
     }
 
-    public void autoContrastPerChannel()
+    public long getCurrentlyShownSliceIndex( int channel )
+    {
+        final AffineTransform3D viewerTransform = getViewerTransform();
+        final RealPoint globalPosition = new RealPoint( 0, 0, 0 );
+        viewerTransform.inverse().apply( new RealPoint( 0, 0, 0 ), globalPosition );
+        final long[] positionInSource = BdvUtils.getPositionInSource( channelSources.get( channel ).getSources().get( 0 ).getSpimSource(), globalPosition, 0, 0 );
+        return positionInSource[ DimensionOrder.Z ];
+    }
+
+    public void autoContrast()
     {
         int nChannels = (int) image.getRai().dimension( DimensionOrder.C);
 
@@ -380,12 +375,12 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
         addToBdv( image );
 
         //bdvHandle.getViewerPanel().setInterpolation( Interpolation.NLINEAR );
-        //setTransform();
+
         setAutoColors();
 
         if ( autoContrast )
         {
-            new Thread( () -> autoContrastPerChannel() ).start();
+            new Thread( () -> autoContrast() ).start();
         }
 
         JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor( bdvHandle.getViewerPanel() );
@@ -460,6 +455,9 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
 
     private ARGBType getAutoColor( int sourceIndex, int numSources )
     {
+        if ( numSources == 1 )
+            return new ARGBType( ARGBType.rgba( 255, 255, 255, 255 / numSources ) );
+
         switch ( sourceIndex )
         {
             case 0:

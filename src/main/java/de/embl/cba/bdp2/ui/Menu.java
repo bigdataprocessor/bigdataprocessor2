@@ -3,9 +3,8 @@ package de.embl.cba.bdp2.ui;
 import de.embl.cba.bdp2.bin.BinCommand;
 import de.embl.cba.bdp2.calibrate.CalibrateCommand;
 import de.embl.cba.bdp2.convert.ConvertToUnsignedByteTypeCommand;
-import de.embl.cba.bdp2.crop.CropCommand;
 import de.embl.cba.bdp2.data.OpenSampleDataCommand;
-import de.embl.cba.bdp2.drift.track.CorrectDriftWithTrackCommand;
+import de.embl.cba.bdp2.drift.track.ApplyTrackCommand;
 import de.embl.cba.bdp2.image.ImageRenameCommand;
 import de.embl.cba.bdp2.open.*;
 import de.embl.cba.bdp2.align.AlignChannelsCommand;
@@ -18,7 +17,6 @@ public class Menu extends JMenu
     public static final String CONFIGURE_LOGGING_MENU_ITEM = "Configure Logging...";
     // Development (alpha stage)
     public static final String IMAGEJ_VIEW_MENU_ITEM = "Show in ImageJ Viewer";
-    public static final String APPLY_TRACK_MENU_ITEM = "Apply Track...";
     public static final String REGISTER_VOLUME_SIFT_MENU_ITEM = "Correct Lateral Slice Drift in Volume (SIFT)...";
     public static final String REGISTER_MOVIE_SIFT_MENU_ITEM = "Correct Lateral Frame Drift in Time-lapse (SIFT)...";
     public static final String REGISTER_MOVIE_PHASE_CORRELATION_MENU_ITEM = "Correct Lateral Frame Drift in Time-lapse (X-Corr)...";
@@ -65,7 +63,7 @@ public class Menu extends JMenu
 
         final JMenu correctDriftMenu = new JMenu( "Correct Drift" );
         addMenuItem( correctDriftMenu, CREATE_MANUAL_TRACK );
-        addMenuItem( correctDriftMenu, CorrectDriftWithTrackCommand.COMMAND_NAME );
+        addMenuItem( correctDriftMenu, ApplyTrackCommand.COMMAND_NAME );
         processMenu.add( correctDriftMenu );
 
         final JMenu cropMenu = new JMenu( "Crop" );
