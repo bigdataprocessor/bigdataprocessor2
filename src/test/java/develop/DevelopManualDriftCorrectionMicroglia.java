@@ -5,6 +5,7 @@ import de.embl.cba.bdp2.drift.track.TrackCreator;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.scijava.Services;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import ij.plugin.frame.Recorder;
 import net.imagej.ImageJ;
 
 import static de.embl.cba.bdp2.open.core.NamingScheme.MULTI_CHANNEL_VOLUMES;
@@ -17,6 +18,8 @@ public class DevelopManualDriftCorrectionMicroglia
         final ImageJ imageJ = new ImageJ();
         imageJ.ui().showUI();
         Services.commandService = imageJ.command();
+
+        new Recorder();
 
         final String directory = "/Users/tischer/Documents/bigdataprocessor2/src/test/resources/test-data/microglia-tracking-nt123/volumes";
 

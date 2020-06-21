@@ -43,10 +43,12 @@ public class TrackCreator extends JFrame
 	public void createAndShowDialog()
 	{
 		addLegendPanels();
-		addHelpTextPanel();
+		this.panel.add( new JSeparator( SwingConstants.HORIZONTAL) );
 		//addInterpolationCheckBoxPanel();
 		addTrackNavigationPanel();
 		addSaveTrackPanel();
+		addHelpTextPanel();
+		addHelpTextPanel2();
 		showFrame();
 	}
 
@@ -56,16 +58,16 @@ public class TrackCreator extends JFrame
 		final JLabel label = new JLabel( "Move" );
 		dt = new JTextField( "1" );
 
-		final JButton bwd = new JButton( "Bwd [J]" );
-		bwd.setFont( new Font(Font.MONOSPACED, Font.PLAIN, 12)  );
+		final JButton bwd = new JButton( "Bwd [ J ]" );
+		//bwd.setFont( new Font(Font.MONOSPACED, Font.PLAIN, 12)  );
 		bwd.addActionListener( e -> {
 			moveBwd();
 		} );
 
 		behaviours.behaviour( ( ClickBehaviour ) ( x, y ) -> moveBwd(), "move bwd along track", "J" );
 
-		final JButton fwd = new JButton( "Fwd [K]" );
-		fwd.setFont( new Font(Font.MONOSPACED, Font.PLAIN, 12)  );
+		final JButton fwd = new JButton( "Fwd [ K ]" );
+		//fwd.setFont( new Font(Font.MONOSPACED, Font.PLAIN, 12)  );
 		fwd.addActionListener( e -> {
 			moveFwd();
 		} );
@@ -145,7 +147,7 @@ public class TrackCreator extends JFrame
 	private JPanel getPanel()
 	{
 		final JPanel panel = new JPanel(  );
-		panel.setLayout( new BoxLayout(panel, BoxLayout.LINE_AXIS) );
+		panel.setLayout( new BoxLayout( panel, BoxLayout.LINE_AXIS ) );
 		panel.setBorder( BorderFactory.createEmptyBorder(0, 10, 10, 10) );
 		return panel;
 	}
@@ -209,15 +211,25 @@ public class TrackCreator extends JFrame
 	private void addHelpTextPanel()
 	{
 		final JPanel panel = getPanel();
-		final JLabel label = new JLabel( "Press [ A ] to add or move a track point" );
+		final JLabel label = new JLabel( "Add or change track point: Press [ A ]" );
 		panel.add( label );
+		panel.add( Box.createHorizontalGlue() );
+		this.panel.add( panel );
+	}
+
+	private void addHelpTextPanel2()
+	{
+		final JPanel panel = getPanel();
+		final JLabel label = new JLabel( "Correct drift: Process > Correct Drift > Apply Track..." );
+		panel.add( label );
+		panel.add( Box.createHorizontalGlue() );
 		this.panel.add( panel );
 	}
 
 	private void addSaveTrackPanel()
 	{
 		final JPanel panel = getPanel();
-		final JButton button = new JButton( "Save track" );
+		final JButton button = new JButton( "Save track to file" );
 		panel.add( button );
 		button.addActionListener( e -> {
 
@@ -226,8 +238,13 @@ public class TrackCreator extends JFrame
 
 			if ( jFileChooser.showSaveDialog( this ) == JFileChooser.APPROVE_OPTION )
 			{
-				final File file = jFileChooser.getSelectedFile();
-				track.setName( file.getName() );
+				File file = jFileChooser.getSelectedFile();
+				if ( ! file.getName().endsWith( ".json" ) )
+				{
+					file = new File( file.getAbsolutePath() + ".json" );
+				}
+
+				track.setName( file.getName().replace( ".json", "" ) );
 				final ObjectMapper objectMapper = new ObjectMapper();
 				try
 				{

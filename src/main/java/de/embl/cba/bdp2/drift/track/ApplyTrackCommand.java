@@ -10,26 +10,37 @@ import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
+import java.io.File;
+
 @Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>" + AbstractProcessingCommand.COMMAND_PROCESS_PATH  + ApplyTrackCommand.COMMAND_FULL_NAME )
 public class ApplyTrackCommand< R extends RealType< R > & NativeType< R > > extends AbstractProcessingCommand
 {
     public static final String COMMAND_NAME = "Apply Track...";
     public static final String COMMAND_FULL_NAME =  Utils.COMMAND_BDP_PREFIX + COMMAND_NAME;
 
+//    @Parameter(label = "Track")
+//    Track track;
+
     @Parameter(label = "Track")
-    Track track;
+    File file;
 
     public void run()
     {
         process();
-        final BdvImageViewer viewer = handleOutputImage( false, false );
-        BdvUtils.moveToPosition( viewer.getBdvHandle(), new double[]{ 0, 0, 0 }, 0 , 0);
-        viewer.autoContrast();
+        showOutputImage();
     }
 
     private void process()
     {
+        final Track track = Tracks.fromJsonFile( file );
         final TrackApplier< R > trackApplier = new TrackApplier<>( inputImage );
         outputImage = trackApplier.applyTrack( track );
+    }
+
+    public void showOutputImage()
+    {
+        final BdvImageViewer viewer = handleOutputImage( false, false );
+        BdvUtils.moveToPosition( viewer.getBdvHandle(), new double[]{ 0, 0, 0 }, 0 , 0);
+        viewer.autoContrast();
     }
 }
