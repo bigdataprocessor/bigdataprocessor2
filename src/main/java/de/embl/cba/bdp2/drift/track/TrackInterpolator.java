@@ -1,6 +1,5 @@
 package de.embl.cba.bdp2.drift.track;
 
-import net.imagej.ops.Ops;
 import net.imglib2.util.LinAlgHelpers;
 
 import java.util.ArrayList;
@@ -20,7 +19,7 @@ public class TrackInterpolator
 
 		for ( int i = timePoints.size() - 1; i >= 0 ; i-- )
 		{
-			if ( track.getType( timePoints.get( i ) ).equals( Track.PositionType.Interpolated ) )
+			if ( track.getType( timePoints.get( i ) ).equals( TrackPosition.PositionType.Interpolated ) )
 			{
 				timePoints.remove( i );
 			}
@@ -46,7 +45,7 @@ public class TrackInterpolator
 				final double[] pInterpolate = new double[ pCurrent.length ];
 				LinAlgHelpers.scale( dp, f, pInterpolate );
 				LinAlgHelpers.add( pCurrent, pInterpolate, pInterpolate );
-				track.setPosition( t, pInterpolate, Track.PositionType.Interpolated );
+				track.setPosition( t, pInterpolate, TrackPosition.PositionType.Interpolated );
 			}
 		}
 	}

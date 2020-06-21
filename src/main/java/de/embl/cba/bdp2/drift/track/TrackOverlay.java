@@ -77,16 +77,16 @@ public class TrackOverlay extends BdvOverlay
 			return Shape.Empty;
 	}
 
-	private Color getColor( final double depth, Track.PositionType type )
+	private Color getColor( final double depth, TrackPosition.PositionType type )
 	{
 		int alpha = 255 - ( int ) Math.round( Math.abs( depth ) );
 
 		if ( alpha < 64 )
 			alpha = 64;
 
-		if ( type.equals( Track.PositionType.Anchor ))
+		if ( type.equals( TrackPosition.PositionType.Anchor ))
 			return new Color( 255, 255, 0, alpha );
-		else if ( type.equals( Track.PositionType.Interpolated ) )
+		else if ( type.equals( TrackPosition.PositionType.Interpolated ) )
 			return new Color( 0, 0, 255, alpha );
 		else
 			throw new RuntimeException( "Cannot color type: " + type );

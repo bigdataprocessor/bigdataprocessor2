@@ -28,7 +28,7 @@ public class Menu extends JMenu
     public static final String CROP_CALIBRATED = "Crop in Calibrated Units...";
     public static final String CROP_VOXEL = "Crop in Voxel Units...";
 
-    public static final String CREATE_MANUAL_TRACK = "Create Manual Track...";
+    public static final String CREATE_TRACK = "Create Track...";
 
     public static final String OBLIQUE_MENU_ITEM = "Shear...";
 
@@ -62,7 +62,7 @@ public class Menu extends JMenu
         addMenuItem( processMenu, CalibrateCommand.COMMAND_NAME );
 
         final JMenu correctDriftMenu = new JMenu( "Correct Drift" );
-        addMenuItem( correctDriftMenu, CREATE_MANUAL_TRACK );
+        addMenuItem( correctDriftMenu, CREATE_TRACK );
         addMenuItem( correctDriftMenu, ApplyTrackCommand.COMMAND_NAME );
         processMenu.add( correctDriftMenu );
 

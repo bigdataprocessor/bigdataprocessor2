@@ -7,39 +7,40 @@ import java.util.Set;
 
 public class Track
 {
-	private String trackName;
+	private String name;
 	private double[] voxelSpacings;
+	private HashMap< Integer, TrackPosition > timeToTrackPosition;
 
-	private class TrackPoint
+	public Track( String name, double[] voxelSpacings )
 	{
-		public double[] position;
-		public PositionType type;
-
-		public TrackPoint( double[] position, PositionType type )
-		{
-			this.position = position;
-			this.type = type;
-		}
-	}
-
-	private HashMap< Integer, TrackPoint > timeToTrackPoint;
-
-	public enum PositionType
-	{
-		Anchor,
-		Interpolated
-	}
-
-	public Track( String trackName, double[] voxelSpacings )
-	{
-		this.trackName = trackName;
+		this.name = name;
 		this.voxelSpacings = voxelSpacings;
-		timeToTrackPoint = new HashMap<>();
+		timeToTrackPosition = new HashMap<>();
 	}
 
-	public PositionType getType( int t )
+	public TrackPosition.PositionType getType( int t )
 	{
-		return timeToTrackPoint.get( t ).type;
+		return timeToTrackPosition.get( t ).type;
+	}
+
+	public double[] getVoxelSpacings()
+	{
+		return voxelSpacings;
+	}
+
+	public void setVoxelSpacings( double[] voxelSpacings )
+	{
+		this.voxelSpacings = voxelSpacings;
+	}
+
+	public HashMap< Integer, TrackPosition > getTimeToTrackPosition()
+	{
+		return timeToTrackPosition;
+	}
+
+	public void setTimeToTrackPosition( HashMap< Integer, TrackPosition > timeToTrackPosition )
+	{
+		this.timeToTrackPosition = timeToTrackPosition;
 	}
 
 	public void setVoxelSpacing( double[] voxelSpacings )
@@ -49,12 +50,12 @@ public class Track
 
 	public String getName()
 	{
-		return trackName;
+		return name;
 	}
 
-	public void setName( String trackName )
+	public void setName( String name )
 	{
-		this.trackName = trackName;
+		this.name = name;
 	}
 
 	private long[] uncalibrate( double[] position )
@@ -72,9 +73,8 @@ public class Track
 	 */
 	public void setPosition( int t, double[] position )
 	{
-		setPosition( t, position, PositionType.Anchor );
+		setPosition( t, position, TrackPosition.PositionType.Anchor );
 	}
-
 
 	/**
 	 *
@@ -82,9 +82,9 @@ public class Track
 	 * @param position calibrated
 	 * @param positionType
 	 */
-	public void setPosition( int t, double[] position, PositionType positionType )
+	public void setPosition( int t, double[] position, TrackPosition.PositionType positionType )
 	{
-		timeToTrackPoint.put( t, new TrackPoint( position, positionType ) );
+		timeToTrackPosition.put( t, new TrackPosition( position, positionType ) );
 	}
 
 	/**
@@ -94,7 +94,7 @@ public class Track
 	 */
 	public void setPosition( int t, RealPoint realPoint )
 	{
-		setPosition( t, realPoint, PositionType.Anchor );
+		setPosition( t, realPoint, TrackPosition.PositionType.Anchor );
 	}
 
 
@@ -104,7 +104,7 @@ public class Track
 	 * @param realPoint calibrated
 	 * @param positionType
 	 */
-	public void setPosition( int t, RealPoint realPoint, PositionType positionType )
+	public void setPosition( int t, RealPoint realPoint, TrackPosition.PositionType positionType )
 	{
 		final double[] doubles = new double[ realPoint.numDimensions() ];
 		realPoint.localize( doubles );
@@ -117,7 +117,7 @@ public class Track
 	 */
 	public double[] getPosition( int t )
 	{
-		return timeToTrackPoint.get( t ).position;
+		return timeToTrackPosition.get( t ).position;
 	}
 
 	/**
@@ -127,9 +127,9 @@ public class Track
 	 */
 	public long[] getVoxelPosition( int t )
 	{
-		if ( timeToTrackPoint.containsKey( t ) )
+		if ( timeToTrackPosition.containsKey( t ) )
 		{
-			return uncalibrate( timeToTrackPoint.get( t ).position );
+			return uncalibrate( timeToTrackPosition.get( t ).position );
 		}
 		else
 		{
@@ -139,18 +139,18 @@ public class Track
 
 	public Set< Integer > getTimePoints()
 	{
-		return timeToTrackPoint.keySet();
+		return timeToTrackPosition.keySet();
 	}
 
 	public int numDimensions()
 	{
-		return timeToTrackPoint.values().iterator().next().position.length;
+		return timeToTrackPosition.values().iterator().next().position.length;
 	}
 
 	public int tMin()
 	{
 		int tMin = Integer.MAX_VALUE;
-		for ( int t : timeToTrackPoint.keySet() )
+		for ( int t : timeToTrackPosition.keySet() )
 			if ( t < tMin ) tMin = t;
 
 		return tMin;
@@ -159,7 +159,7 @@ public class Track
 	public int tMax()
 	{
 		int tMax = Integer.MIN_VALUE;
-		for ( int t : timeToTrackPoint.keySet() )
+		for ( int t : timeToTrackPosition.keySet() )
 			if ( t > tMax ) tMax = t;
 
 		return tMax;
@@ -168,6 +168,6 @@ public class Track
 	@Override
 	public String toString()
 	{
-		return trackName;
+		return name;
 	}
 }

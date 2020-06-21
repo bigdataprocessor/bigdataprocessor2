@@ -12,7 +12,7 @@ import de.embl.cba.bdp2.data.OpenSampleDataCommand;
 import de.embl.cba.bdp2.dialog.MiscMenu;
 import de.embl.cba.bdp2.dialog.Utils;
 import de.embl.cba.bdp2.drift.track.ApplyTrackCommand;
-import de.embl.cba.bdp2.drift.track.ManualTrackCreator;
+import de.embl.cba.bdp2.drift.track.TrackCreator;
 import de.embl.cba.bdp2.image.ImageRenameCommand;
 import de.embl.cba.bdp2.image.ImageRenameDialog;
 import de.embl.cba.bdp2.log.Logger;
@@ -107,10 +107,10 @@ public class MenuActions implements ActionListener {
                 shearMenuDialog.setVisible(true);
             });
         }
-        else if (e.getActionCommand().equalsIgnoreCase( Menu.CREATE_MANUAL_TRACK ))
+        else if (e.getActionCommand().equalsIgnoreCase( Menu.CREATE_TRACK ))
         {
             BigDataProcessor2.threadPool.submit(() -> {
-                new ManualTrackCreator( viewer, "" );
+                new TrackCreator( viewer, "track" );
             });
         }
         else if (e.getActionCommand().equalsIgnoreCase( ApplyTrackCommand.COMMAND_NAME ))
