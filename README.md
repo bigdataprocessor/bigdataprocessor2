@@ -29,11 +29,11 @@ All actions can be recorded as ImageJ macros. To enable this please:
 
 <img src="https://user-images.githubusercontent.com/2157566/83620230-51d35e80-a58d-11ea-919e-5c6e2c5890eb.png" width="500">
 
-## Open a dataset
+## Open dataset
 
 In the BigDataViewer window, go to the menu bar and use the menu items in [ BigDataProcessor2 > Open ].
 
-<img src="https://user-images.githubusercontent.com/2157566/83619635-72e77f80-a58c-11ea-9602-c4eeb05bfd2f.png" width="600">
+<img src="https://user-images.githubusercontent.com/2157566/85284864-3377c900-b490-11ea-9a02-83056f792c14.png" width="500">
 
 
 ## Process
