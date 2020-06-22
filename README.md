@@ -28,7 +28,7 @@ Note: **Don't use the Commands**, they just serve the macro recording.
 All actions can be recorded as ImageJ macros. To enable this please:
 
 <img src="https://user-images.githubusercontent.com/2157566/85285145-abde8a00-b490-11ea-9fca-8661c87bc261.png" width="350">
-<img src="https://user-images.githubusercontent.com/2157566/85285194-bc8f0000-b490-11ea-9a63-f52543d1a714.png" width="200">
+<img src="https://user-images.githubusercontent.com/2157566/85285194-bc8f0000-b490-11ea-9a63-f52543d1a714.png" width="250">
 
 Note: This is equivalent to [ Plugins > Macros > Record... ] in the ImageJ menu, we just thought it is more convenient to also have it in the BigDataProcessor2 menu tree.
 
