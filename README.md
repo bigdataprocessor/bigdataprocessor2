@@ -33,7 +33,7 @@ All actions can be recorded as ImageJ macros. To enable this please:
 
 In the BigDataViewer window, go to the menu bar and use the menu items in [ BigDataProcessor2 > Open ].
 
-<img src="https://user-images.githubusercontent.com/2157566/85284864-3377c900-b490-11ea-9a02-83056f792c14.png" width="500">
+<img src="https://user-images.githubusercontent.com/2157566/85284864-3377c900-b490-11ea-9a02-83056f792c14.png" width="460">
 
 
 ## Process
