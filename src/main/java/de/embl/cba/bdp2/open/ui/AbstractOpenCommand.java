@@ -26,6 +26,7 @@ public abstract class AbstractOpenCommand< R extends RealType< R > & NativeType<
 
     @Parameter(label = "Image data directory", style = "directory")
     File directory;
+    public static String DIRECTORY_PARAMETER = "directory";
 
     @Parameter(label = "Output image handling", choices = {
             SHOW_IN_CURRENT_VIEWER,
@@ -39,6 +40,7 @@ public abstract class AbstractOpenCommand< R extends RealType< R > & NativeType<
 
     @Parameter(label = "Enable arbitrary plane slicing", required = false)
     protected boolean enableArbitraryPlaneSlicing = false;
+    public static String ARBITRARY_PLANE_SLICING_PARAMETER = "enableArbitraryPlaneSlicing";
 
     protected boolean autoContrast = true;
 

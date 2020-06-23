@@ -12,6 +12,7 @@ public class MacroRecorder< R extends RealType< R > & NativeType< R > >
 {
 	private final String commandName;
 	private String options;
+	private String message;
 
 	public MacroRecorder( String commandName, String outputImageHandling )
 	{
@@ -65,8 +66,16 @@ public class MacroRecorder< R extends RealType< R > & NativeType< R > >
 
 			if ( recorder != null )
 				if ( ! Recorder.scriptMode() )
+				{
+					Recorder.recordString( message );
 					Recorder.record( "run", commandName, options );
+				}
 
 		}).start();
+	}
+
+	public void setMessage( String message )
+	{
+		this.message = message;
 	}
 }

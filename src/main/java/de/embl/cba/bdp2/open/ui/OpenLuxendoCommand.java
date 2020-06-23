@@ -2,6 +2,7 @@ package de.embl.cba.bdp2.open.ui;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.open.LuxendoInteractiveChannelSubsetter;
+import ij.plugin.frame.Recorder;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;
@@ -21,19 +22,22 @@ public class OpenLuxendoCommand< R extends RealType< R > & NativeType< R > > ext
 
     @Parameter( label = "Stack index"  )
     protected int stackIndex = 0;
+    public static String STACK_INDEX_PARAMETER = "stackIndex";
 
     public void run()
     {
         SwingUtilities.invokeLater( () ->  {
-
             String regExp = LUXENDO_REGEXP.replace( "STACK", "" + stackIndex );
 
             final LuxendoInteractiveChannelSubsetter channelSubsetter =
-                    new LuxendoInteractiveChannelSubsetter( OpenLuxendoChannelsCommand.COMMAND_FULL_NAME, viewingModality );
+                    new LuxendoInteractiveChannelSubsetter(
+                            directory,
+                            viewingModality,
+                            enableArbitraryPlaneSlicing,
+                            stackIndex );
             outputImage = BigDataProcessor2.openImageFromHdf5( directory.toString(), regExp, regExp, "Data", channelSubsetter );
 
             handleOutputImage( true, false );
-
         });
     }
 }
