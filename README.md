@@ -23,18 +23,20 @@ This opens up an empty BigDataViewer window with additional menu entries.
 
 Note: **Don't use the Commands**, they just serve the macro recording.
 
-## Record macros
+## Record macro
 
 All actions can be recorded as ImageJ macros. To enable this please:
 
-<img src="https://user-images.githubusercontent.com/2157566/83620230-51d35e80-a58d-11ea-919e-5c6e2c5890eb.png" width="500">
+<img src="https://user-images.githubusercontent.com/2157566/85285145-abde8a00-b490-11ea-9fca-8661c87bc261.png" width="350">
+<img src="https://user-images.githubusercontent.com/2157566/85285194-bc8f0000-b490-11ea-9a63-f52543d1a714.png" width="250">
 
-## Open a dataset
+Note: This is equivalent to [ Plugins > Macros > Record... ] in the ImageJ menu, we just thought it is more convenient to also have it in the BigDataProcessor2 menu tree.
+
+## Open dataset
 
 In the BigDataViewer window, go to the menu bar and use the menu items in [ BigDataProcessor2 > Open ].
 
-<img src="https://user-images.githubusercontent.com/2157566/83619635-72e77f80-a58c-11ea-9602-c4eeb05bfd2f.png" width="600">
-
+<img src="https://user-images.githubusercontent.com/2157566/85284864-3377c900-b490-11ea-9a02-83056f792c14.png" width="460">
 
 ## Process
 
