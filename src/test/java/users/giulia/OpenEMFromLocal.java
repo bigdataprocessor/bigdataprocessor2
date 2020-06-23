@@ -2,7 +2,7 @@ package users.giulia;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.BigDataProcessor2;
-import de.embl.cba.bdp2.open.core.NamingScheme;
+import de.embl.cba.bdp2.open.core.NamingSchemes;
 import net.imagej.ImageJ;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -16,7 +16,7 @@ public class OpenEMFromLocal
 
 		final Image< R > image = BigDataProcessor2.openImage(
 				"/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-data/em-2d-sift-align-01",
-				NamingScheme.TIFF_SLICES,
+				NamingSchemes.TIFF_SLICES,
 				".*.tif" );
 
 		BigDataProcessor2.showImage( image);

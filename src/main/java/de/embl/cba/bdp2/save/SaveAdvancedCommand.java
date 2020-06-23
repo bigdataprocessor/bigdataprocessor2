@@ -43,6 +43,7 @@ public class SaveAdvancedCommand< R extends RealType< R > & NativeType< R > > im
     boolean saveProjections;
     public static String SAVE_PROJECTIONS_PARAMETER = "saveProjections";
 
+
     @Parameter(label = "File type", choices =
             {
                     SavingSettings.TIFF_VOLUMES,
@@ -82,7 +83,7 @@ public class SaveAdvancedCommand< R extends RealType< R > & NativeType< R > > im
     {
         SavingSettings savingSettings = new SavingSettings();
 
-        savingSettings.fileType = SavingSettings.FileType.getEnum( fileType );
+        savingSettings.saveFileType = SavingSettings.SaveFileType.getEnum( fileType );
 
         savingSettings.compression = tiffCompression;
         savingSettings.rowsPerStrip = 10;

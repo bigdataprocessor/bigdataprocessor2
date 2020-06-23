@@ -14,13 +14,13 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class TiffVolumesSaver extends AbstractImageSaver
+public class TiffVolumesImageSaver extends AbstractImageSaver
 {
     private SavingSettings savingSettings;
     private ExecutorService es;
     private AtomicBoolean stop;
 
-    public TiffVolumesSaver( SavingSettings savingSettings, ExecutorService es ) {
+    public TiffVolumesImageSaver( SavingSettings savingSettings, ExecutorService es ) {
         this.savingSettings = savingSettings;
         this.es = es;
         this.stop = new AtomicBoolean(false);

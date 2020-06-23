@@ -2,7 +2,7 @@ package test;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
-import de.embl.cba.bdp2.open.core.NamingScheme;
+import de.embl.cba.bdp2.open.core.NamingSchemes;
 import de.embl.cba.bdp2.register.RegisteredViews;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.BigDataProcessor2;
@@ -23,7 +23,7 @@ public class TestEMProcessingAndSaving< R extends RealType< R > & NativeType< R 
 
 		Image< R > image = BigDataProcessor2.openImage(
 				"/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-data/em-2d-sift-align-01",
-				NamingScheme.TIFF_SLICES,
+				NamingSchemes.TIFF_SLICES,
 				".*.tif" );
 
 //		image = align( image );
@@ -44,7 +44,7 @@ public class TestEMProcessingAndSaving< R extends RealType< R > & NativeType< R 
 	private SavingSettings getSavingSettings()
 	{
 		final SavingSettings savingSettings = SavingSettings.getDefaults();
-		savingSettings.fileType = SavingSettings.FileType.TIFF_PLANES;
+		savingSettings.saveFileType = SavingSettings.SaveFileType.TIFF_PLANES;
 		savingSettings.numIOThreads = 4;
 		savingSettings.numProcessingThreads = 4;
 

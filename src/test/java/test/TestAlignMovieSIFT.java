@@ -2,7 +2,7 @@ package test;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
-import de.embl.cba.bdp2.open.core.NamingScheme;
+import de.embl.cba.bdp2.open.core.NamingSchemes;
 import de.embl.cba.bdp2.register.RegisteredViews;
 import de.embl.cba.bdp2.register.Registration;
 import de.embl.cba.bdp2.BigDataProcessor2;
@@ -23,7 +23,7 @@ public class TestAlignMovieSIFT< R extends RealType< R > & NativeType< R > >
 
 		final Image< R > image = BigDataProcessor2.openImage(
 				"/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-data/gustavo-drift",
-				NamingScheme.LOAD_CHANNELS_FROM_FOLDERS,
+				NamingSchemes.LOAD_CHANNELS_FROM_FOLDERS,
 				".*");
 
 		if ( showImages )

@@ -4,6 +4,8 @@ import ch.systemsx.cisd.hdf5.HDF5DataSetInformation;
 import ch.systemsx.cisd.hdf5.HDF5Factory;
 import ch.systemsx.cisd.hdf5.IHDF5Reader;
 import de.embl.cba.bdp2.log.Logger;
+import de.embl.cba.bdp2.open.ChannelSubsetter;
+import de.embl.cba.bdp2.open.OpenFileType;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.imaris.ImarisUtils;
@@ -17,6 +19,8 @@ import net.imglib2.type.numeric.real.FloatType;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.regex.Pattern;
 
 public class FileInfos
 {
@@ -41,7 +45,7 @@ public class FileInfos
     public int nZ;
     public String voxelUnit;
     public double[] voxelSpacing;
-    public String fileType;
+    public OpenFileType fileType;
     public String h5DataSetName;
     public String[][][] ctzFiles;
     public String directory;
@@ -53,17 +57,28 @@ public class FileInfos
 
     public FileInfos(
             String directory,
-            String loadingScheme,
+            String namingScheme,
             String filterPattern)
     {
-        this( directory, loadingScheme, filterPattern, null);
+        this( directory, namingScheme, filterPattern, null);
+    }
+
+    public FileInfos(
+            String directory,
+            String namingScheme,
+            String filterPattern,
+            String h5DataSetName
+    )
+    {
+        this( directory, namingScheme, filterPattern, h5DataSetName, null);
     }
 
     public FileInfos(
             String aDirectory,
             String namingScheme,
-            String filterPattern,
-            String h5DataSetName
+            String filter,
+            String h5DataSetName,
+            ChannelSubsetter channelSubsetter
     )
     {
         Logger.info( "" );
@@ -74,18 +89,20 @@ public class FileInfos
         this.directory  = Utils.fixDirectoryFormatAndAppendFileSeparator( aDirectory );
         this.h5DataSetName = h5DataSetName;
 
-        if ( ! namingScheme.equals( NamingScheme.LEICA_LIGHT_SHEET_TIFF ) )
+        if ( ! namingScheme.equals( NamingSchemes.LEICA_LIGHT_SHEET_TIFF ) )
         {
             if ( ! namingScheme.contains( "?<C" ) )
             {
                 // assign containing folder as channel
                 final String channelFolder = new File( directory ).getName();
                 namingScheme = "(?<C>" + channelFolder + ")/" + namingScheme;
-                filterPattern = channelFolder + "/" + filterPattern;
+                filter = channelFolder + "/" + filter;
             }
         }
 
-        FileInfosHelper.setFileInfos( this, namingScheme, filterPattern );
+        namingScheme = namingScheme.replace( "/", Pattern.quote( File.separator ) );
+
+        FileInfosHelper.setFileInfos( this, namingScheme, filter, channelSubsetter );
 
         fileInfos = new SerializableFileInfo[nC][nT][nZ];
         dimensions = new long[ 5 ];
@@ -107,7 +124,7 @@ public class FileInfos
         info += "FileType: " + fileType + "\n";
         info += "BitDepth: " + bitDepth + "\n";
 
-        if ( fileType.toLowerCase().contains( "tif" ) )
+        if ( fileType.toString().toLowerCase().contains( "tif" ) )
         {
             info += "Tiff Compression: " + getCompressionString() + "\n";
             info += "Tiff Strips: " + numTiffStrips + "\n";
@@ -171,13 +188,13 @@ public class FileInfos
 
     public SerializableFileInfo[] getSerializableFileStackInfo( int channel, int time ) {
         int z = 0;
-        if (fileType.equals(Utils.FileType.TIFF_STACKS.toString())) {
+        if ( fileType.equals( OpenFileType.TIFF_STACKS ) ) {
             setInfosFromFile(channel, time, z, true);
         }
-        else if (fileType.equals(Utils.FileType.HDF5.toString())) {
+        else if ( fileType.equals( OpenFileType.HDF5 ) ) {
             setInfosFromFile(channel, time, z, true);
         }
-        else if (fileType.equals(Utils.FileType.SINGLE_PLANE_TIFF.toString())) {
+        else if ( fileType.equals( OpenFileType.TIFF_PLANES ) ) {
             int nZ = ctzFiles[channel][time].length;
             for (; z < nZ; ++z) {
                 setInfosFromFile(channel, time, z, true);
@@ -194,7 +211,7 @@ public class FileInfos
         File file = new File( directory, ctzFiles[c][t][z] );
         if ( file.exists() )
         {
-            if ( fileType.equals(Utils.FileType.TIFF_STACKS.toString() ) )
+            if ( fileType.equals( OpenFileType.TIFF_STACKS ) )
             {
                 ftd = new FastTiffDecoder( directory, ctzFiles[c][t][0] );
                 try {
@@ -212,7 +229,7 @@ public class FileInfos
                 // add missing information to first IFD
                 info[0].fileName = getName( c, t, 0 );
                 info[0].directory = getDirectory( c, t, 0 );
-                info[0].fileTypeString = fileType;
+                info[0].fileTypeString = fileType.toString();
 
                 infoCT = new SerializableFileInfo[nZ];
                 for ( int z2 = 0; z2 < nZ; z2++ ) {
@@ -226,7 +243,7 @@ public class FileInfos
 
                 fileInfos[c][t] = infoCT;
             }
-            else if ( fileType.equals(Utils.FileType.HDF5.toString() ) )
+            else if ( fileType.equals( OpenFileType.HDF5 ) )
             {
                 //
                 // construct a FileInfoSer
@@ -261,11 +278,11 @@ public class FileInfos
                     infoCT[z2].height = nY;
                     infoCT[z2].bytesPerPixel = bytesPerPixel;
                     infoCT[z2].h5DataSet = h5DataSetName;
-                    infoCT[z2].fileTypeString = fileType;
+                    infoCT[z2].fileTypeString = fileType.toString();
                 }
                 fileInfos[c][t] = infoCT;
             }
-            else if ( fileType.equals(Utils.FileType.SINGLE_PLANE_TIFF.toString()))
+            else if ( fileType.equals( OpenFileType.TIFF_PLANES))
             {
                 ftd = new FastTiffDecoder(directory, ctzFiles[c][t][z]);
                 try{
@@ -276,7 +293,7 @@ public class FileInfos
                 }
                 fileInfos[c][t][z].fileName = getName( c, t, z );
                 fileInfos[c][t][z].directory = getDirectory( c, t, z );
-                fileInfos[c][t][z].fileTypeString = fileType;
+                fileInfos[c][t][z].fileTypeString = fileType.toString();
             }
         }
         else

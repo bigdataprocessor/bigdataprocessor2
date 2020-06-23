@@ -1,7 +1,7 @@
 package test;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.open.core.NamingScheme;
+import de.embl.cba.bdp2.open.core.NamingSchemes;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import loci.common.DebugTools;
@@ -22,7 +22,7 @@ public class TestSaveSingleChannel8BitTiffSeriesAsImarisVolumes
         final String directory =
                 "/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-data/nc1-nt3-calibrated-8bit-tiff";
 
-        final String loadingScheme = NamingScheme.SINGLE_CHANNEL_TIMELAPSE;
+        final String loadingScheme = NamingSchemes.SINGLE_CHANNEL_TIMELAPSE;
         final String filterPattern = ".*.tif";
 
         final Image image = bdp.openImage(
@@ -33,7 +33,7 @@ public class TestSaveSingleChannel8BitTiffSeriesAsImarisVolumes
         // bdp.showImage( image );
 
         final SavingSettings savingSettings = SavingSettings.getDefaults();
-        savingSettings.fileType = SavingSettings.FileType.IMARIS_VOLUMES;
+        savingSettings.saveFileType = SavingSettings.SaveFileType.IMARIS_VOLUMES;
         savingSettings.numIOThreads = 1;
         savingSettings.numProcessingThreads = 4;
         savingSettings.saveProjections = true;

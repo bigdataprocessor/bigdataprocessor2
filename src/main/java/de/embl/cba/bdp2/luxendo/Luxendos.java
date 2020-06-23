@@ -3,7 +3,7 @@ package de.embl.cba.bdp2.luxendo;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static de.embl.cba.bdp2.open.core.NamingScheme.LUXENDO_STACKINDEX_REGEXP;
+import static de.embl.cba.bdp2.open.core.NamingSchemes.LUXENDO_STACKINDEX_REGEXP;
 
 public class Luxendos
 {

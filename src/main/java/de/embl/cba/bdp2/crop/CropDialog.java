@@ -3,7 +3,7 @@ package de.embl.cba.bdp2.crop;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.open.AbstractOpenCommand;
+import de.embl.cba.bdp2.open.ui.AbstractOpenCommand;
 import de.embl.cba.bdp2.record.MacroRecorder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;

@@ -1,7 +1,7 @@
 package users.giulia;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.open.core.NamingScheme;
+import de.embl.cba.bdp2.open.core.NamingSchemes;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import net.imagej.ImageJ;
@@ -18,7 +18,7 @@ public class ProcessEMfromServer
 	{
 		final Image< R > image = BigDataProcessor2.openImage(
 				"/Volumes/emcf/Mizzon/projects/Julian_FIBSEM/fib-SEM/20190730_batch6-blockB-prep/20190730_02UA_01GA_cell1",
-				NamingScheme.TIFF_SLICES,
+				NamingSchemes.TIFF_SLICES,
 				".*.tif" );
 
 		BigDataProcessor2.showImage( image);
@@ -36,7 +36,7 @@ public class ProcessEMfromServer
 			final Image< R > convert = BigDataProcessor2.convert( crop, 65535, 0 );
 
 			final SavingSettings savingSettings = SavingSettings.getDefaults();
-			savingSettings.fileType = SavingSettings.FileType.TIFF_PLANES;
+			savingSettings.saveFileType = SavingSettings.SaveFileType.TIFF_PLANES;
 			savingSettings.numIOThreads = 4;
 			savingSettings.numProcessingThreads = 4;
 			savingSettings.saveProjections = false;

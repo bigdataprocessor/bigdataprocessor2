@@ -2,7 +2,7 @@ package users.giulia;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.BigDataProcessor2;
-import de.embl.cba.bdp2.open.core.NamingScheme;
+import de.embl.cba.bdp2.open.core.NamingSchemes;
 import net.imagej.ImageJ;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -16,7 +16,7 @@ public class OpenEMFromServer01
 
 		final Image< R > image = BigDataProcessor2.openImage(
 				"/Volumes/emcf/Mizzon/projects/Klaske_FIBSEM/FIB-SEM-target2/20190506-Spongilla_cell2/19-05-06_Spongilla_cell2_3/ImageProcessingSteps/ROIs/ROI3__neighbouringCells",
-				NamingScheme.TIFF_SLICES,
+				NamingSchemes.TIFF_SLICES,
 				".*.tif" );
 
 		BigDataProcessor2.showImage( image, false );

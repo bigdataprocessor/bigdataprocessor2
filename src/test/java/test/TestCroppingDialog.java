@@ -2,7 +2,7 @@ package test;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.BigDataProcessor2;
-import de.embl.cba.bdp2.open.core.NamingScheme;
+import de.embl.cba.bdp2.open.core.NamingSchemes;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import loci.common.DebugTools;
 import net.imagej.ImageJ;
@@ -22,7 +22,7 @@ public class TestCroppingDialog
 
         final Image< R > image = BigDataProcessor2.openImage(
                 imageDirectory,
-                NamingScheme.SINGLE_CHANNEL_TIMELAPSE,
+                NamingSchemes.SINGLE_CHANNEL_TIMELAPSE,
                 ".*" );
 
         image.setVoxelUnit( "pixel" );

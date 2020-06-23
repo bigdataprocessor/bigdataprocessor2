@@ -117,11 +117,13 @@
 		<dependency>
 			<groupId>sc.fiji</groupId>
 			<artifactId>bigdataviewer-core</artifactId>
+			<!-- Transformed Box Dialog	-->
 			<version>8.0.2-platybrowser</version>
 		</dependency>
 		<dependency>
 			<groupId>sc.fiji</groupId>
 			<artifactId>bigdataviewer-vistools</artifactId>
+			<!-- Transformed Box Dialog	-->
 			<version>1.0.0-beta-18-platybrowser</version>
 		</dependency>
 		<dependency>

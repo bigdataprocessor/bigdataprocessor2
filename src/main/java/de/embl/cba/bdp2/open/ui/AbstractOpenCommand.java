@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.open;
+package de.embl.cba.bdp2.open.ui;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.dialog.HelpDialog;

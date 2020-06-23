@@ -2,7 +2,7 @@ package develop;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.BigDataProcessor2;
-import de.embl.cba.bdp2.open.core.NamingScheme;
+import de.embl.cba.bdp2.open.core.NamingSchemes;
 import loci.common.DebugTools;
 
 import static junit.framework.TestCase.assertTrue;
@@ -27,7 +27,7 @@ public class ExploreCorrectChromaticShift
 
         final Image image = bdp.openImage(
                 imageDirectory,
-                NamingScheme.LOAD_CHANNELS_FROM_FOLDERS,
+                NamingSchemes.LOAD_CHANNELS_FROM_FOLDERS,
                 ".*" );
 
         BigDataProcessor2.showImage( image);

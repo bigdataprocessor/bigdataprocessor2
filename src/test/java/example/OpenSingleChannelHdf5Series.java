@@ -2,7 +2,7 @@ package example;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.BigDataProcessor2;
-import de.embl.cba.bdp2.open.core.NamingScheme;
+import de.embl.cba.bdp2.open.core.NamingSchemes;
 
 /**
  * IMPORTANT NOTE: Adjust Max value to 255 in the Big Data Viewer. (Settings>Brightness and Color>Max)
@@ -18,7 +18,7 @@ public class OpenSingleChannelHdf5Series
 
         final Image image = bigDataProcessor2.openImage(
                 imageDirectory,
-                NamingScheme.SINGLE_CHANNEL_TIMELAPSE,
+                NamingSchemes.SINGLE_CHANNEL_TIMELAPSE,
                 ".*" );
 
         image.setVoxelUnit( "micrometer" );

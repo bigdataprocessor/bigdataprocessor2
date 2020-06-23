@@ -1,7 +1,7 @@
-package de.embl.cba.bdp2.open;
+package de.embl.cba.bdp2.open.ui;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
-import de.embl.cba.bdp2.open.core.NamingScheme;
+import de.embl.cba.bdp2.open.core.NamingSchemes;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;
@@ -23,7 +23,7 @@ public class OpenEMTiffPlanesCommand< R extends RealType< R > & NativeType< R > 
             outputImage =
                     BigDataProcessor2.openImage(
                             directory.toString(),
-                            NamingScheme.TIFF_SLICES,
+                            NamingSchemes.TIFF_SLICES,
                             ".*.tif" );
 
             handleOutputImage( true, false );

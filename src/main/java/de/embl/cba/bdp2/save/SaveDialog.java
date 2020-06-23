@@ -4,9 +4,9 @@ import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.log.progress.ProgressListener;
+import de.embl.cba.bdp2.open.OpenFileType;
 import de.embl.cba.bdp2.record.MacroRecorder;
 import de.embl.cba.bdp2.utils.DimensionOrder;
-import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import ij.IJ;
 import net.imglib2.type.NativeType;
@@ -22,7 +22,7 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > >  extends JF
 {
     private final BdvImageViewer viewer;
     private final Image< R > inputImage;
-    private final SavingSettings.FileType fileType;
+    private final SavingSettings.SaveFileType saveFileType;
 
     private static SavingSettings defaults = SavingSettings.getDefaults();
 
@@ -52,11 +52,11 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > >  extends JF
     private JPanel mainPanel;
     private ArrayList< JPanel > panels;
 
-    public SaveDialog( BdvImageViewer viewer, SavingSettings.FileType fileType )
+    public SaveDialog( BdvImageViewer viewer, SavingSettings.SaveFileType saveFileType )
     {
         this.viewer = viewer;
         this.inputImage = viewer.getImage();
-        this.fileType = fileType;
+        this.saveFileType = saveFileType;
 
         createDialog();
     }
@@ -105,9 +105,9 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > >  extends JF
 
         panelIndex = addTiffCompressionPanel( panelIndex );
 
-        if ( ( fileType.equals( SavingSettings.FileType.TIFF_PLANES ) ||
-                fileType.equals( SavingSettings.FileType.TIFF_VOLUMES ) )
-                && ! viewer.getImage().getFileInfos().fileType.equals( Utils.FileType.HDF5.toString() ) )
+        if ( ( saveFileType.equals( SavingSettings.SaveFileType.TIFF_PLANES ) ||
+                saveFileType.equals( SavingSettings.SaveFileType.TIFF_VOLUMES ) )
+                && ! viewer.getImage().getFileInfos().fileType.equals( OpenFileType.HDF5 ) )
         {
             panels.add( new JPanel() );
             panels.get( panelIndex ).add( new JLabel( "I/O Threads" ) );
@@ -147,15 +147,15 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > >  extends JF
         panels.get(panelIndex).add(MESSAGE);
         mainPanel.add( panels.get(panelIndex++));
 
-        menu.add( "Save as " + fileType.toString(), mainPanel);
+        menu.add( "Save as " + saveFileType.toString(), mainPanel);
         add(menu);
         pack();
     }
 
     public int addTiffCompressionPanel( int j )
     {
-        if ( fileType.equals( SavingSettings.FileType.TIFF_VOLUMES ) ||
-             fileType.equals( SavingSettings.FileType.TIFF_PLANES ) )
+        if ( saveFileType.equals( SavingSettings.SaveFileType.TIFF_VOLUMES ) ||
+             saveFileType.equals( SavingSettings.SaveFileType.TIFF_PLANES ) )
         {
             panels.add( new JPanel() );
             panels.get( j ).add( new JLabel( "Tiff Compression" ) );
@@ -214,7 +214,7 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > >  extends JF
     {
         SavingSettings savingSettings = new SavingSettings();
 
-        savingSettings.fileType = fileType;
+        savingSettings.saveFileType = saveFileType;
 
         savingSettings.compression = (String) comboCompression.getSelectedItem();
 
@@ -259,7 +259,7 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > >  extends JF
         recorder.addOption( SaveAdvancedCommand.DIRECTORY_PARAMETER, tfDirectory.getText() );
         recorder.addOption( SaveAdvancedCommand.NUM_IO_THREADS_PARAMETER, savingSettings.numIOThreads );
         recorder.addOption( SaveAdvancedCommand.NUM_PROCESSING_THREADS_PARAMETER, savingSettings.numProcessingThreads );
-        recorder.addOption( SaveAdvancedCommand.SAVE_FILE_TYPE_PARAMETER, savingSettings.fileType.toString());
+        recorder.addOption( SaveAdvancedCommand.SAVE_FILE_TYPE_PARAMETER, savingSettings.saveFileType.toString());
         recorder.addOption( SaveAdvancedCommand.SAVE_PROJECTIONS_PARAMETER, savingSettings.saveProjections);
         recorder.addOption( SaveAdvancedCommand.SAVE_VOLUMES_PARAMETER, savingSettings.saveVolumes);
         recorder.addOption( SaveAdvancedCommand.TIFF_COMPRESSION_PARAMETER, savingSettings.compression);

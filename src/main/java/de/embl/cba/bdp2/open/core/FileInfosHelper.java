@@ -1,7 +1,10 @@
 package de.embl.cba.bdp2.open.core;
 
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.utils.Utils;
+import de.embl.cba.bdp2.open.ChannelSubsetter;
+import de.embl.cba.bdp2.open.ui.ChannelChooserDialog;
+import de.embl.cba.bdp2.open.OpenFileType;
+import de.embl.cba.bdp2.record.MacroRecorder;
 import org.apache.commons.lang.ArrayUtils;
 
 import java.io.File;
@@ -11,7 +14,6 @@ import java.lang.reflect.Field;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class FileInfosHelper
 {
@@ -87,7 +89,7 @@ public class FileInfosHelper
         infoSource.ctzFiles = new String[ctzSize[0]][ctzSize[1]][ctzSize[2]];
 
         if (namingPattern.contains("<Z") && namingPattern.contains(".tif")) {
-            infoSource.fileType = Utils.FileType.SINGLE_PLANE_TIFF.toString();
+            infoSource.fileType = OpenFileType.TIFF_PLANES;
         } else {
             Logger.error("Sorry, currently only single tiff planes supported");
             return false;
@@ -101,7 +103,7 @@ public class FileInfosHelper
 
                     String fileName = "";
 
-                    if (infoSource.fileType.equals(Utils.FileType.SINGLE_PLANE_TIFF.toString())) {
+                    if (infoSource.fileType.equals( OpenFileType.TIFF_PLANES)) {
                         fileName = namingPattern.replaceFirst("<Z(\\d+)-(\\d+)>",String.format("%1$0" + ctzPad[2] + "d", z));
                     } else {
                         Logger.error("BigDataProcessor:setMissingInfos:unsupported file type");
@@ -123,7 +125,7 @@ public class FileInfosHelper
                         {
                             setImageMetadataFromTiff( infoSource, directory, fileName);
 
-                            if (infoSource.fileType.equals(Utils.FileType.SINGLE_PLANE_TIFF.toString()))
+                            if (infoSource.fileType.equals( OpenFileType.TIFF_PLANES))
                                 infoSource.nZ = ctzSize[2];
 
                             Logger.info("Found one file; setting nx,ny,nz and bit-depth from this file: "+ fileName);
@@ -185,7 +187,7 @@ public class FileInfosHelper
             fileInfos.voxelUnit = fileInfos.voxelUnit.trim();
     }
 
-    public static void setFileInfos( FileInfos fileInfos, String namingScheme, String filterPattern)
+    public static void setFileInfos( FileInfos fileInfos, String namingScheme, String filterPattern, ChannelSubsetter channels )
     {
         String directory = fileInfos.directory;
 
@@ -197,15 +199,19 @@ public class FileInfosHelper
             return;
         }
 
-        if ( namingScheme.equals( NamingScheme.LEICA_LIGHT_SHEET_TIFF ) )
+        if ( namingScheme.equals( NamingSchemes.LEICA_LIGHT_SHEET_TIFF ) )
         {
-            fileInfos.fileType = Utils.FileType.SINGLE_PLANE_TIFF.toString();
-
+            fileInfos.fileType = OpenFileType.TIFF_PLANES;
             FileInfosLeicaHelper.initLeicaSinglePlaneTiffData( fileInfos, directory, filterPattern, fileLists[ 0 ], fileInfos.nC, fileInfos.nZ );
         }
         else // tiff or h5
         {
-            setFileInfos( fileInfos, namingScheme, fileLists );
+            if ( NamingSchemes.isLuxendoNamingScheme( namingScheme ) )
+            {
+                fileInfos.fileType = OpenFileType.LUXENDO;
+            }
+
+            setFileInfos( fileInfos, namingScheme, fileLists, channels );
         }
     }
 
@@ -218,19 +224,19 @@ public class FileInfosHelper
                     directory,
                     fileList[ 0 ] );
 
-            if ( namingScheme.equals( NamingScheme.TIFF_SLICES ) )
+            if ( namingScheme.equals( NamingSchemes.TIFF_SLICES ) )
             {
-                fileInfos.fileType = Utils.FileType.SINGLE_PLANE_TIFF.toString();
+                fileInfos.fileType = OpenFileType.TIFF_PLANES;
                 fileInfos.nZ = fileList.length;
             }
             else
             {
-                fileInfos.fileType = Utils.FileType.TIFF_STACKS.toString();
+                fileInfos.fileType = OpenFileType.TIFF_STACKS;
             }
         }
         else if ( fileList[0].endsWith(".h5") )
         {
-            fileInfos.fileType = Utils.FileType.HDF5.toString();
+            fileInfos.fileType = OpenFileType.HDF5;
             FileInfosHDF5Helper.setImageDataInfoFromH5( fileInfos, directory, fileList[ 0 ] );
         }
         else
@@ -239,14 +245,14 @@ public class FileInfosHelper
         }
     }
 
-    private static void setFileInfos( FileInfos fileInfos, String namingScheme, String[][] fileLists )
+    private static void setFileInfos( FileInfos fileInfos, String namingScheme, String[][] fileLists, ChannelSubsetter channelSubset )
     {
-        if ( namingScheme.equals( NamingScheme.TIFF_SLICES ) )
+        if ( namingScheme.equals( NamingSchemes.TIFF_SLICES ) )
         {
             fileInfos.nC = 1;
             fileInfos.nT = 1;
             fileInfos.nZ = fileLists[ 0 ].length;
-            fileInfos.fileType = Utils.FileType.SINGLE_PLANE_TIFF.toString();
+            fileInfos.fileType = OpenFileType.TIFF_PLANES;
             fileInfos.channelNames = new String[]{ new File( fileInfos.directory ).getParent() };
             fetchAndSetImageMetadata( fileInfos, fileInfos.directory, namingScheme, fileLists[ 0 ] );
             populateFileList( fileInfos, namingScheme, fileLists );
@@ -256,8 +262,7 @@ public class FileInfosHelper
             HashSet<String> channels = new HashSet();
             HashSet<String> timepoints = new HashSet();
 
-            final String regExp = namingScheme.replace( "/", Pattern.quote( File.separator ) );
-            Pattern pattern = Pattern.compile( regExp );
+            Pattern pattern = Pattern.compile( namingScheme );
 
             // get channel and time groups
             final Map< String, Integer > groupIndexToGroupName = getGroupIndexToGroupName( pattern );
@@ -294,8 +299,9 @@ public class FileInfosHelper
             if ( timepoints.size() == 0 )
                 throw new UnsupportedOperationException( "No time-points found!" );
 
-            // sort channels
             List< String > sortedChannels = sort( channels );
+            sortedChannels = subSetChannelsIfNecessary( channelSubset, sortedChannels );
+
             fileInfos.nC = sortedChannels.size();
             fileInfos.channelNames = sortedChannels.stream().toArray( String[]::new );
 
@@ -307,7 +313,7 @@ public class FileInfosHelper
 
             populateFileInfosFromChannelTimeRegExp(
                     fileInfos,
-                    regExp,
+                    namingScheme,
                     fileLists[ 0 ],
                     sortedChannels,
                     sortedTimepoints,
@@ -316,7 +322,17 @@ public class FileInfosHelper
         }
     }
 
-    public static List< String > sort( Set< String > strings )
+    private static List< String > subSetChannelsIfNecessary( ChannelSubsetter channelSubsetter, List< String > sortedChannels )
+    {
+        if ( channelSubsetter != null )
+        {
+            sortedChannels = sort( channelSubsetter.getChannelSubset( sortedChannels ) );
+        }
+
+        return sortedChannels;
+    }
+
+    public static List< String > sort( Collection< String > strings )
     {
         try
         {
@@ -344,13 +360,13 @@ public class FileInfosHelper
 
     private static String getId( ArrayList< Integer > groups, Matcher matcher )
     {
-        String id = "";
+        ArrayList< String > ids = new ArrayList<>(  );
         for ( Integer group : groups )
         {
-            id += matcher.group( group );
+            ids.add( matcher.group( group ) );
         }
 
-        return id;
+        return String.join( NamingSchemes.CHANNEL_ID_DELIMITER, ids );
     }
 
     private static Map< String, Integer > getGroupIndexToGroupName( Pattern pattern )
@@ -375,7 +391,7 @@ public class FileInfosHelper
     {
         fileInfos.ctzFiles = new String[ fileInfos.nC ][ fileInfos.nT ][ fileInfos.nZ ];
 
-        if ( namingScheme.equals( NamingScheme.TIFF_SLICES ) )
+        if ( namingScheme.equals( NamingSchemes.TIFF_SLICES ) )
         {
             for ( int z = 0; z < fileInfos.nZ; z++ )
                 fileInfos.ctzFiles[ 0 ][ 0 ][ z ] = fileLists[ 0 ][ z ];

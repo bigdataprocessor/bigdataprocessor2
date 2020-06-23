@@ -1,7 +1,6 @@
 package run;
 
 import de.embl.cba.bdp2.BigDataProcessor2Command;
-import de.embl.cba.bdp2.open.OpenLuxendoMuViCommand;
 import de.embl.cba.bdp2.scijava.Services;
 import ij.plugin.frame.Recorder;
 import net.imagej.ImageJ;

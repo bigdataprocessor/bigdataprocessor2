@@ -2,12 +2,10 @@ package test.open;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.open.core.NamingScheme;
 import org.junit.Test;
-import org.renjin.gnur.api.R;
 
-import static de.embl.cba.bdp2.open.core.NamingScheme.MULTI_CHANNEL_VOLUMES;
-import static de.embl.cba.bdp2.open.core.NamingScheme.TIF;
+import static de.embl.cba.bdp2.open.core.NamingSchemes.MULTI_CHANNEL_VOLUMES;
+import static de.embl.cba.bdp2.open.core.NamingSchemes.TIF;
 
 public class TestOpenMultiChannelTiffVolumes
 {
@@ -27,6 +25,6 @@ public class TestOpenMultiChannelTiffVolumes
                 ".*"
         );
 
-        // BigDataProcessor2.showImage( image, true );
+        BigDataProcessor2.showImage( image, true );
     }
 }

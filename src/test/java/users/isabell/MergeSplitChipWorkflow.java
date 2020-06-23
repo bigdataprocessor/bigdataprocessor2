@@ -2,7 +2,7 @@ package users.isabell;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.open.core.NamingScheme;
+import de.embl.cba.bdp2.open.core.NamingSchemes;
 import de.embl.cba.bdp2.align.splitchip.SplitViewMerger;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.BigDataProcessor2;
@@ -32,7 +32,7 @@ public class MergeSplitChipWorkflow
         double voxelSpacingMicrometerZ = 1.04;
 
         final SavingSettings savingSettings = SavingSettings.getDefaults();
-        savingSettings.fileType = SavingSettings.FileType.TIFF_VOLUMES;
+        savingSettings.saveFileType = SavingSettings.SaveFileType.TIFF_VOLUMES;
         savingSettings.numIOThreads = Runtime.getRuntime().availableProcessors();
 
         final SplitViewMerger merger = new SplitViewMerger();
@@ -49,9 +49,9 @@ public class MergeSplitChipWorkflow
         {
             final Image< R > image = BigDataProcessor2.openImageFromHdf5(
                     directory.toString(),
-                    NamingScheme.SINGLE_CHANNEL_TIMELAPSE,
+                    NamingSchemes.SINGLE_CHANNEL_TIMELAPSE,
                     ".*.h5",
-                    "Data" );
+                    "Data");
             image.setVoxelUnit( voxelUnit );
             image.setVoxelSpacing(
                     voxelSpacingMicrometerX,
@@ -82,9 +82,9 @@ public class MergeSplitChipWorkflow
             final String directory = directories.get( i ).toString();
             final Image< R > image = BigDataProcessor2.openImageFromHdf5(
                     directory,
-                    NamingScheme.SINGLE_CHANNEL_TIMELAPSE,
+                    NamingSchemes.SINGLE_CHANNEL_TIMELAPSE,
                     ".*.h5",
-                    "Data" );
+                    "Data");
 
             image.setVoxelUnit( voxelUnit );
             image.setVoxelSpacing(

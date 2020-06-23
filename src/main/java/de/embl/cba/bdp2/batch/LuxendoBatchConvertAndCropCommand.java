@@ -3,7 +3,7 @@ package de.embl.cba.bdp2.batch;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.crop.Cropper;
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.open.core.NamingScheme;
+import de.embl.cba.bdp2.open.core.NamingSchemes;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
@@ -56,7 +56,7 @@ public class LuxendoBatchConvertAndCropCommand< R extends RealType< R > & Native
     public void process( ArrayList< File > directories )
     {
         final SavingSettings savingSettings = SavingSettings.getDefaults();
-        savingSettings.fileType = SavingSettings.FileType.TIFF_VOLUMES;
+        savingSettings.saveFileType = SavingSettings.SaveFileType.TIFF_VOLUMES;
         savingSettings.numIOThreads = Runtime.getRuntime().availableProcessors();
 
         /*
@@ -68,11 +68,13 @@ public class LuxendoBatchConvertAndCropCommand< R extends RealType< R > & Native
         {
             for ( File directory : directories )
             {
+                // TODO: Deprecated??
+
                 // Open
                 final Image< R > image = BigDataProcessor2.openImageFromHdf5(
                         directory.getAbsolutePath(),
-                        NamingScheme.PATTERN_6,
-                        NamingScheme.PATTERN_LUXENDO,
+                        NamingSchemes.PATTERN_6,
+                        NamingSchemes.PATTERN_LUXENDO,
                         "Data");
 
                 image.setVoxelUnit( voxelUnit );
@@ -101,8 +103,8 @@ public class LuxendoBatchConvertAndCropCommand< R extends RealType< R > & Native
             final String directory = directories.get( i ).getAbsolutePath();
             final Image< R > image = BigDataProcessor2.openImageFromHdf5(
                     directory,
-                    NamingScheme.PATTERN_6,
-                    NamingScheme.PATTERN_LUXENDO,
+                    NamingSchemes.PATTERN_6,
+                    NamingSchemes.PATTERN_LUXENDO,
                     "Data");
             image.setVoxelUnit( voxelUnit );
             image.setVoxelSpacing( new double[]{ voxelSpacingX, voxelSpacingY, voxelSpacingZ } );

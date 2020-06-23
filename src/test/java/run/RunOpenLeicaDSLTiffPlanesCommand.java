@@ -1,6 +1,6 @@
 package run;
 
-import de.embl.cba.bdp2.open.OpenLeicaDSLTiffPlanesCommand;
+import de.embl.cba.bdp2.open.ui.OpenLeicaDSLTiffPlanesCommand;
 import de.embl.cba.bdp2.scijava.Services;
 import ij.plugin.frame.Recorder;
 import net.imagej.ImageJ;

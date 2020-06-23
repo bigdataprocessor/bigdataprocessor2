@@ -2,14 +2,14 @@ package develop;
 
 import de.embl.cba.bdp2.open.core.CachedCellImgReader;
 import de.embl.cba.bdp2.open.core.FileInfos;
-import de.embl.cba.bdp2.open.core.NamingScheme;
+import de.embl.cba.bdp2.open.core.NamingSchemes;
 import net.imglib2.cache.img.CachedCellImg;
 
 public class TestTHdf5ImarisSaving {
 
     public static void main(String[] args) {
         String imageDirectory = "src/test/resources/shear_transform_test";
-        final FileInfos fileInfos = new FileInfos(imageDirectory, NamingScheme.SINGLE_CHANNEL_TIMELAPSE,
+        final FileInfos fileInfos = new FileInfos(imageDirectory, NamingSchemes.SINGLE_CHANNEL_TIMELAPSE,
                 ".*", "");
         CachedCellImg cachedCellImg = CachedCellImgReader.createCachedCellImg( fileInfos );
 

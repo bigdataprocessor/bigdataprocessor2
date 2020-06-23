@@ -6,9 +6,9 @@ import de.embl.cba.bdp2.convert.ConvertToUnsignedByteTypeCommand;
 import de.embl.cba.bdp2.data.OpenSampleDataCommand;
 import de.embl.cba.bdp2.drift.track.ApplyTrackCommand;
 import de.embl.cba.bdp2.image.ImageRenameCommand;
-import de.embl.cba.bdp2.open.*;
 import de.embl.cba.bdp2.align.AlignChannelsCommand;
 import de.embl.cba.bdp2.align.splitchip.AlignChannelsSplitChipCommand;
+import de.embl.cba.bdp2.open.ui.*;
 
 import javax.swing.*;
 
@@ -48,13 +48,11 @@ public class Menu extends JMenu
         addMenuItem( recordMenu, MACRO_RECORDING );
 
         final JMenu openMenu = addMenu( "Open" );
-        addMenuItem( openMenu, RegExpHelpCommand.COMMAND_NAME );
-        addMenuItem( openMenu, OpenSampleDataCommand.COMMAND_NAME );
-
-        addMenuItem( openMenu, OpenCommand.COMMAND_NAME );
+        addMenuItem( openMenu, OpenCustomCommand.COMMAND_NAME );
+        addMenuItem( openMenu, OpenCustomHelpCommand.COMMAND_NAME );
         addMenuItem( openMenu, OpenEMTiffPlanesCommand.COMMAND_NAME );
-        addMenuItem( openMenu, OpenLuxendoMuViCommand.COMMAND_NAME );
-        addMenuItem( openMenu, OpenLuxendoInViCommand.COMMAND_NAME );
+        addMenuItem( openMenu, OpenSampleDataCommand.COMMAND_NAME );
+        addMenuItem( openMenu, OpenLuxendoCommand.COMMAND_NAME );
         addMenuItem( openMenu, OpenLeicaDSLTiffPlanesCommand.COMMAND_NAME );
 
         final JMenu processMenu = addMenu( "Process" );
@@ -62,9 +60,10 @@ public class Menu extends JMenu
         addMenuItem( processMenu, CalibrateCommand.COMMAND_NAME );
 
         final JMenu correctDriftMenu = new JMenu( "Correct Drift" );
+        processMenu.add( correctDriftMenu );
         addMenuItem( correctDriftMenu, CREATE_TRACK );
         addMenuItem( correctDriftMenu, ApplyTrackCommand.COMMAND_NAME );
-        processMenu.add( correctDriftMenu );
+
 
         final JMenu cropMenu = new JMenu( "Crop" );
         addMenuItem( cropMenu, CROP_VOXEL );

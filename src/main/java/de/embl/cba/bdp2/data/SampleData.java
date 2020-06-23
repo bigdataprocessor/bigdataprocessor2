@@ -2,7 +2,7 @@ package de.embl.cba.bdp2.data;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.open.core.NamingScheme;
+import de.embl.cba.bdp2.open.core.NamingSchemes;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 
 import java.io.BufferedInputStream;
@@ -13,7 +13,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.embl.cba.bdp2.open.core.NamingScheme.TIF;
+import static de.embl.cba.bdp2.open.core.NamingSchemes.TIF;
 
 public class SampleData
 {
@@ -27,7 +27,7 @@ public class SampleData
 	{
 		datasetNameToURL.put( TIFF_VOLUMES_X_50_Y_50_Z_50_C_2_T_6_1_6_MB, "https://www.ebi.ac.uk/biostudies/files/S-BSST417/tiff-volumes-x50y50z50c2t6.zip" );
 
-		datasetNameToRegExp.put( TIFF_VOLUMES_X_50_Y_50_Z_50_C_2_T_6_1_6_MB, NamingScheme.MULTI_CHANNEL_VOLUMES + TIF);
+		datasetNameToRegExp.put( TIFF_VOLUMES_X_50_Y_50_Z_50_C_2_T_6_1_6_MB, NamingSchemes.MULTI_CHANNEL_VOLUMES + TIF);
 	}
 
 	public File download( String datasetName, File outputDirectory )

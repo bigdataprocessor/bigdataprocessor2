@@ -1,7 +1,7 @@
 package de.embl.cba.bdp2.open.core;
 
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.utils.Utils;
+import de.embl.cba.bdp2.open.OpenFileType;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -16,7 +16,7 @@ public class FileInfosLeicaHelper
     {
         int nT;
         int z,t,c;
-        fileInfos.fileType = Utils.FileType.SINGLE_PLANE_TIFF.toString();
+        fileInfos.fileType = OpenFileType.TIFF_PLANES;
 
         //
         // Do special stuff related to Leica file

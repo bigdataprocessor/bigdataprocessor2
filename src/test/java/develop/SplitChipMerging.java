@@ -3,7 +3,7 @@ package develop;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.open.core.FileInfos;
 import de.embl.cba.bdp2.open.core.CachedCellImgReader;
-import de.embl.cba.bdp2.open.core.NamingScheme;
+import de.embl.cba.bdp2.open.core.NamingSchemes;
 import de.embl.cba.bdp2.align.splitchip.SplitViewMergeDialog;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.type.NativeType;
@@ -26,7 +26,7 @@ public class SplitChipMerging
 		String imageDirectory = "/Users/tischer/Desktop/stack_0_channel_0";
 
 		final FileInfos fileInfos = new FileInfos( imageDirectory,
-				NamingScheme.SINGLE_CHANNEL_TIMELAPSE,
+				NamingSchemes.SINGLE_CHANNEL_TIMELAPSE,
 				".*.h5", "Data" );
 
 		fileInfos.voxelSpacing = new double[]{ 0.5, 0.5, 5.0 };

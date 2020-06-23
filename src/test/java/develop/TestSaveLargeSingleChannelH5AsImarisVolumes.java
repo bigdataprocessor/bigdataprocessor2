@@ -1,7 +1,7 @@
 package develop;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.open.core.NamingScheme;
+import de.embl.cba.bdp2.open.core.NamingSchemes;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.BigDataProcessor2;
 
@@ -19,7 +19,7 @@ public class TestSaveLargeSingleChannelH5AsImarisVolumes
         final String directory =
                 "/Users/tischer/Desktop/bdp2/_stack_0_channel_0";
 
-        final String loadingScheme = NamingScheme.SINGLE_CHANNEL_TIMELAPSE;
+        final String loadingScheme = NamingSchemes.SINGLE_CHANNEL_TIMELAPSE;
         final String filterPattern = ".*.h5";
 
         final Image image = bdp.openImageFromHdf5(
@@ -31,7 +31,7 @@ public class TestSaveLargeSingleChannelH5AsImarisVolumes
         // bdp.showImage( image );
 
         final SavingSettings savingSettings = SavingSettings.getDefaults();
-        savingSettings.fileType = SavingSettings.FileType.IMARIS_VOLUMES;
+        savingSettings.saveFileType = SavingSettings.SaveFileType.IMARIS_VOLUMES;
         savingSettings.numIOThreads = 1;
         savingSettings.numProcessingThreads = 4;
         savingSettings.saveProjections = false;

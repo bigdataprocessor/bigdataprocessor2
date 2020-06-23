@@ -5,7 +5,7 @@ import bdv.util.BdvFunctions;
 import bdv.util.BdvOptions;
 import de.embl.cba.bdp2.open.core.CachedCellImgReader;
 import de.embl.cba.bdp2.open.core.FileInfos;
-import de.embl.cba.bdp2.open.core.NamingScheme;
+import de.embl.cba.bdp2.open.core.NamingSchemes;
 import de.embl.cba.bdp2.viewers.BdvTransformEventHandler;
 import net.imglib2.img.Img;
 
@@ -17,7 +17,7 @@ public class TestOpenLeicaDLS
     public static void main(String[] args)
     {
         final String directory = "src\\test\\resources\\leicaDLS\\";
-        FileInfos fileInfos = new FileInfos(directory, NamingScheme.LEICA_LIGHT_SHEET_TIFF,".*","");
+        FileInfos fileInfos = new FileInfos(directory, NamingSchemes.LEICA_LIGHT_SHEET_TIFF,".*","");
         System.out.println( fileInfos.nT);
         System.out.println( fileInfos.nC);
         System.out.println( fileInfos.nZ);

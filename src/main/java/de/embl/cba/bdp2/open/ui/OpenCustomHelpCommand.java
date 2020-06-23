@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.open;
+package de.embl.cba.bdp2.open.ui;
 
 import de.embl.cba.bdp2.dialog.HelpDialog;
 import net.imglib2.type.NativeType;
@@ -10,10 +10,10 @@ import javax.swing.*;
 
 import static de.embl.cba.bdp2.utils.Utils.COMMAND_BDP_PREFIX;
 
-@Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>" + AbstractOpenCommand.COMMAND_OPEN_PATH + RegExpHelpCommand.COMMAND_FULL_NAME )
-public class RegExpHelpCommand< R extends RealType< R > & NativeType< R > > implements Command
+@Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>" + AbstractOpenCommand.COMMAND_OPEN_PATH + OpenCustomHelpCommand.COMMAND_FULL_NAME )
+public class OpenCustomHelpCommand< R extends RealType< R > & NativeType< R > > implements Command
 {
-    public static final String COMMAND_NAME = "Regular Expression Help";
+    public static final String COMMAND_NAME = "Open Custom Help...";
     public static final String COMMAND_FULL_NAME = COMMAND_BDP_PREFIX + COMMAND_NAME;
 
     public void run()

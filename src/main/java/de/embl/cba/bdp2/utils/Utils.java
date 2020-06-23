@@ -74,7 +74,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
-import static de.embl.cba.bdp2.open.core.NamingScheme.MULTI_CHANNEL_VOLUMES_FROM_SUBFOLDERS;
+import static de.embl.cba.bdp2.open.core.NamingSchemes.MULTI_CHANNEL_VOLUMES_FROM_SUBFOLDERS;
 
 /**
  * Created by tischi on 06/11/16.
@@ -252,24 +252,8 @@ public class Utils {
 		return shifts;
 	}
 
-	public enum FileType {
-        HDF5("Hdf5"),
-        HDF5_IMARIS_BDV("Partitioned Imaris"),
-        TIFF_STACKS("Tiff stacks"),
-        SINGLE_PLANE_TIFF("Single plane Tiff"); //SERIALIZED_HEADERS("Serialized headers");
-        private final String text;
-        private FileType(String s)
-        {
-            text = s;
-        }
-        @Override
-        public String toString() {
-            return text;
-        }
-    }
 
-
-    public enum ImageFilterTypes {
+	public enum ImageFilterTypes {
         NONE("None"),
         THRESHOLD("Threshold"),
         VARIANCE("Variance");

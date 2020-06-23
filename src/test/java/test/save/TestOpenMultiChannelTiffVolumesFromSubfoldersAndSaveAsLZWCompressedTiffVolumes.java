@@ -3,7 +3,7 @@ package test.save;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
-import de.embl.cba.bdp2.open.core.NamingScheme;
+import de.embl.cba.bdp2.open.core.NamingSchemes;
 import de.embl.cba.bdp2.save.SavingSettings;
 
 public class TestOpenMultiChannelTiffVolumesFromSubfoldersAndSaveAsLZWCompressedTiffVolumes
@@ -14,7 +14,7 @@ public class TestOpenMultiChannelTiffVolumesFromSubfoldersAndSaveAsLZWCompressed
 
         final Image image = BigDataProcessor2.openImage(
                 directory,
-                NamingScheme.MULTI_CHANNEL_VOLUMES_FROM_SUBFOLDERS,
+                NamingSchemes.MULTI_CHANNEL_VOLUMES_FROM_SUBFOLDERS,
                 ".*"
         );
 
@@ -22,7 +22,7 @@ public class TestOpenMultiChannelTiffVolumesFromSubfoldersAndSaveAsLZWCompressed
 
         final SavingSettings settings = SavingSettings.getDefaults();
         settings.volumesFilePathStump = "/Users/tischer/Documents/bigdataprocessor2/src/test/resources/test/tiff-nc2-nt6-zlib/image";
-        settings.fileType = SavingSettings.FileType.TIFF_VOLUMES;
+        settings.saveFileType = SavingSettings.SaveFileType.TIFF_VOLUMES;
         settings.numIOThreads = 3;
         settings.voxelSpacing = image.getVoxelSpacing();
         settings.voxelUnit = image.getVoxelUnit();

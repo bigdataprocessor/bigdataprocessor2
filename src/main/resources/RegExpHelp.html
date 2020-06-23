@@ -43,6 +43,7 @@ body
 
 
 <h2>Regular expression help</h2>
+
 <p>Regular expressions are a powerful way to subset and group files.</p>
 <p><a href="https://www.freeformatter.com/java-regex-tester.html#documentation">Regular expression documentation</a></p>
 <p><a href="https://www.freeformatter.com/java-regex-tester.html">Test regular expressions</a></p>
@@ -55,25 +56,45 @@ body
 <br>
 
 <h3>Examples</h3>
+
 <p>
-Please note that below examples are on purpose without file extensions.
+Below examples are on purpose without file extensions.
 The file extensions can be selected via a drop down in the "Open..." menu item and will
 be added to the regular expression automatically.
 </p>
 <p>
+Below examples work both with and without zero-padding, e.g. "T0000", "T0001" works, but also "T0", "T2", "T11" works (and will have the correct numeric-based ordering).
+</p>
+
+<p>
 <table border="1">
+
 <tr>
   <td class="a"><b>.*--C(?&lt;C&gt;\d+)--T(?&lt;T&gt;\d+)</b></td>
-  <td>Channel and timepoint encoded in filenames such as "image--C00--T000"</td>
-</tr><tr>
-  <td class="a"><b>(?&lt;C&gt;.*)/.*T(?&lt;T&gt;\d+)</b></td>
-  <td>Channels are specified by subfolders such as "gfp/T000" and "rfp/T000"</td>
-</tr><tr>
-  <td class="a"><b>".*T(?&lt;T&gt;\d+)"</b></td>
-  <td>No channel grouping specified, e.g. "T0000", "T0001", etc.</td>
+  <td>Channel and timepoint encoded in filenames such as "image--C00--T0000" and "image--C01--T0000"</td>
 </tr>
+<tr>
+  <td class="a"><b>T(?&lt;T&gt;\d+)_(?&lt;C&gt;.*)</b></td>
+  <td>Channel and timepoint encoded in filenames such as "T0000_gfp" and "T0001_rfp"</td>
+</tr>
+<tr>
+  <td class="a"><b>t(?&lt;T&gt;\d+)_(?&lt;C&gt;.*)</b></td>
+  <td>Same as above but with lower case "t" such as "t0000_gfp" and "t0001_rfp"</td>
+</tr>
+<tr>
+  <td class="a"><b>(?&lt;C&gt;.*)_T(?&lt;T&gt;\d+)</b></td>
+  <td>Channel and timepoint encoded in filenames such as "gfp_T0000" and "rfp_T0000"</td>
+</tr>
+<tr>
+  <td class="a"><b>(?&lt;C&gt;.*)/.*T(?&lt;T&gt;\d+)</b></td>
+  <td>Channels are specified by subfolders and timepoints are encoded in filenames such as "gfp/T0000" and "rfp/T0000"</td>
+</tr>
+<tr>
+  <td class="a"><b>.*T(?&lt;T&gt;\d+)</b></td>
+  <td>No channel grouping specified, e.g. "T0000", "T0001", etc. (in this case the name of the containing folder will be used as the channel name).</td>
+</tr>
+
 </table>
-<br/>
 </p>
 
 </body>

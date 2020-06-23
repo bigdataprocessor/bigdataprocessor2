@@ -1,7 +1,7 @@
 package users.isabell;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.open.core.NamingScheme;
+import de.embl.cba.bdp2.open.core.NamingSchemes;
 import de.embl.cba.bdp2.align.splitchip.SplitViewMergeDialog;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
@@ -19,9 +19,9 @@ public class MergeSplitChipDialog
 
         final Image< R > image = BigDataProcessor2.openImageFromHdf5(
                 "/Users/tischer/Desktop/stack_0_channel_0",
-                NamingScheme.SINGLE_CHANNEL_TIMELAPSE,
+                NamingSchemes.SINGLE_CHANNEL_TIMELAPSE,
                 ".*.h5",
-                "Data" );
+                "Data");
 
         image.setVoxelUnit( "micrometer" );
         image.setVoxelSpacing( new double[]{0.13, 0.13, 1.04} );

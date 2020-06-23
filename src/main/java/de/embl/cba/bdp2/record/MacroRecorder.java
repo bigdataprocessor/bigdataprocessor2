@@ -1,7 +1,7 @@
 package de.embl.cba.bdp2.record;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.open.AbstractOpenCommand;
+import de.embl.cba.bdp2.open.ui.AbstractOpenCommand;
 import ij.plugin.frame.Recorder;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;

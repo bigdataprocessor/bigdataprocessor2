@@ -27,7 +27,7 @@ public class ImageSaverCreator < R extends RealType< R > & NativeType< R > >
 
 		ExecutorService saveExecutorService = Executors.newFixedThreadPool( nIOThread );
 
-		if ( ! savingSettings.fileType.equals( SavingSettings.FileType.TIFF_PLANES ) )
+		if ( ! savingSettings.saveFileType.equals( SavingSettings.SaveFileType.TIFF_PLANES ) )
 		{
 			Logger.info( "Saving: Configuring volume reader..." );
 

@@ -16,7 +16,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 
 	private RandomAccessibleInterval< R > raiXYZCT;
 	private String name;
-	private final String[] channelNames;
+	private String[] channelNames;
 	private double[] voxelSpacing;
 	private String voxelUnit;
 	private FileInfos fileInfos;
@@ -40,6 +40,11 @@ public class Image< R extends RealType< R > & NativeType< R > >
 	public String[] getChannelNames()
 	{
 		return channelNames;
+	}
+
+	public void setChannelNames( String[] channelNames )
+	{
+		this.channelNames = channelNames;
 	}
 
 	public FileInfos getFileInfos()

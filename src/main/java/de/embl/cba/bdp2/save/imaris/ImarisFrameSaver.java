@@ -1,6 +1,7 @@
-package de.embl.cba.bdp2.save;
+package de.embl.cba.bdp2.save.imaris;
 
 import de.embl.cba.bdp2.log.Logger;
+import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.utils.IntervalImageViews;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
@@ -16,7 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static de.embl.cba.bdp2.save.ProjectionXYZ.saveAsTiffXYZMaxProjection;
 
-public class SaveFrameAsImarisVolumes< R extends RealType< R > & NativeType< R >> implements Runnable {
+public class ImarisFrameSaver< R extends RealType< R > & NativeType< R >> implements Runnable {
     private int t;
     private final int nFrames;
     private final int nChannels;
@@ -27,7 +28,7 @@ public class SaveFrameAsImarisVolumes< R extends RealType< R > & NativeType< R >
     private final AtomicBoolean stop;
     private final RandomAccessibleInterval raiXYZCT;
 
-    public SaveFrameAsImarisVolumes(
+    public ImarisFrameSaver(
             SavingSettings settings,
             ImarisDataSet imarisDataSet,
             int t,

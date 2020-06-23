@@ -1,11 +1,12 @@
 package run;
 
-import de.embl.cba.bdp2.open.OpenLuxendoMuViCommand;
+import de.embl.cba.bdp2.open.ui.OpenLuxendoChannelsCommand;
+import de.embl.cba.bdp2.open.ui.OpenLuxendoCommand;
 import de.embl.cba.bdp2.scijava.Services;
 import ij.plugin.frame.Recorder;
 import net.imagej.ImageJ;
 
-public class RunOpenLuxendoMuViCommand
+public class RunOpenLuxendoChannelsCommand
 {
 	public static void main ( String... args )
 	{
@@ -16,6 +17,6 @@ public class RunOpenLuxendoMuViCommand
 
 		Services.commandService = ij.command();
 
-		ij.command().run( OpenLuxendoMuViCommand.class, true );
+		ij.command().run( OpenLuxendoChannelsCommand.class, true );
 	}
 }

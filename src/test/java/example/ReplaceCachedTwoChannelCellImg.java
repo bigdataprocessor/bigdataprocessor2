@@ -3,7 +3,7 @@ package example;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.open.core.CachedCellImgReader;
 import de.embl.cba.bdp2.open.core.FileInfos;
-import de.embl.cba.bdp2.open.core.NamingScheme;
+import de.embl.cba.bdp2.open.core.NamingSchemes;
 import de.embl.cba.bdp2.save.CachedCellImgReplacer;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import net.imglib2.RandomAccessibleInterval;
@@ -17,7 +17,7 @@ public class ReplaceCachedTwoChannelCellImg
 
 		final String directory = "/Users/tischer/Documents/isabell-schneider-splitchipmerge/two_channels";
 
-		final String loadingScheme = NamingScheme.LOAD_CHANNELS_FROM_FOLDERS;
+		final String loadingScheme = NamingSchemes.LOAD_CHANNELS_FROM_FOLDERS;
 		final String filterPattern = ".*.h5";
 		final String dataset = "Data";
 
@@ -25,7 +25,7 @@ public class ReplaceCachedTwoChannelCellImg
 				directory,
 				loadingScheme,
 				filterPattern,
-				dataset );
+				dataset);
 
 //		bdp.showImage( image );
 

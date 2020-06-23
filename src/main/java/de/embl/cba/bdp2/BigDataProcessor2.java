@@ -4,6 +4,7 @@ import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.bin.Binner;
 import de.embl.cba.bdp2.convert.UnsignedByteTypeConversionDialog;
 import de.embl.cba.bdp2.crop.Cropper;
+import de.embl.cba.bdp2.open.ChannelSubsetter;
 import de.embl.cba.bdp2.open.core.CachedCellImgReader;
 import de.embl.cba.bdp2.open.core.FileInfos;
 import de.embl.cba.bdp2.log.Logger;
@@ -13,11 +14,9 @@ import de.embl.cba.bdp2.log.progress.ProgressListener;
 import de.embl.cba.bdp2.save.*;
 import de.embl.cba.bdp2.dialog.DisplaySettings;
 import de.embl.cba.bdp2.align.ChannelShifter;
-import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import loci.common.DebugTools;
 import net.imglib2.*;
-import net.imglib2.cache.img.CachedCellImg;
 import net.imglib2.converter.Converters;
 import net.imglib2.converter.RealUnsignedByteConverter;
 import net.imglib2.type.NativeType;
@@ -27,6 +26,7 @@ import net.imglib2.util.Util;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -89,7 +89,24 @@ public class BigDataProcessor2
     {
         DebugTools.setRootLevel( "OFF" ); // Bio-Formats
 
-        FileInfos fileInfos = new FileInfos( directory, loadingScheme, filterPattern, hdf5DataSetName );
+        FileInfos fileInfos = new FileInfos( directory, loadingScheme, filterPattern, hdf5DataSetName, null );
+
+        final Image< R > image = CachedCellImgReader.loadImage( fileInfos );
+
+        return image;
+    }
+
+    public static < R extends RealType< R > & NativeType< R > >
+    Image< R > openImageFromHdf5(
+            String directory,
+            String loadingScheme,
+            String filterPattern,
+            String hdf5DataSetName,
+            ChannelSubsetter channelSubsetter )
+    {
+        DebugTools.setRootLevel( "OFF" ); // Bio-Formats
+
+        FileInfos fileInfos = new FileInfos( directory, loadingScheme, filterPattern, hdf5DataSetName, channelSubsetter );
 
         final Image< R > image = CachedCellImgReader.loadImage( fileInfos );
 
@@ -153,4 +170,5 @@ public class BigDataProcessor2
         final ChannelShifter< R > shifter = new ChannelShifter< >( crop.getRai() );
         return crop.newImage( shifter.getShiftedRai( shifts ) );
     }
+
 }

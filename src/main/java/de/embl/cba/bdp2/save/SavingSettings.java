@@ -35,14 +35,14 @@ public class SavingSettings {
     public boolean convertTo16Bit;
     public boolean gate;
     public int gateMin, gateMax;
-    public FileType fileType;
+    public SaveFileType saveFileType;
     public String compression;
     public int compressionLevel;
     public int rowsPerStrip = -1;
     public int numIOThreads = 1;
     public int numProcessingThreads = 1;
 
-	public enum FileType
+	public enum SaveFileType
     {
         TIFF_PLANES( SavingSettings.TIFF_PLANES ),
         TIFF_VOLUMES( SavingSettings.TIFF_VOLUMES ),
@@ -51,7 +51,7 @@ public class SavingSettings {
 
         private final String text;
 
-        FileType( String s )
+        SaveFileType( String s )
         {
             text = s;
         }
@@ -62,9 +62,9 @@ public class SavingSettings {
             return text;
         }
 
-        public static FileType getEnum( String value )
+        public static SaveFileType getEnum( String value )
         {
-            for ( FileType v : values() )
+            for ( SaveFileType v : values() )
                 if ( v.toString().equalsIgnoreCase( value ) ) return v;
             throw new IllegalArgumentException();
         }
@@ -81,7 +81,7 @@ public class SavingSettings {
         savingSettings.voxelSpacing = new double[]{1,1,1};
         savingSettings.voxelUnit = "pixel";
         savingSettings.saveVolumes = true;
-        savingSettings.fileType = FileType.TIFF_PLANES;
+        savingSettings.saveFileType = SaveFileType.TIFF_PLANES;
         savingSettings.volumesFilePathStump = "/Users/tischer/Desktop/bdp2-out/image";
         savingSettings.compression = COMPRESSION_NONE;
         savingSettings.numProcessingThreads = (int) Math.ceil( Math.sqrt( AVAILABLE_PROCESSORS ) + 1 );

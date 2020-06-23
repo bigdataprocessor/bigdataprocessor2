@@ -16,7 +16,7 @@ import de.embl.cba.bdp2.drift.track.TrackCreator;
 import de.embl.cba.bdp2.image.ImageRenameCommand;
 import de.embl.cba.bdp2.image.ImageRenameDialog;
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.open.*;
+import de.embl.cba.bdp2.open.ui.*;
 import de.embl.cba.bdp2.record.MacroRecordingDialog;
 import de.embl.cba.bdp2.save.SaveDialog;
 import de.embl.cba.bdp2.save.SavingSettings;
@@ -70,21 +70,21 @@ public class MenuActions implements ActionListener {
         if (e.getActionCommand().equalsIgnoreCase( Menu.SAVE_AS_IMARIS_VOLUMES_MENU_ITEM ))
         {
             BigDataProcessor2.threadPool.submit(() -> {
-                SaveDialog saveDialog = new SaveDialog( viewer, SavingSettings.FileType.IMARIS_VOLUMES );
+                SaveDialog saveDialog = new SaveDialog( viewer, SavingSettings.SaveFileType.IMARIS_VOLUMES );
                 saveDialog.setVisible(true);
             });
         }
         else if (e.getActionCommand().equalsIgnoreCase( Menu.SAVE_AS_TIFF_VOLUMES_MENU_ITEM ))
         {
             BigDataProcessor2.threadPool.submit(() -> {
-                SaveDialog saveDialog = new SaveDialog( viewer, SavingSettings.FileType.TIFF_VOLUMES );
+                SaveDialog saveDialog = new SaveDialog( viewer, SavingSettings.SaveFileType.TIFF_VOLUMES );
                 saveDialog.setVisible(true);
             });
         }
         else if (e.getActionCommand().equalsIgnoreCase( Menu.SAVE_AS_TIFF_PLANES_MENU_ITEM ))
         {
             BigDataProcessor2.threadPool.submit(() -> {
-                SaveDialog saveDialog = new SaveDialog( viewer, SavingSettings.FileType.TIFF_PLANES );
+                SaveDialog saveDialog = new SaveDialog( viewer, SavingSettings.SaveFileType.TIFF_PLANES );
                 saveDialog.setVisible(true);
             });
         }
@@ -210,11 +210,11 @@ public class MenuActions implements ActionListener {
                 new ImageRenameDialog<>( viewer );
             });
         }
-        else if( e.getActionCommand().equalsIgnoreCase( RegExpHelpCommand.COMMAND_NAME ) )
+        else if( e.getActionCommand().equalsIgnoreCase( OpenCustomHelpCommand.COMMAND_NAME ) )
         {
             BigDataProcessor2.threadPool.submit(() ->
             {
-                Services.commandService.run( RegExpHelpCommand.class, true );
+                Services.commandService.run( OpenCustomHelpCommand.class, true );
             });
         }
         else if( e.getActionCommand().equalsIgnoreCase( OpenSampleDataCommand.COMMAND_NAME ) )
@@ -225,12 +225,12 @@ public class MenuActions implements ActionListener {
                 Services.commandService.run( OpenSampleDataCommand.class, true );
             });
         }
-        else if( e.getActionCommand().equalsIgnoreCase( OpenCommand.COMMAND_NAME ) )
+        else if( e.getActionCommand().equalsIgnoreCase( OpenCustomCommand.COMMAND_NAME ) )
         {
             BigDataProcessor2.threadPool.submit(() ->
             {
                 AbstractOpenCommand.parentBdvImageViewer = viewer;
-                Services.commandService.run( OpenCommand.class, true );
+                Services.commandService.run( OpenCustomCommand.class, true );
             });
         }
         else if( e.getActionCommand().equalsIgnoreCase( OpenLeicaDSLTiffPlanesCommand.COMMAND_NAME ) )
@@ -239,22 +239,6 @@ public class MenuActions implements ActionListener {
             {
                 AbstractOpenCommand.parentBdvImageViewer = viewer;
                 Services.commandService.run( OpenLeicaDSLTiffPlanesCommand.class, true );
-            });
-        }
-        else if( e.getActionCommand().equalsIgnoreCase( OpenLuxendoMuViCommand.COMMAND_NAME ) )
-        {
-            BigDataProcessor2.threadPool.submit(() ->
-            {
-                AbstractOpenCommand.parentBdvImageViewer = viewer;
-                Services.commandService.run( OpenLuxendoMuViCommand.class, true );
-            });
-        }
-        else if( e.getActionCommand().equalsIgnoreCase( OpenLuxendoInViCommand.COMMAND_NAME ) )
-        {
-            BigDataProcessor2.threadPool.submit(() ->
-            {
-                AbstractOpenCommand.parentBdvImageViewer = viewer;
-                Services.commandService.run( OpenLuxendoInViCommand.class, true );
             });
         }
     }

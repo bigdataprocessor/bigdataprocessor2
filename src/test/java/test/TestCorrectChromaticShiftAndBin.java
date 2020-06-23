@@ -2,7 +2,7 @@ package test;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.bin.Binner;
-import de.embl.cba.bdp2.open.core.NamingScheme;
+import de.embl.cba.bdp2.open.core.NamingSchemes;
 import de.embl.cba.bdp2.align.ChannelShifter;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import loci.common.DebugTools;
@@ -33,7 +33,7 @@ public class TestCorrectChromaticShiftAndBin
 
         final Image image = bdp.openImage(
                 imageDirectory,
-                NamingScheme.LOAD_CHANNELS_FROM_FOLDERS,
+                NamingSchemes.LOAD_CHANNELS_FROM_FOLDERS,
                 ".*" );
 
         // final BdvImageViewer imageViewer = bdp.showImage( image );

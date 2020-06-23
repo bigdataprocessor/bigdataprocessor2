@@ -1,7 +1,9 @@
-package de.embl.cba.bdp2.save;
+package de.embl.cba.bdp2.save.imaris;
 
 import de.embl.cba.bdp2.open.core.FileInfos;
 import de.embl.cba.bdp2.log.Logger;
+import de.embl.cba.bdp2.save.AbstractImageSaver;
+import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.log.progress.Progress;
 import de.embl.cba.bdp2.utils.Utils;
@@ -23,13 +25,13 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class ImarisStacksSaver extends AbstractImageSaver
+public class ImarisImageSaver extends AbstractImageSaver
 {
     private SavingSettings savingSettings;
     private ExecutorService es;
     private AtomicBoolean stop;
 
-    public ImarisStacksSaver( SavingSettings savingSettings, ExecutorService es) {
+    public ImarisImageSaver( SavingSettings savingSettings, ExecutorService es) {
         this.savingSettings = savingSettings;
         this.es = es;
         this.stop = new AtomicBoolean(false);
@@ -48,7 +50,7 @@ public class ImarisStacksSaver extends AbstractImageSaver
             if (imageType instanceof UnsignedByteType)
             {
                 futures.add(es.submit(
-                        new SaveFrameAsImarisVolumes<UnsignedByteType>(
+                        new ImarisFrameSaver<UnsignedByteType>(
                                 savingSettings,
                                 imarisDataSetProperties,
                                 t, counter, startTime, stop)
@@ -58,7 +60,7 @@ public class ImarisStacksSaver extends AbstractImageSaver
             {
                 futures.add(
                         es.submit(
-                                new SaveFrameAsImarisVolumes<UnsignedShortType>(
+                                new ImarisFrameSaver<UnsignedShortType>(
                                         savingSettings,
                                         imarisDataSetProperties,
                                         t, counter, startTime, stop)
@@ -66,7 +68,7 @@ public class ImarisStacksSaver extends AbstractImageSaver
             } else if (imageType instanceof FloatType) {
                 futures.add(
                         es.submit(
-                                new SaveFrameAsImarisVolumes<FloatType>(
+                                new ImarisFrameSaver<FloatType>(
                                         savingSettings,
                                         imarisDataSetProperties,
                                         t, counter, startTime, stop)

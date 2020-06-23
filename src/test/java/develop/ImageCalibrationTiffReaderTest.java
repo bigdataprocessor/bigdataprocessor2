@@ -1,7 +1,7 @@
 package develop;
 
 import de.embl.cba.bdp2.open.core.FileInfos;
-import de.embl.cba.bdp2.open.core.NamingScheme;
+import de.embl.cba.bdp2.open.core.NamingSchemes;
 import ij.IJ;
 import ij.ImageJ;
 import ij.io.FileInfo;
@@ -27,7 +27,7 @@ public class ImageCalibrationTiffReaderTest
 
 		final FileInfos fileInfos = new FileInfos(
 				file.toString(),
-				NamingScheme.SINGLE_CHANNEL_TIMELAPSE,
+				NamingSchemes.SINGLE_CHANNEL_TIMELAPSE,
 				".*",
 				"" );
 

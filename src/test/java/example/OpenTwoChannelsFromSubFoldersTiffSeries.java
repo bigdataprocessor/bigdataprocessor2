@@ -2,7 +2,7 @@ package example;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.BigDataProcessor2;
-import de.embl.cba.bdp2.open.core.NamingScheme;
+import de.embl.cba.bdp2.open.core.NamingSchemes;
 
 public class OpenTwoChannelsFromSubFoldersTiffSeries
 {
@@ -16,7 +16,7 @@ public class OpenTwoChannelsFromSubFoldersTiffSeries
 
         final Image image = bdp.openImage(
                 imageDirectory,
-                NamingScheme.LOAD_CHANNELS_FROM_FOLDERS,
+                NamingSchemes.LOAD_CHANNELS_FROM_FOLDERS,
                 ".*" );
 
         bdp.showImage( image);

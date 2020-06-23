@@ -93,7 +93,7 @@ public class TiffVolumesFrameSaver< R extends RealType< R > & NativeType< R > > 
                 return;
             }
 
-            System.out.println( "Saving started: Frame " + t + ", Channel " + c );
+//            System.out.println( "Saving started: Frame " + t + ", Channel " + c );
 
             RandomAccessibleInterval< R > raiXYZ = IntervalImageViews.getVolumeForSaving( rai, c, t, settings.numProcessingThreads );
 
@@ -119,8 +119,9 @@ public class TiffVolumesFrameSaver< R extends RealType< R > & NativeType< R > > 
 //                ProgressHelpers.logProgress( totalCubes, counter, startTime, "Saved file " );
 //            }
 
-            System.out.println( "Saving finished: Frame " + t + ", Channel " + c );
+//            System.out.println( "Saving finished: Frame " + t + ", Channel " + c );
 
+            System.gc();
         }
     }
 
@@ -248,7 +249,6 @@ public class TiffVolumesFrameSaver< R extends RealType< R > & NativeType< R > > 
                 }
             }
             writer.close();
-            System.gc();
         }
         catch (Exception e)
         {

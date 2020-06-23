@@ -1,7 +1,7 @@
 package develop;
 
 import de.embl.cba.bdp2.open.core.CachedCellImgReader;
-import de.embl.cba.bdp2.open.core.NamingScheme;
+import de.embl.cba.bdp2.open.core.NamingSchemes;
 import de.embl.cba.bdp2.shear.ImageShearer;
 import de.embl.cba.bdp2.shear.RaiNDShearer;
 import de.embl.cba.bdp2.shear.ShearMenuDialog;
@@ -16,7 +16,7 @@ public class TestShearTransform {
     public static void main(String[] args)
     {
         String imageDirectory = "src/test/resources/shear_transform_test";
-        final FileInfos fileInfos = new FileInfos( imageDirectory, NamingScheme.SINGLE_CHANNEL_TIMELAPSE,
+        final FileInfos fileInfos = new FileInfos( imageDirectory, NamingSchemes.SINGLE_CHANNEL_TIMELAPSE,
                 ".*", "");
         CachedCellImg cachedCellImg = CachedCellImgReader.createCachedCellImg( fileInfos );
 //

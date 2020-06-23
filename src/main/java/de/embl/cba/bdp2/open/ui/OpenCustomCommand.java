@@ -1,9 +1,8 @@
-package de.embl.cba.bdp2.open;
+package de.embl.cba.bdp2.open.ui;
 
 import de.embl.cba.bdp2.calibrate.CalibrationUtils;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.BigDataProcessor2;
-import de.embl.cba.bdp2.open.core.NamingScheme;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;
@@ -12,7 +11,7 @@ import org.scijava.plugin.Plugin;
 
 import javax.swing.*;
 
-import static de.embl.cba.bdp2.open.core.NamingScheme.*;
+import static de.embl.cba.bdp2.open.core.NamingSchemes.*;
 import static de.embl.cba.bdp2.utils.Utils.COMMAND_BDP_PREFIX;
 
 
@@ -22,8 +21,8 @@ import static de.embl.cba.bdp2.utils.Utils.COMMAND_BDP_PREFIX;
  *
  * @param <R>
  */
-@Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>" + AbstractOpenCommand.COMMAND_OPEN_PATH + OpenCommand.COMMAND_FULL_NAME )
-public class OpenCommand< R extends RealType< R > & NativeType< R > > extends AbstractOpenCommand< R >
+@Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>" + AbstractOpenCommand.COMMAND_OPEN_PATH + OpenCustomCommand.COMMAND_FULL_NAME )
+public class OpenCustomCommand< R extends RealType< R > & NativeType< R > > extends AbstractOpenCommand< R >
 {
     public static final String COMMAND_NAME = "Open Custom...";
     public static final String COMMAND_FULL_NAME = COMMAND_BDP_PREFIX + COMMAND_NAME;

@@ -2,7 +2,7 @@ package de.embl.cba.bdp2.open.core;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.utils.Utils;
+import de.embl.cba.bdp2.open.OpenFileType;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.cache.img.CachedCellImg;
 import net.imglib2.cache.img.ReadOnlyCachedCellImgFactory;
@@ -27,7 +27,7 @@ public class CachedCellImgReader
     {
         int[] cellDimsXYZCT = getCellDimsXYZCT( fileInfos );
 
-        if ( fileInfos.fileType.equals( Utils.FileType.HDF5.toString() ) )
+        if ( fileInfos.fileType.equals( OpenFileType.HDF5 ) )
         {
             return createCachedCellImg( fileInfos, cellDimsXYZCT );
         }

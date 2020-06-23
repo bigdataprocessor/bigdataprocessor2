@@ -63,7 +63,7 @@ public class LuxendoBatchMergeSplitChipCommand< R extends RealType< R > & Native
     public void process( ArrayList< File > directories )
     {
         final SavingSettings savingSettings = SavingSettings.getDefaults();
-        savingSettings.fileType = SavingSettings.FileType.TIFF_VOLUMES;
+        savingSettings.saveFileType = SavingSettings.SaveFileType.TIFF_VOLUMES;
         savingSettings.numIOThreads = 1; // input is hdf5 => single threaded
         savingSettings.numProcessingThreads = Runtime.getRuntime().availableProcessors();
 

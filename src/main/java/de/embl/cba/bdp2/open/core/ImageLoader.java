@@ -4,8 +4,8 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import de.embl.cba.bdp2.BigDataProcessor2;
+import de.embl.cba.bdp2.open.OpenFileType;
 import de.embl.cba.bdp2.utils.DimensionOrder;
-import de.embl.cba.bdp2.utils.Utils;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.process.ImageProcessor;
@@ -31,7 +31,7 @@ public class ImageLoader< T extends NativeType< T > > implements CellLoader< T >
     private long[] dimensions;
     private int[] cellDims;
     private LoadingCache< List< Integer >, SerializableFileInfo[] > serializableFileInfoCache;
-    private final String fileType;
+    private final OpenFileType fileType;
 
     public ImageLoader( FileInfos fileInfos, int[] cellDimsXYZCT )
     {
@@ -148,7 +148,7 @@ public class ImageLoader< T extends NativeType< T > > implements CellLoader< T >
         }
         else if ( cell.firstElement() instanceof UnsignedShortType )
         {
-            if ( fileType.equals( Utils.FileType.HDF5.toString() ) )
+            if ( fileType.toString().toLowerCase().contains( "hdf5" ) )
             {
                 final SerializableFileInfo fileInfo = getFileInfo( cell );
                 Hdf5DataCubeReader.read16bitDataCubeIntoArray(

@@ -1,6 +1,6 @@
 package de.embl.cba.bdp2.open.core;
 
-public abstract class NamingScheme
+public abstract class NamingSchemes
 {
 	public static final String SINGLE_CHANNEL_TIMELAPSE = "Single Channel Movie"; // TODO: get rid of this and replace by regExp
 	public static final String PATTERN_LUXENDO_LEFT_CAM = "Cam_Left_(\\d)+.h5$";
@@ -17,7 +17,16 @@ public abstract class NamingScheme
 	public static final String MULTI_CHANNEL_VOLUMES_FROM_SUBFOLDERS = "(?<C>.*)/.*T(?<T>\\d+)";
 	public static final String MULTI_CHANNEL_VOLUMES = ".*--C(?<C>.*)--T(?<T>\\d+)";
 
-	public static final String LUXENDO_REGEXP = ".*stack_STACK_channel_(?<C1>\\d+)/Cam_(?<C2>.*)_(?<T>\\d+).h5";
+	public static final String LUXENDO_REGEXP_OLD = ".*stack_STACK_channel_(?<C1>.*)/Cam_(?<C2>.*)_(?<T>\\d+).h5";
+	public static final String LUXENDO_REGEXP = ".*stack_STACK.*(?<C1>channel_.*)/(?<C2>Cam_.*)_(?<T>\\d+).h5";
+	public static final String LUXENDO_REGEXP_ID = "(?<C1>channel_.*)/(?<C2>Cam_.*)_(?<T>\\d+).h5";
+	public static final String CHANNEL_ID_DELIMITER = "_";
+
+	public static boolean isLuxendoNamingScheme( String namingScheme )
+	{
+		return namingScheme.contains( LUXENDO_REGEXP_ID );
+	}
+
 	public static final String LUXENDO_STACKINDEX_REGEXP = ".*stack_(?<StackIndex>\\d+)_channel_.*";
 	public static final String PATTERN_LUXENDO = "Cam_.*_(\\d)+.h5$";
 	public static final String PATTERN_ALL= ".*";
@@ -31,7 +40,6 @@ public abstract class NamingScheme
 	public static final String LOAD_CHANNELS_FROM_FOLDERS = "Channels from Subfolders";
 	public static final String TIFF_SLICES = "Tiff Slices";
 	public static final String LEICA_LIGHT_SHEET_TIFF = "Leica Light Sheet Tiff";
-	public static final String LUXENDO_REGEXP_ID = "+)/Cam_";
 
 	// File extensions
 	public static final String TIF = ".tif";
