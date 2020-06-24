@@ -25,8 +25,7 @@ public class Menu extends JMenu
     public static final String SAVE_AS_TIFF_VOLUMES_MENU_ITEM = "Save as Tiff Volumes...";
     public static final String SAVE_AS_TIFF_PLANES_MENU_ITEM = "Save as Tiff Planes...";
 
-    public static final String CROP_CALIBRATED = "Crop in Calibrated Units...";
-    public static final String CROP_VOXEL = "Crop in Voxel Units...";
+    public static final String CROP = "Crop...";
 
     public static final String CREATE_TRACK = "Create Track...";
 
@@ -59,16 +58,13 @@ public class Menu extends JMenu
         addMenuItem( processMenu, ImageRenameCommand.COMMAND_NAME );
         addMenuItem( processMenu, CalibrateCommand.COMMAND_NAME );
 
+
         final JMenu correctDriftMenu = new JMenu( "Correct Drift" );
         processMenu.add( correctDriftMenu );
         addMenuItem( correctDriftMenu, CREATE_TRACK );
         addMenuItem( correctDriftMenu, ApplyTrackCommand.COMMAND_NAME );
 
-
-        final JMenu cropMenu = new JMenu( "Crop" );
-        addMenuItem( cropMenu, CROP_VOXEL );
-        addMenuItem( cropMenu, CROP_CALIBRATED );
-        processMenu.add( cropMenu );
+        addMenuItem( processMenu, CROP );
 
         addMenuItem( processMenu, BinCommand.COMMAND_NAME );
         addMenuItem( processMenu, ConvertToUnsignedByteTypeCommand.COMMAND_NAME );

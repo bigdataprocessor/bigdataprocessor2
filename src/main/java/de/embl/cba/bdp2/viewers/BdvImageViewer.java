@@ -32,6 +32,9 @@ import org.scijava.ui.behaviour.io.InputTriggerConfig;
 import org.scijava.ui.behaviour.util.Behaviours;
 
 import javax.swing.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -369,8 +372,8 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
     {
         this.image = image;
 
-        BdvService.imageNameToBdv.put( image.getName(), this );
-        ImageService.nameToImage.put( image.getName(), image );
+        BdvService.imageNameToBdvImageViewer.put( image.getName(), this );
+        ImageService.imageNameToImage.put( image.getName(), image );
 
         addToBdv( image );
 
@@ -379,12 +382,31 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
         setAutoColors();
 
         if ( autoContrast )
-        {
             new Thread( () -> autoContrast() ).start();
-        }
 
+        JFrame topFrame = setWindowTitle( image );
+        addFocusListener( topFrame );
+    }
+
+    private JFrame setWindowTitle( Image< R > image )
+    {
         JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor( bdvHandle.getViewerPanel() );
         topFrame.setTitle( VIEWER_TITLE_STUMP + image.getName() );
+        return topFrame;
+    }
+
+    private void addFocusListener( JFrame topFrame )
+    {
+        final BdvImageViewer viewer = this;
+        topFrame.addWindowListener( new WindowAdapter()
+        {
+            @Override
+            public void windowActivated( WindowEvent e )
+            {
+                super.windowActivated( e );
+                BdvService.setFocusedViewer( viewer );
+            }
+        } );
     }
 
     private void addToBdv( Image< R > image )

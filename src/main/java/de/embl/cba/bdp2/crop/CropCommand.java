@@ -52,7 +52,7 @@ public class CropCommand< R extends RealType< R > & NativeType< R > > extends Ab
     {
         process();
         handleOutputImage( false, false );
-        ImageService.nameToImage.put( outputImage.getName(), outputImage );
+        ImageService.imageNameToImage.put( outputImage.getName(), outputImage );
     }
 
     private void process()

@@ -25,6 +25,6 @@ public class TestOpenMultiChannelTiffVolumes
                 ".*"
         );
 
-        BigDataProcessor2.showImage( image, true );
+        // BigDataProcessor2.showImage( image, true );
     }
 }

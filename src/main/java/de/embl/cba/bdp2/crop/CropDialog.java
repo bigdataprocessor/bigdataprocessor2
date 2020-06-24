@@ -7,20 +7,56 @@ import de.embl.cba.bdp2.open.ui.AbstractOpenCommand;
 import de.embl.cba.bdp2.record.MacroRecorder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import ij.gui.GenericDialog;
 import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
 import net.imglib2.RealInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
+import javax.swing.*;
+
 public class CropDialog< R extends RealType< R > & NativeType< R > >
 {
+	public static final String SHOW_IN_VOXEL_UNITS = "Use voxel units";
+	public static final String SHOW_IN_CALIBRATED_UNITS = "Use calibrated units";
+	public static boolean askForUnitsChoice = true;
+	private String unitsChoice = SHOW_IN_CALIBRATED_UNITS;
+
+	public CropDialog( BdvImageViewer< R > viewer )
+	{
+		if ( askForUnitsChoice )
+		{
+			final GenericDialog gd = new GenericDialog( "Cropping Units" );
+			gd.addChoice( "Cropping dialog", new String[]{ SHOW_IN_VOXEL_UNITS, SHOW_IN_CALIBRATED_UNITS }, unitsChoice );
+			gd.addCheckbox( "Do not ask again during this session", true );
+			gd.showDialog();
+			if ( gd.wasCanceled() ) return;
+			unitsChoice = gd.getNextChoice();
+			askForUnitsChoice = ! gd.getNextBoolean();
+		}
+
+		if ( unitsChoice.equals( SHOW_IN_VOXEL_UNITS ) )
+		{
+			showDialog( viewer, false );
+		}
+		else if ( unitsChoice.equals( SHOW_IN_CALIBRATED_UNITS ) )
+		{
+			showDialog( viewer, true );
+		}
+	}
+
 	public CropDialog( BdvImageViewer< R > viewer, boolean calibratedUnits )
+	{
+		showDialog( viewer, calibratedUnits );
+	}
+
+	private void showDialog( BdvImageViewer< R > viewer, boolean calibratedUnits )
 	{
 		final Image< R > inputImage = viewer.getImage();
 
-		Interval voxelInterval = null;
-		RealInterval realInterval = null;
+		final Interval voxelInterval;
+		final RealInterval realInterval;
 		if ( calibratedUnits )
 		{
 			realInterval = viewer.getRealIntervalXYZCTViaDialog();
@@ -29,18 +65,21 @@ public class CropDialog< R extends RealType< R > & NativeType< R > >
 		}
 		else
 		{
+			realInterval = null;
 			voxelInterval = viewer.getVoxelIntervalXYZCTViaDialog();
 			if ( voxelInterval == null ) return;
 		}
 
+
 		Image< R > outputImage = BigDataProcessor2.crop( inputImage, voxelInterval );
+
+		SwingUtilities.invokeLater( () -> {
+			log( calibratedUnits, voxelInterval, realInterval, outputImage );
+			recordMacro( inputImage, outputImage, voxelInterval );
+		} );
 
 		final BdvImageViewer< R > newViewer = new BdvImageViewer<>( outputImage );
 		newViewer.setDisplaySettings( viewer.getDisplaySettings() );
-
-		log( calibratedUnits, voxelInterval, realInterval, outputImage );
-
-		recordMacro( inputImage, outputImage, voxelInterval );
 	}
 
 	public void log( boolean calibratedUnits, Interval voxelInterval, RealInterval realInterval, Image< R > outputImage )

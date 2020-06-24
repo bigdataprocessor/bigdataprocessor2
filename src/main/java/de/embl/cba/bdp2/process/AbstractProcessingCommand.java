@@ -16,11 +16,11 @@ public abstract class AbstractProcessingCommand< R extends RealType< R > & Nativ
     public static final String COMMAND_PROCESS_PATH = "Commands>Process>";
 
     @Parameter(label = "Input image")
-    protected Image inputImage = ImageService.nameToImage.values().iterator().next();
+    protected Image inputImage = ImageService.imageNameToImage.values().iterator().next();
     public static final String INPUT_IMAGE_PARAMETER = "inputImage";
 
     @Parameter(label = "Output image name")
-    protected String outputImageName = ImageService.nameToImage.keySet().iterator().next();
+    protected String outputImageName = ImageService.imageNameToImage.keySet().iterator().next();
     public static final String OUTPUT_IMAGE_NAME_PARAMETER = "outputImageName";
 
     @Parameter(label = "Output image handling", choices = {
@@ -36,7 +36,7 @@ public abstract class AbstractProcessingCommand< R extends RealType< R > & Nativ
     protected BdvImageViewer handleOutputImage( boolean autoContrast, boolean keepViewerTransform )
     {
         outputImage.setName( outputImageName );
-        ImageService.nameToImage.put( outputImageName, outputImage );
+        ImageService.imageNameToImage.put( outputImageName, outputImage );
 
         if ( viewingModality.equals( AbstractOpenCommand.SHOW_IN_NEW_VIEWER ) )
         {
@@ -44,7 +44,7 @@ public abstract class AbstractProcessingCommand< R extends RealType< R > & Nativ
         }
         else if ( viewingModality.equals( AbstractOpenCommand.SHOW_IN_CURRENT_VIEWER ))
         {
-            final BdvImageViewer viewer = BdvService.imageNameToBdv.get( inputImage.getName() );
+            final BdvImageViewer viewer = BdvService.imageNameToBdvImageViewer.get( inputImage.getName() );
             viewer.replaceImage( outputImage, autoContrast, keepViewerTransform );
             return viewer;
         }

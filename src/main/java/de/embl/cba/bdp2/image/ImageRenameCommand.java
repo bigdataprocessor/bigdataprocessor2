@@ -26,7 +26,7 @@ public class ImageRenameCommand< R extends RealType< R > & NativeType< R > > ext
     {
         process();
         handleOutputImage( false, true );
-        ImageService.nameToImage.put( outputImage.getName(), outputImage );
+        ImageService.imageNameToImage.put( outputImage.getName(), outputImage );
     }
 
     private void process()

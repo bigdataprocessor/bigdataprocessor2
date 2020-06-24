@@ -48,7 +48,7 @@ public abstract class AbstractOpenCommand< R extends RealType< R > & NativeType<
 
     protected void handleOutputImage( boolean autoContrast, boolean keepViewerTransform )
     {
-        ImageService.nameToImage.put( outputImage.getName(), outputImage );
+        ImageService.imageNameToImage.put( outputImage.getName(), outputImage );
 
         if ( viewingModality.equals( SHOW_IN_NEW_VIEWER ) )
         {

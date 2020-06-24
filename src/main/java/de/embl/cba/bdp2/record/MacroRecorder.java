@@ -67,7 +67,8 @@ public class MacroRecorder< R extends RealType< R > & NativeType< R > >
 			if ( recorder != null )
 				if ( ! Recorder.scriptMode() )
 				{
-					Recorder.recordString( message );
+					if ( message != null )
+						Recorder.recordString( message );
 					Recorder.record( "run", commandName, options );
 				}
 

@@ -24,7 +24,5 @@ public class TestOpenMultiChannelTiffVolumesFromSubfolders
                 MULTI_CHANNEL_VOLUMES_FROM_SUBFOLDERS + TIF,
                 ".*"
         );
-
-        // BigDataProcessor2.showImage( image, true );
     }
 }

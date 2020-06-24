@@ -27,6 +27,7 @@ import de.embl.cba.bdp2.align.splitchip.SplitViewMergeDialog;
 import de.embl.cba.bdp2.align.ChromaticShiftDialog;
 import de.embl.cba.bdp2.register.RegisteredViews;
 import de.embl.cba.bdp2.register.Registration;
+import de.embl.cba.bdp2.service.BdvService;
 import de.embl.cba.bdp2.shear.ShearMenuDialog;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
@@ -57,7 +58,8 @@ public class MenuActions implements ActionListener {
         this.viewer = viewer;
     }
 
-    public List< JMenu > getMenus(){ //Add new menu items here.
+    public List< JMenu > getMenus()
+    {
         List<JMenu> jMenuList = new ArrayList<>();
         jMenuList.add( menu );
         jMenuList.add( miscMenu );
@@ -67,6 +69,8 @@ public class MenuActions implements ActionListener {
     @Override
     public synchronized void actionPerformed(ActionEvent e)
     {
+        final BdvImageViewer activeViewer = BdvService.getActiveViewer();
+
         if (e.getActionCommand().equalsIgnoreCase( Menu.SAVE_AS_IMARIS_VOLUMES_MENU_ITEM ))
         {
             BigDataProcessor2.threadPool.submit(() -> {
@@ -144,16 +148,10 @@ public class MenuActions implements ActionListener {
                 RegisteredViews.createAlignedMovieView( viewer, Registration.PHASE_CORRELATION, 0 );
             });
         }
-        else if(e.getActionCommand().equalsIgnoreCase( Menu.CROP_VOXEL ))
+        else if(e.getActionCommand().equalsIgnoreCase( Menu.CROP ))
         {
         	new Thread( () ->  {
-        	    new CropDialog<>( viewer, false );
-            }).start();
-        }
-        else if(e.getActionCommand().equalsIgnoreCase( Menu.CROP_CALIBRATED ))
-        {
-            new Thread( () ->  {
-                new CropDialog<>( viewer, true );
+        	    new CropDialog<>( viewer );
             }).start();
         }
         else if(e.getActionCommand().equalsIgnoreCase( Menu.IMAGEJ_VIEW_MENU_ITEM ))
@@ -241,5 +239,14 @@ public class MenuActions implements ActionListener {
                 Services.commandService.run( OpenLeicaDSLTiffPlanesCommand.class, true );
             });
         }
+        else if( e.getActionCommand().equalsIgnoreCase( OpenLuxendoCommand.COMMAND_NAME ) )
+        {
+            BigDataProcessor2.threadPool.submit(() ->
+            {
+                AbstractOpenCommand.parentBdvImageViewer = viewer;
+                Services.commandService.run( OpenLuxendoCommand.class, true );
+            });
+        }
+
     }
 }

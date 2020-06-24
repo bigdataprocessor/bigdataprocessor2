@@ -37,7 +37,7 @@ public class SwingImageWidget extends SwingInputWidget< Image > implements
 
         comboBox = new JComboBox<>();
 
-        final Collection< Image > images = ImageService.nameToImage.values();
+        final Collection< Image > images = ImageService.imageNameToImage.values();
         for ( Image image : images )
         {
             comboBox.addItem( image );

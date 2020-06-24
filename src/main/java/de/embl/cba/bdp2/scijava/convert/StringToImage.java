@@ -10,7 +10,7 @@ public class StringToImage<I extends String, O extends Image > extends AbstractC
 
     @Override
     public <T> T convert(Object src, Class<T> dest) {
-        return (T) ImageService.nameToImage.get( src );
+        return (T) ImageService.imageNameToImage.get( src );
     }
 
     @Override

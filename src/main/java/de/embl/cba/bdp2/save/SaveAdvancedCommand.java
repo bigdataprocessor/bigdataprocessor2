@@ -28,7 +28,7 @@ public class SaveAdvancedCommand< R extends RealType< R > & NativeType< R > > im
     public static final String COMMAND_FULL_NAME = Utils.COMMAND_BDP_PREFIX + COMMAND_NAME;
 
     @Parameter(label = "Input image name", persist = true)
-    protected Image< R > inputImage = ImageService.nameToImage.values().iterator().next();
+    protected Image< R > inputImage = ImageService.imageNameToImage.values().iterator().next();
     public static final String INPUT_IMAGE_PARAMETER = "inputImage";
 
     @Parameter(label = "Saving directory", style = "directory")

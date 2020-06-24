@@ -7,6 +7,7 @@ import de.embl.cba.bdp2.open.OpenFileType;
 import de.embl.cba.bdp2.record.MacroRecorder;
 import org.apache.commons.lang.ArrayUtils;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -300,6 +301,7 @@ public class FileInfosHelper
                 throw new UnsupportedOperationException( "No time-points found!" );
 
             List< String > sortedChannels = sort( channels );
+
             sortedChannels = subSetChannelsIfNecessary( channelSubset, sortedChannels );
 
             fileInfos.nC = sortedChannels.size();
@@ -326,6 +328,7 @@ public class FileInfosHelper
     {
         if ( channelSubsetter != null )
         {
+            // TODO: this could invoke a UI, maybe i need a SwingUtilities.invokeLater here?
             sortedChannels = sort( channelSubsetter.getChannelSubset( sortedChannels ) );
         }
 

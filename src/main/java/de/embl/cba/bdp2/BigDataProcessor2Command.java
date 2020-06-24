@@ -1,6 +1,7 @@
 package de.embl.cba.bdp2;
 
 import bdv.viewer.animate.TextOverlayAnimator;
+import de.embl.cba.bdp2.crop.CropDialog;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.scijava.Services;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
@@ -35,6 +36,7 @@ public class BigDataProcessor2Command< R extends RealType< R > & NativeType< R >
     public void run()
     {
         Services.commandService = cs;
+        CropDialog.askForUnitsChoice = true;
 
         SwingUtilities.invokeLater( () -> {
 
