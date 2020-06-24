@@ -47,11 +47,14 @@ public class MenuActions implements ActionListener {
     private final MiscMenu miscMenu;
     private final Menu menu;
     private BdvImageViewer viewer;
+    private final ArrayList< JMenu > menus;
 
     public MenuActions()
     {
         menu = new Menu(this);
+        menus = menu.getMenus();
         miscMenu = new MiscMenu(this);
+        menus.add( miscMenu );
     }
 
     public void setViewer( BdvImageViewer viewer ){
@@ -59,6 +62,11 @@ public class MenuActions implements ActionListener {
     }
 
     public List< JMenu > getMenus()
+    {
+        return menus;
+    }
+
+    public List< JMenu > getMainMenus()
     {
         List<JMenu> jMenuList = new ArrayList<>();
         jMenuList.add( menu );
@@ -70,6 +78,8 @@ public class MenuActions implements ActionListener {
     public synchronized void actionPerformed(ActionEvent e)
     {
         final BdvImageViewer activeViewer = BdvService.getActiveViewer();
+
+        this.viewer = activeViewer;
 
         if (e.getActionCommand().equalsIgnoreCase( Menu.SAVE_AS_IMARIS_VOLUMES_MENU_ITEM ))
         {

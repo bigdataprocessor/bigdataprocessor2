@@ -34,7 +34,6 @@ import org.scijava.ui.behaviour.util.Behaviours;
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,7 +41,7 @@ import java.util.Map;
 
 public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
 {
-    public static final String VIEWER_TITLE_STUMP = "BigDataProcessor2: ";
+    public static final String VIEWER_TITLE_STUMP = "BigDataViewer - Image: ";
     public static boolean enableArbitraryPlaneSlicing = false;
 
     private Image< R > image;
@@ -64,7 +63,7 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
 
         showImage( image, autoContrast );
 
-        this.addMenus( new MenuActions() );
+        // this.addMenus( new MenuActions() );
         this.installBehaviours( );
     }
 
@@ -188,14 +187,14 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
         }
     }
 
-    public void addMenus( MenuActions menus )
+    public void addMenus( MenuActions menuActions )
     {
-        menus.setViewer(this);
+        menuActions.setViewer(this);
 
         final BdvHandleFrame bdvHandleFrame = ( BdvHandleFrame ) this.bdvHandle;
         final JMenuBar bdvMenuBar = bdvHandleFrame.getBigDataViewer().getViewerFrame().getJMenuBar();
 
-        for ( JMenu menu : menus.getMenus() )
+        for ( JMenu menu : menuActions.getMainMenus() )
         {
             bdvMenuBar.add( menu );
         }

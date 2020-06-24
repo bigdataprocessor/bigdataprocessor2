@@ -11,6 +11,7 @@ import de.embl.cba.bdp2.align.splitchip.AlignChannelsSplitChipCommand;
 import de.embl.cba.bdp2.open.ui.*;
 
 import javax.swing.*;
+import java.util.ArrayList;
 
 public class Menu extends JMenu
 {
@@ -34,19 +35,24 @@ public class Menu extends JMenu
     // Menus
     public static final String MISC_MENU = "Misc";
     public static final String DEVELOPMENT_MENU_DISPLAY_TEXT = "Development";
-    public static final String MACRO_RECORDING = "Macro Recording...";
+    public static final String MACRO_RECORDING = "Record Macro...";
 
     private final MenuActions menuActions;
+    private final ArrayList< JMenu > menus;
 
     public Menu( MenuActions menuActions )
     {
         this.menuActions = menuActions;
         setText( "BigDataProcessor2" );
 
+        menus = new ArrayList<>();
+
         final JMenu recordMenu = addMenu( "Record" );
+        menus.add( recordMenu );
         addMenuItem( recordMenu, MACRO_RECORDING );
 
         final JMenu openMenu = addMenu( "Open" );
+        menus.add( openMenu );
         addMenuItem( openMenu, OpenCustomCommand.COMMAND_NAME );
         addMenuItem( openMenu, OpenCustomHelpCommand.COMMAND_NAME );
         addMenuItem( openMenu, OpenEMTiffPlanesCommand.COMMAND_NAME );
@@ -55,9 +61,9 @@ public class Menu extends JMenu
         addMenuItem( openMenu, OpenLeicaDSLTiffPlanesCommand.COMMAND_NAME );
 
         final JMenu processMenu = addMenu( "Process" );
+        menus.add( processMenu );
         addMenuItem( processMenu, ImageRenameCommand.COMMAND_NAME );
         addMenuItem( processMenu, CalibrateCommand.COMMAND_NAME );
-
 
         final JMenu correctDriftMenu = new JMenu( "Correct Drift" );
         processMenu.add( correctDriftMenu );
@@ -73,16 +79,21 @@ public class Menu extends JMenu
 //        addMenuItem( OBLIQUE_MENU_ITEM );
 
         final JMenu saveMenu = addMenu( "Save" );
+        menus.add( saveMenu );
         addMenuItem( saveMenu, SAVE_AS_IMARIS_VOLUMES_MENU_ITEM );
         addMenuItem( saveMenu, SAVE_AS_TIFF_VOLUMES_MENU_ITEM );
         addMenuItem( saveMenu, SAVE_AS_TIFF_PLANES_MENU_ITEM );
-
 
 //        final JMenu correctMotionMenu = addMenu( UIDisplayConstants.CORRECT_MOTION_MENU_ITEM );
 //        addMenuItem( correctMotionMenu, UIDisplayConstants.APPLY_TRACK_MENU_ITEM );
 //        addMenuItem( correctMotionMenu, UIDisplayConstants.REGISTER_VOLUME_SIFT_MENU_ITEM );
 //        addMenuItem( correctMotionMenu, UIDisplayConstants.REGISTER_MOVIE_SIFT_MENU_ITEM );
 //        addMenuItem( correctMotionMenu, UIDisplayConstants.REGISTER_MOVIE_PHASE_CORRELATION_MENU_ITEM );
+    }
+
+    public ArrayList< JMenu > getMenus()
+    {
+        return menus;
     }
 
     private JMenu addMenu( String name )

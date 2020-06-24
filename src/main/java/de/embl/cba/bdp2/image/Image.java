@@ -1,11 +1,13 @@
 package de.embl.cba.bdp2.image;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.embl.cba.bdp2.open.core.FileInfos;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import mpicbg.imglib.multithreading.Stopable;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.util.Intervals;
 
 import java.util.ArrayList;
 
@@ -37,6 +39,13 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		this.fileInfos = fileInfos;
 	}
 
+	public long[] getDimensionsXYZCT()
+	{
+		final long[] longs = new long[ raiXYZCT.numDimensions() ];
+		raiXYZCT.dimensions( longs );
+		return longs;
+	}
+
 	public String[] getChannelNames()
 	{
 		return channelNames;
@@ -47,21 +56,25 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		this.channelNames = channelNames;
 	}
 
+	@JsonIgnore
 	public FileInfos getFileInfos()
 	{
 		return fileInfos;
 	}
 
+	@JsonIgnore
 	public void setFileInfos( FileInfos fileInfos )
 	{
 		this.fileInfos = fileInfos;
 	}
 
+	@JsonIgnore
 	public RandomAccessibleInterval< R > getRai()
 	{
 		return raiXYZCT;
 	}
 
+	@JsonIgnore
 	public void setRai( RandomAccessibleInterval< R > raiXYZCT )
 	{
 		this.raiXYZCT = raiXYZCT;

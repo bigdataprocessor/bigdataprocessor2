@@ -1,5 +1,7 @@
 package de.embl.cba.bdp2.service;
 
+import de.embl.cba.bdp2.BigDataProcessor2;
+import de.embl.cba.bdp2.BigDataProcessor2UI;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 
 import java.util.Collections;
@@ -16,6 +18,7 @@ public abstract class BdvService
 	public static synchronized void setFocusedViewer( BdvImageViewer viewer )
 	{
 		focusedViewer = viewer;
+		BigDataProcessor2UI.setImageInformation( viewer.getImage() );
 	}
 
 	public static synchronized BdvImageViewer getActiveViewer()

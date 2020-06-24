@@ -40,20 +40,22 @@ public class BigDataProcessor2Command< R extends RealType< R > & NativeType< R >
 
         SwingUtilities.invokeLater( () -> {
 
-            ArrayImgs.unsignedShorts( 10, 10, 10, 1, 1 );
-            final Image< UnsignedShortType > image = new Image<>( ArrayImgs.unsignedShorts( 10, 10, 10, 1, 1 ),
-                    "Welcome!",
-					new String[]{"channel 0"},
-                    new double[]{ 1, 1, 1 },
-                    "micrometer",
-                    null );
+            BigDataProcessor2UI.showUI();
 
-            final BdvImageViewer viewer = BigDataProcessor2.showImage( image );
-
-            new Thread( () ->  {
-                IJ.wait( 2000 );
-                viewer.getBdvHandle().getViewerPanel().addOverlayAnimator ( new TextOverlayAnimator( "Go to Menu > BigDataProcessor2 > Open", 10000, TextOverlayAnimator.TextPosition.CENTER ) );
-            }).start();
+//            ArrayImgs.unsignedShorts( 10, 10, 10, 1, 1 );
+//            final Image< UnsignedShortType > image = new Image<>( ArrayImgs.unsignedShorts( 10, 10, 10, 1, 1 ),
+//                    "Welcome!",
+//					new String[]{"channel 0"},
+//                    new double[]{ 1, 1, 1 },
+//                    "micrometer",
+//                    null );
+//
+//            final BdvImageViewer viewer = BigDataProcessor2.showImage( image );
+//
+//            new Thread( () ->  {
+//                IJ.wait( 2000 );
+//                viewer.getBdvHandle().getViewerPanel().addOverlayAnimator ( new TextOverlayAnimator( "Go to Menu > BigDataProcessor2 > Open", 10000, TextOverlayAnimator.TextPosition.CENTER ) );
+//            }).start();
 
         } );
     }
