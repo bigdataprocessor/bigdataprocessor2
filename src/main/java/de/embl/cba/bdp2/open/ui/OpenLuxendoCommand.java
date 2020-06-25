@@ -12,6 +12,8 @@ import org.scijava.plugin.Plugin;
 
 import javax.swing.*;
 
+import java.io.File;
+
 import static de.embl.cba.bdp2.open.core.NamingSchemes.LUXENDO_REGEXP;
 import static de.embl.cba.bdp2.utils.Utils.COMMAND_BDP_PREFIX;
 
@@ -30,12 +32,19 @@ public class OpenLuxendoCommand< R extends RealType< R > & NativeType< R > > ext
         SwingUtilities.invokeLater( () ->  {
             String regExp = LUXENDO_REGEXP.replace( "STACK", "" + stackIndex );
 
+            if ( directory.getName().contains( "stack_" ) )
+            {
+                // User mistakenly clicked one level too deep
+                directory = new File( directory.getParent() );
+            }
+
             final LuxendoInteractiveChannelSubsetter channelSubsetter =
                     new LuxendoInteractiveChannelSubsetter(
                             directory,
                             viewingModality,
                             enableArbitraryPlaneSlicing,
                             stackIndex );
+
             outputImage = BigDataProcessor2.openImageFromHdf5( directory.toString(), regExp, regExp, "Data", channelSubsetter );
 
             outputImage.getInfos().add( Image.WARNING_VOXEL_SIZE );

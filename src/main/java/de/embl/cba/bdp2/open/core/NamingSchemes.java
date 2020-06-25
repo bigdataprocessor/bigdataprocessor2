@@ -18,8 +18,8 @@ public abstract class NamingSchemes
 	public static final String MULTI_CHANNEL_VOLUMES = ".*--C(?<C>.*)--T(?<T>\\d+)";
 
 	public static final String LUXENDO_REGEXP_OLD = ".*stack_STACK_channel_(?<C1>.*)/Cam_(?<C2>.*)_(?<T>\\d+).h5";
-	public static final String LUXENDO_REGEXP = ".*stack_STACK.*(?<C1>channel_.*)/(?<C2>Cam_.*)_(?<T>\\d+).h5";
-	public static final String LUXENDO_REGEXP_ID = "(?<C1>channel_.*)/(?<C2>Cam_.*)_(?<T>\\d+).h5";
+	public static final String LUXENDO_REGEXP = ".*stack_STACK(?<C1>.*channel_.*)/(?<C2>Cam_.*)_(?<T>\\d+).h5";
+	public static final String LUXENDO_REGEXP_ID = "(?<C1>.*channel_.*)/(?<C2>Cam_.*)_(?<T>\\d+).h5";
 	public static final String CHANNEL_ID_DELIMITER = "_";
 
 	public static boolean isLuxendoNamingScheme( String namingScheme )
