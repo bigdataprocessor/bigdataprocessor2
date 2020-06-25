@@ -1,5 +1,6 @@
 package de.embl.cba.bdp2.open.ui;
 
+import de.embl.cba.bdp2.BigDataProcessor2Command;
 import de.embl.cba.bdp2.dialog.HelpDialog;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;

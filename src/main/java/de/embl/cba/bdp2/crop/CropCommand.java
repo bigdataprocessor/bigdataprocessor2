@@ -1,5 +1,6 @@
 package de.embl.cba.bdp2.crop;
 
+import de.embl.cba.bdp2.BigDataProcessor2Command;
 import de.embl.cba.bdp2.process.AbstractProcessingCommand;
 import de.embl.cba.bdp2.service.ImageService;
 import de.embl.cba.bdp2.BigDataProcessor2;

@@ -1,6 +1,7 @@
 package de.embl.cba.bdp2.save;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
+import de.embl.cba.bdp2.BigDataProcessor2Command;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.service.ImageService;
 import de.embl.cba.bdp2.utils.Utils;

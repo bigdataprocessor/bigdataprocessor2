@@ -1,5 +1,6 @@
 package de.embl.cba.bdp2.align.splitchip;
 
+import de.embl.cba.bdp2.BigDataProcessor2Command;
 import de.embl.cba.bdp2.process.AbstractProcessingCommand;
 import de.embl.cba.bdp2.utils.Utils;
 import net.imglib2.type.NativeType;

@@ -1,6 +1,7 @@
 package de.embl.cba.bdp2.open.ui;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
+import de.embl.cba.bdp2.BigDataProcessor2Command;
 import de.embl.cba.bdp2.open.FixedListChannelSubsetter;
 import de.embl.cba.bdp2.open.core.NamingSchemes;
 import net.imglib2.type.NativeType;
