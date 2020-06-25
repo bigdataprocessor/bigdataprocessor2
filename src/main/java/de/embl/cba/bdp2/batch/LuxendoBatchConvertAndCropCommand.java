@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 import static de.embl.cba.bdp2.dialog.Utils.selectDirectories;
 
-@Plugin(type = Command.class, menuPath = "Plugins>BigDataTools>Luxendo>Batch Convert and Crop", initializer = "init")
+@Plugin(type = Command.class, menuPath = "Plugins>EMBL>Ellenberg>Batch Convert and Crop (Broken?)", initializer = "init")
 public class LuxendoBatchConvertAndCropCommand< R extends RealType< R > & NativeType< R > > implements Command
 {
     @Parameter(label = "Voxel Unit")

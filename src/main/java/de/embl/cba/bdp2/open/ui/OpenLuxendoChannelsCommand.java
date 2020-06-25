@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 import static de.embl.cba.bdp2.open.core.NamingSchemes.LUXENDO_REGEXP_OLD;
 import static de.embl.cba.bdp2.utils.Utils.COMMAND_BDP_PREFIX;
 
-@Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>" + AbstractOpenCommand.COMMAND_OPEN_PATH + OpenLuxendoChannelsCommand.COMMAND_FULL_NAME )
+@Plugin(type = Command.class, menuPath = BigDataProcessor2Command.BIGDATAPROCESSOR2_PLUGINS_MENU_ROOT + AbstractOpenCommand.COMMAND_OPEN_PATH + OpenLuxendoChannelsCommand.COMMAND_FULL_NAME )
 public class OpenLuxendoChannelsCommand< R extends RealType< R > & NativeType< R > > extends AbstractOpenCommand< R >
 {
     public static final String COMMAND_NAME = "Open Luxendo Channels...";

@@ -46,7 +46,7 @@ public class CalibrationDialog< R extends RealType< R > & NativeType< R > >
 		voxelSpacing[ 0 ] = genericDialog.getNextNumber();
 		voxelSpacing[ 1 ] = genericDialog.getNextNumber();
 		voxelSpacing[ 2 ] = genericDialog.getNextNumber();
-
+		outputImage.setVoxelSpacing( voxelSpacing );
 		Logger.info( "Image voxel unit: " + outputImage.getVoxelUnit() );
 		Logger.info( "Image voxel size: " + Arrays.toString( outputImage.getVoxelSpacing() ) );
 

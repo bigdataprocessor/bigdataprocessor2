@@ -2,9 +2,11 @@ package de.embl.cba.bdp2.dialog;
 
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import de.embl.cba.bdv.utils.BdvUtils;
 import fiji.util.gui.GenericDialogPlus;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -74,4 +76,24 @@ public class Utils
 		JFrame outputViewerFrame = ( JFrame ) SwingUtilities.getWindowAncestor( outputViewer.getBdvHandle().getViewerPanel() );
 		outputViewerFrame.setLocation( x, y );
 	}
+
+	public static void moveWindowToCurrentMousePosition( JComponent component )
+	{
+		final Window window = SwingUtilities.getWindowAncestor( component );
+		window.setLocation( MouseInfo.getPointerInfo().getLocation().x, MouseInfo.getPointerInfo().getLocation().y );
+	}
+
+	public static void moveWindowToPosition( JComponent component, int x, int y )
+	{
+		final Window window = SwingUtilities.getWindowAncestor( component );
+		window.setLocation( x, y );
+	}
+
+	public static void centerWindowToPosition( JComponent component )
+	{
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		final Window window = SwingUtilities.getWindowAncestor( component );
+		window.setLocation( screenSize.width / 2 - window.getWidth() / 2, screenSize.height / 2 - window.getHeight() / 2 );
+	}
+
 }

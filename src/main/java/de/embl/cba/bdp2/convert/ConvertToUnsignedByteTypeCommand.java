@@ -8,7 +8,7 @@ import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
-@Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>" + AbstractProcessingCommand.COMMAND_PROCESS_PATH + ConvertToUnsignedByteTypeCommand.COMMAND_FULL_NAME )
+@Plugin(type = Command.class, menuPath = BigDataProcessor2Command.BIGDATAPROCESSOR2_PLUGINS_MENU_ROOT + AbstractProcessingCommand.COMMAND_PROCESS_PATH + ConvertToUnsignedByteTypeCommand.COMMAND_FULL_NAME )
 public class ConvertToUnsignedByteTypeCommand< R extends RealType< R > & NativeType< R > > extends AbstractProcessingCommand implements Command
 {
     public static final String COMMAND_NAME = "Convert to 8-Bit...";

@@ -10,7 +10,7 @@ import javax.swing.*;
 
 import static de.embl.cba.bdp2.utils.Utils.COMMAND_BDP_PREFIX;
 
-@Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>" + AbstractOpenCommand.COMMAND_OPEN_PATH + OpenCustomHelpCommand.COMMAND_FULL_NAME )
+@Plugin(type = Command.class, menuPath = BigDataProcessor2Command.BIGDATAPROCESSOR2_PLUGINS_MENU_ROOT + AbstractOpenCommand.COMMAND_OPEN_PATH + OpenCustomHelpCommand.COMMAND_FULL_NAME )
 public class OpenCustomHelpCommand< R extends RealType< R > & NativeType< R > > implements Command
 {
     public static final String COMMAND_NAME = "Open Custom Help...";

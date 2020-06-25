@@ -24,9 +24,10 @@ import javax.swing.*;
  *
  * @param <R>
  */
-@Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>" + BigDataProcessor2Command.COMMAND_FULL_NAME )
+@Plugin(type = Command.class, menuPath = BigDataProcessor2Command.BIGDATAPROCESSOR2_PLUGINS_MENU_ROOT + BigDataProcessor2Command.COMMAND_FULL_NAME )
 public class BigDataProcessor2Command< R extends RealType< R > & NativeType< R > > implements Command
 {
+    public static final String BIGDATAPROCESSOR2_PLUGINS_MENU_ROOT = "Plugins>BigDataTools>BigDataProcessor2>";
     @Parameter
     CommandService cs;
 

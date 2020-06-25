@@ -3,18 +3,17 @@ package de.embl.cba.bdp2.image;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.embl.cba.bdp2.open.core.FileInfos;
 import de.embl.cba.bdp2.utils.DimensionOrder;
+import de.embl.cba.bdp2.utils.Utils;
 import mpicbg.imglib.multithreading.Stopable;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
-import net.imglib2.util.Intervals;
 
 import java.util.ArrayList;
 
 public class Image< R extends RealType< R > & NativeType< R > >
 {
-	// TODO: keep drift of the dimensions
-	//  of the image in the voxel space of the fileInfos
+	public static final String WARNING_VOXEL_SIZE = "Voxel size may be incorrect!";
 
 	private RandomAccessibleInterval< R > raiXYZCT;
 	private String name;
@@ -23,6 +22,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 	private String voxelUnit;
 	private FileInfos fileInfos;
 	private ArrayList< Stopable > stopables = new ArrayList<>(  );
+	private ArrayList< String > infos = new ArrayList<>(  );
 
 	public Image( RandomAccessibleInterval< R > raiXYZCT,
 				  String name,
@@ -39,11 +39,26 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		this.fileInfos = fileInfos;
 	}
 
-	public long[] getDimensionsXYZCT()
+	public ArrayList< String > getInfos()
+	{
+		return infos;
+	}
+
+	public void setInfos( ArrayList< String > infos )
+	{
+		this.infos = infos;
+	}
+
+	public long[] getVoxelDimensionsXYZCT()
 	{
 		final long[] longs = new long[ raiXYZCT.numDimensions() ];
 		raiXYZCT.dimensions( longs );
 		return longs;
+	}
+
+	public double getSizeGB()
+	{
+		return Utils.getSizeGB( this.getRai() );
 	}
 
 	public String[] getChannelNames()
@@ -93,6 +108,9 @@ public class Image< R extends RealType< R > & NativeType< R > >
 	public void setVoxelSpacing( double... voxelSpacing )
 	{
 		this.voxelSpacing = voxelSpacing;
+		if ( infos.indexOf( WARNING_VOXEL_SIZE ) != -1 ){
+			infos.remove( infos.indexOf( WARNING_VOXEL_SIZE ) );
+		};
 	}
 
 	public String getVoxelUnit()
@@ -112,7 +130,9 @@ public class Image< R extends RealType< R > & NativeType< R > >
 
 	public Image< R > newImage( RandomAccessibleInterval< R > raiXYZCT )
 	{
-		return new Image<>( raiXYZCT, getName(), getChannelNames(), getVoxelSpacing(), getVoxelUnit(), getFileInfos() );
+		final Image< R > image = new Image<>( raiXYZCT, getName(), getChannelNames(), getVoxelSpacing(), getVoxelUnit(), getFileInfos() );
+		image.setInfos( this.infos );
+		return image;
 	}
 
 	public long numTimePoints()

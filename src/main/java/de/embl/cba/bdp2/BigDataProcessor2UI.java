@@ -1,7 +1,10 @@
 package de.embl.cba.bdp2;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.util.DefaultIndenter;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.embl.cba.bdp2.dialog.Utils;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.ui.MenuActions;
 
@@ -47,8 +50,12 @@ public abstract class BigDataProcessor2UI
 
 		try
 		{
+			DefaultPrettyPrinter prettyPrinter = new DefaultPrettyPrinter();
+			prettyPrinter.indentArraysWith( DefaultIndenter.SYSTEM_LINEFEED_INSTANCE);
+			objectMapper.setDefaultPrettyPrinter(prettyPrinter);
+
 			final String info = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString( image );
-			imageInfo.setText( "<html><pre>" + info + "</pre></html>");
+			imageInfo.setText( "<html><pre>Active image:\n" + info + "</pre></html>");
 			imageInfo.validate();
 			frame.validate();
 			frame.pack();
@@ -80,6 +87,10 @@ public abstract class BigDataProcessor2UI
 
 		frame.setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
 		frame.pack();
-		SwingUtilities.invokeLater( () -> frame.setVisible( true ) );
+		SwingUtilities.invokeLater( () ->
+		{
+			frame.setVisible( true );
+			Utils.moveWindowToPosition( panel, 50, 200 );
+		} );
 	}
 }

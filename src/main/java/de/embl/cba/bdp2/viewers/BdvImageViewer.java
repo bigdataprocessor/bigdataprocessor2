@@ -7,7 +7,9 @@ import bdv.util.*;
 import bdv.util.volatiles.VolatileViews;
 import bdv.viewer.DisplayMode;
 import bdv.viewer.SourceAndConverter;
+import bdv.viewer.ViewerFrame;
 import de.embl.cba.bdp2.dialog.DisplaySettings;
+import de.embl.cba.bdp2.dialog.Utils;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.boundingbox.BoundingBoxDialog;
 import de.embl.cba.bdp2.service.BdvService;
@@ -19,6 +21,7 @@ import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.volatiles.VolatileCachedCellImgs;
 import de.embl.cba.bdv.utils.BdvUtils;
 import net.imglib2.*;
+import net.imglib2.Cursor;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ARGBType;
@@ -32,6 +35,7 @@ import org.scijava.ui.behaviour.io.InputTriggerConfig;
 import org.scijava.ui.behaviour.util.Behaviours;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
@@ -41,7 +45,7 @@ import java.util.Map;
 
 public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
 {
-    public static final String VIEWER_TITLE_STUMP = "BigDataViewer - Image: ";
+    public static final String VIEWER_TITLE_STUMP = "BigDataViewer - ";
     public static boolean enableArbitraryPlaneSlicing = false;
 
     private Image< R > image;
@@ -62,6 +66,9 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
         this.channelSources = new ArrayList<>(  );
 
         showImage( image, autoContrast );
+
+
+        Utils.centerWindowToPosition( bdvHandle.getViewerPanel()  );
 
         // this.addMenus( new MenuActions() );
         this.installBehaviours( );

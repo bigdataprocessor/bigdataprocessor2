@@ -10,7 +10,7 @@ import org.scijava.plugin.Plugin;
 
 import java.util.List;
 
-@Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor2>" + AbstractProcessingCommand.COMMAND_PROCESS_PATH + AlignChannelsSplitChipCommand.COMMAND_FULL_NAME )
+@Plugin(type = Command.class, menuPath = BigDataProcessor2Command.BIGDATAPROCESSOR2_PLUGINS_MENU_ROOT + AbstractProcessingCommand.COMMAND_PROCESS_PATH + AlignChannelsSplitChipCommand.COMMAND_FULL_NAME )
 public class AlignChannelsSplitChipCommand< R extends RealType< R > & NativeType< R > > extends AbstractProcessingCommand< R >
 {
     public static final String COMMAND_NAME = "Align Channels Split Chip...";
