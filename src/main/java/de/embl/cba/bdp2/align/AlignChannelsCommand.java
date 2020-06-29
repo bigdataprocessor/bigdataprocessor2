@@ -1,6 +1,5 @@
 package de.embl.cba.bdp2.align;
 
-import de.embl.cba.bdp2.BigDataProcessor2Command;
 import de.embl.cba.bdp2.process.AbstractProcessingCommand;
 import de.embl.cba.bdp2.service.ImageService;
 import de.embl.cba.bdp2.utils.Utils;
@@ -12,7 +11,7 @@ import org.scijava.plugin.Plugin;
 
 import java.util.List;
 
-@Plugin(type = Command.class, menuPath = BigDataProcessor2Command.BIGDATAPROCESSOR2_PLUGINS_MENU_ROOT + AbstractProcessingCommand.COMMAND_PROCESS_PATH + AlignChannelsCommand.COMMAND_FULL_NAME )
+@Plugin(type = Command.class, menuPath = de.embl.cba.bdp2.dialog.Utils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractProcessingCommand.COMMAND_PROCESS_PATH + AlignChannelsCommand.COMMAND_FULL_NAME )
 public class AlignChannelsCommand< R extends RealType< R > & NativeType< R > > extends AbstractProcessingCommand< R >
 {
 

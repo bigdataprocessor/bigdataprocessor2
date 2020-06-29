@@ -1,7 +1,7 @@
 package de.embl.cba.bdp2.open.ui;
 
-import de.embl.cba.bdp2.BigDataProcessor2Command;
 import de.embl.cba.bdp2.dialog.HelpDialog;
+import de.embl.cba.bdp2.dialog.Utils;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;
@@ -11,7 +11,7 @@ import javax.swing.*;
 
 import static de.embl.cba.bdp2.utils.Utils.COMMAND_BDP_PREFIX;
 
-@Plugin(type = Command.class, menuPath = BigDataProcessor2Command.BIGDATAPROCESSOR2_PLUGINS_MENU_ROOT + AbstractOpenCommand.COMMAND_OPEN_PATH + OpenCustomHelpCommand.COMMAND_FULL_NAME )
+@Plugin(type = Command.class, menuPath = Utils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractOpenCommand.COMMAND_OPEN_PATH + OpenCustomHelpCommand.COMMAND_FULL_NAME )
 public class OpenCustomHelpCommand< R extends RealType< R > & NativeType< R > > implements Command
 {
     public static final String COMMAND_NAME = "Open Custom Help...";

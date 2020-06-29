@@ -11,15 +11,16 @@ import org.scijava.widget.FileWidget;
 import java.io.File;
 
 @Plugin(type = Command.class,
-		menuPath = "Plugins>BigDataTools>Convert>Convert XML/HDF5 to Single Resolution Image (using Reference Image)")
+		menuPath = "Plugins>BigDataTools>Convert XML/HDF5 to Single Resolution Image")
 public class BdvToVoxelGridImageCommand< T extends RealType< T > & NativeType< T > >
 		implements Command
 {
-	@Parameter( label = "Bdv reference image for voxel spacing and image size", style = FileWidget.OPEN_STYLE )
-	public File bdvReferenceImage;
 
-	@Parameter( label = "Bdv source image", style = FileWidget.OPEN_STYLE )
+	@Parameter( label = "XML/HDF5 source image", style = FileWidget.OPEN_STYLE )
 	public File bdvSourceImage;
+
+	@Parameter( label = "XML/HDF5 reference, providing target image for voxel spacing and image size", style = FileWidget.OPEN_STYLE )
+	public File bdvReferenceImage;
 
 	@Parameter( label = "Output file", style = FileWidget.SAVE_STYLE )
 	public File outputPath;

@@ -1,15 +1,9 @@
 package de.embl.cba.bdp2;
 
-import bdv.viewer.animate.TextOverlayAnimator;
 import de.embl.cba.bdp2.crop.CropDialog;
-import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.scijava.Services;
-import de.embl.cba.bdp2.viewers.BdvImageViewer;
-import ij.IJ;
-import net.imglib2.img.array.ArrayImgs;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
-import net.imglib2.type.numeric.integer.UnsignedShortType;
 import org.scijava.command.Command;
 import org.scijava.command.CommandService;
 import org.scijava.plugin.Parameter;
@@ -24,10 +18,10 @@ import javax.swing.*;
  *
  * @param <R>
  */
-@Plugin(type = Command.class, menuPath = BigDataProcessor2Command.BIGDATAPROCESSOR2_PLUGINS_MENU_ROOT + BigDataProcessor2Command.COMMAND_FULL_NAME )
+@Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor>" + BigDataProcessor2Command.COMMAND_FULL_NAME )
 public class BigDataProcessor2Command< R extends RealType< R > & NativeType< R > > implements Command
 {
-    public static final String BIGDATAPROCESSOR2_PLUGINS_MENU_ROOT = "Plugins>BigDataTools>";
+
     @Parameter
     CommandService cs;
 

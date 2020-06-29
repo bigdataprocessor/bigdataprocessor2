@@ -1,7 +1,7 @@
 package de.embl.cba.bdp2.open.ui;
 
-import de.embl.cba.bdp2.BigDataProcessor2Command;
 import de.embl.cba.bdp2.calibrate.CalibrationUtils;
+import de.embl.cba.bdp2.dialog.Utils;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import net.imglib2.type.NativeType;
@@ -22,7 +22,7 @@ import static de.embl.cba.bdp2.utils.Utils.COMMAND_BDP_PREFIX;
  *
  * @param <R>
  */
-@Plugin(type = Command.class, menuPath = BigDataProcessor2Command.BIGDATAPROCESSOR2_PLUGINS_MENU_ROOT + AbstractOpenCommand.COMMAND_OPEN_PATH + OpenCustomCommand.COMMAND_FULL_NAME )
+@Plugin(type = Command.class, menuPath = Utils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractOpenCommand.COMMAND_OPEN_PATH + OpenCustomCommand.COMMAND_FULL_NAME )
 public class OpenCustomCommand< R extends RealType< R > & NativeType< R > > extends AbstractOpenCommand< R >
 {
     public static final String COMMAND_NAME = "Open Custom...";

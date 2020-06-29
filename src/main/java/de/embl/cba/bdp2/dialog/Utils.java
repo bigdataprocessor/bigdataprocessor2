@@ -13,6 +13,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Utils
 {
+	public static final String BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT = "Plugins>BigDataTools>BigDataProcessor2>";
 
 	public static ArrayList< File > selectDirectories()
 	{
