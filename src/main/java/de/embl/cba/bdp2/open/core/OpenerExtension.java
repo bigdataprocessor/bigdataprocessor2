@@ -651,7 +651,7 @@ public class OpenerExtension extends Opener {
                 return; // leave pixels in the stack black
             }
 
-            File file = new File( directory + fi.directory + fi.fileName );
+            File file = new File( new File( directory, fi.directory ).getAbsolutePath(), fi.fileName );
             //File file = new File(directory + fi.fileName);
             try
             {
@@ -677,8 +677,8 @@ public class OpenerExtension extends Opener {
                 buffer[ ( z - zs ) / dz ] = readCroppedPlaneFromTiff( fi, inputStream, ys, ye );
                 //readingTime += (System.currentTimeMillis() - startTime);
                 inputStream.close();
-
-            } catch ( Exception e )
+            }
+            catch ( Exception e )
             {
                 IJ.handleException( e );
             }
@@ -689,7 +689,6 @@ public class OpenerExtension extends Opener {
             {
                 hasStrips = true;
             }
-
 
             if ( hasStrips )
             {
@@ -864,9 +863,8 @@ public class OpenerExtension extends Opener {
                     }
 
                     buffer[ ( z - zs ) / dz ] = unCompressedBuffer;
-
-
-                } else
+                }
+                else
                 {
 
                     Logger.error( "Tiff compression not implemented: fi.compression = " + fi.compression );
@@ -934,7 +932,8 @@ public class OpenerExtension extends Opener {
             if ( fi.bytesPerPixel == 1 )
             {
                 setBytePixelsCropXY( ( byte[] ) stack.getPixels( ( z - zs ) / dz + 1 ), ys, ny, xs, nx, imByteWidth, buffer[ ( z - zs ) / dz ] );
-            } else if ( fi.bytesPerPixel == 2 )
+            }
+            else if ( fi.bytesPerPixel == 2 )
             {
                 setShortPixelsCropXY( ( short[] ) stack.getPixels( ( z - zs ) / dz + 1 ), ys, ny, xs, nx, imByteWidth, buffer[ ( z - zs ) / dz ] );
             } else

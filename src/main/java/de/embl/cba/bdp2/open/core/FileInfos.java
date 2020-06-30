@@ -96,6 +96,7 @@ public class FileInfos
                 final String channelFolder = new File( directory ).getName();
                 namingScheme = "(?<C>" + channelFolder + ")/" + namingScheme;
                 filter = channelFolder + "/" + filter;
+                directory = new File( directory ).getParent() + "/";
             }
         }
 

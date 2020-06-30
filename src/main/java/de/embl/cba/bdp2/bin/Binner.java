@@ -5,6 +5,8 @@ import de.embl.cba.lazyalgorithm.view.NeighborhoodViews;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.view.IntervalView;
+import net.imglib2.view.Views;
 
 public class Binner
 {
@@ -37,8 +39,9 @@ public class Binner
 //			throw new UnsupportedOperationException( "The minimal bin width is 1.\n " +
 //					"Some values of the requested binning span were smaller than one: " + Arrays.toString( span ) );
 
-		final RandomAccessibleInterval< T > binnedRai =
-				NeighborhoodViews.averageBinnedView( inputImage.getRai(), span );
+		final RandomAccessibleInterval< T > rai = inputImage.getRai();
+
+		final RandomAccessibleInterval< T > binnedRai = NeighborhoodViews.averageBinnedView( rai, span );
 
 		return ( Image< T > ) new Image(
 					binnedRai,

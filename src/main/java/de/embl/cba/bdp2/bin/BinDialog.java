@@ -28,8 +28,7 @@ public class BinDialog< T extends RealType< T > & NativeType< T > > extends Abst
 		this.inputImage = viewer.getImage();
 		this.viewer = viewer;
 
-		Logger.info( "Image size [GB]: "
-				+ Utils.getSizeGB( this.inputImage.getRai() ) );
+		Logger.info( "Image size [GB]: " + Utils.getSizeGB( this.inputImage.getRai() ) );
 
 		panel = createContent();
 		showDialog( panel );
@@ -84,7 +83,7 @@ public class BinDialog< T extends RealType< T > & NativeType< T > > extends Abst
 
 				outputImage = Binner.bin( inputImage, span );
 				outputImage.setName( inputImage.getName() + "-binned" );
-				viewer.replaceImage( outputImage, true, true );
+				viewer.replaceImage( outputImage, false, true );
 
 				for ( SliderPanel sliderPanel : sliderPanels )
 				{
