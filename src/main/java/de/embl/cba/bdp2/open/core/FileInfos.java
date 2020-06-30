@@ -34,7 +34,7 @@ public class FileInfos
 			ImarisUtils.RESOLUTION_LEVEL +"3/Data",
 			"ITKImage/0/VoxelData" // Elastix
     };
-	private final SerializableFileInfo[][][] fileInfos;
+	private final SerializableFileInfo[][][] ctzFileInfos;
     private final long[] dimensions;
     public int bitDepth;
     public int nC;
@@ -103,7 +103,7 @@ public class FileInfos
 
         FileInfosHelper.setFileInfos( this, namingScheme, filter, channelSubsetter );
 
-        fileInfos = new SerializableFileInfo[nC][nT][nZ];
+        ctzFileInfos = new SerializableFileInfo[nC][nT][nZ];
         dimensions = new long[ 5 ];
         dimensions[ DimensionOrder.X ] = nX;
         dimensions[ DimensionOrder.Y ] = nY;
@@ -199,7 +199,7 @@ public class FileInfos
                 setInfosFromFile(channel, time, z, true);
             }
         }
-        return fileInfos[channel][time];
+        return ctzFileInfos[channel][time];
     }
 
     private void setInfosFromFile( final int c, final int t, final int z, boolean throwError )
@@ -240,7 +240,7 @@ public class FileInfos
                     //infoCT[z].rowsPerStrip = info[z].rowsPerStrip; // only core for first IFD!
                 }
 
-                fileInfos[c][t] = infoCT;
+                ctzFileInfos[c][t] = infoCT;
             }
             else if ( fileType.equals( OpenFileType.HDF5 ) )
             {
@@ -279,20 +279,20 @@ public class FileInfos
                     infoCT[z2].h5DataSet = h5DataSetName;
                     infoCT[z2].fileTypeString = fileType.toString();
                 }
-                fileInfos[c][t] = infoCT;
+                ctzFileInfos[c][t] = infoCT;
             }
             else if ( fileType.equals( OpenFileType.TIFF_PLANES))
             {
                 ftd = new FastTiffDecoder(directory, ctzFiles[c][t][z]);
                 try{
-                    fileInfos[c][t][z] = ftd.getTiffInfo()[0];
+                    ctzFileInfos[c][t][z] = ftd.getTiffInfo()[0];
                 }
                 catch ( IOException e ){// TODO : Handle exceptions properly --ashis
                     System.out.print( e.toString() );
                 }
-                fileInfos[c][t][z].fileName = getName( c, t, z );
-                fileInfos[c][t][z].directory = getDirectory( c, t, z );
-                fileInfos[c][t][z].fileTypeString = fileType.toString();
+                ctzFileInfos[c][t][z].fileName = getName( c, t, z );
+                ctzFileInfos[c][t][z].directory = getDirectory( c, t, z );
+                ctzFileInfos[c][t][z].fileTypeString = fileType.toString();
             }
         }
         else

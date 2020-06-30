@@ -5,8 +5,8 @@ public enum OpenFileType
 	HDF5("Hdf5"),
 	LUXENDO("Luxendo Hdf5"),
 	IMARIS("Partitioned Imaris Hdf5"),
-	TIFF_STACKS("Tiff stacks"),
-	TIFF_PLANES("Tiff planes");
+	TIFF_STACKS("Tiff Stacks"),
+	TIFF_PLANES("Tiff Planes");
 
 	private final String text;
 	private OpenFileType( String s)

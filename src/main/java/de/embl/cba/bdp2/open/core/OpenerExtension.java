@@ -73,21 +73,21 @@ public class OpenerExtension extends Opener {
 
         ImagePlus imp = null;
 
-        if( info[ zs ].fileTypeString.equals( OpenFileType.TIFF_STACKS ) )
+        if( info[ zs ].fileTypeString.equals( OpenFileType.TIFF_STACKS.toString() ) )
         {
             imp = readDataCubeFromTiff(directory, info, executorService, zs, ze, nz, dz, xs, xe, ys, ye);
         }
-        else if(info[zs].fileTypeString.equals( OpenFileType.TIFF_PLANES))
+        else if( info[ zs ].fileTypeString.equals( OpenFileType.TIFF_PLANES.toString()  ) )
         {
             imp = readDataCubeFromTiff(directory, info, executorService, zs, ze, nz, dz, xs, xe, ys, ye);
         }
-        else if(info[zs].fileTypeString.equals( OpenFileType.HDF5))
+        else if( info[ zs ].fileTypeString.equals( OpenFileType.HDF5.toString()  ) )
         {
             imp = readDataCubeFromHdf5(directory, info, zs, ze, nz, dz, xs, xe, ys, ye);
         }
         else
         {
-            Logger.error("unsupported file type: " + info[0].fileTypeString);
+            Logger.error("Unsupported file type: " + info[0].fileTypeString);
         }
 
         return(imp);
