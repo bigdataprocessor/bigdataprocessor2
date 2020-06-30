@@ -3,8 +3,6 @@ package de.embl.cba.bdp2.drift.track;
 import bdv.util.BdvFunctions;
 import bdv.util.BdvHandle;
 import bdv.util.BdvOptions;
-import com.esotericsoftware.kryo.util.ObjectMap;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import de.embl.cba.bdv.utils.BdvUtils;
@@ -186,7 +184,7 @@ public class TrackCreator extends JFrame
 
 	public void initTrackAndOverlay( BdvImageViewer viewer, String trackName )
 	{
-		track = new Track( trackName, viewer.getImage().getVoxelSpacing() );
+		track = new Track( trackName, viewer.getImage().getVoxelSize() );
 		final TrackOverlay trackOverlay = new TrackOverlay( bdvHandle, track, 20 );
 		BdvFunctions.showOverlay( trackOverlay, "drift-overlay", BdvOptions.options().addTo( bdvHandle ) );
 	}

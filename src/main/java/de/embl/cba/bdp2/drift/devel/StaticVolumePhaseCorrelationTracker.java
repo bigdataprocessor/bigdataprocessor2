@@ -37,7 +37,7 @@ public class StaticVolumePhaseCorrelationTracker < R extends RealType< R > & Nat
 		this.settings = settings;
 		this.id = id;
 		this.numDimensions = settings.initialPosition.length;
-		track = new Track( id, image.getVoxelSpacing() );
+		track = new Track( id, image.getVoxelSize() );
 	}
 
 	public void track()

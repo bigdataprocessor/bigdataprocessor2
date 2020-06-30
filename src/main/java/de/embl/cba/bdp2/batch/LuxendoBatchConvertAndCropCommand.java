@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 import static de.embl.cba.bdp2.dialog.Utils.selectDirectories;
 
-@Plugin(type = Command.class, menuPath = "Plugins>EMBL>Ellenberg>Batch Convert and Crop (Broken?)", initializer = "init")
+@Plugin(type = Command.class, menuPath = "Plugins>BigDataTools>EMBL>Ellenberg>Batch Convert and Crop (Broken?)", initializer = "init")
 public class LuxendoBatchConvertAndCropCommand< R extends RealType< R > & NativeType< R > > implements Command
 {
     @Parameter(label = "Voxel Unit")
@@ -78,7 +78,7 @@ public class LuxendoBatchConvertAndCropCommand< R extends RealType< R > & Native
                         "Data");
 
                 image.setVoxelUnit( voxelUnit );
-                image.setVoxelSpacing( new double[]{ voxelSpacingX, voxelSpacingY, voxelSpacingZ } );
+                image.setVoxelSize( new double[]{ voxelSpacingX, voxelSpacingY, voxelSpacingZ } );
                 final BdvImageViewer viewer = BigDataProcessor2.showImage( image);
 
                 final FinalInterval interval = viewer.getVoxelIntervalXYZCTViaDialog( );
@@ -107,7 +107,7 @@ public class LuxendoBatchConvertAndCropCommand< R extends RealType< R > & Native
                     NamingSchemes.PATTERN_LUXENDO,
                     "Data");
             image.setVoxelUnit( voxelUnit );
-            image.setVoxelSpacing( new double[]{ voxelSpacingX, voxelSpacingY, voxelSpacingZ } );
+            image.setVoxelSize( new double[]{ voxelSpacingX, voxelSpacingY, voxelSpacingZ } );
 
             final String outputDirectoryStump = directory.replace( "_channel_0", "" );
 

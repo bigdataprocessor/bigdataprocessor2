@@ -26,7 +26,7 @@ public class SaveSingleChanneHdf5SeriesAsImaris
                 dataset);
 
         image.setVoxelUnit( "micrometer" );
-        image.setVoxelSpacing( 0.13, 0.13, 1.04 );
+        image.setVoxelSize( 0.13, 0.13, 1.04 );
 
         bdp.showImage( image);
 

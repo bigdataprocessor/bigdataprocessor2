@@ -6,8 +6,6 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
-import java.util.Arrays;
-
 public class Binner
 {
 	public static double[] getBinnedVoxelSize( long[] span, double[] voxelSpacing )
@@ -46,7 +44,7 @@ public class Binner
 					binnedRai,
 					inputImage.getName(),
 					inputImage.getChannelNames(),
-					getBinnedVoxelSize( span, inputImage.getVoxelSpacing() ),
+					getBinnedVoxelSize( span, inputImage.getVoxelSize() ),
 					inputImage.getVoxelUnit(),
 					inputImage.getFileInfos()
 		);

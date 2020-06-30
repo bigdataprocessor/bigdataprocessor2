@@ -62,8 +62,6 @@ import net.imglib2.util.Util;
 import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
 
-import javax.swing.*;
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -185,7 +183,7 @@ public class Utils {
 						"Data" );
 
 		image.setVoxelUnit( voxelUnit );
-		image.setVoxelSpacing(
+		image.setVoxelSize(
 				voxelSpacingMicrometerX,
 				voxelSpacingMicrometerY,
 				voxelSpacingMicrometerZ );

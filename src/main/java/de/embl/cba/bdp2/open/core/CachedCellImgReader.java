@@ -155,7 +155,7 @@ public class CachedCellImgReader
                 cachedCellImg,
                 new File( fileInfos.directory ).getName(),
                 fileInfos.channelNames,
-                fileInfos.voxelSpacing,
+                fileInfos.voxelSize,
                 fileInfos.voxelUnit,
                 fileInfos
                 );

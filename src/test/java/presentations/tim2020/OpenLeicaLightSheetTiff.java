@@ -16,10 +16,10 @@ public class OpenLeicaLightSheetTiff
 
 		// The image calibration is core in cm.
 		// I do not know why, we fix it here to micrometer.
-		final double[] voxelSpacing = image.getVoxelSpacing();
-		final String voxelUnit = CalibrationUtils.fixVoxelSpacingAndUnit( voxelSpacing, image.getVoxelUnit() );
+		final double[] voxelSpacing = image.getVoxelSize();
+		final String voxelUnit = CalibrationUtils.fixVoxelSizeAndUnit( voxelSpacing, image.getVoxelUnit() );
 		voxelSpacing[ 2 ] = voxelSpacing[ 1 ];
-		image.setVoxelSpacing( voxelSpacing );
+		image.setVoxelSize( voxelSpacing );
 		image.setVoxelUnit( voxelUnit );
 
 

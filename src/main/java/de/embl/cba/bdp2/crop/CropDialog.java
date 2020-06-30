@@ -61,7 +61,7 @@ public class CropDialog< R extends RealType< R > & NativeType< R > >
 		{
 			realInterval = viewer.getRealIntervalXYZCTViaDialog();
 			if ( realInterval == null ) return;
-			voxelInterval = toVoxelInterval( realInterval, inputImage.getVoxelSpacing() );
+			voxelInterval = toVoxelInterval( realInterval, inputImage.getVoxelSize() );
 		}
 		else
 		{
@@ -93,7 +93,7 @@ public class CropDialog< R extends RealType< R > & NativeType< R > >
 
 	public static Interval toVoxelInterval(
 			RealInterval intervalXYZCT,
-			double[] voxelSpacings )
+			double[] voxelSize )
 	{
 		final long[] min = new long[ intervalXYZCT.numDimensions() ];
 		final long[] max = new long[ intervalXYZCT.numDimensions() ];
@@ -101,8 +101,8 @@ public class CropDialog< R extends RealType< R > & NativeType< R > >
 		// XYZ
 		for ( int d = 0; d < 3; d++ )
 		{
-			min[ d ] = (long) ( intervalXYZCT.realMin( d ) / voxelSpacings[ d ] );
-			max[ d ] = (long) ( intervalXYZCT.realMax( d ) / voxelSpacings[ d ] );
+			min[ d ] = (long) ( intervalXYZCT.realMin( d ) / voxelSize[ d ] );
+			max[ d ] = (long) ( intervalXYZCT.realMax( d ) / voxelSize[ d ] );
 		}
 
 		// CT

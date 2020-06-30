@@ -27,7 +27,7 @@ public class SaveSingleChanneHdf5SeriesAsTiffStacks
                 dataset);
 
         image.setVoxelUnit( "micrometer" );
-        image.setVoxelSpacing( 0.13, 0.13, 1.04 );
+        image.setVoxelSize( 0.13, 0.13, 1.04 );
 
         bdp.showImage( image);
 

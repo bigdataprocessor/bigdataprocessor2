@@ -63,6 +63,7 @@ public class SplitViewMergeDialog< R extends RealType< R > & NativeType< R > > e
 
 	@Override
 	protected void ok(){
+		recordMacro();
 		viewer.close();
 		this.dispose();
 	}
@@ -184,7 +185,7 @@ public class SplitViewMergeDialog< R extends RealType< R > & NativeType< R > > e
 				merge,
 				inputImage.getName() + "_merged",
 				createMergedChannelNames(),
-				inputImage.getVoxelSpacing(),
+				inputImage.getVoxelSize(),
 				inputImage.getVoxelUnit(),
 				inputImage.getFileInfos() );
 	}

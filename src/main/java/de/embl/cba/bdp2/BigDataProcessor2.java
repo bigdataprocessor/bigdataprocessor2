@@ -26,7 +26,6 @@ import net.imglib2.util.Util;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -161,7 +160,7 @@ public class BigDataProcessor2
 
     public static void calibrate( Image image, double[] doubles, String voxelUnit )
     {
-        image.setVoxelSpacing( doubles );
+        image.setVoxelSize( doubles );
         image.setVoxelUnit( voxelUnit );
     }
 

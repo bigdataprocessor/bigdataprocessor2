@@ -42,7 +42,7 @@ public class TestMicrogliaTracking
                 ".*" );
 
         image.setVoxelUnit( "pixel" );
-        image.setVoxelSpacing( 1.0, 1.0, 1.0 );
+        image.setVoxelSize( 1.0, 1.0, 1.0 );
 
         BdvImageViewer viewer = null;
         if ( showImages )
@@ -100,7 +100,7 @@ public class TestMicrogliaTracking
                 ".*" );
 
         image.setVoxelUnit( "pixel" );
-        image.setVoxelSpacing( 1.0, 1.0, 1.0 );
+        image.setVoxelSize( 1.0, 1.0, 1.0 );
 
         BdvImageViewer viewer = null;
         if ( showImages )
@@ -148,7 +148,7 @@ public class TestMicrogliaTracking
                 ".*" );
 
         image.setVoxelUnit( "pixel" );
-        image.setVoxelSpacing(
+        image.setVoxelSize(
                 1.0,
                 1.0,
                 1.0 );

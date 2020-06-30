@@ -98,7 +98,7 @@ public class ImarisImageSaver extends AbstractImageSaver
 
         ImagePlus image = Utils.wrap5DRaiToCalibratedImagePlus(
                 settings.rai,
-                settings.voxelSpacing,
+                settings.voxelSize,
                 settings.voxelUnit,
                 "wrapped");
 

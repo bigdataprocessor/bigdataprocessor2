@@ -38,9 +38,9 @@ public class OpenLeicaDSLTiffPlanesCommand< R extends RealType< R > & NativeType
     private void fixVoxelSpacing( Image< R > image )
     {
         // Sometimes Leica is calibrated as cm, which makes no sense
-        final double[] voxelSpacing = image.getVoxelSpacing();
-        final String voxelUnit = CalibrationUtils.fixVoxelSpacingAndUnit( voxelSpacing, image.getVoxelUnit() );
-        image.setVoxelSpacing( voxelSpacing );
+        final double[] voxelSpacing = image.getVoxelSize();
+        final String voxelUnit = CalibrationUtils.fixVoxelSizeAndUnit( voxelSpacing, image.getVoxelUnit() );
+        image.setVoxelSize( voxelSpacing );
         image.setVoxelUnit( voxelUnit );
     }
 }

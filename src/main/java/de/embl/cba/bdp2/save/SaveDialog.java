@@ -229,7 +229,7 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > >  extends JF
         savingSettings.numIOThreads = Integer.parseInt( tfNumIOThreads.getText() );
         savingSettings.numProcessingThreads = Integer.parseInt( tfNumProcessingThreads.getText() );
 
-        savingSettings.voxelSpacing = viewer.getImage().getVoxelSpacing();
+        savingSettings.voxelSize = viewer.getImage().getVoxelSize();
         savingSettings.voxelUnit = viewer.getImage().getVoxelUnit();
 
         return savingSettings;

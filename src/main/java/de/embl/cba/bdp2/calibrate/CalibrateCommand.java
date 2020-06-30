@@ -17,20 +17,23 @@ public class CalibrateCommand< R extends RealType< R > & NativeType< R > > exten
     @Parameter(label = "Unit", choices = {"micrometer", "nanometer"}, persist = false)
     public String unit = "micrometer";
 
-    @Parameter(label = "Voxel spacing X", persist = false)
-    public double voxelSpacingX = 1.0;
+    @Parameter(label = "Voxel size X", persist = false)
+    public double voxelSizeX = 1.0;
+    public static String VOXEL_SIZE_X_PARAMETER = "voxelSizeX";
 
-    @Parameter(label = "Voxel spacing Y", persist = false)
-    public double voxelSpacingY = 1.0;
+    @Parameter(label = "Voxel size Y", persist = false)
+    public double voxelSizeY = 1.0;
+    public static String VOXEL_SIZE_Y_PARAMETER = "voxelSizeY";
 
-    @Parameter(label = "Voxel spacing Z", persist = false)
-    public double voxelSpacingZ = 1.0;
+    @Parameter(label = "Voxel size Z", persist = false)
+    public double voxelSizeZ = 1.0;
+    public static String VOXEL_SIZE_Z_PARAMETER = "voxelSizeZ";
 
     public void run()
     {
         outputImage = inputImage;
         outputImage.setVoxelUnit( unit );
-        outputImage.setVoxelSpacing( new double[]{voxelSpacingX, voxelSpacingY, voxelSpacingZ} );
+        outputImage.setVoxelSize( new double[]{ voxelSizeX, voxelSizeY, voxelSizeZ } );
         handleOutputImage( false, false );
     }
 }

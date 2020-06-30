@@ -36,7 +36,7 @@ public class SaveSingleChanneHdf5SeriesAsImaris
                 dataset);
 
         image.setVoxelUnit( "micrometer" );
-        image.setVoxelSpacing( 0.13, 0.13, 1.04 );
+        image.setVoxelSize( 0.13, 0.13, 1.04 );
 
         bdp.showImage( image);
 
@@ -60,7 +60,7 @@ public class SaveSingleChanneHdf5SeriesAsImaris
         final Image volumeLoaderBinnedImage = new Image<>(
                 replaced,
                 fileInfos.directory,
-				fileInfos.channelNames, fileInfos.voxelSpacing,
+				fileInfos.channelNames, fileInfos.voxelSize,
                 fileInfos.voxelUnit, fileInfos );
 
         final File out = new File( "/Users/tischer/Desktop/stack_0_channel_0-asImaris-bdp2/im");

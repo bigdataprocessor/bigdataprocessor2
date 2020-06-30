@@ -13,12 +13,12 @@ import java.util.ArrayList;
 
 public class Image< R extends RealType< R > & NativeType< R > >
 {
-	public static final String WARNING_VOXEL_SIZE = "Voxel size may be incorrect!";
+	public static final String WARNING_VOXEL_SIZE = "Voxel size may be incorrect!\nProcess > Set Voxel Size";
 
 	private RandomAccessibleInterval< R > raiXYZCT;
 	private String name;
 	private String[] channelNames;
-	private double[] voxelSpacing;
+	private double[] voxelSize;
 	private String voxelUnit;
 	private FileInfos fileInfos;
 	private ArrayList< Stopable > stopables = new ArrayList<>(  );
@@ -27,14 +27,14 @@ public class Image< R extends RealType< R > & NativeType< R > >
 	public Image( RandomAccessibleInterval< R > raiXYZCT,
 				  String name,
 				  String[] channelNames,
-				  double[] voxelSpacing,
+				  double[] voxelSize,
 				  String voxelUnit,
 				  FileInfos fileInfos )
 	{
 		this.raiXYZCT = raiXYZCT;
 		this.name = name;
 		this.channelNames = channelNames;
-		this.voxelSpacing = voxelSpacing;
+		this.voxelSize = voxelSize;
 		this.voxelUnit = voxelUnit;
 		this.fileInfos = fileInfos;
 	}
@@ -95,9 +95,9 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		this.raiXYZCT = raiXYZCT;
 	}
 
-	public double[] getVoxelSpacing()
+	public double[] getVoxelSize()
 	{
-		return voxelSpacing;
+		return voxelSize;
 	}
 
 	public void setName( String name )
@@ -105,9 +105,9 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		this.name = name;
 	}
 
-	public void setVoxelSpacing( double... voxelSpacing )
+	public void setVoxelSize( double... voxelSize )
 	{
-		this.voxelSpacing = voxelSpacing;
+		this.voxelSize = voxelSize;
 		if ( infos.indexOf( WARNING_VOXEL_SIZE ) != -1 ){
 			infos.remove( infos.indexOf( WARNING_VOXEL_SIZE ) );
 		};
@@ -130,7 +130,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 
 	public Image< R > newImage( RandomAccessibleInterval< R > raiXYZCT )
 	{
-		final Image< R > image = new Image<>( raiXYZCT, getName(), getChannelNames(), getVoxelSpacing(), getVoxelUnit(), getFileInfos() );
+		final Image< R > image = new Image<>( raiXYZCT, getName(), getChannelNames(), getVoxelSize(), getVoxelUnit(), getFileInfos() );
 		image.setInfos( this.infos );
 		return image;
 	}

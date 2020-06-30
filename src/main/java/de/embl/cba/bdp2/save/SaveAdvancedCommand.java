@@ -97,7 +97,7 @@ public class SaveAdvancedCommand< R extends RealType< R > & NativeType< R > > im
         savingSettings.numIOThreads = numIOThreads;
         savingSettings.numProcessingThreads = numProcessingThreads;
 
-        savingSettings.voxelSpacing = inputImage.getVoxelSpacing();
+        savingSettings.voxelSize = inputImage.getVoxelSize();
         savingSettings.voxelUnit = inputImage.getVoxelUnit();
 
         return savingSettings;

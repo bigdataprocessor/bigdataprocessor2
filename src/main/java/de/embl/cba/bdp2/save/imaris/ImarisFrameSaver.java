@@ -85,7 +85,7 @@ public class ImarisFrameSaver< R extends RealType< R > & NativeType< R >> implem
             ImagePlus imagePlus =
                     Utils.wrap3DRaiToCalibratedImagePlus(
                             raiXYZ,
-                            settings.voxelSpacing,
+                            settings.voxelSize,
                             settings.voxelUnit,
                             "");
 

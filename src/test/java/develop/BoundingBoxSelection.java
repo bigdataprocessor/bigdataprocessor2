@@ -33,7 +33,7 @@ public class BoundingBoxSelection
 		final double[] min = new double[ 3 ];
 		final double[] max = new double[ 3 ];
 
-		final double[] voxelSpacing = viewer.getImage().getVoxelSpacing();
+		final double[] voxelSpacing = viewer.getImage().getVoxelSize();
 
 		for (int d = 0; d < 3; d++) {
 			min[d] = (int) (rai.min(d) * voxelSpacing[d]);
@@ -99,7 +99,7 @@ public class BoundingBoxSelection
 				NamingSchemes.SINGLE_CHANNEL_TIMELAPSE,
 				".*.h5", "Data" );
 
-		fileInfos.voxelSpacing = new double[]{ 0.5, 0.5, 5.0};
+		fileInfos.voxelSize = new double[]{ 0.5, 0.5, 5.0};
 
 		return CachedCellImgReader.loadImage( fileInfos );
 	}

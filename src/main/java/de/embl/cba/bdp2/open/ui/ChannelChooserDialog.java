@@ -16,7 +16,7 @@ public class ChannelChooserDialog
 
 	public List< String > getChannelsViaDialog( )
 	{
-		final GenericDialog gd = new GenericDialog( "Channel Chooser" );
+		final GenericDialog gd = new GenericDialog( "Select Channels..." );
 		final int numChannels = channels.size();
 		for ( int c = 0; c < numChannels; c++ )
 		{

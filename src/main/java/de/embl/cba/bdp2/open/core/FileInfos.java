@@ -19,7 +19,6 @@ import net.imglib2.type.numeric.real.FloatType;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.regex.Pattern;
 
 public class FileInfos
@@ -44,7 +43,7 @@ public class FileInfos
     public int nY;
     public int nZ;
     public String voxelUnit;
-    public double[] voxelSpacing;
+    public double[] voxelSize;
     public OpenFileType fileType;
     public String h5DataSetName;
     public String[][][] ctzFiles;
@@ -135,9 +134,9 @@ public class FileInfos
         info += "nC: " + nC + "\n";
         info += "nT: " + nT + "\n";
         info += "voxelUnit: " + voxelUnit + "\n";
-        info += "voxelSpacingX: " + voxelSpacing[0] + "\n";
-        info += "voxelSpacingY: " + voxelSpacing[1] + "\n";
-        info += "voxelSpacingZ: " + voxelSpacing[2] + "\n";
+        info += "voxelSizeX: " + voxelSize[0] + "\n";
+        info += "voxelSizeY: " + voxelSize[1] + "\n";
+        info += "voxelSizeZ: " + voxelSize[2] + "\n";
         info += "GB: " + getSizeInGB() + "\n";
         return info;
     }

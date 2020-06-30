@@ -22,7 +22,7 @@ public class OpenSingleChannelHdf5Series
                 ".*" );
 
         image.setVoxelUnit( "micrometer" );
-        image.setVoxelSpacing( 0.13, 0.13, 1.04 );
+        image.setVoxelSize( 0.13, 0.13, 1.04 );
 
         bigDataProcessor2.showImage( image);
 

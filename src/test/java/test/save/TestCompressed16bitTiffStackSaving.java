@@ -24,7 +24,7 @@ public class TestCompressed16bitTiffStackSaving
         final SavingSettings settings = SavingSettings.getDefaults();
         settings.saveFileType = SavingSettings.SaveFileType.TIFF_VOLUMES;
         settings.numIOThreads = 3;
-        settings.voxelSpacing = image.getVoxelSpacing();
+        settings.voxelSize = image.getVoxelSize();
         settings.voxelUnit = image.getVoxelUnit();
         settings.compression = SavingSettings.COMPRESSION_NONE;
 

@@ -19,7 +19,7 @@ public class BdvToVoxelGridImageCommand< T extends RealType< T > & NativeType< T
 	@Parameter( label = "XML/HDF5 source image", style = FileWidget.OPEN_STYLE )
 	public File bdvSourceImage;
 
-	@Parameter( label = "XML/HDF5 reference, providing target image for voxel spacing and image size", style = FileWidget.OPEN_STYLE )
+	@Parameter( label = "XML/HDF5 reference, providing target image for voxel and image size", style = FileWidget.OPEN_STYLE )
 	public File bdvReferenceImage;
 
 	@Parameter( label = "Output file", style = FileWidget.SAVE_STYLE )

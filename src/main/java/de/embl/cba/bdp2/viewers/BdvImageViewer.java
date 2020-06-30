@@ -7,7 +7,6 @@ import bdv.util.*;
 import bdv.util.volatiles.VolatileViews;
 import bdv.viewer.DisplayMode;
 import bdv.viewer.SourceAndConverter;
-import bdv.viewer.ViewerFrame;
 import de.embl.cba.bdp2.dialog.DisplaySettings;
 import de.embl.cba.bdp2.dialog.Utils;
 import de.embl.cba.bdp2.image.Image;
@@ -35,7 +34,6 @@ import org.scijava.ui.behaviour.io.InputTriggerConfig;
 import org.scijava.ui.behaviour.util.Behaviours;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
@@ -417,7 +415,7 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
 
     private void addToBdv( Image< R > image )
     {
-        final AffineTransform3D scaling = getScalingTransform( image.getVoxelSpacing() );
+        final AffineTransform3D scaling = getScalingTransform( image.getVoxelSize() );
         RandomAccessibleInterval cachedCellImg = VolatileCachedCellImgs.asVolatileCachedCellImg( image );
         BdvOptions options = getBdvOptions( image, scaling );
 

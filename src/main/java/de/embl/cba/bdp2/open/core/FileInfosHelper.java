@@ -2,12 +2,9 @@ package de.embl.cba.bdp2.open.core;
 
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.open.ChannelSubsetter;
-import de.embl.cba.bdp2.open.ui.ChannelChooserDialog;
 import de.embl.cba.bdp2.open.OpenFileType;
-import de.embl.cba.bdp2.record.MacroRecorder;
 import org.apache.commons.lang.ArrayUtils;
 
-import javax.swing.*;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -177,7 +174,7 @@ public class FileInfosHelper
         fileInfos.compression =  info[0].compression;
         fileInfos.numTiffStrips = info[0].stripLengths.length;
 
-        fileInfos.voxelSpacing = new double[]{
+        fileInfos.voxelSize = new double[]{
                 info[0].pixelWidth,
                 info[0].pixelHeight,
                 info[0].pixelDepth };
@@ -462,7 +459,13 @@ public class FileInfosHelper
             if ( matcher.matches() )
             {
                 int c = channels.indexOf( getId( channelGroups, matcher ) );
+                if ( c == -1 )
+                    continue; // channels have been subset => not all fileNames are matching
+
                 int t = timepoints.indexOf( getId( timeGroups, matcher ) );
+                if ( t == -1 )
+                    throw new RuntimeException( "Could get time index for " + fileName );
+
                 for ( int z = 0; z < fileInfos.nZ; z++)
                 {
                     fileInfos.ctzFiles[c][t][z] = fileName; // all z with same file-name, because it is stacks

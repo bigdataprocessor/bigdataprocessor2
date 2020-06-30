@@ -53,7 +53,7 @@ public class MergeSplitChipWorkflow
                     ".*.h5",
                     "Data");
             image.setVoxelUnit( voxelUnit );
-            image.setVoxelSpacing(
+            image.setVoxelSize(
                     voxelSpacingMicrometerX,
                     voxelSpacingMicrometerY,
                     voxelSpacingMicrometerZ );
@@ -87,7 +87,7 @@ public class MergeSplitChipWorkflow
                     "Data");
 
             image.setVoxelUnit( voxelUnit );
-            image.setVoxelSpacing(
+            image.setVoxelSize(
                     voxelSpacingMicrometerX,
                     voxelSpacingMicrometerY,
                     voxelSpacingMicrometerZ );

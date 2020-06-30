@@ -111,7 +111,7 @@ public class BigDataTrackerGUI < R extends RealType< R > & NativeType< R > >
         trackingSettings.viewFirstNProcessedRegions = 0;
         trackingSettings.imageFeatureEnhancement = Utils.ImageFilterTypes.NONE.toString();
         trackingSettings.nt = -1;
-        trackingSettings.voxelSpacing = imageViewer.getImage().getVoxelSpacing();
+        trackingSettings.voxelSpacing = imageViewer.getImage().getVoxelSize();
         setDefaults();
     }
 

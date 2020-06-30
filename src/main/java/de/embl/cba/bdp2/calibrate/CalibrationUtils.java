@@ -6,7 +6,7 @@ import net.imglib2.type.numeric.RealType;
 
 public class CalibrationUtils
 {
-	public static < R extends RealType< R > & NativeType< R > > String fixVoxelSpacingAndUnit( double[] voxelSpacing, String voxelUnit )
+	public static < R extends RealType< R > & NativeType< R > > String fixVoxelSizeAndUnit( double[] voxelSpacing, String voxelUnit )
 	{
 		if ( voxelUnit.equals( "cm" ) )
 		{

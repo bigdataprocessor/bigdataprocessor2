@@ -101,7 +101,7 @@ public class TiffVolumesFrameSaver< R extends RealType< R > & NativeType< R > > 
             {
                 ImagePlus imp = Utils.wrap3DRaiToCalibratedImagePlus(
                         raiXYZ,
-                        settings.voxelSpacing,
+                        settings.voxelSize,
                         settings.voxelUnit,
                         "" );
 
@@ -148,7 +148,7 @@ public class TiffVolumesFrameSaver< R extends RealType< R > & NativeType< R > > 
 
         ImagePlus imp3D = Utils.wrap3DRaiToCalibratedImagePlus(
                 rai3D,
-                settings.voxelSpacing,
+                settings.voxelSize,
                 settings.voxelUnit,
                 "" );
 
@@ -161,9 +161,9 @@ public class TiffVolumesFrameSaver< R extends RealType< R > & NativeType< R > > 
 
     private double[] getVoxelSpacingCopy()
     {
-        final double[] voxelSpacing = new double[ settings.voxelSpacing.length ];
-        for ( int d = 0; d < settings.voxelSpacing.length; d++ )
-            voxelSpacing[ d ] = settings.voxelSpacing[ d ];
+        final double[] voxelSpacing = new double[ settings.voxelSize.length ];
+        for ( int d = 0; d < settings.voxelSize.length; d++ )
+            voxelSpacing[ d ] = settings.voxelSize[ d ];
         return voxelSpacing;
     }
 

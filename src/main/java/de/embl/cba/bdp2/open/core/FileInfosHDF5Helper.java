@@ -64,7 +64,7 @@ public class FileInfosHDF5Helper
         imageDataInfo.bitDepth = assignHDF5TypeToImagePlusBitdepth(dsInfo);
 
         // There is no standard way of retrieving voxelSpacings from h5 data....
-        imageDataInfo.voxelSpacing = new double[]{1,1,1};
+        imageDataInfo.voxelSize = new double[]{1,1,1};
         imageDataInfo.voxelUnit = "micrometer";
     }
 

@@ -24,7 +24,7 @@ public class MergeSplitChipDialog
                 "Data");
 
         image.setVoxelUnit( "micrometer" );
-        image.setVoxelSpacing( new double[]{0.13, 0.13, 1.04} );
+        image.setVoxelSize( new double[]{0.13, 0.13, 1.04} );
 
         final BdvImageViewer viewer = BigDataProcessor2.showImage( image);
         new SplitViewMergeDialog( viewer );

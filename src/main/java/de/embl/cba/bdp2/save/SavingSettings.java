@@ -15,7 +15,7 @@ public class SavingSettings {
 
     // TODO: remove the image itself from the settings
     public RandomAccessibleInterval rai;
-    public double[] voxelSpacing;
+    public double[] voxelSize;
     public String voxelUnit;
 
     // TODO: also remove the binning
@@ -78,7 +78,7 @@ public class SavingSettings {
     public static SavingSettings getDefaults() {
         SavingSettings savingSettings = new SavingSettings();
         savingSettings.bin = "1,1,1";
-        savingSettings.voxelSpacing = new double[]{1,1,1};
+        savingSettings.voxelSize = new double[]{1,1,1};
         savingSettings.voxelUnit = "pixel";
         savingSettings.saveVolumes = true;
         savingSettings.saveFileType = SaveFileType.TIFF_PLANES;

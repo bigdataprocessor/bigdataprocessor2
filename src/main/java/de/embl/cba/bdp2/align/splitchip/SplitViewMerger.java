@@ -67,7 +67,7 @@ public class SplitViewMerger
 				merge,
 				image.getName() + "_merged",
 				newChannelNames,
-				image.getVoxelSpacing(),
+				image.getVoxelSize(),
 				image.getVoxelUnit(),
 				image.getFileInfos() );
 

@@ -24,7 +24,7 @@ public class TestOpenMultiChannelTiffVolumesFromSubfoldersAndSaveAsTiffVolumes
         settings.volumesFilePathStump = "/Users/tischer/Documents/bigdataprocessor2/src/test/resources/test/tiff-nc2-nt6/image";
         settings.saveFileType = SavingSettings.SaveFileType.TIFF_VOLUMES;
         settings.numIOThreads = 3;
-        settings.voxelSpacing = image.getVoxelSpacing();
+        settings.voxelSize = image.getVoxelSize();
         settings.voxelUnit = image.getVoxelUnit();
         settings.compression = SavingSettings.COMPRESSION_NONE;
 

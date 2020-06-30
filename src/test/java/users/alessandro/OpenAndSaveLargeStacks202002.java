@@ -21,7 +21,7 @@ public class OpenAndSaveLargeStacks202002
 		savingSettings.saveFileType = SavingSettings.SaveFileType.TIFF_VOLUMES;
 		savingSettings.numIOThreads = 1;
 		savingSettings.numProcessingThreads = 1;
-		savingSettings.voxelSpacing = image.getVoxelSpacing();
+		savingSettings.voxelSize = image.getVoxelSize();
 		savingSettings.voxelUnit = image.getVoxelUnit();
 
 		BigDataProcessor2.saveImage( image, savingSettings, new LoggingProgressListener( "Save" ) );

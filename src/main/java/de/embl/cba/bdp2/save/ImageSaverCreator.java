@@ -44,7 +44,7 @@ public class ImageSaverCreator < R extends RealType< R > & NativeType< R > >
 			savingSettings.rai = image.getRai();
 		}
 
-		savingSettings.voxelSpacing = image.getVoxelSpacing();
+		savingSettings.voxelSize = image.getVoxelSize();
 		savingSettings.voxelUnit = image.getVoxelUnit();
 		ImgSaverFactory factory = new ImgSaverFactory();
 
