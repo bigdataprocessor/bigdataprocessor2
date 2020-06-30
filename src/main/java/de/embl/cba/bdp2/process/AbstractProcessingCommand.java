@@ -40,7 +40,14 @@ public abstract class AbstractProcessingCommand< R extends RealType< R > & Nativ
 
         if ( viewingModality.equals( AbstractOpenCommand.SHOW_IN_NEW_VIEWER ) )
         {
-            return BigDataProcessor2.showImage( outputImage, autoContrast );
+            final BdvImageViewer viewer = BigDataProcessor2.showImage( outputImage, autoContrast );
+            if ( autoContrast == false )
+            {
+                final BdvImageViewer inputImageViewer = BdvService.imageNameToBdvImageViewer.get( inputImage.getName() );
+                if ( inputImageViewer != null )
+                    viewer.setDisplaySettings( inputImageViewer.getDisplaySettings() );
+            }
+            return viewer;
         }
         else if ( viewingModality.equals( AbstractOpenCommand.SHOW_IN_CURRENT_VIEWER ))
         {

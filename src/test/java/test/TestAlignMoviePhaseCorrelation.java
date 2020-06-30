@@ -33,7 +33,7 @@ public class TestAlignMoviePhaseCorrelation< R extends RealType< R > & NativeTyp
 				".*");
 
 		if ( showImages )
-			BigDataProcessor2.showImage( image, false ).setDisplayRange( 100, 200, 0 );
+			BigDataProcessor2.showImage( image, false ).setDisplaySettings( 100, 200, 0 );
 
 		final FinalInterval hyperSliceInterval = FinalInterval.createMinMax(
 				0, 0, image.getRai().dimension( 2 ) / 2,
@@ -49,7 +49,7 @@ public class TestAlignMoviePhaseCorrelation< R extends RealType< R > & NativeTyp
 						Registration.PHASE_CORRELATION );
 
 		if ( showImages )
-			BigDataProcessor2.showImage( alignedImage, false ).setDisplayRange( 100, 200, 0 );
+			BigDataProcessor2.showImage( alignedImage, false ).setDisplaySettings( 100, 200, 0 );
 
 //		final SavingSettings savingSettings = SavingSettings.getDefaults();
 //		savingSettings.fileType = SavingSettings.FileType.TIFF_PLANES;
@@ -74,7 +74,7 @@ public class TestAlignMoviePhaseCorrelation< R extends RealType< R > & NativeTyp
 				".*");
 
 		if ( showImages )
-			BigDataProcessor2.showImage( image, false ).setDisplayRange( 0, 200, 0 );
+			BigDataProcessor2.showImage( image, false ).setDisplaySettings( 0, 200,  0 );
 
 		long channel = 1;
 
@@ -92,7 +92,7 @@ public class TestAlignMoviePhaseCorrelation< R extends RealType< R > & NativeTyp
 						Registration.PHASE_CORRELATION );
 
 		if ( showImages )
-			BigDataProcessor2.showImage( alignedImage, false ).setDisplayRange( 0, 200, 0 );
+			BigDataProcessor2.showImage( alignedImage, false ).setDisplaySettings( 0, 200, 0 );
 
 //		final SavingSettings savingSettings = SavingSettings.getDefaults();
 //		savingSettings.fileType = SavingSettings.FileType.TIFF_PLANES;

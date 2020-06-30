@@ -35,7 +35,7 @@ public class TestAlignVolumeSIFT< R extends RealType< R > & NativeType< R > >
 		if ( showImages )
 		{
 			final BdvImageViewer viewer = BigDataProcessor2.showImage( alignedImage, false );
-			viewer.setDisplayRange( 0, 65535, 0 );
+			viewer.setDisplaySettings( 0, 65535,0 );
 		}
 
 //		final SavingSettings savingSettings = SavingSettings.getDefaults();

@@ -25,7 +25,7 @@ public class TrackingUI
 		image.setVoxelSize( 1.0, 1.0, 1.0 );
 
 		final BdvImageViewer viewer = BigDataProcessor2.showImage( image);
-		viewer.setDisplayRange( 0, 150, 0 );
+		viewer.setDisplaySettings( 0, 150,0 );
 	}
 
 }

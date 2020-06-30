@@ -1,6 +1,7 @@
 package de.embl.cba.bdp2.crop;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
+import de.embl.cba.bdp2.dialog.DisplaySettings;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.open.ui.AbstractOpenCommand;
@@ -15,6 +16,7 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
 import javax.swing.*;
+import java.util.List;
 
 public class CropDialog< R extends RealType< R > & NativeType< R > >
 {
@@ -78,8 +80,10 @@ public class CropDialog< R extends RealType< R > & NativeType< R > >
 			recordMacro( inputImage, outputImage, voxelInterval );
 		} );
 
-		final BdvImageViewer< R > newViewer = new BdvImageViewer<>( outputImage );
-		newViewer.setDisplaySettings( viewer.getDisplaySettings() );
+
+		final BdvImageViewer< R > newViewer = BigDataProcessor2.showImage( outputImage, false );
+		final List< DisplaySettings > displaySettings = viewer.getDisplaySettings();
+		newViewer.setDisplaySettings( displaySettings );
 	}
 
 	public void log( boolean calibratedUnits, Interval voxelInterval, RealInterval realInterval, Image< R > outputImage )

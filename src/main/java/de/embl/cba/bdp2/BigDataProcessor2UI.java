@@ -46,25 +46,31 @@ public abstract class BigDataProcessor2UI
 
 	public static void setImageInformation( Image< ? > image )
 	{
-		final ObjectMapper objectMapper = new ObjectMapper();
+		String info = "None";
 
-		try
+		if ( image != null )
 		{
-			DefaultPrettyPrinter prettyPrinter = new DefaultPrettyPrinter();
-			prettyPrinter.indentArraysWith( DefaultIndenter.SYSTEM_LINEFEED_INSTANCE);
-			objectMapper.setDefaultPrettyPrinter(prettyPrinter);
+			final ObjectMapper objectMapper = new ObjectMapper();
 
-			final String info = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString( image );
-			imageInfo.setText( "<html><pre>Active image:\n" + info + "</pre></html>");
-			imageInfo.validate();
-			frame.validate();
-			frame.pack();
-			frame.repaint();
+			try
+			{
+				DefaultPrettyPrinter prettyPrinter = new DefaultPrettyPrinter();
+				prettyPrinter.indentArraysWith( DefaultIndenter.SYSTEM_LINEFEED_INSTANCE );
+				objectMapper.setDefaultPrettyPrinter( prettyPrinter );
+
+				info = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString( image );
+			}
+			catch ( JsonProcessingException e )
+			{
+				e.printStackTrace();
+			}
 		}
-		catch ( JsonProcessingException e )
-		{
-			e.printStackTrace();
-		}
+
+		imageInfo.setText( "<html><pre>Active image:\n" + info + "</pre></html>" );
+		imageInfo.validate();
+		frame.validate();
+		frame.pack();
+		frame.repaint();
 	}
 
 	private static void showFrame()

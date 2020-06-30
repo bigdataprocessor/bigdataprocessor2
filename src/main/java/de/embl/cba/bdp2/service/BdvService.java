@@ -18,7 +18,10 @@ public abstract class BdvService
 	public static synchronized void setFocusedViewer( BdvImageViewer viewer )
 	{
 		focusedViewer = viewer;
-		BigDataProcessor2UI.setImageInformation( viewer.getImage() );
+		if ( viewer != null )
+			BigDataProcessor2UI.setImageInformation( viewer.getImage() );
+		else
+			BigDataProcessor2UI.setImageInformation( null );
 	}
 
 	public static synchronized BdvImageViewer getActiveViewer()

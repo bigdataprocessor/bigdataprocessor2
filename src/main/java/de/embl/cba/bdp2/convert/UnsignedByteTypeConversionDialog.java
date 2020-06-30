@@ -48,7 +48,7 @@ public class UnsignedByteTypeConversionDialog< R extends RealType< R > & NativeT
 		viewer.replaceImage( outputImage, true, true );
 
 		for ( int c = 0; c < viewer.getImage().numChannels(); c++ )
-			viewer.setDisplayRange( 0, 255, c );
+			viewer.setDisplaySettings( 0, 255, null, c );
 
 		Logger.info( "8-bit view size [GB]: " + Utils.getSizeGB( outputImage.getRai() ) );
 

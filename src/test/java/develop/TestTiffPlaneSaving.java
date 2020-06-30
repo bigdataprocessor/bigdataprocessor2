@@ -21,7 +21,7 @@ public class TestTiffPlaneSaving
 
         BdvImageViewer imageViewer = new BdvImageViewer<UnsignedShortType>( image );
 
-        imageViewer.setDisplayRange( 0, 800, 0 );
+        imageViewer.setDisplaySettings( 0, 800, 0 );
 
         /**
 		 * Save as Tiff Planes

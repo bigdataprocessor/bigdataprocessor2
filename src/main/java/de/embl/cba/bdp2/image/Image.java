@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public class Image< R extends RealType< R > & NativeType< R > >
 {
-	public static final String WARNING_VOXEL_SIZE = "Voxel size may be incorrect!\nProcess > Set Voxel Size";
+	public static final String WARNING_VOXEL_SIZE = "Voxel size may be incorrect!";
 
 	private RandomAccessibleInterval< R > raiXYZCT;
 	private String name;

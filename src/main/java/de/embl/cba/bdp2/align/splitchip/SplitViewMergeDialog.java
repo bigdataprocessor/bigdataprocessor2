@@ -212,7 +212,7 @@ public class SplitViewMergeDialog< R extends RealType< R > & NativeType< R > > e
 			final DisplaySettings displaySettings = viewer.getDisplaySettings().get( CHANNEL );
 			for ( int c = 0; c < numChannelsAfterMerge; c++ )
 			{
-				outputViewer.setDisplayRange( displaySettings.getDisplayRangeMin(), displaySettings.getDisplayRangeMax(), c );
+				outputViewer.setDisplaySettings( displaySettings.getDisplayRangeMin(), displaySettings.getDisplayRangeMax(), null, c );
 			}
 		}
 		else

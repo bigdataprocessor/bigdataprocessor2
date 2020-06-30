@@ -48,7 +48,7 @@ public class TestMicrogliaTracking
         if ( showImages )
         {
             viewer = BigDataProcessor2.showImage( image);
-            viewer.setDisplayRange( 0, 150, 0 );
+            viewer.setDisplaySettings( 0, 150,  0 );
         }
 
         ThresholdFloodFillOverlapTracker.Settings settings = new ThresholdFloodFillOverlapTracker.Settings();
@@ -106,7 +106,7 @@ public class TestMicrogliaTracking
         if ( showImages )
         {
             viewer = BigDataProcessor2.showImage( image);
-            viewer.setDisplayRange( 0, 150, 0 );
+            viewer.setDisplaySettings( 0, 150, 0 );
         }
 
         ThresholdFloodFillOverlapTracker.Settings settings = new ThresholdFloodFillOverlapTracker.Settings();
@@ -157,7 +157,7 @@ public class TestMicrogliaTracking
         if ( showImages )
         {
             viewer = BigDataProcessor2.showImage( image);
-            viewer.setDisplayRange( 0, 150, 0 );
+            viewer.setDisplaySettings( 0, 150, 0 );
         }
 
         StaticVolumePhaseCorrelationTracker.Settings settings = new StaticVolumePhaseCorrelationTracker.Settings();

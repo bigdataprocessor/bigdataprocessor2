@@ -45,7 +45,7 @@ public class FigureCreator
 		//
 		bin.setName( "processed" );
 		final BdvImageViewer viewer = BigDataProcessor2.showImage( bin, true );
-		viewer.setDisplayRange( 100, 300, 0);
+		viewer.setDisplaySettings( 100, 300, 0);
 
 		/**
 		 * run("BDP Crop...", "inputimage=[dfgdf] outputimagename=[dfgdf-crop] viewingmodality=[Show image in new viewer] minx=477 miny=487 minz=31 minc=0 mint=0 maxx=1567 maxy=1491 maxz=143 maxc=1 maxt=1 ");

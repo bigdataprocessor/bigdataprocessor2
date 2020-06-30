@@ -57,6 +57,11 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
         this( image, true, false );
     }
 
+    public BdvImageViewer( final Image< R > image, final boolean autoContrast )
+    {
+        this( image, autoContrast, enableArbitraryPlaneSlicing );
+    }
+
     public BdvImageViewer( final Image< R > image, final boolean autoContrast, final boolean enableArbitraryPlaneSlicing )
     {
         this.image = image;
@@ -64,7 +69,6 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
         this.channelSources = new ArrayList<>(  );
 
         showImage( image, autoContrast );
-
 
         Utils.centerWindowToPosition( bdvHandle.getViewerPanel()  );
 
@@ -164,12 +168,15 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
     public void setDisplaySettings( List< DisplaySettings > displaySettings )
     {
         final int numChannels = displaySettings.size();
-        for ( int c = 0; c < numChannels; c++ )
+        for ( int channel = 0; channel < numChannels; channel++ )
         {
-            setDisplayRange(
-                    displaySettings.get( c ).getDisplayRangeMin(),
-                    displaySettings.get( c ).getDisplayRangeMax(),
-                    c );
+            final DisplaySettings displaySettingsChannel = displaySettings.get( channel );
+
+            setDisplaySettings(
+                    displaySettingsChannel.getDisplayRangeMin(),
+                    displaySettingsChannel.getDisplayRangeMax(),
+                    displaySettingsChannel.getColor(),
+                    channel );
         }
     }
 
@@ -207,7 +214,12 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
         bdvMenuBar.updateUI();
     }
 
-    public void setDisplayRange( double min, double max, int channel )
+    public void setDisplaySettings( double min, double max, int channel )
+    {
+        setDisplaySettings( min, max, null, channel );
+    }
+
+    public void setDisplaySettings( double min, double max, ARGBType color, int channel )
     {
         final boolean groupingEnabled = bdvHandle.getViewerPanel().getVisibilityAndGrouping().isGroupingEnabled();
         final DisplayMode displayMode = bdvHandle.getViewerPanel().getVisibilityAndGrouping().getDisplayMode();
@@ -216,11 +228,15 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
 
         final List< ConverterSetup > converterSetups = setupAssignments.getConverterSetups();
         final ConverterSetup converterSetup = converterSetups.get( channel );
+        final MinMaxGroup minMaxGroup = setupAssignments.getMinMaxGroup( converterSetup );
 
         setupAssignments.removeSetupFromGroup( converterSetup,  setupAssignments.getMinMaxGroup( converterSetup ) );
 
         converterSetup.setDisplayRange( min, max );
-        final MinMaxGroup minMaxGroup = setupAssignments.getMinMaxGroup( converterSetup );
+
+        if ( color != null )
+            converterSetup.setColor( color );
+
         minMaxGroup.getMinBoundedValue().setCurrentValue( min );
         minMaxGroup.getMaxBoundedValue().setCurrentValue( max );
     }
@@ -313,9 +329,10 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
         {
             DisplaySettings setting = getAutoContrastDisplaySettings( channel );
 
-            setDisplayRange(
+            setDisplaySettings(
                     setting.getDisplayRangeMin(),
                     setting.getDisplayRangeMax(),
+                    null,
                     channel );
         }
     }
@@ -331,24 +348,6 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
     {
         bdvHandle.getViewerPanel()
                 .setCurrentViewerTransform( viewerTransform );
-    }
-
-    public void replicateViewerContrast( BdvImageViewer newImageViewer ) {
-
-        int nChannels = bdvHandle.getSetupAssignments().getConverterSetups().size();
-
-        for (int channel = 0; channel < nChannels; ++channel)
-        {
-            ConverterSetup converterSetup = bdvHandle
-                    .getSetupAssignments().getConverterSetups().get(channel);
-
-            if (! ( converterSetup instanceof PlaceHolderConverterSetup))
-            { // PlaceHolderConverterSetup is the Overlay.
-                newImageViewer.setDisplayRange(
-                        converterSetup.getDisplayRangeMin(),
-                        converterSetup.getDisplayRangeMax(), channel);
-            }
-        }
     }
 
     public int getCurrentTimePoint() {
@@ -389,6 +388,7 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
             new Thread( () -> autoContrast() ).start();
 
         JFrame topFrame = setWindowTitle( image );
+        BdvService.setFocusedViewer( this );
         addFocusListener( topFrame );
     }
 
@@ -404,6 +404,13 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
         final BdvImageViewer viewer = this;
         topFrame.addWindowListener( new WindowAdapter()
         {
+            @Override
+            public void windowClosed( WindowEvent e )
+            {
+                super.windowClosed( e );
+                BdvService.setFocusedViewer( null );
+            }
+
             @Override
             public void windowActivated( WindowEvent e )
             {

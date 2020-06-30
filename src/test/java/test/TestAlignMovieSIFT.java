@@ -43,7 +43,7 @@ public class TestAlignMovieSIFT< R extends RealType< R > & NativeType< R > >
 						Registration.SIFT_CORRESPONDENCES );
 
 		if ( showImages )
-			BigDataProcessor2.showImage( alignedImage, false ).setDisplayRange( 0, 200, 0 );
+			BigDataProcessor2.showImage( alignedImage, false ).setDisplaySettings( 0, 200, 0 );
 	}
 
 	public static void main( String[] args )
