@@ -1,5 +1,8 @@
 package de.embl.cba.bdp2;
 
+import de.embl.cba.bdp2.drift.track.Track;
+import de.embl.cba.bdp2.drift.track.TrackApplier;
+import de.embl.cba.bdp2.drift.track.Tracks;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.bin.Binner;
 import de.embl.cba.bdp2.convert.UnsignedByteTypeConversionDialog;
@@ -23,6 +26,7 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.util.Util;
+import net.imglib2.view.Views;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -164,10 +168,20 @@ public class BigDataProcessor2
         image.setVoxelUnit( voxelUnit );
     }
 
-    public static < R extends RealType< R > & NativeType< R > > Image correctChromaticShift( Image crop, ArrayList< long[] > shifts )
+    public static < R extends RealType< R > & NativeType< R > > Image< R > correctChromaticShift( Image< R > image, ArrayList< long[] > shifts )
     {
-        final ChannelShifter< R > shifter = new ChannelShifter< >( crop.getRai() );
-        return crop.newImage( shifter.getShiftedRai( shifts ) );
+        final ChannelShifter< R > shifter = new ChannelShifter< >( image.getRai() );
+        return image.newImage( shifter.getShiftedRai( shifts ) );
     }
 
+	public static < R extends RealType< R > & NativeType< R > > Image< R > applyTrack( File file, Image< R > image, Boolean centerImage )
+	{
+		final Track track = Tracks.fromJsonFile( file );
+		final TrackApplier< R > trackApplier = new TrackApplier<>( image );
+		Image outputImage = trackApplier.applyTrack( track );
+		if ( ! centerImage )
+			outputImage.setRai( Views.zeroMin( outputImage.getRai() ) );
+
+		return outputImage;
+	}
 }

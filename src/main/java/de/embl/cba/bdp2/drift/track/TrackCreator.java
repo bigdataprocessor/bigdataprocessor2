@@ -27,6 +27,7 @@ public class TrackCreator extends JFrame
 	private boolean automaticLinearInterpolation = true;
 	private JTextField dt;
 	private Behaviours behaviours;
+	private static File recentTrackSavingDirectory = null;
 
 	public TrackCreator( BdvImageViewer viewer, String trackName )
 	{
@@ -232,11 +233,14 @@ public class TrackCreator extends JFrame
 		button.addActionListener( e -> {
 
 			final JFileChooser jFileChooser = new JFileChooser();
+
+			jFileChooser.setCurrentDirectory( recentTrackSavingDirectory );
 			jFileChooser.setDialogTitle("Save track");
 
 			if ( jFileChooser.showSaveDialog( this ) == JFileChooser.APPROVE_OPTION )
 			{
 				File file = jFileChooser.getSelectedFile();
+				recentTrackSavingDirectory = new File( file.getParent() );
 				if ( ! file.getName().endsWith( ".json" ) )
 				{
 					file = new File( file.getAbsolutePath() + ".json" );

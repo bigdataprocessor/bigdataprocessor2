@@ -26,7 +26,7 @@ public class ShearMenuDialog extends JDialog implements ActionListener {
     private final BdvImageViewer imageViewer;
     private final RandomAccessibleInterval originalRAI;
 
-    public ShearMenuDialog( BdvImageViewer imageViewer) {
+    public ShearMenuDialog( BdvImageViewer imageViewer ) {
         this.imageViewer = imageViewer;
         this.originalRAI = imageViewer.getImage().getRai();
         JTabbedPane menu = new JTabbedPane();

@@ -1,5 +1,6 @@
 package de.embl.cba.bdp2.drift.track;
 
+import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.process.AbstractProcessingCommand;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
@@ -23,6 +24,11 @@ public class ApplyTrackCommand< R extends RealType< R > & NativeType< R > > exte
 
     @Parameter(label = "Track")
     File file;
+    public static final String TRACK_FILE_PARAMETER = "file";
+
+    @Parameter(label = "Center image on track positions")
+    Boolean centerImage = false;
+    public static final String CENTER_IMAGE_PARAMETER = "centerImage";
 
     public void run()
     {
@@ -32,15 +38,13 @@ public class ApplyTrackCommand< R extends RealType< R > & NativeType< R > > exte
 
     private void process()
     {
-        final Track track = Tracks.fromJsonFile( file );
-        final TrackApplier< R > trackApplier = new TrackApplier<>( inputImage );
-        outputImage = trackApplier.applyTrack( track );
+        outputImage = BigDataProcessor2.applyTrack( file, inputImage, centerImage );
     }
 
     public void showOutputImage()
     {
         final BdvImageViewer viewer = handleOutputImage( false, false );
-        BdvUtils.moveToPosition( viewer.getBdvHandle(), new double[]{ 0, 0, 0 }, 0 , 0);
-        viewer.autoContrast();
+        if ( centerImage )
+            BdvUtils.moveToPosition( viewer.getBdvHandle(), new double[]{ 0, 0, 0 }, 0 , 0);
     }
 }

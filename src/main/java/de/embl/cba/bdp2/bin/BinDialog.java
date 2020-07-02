@@ -14,11 +14,6 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-/**
- *
- * TODO: make only one slider for binning in X and Y
- *
- */
 public class BinDialog< T extends RealType< T > & NativeType< T > > extends AbstractProcessingDialog< T >
 {
 	private long[] span;

@@ -1076,19 +1076,6 @@ public class OpenerExtension extends Opener {
         public byte[] lzwUncompress( byte[] input, int byteCount )
         {
             long startTimeGlob = System.nanoTime();
-            long totalTimeGlob = 0;
-            long startTime0, totalTime0 = 0;
-            long startTime1, totalTime1 = 0;
-            long startTime2, totalTime2 = 0;
-            long startTime3, totalTime3 = 0;
-            long startTime4, totalTime4 = 0;
-            long startTime5, totalTime5 = 0;
-            long startTime6, totalTime6 = 0;
-            long startTime7, totalTime7 = 0;
-            long startTime8, totalTime8 = 0;
-            long startTime9, totalTime9 = 0;
-
-            //startTime1 = System.nanoTime();
 
             if ( input == null || input.length == 0 )
                 return input;
@@ -1107,12 +1094,6 @@ public class OpenerExtension extends Opener {
             byte[] byteBuffer1 = new byte[ 16 ];
             byte[] byteBuffer2 = new byte[ 16 ];
 
-            // todo: can this be larger?
-            //byte[] symbol = new byte[100];
-
-            //totalTime1 = (System.nanoTime() - startTime1);
-
-            //while (out.size()<byteCount) {
             while ( iOut < byteCount )
             {
                 //startTime2 = System.nanoTime();
@@ -1166,9 +1147,9 @@ public class OpenerExtension extends Opener {
                         nextSymbol++;
                         //totalTime6 += (System.nanoTime() - startTime6);
 
-                    } else
+                    }
+                    else
                     {
-
                         //startTime3 = System.nanoTime();
                         // out of jTableSpots
                         ByteVector symbol = new ByteVector( byteBuffer2 );
@@ -1215,22 +1196,6 @@ public class OpenerExtension extends Opener {
                 }
 
             }
-
-            totalTimeGlob = ( System.nanoTime() - startTimeGlob );
-        /*
-        Logger.info("total : "+totalTimeGlob/1000);
-        totalTimeGlob = 1000;
-        Logger.info("fraction1 : "+(double)totalTime1/totalTimeGlob);
-        Logger.info("fraction2 : "+(double)totalTime2/totalTimeGlob);
-        Logger.info("fraction3 : "+(double)totalTime3/totalTimeGlob);
-        Logger.info("fraction4 : "+(double)totalTime4/totalTimeGlob);
-        Logger.info("fraction5 : "+(double)totalTime5/totalTimeGlob);
-        Logger.info("fraction6 : "+(double)totalTime6/totalTimeGlob);
-        Logger.info("fraction7 : "+(double)totalTime7/totalTimeGlob);
-        Logger.info("fraction8 : "+(double)totalTime8/totalTimeGlob);
-        Logger.info("fraction9 : "+(double)totalTime9/totalTimeGlob);
-        Logger.info("symbolLengthMax "+symbolLengthMax);
-        */
 
             return out;
         }
