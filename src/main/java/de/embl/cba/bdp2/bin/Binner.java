@@ -5,7 +5,6 @@ import de.embl.cba.lazyalgorithm.view.NeighborhoodViews;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
-import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
 
 public class Binner
@@ -23,25 +22,7 @@ public class Binner
 	public static < T extends RealType< T > & NativeType< T > >
 	Image< T > bin( Image< T > inputImage, long[] span )
 	{
-//		boolean allOne = true;
-//		for ( int i = 0; i < span.length; i++ )
-//			if ( span[ i ] != 1 )
-//				allOne = false;
-//
-//		if ( allOne ) return inputImage;
-//
-//		boolean someSmallerOne = false;
-//		for ( int i = 0; i < span.length; i++ )
-//			if ( span[ i ] < 1 )
-//				someSmallerOne = true;
-//
-//		if ( someSmallerOne )
-//			throw new UnsupportedOperationException( "The minimal bin width is 1.\n " +
-//					"Some values of the requested binning span were smaller than one: " + Arrays.toString( span ) );
-
-		final RandomAccessibleInterval< T > rai = inputImage.getRai();
-
-		final RandomAccessibleInterval< T > binnedRai = NeighborhoodViews.averageBinnedView( rai, span );
+		RandomAccessibleInterval< T > binnedRai = binImageWithNonZeroSpatialOffset( inputImage, span );
 
 		return ( Image< T > ) new Image(
 					binnedRai,
@@ -51,5 +32,23 @@ public class Binner
 					inputImage.getVoxelUnit(),
 					inputImage.getFileInfos()
 		);
+	}
+
+	public static < T extends RealType< T > & NativeType< T > > RandomAccessibleInterval< T > binImageWithNonZeroSpatialOffset( Image< T > inputImage, long[] span )
+	{
+		RandomAccessibleInterval< T > rai = inputImage.getRai();
+
+		final long[ ] min = new long[ 5 ];
+		rai.min( min );
+		rai = Views.zeroMin( rai );
+
+		RandomAccessibleInterval< T > binnedRai = NeighborhoodViews.averageBinnedView( rai, span );
+
+		for ( int d = 0; d < 3; d++ )
+		{
+			min[ d ] /= span[ d ];
+		}
+		binnedRai = Views.translate( binnedRai, min );
+		return binnedRai;
 	}
 }

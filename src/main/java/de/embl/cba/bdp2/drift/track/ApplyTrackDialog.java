@@ -28,7 +28,7 @@ public class ApplyTrackDialog< R extends RealType< R > & NativeType< R > >
 	private void showGenericDialog()
 	{
 		final GenericDialogPlus genericDialog = new GenericDialogPlus( "Apply Track" );
-		genericDialog.addFileField( "Track", trackFile.getAbsolutePath(), 200 );
+		genericDialog.addFileField( "Track", trackFile.getAbsolutePath(), 50 );
 		genericDialog.addCheckbox("Center image on track positions", centerImage );
 
 		genericDialog.showDialog();
