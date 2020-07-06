@@ -27,6 +27,8 @@ This opens up an empty BigDataViewer window with additional menu entries.
 
 Note: **Don't use the Commands**, they just serve the macro recording.
 
+## Help
+
 ## Record macro
 
 All actions can be recorded as ImageJ macros. To enable this please:
