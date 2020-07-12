@@ -5,6 +5,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.open.OpenFileType;
+import de.embl.cba.bdp2.service.PerformanceService;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import ij.ImagePlus;
 import ij.ImageStack;
@@ -129,38 +130,43 @@ public class ImageLoader< T extends NativeType< T > > implements CellLoader< T >
         cell.min( min );
         cell.max( max );
 
-//        System.out.println( "Start: " + Arrays.toString( min ) );
+        long start = System.currentTimeMillis();
 
         if ( cell.firstElement() instanceof UnsignedByteType )
         {
-            // TODO: Clean up by not putting into Imp in the first place!
-            final byte[] cellData = (byte[]) cell.getStorageArray();
+            // TODO: Do not use ImagePlus
+            final byte[] storageArray = (byte[]) cell.getStorageArray();
             int destPos = 0;
             ImagePlus imagePlus = getDataCube( min, max );
+            PerformanceService.getPerformanceMonitor().addReadPerformance( storageArray.length, System.currentTimeMillis() - start  );
+
+            start = System.currentTimeMillis();
             final ImageStack stack = imagePlus.getStack();
             for ( int i = 0; i < stack.size(); i++ )
             {
                 final ImageProcessor processor = stack.getProcessor( i + 1 );
                 final byte[] impData = (byte[]) processor.getPixels();
-                System.arraycopy( impData, 0, cellData, destPos, impData.length );
+                System.arraycopy( impData, 0, storageArray, destPos, impData.length );
                 destPos += impData.length;
             }
+            PerformanceService.getPerformanceMonitor().addCopyPerformance( storageArray.length, System.currentTimeMillis() - start  );
+
         }
         else if ( cell.firstElement() instanceof UnsignedShortType )
         {
+            final short[] storageArray = ( short[] ) cell.getStorageArray();
+
             if ( fileType.toString().toLowerCase().contains( "hdf5" ) )
             {
                 final SerializableFileInfo fileInfo = getFileInfo( cell );
                 Hdf5DataCubeReader.read16bitDataCubeIntoArray(
                         cell,
-                        ( short[] ) cell.getStorageArray(),
+                        storageArray,
                         getFilePath( fileInfo ),
                         fileInfo.h5DataSet );
             }
             else
             {
-                // TODO: Clean up by not putting into Imp in the first place!
-                final short[] cellData = (short[]) cell.getStorageArray();
                 int destPos = 0;
                 ImagePlus imagePlus = getDataCube( min, max );
                 final ImageStack stack = imagePlus.getStack();
@@ -168,20 +174,23 @@ public class ImageLoader< T extends NativeType< T > > implements CellLoader< T >
                 {
                     final ImageProcessor processor = stack.getProcessor( i + 1 );
                     final short[] impData = (short[]) processor.getPixels();
-                    System.arraycopy( impData, 0, cellData, destPos, impData.length );
+                    System.arraycopy( impData, 0, storageArray, destPos, impData.length );
                     destPos += impData.length;
                 }
             }
+
+            PerformanceService.getPerformanceMonitor().addReadPerformance( 2 * storageArray.length, System.currentTimeMillis() - start  );
+
         }
         else if (cell.firstElement() instanceof FloatType)
         {
             ImagePlus imagePlus = getDataCube( min, max );
             final float[] impData = (float[]) imagePlus.getProcessor().getPixels();
-            final float[] cellData = (float[]) cell.getStorageArray();
-            System.arraycopy(impData, 0, cellData, 0, cellData.length);
-        }
+            final float[] storageArray = (float[]) cell.getStorageArray();
+            System.arraycopy(impData, 0, storageArray, 0, storageArray.length);
 
-//        System.out.println( "End: " + Arrays.toString( min ) );
+            PerformanceService.getPerformanceMonitor().addReadPerformance( 4 * storageArray.length, System.currentTimeMillis() - start  );
+        }
 
     }
 

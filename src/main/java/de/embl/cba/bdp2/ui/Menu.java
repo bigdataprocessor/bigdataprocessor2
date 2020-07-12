@@ -3,7 +3,8 @@ package de.embl.cba.bdp2.ui;
 import de.embl.cba.bdp2.bin.BinCommand;
 import de.embl.cba.bdp2.calibrate.CalibrateCommand;
 import de.embl.cba.bdp2.convert.ConvertToUnsignedByteTypeCommand;
-import de.embl.cba.bdp2.data.OpenSampleDataCommand;
+import de.embl.cba.bdp2.data.DownloadAndOpenSampleDataCommand;
+import de.embl.cba.bdp2.dialog.Hello;
 import de.embl.cba.bdp2.drift.track.ApplyTrackCommand;
 import de.embl.cba.bdp2.image.ImageRenameCommand;
 import de.embl.cba.bdp2.align.AlignChannelsCommand;
@@ -31,11 +32,15 @@ public class Menu extends JMenu
     public static final String CREATE_TRACK = "Create Track...";
 
     public static final String OBLIQUE_MENU_ITEM = "Shear...";
-
+    
     // Menus
-    public static final String MISC_MENU = "Misc";
+    public static final String MISC = "Misc";
     public static final String DEVELOPMENT_MENU_DISPLAY_TEXT = "Development";
     public static final String MACRO_RECORDING = "Record Macro...";
+    public static final String ABOUT = "About";
+    public static final String HELP = "Help";
+    public static final String CITE = "Cite";
+
 
     private final MenuActions menuActions;
     private final ArrayList< JMenu > menus;
@@ -47,6 +52,12 @@ public class Menu extends JMenu
 
         menus = new ArrayList<>();
 
+        final JMenu mainMenu = addMenu( "BDP2" );
+        menus.add( mainMenu );
+        addMenuItem( mainMenu, ABOUT );
+        addMenuItem( mainMenu, HELP );
+        addMenuItem( mainMenu, CITE );
+
         final JMenu recordMenu = addMenu( "Record" );
         menus.add( recordMenu );
         addMenuItem( recordMenu, MACRO_RECORDING );
@@ -56,7 +67,7 @@ public class Menu extends JMenu
         addMenuItem( openMenu, OpenCustomCommand.COMMAND_NAME );
         addMenuItem( openMenu, OpenCustomHelpCommand.COMMAND_NAME );
         addMenuItem( openMenu, OpenEMTiffPlanesCommand.COMMAND_NAME );
-        addMenuItem( openMenu, OpenSampleDataCommand.COMMAND_NAME );
+        addMenuItem( openMenu, DownloadAndOpenSampleDataCommand.COMMAND_NAME );
         addMenuItem( openMenu, OpenLuxendoCommand.COMMAND_NAME );
         addMenuItem( openMenu, OpenLeicaDSLTiffPlanesCommand.COMMAND_NAME );
 

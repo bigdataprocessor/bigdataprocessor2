@@ -14,15 +14,16 @@ import org.scijava.plugin.Plugin;
 import javax.swing.*;
 import java.io.File;
 
-import static de.embl.cba.bdp2.data.SampleData.TIFF_VOLUMES_X_50_Y_50_Z_50_C_2_T_6_1_6_MB;
+import static de.embl.cba.bdp2.data.SampleData.DUAL_COLOR_MOUSE;
+import static de.embl.cba.bdp2.data.SampleData.MINIMAL_SYNTHETIC;
 import static de.embl.cba.bdp2.utils.Utils.COMMAND_BDP_PREFIX;
 
 
 /**
  * @param <R>
  */
-@Plugin(type = Command.class, menuPath = Utils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractOpenCommand.COMMAND_OPEN_PATH + OpenSampleDataCommand.COMMAND_FULL_NAME )
-public class OpenSampleDataCommand< R extends RealType< R > & NativeType< R > > implements Command
+@Plugin(type = Command.class, menuPath = Utils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractOpenCommand.COMMAND_OPEN_PATH + DownloadAndOpenSampleDataCommand.COMMAND_FULL_NAME )
+public class DownloadAndOpenSampleDataCommand< R extends RealType< R > & NativeType< R > > implements Command
 {
     public static final String COMMAND_NAME = "Download and Open Sample Data...";
     public static final String COMMAND_FULL_NAME = COMMAND_BDP_PREFIX + COMMAND_NAME;
@@ -31,8 +32,8 @@ public class OpenSampleDataCommand< R extends RealType< R > & NativeType< R > > 
     @Parameter
     CommandService commandService;
 
-    @Parameter (label="Sample data", choices={ TIFF_VOLUMES_X_50_Y_50_Z_50_C_2_T_6_1_6_MB })
-    String sampleDataName = TIFF_VOLUMES_X_50_Y_50_Z_50_C_2_T_6_1_6_MB;
+    @Parameter (label="Sample data", choices={ MINIMAL_SYNTHETIC, DUAL_COLOR_MOUSE  })
+    String sampleDataName = MINIMAL_SYNTHETIC;
 
     @Parameter (label="Save to directory", style = "directory")
     File outputDirectory;

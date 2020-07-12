@@ -14,8 +14,10 @@ import java.util.List;
 
 public abstract class BigDataProcessor2UI
 {
+	public static final String SPEED = "Reading speed [MBit/s]: ";
 	private static JFrame frame;
 	private static JLabel imageInfo;
+	private static JLabel readInfo;
 	private static JPanel panel;
 
 	public static void showUI()
@@ -39,14 +41,17 @@ public abstract class BigDataProcessor2UI
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		panel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
 		imageInfo = new JLabel( "<html><pre>Please open an image...</pre></html>" );
+		readInfo = new JLabel( SPEED + "NaN" );
 		panel.add( imageInfo );
+		panel.add( new JLabel( "  " ) );
+		panel.add( readInfo );
 
 		showFrame();
 	}
 
 	public static void setImageInformation( Image< ? > image )
 	{
-		String info = "None";
+		if ( frame == null ) return; // UI not instantiated
 
 		if ( image != null )
 		{
@@ -57,37 +62,41 @@ public abstract class BigDataProcessor2UI
 				DefaultPrettyPrinter prettyPrinter = new DefaultPrettyPrinter();
 				prettyPrinter.indentArraysWith( DefaultIndenter.SYSTEM_LINEFEED_INSTANCE );
 				objectMapper.setDefaultPrettyPrinter( prettyPrinter );
-
-				info = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString( image );
+				String info = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString( image );
+				imageInfo.setText( "<html><pre>Active image:\n" + info + "</pre></html>" );
 			}
 			catch ( JsonProcessingException e )
 			{
 				e.printStackTrace();
 			}
 		}
+		else
+		{
+			imageInfo.setText( "<html><pre>Active image: None</pre></html>" );
+		}
 
-		imageInfo.setText( "<html><pre>Active image:\n" + info + "</pre></html>" );
 		imageInfo.validate();
+		refreshFrame();
+	}
+
+	private static void refreshFrame()
+	{
 		frame.validate();
 		frame.pack();
 		frame.repaint();
 	}
 
+	public static void setReadPerformanceInformation( double mbps, double readPerformanceMBPS )
+	{
+		if ( frame == null ) return; // UI not instantiated
+
+		readInfo.setText(  SPEED + (int) mbps + " <" + (int) readPerformanceMBPS + ">");
+		readInfo.validate();
+		refreshFrame();
+	}
+
 	private static void showFrame()
 	{
-//		JSplitPane splitPane = new JSplitPane();
-//		splitPane.setOrientation( JSplitPane.VERTICAL_SPLIT );
-//		final int numModalities = actionPanel.getSortedModalities().size();
-//		final int actionPanelHeight = ( numModalities + 7 ) * 40;
-//		splitPane.setDividerLocation( actionPanelHeight );
-//		splitPane.setTopComponent( actionPanel );
-//		splitPane.setBottomComponent( sourcesPanel );
-//		splitPane.setAutoscrolls( true );
-//		frameWidth = 600;
-//		frame.setPreferredSize( new Dimension( frameWidth, actionPanelHeight + 200 ) );
-//		frame.getContentPane().setLayout( new GridLayout() );
-//		frame.getContentPane().add( splitPane );
-
 		frame.getContentPane().setLayout( new GridLayout() );
 		frame.getContentPane().add( panel );
 

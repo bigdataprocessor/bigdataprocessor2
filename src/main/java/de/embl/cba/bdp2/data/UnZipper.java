@@ -41,7 +41,9 @@ public class UnZipper
 					continue;
 				}
 
-				FileOutputStream fos = new FileOutputStream( new File( destDir, zipEntry.getName() ) );
+				final File file = new File( destDir, zipEntry.getName() );
+				new File( file.getParent() ).mkdirs();
+				FileOutputStream fos = new FileOutputStream( file );
 				int len;
 				while ( ( len = zis.read( buffer ) ) > 0 )
 				{

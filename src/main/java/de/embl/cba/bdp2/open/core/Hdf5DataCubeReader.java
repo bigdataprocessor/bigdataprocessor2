@@ -10,7 +10,6 @@ import net.imglib2.Interval;
 
 public class Hdf5DataCubeReader
 {
-	
 	public static void read16bitDataCubeIntoArray(
 			Interval interval,
 			short[] array,

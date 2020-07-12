@@ -8,7 +8,7 @@ import de.embl.cba.bdp2.calibrate.CalibrationDialog;
 import de.embl.cba.bdp2.convert.ConvertToUnsignedByteTypeCommand;
 import de.embl.cba.bdp2.convert.UnsignedByteTypeConversionDialog;
 import de.embl.cba.bdp2.crop.CropDialog;
-import de.embl.cba.bdp2.data.OpenSampleDataCommand;
+import de.embl.cba.bdp2.data.DownloadAndOpenSampleDataCommand;
 import de.embl.cba.bdp2.dialog.MiscMenu;
 import de.embl.cba.bdp2.dialog.Utils;
 import de.embl.cba.bdp2.drift.track.ApplyTrackCommand;
@@ -32,6 +32,7 @@ import de.embl.cba.bdp2.service.BdvService;
 import de.embl.cba.bdp2.shear.ShearMenuDialog;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import de.embl.cba.tables.FileAndUrlUtils;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.view.Views;
@@ -44,8 +45,7 @@ import java.util.List;
 
 public class MenuActions implements ActionListener {
 
-    //private final ImageMenu imageMenu;
-    private final MiscMenu miscMenu;
+    private  MiscMenu miscMenu;
     private final Menu menu;
     private BdvImageViewer viewer;
     private final ArrayList< JMenu > menus;
@@ -54,8 +54,8 @@ public class MenuActions implements ActionListener {
     {
         menu = new Menu(this);
         menus = menu.getMenus();
-        miscMenu = new MiscMenu(this);
-        menus.add( miscMenu );
+//        miscMenu = new MiscMenu(this); // TODO: rethink the Misc Menu, probably move to BDP2
+//        menus.add( miscMenu );
     }
 
     public void setViewer( BdvImageViewer viewer ){
@@ -87,6 +87,27 @@ public class MenuActions implements ActionListener {
             BigDataProcessor2.threadPool.submit(() -> {
                 SaveDialog saveDialog = new SaveDialog( viewer, SavingSettings.SaveFileType.IMARIS_VOLUMES );
                 saveDialog.setVisible(true);
+            });
+        }
+        else if ( e.getActionCommand().equalsIgnoreCase( Menu.ABOUT ) )
+        {
+            BigDataProcessor2.threadPool.submit(() ->
+            {
+                FileAndUrlUtils.openURI( "https://imagej.net/BigDataProcessor2" );
+            });
+        }
+        else if ( e.getActionCommand().equalsIgnoreCase( Menu.CITE ) )
+        {
+            BigDataProcessor2.threadPool.submit(() ->
+            {
+                FileAndUrlUtils.openURI( "https://github.com/bigdataprocessor/bigDataProcessor2/blob/master/README.md#cite" );
+            });
+        }
+        else if ( e.getActionCommand().equalsIgnoreCase( Menu.HELP ) )
+        {
+            BigDataProcessor2.threadPool.submit(() ->
+            {
+                FileAndUrlUtils.openURI( "https://github.com/bigdataprocessor/bigDataProcessor2/blob/master/README.md#help" );
             });
         }
         else if (e.getActionCommand().equalsIgnoreCase( Menu.SAVE_AS_TIFF_VOLUMES_MENU_ITEM ))
@@ -226,12 +247,12 @@ public class MenuActions implements ActionListener {
                 Services.commandService.run( OpenCustomHelpCommand.class, true );
             });
         }
-        else if( e.getActionCommand().equalsIgnoreCase( OpenSampleDataCommand.COMMAND_NAME ) )
+        else if( e.getActionCommand().equalsIgnoreCase( DownloadAndOpenSampleDataCommand.COMMAND_NAME ) )
         {
             BigDataProcessor2.threadPool.submit(() ->
             {
-                OpenSampleDataCommand.parentBdvImageViewer = viewer;
-                Services.commandService.run( OpenSampleDataCommand.class, true );
+                DownloadAndOpenSampleDataCommand.parentBdvImageViewer = viewer;
+                Services.commandService.run( DownloadAndOpenSampleDataCommand.class, true );
             });
         }
         else if( e.getActionCommand().equalsIgnoreCase( OpenCustomCommand.COMMAND_NAME ) )

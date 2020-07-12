@@ -17,17 +17,21 @@ import static de.embl.cba.bdp2.open.core.NamingSchemes.TIF;
 
 public class SampleData
 {
-	public static final String TIFF_VOLUMES_X_50_Y_50_Z_50_C_2_T_6_1_6_MB = "Tiff volumes x50 y50 z50 c2 t6 (1.6 MB)";
-	private Map< String, String > datasetNameToURL =  new HashMap<>();
+	public static final String MINIMAL_SYNTHETIC = "Minimal synthetic dual color Tiff volumes (1.6 MB)";
+	public static final String DUAL_COLOR_MOUSE = "Dual color light-sheet mouse Tiff volume (64.8 MB)";
 
+	private Map< String, String > datasetNameToURL =  new HashMap<>();
 	private Map< String, String > datasetNameToRegExp =  new HashMap<>();
 
 
 	public SampleData()
 	{
-		datasetNameToURL.put( TIFF_VOLUMES_X_50_Y_50_Z_50_C_2_T_6_1_6_MB, "https://www.ebi.ac.uk/biostudies/files/S-BSST417/tiff-volumes-x50y50z50c2t6.zip" );
+		datasetNameToURL.put( MINIMAL_SYNTHETIC, "https://www.ebi.ac.uk/biostudies/files/S-BSST417/tiff-volumes-x50y50z50c2t6.zip" );
+		datasetNameToURL.put( DUAL_COLOR_MOUSE, "https://www.ebi.ac.uk/biostudies/files/S-BSST417/mouse-volumes.zip" );
 
-		datasetNameToRegExp.put( TIFF_VOLUMES_X_50_Y_50_Z_50_C_2_T_6_1_6_MB, NamingSchemes.MULTI_CHANNEL_VOLUMES + TIF);
+		datasetNameToRegExp.put( MINIMAL_SYNTHETIC, NamingSchemes.MULTI_CHANNEL_VOLUMES + TIF);
+		datasetNameToRegExp.put( DUAL_COLOR_MOUSE, NamingSchemes.MULTI_CHANNEL_VOLUMES + TIF);
+
 	}
 
 	public File download( String datasetName, File outputDirectory )

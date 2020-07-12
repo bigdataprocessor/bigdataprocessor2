@@ -184,4 +184,9 @@ public class BigDataProcessor2
 
 		return outputImage;
 	}
+
+	public static void showUI()
+    {
+        BigDataProcessor2UI.showUI();
+    }
 }

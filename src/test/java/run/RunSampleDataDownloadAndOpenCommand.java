@@ -1,6 +1,6 @@
 package run;
 
-import de.embl.cba.bdp2.data.OpenSampleDataCommand;
+import de.embl.cba.bdp2.data.DownloadAndOpenSampleDataCommand;
 import de.embl.cba.bdp2.scijava.Services;
 import ij.plugin.frame.Recorder;
 import net.imagej.ImageJ;
@@ -16,6 +16,6 @@ public class RunSampleDataDownloadAndOpenCommand
 
 		Services.commandService = ij.command();
 
-		ij.command().run( OpenSampleDataCommand.class, true );
+		ij.command().run( DownloadAndOpenSampleDataCommand.class, true );
 	}
 }
