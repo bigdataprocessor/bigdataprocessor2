@@ -2,6 +2,10 @@
 
 Interactive processing of TB-sized image data within [Fiji](http://fiji.sc/), on your laptop.
 
+## Cite
+
+Publication in preparation...
+
 ## Install
 
 BigDataProcessor2 is a Fiji plugin and can be installed via an update site.
@@ -22,6 +26,8 @@ In the Fiji Plugins menu scroll far down and start BigDataProcessor2:
 This opens up an empty BigDataViewer window with additional menu entries.
 
 Note: **Don't use the Commands**, they just serve the macro recording.
+
+## Help
 
 ## Record macro
 
@@ -74,7 +80,7 @@ This is done lazily, i.e. the data on disk is not altered at this stage.
 
 ## Save
 
-TODO...
+...
 
 ## Additional information
 
