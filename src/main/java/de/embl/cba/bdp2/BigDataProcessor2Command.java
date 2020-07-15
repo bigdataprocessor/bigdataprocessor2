@@ -2,6 +2,7 @@ package de.embl.cba.bdp2;
 
 import de.embl.cba.bdp2.crop.CropDialog;
 import de.embl.cba.bdp2.scijava.Services;
+import de.embl.cba.bdp2.ui.BigDataProcessor2UI;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;

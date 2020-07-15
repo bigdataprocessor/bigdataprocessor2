@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.RecursiveTask;
 
-public class Rai5DShearer< R extends RealType< R > & NativeType< R > > extends RecursiveTask< RandomAccessibleInterval >
+public class Rai5DTimePointTransformer< R extends RealType< R > & NativeType< R > > extends RecursiveTask< RandomAccessibleInterval >
 {
 	private RandomAccessibleInterval raiXYZCT;
 	private int t;
@@ -26,7 +26,7 @@ public class Rai5DShearer< R extends RealType< R > & NativeType< R > > extends R
 	private final AffineTransform3D affine;
 	private InterpolatorFactory interpolatorFactory;
 
-	public Rai5DShearer( RandomAccessibleInterval raiXYZCT, int timePoint, AffineTransform3D affine, InterpolatorFactory interpolatorFactory) {
+	public Rai5DTimePointTransformer( RandomAccessibleInterval raiXYZCT, int timePoint, AffineTransform3D affine, InterpolatorFactory interpolatorFactory) {
 		this.raiXYZCT = raiXYZCT;
 		this.t = timePoint;
 		this.numChannels = (int) raiXYZCT.dimension( DimensionOrder.C );
@@ -37,7 +37,7 @@ public class Rai5DShearer< R extends RealType< R > & NativeType< R > > extends R
 	@Override
 	protected RandomAccessibleInterval< R > compute()
 	{
-		RandomAccessibleInterval timeSlice = Views.hyperSlice( raiXYZCT, DimensionOrder.T, t);
+		RandomAccessibleInterval< R > timeSlice = Views.hyperSlice( raiXYZCT, DimensionOrder.T, t);
 		List< RandomAccessibleInterval< R > > channels = new ArrayList<>();
 		for ( int channel = 0; channel < numChannels; ++channel)
 		{

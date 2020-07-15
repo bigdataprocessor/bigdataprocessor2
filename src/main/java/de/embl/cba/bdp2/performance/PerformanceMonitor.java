@@ -1,7 +1,6 @@
 package de.embl.cba.bdp2.performance;
 
-import de.embl.cba.bdp2.BigDataProcessor2;
-import de.embl.cba.bdp2.BigDataProcessor2UI;
+import de.embl.cba.bdp2.ui.BigDataProcessor2UI;
 
 import java.util.ArrayList;
 import java.util.List;

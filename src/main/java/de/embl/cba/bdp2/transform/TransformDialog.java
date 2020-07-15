@@ -2,19 +2,16 @@ package de.embl.cba.bdp2.transform;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.dialog.AbstractProcessingDialog;
-import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.record.MacroRecorder;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import ij.gui.GenericDialog;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
-import java.util.Arrays;
-
 public class TransformDialog< T extends RealType< T > & NativeType< T > > extends AbstractProcessingDialog< T >
 {
 	private static String affine = "1,0,0,0,0,1,0,0,0,0,1,0";
-	private static String interpolation = TransformCommand.N_LINEAR;
+	private static String interpolation = TransformCommand.NEAREST;
 
 	public TransformDialog( final BdvImageViewer< T > viewer )
 	{
@@ -27,13 +24,13 @@ public class TransformDialog< T extends RealType< T > & NativeType< T > > extend
 	{
 		final GenericDialog genericDialog = new GenericDialog( "Calibration" );
 		genericDialog.addStringField( TransformCommand.AFFINE_LABEL, affine, 30 );
-		genericDialog.addChoice( "Interpolation", new String[]{ TransformCommand.N_LINEAR }, interpolation );
+		genericDialog.addChoice( "Interpolation", new String[]{ TransformCommand.NEAREST, TransformCommand.LINEAR }, interpolation );
 		genericDialog.showDialog();
 		if ( genericDialog.wasCanceled() ) return;
 		affine = genericDialog.getNextString();
 		interpolation = genericDialog.getNextChoice();
 		outputImage = BigDataProcessor2.transform( inputImage, TransformCommand.getAffineTransform3D( affine ), TransformCommand.getInterpolator( interpolation ) );
-
+		outputImage.setName( inputImage.getName() + "-transformed" );
 		viewer.replaceImage( outputImage, false, false );
 		recordMacro();
 	}

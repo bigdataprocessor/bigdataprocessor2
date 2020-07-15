@@ -53,16 +53,15 @@ public class CachedCellImgReader
     {
         int[] cellDimsXYZCT = new int[ 5 ];
 
-        // load whole rows
-        cellDimsXYZCT[ 0 ] = imageDimsXYZCT[ 0 ];
+        cellDimsXYZCT[ 0 ] = imageDimsXYZCT[ 0 ]; // load whole rows
 
         final int bytesPerRow = imageDimsXYZCT[ 0 ] * bitDepth / 8;
-
+        final double megaBitsPerPlane = imageDimsXYZCT[ 0 ] * imageDimsXYZCT[ 1 ] * bitDepth / 1000000.0;
         final int numRowsPerFileSystemBlock = 4096 / bytesPerRow;
 
-        if ( numRowsPerFileSystemBlock < 10 )
+        if ( megaBitsPerPlane > 10.0 ) // would take longer to load than one second at 10 MBit/s bandwidth
         {
-            cellDimsXYZCT[ 1 ] = imageDimsXYZCT[ 1 ] / 10; //  Math.min( 10, imageDimsXYZCT[ 1 ] );
+            cellDimsXYZCT[ 1 ] = (int) Math.ceil( imageDimsXYZCT[ 1 ] / 3.0 ); // TODO: find a better value?
         }
         else
         {

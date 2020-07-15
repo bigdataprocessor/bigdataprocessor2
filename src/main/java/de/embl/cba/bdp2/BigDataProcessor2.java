@@ -18,6 +18,7 @@ import de.embl.cba.bdp2.save.*;
 import de.embl.cba.bdp2.dialog.DisplaySettings;
 import de.embl.cba.bdp2.align.ChannelShifter;
 import de.embl.cba.bdp2.transform.ImageTransformer;
+import de.embl.cba.bdp2.ui.BigDataProcessor2UI;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import loci.common.DebugTools;
 import net.imglib2.*;

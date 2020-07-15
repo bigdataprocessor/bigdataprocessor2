@@ -5,6 +5,7 @@ import de.embl.cba.bdp2.process.AbstractProcessingCommand;
 import de.embl.cba.bdp2.utils.Utils;
 import net.imglib2.interpolation.InterpolatorFactory;
 import net.imglib2.interpolation.randomaccess.ClampingNLinearInterpolatorFactory;
+import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -17,15 +18,16 @@ public class TransformCommand< R extends RealType< R > & NativeType< R > > exten
 {
     public static final String COMMAND_NAME = "Transform...";
     public static final String COMMAND_FULL_NAME = Utils.COMMAND_BDP_PREFIX + COMMAND_NAME;
-    public static final String N_LINEAR = "N-Linear";
+    public static final String NEAREST = "Nearest";
+    public static final String LINEAR = "Linear";
     public static final String AFFINE_LABEL = "Affine transform [m00,..,m03,m10,..,m13,m20,..,m23]";
 
     @Parameter(label = AFFINE_LABEL )
     String affineTransformCSV = "1,0,0,0,0,1,0,0,0,0,1,0";
     public static final String AFFINE_STRING_PARAMETER = "affineTransformCSV";
 
-    @Parameter(label = "Interpolation", choices = { N_LINEAR })
-    String interpolation = N_LINEAR;
+    @Parameter(label = "Interpolation", choices = { NEAREST, LINEAR })
+    String interpolation = NEAREST;
     public static final String INTERPOLATION_PARAMETER = "interpolation";
 
     @Override
@@ -52,10 +54,11 @@ public class TransformCommand< R extends RealType< R > & NativeType< R > > exten
 
     public static InterpolatorFactory getInterpolator( String interpolation )
     {
-        if ( interpolation.equalsIgnoreCase( N_LINEAR ) )
+        if ( interpolation.equalsIgnoreCase( LINEAR ) )
             return new ClampingNLinearInterpolatorFactory<>();
+        else if ( interpolation.equalsIgnoreCase( NEAREST ) )
+            return new NearestNeighborInterpolatorFactory();
         else
             throw new RuntimeException( "Interpolation not supported: " + interpolation );
-
     }
 }

@@ -10,6 +10,7 @@ import de.embl.cba.bdp2.image.ImageRenameCommand;
 import de.embl.cba.bdp2.align.AlignChannelsCommand;
 import de.embl.cba.bdp2.align.splitchip.AlignChannelsSplitChipCommand;
 import de.embl.cba.bdp2.open.ui.*;
+import de.embl.cba.bdp2.transform.TransformCommand;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -82,7 +83,7 @@ public class Menu extends JMenu
         addMenuItem( correctDriftMenu, ApplyTrackCommand.COMMAND_NAME );
 
         addMenuItem( processMenu, CROP );
-
+        addMenuItem( processMenu, TransformCommand.COMMAND_NAME );
         addMenuItem( processMenu, BinCommand.COMMAND_NAME );
         addMenuItem( processMenu, ConvertToUnsignedByteTypeCommand.COMMAND_NAME );
         addMenuItem( processMenu, AlignChannelsCommand.COMMAND_NAME );

@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2;
+package de.embl.cba.bdp2.ui;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.util.DefaultIndenter;

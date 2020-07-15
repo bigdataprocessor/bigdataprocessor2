@@ -29,7 +29,8 @@ import de.embl.cba.bdp2.align.ChromaticShiftDialog;
 import de.embl.cba.bdp2.register.RegisteredViews;
 import de.embl.cba.bdp2.register.Registration;
 import de.embl.cba.bdp2.service.BdvService;
-import de.embl.cba.bdp2.transform.ShearMenuDialog;
+import de.embl.cba.bdp2.transform.TransformCommand;
+import de.embl.cba.bdp2.transform.TransformDialog;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import de.embl.cba.tables.FileAndUrlUtils;
@@ -134,13 +135,6 @@ public class MenuActions implements ActionListener {
         {
             BigDataProcessor2.threadPool.submit(() -> {
                 new MacroRecordingDialog();
-            });
-        }
-        else if (e.getActionCommand().equalsIgnoreCase( Menu.OBLIQUE_MENU_ITEM ))
-        {
-            BigDataProcessor2.threadPool.submit(() -> {
-                ShearMenuDialog shearMenuDialog = new ShearMenuDialog( viewer );
-                shearMenuDialog.setVisible( true );
             });
         }
         else if (e.getActionCommand().equalsIgnoreCase( Menu.CREATE_TRACK ))
@@ -279,6 +273,12 @@ public class MenuActions implements ActionListener {
                 Services.commandService.run( OpenLuxendoCommand.class, true );
             });
         }
-
+        else if( e.getActionCommand().equalsIgnoreCase( TransformCommand.COMMAND_NAME ) )
+        {
+            BigDataProcessor2.threadPool.submit(() ->
+            {
+                new TransformDialog<>( viewer );
+            });
+        }
     }
 }
