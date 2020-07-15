@@ -2,10 +2,10 @@ package develop;
 
 import de.embl.cba.bdp2.open.core.CachedCellImgReader;
 import de.embl.cba.bdp2.open.core.NamingSchemes;
-import de.embl.cba.bdp2.shear.ImageShearer;
-import de.embl.cba.bdp2.shear.RaiNDShearer;
-import de.embl.cba.bdp2.shear.ShearMenuDialog;
-import de.embl.cba.bdp2.shear.ShearingSettings;
+import de.embl.cba.bdp2.transform.ImageTransformer;
+import de.embl.cba.bdp2.devel.RaiNDShearer;
+import de.embl.cba.bdp2.transform.ShearMenuDialog;
+import de.embl.cba.bdp2.devel.ShearingSettings;
 import de.embl.cba.bdp2.open.core.FileInfos;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.RandomAccessibleInterval;
@@ -58,7 +58,7 @@ public class TestShearTransform {
         ShearingSettings shearingSettings = new ShearingSettings();
         ShearMenuDialog dialog = new ShearMenuDialog(imageViewer);
         dialog.getShearingSettings( shearingSettings ); // sets default values.
-        return ImageShearer.shearRai5D( cachedCellImg, shearingSettings );
+        return ImageTransformer.shearRai5D( cachedCellImg, shearingSettings );
     }
 
     private static RandomAccessibleInterval

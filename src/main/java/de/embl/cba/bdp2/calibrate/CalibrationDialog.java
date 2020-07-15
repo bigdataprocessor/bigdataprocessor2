@@ -22,10 +22,10 @@ public class CalibrationDialog< R extends RealType< R > & NativeType< R > >
 	{
 		this.inputImage = viewer.getImage();
 		this.viewer = viewer;
-		showGenericDialog();
+		showDialog();
 	}
 
-	private void showGenericDialog()
+	private void showDialog()
 	{
 		final double[] voxelSize = inputImage.getVoxelSize();
 		String voxelUnit = inputImage.getVoxelUnit();

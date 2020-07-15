@@ -17,11 +17,14 @@ import de.embl.cba.bdp2.log.progress.ProgressListener;
 import de.embl.cba.bdp2.save.*;
 import de.embl.cba.bdp2.dialog.DisplaySettings;
 import de.embl.cba.bdp2.align.ChannelShifter;
+import de.embl.cba.bdp2.transform.ImageTransformer;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import loci.common.DebugTools;
 import net.imglib2.*;
 import net.imglib2.converter.Converters;
 import net.imglib2.converter.RealUnsignedByteConverter;
+import net.imglib2.interpolation.InterpolatorFactory;
+import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
@@ -174,7 +177,13 @@ public class BigDataProcessor2
         return image.newImage( shifter.getShiftedRai( shifts ) );
     }
 
-	public static < R extends RealType< R > & NativeType< R > > Image< R > applyTrack( File file, Image< R > image, Boolean centerImage )
+    public static < R extends RealType< R > & NativeType< R > > Image< R > transform( Image< R > image, AffineTransform3D transform3D, InterpolatorFactory interpolatorFactory )
+    {
+        final ImageTransformer< R > transformer = new ImageTransformer<>( image, transform3D, interpolatorFactory );
+        return transformer.transform();
+    }
+
+    public static < R extends RealType< R > & NativeType< R > > Image< R > applyTrack( File file, Image< R > image, Boolean centerImage )
 	{
 		final Track track = Tracks.fromJsonFile( file );
 		final TrackApplier< R > trackApplier = new TrackApplier<>( image );

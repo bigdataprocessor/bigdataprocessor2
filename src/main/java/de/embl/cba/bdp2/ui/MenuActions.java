@@ -29,7 +29,7 @@ import de.embl.cba.bdp2.align.ChromaticShiftDialog;
 import de.embl.cba.bdp2.register.RegisteredViews;
 import de.embl.cba.bdp2.register.Registration;
 import de.embl.cba.bdp2.service.BdvService;
-import de.embl.cba.bdp2.shear.ShearMenuDialog;
+import de.embl.cba.bdp2.transform.ShearMenuDialog;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import de.embl.cba.tables.FileAndUrlUtils;
