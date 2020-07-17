@@ -70,7 +70,7 @@ public class IntervalImageViews
 				c,
 				t };
 
-		RandomAccessibleInterval raiXYZ =
+		RandomAccessibleInterval< R > raiXYZ =
 				Views.dropSingletonDimensions(
 						Views.interval( raiXYZCT, minInterval, maxInterval ) );
 

@@ -58,30 +58,10 @@ public class TiffVolumesFrameSaver< R extends RealType< R > & NativeType< R > > 
     }
 
     @Override
-    public void run() {
-
-
+    public void run()
+    {
         // TODO:
-        // - check whether enough RAM is available to execute current thread
-        // - if not, merge GC and wait until there is enough
-        // - estimate 3x more RAM then actually necessary
-        // - if waiting takes to long somehoe terminate in a nice way
-
-        // long freeMemoryInBytes = IJ.maxMemory() - IJ.currentMemory();
-
-
-        final long totalCubes = rai.dimension( T ) * rai.dimension( C );
-
-//        long numBytesOfImage = image.dimension(FileInfoConstants.X) *
-//                    image.dimension(FileInfoConstants.Y) *
-//                    image.dimension(FileInfoConstants.Z) *
-//                    image.dimension(FileInfoConstants.C) *
-//                    image.dimension(FileInfoConstants.T) *
-//                    file.bitDepth / 8;
-//
-//            if (numBytesOfImage > 1.5 * freeMemoryInBytes) {
-//                // TODO: handle this
-//            }
+        checkMemoryRequirements();
 
         int totalChannels = Math.toIntExact( rai.dimension( C ));
 
@@ -92,8 +72,6 @@ public class TiffVolumesFrameSaver< R extends RealType< R > & NativeType< R > > 
                 Logger.progress( "Stopped save thread: ", "" + t );
                 return;
             }
-
-//            System.out.println( "Saving started: Frame " + t + ", Channel " + c );
 
             RandomAccessibleInterval< R > raiXYZ = IntervalImageViews.getVolumeForSaving( rai, c, t, settings.numProcessingThreads );
 
@@ -115,14 +93,31 @@ public class TiffVolumesFrameSaver< R extends RealType< R > & NativeType< R > > 
 
             counter.incrementAndGet();
 
-//            if ( ! stop.get() ) {
-//                ProgressHelpers.logProgress( totalCubes, counter, startTime, "Saved file " );
-//            }
-
-//            System.out.println( "Saving finished: Frame " + t + ", Channel " + c );
-
             System.gc();
         }
+    }
+
+    public void checkMemoryRequirements()
+    {
+        // - check whether enough RAM is available to execute current thread
+        // - if not, merge GC and wait until there is enough
+        // - estimate 3x more RAM then actually necessary
+        // - if waiting takes to long somehoe terminate in a nice way
+
+        // long freeMemoryInBytes = IJ.maxMemory() - IJ.currentMemory();
+
+        final long totalCubes = rai.dimension( T ) * rai.dimension( C );
+
+//        long numBytesOfImage = image.dimension(FileInfoConstants.X) *
+//                    image.dimension(FileInfoConstants.Y) *
+//                    image.dimension(FileInfoConstants.Z) *
+//                    image.dimension(FileInfoConstants.C) *
+//                    image.dimension(FileInfoConstants.T) *
+//                    file.bitDepth / 8;
+//
+//            if (numBytesOfImage > 1.5 * freeMemoryInBytes) {
+//                // TODO: handle this
+//            }
     }
 
     private void saveProjections(

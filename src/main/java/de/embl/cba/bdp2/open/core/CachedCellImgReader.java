@@ -137,7 +137,7 @@ public class CachedCellImgReader
                 fileInfos, new int[]{ cellDimX, cellDimY, cellDimZ, 1, 1 } );
 
         final ReadOnlyCachedCellImgOptions options = options()
-                .cellDimensions( loader.getCellDims() );
+                .cellDimensions( loader.getCellDims() ).maxCacheSize( 0 );
         
         final CachedCellImg cachedCellImg = new ReadOnlyCachedCellImgFactory().create(
                 loader.getDimensions(),
