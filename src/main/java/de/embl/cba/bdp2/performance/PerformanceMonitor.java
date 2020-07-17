@@ -3,6 +3,7 @@ package de.embl.cba.bdp2.performance;
 import de.embl.cba.bdp2.ui.BigDataProcessor2UI;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class PerformanceMonitor
@@ -13,15 +14,18 @@ public class PerformanceMonitor
 
 	public PerformanceMonitor()
 	{
-		readPerformances = new ArrayList<>( );
-		copyPerformances = new ArrayList<>( );
+		readPerformances = Collections.synchronizedList(new ArrayList<>( ));
+		copyPerformances = Collections.synchronizedList(new ArrayList<>( ));
 	}
 
-	public synchronized void addReadPerformance( int numBytes, long timeMillis )
+	public void addReadPerformance( int numBytes, long timeMillis )
 	{
 		final double mbps = toMBPS( numBytes, timeMillis );
-		readPerformances.add( mbps );
-		BigDataProcessor2UI.setReadPerformanceInformation( mbps, getAverageReadPerformance() );
+		synchronized ( readPerformances )
+		{
+			readPerformances.add( mbps );
+		}
+		BigDataProcessor2UI.setReadPerformanceInformation( mbps, getMedianReadPerformance() );
 	}
 
 	/**
@@ -35,12 +39,18 @@ public class PerformanceMonitor
 		return 1.0 * numBytes * 8 / MEGA / ( timeMillis / 1000.0 );
 	}
 
-	public double getAverageReadPerformance()
+	public double getMedianReadPerformance()
 	{
-		return readPerformances.stream().mapToDouble( x -> x ).average().getAsDouble();
+		if ( readPerformances.size() == 0 ) return 0;
+
+		synchronized ( readPerformances )
+		{
+			final double median = readPerformances.stream().mapToDouble( x -> x ).sorted().skip(readPerformances.size()/2).findFirst().getAsDouble();
+			return median;
+		}
 	}
 
-	public synchronized void addCopyPerformance( int numBytes, long timeMillis )
+	public void addCopyPerformance( int numBytes, long timeMillis )
 	{
 		copyPerformances.add( toMBPS( numBytes, timeMillis ) );
 	}

@@ -10,6 +10,7 @@ import de.embl.cba.bdp2.ui.MenuActions;
 
 import javax.swing.*;
 import java.awt.*;
+import java.text.DecimalFormat;
 import java.util.List;
 
 public abstract class BigDataProcessor2UI
@@ -86,11 +87,14 @@ public abstract class BigDataProcessor2UI
 		frame.repaint();
 	}
 
-	public static void setReadPerformanceInformation( double mbps, double readPerformanceMBPS )
+	public static void setReadPerformanceInformation( double mbps, double averageMBPS )
 	{
 		if ( frame == null ) return; // UI not instantiated
 
-		readInfo.setText(  SPEED + (int) mbps + " <" + (int) readPerformanceMBPS + ">");
+		DecimalFormat df = new DecimalFormat();
+		df.setMaximumFractionDigits(2);
+
+		readInfo.setText(  SPEED + df.format( mbps ) + " <" + df.format( averageMBPS )+ ">");
 		readInfo.validate();
 		refreshFrame();
 	}

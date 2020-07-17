@@ -25,7 +25,7 @@ public class UnsignedByteTypeConversionDialog< R extends RealType< R > & NativeT
 	private double mapTo255;
 	private RealUnsignedByteConverter< R > converter;
 
-	public UnsignedByteTypeConversionDialog( final BdvImageViewer viewer )
+	public UnsignedByteTypeConversionDialog( final BdvImageViewer< R > viewer )
 	{
 		this.viewer = viewer;
 		this.inputImage = viewer.getImage();
@@ -37,8 +37,8 @@ public class UnsignedByteTypeConversionDialog< R extends RealType< R > & NativeT
 			return;
 		}
 
-		mapTo0 = viewer.getAutoContrastDisplaySettings( 0 ).getDisplayRangeMin();
-		mapTo255 = viewer.getAutoContrastDisplaySettings( 0 ).getDisplayRangeMax();
+		mapTo0 = viewer.getDisplaySettings().get( 0 ).getDisplayRangeMin();
+		mapTo255 = viewer.getDisplaySettings().get( 0 ).getDisplayRangeMax();
 
 		final UnsignedByteTypeConverter< R > unsignedByteTypeConverter = new UnsignedByteTypeConverter<>( inputImage, mapTo0, mapTo255 );
 

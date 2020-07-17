@@ -19,7 +19,7 @@ public class UnsignedByteTypeConverter < R extends RealType< R > & NativeType< R
 		converter = new RealUnsignedByteConverter<>( mapTo0, mapTo255 );
 	}
 
-	public Image< R > getConvertedImage( )
+	public Image< R > getConvertedImage()
 	{
 		final RandomAccessibleInterval< R > convertedRai =
 				Converters.convert(

@@ -19,7 +19,7 @@ public class Menu extends JMenu
 {
     public static final String CONFIGURE_LOGGING_MENU_ITEM = "Configure Logging...";
     // Development (alpha stage)
-    public static final String IMAGEJ_VIEW_MENU_ITEM = "Show in ImageJ Viewer";
+    public static final String IMAGEJ_VIEW_MENU_ITEM = "Show in Hyperstack Viewer";
     public static final String REGISTER_VOLUME_SIFT_MENU_ITEM = "Correct Lateral Slice Drift in Volume (SIFT)...";
     public static final String REGISTER_MOVIE_SIFT_MENU_ITEM = "Correct Lateral Frame Drift in Time-lapse (SIFT)...";
     public static final String REGISTER_MOVIE_PHASE_CORRELATION_MENU_ITEM = "Correct Lateral Frame Drift in Time-lapse (X-Corr)...";
@@ -96,11 +96,9 @@ public class Menu extends JMenu
         addMenuItem( saveMenu, SAVE_AS_TIFF_VOLUMES_MENU_ITEM );
         addMenuItem( saveMenu, SAVE_AS_TIFF_PLANES_MENU_ITEM );
 
-//        final JMenu correctMotionMenu = addMenu( UIDisplayConstants.CORRECT_MOTION_MENU_ITEM );
-//        addMenuItem( correctMotionMenu, UIDisplayConstants.APPLY_TRACK_MENU_ITEM );
-//        addMenuItem( correctMotionMenu, UIDisplayConstants.REGISTER_VOLUME_SIFT_MENU_ITEM );
-//        addMenuItem( correctMotionMenu, UIDisplayConstants.REGISTER_MOVIE_SIFT_MENU_ITEM );
-//        addMenuItem( correctMotionMenu, UIDisplayConstants.REGISTER_MOVIE_PHASE_CORRELATION_MENU_ITEM );
+        final JMenu miscMenu = addMenu( MISC );
+        menus.add( miscMenu );
+        addMenuItem( miscMenu, IMAGEJ_VIEW_MENU_ITEM );
     }
 
     public ArrayList< JMenu > getMenus()
