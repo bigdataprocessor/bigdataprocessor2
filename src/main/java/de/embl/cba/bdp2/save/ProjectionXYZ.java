@@ -47,8 +47,7 @@ public class ProjectionXYZ {
         setDoscale(true);
     }
 
-    public static void saveAsTiffXYZMaxProjection(
-            ImagePlus imp, int c, int t, String path ) {
+    public static void saveAsTiffXYZMaxProjection( ImagePlus imp, int c, int t, String path ) {
 
         ProjectionXYZ projectionXYZ = new ProjectionXYZ( imp );
         projectionXYZ.setDoscale( true );
@@ -57,7 +56,7 @@ public class ProjectionXYZ {
         FileSaver fileSaver = new FileSaver(projection);
         String sC = String.format("%1$02d", c);
         String sT = String.format("%1$05d", t);
-        String pathCT = path + "--xyz-max-projection" + "--C" + sC + "--T" + sT + ".tif";
+        String pathCT = path + "-xyz-max" + "--C" + sC + "--T" + sT + ".tif";
         fileSaver.saveAsTiff(pathCT);
     }
 

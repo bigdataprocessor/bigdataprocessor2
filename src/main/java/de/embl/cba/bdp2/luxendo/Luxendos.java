@@ -1,5 +1,8 @@
 package de.embl.cba.bdp2.luxendo;
 
+import ch.systemsx.cisd.hdf5.IHDF5Reader;
+import de.embl.cba.bdp2.utils.Utils;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,5 +24,23 @@ public class Luxendos
 			throw new RuntimeException( subFolderName + " does not match pattern " + LUXENDO_STACKINDEX_REGEXP );
 		}
 		return stackIndex;
+	}
+
+	public static double[] getVoxelSizeMicrometer( IHDF5Reader reader, String h5DataSetName )
+	{
+		if ( reader.hasAttribute( "/" + h5DataSetName, "element_size_um" ) )
+		{
+			final double[] voxelSizeZYX = reader.float64().getArrayAttr( "/" + h5DataSetName, "element_size_um");
+			double[] voxelSizeXYZ = new double[ 3 ];
+			for ( int d = 0; d < 3; d++ )
+			{
+				voxelSizeXYZ[ d ] = voxelSizeZYX[ 2 - d];
+			}
+			return voxelSizeXYZ;
+		}
+		else
+		{
+			return null;
+		}
 	}
 }

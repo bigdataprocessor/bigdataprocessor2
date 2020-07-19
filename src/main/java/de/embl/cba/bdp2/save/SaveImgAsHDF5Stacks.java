@@ -175,7 +175,8 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
                 }
 
                 // Save projections
-                if (savingSettings.saveProjections ) {
+                if (savingSettings.saveProjections )
+                {
                     ImagePlus imagePlusImage = ImageJFunctions.wrap(newRai, "", null);
                     ProjectionXYZ.saveAsTiffXYZMaxProjection(imagePlusImage, c, this.current_t, newPath);
                 }

@@ -5,6 +5,7 @@ import ch.systemsx.cisd.hdf5.HDF5DataTypeInformation;
 import ch.systemsx.cisd.hdf5.HDF5Factory;
 import ch.systemsx.cisd.hdf5.IHDF5Reader;
 import de.embl.cba.bdp2.log.Logger;
+import de.embl.cba.bdp2.luxendo.Luxendos;
 import ij.gui.GenericDialog;
 
 import java.util.Arrays;
@@ -63,9 +64,11 @@ public class FileInfosHDF5Helper
         }
         imageDataInfo.bitDepth = assignHDF5TypeToImagePlusBitdepth(dsInfo);
 
-        // There is no standard way of retrieving voxelSpacings from h5 data....
-        imageDataInfo.voxelSize = new double[]{1,1,1};
+        imageDataInfo.voxelSize = Luxendos.getVoxelSizeMicrometer( reader, imageDataInfo.h5DataSetName );
         imageDataInfo.voxelUnit = "micrometer";
+        if ( imageDataInfo.voxelSize == null )
+            imageDataInfo.voxelSize = new double[]{1,1,1};
+
     }
 
     private static int assignHDF5TypeToImagePlusBitdepth(HDF5DataSetInformation dsInfo) {

@@ -255,7 +255,7 @@ public class FileInfosHelper
             fetchAndSetImageMetadata( fileInfos, fileInfos.directory, namingScheme, fileLists[ 0 ] );
             populateFileList( fileInfos, namingScheme, fileLists );
         }
-        else
+        else // h5 or tif volumes
         {
             HashSet<String> channels = new HashSet();
             HashSet<String> timepoints = new HashSet();
