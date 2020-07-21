@@ -43,7 +43,7 @@ import java.util.Map;
 
 public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
 {
-    public static final String VIEWER_TITLE_STUMP = "BigDataViewer - ";
+    public static final String VIEWER_TITLE_STUMP = "Image: ";
     public static boolean enableArbitraryPlaneSlicing = false;
 
     private Image< R > image;

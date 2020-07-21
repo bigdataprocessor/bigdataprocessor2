@@ -1,16 +1,13 @@
 package de.embl.cba.bdp2.open.ui;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
-import de.embl.cba.bdp2.calibrate.CalibrateCommand;
-import de.embl.cba.bdp2.dialog.HelpDialog;
+import de.embl.cba.bdp2.dialog.HelpWindow;
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.scijava.Services;
 import de.embl.cba.bdp2.service.ImageService;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;
-import org.scijava.command.CommandService;
 import org.scijava.plugin.Parameter;
 
 import javax.swing.*;
@@ -75,9 +72,8 @@ public abstract class AbstractOpenCommand< R extends RealType< R > & NativeType<
     protected void showRegExpHelp()
     {
         SwingUtilities.invokeLater( () -> {
-            final HelpDialog helpDialog = new HelpDialog( null,
-                    AbstractOpenCommand.class.getResource( "/RegExpHelp.html" ) );
-            helpDialog.setVisible( true );
+            final HelpWindow helpWindow = new HelpWindow( AbstractOpenCommand.class.getResource( "/RegExpHelp.html" ) );
+            helpWindow.setVisible( true );
         } );
     }
 }

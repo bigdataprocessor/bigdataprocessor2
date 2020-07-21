@@ -17,6 +17,7 @@ import de.embl.cba.bdp2.log.progress.ProgressListener;
 import de.embl.cba.bdp2.save.*;
 import de.embl.cba.bdp2.dialog.DisplaySettings;
 import de.embl.cba.bdp2.align.ChannelShifter;
+import de.embl.cba.bdp2.service.BdvService;
 import de.embl.cba.bdp2.transform.ImageTransformer;
 import de.embl.cba.bdp2.ui.BigDataProcessor2UI;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
@@ -198,5 +199,16 @@ public class BigDataProcessor2
 	public static void showUI()
     {
         BigDataProcessor2UI.showUI();
+    }
+
+    public static < R extends RealType< R > & NativeType< R > > BdvImageViewer showImageInheritingDisplaySettings( Image< R > image, Image< R > parentImage )
+    {
+        final BdvImageViewer viewer = showImage( image, false );
+
+        final BdvImageViewer inputImageViewer = BdvService.imageNameToBdvImageViewer.get( parentImage.getName() );
+        if ( inputImageViewer != null )
+                viewer.setDisplaySettings( inputImageViewer.getDisplaySettings() );
+
+        return viewer;
     }
 }

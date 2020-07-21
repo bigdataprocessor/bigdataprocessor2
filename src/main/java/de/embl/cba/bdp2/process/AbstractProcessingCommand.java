@@ -40,14 +40,11 @@ public abstract class AbstractProcessingCommand< R extends RealType< R > & Nativ
 
         if ( viewingModality.equals( AbstractOpenCommand.SHOW_IN_NEW_VIEWER ) )
         {
-            final BdvImageViewer viewer = BigDataProcessor2.showImage( outputImage, autoContrast );
-            if ( autoContrast == false )
-            {
-                final BdvImageViewer inputImageViewer = BdvService.imageNameToBdvImageViewer.get( inputImage.getName() );
-                if ( inputImageViewer != null )
-                    viewer.setDisplaySettings( inputImageViewer.getDisplaySettings() );
-            }
-            return viewer;
+            if ( autoContrast )
+                return BigDataProcessor2.showImage( outputImage, true );
+            else
+                return BigDataProcessor2.showImageInheritingDisplaySettings( outputImage, inputImage );
+
         }
         else if ( viewingModality.equals( AbstractOpenCommand.SHOW_IN_CURRENT_VIEWER ))
         {
@@ -65,4 +62,5 @@ public abstract class AbstractProcessingCommand< R extends RealType< R > & Nativ
             throw new RuntimeException( "Unsupported viewing modality: " + viewingModality );
         }
     }
+
 }

@@ -6,7 +6,6 @@ import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.embl.cba.bdp2.dialog.Utils;
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.ui.MenuActions;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,8 +40,8 @@ public abstract class BigDataProcessor2UI
 		panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		panel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
-		imageInfo = new JLabel( "<html><pre>Please open an image...</pre></html>" );
-		readInfo = new JLabel( SPEED + "NaN" );
+		imageInfo = new JLabel( wrapAsHtml( "Please open an image..." ) );
+		readInfo = new JLabel( wrapAsHtml( SPEED + "NaN" ) );
 		panel.add( imageInfo );
 		panel.add( new JLabel( "  " ) );
 		panel.add( readInfo );
@@ -64,7 +63,7 @@ public abstract class BigDataProcessor2UI
 				prettyPrinter.indentArraysWith( DefaultIndenter.SYSTEM_LINEFEED_INSTANCE );
 				objectMapper.setDefaultPrettyPrinter( prettyPrinter );
 				String info = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString( image );
-				imageInfo.setText( "<html><pre>Active image:\n" + info + "</pre></html>" );
+				imageInfo.setText( wrapAsHtml( "Active image:\n" + info ) );
 			}
 			catch ( JsonProcessingException e )
 			{
@@ -73,11 +72,16 @@ public abstract class BigDataProcessor2UI
 		}
 		else
 		{
-			imageInfo.setText( "<html><pre>Active image: None</pre></html>" );
+			imageInfo.setText( wrapAsHtml( "Active image: None" ) );
 		}
 
 		imageInfo.validate();
 		refreshFrame();
+	}
+
+	public static String wrapAsHtml( final String text )
+	{
+		return "<html><pre>" + text + "</pre></html>";
 	}
 
 	private static void refreshFrame()
@@ -94,7 +98,7 @@ public abstract class BigDataProcessor2UI
 		DecimalFormat df = new DecimalFormat();
 		df.setMaximumFractionDigits(2);
 
-		readInfo.setText(  SPEED + df.format( mbps ) + " <" + df.format( averageMBPS )+ ">");
+		readInfo.setText(  wrapAsHtml(SPEED + df.format( mbps ) + " <" + df.format( averageMBPS )+ ">"));
 		readInfo.validate();
 		refreshFrame();
 	}

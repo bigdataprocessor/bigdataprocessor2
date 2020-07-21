@@ -1,6 +1,6 @@
 package de.embl.cba.bdp2.open.ui;
 
-import de.embl.cba.bdp2.dialog.HelpDialog;
+import de.embl.cba.bdp2.dialog.HelpWindow;
 import de.embl.cba.bdp2.dialog.Utils;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -19,10 +19,10 @@ public class OpenCustomHelpCommand< R extends RealType< R > & NativeType< R > > 
 
     public void run()
     {
+
         SwingUtilities.invokeLater( () -> {
-            final HelpDialog helpDialog = new HelpDialog( null,
-                    AbstractOpenCommand.class.getResource( "/RegExpHelp.html" ) );
-            helpDialog.setVisible( true );
+            final HelpWindow helpWindow = new HelpWindow( AbstractOpenCommand.class.getResource( "/RegExpHelp.html" ) );
+            helpWindow.setVisible( true );
         } );
     }
 }

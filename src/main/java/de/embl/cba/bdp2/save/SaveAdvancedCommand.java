@@ -91,8 +91,9 @@ public class SaveAdvancedCommand< R extends RealType< R > & NativeType< R > > im
         savingSettings.saveVolumes = saveVolumes;
         savingSettings.saveProjections = saveProjections;
 
-        savingSettings.volumesFilePathStump = directory + File.separator + "volumes" + File.separator + "volume";
-        savingSettings.projectionsFilePathStump = directory + File.separator + "projections" + File.separator + "projection";
+        final String imageName = inputImage.getName();
+        savingSettings.volumesFilePathStump = directory + File.separator + "volumes" + File.separator + imageName;
+        savingSettings.projectionsFilePathStump = directory + File.separator + "projections" + File.separator + imageName;
 
         savingSettings.numIOThreads = numIOThreads;
         savingSettings.numProcessingThreads = numProcessingThreads;

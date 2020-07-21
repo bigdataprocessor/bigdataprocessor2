@@ -220,11 +220,14 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > >  extends JF
 
         // compress plane wise
         savingSettings.rowsPerStrip = (int) viewer.getImage().getRai().dimension( DimensionOrder.Y );  //Integer.parseInt( tfRowsPerStrip.getText() );
+
+        final String imageName = inputImage.getName();
+
         savingSettings.saveVolumes = cbSaveVolume.isSelected();
-        savingSettings.volumesFilePathStump = tfDirectory.getText() + File.separator + "volumes" + File.separator + "volume";
+        savingSettings.volumesFilePathStump = tfDirectory.getText() + File.separator + "volumes" + File.separator + imageName;
 
         savingSettings.saveProjections = cbSaveProjection.isSelected();
-        savingSettings.projectionsFilePathStump = tfDirectory.getText() + File.separator + "projections" + File.separator + "projection";
+        savingSettings.projectionsFilePathStump = tfDirectory.getText() + File.separator + "projections" + File.separator + imageName;
 
         savingSettings.numIOThreads = Integer.parseInt( tfNumIOThreads.getText() );
         savingSettings.numProcessingThreads = Integer.parseInt( tfNumProcessingThreads.getText() );

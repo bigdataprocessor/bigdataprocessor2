@@ -7,22 +7,11 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.ActionMap;
-import javax.swing.BorderFactory;
-import javax.swing.InputMap;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JEditorPane;
-import javax.swing.JScrollPane;
-import javax.swing.KeyStroke;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
-public class HelpDialog extends JDialog
+public class HelpWindow extends JFrame
 {
 	private static final long serialVersionUID = 1L;
 
@@ -30,15 +19,8 @@ public class HelpDialog extends JDialog
 	 * Instantiates and displays a JFrame that lists the help file for the SPIM
 	 * viewer UI.
 	 */
-	public HelpDialog( final Frame owner )
+	public HelpWindow( final URL helpFile )
 	{
-		this( owner, bdv.tools.HelpDialog.class.getResource( "/viewer/Help.html" ) );
-	}
-
-	public HelpDialog( final Frame owner, final URL helpFile )
-	{
-		super( owner, "Help", true );
-
 		if ( helpFile == null )
 		{
 			System.err.println( "helpFile url is null." );
@@ -101,7 +83,5 @@ public class HelpDialog extends JDialog
 			e.printStackTrace();
 		}
 	}
-
-
 }
 
