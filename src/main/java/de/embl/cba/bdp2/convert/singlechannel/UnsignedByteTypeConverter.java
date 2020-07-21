@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.convert;
+package de.embl.cba.bdp2.convert.singlechannel;
 
 import de.embl.cba.bdp2.image.Image;
 import net.imglib2.RandomAccessibleInterval;

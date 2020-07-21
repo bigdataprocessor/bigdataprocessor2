@@ -2,6 +2,7 @@ package test.open;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
+import de.embl.cba.bdp2.ui.BigDataProcessor2UI;
 import org.junit.Test;
 
 import static de.embl.cba.bdp2.open.core.NamingSchemes.MULTI_CHANNEL_VOLUMES;
@@ -25,6 +26,7 @@ public class TestOpenMultiChannelTiffVolumes
                 ".*"
         );
 
-        // BigDataProcessor2.showImage( image, true );
+        BigDataProcessor2UI.showUI();
+        BigDataProcessor2.showImage( image, true );
     }
 }

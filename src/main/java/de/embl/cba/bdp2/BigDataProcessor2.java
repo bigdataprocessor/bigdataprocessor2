@@ -5,7 +5,7 @@ import de.embl.cba.bdp2.drift.track.TrackApplier;
 import de.embl.cba.bdp2.drift.track.Tracks;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.bin.Binner;
-import de.embl.cba.bdp2.convert.UnsignedByteTypeConversionDialog;
+import de.embl.cba.bdp2.convert.singlechannel.UnsignedByteTypeConversionDialog;
 import de.embl.cba.bdp2.crop.Cropper;
 import de.embl.cba.bdp2.open.ChannelSubsetter;
 import de.embl.cba.bdp2.open.core.CachedCellImgReader;

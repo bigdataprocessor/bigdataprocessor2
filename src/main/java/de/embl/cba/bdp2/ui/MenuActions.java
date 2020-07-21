@@ -5,8 +5,9 @@ import de.embl.cba.bdp2.bin.BinCommand;
 import de.embl.cba.bdp2.bin.BinDialog;
 import de.embl.cba.bdp2.calibrate.CalibrateCommand;
 import de.embl.cba.bdp2.calibrate.CalibrationDialog;
-import de.embl.cba.bdp2.convert.ConvertToUnsignedByteTypeCommand;
-import de.embl.cba.bdp2.convert.UnsignedByteTypeConversionDialog;
+import de.embl.cba.bdp2.convert.MultiChannelUnsignedByteTypeConversionDialog;
+import de.embl.cba.bdp2.convert.singlechannel.ConvertToUnsignedByteTypeCommand;
+import de.embl.cba.bdp2.convert.singlechannel.UnsignedByteTypeConversionDialog;
 import de.embl.cba.bdp2.crop.CropDialog;
 import de.embl.cba.bdp2.data.DownloadAndOpenSampleDataCommand;
 import de.embl.cba.bdp2.dialog.MiscMenu;
@@ -196,7 +197,7 @@ public class MenuActions implements ActionListener {
         {
             BigDataProcessor2.threadPool.submit(() ->
 			{
-                new UnsignedByteTypeConversionDialog( viewer );
+                new MultiChannelUnsignedByteTypeConversionDialog<>( viewer );
             });
         }
         else if(e.getActionCommand().equalsIgnoreCase( BinCommand.COMMAND_NAME ))

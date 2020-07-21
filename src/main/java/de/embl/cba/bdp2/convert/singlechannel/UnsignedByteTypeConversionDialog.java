@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.convert;
+package de.embl.cba.bdp2.convert.singlechannel;
 
 import bdv.tools.brightness.SliderPanelDouble;
 import bdv.util.BoundedValueDouble;

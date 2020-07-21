@@ -98,7 +98,7 @@ public abstract class BigDataProcessor2UI
 		DecimalFormat df = new DecimalFormat();
 		df.setMaximumFractionDigits(2);
 
-		readInfo.setText(  wrapAsHtml(SPEED + df.format( mbps ) + " <" + df.format( averageMBPS )+ ">"));
+		readInfo.setText(  wrapAsHtml(SPEED + df.format( mbps ) + " Avg: " + df.format( averageMBPS )));
 		readInfo.validate();
 		refreshFrame();
 	}
