@@ -3,6 +3,7 @@ package de.embl.cba.bdp2.open.core;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.open.ChannelSubsetter;
 import de.embl.cba.bdp2.open.OpenFileType;
+import de.embl.cba.bdp2.utils.BioFormatsCalibrationReader;
 import org.apache.commons.lang.ArrayUtils;
 
 import java.io.File;
@@ -230,6 +231,14 @@ public class FileInfosHelper
             else
             {
                 fileInfos.fileType = OpenFileType.TIFF_STACKS;
+            }
+
+            final File omeCompanion = new File( directory, "ome-tiff.companion.ome" );
+            if ( omeCompanion.exists() )
+            {
+                final BioFormatsCalibrationReader calibrationReader = new BioFormatsCalibrationReader( omeCompanion );
+                fileInfos.voxelSize = calibrationReader.getVoxelSize();
+                fileInfos.voxelUnit = calibrationReader.getUnit();
             }
         }
         else if ( fileList[0].endsWith(".h5") )
