@@ -8,6 +8,9 @@ import mpicbg.imglib.multithreading.Stopable;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.integer.UnsignedByteType;
+import net.imglib2.type.numeric.integer.UnsignedShortType;
+import net.imglib2.util.Util;
 
 import java.util.ArrayList;
 
@@ -54,6 +57,17 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		final long[] longs = new long[ raiXYZCT.numDimensions() ];
 		raiXYZCT.dimensions( longs );
 		return longs;
+	}
+
+	public String getDataType()
+	{
+		final R type = Util.getTypeFromInterval( raiXYZCT );
+		if ( type instanceof UnsignedShortType )
+			return "unsigned 8 bit";
+		else if ( type instanceof UnsignedByteType )
+			return "unsigned 16 bit";
+		else
+			return "???";
 	}
 
 	public double getSizeGB()

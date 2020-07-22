@@ -74,6 +74,9 @@ public class MultiChannelUnsignedByteTypeConversionDialog< R extends RealType< R
 	
 	protected void prepareDialog()
 	{
+		panel = new JPanel();
+		panel.setLayout( new BoxLayout( panel, BoxLayout.PAGE_AXIS ) );
+
 		for ( int c = 0; c < inputImage.numChannels(); c++ )
 		{
 			final int channel = c;
@@ -90,13 +93,10 @@ public class MultiChannelUnsignedByteTypeConversionDialog< R extends RealType< R
 					rangeMax,
 					mappings.get( c )[ 1 ] );
 
-			panel = new JPanel();
-			panel.setLayout( new BoxLayout( panel, BoxLayout.PAGE_AXIS ) );
-
 			final SliderPanelDouble minSlider =
-					new SliderPanelDouble( "0    <= ", min, 1 );
+					new SliderPanelDouble( " 0    <= ", min, 1 );
 			final SliderPanelDouble maxSlider =
-					new SliderPanelDouble( "255  <= ", max, 1 );
+					new SliderPanelDouble( " 255  <= ", max, 1 );
 
 			class UpdateListener implements BoundedValueDouble.UpdateListener
 			{
@@ -116,6 +116,7 @@ public class MultiChannelUnsignedByteTypeConversionDialog< R extends RealType< R
 			min.setUpdateListener( updateListener );
 			max.setUpdateListener( updateListener );
 
+			panel.add( new JLabel( "Channel " + channel + ": " + inputImage.getChannelNames()[ channel ] ));
 			panel.add( minSlider );
 			panel.add( maxSlider );
 		}

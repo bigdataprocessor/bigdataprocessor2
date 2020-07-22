@@ -19,19 +19,20 @@ public class SampleData
 {
 	public static final String MINIMAL_SYNTHETIC = "Minimal synthetic dual color Tiff volumes (1.6 MB)";
 	public static final String DUAL_COLOR_MOUSE = "Dual color light-sheet mouse Tiff volume (64.8 MB)";
+	public static final String NON_ORTHO = "Non-orthogonal acquisition Tiff volume (2.6 MB)";
 
 	private Map< String, String > datasetNameToURL =  new HashMap<>();
 	private Map< String, String > datasetNameToRegExp =  new HashMap<>();
-
 
 	public SampleData()
 	{
 		datasetNameToURL.put( MINIMAL_SYNTHETIC, "https://www.ebi.ac.uk/biostudies/files/S-BSST417/tiff-volumes-x50y50z50c2t6.zip" );
 		datasetNameToURL.put( DUAL_COLOR_MOUSE, "https://www.ebi.ac.uk/biostudies/files/S-BSST417/mouse-volumes.zip" );
+		datasetNameToURL.put( NON_ORTHO, "https://www.ebi.ac.uk/biostudies/files/S-BSST417/non-ortho.zip" );
 
 		datasetNameToRegExp.put( MINIMAL_SYNTHETIC, NamingSchemes.MULTI_CHANNEL_VOLUMES + TIF);
 		datasetNameToRegExp.put( DUAL_COLOR_MOUSE, NamingSchemes.MULTI_CHANNEL_VOLUMES + TIF);
-
+		datasetNameToRegExp.put( NON_ORTHO, NamingSchemes.SINGLE_CHANNEL_VOLUMES_2 + TIF);
 	}
 
 	public File download( String datasetName, File outputDirectory )
