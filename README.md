@@ -1,6 +1,6 @@
-# BigDataProcessor2
+<img src="https://user-images.githubusercontent.com/2157566/89096211-1e6a5000-d3d5-11ea-822c-af526b9b1d7b.png" width="300">
 
-Interactive processing of TB-sized image data within [Fiji](http://fiji.sc/), on your laptop.
+BigDataProcessor2 (BDP2) is a [Fiji](http://fiji.sc/) pluging for interactive processing of TB-sized image data.
 
 ## Cite
 
@@ -11,10 +11,9 @@ Publication in preparation...
 BigDataProcessor2 is a Fiji plugin and can be installed via an update site.
 
 - Please install [Fiji](fiji.sc)
-    - To avoid dependency issues we currently recommended to download a fresh Fiji (you can have multiple versions of Fiji on one computer, e.g. you could rename this one from 'Fiji.app' to 'Fiji-BDP2.app')
 - Within Fiji, please enable the following [Update Site](https://imagej.net/Update_Sites): 
     - [X] BigDataProcessor
-    - (Note: The EMBL-CBA update site one must currently **not** be checked because of dependency issues!)
+    - Note: The (deprecated) EMBL-CBA update site must **not** be checked because of compatibility issues!
 - Restart Fiji
 
 ## Start
