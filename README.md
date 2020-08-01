@@ -1,6 +1,17 @@
 <img src="https://user-images.githubusercontent.com/2157566/89096211-1e6a5000-d3d5-11ea-822c-af526b9b1d7b.png" width="300">
 
-BigDataProcessor2 (BDP2) is a [Fiji](http://fiji.sc/) pluging for interactive processing of TB-sized image data.
+BigDataProcessor2 (BDP2) is a [Fiji](http://fiji.sc/) plugin for interactive processing of TB-sized image data.
+
+## Example usage movies
+
+#### Binning
+[<img width="300" alt="image" src="./docs/images/2.png">](https://drive.google.com/open?id=1AVFW3M5QYEDH9XUgR-q2LWUsuy16zF1A)
+
+#### Cropping
+[<img width="300" alt="image" src="./docs/images/3.png">](https://drive.google.com/open?id=1iabVP9jbISI1WclMRjtDHvcNWxMTC95-)
+
+#### Bit-depth conversion
+[<img width="300" alt="image" src="./docs/images/4.png">](https://drive.google.com/open?id=1jRZEepD1C8rM5t2gDi7tYnFh092vUztm)
 
 ## Cite
 
@@ -54,14 +65,11 @@ However, this leads to large data volumes with noise since the information is sp
 The BigDataProcessor2 makes it possible to develop different binnings interactively, thereby providing an efficient means to 
 attain a binning at which the corresponding scientific question can be efficiently addressed.*(click below to play the movie)*
 
-[<img width="1000" alt="image" src="./docs/images/2.png">](https://drive.google.com/open?id=1AVFW3M5QYEDH9XUgR-q2LWUsuy16zF1A)
-
 ### Crop
 
 Often, large volumes are acquired than required, e.g. to accommodate sample drift, motion, or growth. 
 Below movie shows *(click below to play)* how the BigDataProcessor2 can be interactively used to crop the data to only contain the relevant parts.
 
-[<img width="1000" alt="image" src="./docs/images/3.png">](https://drive.google.com/open?id=1iabVP9jbISI1WclMRjtDHvcNWxMTC95-)
 
 ### Convert to 8-bit
 
@@ -74,8 +82,6 @@ there are spurious pixels with very high values, making the `max` value very hig
 in the 8-bit converted data.  
 The below movie *(click below to play)* demonstrates interactive 8-bit conversion, where the user can interactively develop different mappings while browsing the entire data. 
 This is done lazily, i.e. the data on disk is not altered at this stage.
-
-[<img width="1000" alt="image" src="./docs/images/4.png">](https://drive.google.com/open?id=1jRZEepD1C8rM5t2gDi7tYnFh092vUztm)
 
 ## Save
 
