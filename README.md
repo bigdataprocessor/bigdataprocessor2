@@ -15,7 +15,7 @@ BigDataProcessor2 (BDP2) is a [Fiji](http://fiji.sc/) plugin for interactive pro
 
 ## Cite
 
-Publication in preparation...
+Publication in preparation..
 
 ## Install
 
