@@ -39,8 +39,9 @@ Note: **Don't use the Commands**, they just serve the macro recording.
 
 ## User Guide 
 
-Example workflow of BDP2
-[<img align="middle" width="800" alt="image" src="./docs/images/BDP2-SIFigure_1.jpg">](https://github.com/bigdataprocessor/bigdataprocessor2/tree/master/docs/images/BDP2-SIFigure_1.jpg?raw=true)
+Example workflow of BDP2:
+
+[<img align="left" width="700" alt="image" src="./docs/images/BDP2-SIFigure_1.jpg">](https://github.com/bigdataprocessor/bigdataprocessor2/tree/master/docs/images/BDP2-SIFigure_1.jpg?raw=true)
 
 ## Record macro
 
@@ -52,6 +53,8 @@ All actions can be recorded as ImageJ macros. To enable this please:
 
 Note: This is equivalent to [ Plugins > Macros > Record... ] in the ImageJ menu, we just thought it is more convenient to also have it in the BigDataProcessor2 menu tree.
 
+[<img width="600" alt="image" src="./docs/images/BDP2-Macro.png">]
+Example of recorded macro. 
 ## Open dataset
 
 In the BigDataViewer window, go to the menu bar and use the menu items in [ BigDataProcessor2 > Open ].
