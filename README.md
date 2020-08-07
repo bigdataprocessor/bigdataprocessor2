@@ -34,9 +34,8 @@ Note: **Don't use the Commands**, they just serve the macro recording.
 
 ## User Guide 
 
-Example workflow of BDP2:
-
 [<img align="middle" width="700" alt="image" src="./docs/images/BDP2-SIFigure_1.jpg">](https://github.com/bigdataprocessor/bigdataprocessor2/tree/master/docs/images/BDP2-SIFigure_1.jpg?raw=true)
+Schematic representation of a lazy-processing workflow in BigDataProcessor2 (BDP2). Dashed arrows represent lazy-computation, where only the currently viewed image plane is loaded and processed. The complete data browsing, data selection and data processing workflow can be configured in a few minutes even for TB-sized image data. Only the final saving to disk requires processing of the whole data set and will take a correspondingly long time (up to hours).
 
 ## Record macro
 
