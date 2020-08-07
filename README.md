@@ -113,7 +113,7 @@ Performs arbitrary binning along x y and z coordinates.
 Motivation: For camera-based microscopy systems the effective pixel size often cannot be freely chosen during acquisition. Thus, the user may be forced to over-sample, leading to large data volumes with noise since the information is spread across many pixels and therefore resulting in (vastly) increased image processing times. Thus, binning the data post-acquisition is can be very useful as it both reduces data size and noise, often without compromising scientific accuracy.
 Motivation: For camera-based microscopy systems the effective pixel size often cannot be freely chosen during acquisition. Thus, the user may be forced to over-sample, leading to large data volumes and potentially with noise since the information is spread across many pixels and therefore resulting in (vastly) increased image processing times. Thus, binning the data post-acquisition can be very useful as it both reduces data size (and noise), often without compromising scientific accuracy.
 The BigDataProcessor2 makes it possible to develop different binnings interactively, thereby providing an efficient means to 
-attain a binning at which the corresponding scientific question can be efficiently addressed. See also [video example binning](binningLink)    
+attain a binning at which the corresponding scientific question can be efficiently addressed. See also [video example binning](# binninglink)    
 
 ***Process > Convert to 8-bit…***
 Convert the data set from 16 to 8-bit depth. 
