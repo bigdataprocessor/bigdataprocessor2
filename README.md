@@ -2,10 +2,10 @@
 
 BigDataProcessor2 (BDP2) is a [Fiji](http://fiji.sc/) plugin for interactive processing of TB-sized image data. Please see our videos of example work flows and the user guide below:  
 
-## Example workflows
-[![Example_workflow](https://img.youtube.com/vi/OixZ0ILbkvc/0.jpg)](https://www.youtube.com/embed/OixZ0ILbkvc "Video Title")
+## Example vidoes of workflows
+[![BigDataProcessor2 Workflow1](https://img.youtube.com/vi/OixZ0ILbkvc/0.jpg)](https://www.youtube.com/embed/OixZ0ILbkvc "BigDataProcessor2 Workflow")
+[![BigDataProcessor2 Workflow2](https://img.youtube.com/vi/OixZ0ILbkvc?vq=hd1440/0.jpg)](https://www.youtube.com/embed/OixZ0ILbkvc?vq=hd1440 "BigDataProcessor2 Workflow2")
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/OixZ0ILbkvc" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ## Cite
 
