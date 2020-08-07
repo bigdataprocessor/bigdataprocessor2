@@ -4,10 +4,9 @@ BigDataProcessor2 (BDP2) is a [Fiji](http://fiji.sc/) plugin for interactive pro
 
 ## Example vidoes of workflows
 [![BigDataProcessor2 Workflow1](https://img.youtube.com/vi/OixZ0ILbkvc/0.jpg)](https://www.youtube.com/embed/OixZ0ILbkvc "BigDataProcessor2 Workflow")
-<! --- [![BigDataProcessor2 Workflow2](https://img.youtube.com/vi/OixZ0ILbkvc?vq=hd1440/0.jpg)](https://www.youtube.com/embed/OixZ0ILbkvc?vq=hd1440 "BigDataProcessor2 Workflow2")
 
 Opening, browsing and preprocessing of a 250GB Hdf5 based raw data set. Movie shows a screen recording of a basic preprocessing workflow of a 250 GB Hdf5 image data set acquired by light-sheet microscopy. The following steps are demonstrated: Open Luxendo HDF5 -> Brightness & Color adjustment -> Set Voxel Size -> Align Channels -> Crop -> Bin -> Save. The 2 color early mouse embryo data waswere provided by Manuel Eguren, Ellenberg group EMBL Heidelberg.
-
+[link](#head1234)
 
 ## Cite
 
@@ -165,7 +164,7 @@ Motivation: As BigDataViewer is a relatively recent addition to the ImageJ ecosy
 ## Additional information
 
 More example videos *(click below to play)* :
- 
+### <a name="head1234"></a>A Heading in this SO entry!
 #### Binning:
     
 [<img width="300" alt="image" src="./docs/images/2.png">](https://drive.google.com/open?id=1AVFW3M5QYEDH9XUgR-q2LWUsuy16zF1A)
