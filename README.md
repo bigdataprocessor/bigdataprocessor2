@@ -71,11 +71,11 @@ Open datasets consisting of a collection of Tiff or Hdf5 volumes. The assignment
 Shows and explains a number of regular expressions that can be used in the [ Open > Open Custom… ] menu item. 
 
 
-**Open > Open EM Tiff Planes...**
+***Open > Open EM Tiff Planes...***
 Opens a single folder with Tiff single plane files. Each file will be assigned to one z-plane in a dataset with one color and one time point. 
 Motivation: This is a typical format for volume EM data to be stored in.
 
-**Open > Download and Open Sample Data...**
+***Open > Download and Open Sample Data...***
 Download and open sample data stored in the BioStudies archive (https://www.ebi.ac.uk/biostudies/studies/S-BSST417?query=bigdataprocessor2). Motivation: Conveniently accessible example data is useful to explore/ teach BigDataProcessor2 without the need to prepare suited input data. 
 
 **Open > Open Luxendo Hdf5...**
