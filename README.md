@@ -40,7 +40,7 @@ Note: **Don't use the Commands**, they just serve the macro recording.
 ## User Guide 
 
 Example workflow of BDP2
-[<img width="300" alt="image" src="./docs/images/BDP2-SI Figure 1.png">]
+<img width="300" alt="image" src="./docs/images/BDP2-SI Figure 1.png">
 
 ## Record macro
 
