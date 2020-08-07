@@ -64,25 +64,25 @@ In the BigDataViewer window, go to the menu bar and use the menu items in [ BigD
 <img src="https://user-images.githubusercontent.com/2157566/85284864-3377c900-b490-11ea-9a02-83056f792c14.png" width="460">
 Screenshot of the Open menu
 
-Open > Open Custom…
+**Open > Open Custom…**
 Open datasets consisting of a collection of Tiff or Hdf5 volumes. The assignment of each file (volume) to a channel and time point can be specified by a regular expression.  
 
-Open > Open Custom Help...
+**Open > Open Custom Help...**
 Shows and explains a number of regular expressions that can be used in the [ Open > Open Custom… ] menu item. 
 
 
-Open > Open EM Tiff Planes...
+**Open > Open EM Tiff Planes...**
 Opens a single folder with Tiff single plane files. Each file will be assigned to one z-plane in a dataset with one color and one time point. 
 Motivation: This is a typical format for volume EM data to be stored in.
 
-Open > Download and Open Sample Data...
+**Open > Download and Open Sample Data...**
 Download and open sample data stored in the BioStudies archive (https://www.ebi.ac.uk/biostudies/studies/S-BSST417?query=bigdataprocessor2). Motivation: Conveniently accessible example data is useful to explore/ teach BigDataProcessor2 without the need to prepare suited input data. 
 
-Open > Open Luxendo Hdf5...
+**Open > Open Luxendo Hdf5...**
 Open datasets acquired with Luxendo light sheet microscopes. 
 Motivation: Luxendo uses an open-source hdf5 based file format. We added convenience functionality for opening those files without the need to enter a complex regular expression. 
 
-Open > Open Leica DSL Tiff Planes...
+**Open > Open Leica DSL Tiff Planes...**
 Open datasets acquired with Leica DSL microscopes, choosing “Auto-Save, Data type: Tif, Compression: Uncompressed” as an option (Leica’s proprietary file format is called .lif, which we do not currently support).
 Motivation: While the Tiff file format is open source, Leica’s naming scheme would require entering a complex regular expression and we thus implemented this convenience opening functionality. 
 
@@ -96,7 +96,7 @@ Process > Rename…
 Rename the data set.
 
 Process > Set Voxel Size…
-Change the image calibration.
+Change the voxel size image properties. 
 Motivation: The voxel size may not always be read correctly from the data set, thus it is useful to have the option to set it manually. 
 
 Process > Correct Drift
@@ -112,11 +112,24 @@ Load a 3D track from a file (created with [ Process > Correct Drift > Create Tra
 
 Process > Crop…
 Interactively specify a 4D (x,y,z,t) subset of the data to be displayed in a new viewer window.
-Motivation: Imaging processes in living samples require setting up imaging parameters before knowing exactly when and where the process of interest takes place. Therefore the imaging field of view (x,y,z) and temporal extent (t) are usually set generously.  Using the crop function one can reduce the dataset to the necessary spatial and temporal dimensions.
+Motivation: Imaging processes in living samples require setting up imaging parameters before knowing exactly when and where the process of interest takes place. Therefore the imaging field of view (x,y,z) and temporal extent (t) are usually set generously to accommodate sample drift, motion, or growth. Using the crop function one can reduce the dataset to the necessary spatial and temporal dimensions.
+
+Often, large volumes are acquired than required, e.g.. 
+Below movie shows *(click below to play)* how the BigDataProcessor2 can be interactively used to crop the data to only contain the relevant parts.
+
 
 Process > Bin…
 Performs arbitrary binning along x y and z coordinates.
-Motivation: For camera-based microscopy systems the pixel size often cannot be freely chosen during acquisition. Thus, the user may be forced to over-sample, leading to large data volumes with noise since the information is spread across many pixels and therefore resulting in (vastly) increased image processing times. Thus, binning the data post-acquisition is can be very useful as it both reduces data size and noise, often without compromising scientific accuracy.
+Motivation: For camera-based microscopy systems the effective pixel size often cannot be freely chosen during acquisition. Thus, the user may be forced to over-sample, leading to large data volumes with noise since the information is spread across many pixels and therefore resulting in (vastly) increased image processing times. Thus, binning the data post-acquisition is can be very useful as it both reduces data size and noise, often without compromising scientific accuracy.
+
+For camera based microscopy systems the pixel size cannot be freely chosen during acquisition. 
+Thus, the user is often forced to over-sample in order not to lose important information. 
+However, this leads to large data volumes with noise since the information is spread across many pixels and therefore resulting in 
+(vastly) increased image processing times.  
+The BigDataProcessor2 makes it possible to develop different binnings interactively, thereby providing an efficient means to 
+attain a binning at which the corresponding scientific question can be efficiently addressed.
+*(click below to play the movie)*
+
 
 Process > Convert to 8-bit…
 Convert the data set from 16 to 8-bit depth. 
@@ -136,17 +149,10 @@ Motivation: Useful when data is warped due to an acquisition process that render
 
 ### Bin
 
-For camera based microscopy systems the pixel size cannot be freely chosen during acquisition. 
-Thus, the user is often forced to over-sample in order not to lose important information. 
-However, this leads to large data volumes with noise since the information is spread across many pixels and therefore resulting in 
-(vastly) increased image processing times.  
-The BigDataProcessor2 makes it possible to develop different binnings interactively, thereby providing an efficient means to 
-attain a binning at which the corresponding scientific question can be efficiently addressed.*(click below to play the movie)*
+
 
 ### Crop
 
-Often, large volumes are acquired than required, e.g. to accommodate sample drift, motion, or growth. 
-Below movie shows *(click below to play)* how the BigDataProcessor2 can be interactively used to crop the data to only contain the relevant parts.
 
 
 ### Convert to 8-bit
@@ -163,7 +169,23 @@ This is done lazily, i.e. the data on disk is not altered at this stage.
 
 ## Save
 
-...
+Screenshot of the Save menu.
+
+<img width="300" alt="image" src="./docs/images/BDP2-Process.png">
+
+
+Save > Save as Imaris Volumes…
+Save data set as an hdf5 based pyramidal Imaris file (http://open.bitplane.com/ims), with each channel and time point saved as an individual .h5 file and one .ims header file that can be used to view the data both in Fiji’s BigDataViewer and in the commercial Imaris software.
+Motivation: The low data overhead of a pyramidal scheme (in 3D for binning 2 x 2 x 2 at each pyramidal level  ~14%) is a marginal cost for a substantially improved user experience when viewing the data. We, therefore, provide saving data in an open file format that offers this functionality based on hdf5, which means that it can be handled with all common programming languages.
+
+Save > Save as Tiff Volumes...
+Save the dataset as a series of Tiff stacks with each channel and time point saved as an individual .tif file.
+Motivation: Tiff stacks are still the most used and compatible file format that can be easily opened by all software for downstream analysis. 
+
+
+Save > Save as Tiff Planes...
+Save the dataset as a series of Tiff planes, where each z-slice, channel and time point are saved as an individual .tif file.
+Motivation: Saving a volume as a series of Tiff planes is popular e.g. in the EM community.
 
 ## Additional information
 
