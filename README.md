@@ -41,7 +41,7 @@ Note: **Don't use the Commands**, they just serve the macro recording.
 
 Example workflow of BDP2:
 
-[<img align="left" width="700" alt="image" src="./docs/images/BDP2-SIFigure_1.jpg">](https://github.com/bigdataprocessor/bigdataprocessor2/tree/master/docs/images/BDP2-SIFigure_1.jpg?raw=true)
+[<img align="middle" width="700" alt="image" src="./docs/images/BDP2-SIFigure_1.jpg">](https://github.com/bigdataprocessor/bigdataprocessor2/tree/master/docs/images/BDP2-SIFigure_1.jpg?raw=true)
 
 ## Record macro
 
