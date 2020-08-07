@@ -44,6 +44,7 @@ Example workflow of BDP2
 
 ## Record macro
 
+Macro recording is one of ImageJ’s greatest features as it allows users without programming experience to record reusable scripts. Can be used for automation but also for documentation. 
 All actions can be recorded as ImageJ macros. To enable this please:
 
 <img src="https://user-images.githubusercontent.com/2157566/85285145-abde8a00-b490-11ea-9fca-8661c87bc261.png" width="350">
