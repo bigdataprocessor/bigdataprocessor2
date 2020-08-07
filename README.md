@@ -117,7 +117,7 @@ attain a binning at which the corresponding scientific question can be efficient
 
 ***Process > Convert to 8-bit…***
 Convert the data set from 16 to 8-bit depth. 
-Motivation: Cameras typically produce image data at 12, 14, or 16 bit-depths. For many image analysis tasks, 8-bit depth is sufficient affording the user to reduce data size by a factor of 2. However, converting 16-bit to 8-bit data is not trivial as it entails deciding on a specific mapping from the higher to the lower bit-depth, which will lose information. Choosing a mapping of 65535 to 255 and 0 to 0 can lead to a low dynamic range in the 8-bit range especially when the input contains only a subset of the full 16-bit range. Also mapping max(image) to 255 and min(image) to 0 can be sub-optimal if there are spurious pixels with very high values, again leading to a low dynamic range for the relevant grey values in the 8-bit converted data. We thus provide the possibility to freely specify a mapping while browsing the data set to inspect at each position current result of the conversion. See also [video example convert to 8-bit](#### Bit-depth conversion:)
+Motivation: Cameras typically produce image data at 12, 14, or 16 bit-depths. For many image analysis tasks, 8-bit depth is sufficient affording the user to reduce data size by a factor of 2. However, converting 16-bit to 8-bit data is not trivial as it entails deciding on a specific mapping from the higher to the lower bit-depth, which will lose information. Choosing a mapping of 65535 to 255 and 0 to 0 can lead to a low dynamic range in the 8-bit range especially when the input contains only a subset of the full 16-bit range. Also mapping max(image) to 255 and min(image) to 0 can be sub-optimal if there are spurious pixels with very high values, again leading to a low dynamic range for the relevant grey values in the 8-bit converted data. We thus provide the possibility to freely specify a mapping while browsing the data set to inspect at each position current result of the conversion. See also [video example convert to 8-bit](# bit-depth-conversion)
 
 
 ***Process > Align Channels…***
@@ -136,8 +136,7 @@ Motivation: Useful when data is warped due to an acquisition process that render
 
 ## Save
 
-Screenshot of the Save menu.
-
+ 
 <img width="300" alt="image" src="./docs/images/BDP2-Process.png">
 
 
@@ -155,7 +154,6 @@ Save the dataset as a series of Tiff planes, where each z-slice, channel and tim
 Motivation: Saving a volume as a series of Tiff planes is popular e.g. in the EM community.
 
 ## Misc
-Screenshot of the Misc menu.
 <img width="300" alt="image" src="./docs/images/BDP2-Misc.png">
 
 ***Misc > Show in Hyperstack Viewer***
@@ -165,7 +163,7 @@ Motivation: As BigDataViewer is a relatively recent addition to the ImageJ ecosy
 
 ## Additional information
 
-More example videos:
+More example videos  *(click below to play)* :
 <a name="binningLink"></a>
 #### Binning:
 [<img width="300" alt="image" src="./docs/images/2.png">](https://drive.google.com/open?id=1AVFW3M5QYEDH9XUgR-q2LWUsuy16zF1A)
@@ -176,7 +174,7 @@ More example videos:
 
 #### Bit-depth conversion:
 [<img width="300" alt="image" src="./docs/images/4.png">](https://drive.google.com/open?id=1jRZEepD1C8rM5t2gDi7tYnFh092vUztm)
-The movie *(click below to play)* demonstrates interactive 8-bit conversion, where the user can interactively develop different mappings while browsing the entire data. 
+The movie demonstrates interactive 8-bit conversion, where the user can interactively develop different mappings while browsing the entire data. 
 This is done lazily, i.e. the data on disk is not altered at this stage.
 
 
