@@ -40,9 +40,9 @@ Note: **Don't use the Commands**, they just serve the macro recording.
 ## User Guide 
 
 Example workflow of BDP2
-[<img width="300" alt="image" src="./docs/images/BDP2-SIFigure_1.png">](https://github.com/https://github.com/bigdataprocessor/bigdataprocessor2/tree/master/docs/images/BDP2-SIFigure_1.jpg?raw=true)
+[<img width="300" alt="image" src="./docs/images/BDP2-SIFigure_1.png">](https://github.com/bigdataprocessor/bigdataprocessor2/tree/master/docs/images/BDP2-SIFigure_1.jpg?raw=true)
 [<img width="300" alt="image" src="./docs/images/BDP2-SIFigure_1.png">]
-<img width="300" alt="image" src="./docs/images/BDP2-SIFigure_1.png">(https://github.com/https://github.com/bigdataprocessor/bigdataprocessor2/tree/master/docs/images/BDP2-SIFigure_1.jpg?raw=true)
+<img width="300" alt="image" src="./docs/images/BDP2-SIFigure_1.png">(https://github.com/bigdataprocessor/bigdataprocessor2/tree/master/docs/images/BDP2-SIFigure_1.jpg?raw=true)
 ## Record macro
 
 All actions can be recorded as ImageJ macros. To enable this please:
