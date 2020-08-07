@@ -4,7 +4,8 @@ BigDataProcessor2 (BDP2) is a [Fiji](http://fiji.sc/) plugin for interactive pro
 
 ## Example vidoes of workflows
 [![BigDataProcessor2 Workflow1](https://img.youtube.com/vi/OixZ0ILbkvc/0.jpg)](https://www.youtube.com/embed/OixZ0ILbkvc "BigDataProcessor2 Workflow")
-[![BigDataProcessor2 Workflow2](https://img.youtube.com/vi/OixZ0ILbkvc?vq=hd1440/0.jpg)](https://www.youtube.com/embed/OixZ0ILbkvc?vq=hd1440 "BigDataProcessor2 Workflow2")
+--[![BigDataProcessor2 Workflow2](https://img.youtube.com/vi/OixZ0ILbkvc?vq=hd1440/0.jpg)](https://www.youtube.com/embed/OixZ0ILbkvc?vq=hd1440 "BigDataProcessor2 Workflow2")
+Opening, browsing and preprocessing of a 250GB Hdf5 based raw data set. Movie shows a screen recording of a basic preprocessing workflow of a 250 GB Hdf5 image data set acquired by light-sheet microscopy. The following steps are demonstrated: Open Luxendo HDF5 -> Brightness & Color adjustment -> Set Voxel Size -> Align Channels -> Crop -> Bin -> Save. The 2 color early mouse embryo data waswere provided by Manuel Eguren, Ellenberg group EMBL Heidelberg.
 
 
 ## Cite
@@ -60,10 +61,8 @@ Screenshot of the Open menu
 
 **Open > Open Custom…**
 Open datasets consisting of a collection of Tiff or Hdf5 volumes. The assignment of each file (volume) to a channel and time point can be specified by a regular expression.  
-
 **Open > Open Custom Help...**
 Shows and explains a number of regular expressions that can be used in the [ Open > Open Custom… ] menu item. 
-
 
 ***Open > Open EM Tiff Planes...***
 Opens a single folder with Tiff single plane files. Each file will be assigned to one z-plane in a dataset with one color and one time point. 
@@ -118,7 +117,8 @@ attain a binning at which the corresponding scientific question can be efficient
 
 ***Process > Convert to 8-bit…***
 Convert the data set from 16 to 8-bit depth. 
-Motivation: Cameras typically produce image data at 12, 14, or 16 bit-depths. For many image analysis tasks, 8-bit depth is sufficient affording the user to reduce data size by a factor of 2. However, converting 16-bit to 8-bit data is not trivial as it entails deciding on a specific mapping from the higher to the lower bit-depth, which will lose information. Choosing a mapping of 65535 to 255 and 0 to 0 can lead to a low dynamic range in the 8-bit range especially when the input contains only a subset of the full 16-bit range. Also mapping max(image) to 255 and min(image) to 0 can be sub-optimal if there are spurious pixels with very high values, again leading to a low dynamic range for the relevant grey values in the 8-bit converted data. We thus provide the possibility to freely specify a mapping while browsing the data set to inspect at each position current result of the conversion. See also [video example convert to 8-bit](#### Bit-depth conversion:)    
+Motivation: Cameras typically produce image data at 12, 14, or 16 bit-depths. For many image analysis tasks, 8-bit depth is sufficient affording the user to reduce data size by a factor of 2. However, converting 16-bit to 8-bit data is not trivial as it entails deciding on a specific mapping from the higher to the lower bit-depth, which will lose information. Choosing a mapping of 65535 to 255 and 0 to 0 can lead to a low dynamic range in the 8-bit range especially when the input contains only a subset of the full 16-bit range. Also mapping max(image) to 255 and min(image) to 0 can be sub-optimal if there are spurious pixels with very high values, again leading to a low dynamic range for the relevant grey values in the 8-bit converted data. We thus provide the possibility to freely specify a mapping while browsing the data set to inspect at each position current result of the conversion. See also [video example convert to 8-bit](#### Bit-depth conversion:)
+
 
 ***Process > Align Channels…***
 Shift one channel in relation to the other to compensate pixel offsets e.g. due to chromatic shifts. 
@@ -131,26 +131,8 @@ Motivation: For the sake of acquisition speed, some fluorescence microscope syst
 ***Process > Transform...***
 Renders an affine view of the data. 
 Motivation: Useful when data is warped due to an acquisition process that renders x-y-z non-orthogonal. Examples are when a stage movement is not orthogonal to the field of view. Also useful in single objective light sheet microscopy.  
-
-### Bin
-
-
-
-### Crop
-
-
-
-### Convert to 8-bit
-
-Cameras typically produce image data at 12, 14, or 16 bit-depths (12 and 14 bit are not common data formats they are often stored as 16 bit anyway). 
-For many image analysis tasks, 8-bit depth is usually sufficient affording the user to reduce data size as well as increase processing time by a factor of 2.
-However, converting 16-bit to 8-bit data can be tricky as it entails deciding on a specific mapping from the higher to the lower bit-depth. 
-Choosing a mapping of 65535 => 255 and 0 => 0 can lead to a low dynamic range in the 8-bit range especially when the input contains 
-only a subset of the full 16-bit range. Furthermore, choosing `max` => 255 and `min` => 0, can be sub-optimal if 
-there are spurious pixels with very high values, making the `max` value very high, again leading to a low dynamic range for the relevant grey values 
-in the 8-bit converted data.  
-The below movie *(click below to play)* demonstrates interactive 8-bit conversion, where the user can interactively develop different mappings while browsing the entire data. 
-This is done lazily, i.e. the data on disk is not altered at this stage.
+ 
+ 
 
 ## Save
 
@@ -181,8 +163,11 @@ More example videos:
 #### Cropping:
 [<img width="300" alt="image" src="./docs/images/3.png">](https://drive.google.com/open?id=1iabVP9jbISI1WclMRjtDHvcNWxMTC95-)
 
+
 #### Bit-depth conversion:
 [<img width="300" alt="image" src="./docs/images/4.png">](https://drive.google.com/open?id=1jRZEepD1C8rM5t2gDi7tYnFh092vUztm)
+The movie *(click below to play)* demonstrates interactive 8-bit conversion, where the user can interactively develop different mappings while browsing the entire data. 
+This is done lazily, i.e. the data on disk is not altered at this stage.
 
 
 
