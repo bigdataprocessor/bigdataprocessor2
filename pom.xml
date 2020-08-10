@@ -76,7 +76,7 @@
 		<package-name>de.embl.cba.bdp2</package-name>
 		<license.licenseName>bsd_2</license.licenseName>
 		<license.copyrightOwners>EMBL</license.copyrightOwners>
-		<scijava.app.directory>/Applications/Fiji.app/</scijava.app.directory>
+		<scijava.app.directory>/Users/tischer/Desktop/Fiji-bdp2.app</scijava.app.directory>
 		<enforcer.skip>true</enforcer.skip>
 
 		<bioformats.version>6.1.0-m2</bioformats.version>
