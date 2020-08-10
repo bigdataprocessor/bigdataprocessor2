@@ -16,7 +16,7 @@ public class AlignChannelsCommand< R extends RealType< R > & NativeType< R > > e
 {
 
     public static final String COMMAND_NAME = "Align Channels...";
-    public static final String COMMAND_FULL_NAME = Utils.COMMAND_BDP_PREFIX + COMMAND_NAME;
+    public static final String COMMAND_FULL_NAME = Utils.COMMAND_BDP2_PREFIX + COMMAND_NAME;
 
     @Parameter(label = "Shifts X_C0,Y_C0,Z_C0;X_C1,Y_C1,Z_C1;... [pixels]")
     String shifts = "0,0,0;0,0,0";

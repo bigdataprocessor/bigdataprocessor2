@@ -13,7 +13,7 @@ import org.scijava.plugin.Plugin;
 import javax.swing.*;
 
 import static de.embl.cba.bdp2.open.core.NamingSchemes.*;
-import static de.embl.cba.bdp2.utils.Utils.COMMAND_BDP_PREFIX;
+import static de.embl.cba.bdp2.utils.Utils.COMMAND_BDP2_PREFIX;
 
 
 /**
@@ -26,7 +26,7 @@ import static de.embl.cba.bdp2.utils.Utils.COMMAND_BDP_PREFIX;
 public class OpenCustomCommand< R extends RealType< R > & NativeType< R > > extends AbstractOpenCommand< R >
 {
     public static final String COMMAND_NAME = "Open Custom...";
-    public static final String COMMAND_FULL_NAME = COMMAND_BDP_PREFIX + COMMAND_NAME;
+    public static final String COMMAND_FULL_NAME = COMMAND_BDP2_PREFIX + COMMAND_NAME;
     public static final String USE_CUSTOM = "Use below custom regular expression";
 
     //@Parameter(label = "Subset file using regular expression" )

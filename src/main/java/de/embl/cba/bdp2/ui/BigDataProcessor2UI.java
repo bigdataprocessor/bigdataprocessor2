@@ -1,9 +1,5 @@
 package de.embl.cba.bdp2.ui;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.util.DefaultIndenter;
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.embl.cba.bdp2.dialog.Utils;
 import de.embl.cba.bdp2.image.Image;
 
@@ -55,24 +51,11 @@ public abstract class BigDataProcessor2UI
 
 		if ( image != null )
 		{
-			final ObjectMapper objectMapper = new ObjectMapper();
-
-			try
-			{
-				DefaultPrettyPrinter prettyPrinter = new DefaultPrettyPrinter();
-				prettyPrinter.indentArraysWith( DefaultIndenter.SYSTEM_LINEFEED_INSTANCE );
-				objectMapper.setDefaultPrettyPrinter( prettyPrinter );
-				String info = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString( image );
-				imageInfo.setText( wrapAsHtml( "Active image:\n" + info ) );
-			}
-			catch ( JsonProcessingException e )
-			{
-				e.printStackTrace();
-			}
+			imageInfo.setText( wrapAsHtml( image.getInfo() ));
 		}
 		else
 		{
-			imageInfo.setText( wrapAsHtml( "Active image: None" ) );
+			imageInfo.setText( wrapAsHtml( "Active Image: None" ) );
 		}
 
 		imageInfo.validate();

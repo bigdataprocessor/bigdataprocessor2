@@ -12,7 +12,7 @@ import org.scijava.plugin.Plugin;
 public class CalibrateCommand< R extends RealType< R > & NativeType< R > > extends AbstractProcessingCommand< R >
 {
     public static final String COMMAND_NAME = "Set Voxel Size...";
-    public static final String COMMAND_FULL_NAME = Utils.COMMAND_BDP_PREFIX + COMMAND_NAME;
+    public static final String COMMAND_FULL_NAME = Utils.COMMAND_BDP2_PREFIX + COMMAND_NAME;
 
     @Parameter(label = "Unit", choices = {"micrometer", "nanometer"}, persist = false)
     public String unit = "micrometer";

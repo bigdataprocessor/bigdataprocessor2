@@ -3,7 +3,6 @@ package de.embl.cba.bdp2.align.splitchip;
 import bdv.util.ModifiableInterval;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.drift.devel.PhaseCorrelationTranslationComputer;
 import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessibleInterval;
@@ -79,10 +78,11 @@ public class RegionOptimiser
 			planes.add( plane );
 		}
 
-		final double[] shift = PhaseCorrelationTranslationComputer.computeShift(
-				planes.get( 0 ), planes.get( 1 ),
-				Executors.newFixedThreadPool( 2 ) );
+		// see github branch withPhaseCorrelation
+//		final double[] shift = PhaseCorrelationTranslationComputer.computeShift(
+//				planes.get( 0 ), planes.get( 1 ),
+//				Executors.newFixedThreadPool( 2 ) );
 
-		return shift;
+		return null; // shift
 	}
 }

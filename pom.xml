@@ -4,11 +4,11 @@
 	<parent>
 		<groupId>org.scijava</groupId>
 		<artifactId>pom-scijava</artifactId>
-		<version>27.0.1</version>
+		<version>29.2.1</version>
 	</parent>
 	<groupId>de.embl.cba</groupId>
 	<artifactId>bigDataProcessor2</artifactId>
-	<version>0.5.1</version>
+	<version>0.5.2-SNAPSHOT</version>
 	<url>https://github.com/embl-cba/bigDataProcessor2</url>
 	<name>BigDataProcessor2</name>
 	<description>Fiji plugin for inspection and processing of big image data</description>
@@ -78,7 +78,11 @@
 		<license.copyrightOwners>EMBL</license.copyrightOwners>
 		<scijava.app.directory>/Applications/Fiji.app/</scijava.app.directory>
 		<enforcer.skip>true</enforcer.skip>
+
 		<bioformats.version>6.1.0-m2</bioformats.version>
+		<ome.version>6.0.1</ome.version>
+		<imaris-writer.version>0.2.1</imaris-writer.version>
+		<imagej-utils.version>0.5.3</imagej-utils.version>
 	</properties>
 
 	<repositories>
@@ -103,7 +107,6 @@
 		<dependency>
 			<groupId>net.imglib2</groupId>
 			<artifactId>imglib2</artifactId>
-			<version>5.8.0</version>
 		</dependency>
 		<dependency>
 			<groupId>sc.fiji</groupId>
@@ -112,19 +115,14 @@
 		<dependency>
 			<groupId>sc.fiji</groupId>
 			<artifactId>bigdataviewer-core</artifactId>
-			<!-- Transformed Box Dialog	-->
-			<version>8.0.2-platybrowser</version>
 		</dependency>
 		<dependency>
 			<groupId>sc.fiji</groupId>
 			<artifactId>bigdataviewer-vistools</artifactId>
-			<!-- Transformed Box Dialog	-->
-			<version>1.0.0-beta-18-platybrowser</version>
 		</dependency>
 		<dependency>
 			<groupId>net.imagej</groupId>
 			<artifactId>imagej-legacy</artifactId>
-<!--			<version>0.37.3-SNAPSHOT</version>-->
 		</dependency>
 		<dependency>
 			<groupId>net.imagej</groupId>
@@ -168,23 +166,23 @@
 		<dependency>
 			<groupId>org.openmicroscopy</groupId>
 			<artifactId>ome-common</artifactId>
-			<version>6.0.1</version>
+			<version>${ome.version}</version>
 		</dependency>
-		<!-- For tracking -->
-		<dependency>
-			<groupId>net.preibisch</groupId>
-			<artifactId>BigStitcher</artifactId>
-		</dependency>
+<!--		&lt;!&ndash; For tracking &ndash;&gt;-->
+<!--		<dependency>-->
+<!--			<groupId>net.preibisch</groupId>-->
+<!--			<artifactId>BigStitcher</artifactId>-->
+<!--		</dependency>-->
 		<!-- CBA -->
 		<dependency>
 			<groupId>de.embl.cba</groupId>
 			<artifactId>imaris-writer</artifactId>
-			<version>0.2.1</version>
+			<version>${imaris-writer.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>de.embl.cba</groupId>
 			<artifactId>imagej-utils</artifactId>
-			<version>0.5.1</version>
+			<version>${imagej-utils.version}</version>
 		</dependency>
 	</dependencies>
 </project>

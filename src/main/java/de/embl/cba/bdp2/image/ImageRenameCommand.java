@@ -15,7 +15,7 @@ import java.util.Arrays;
 public class ImageRenameCommand< R extends RealType< R > & NativeType< R > > extends AbstractProcessingCommand< R >
 {
     public static final String COMMAND_NAME = "Rename...";
-    public static final String COMMAND_FULL_NAME = Utils.COMMAND_BDP_PREFIX + COMMAND_NAME;
+    public static final String COMMAND_FULL_NAME = Utils.COMMAND_BDP2_PREFIX + COMMAND_NAME;
 
     @Parameter(label = "Channel names (comma separated list)")
     String channelNames = "ch0,ch1,ch2";

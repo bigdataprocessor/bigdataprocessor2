@@ -178,4 +178,22 @@ public class Image< R extends RealType< R > & NativeType< R > >
 	{
 		return getName();
 	}
+
+	public String getInfo()
+	{
+		String info = "";
+		info += "Image name: " + getName();
+		final String[] channelNames = getChannelNames();
+		for ( int c = 0; c < channelNames.length; c++ )
+		{
+			info += "\n  Channel name " + c + ": " + channelNames[ c ];
+		}
+		info += "\nSize [GB]: " + getSizeGB();
+		info += "\nSize X,Y,Z [Voxels]: " + Utils.create3DArrayString( getVoxelDimensionsXYZCT() );
+		info += "\nTime-points: " + getVoxelDimensionsXYZCT()[4];
+		info += "\nVoxel size ["+ getVoxelUnit() +"]: " + Utils.create3DArrayString( getVoxelSize() );
+
+		return info;
+	}
+
 }

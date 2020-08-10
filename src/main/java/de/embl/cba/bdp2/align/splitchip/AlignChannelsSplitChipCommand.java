@@ -14,7 +14,7 @@ import java.util.List;
 public class AlignChannelsSplitChipCommand< R extends RealType< R > & NativeType< R > > extends AbstractProcessingCommand< R >
 {
     public static final String COMMAND_NAME = "Align Channels Split Chip...";
-    public static final String COMMAND_FULL_NAME = Utils.COMMAND_BDP_PREFIX + COMMAND_NAME;
+    public static final String COMMAND_FULL_NAME = Utils.COMMAND_BDP2_PREFIX + COMMAND_NAME;
 
     @Parameter(label = "Regions [ minX, minY, sizeX, sizeY, channel; minX, ... ]")
     public String intervalsString = "896, 46, 1000, 1000, 0; 22, 643, 1000, 1000, 0";

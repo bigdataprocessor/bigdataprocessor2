@@ -2,7 +2,6 @@ package de.embl.cba.bdp2.register;
 
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.log.progress.ProgressListener;
-import de.embl.cba.bdp2.drift.devel.PhaseCorrelationTranslationComputer;
 import de.embl.cba.bdp2.utils.Utils;
 import ij.ImagePlus;
 import ij.process.FloatProcessor;
@@ -107,7 +106,6 @@ public class Registration< R extends RealType< R > & NativeType< R > >
 		HyperSlicesTransformComputer transformComputer = getHyperSlicesTransformComputer();
 		transformComputer.computeTransformsUntil( numHyperSlices - 1 );
 		transformComputer.computeTransformsUntil( 0 );
-
 	}
 
 	private HyperSlicesTransformComputer getHyperSlicesTransformComputer()
@@ -277,12 +275,12 @@ public class Registration< R extends RealType< R > & NativeType< R > >
 					@Override
 					public void run()
 					{
-						final double[] shift = PhaseCorrelationTranslationComputer.computeShift(
-								getHyperSliceInterval( currentHyperSliceIndex - step ),
-								getHyperSliceInterval( currentHyperSliceIndex ),
-								Executors.newFixedThreadPool( 1 ) );
-
-						hyperSliceIndexToLocalTransform.put( currentHyperSliceIndex, getAffineTransform( shift ) );
+//						final double[] shift = PhaseCorrelationTranslationComputer.computeShift(
+//								getHyperSliceInterval( currentHyperSliceIndex - step ),
+//								getHyperSliceInterval( currentHyperSliceIndex ),
+//								Executors.newFixedThreadPool( 1 ) );
+//
+//						hyperSliceIndexToLocalTransform.put( currentHyperSliceIndex, getAffineTransform( shift ) );
 					}
 				} ) );
 			}

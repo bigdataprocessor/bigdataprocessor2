@@ -147,6 +147,10 @@ public class SplitViewMergeDialog< R extends RealType< R > & NativeType< R > > e
 		return panel;
 	}
 
+	/**
+	 * TODO: currently not implemented due to missing BigStitcher dependency
+	 * see branch: withPhaseCorrelation
+	 */
 	private void optimise()
 	{
 		final double[] shift = RegionOptimiser.optimiseIntervals(

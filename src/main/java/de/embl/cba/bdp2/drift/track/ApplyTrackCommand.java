@@ -17,7 +17,7 @@ import java.io.File;
 public class ApplyTrackCommand< R extends RealType< R > & NativeType< R > > extends AbstractProcessingCommand
 {
     public static final String COMMAND_NAME = "Apply Track...";
-    public static final String COMMAND_FULL_NAME =  Utils.COMMAND_BDP_PREFIX + COMMAND_NAME;
+    public static final String COMMAND_FULL_NAME =  Utils.COMMAND_BDP2_PREFIX + COMMAND_NAME;
 
 //    @Parameter(label = "Track")
 //    Track track;

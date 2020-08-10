@@ -7,20 +7,18 @@ import bdv.util.*;
 import bdv.util.volatiles.VolatileViews;
 import bdv.viewer.DisplayMode;
 import bdv.viewer.SourceAndConverter;
+import de.embl.cba.bdp2.boundingbox.BoundingBoxDialog;
 import de.embl.cba.bdp2.dialog.DisplaySettings;
 import de.embl.cba.bdp2.dialog.Utils;
+import de.embl.cba.bdp2.drift.track.Track;
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.boundingbox.BoundingBoxDialog;
 import de.embl.cba.bdp2.service.BdvService;
 import de.embl.cba.bdp2.service.ImageService;
-import de.embl.cba.bdp2.drift.devel.ThresholdFloodFillOverlapTracker;
-import de.embl.cba.bdp2.drift.track.Track;
 import de.embl.cba.bdp2.ui.MenuActions;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.volatiles.VolatileCachedCellImgs;
 import de.embl.cba.bdv.utils.BdvUtils;
 import net.imglib2.*;
-import net.imglib2.Cursor;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ARGBType;
@@ -81,17 +79,7 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
         Behaviours behaviours = new Behaviours( new InputTriggerConfig() );
         behaviours.install( bdvHandle.getTriggerbindings(), "behaviours" );
 
-        installTrackingBehaviour( behaviours );
         installStoppingBehaviour( behaviours );
-    }
-
-    private void installTrackingBehaviour( Behaviours behaviours )
-    {
-        tracks = new HashMap<>(  );
-
-        behaviours.behaviour( ( ClickBehaviour ) ( x, y ) ->
-                ( new Thread( () -> ThresholdFloodFillOverlapTracker.trackObjectDialog( this ) )).start(),
-                "Track object", "ctrl T"  ) ;
     }
 
     private void installStoppingBehaviour( Behaviours behaviours )

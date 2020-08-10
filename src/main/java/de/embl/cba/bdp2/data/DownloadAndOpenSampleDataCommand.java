@@ -16,7 +16,7 @@ import java.io.File;
 
 import static de.embl.cba.bdp2.data.SampleData.DUAL_COLOR_MOUSE;
 import static de.embl.cba.bdp2.data.SampleData.MINIMAL_SYNTHETIC;
-import static de.embl.cba.bdp2.utils.Utils.COMMAND_BDP_PREFIX;
+import static de.embl.cba.bdp2.utils.Utils.COMMAND_BDP2_PREFIX;
 
 
 /**
@@ -26,7 +26,7 @@ import static de.embl.cba.bdp2.utils.Utils.COMMAND_BDP_PREFIX;
 public class DownloadAndOpenSampleDataCommand< R extends RealType< R > & NativeType< R > > implements Command
 {
     public static final String COMMAND_NAME = "Download and Open Sample Data...";
-    public static final String COMMAND_FULL_NAME = COMMAND_BDP_PREFIX + COMMAND_NAME;
+    public static final String COMMAND_FULL_NAME = COMMAND_BDP2_PREFIX + COMMAND_NAME;
     public static BdvImageViewer parentBdvImageViewer;
 
     @Parameter

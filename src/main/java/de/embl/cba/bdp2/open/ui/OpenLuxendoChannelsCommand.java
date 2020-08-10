@@ -16,13 +16,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static de.embl.cba.bdp2.utils.Utils.COMMAND_BDP_PREFIX;
+import static de.embl.cba.bdp2.utils.Utils.COMMAND_BDP2_PREFIX;
 
 @Plugin(type = Command.class, menuPath = Utils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractOpenCommand.COMMAND_OPEN_PATH + OpenLuxendoChannelsCommand.COMMAND_FULL_NAME )
 public class OpenLuxendoChannelsCommand< R extends RealType< R > & NativeType< R > > extends AbstractOpenCommand< R >
 {
     public static final String COMMAND_NAME = "Open Luxendo Channels...";
-    public static final String COMMAND_FULL_NAME = COMMAND_BDP_PREFIX + COMMAND_NAME;
+    public static final String COMMAND_FULL_NAME = COMMAND_BDP2_PREFIX + COMMAND_NAME;
 
     @Parameter(label = "Stack index"  )
     protected int stackIndex = 0;

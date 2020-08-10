@@ -17,7 +17,7 @@ import org.scijava.plugin.Plugin;
 public class TransformCommand< R extends RealType< R > & NativeType< R > > extends AbstractProcessingCommand implements Command
 {
     public static final String COMMAND_NAME = "Transform...";
-    public static final String COMMAND_FULL_NAME = Utils.COMMAND_BDP_PREFIX + COMMAND_NAME;
+    public static final String COMMAND_FULL_NAME = Utils.COMMAND_BDP2_PREFIX + COMMAND_NAME;
     public static final String NEAREST = "Nearest";
     public static final String LINEAR = "Linear";
     public static final String AFFINE_LABEL = "Affine transform [m00,..,m03,m10,..,m13,m20,..,m23]";

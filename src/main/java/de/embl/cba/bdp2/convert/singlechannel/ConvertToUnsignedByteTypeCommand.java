@@ -12,7 +12,7 @@ import org.scijava.plugin.Plugin;
 public class ConvertToUnsignedByteTypeCommand< R extends RealType< R > & NativeType< R > > extends AbstractProcessingCommand implements Command
 {
     public static final String COMMAND_NAME = "Convert to 8-Bit...";
-    public static final String COMMAND_FULL_NAME = Utils.COMMAND_BDP_PREFIX + COMMAND_NAME;
+    public static final String COMMAND_FULL_NAME = Utils.COMMAND_BDP2_PREFIX + COMMAND_NAME;
     @Parameter(label = "Map to 0", min = "0")
     int mapTo0 = 0;
 

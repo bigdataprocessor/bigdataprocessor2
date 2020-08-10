@@ -83,7 +83,7 @@ import static de.embl.cba.bdp2.open.core.NamingSchemes.MULTI_CHANNEL_VOLUMES_FRO
 
 public class Utils {
 
-	public static final String COMMAND_BDP_PREFIX = "BDP ";
+	public static final String COMMAND_BDP2_PREFIX = "BDP2 ";
 
 	public static boolean verbose = false;
 
@@ -253,6 +253,15 @@ public class Utils {
 		return shifts;
 	}
 
+	public static String create3DArrayString( double[] array )
+	{
+		return array[ 0 ] + ", " + array[ 1 ] + ", " + array[ 2 ];
+	}
+
+	public static String create3DArrayString( long[] array )
+	{
+		return array[ 0 ] + ", " + array[ 1 ] + ", " + array[ 2 ];
+	}
 
 	public enum ImageFilterTypes {
         NONE("None"),
