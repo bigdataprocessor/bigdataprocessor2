@@ -3,7 +3,7 @@ package de.embl.cba.bdp2.ui;
 import de.embl.cba.bdp2.bin.BinCommand;
 import de.embl.cba.bdp2.calibrate.CalibrateCommand;
 import de.embl.cba.bdp2.convert.singlechannel.ConvertToUnsignedByteTypeCommand;
-import de.embl.cba.bdp2.data.DownloadAndOpenSampleDataCommand;
+import de.embl.cba.bdp2.open.ui.DownloadAndOpenSampleDataCommand;
 import de.embl.cba.bdp2.drift.track.ApplyTrackCommand;
 import de.embl.cba.bdp2.image.ImageRenameCommand;
 import de.embl.cba.bdp2.align.AlignChannelsCommand;

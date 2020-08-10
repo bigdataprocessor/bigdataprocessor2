@@ -1,6 +1,6 @@
 package develop;
 
-import de.embl.cba.bdp2.data.UnZipper;
+import de.embl.cba.bdp2.open.core.UnZipper;
 
 import java.io.File;
 

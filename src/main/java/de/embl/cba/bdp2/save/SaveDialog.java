@@ -18,7 +18,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 
-public class SaveDialog< R extends RealType< R > & NativeType< R > >  extends JFrame implements ActionListener
+public class SaveDialog< R extends RealType< R > & NativeType< R > > extends JFrame implements ActionListener
 {
     private final BdvImageViewer viewer;
     private final Image< R > inputImage;
@@ -205,7 +205,6 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > >  extends JF
                     viewer.getImage(),
                     savingSettings,
                     progressBar() );
-
             saver.addProgressListener( new LoggingProgressListener( "Frames saved" ) );
         } );
     }
@@ -213,25 +212,18 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > >  extends JF
     private SavingSettings getSavingSettings()
     {
         SavingSettings savingSettings = new SavingSettings();
-
         savingSettings.saveFileType = saveFileType;
-
         savingSettings.compression = (String) comboCompression.getSelectedItem();
-
         // compress plane wise
         savingSettings.rowsPerStrip = (int) viewer.getImage().getRai().dimension( DimensionOrder.Y );  //Integer.parseInt( tfRowsPerStrip.getText() );
 
         final String imageName = inputImage.getName();
-
         savingSettings.saveVolumes = cbSaveVolume.isSelected();
         savingSettings.volumesFilePathStump = tfDirectory.getText() + File.separator + "volumes" + File.separator + imageName;
-
         savingSettings.saveProjections = cbSaveProjection.isSelected();
         savingSettings.projectionsFilePathStump = tfDirectory.getText() + File.separator + "projections" + File.separator + imageName;
-
         savingSettings.numIOThreads = Integer.parseInt( tfNumIOThreads.getText() );
         savingSettings.numProcessingThreads = Integer.parseInt( tfNumProcessingThreads.getText() );
-
         savingSettings.voxelSize = viewer.getImage().getVoxelSize();
         savingSettings.voxelUnit = viewer.getImage().getVoxelUnit();
 
@@ -240,8 +232,8 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > >  extends JF
 
     private ProgressListener progressBar()
     {
-        return ( current, total ) -> {
-
+        return ( current, total ) ->
+        {
             int progressPercent = ( int ) ( ( current * 100 ) / total );
             progressBar.setValue( progressPercent );
             if ( progressPercent >= 100 )
