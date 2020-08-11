@@ -186,7 +186,7 @@ Motivation: As BigDataViewer is a relatively recent addition to the ImageJ ecosy
 
 # Additional information
 
-### More example videos *(click images to play)* :
+### More example videos
 
 #### <a name="binninglink"></a>Binning
     
@@ -198,5 +198,3 @@ Motivation: As BigDataViewer is a relatively recent addition to the ImageJ ecosy
 #### <a name="bitdepthlink"></a>Bit-depth conversion
 [<img width="300" alt="image" src="./docs/images/4.png">](https://drive.google.com/open?id=1jRZEepD1C8rM5t2gDi7tYnFh092vUztm)
 
-The movie demonstrates interactive 8-bit conversion, where the user can interactively develop different mappings while browsing the entire data. 
-This is done lazily, i.e. the data on disk is not altered at this stage.
