@@ -2,8 +2,6 @@
 
 BigDataProcessor2 (BDP2) is a [Fiji](http://fiji.sc/) plugin for interactive processing of TB-sized image data. BDP2 uses [BigDataViewer](https://imagej.net/BigDataViewer) for rendering and the [ImgLib2](https://imagej.net/ImgLib2) library for image processing. 
 
-BDP2 implements a [Lazy Loading design pattern](https://en.wikipedia.org/wiki/Lazy_loading) to render Terabyte sized big data image data produced by light-sheet and electron microscopy, also on laptops with limited RAM. 
-
 The BDP2 is the new version of [BigDataProcessor1](https://github.com/bigdataprocessor/bigdataprocessor1). 
 
 Main features:
@@ -47,7 +45,7 @@ Note: **Don't use the Commands**, they just serve the macro recording.
 
 The easiest way to explore BDP2's functionality is to download and open a small example data set and explore the processing options.
 
-<img width="500" alt="image" src="./docs/images/BDP-OpenSampleData.png">
+<img width="500" alt="image" src="./docs/images/BDP2-OpenSampleData.png">
 
 ## User Guide 
 
@@ -57,7 +55,7 @@ Schematic representation of a lazy-processing workflow in BigDataProcessor2 (BDP
 
 ## Main user interface
 
-<img width="500" alt="image" src="./docs/images/BDP-MainUI.png">
+<img width="500" alt="image" src="./docs/images/BDP2-MainUI.png">
 
 BDP2 comes with its own a user interface (UI) where all functionality can be accessed (the menus in the ImageJ UI will typically not work here). 
 The UI shows information about the currently active image as well as the current and average image data reading speed.
