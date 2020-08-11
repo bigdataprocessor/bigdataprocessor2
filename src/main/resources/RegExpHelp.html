@@ -91,7 +91,11 @@ Below examples work both with and without zero-padding, e.g. "T0000", "T0001" wo
 </tr>
 <tr>
   <td class="a"><b>.*T(?&lt;T&gt;\d+)</b></td>
-  <td>No channel grouping specified, e.g. "T0000", "T0001", etc. (in this case the name of the containing folder will be used as the channel name).</td>
+  <td>No channel grouping specified, e.g. "gpf-T0000", "gfo-T0001", etc. (in this case the name of the containing folder will be used as the channel name).</td>
+</tr>
+<tr>
+  <td class="a"><b>.*-(?&lt;T&gt;\d+)</b></td>
+  <td>No channel grouping specified, and e.g. "gfp-00", "gfp-01", etc. (in this case the name of the containing folder will be used as the channel name).</td>
 </tr>
 
 </table>
