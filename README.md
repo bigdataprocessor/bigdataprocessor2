@@ -45,7 +45,9 @@ Note: **Don't use the Commands**, they just serve the macro recording.
 
 ## Quick start
 
-The easiest way to explore BDP2's functionality is to download and open a small example data set.
+The easiest way to explore BDP2's functionality is to download and open a small example data set and explore the processing options.
+
+<img width="500" alt="image" src="./docs/images/BDP-OpenSampleData.png">
 
 ## User Guide 
 
@@ -55,11 +57,10 @@ Schematic representation of a lazy-processing workflow in BigDataProcessor2 (BDP
 
 ## Main user interface
 
+<img width="500" alt="image" src="./docs/images/BDP-MainUI.png">
 
-
-
-BDP2 comes with a user interface (UI) where all functionality can be accessed. 
-In addition, the UI shows information about the currently active image and the current and average image data reading speed.
+BDP2 comes with its own a user interface (UI) where all functionality can be accessed (the menus in the ImageJ UI will typically not work here). 
+The UI shows information about the currently active image as well as the current and average image data reading speed.
 It is possible to have multiple images (BigDataViewer windows) open at the same time. Following the usual ImageJ convention, the "active" image is the one that you clicked on last.
 
 ## Record macro
