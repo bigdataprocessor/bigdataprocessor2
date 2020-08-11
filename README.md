@@ -1,4 +1,4 @@
-<img src="https://user-images.githubusercontent.com/2157566/89096211-1e6a5000-d3d5-11ea-822c-af526b9b1d7b.png" width="300">
+<img src="./docs/images/BDP2-icon.png" width="300">
 
 BigDataProcessor2 (BDP2) is a [Fiji](http://fiji.sc/) plugin for interactive processing of TB-sized image data. BDP2 uses [BigDataViewer](https://imagej.net/BigDataViewer) for rendering and the [ImgLib2](https://imagej.net/ImgLib2) library for image processing. 
 
