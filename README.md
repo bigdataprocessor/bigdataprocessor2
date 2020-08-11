@@ -1,27 +1,27 @@
-<img src="https://user-images.githubusercontent.com/2157566/89096211-1e6a5000-d3d5-11ea-822c-af526b9b1d7b.png" width="300">
+<img src="./docs/images/BDP2-icon.png" width="300">
 
 BigDataProcessor2 (BDP2) is a [Fiji](http://fiji.sc/) plugin for interactive processing of TB-sized image data. BDP2 uses [BigDataViewer](https://imagej.net/BigDataViewer) for rendering and the [ImgLib2](https://imagej.net/ImgLib2) library for image processing. 
-
-BDP2 implements a [Lazy Loading design pattern](https://en.wikipedia.org/wiki/Lazy_loading) to render Terabyte sized big data image data produced by light-sheet and electron microscopy, also on laptops with limited RAM. 
 
 The BDP2 is the new version of [BigDataProcessor1](https://github.com/bigdataprocessor/bigdataprocessor1). 
 
 Main features:
-- [lazy loading](https://en.wikipedia.org/wiki/Lazy_loading) of TB sized image data
-- [lazy processing](https://en.wikipedia.org/wiki/Lazy_evaluation) of TB sized image data
+- [lazy-loading](https://en.wikipedia.org/wiki/Lazy_loading) of TB sized image data
+- [lazy-computation](https://en.wikipedia.org/wiki/Lazy_evaluation) of TB sized image data
 - [ImageJ macro](https://imagej.nih.gov/ij/developer/macro/macros.html) recording for automation
 
-## Example videos
 
-### Typical BDP2 workflow
+**Schematic representation of a lazy-processing workflow in BDP2:** Dashed arrows represent lazy-computation, where only the currently viewed image plane is processed. A complete data browsing, data selection and data processing workflow can be configured in a few minutes even for TB-sized image data. Only the final saving to disk requires processing of the whole data set and will take a correspondingly long time (up to hours).
+
+[<img align="middle" width="700" alt="image" src="./docs/images/BDP2-SIFigure_1.jpg">](/docs/images/BDP2-SIFigure_1.jpg?raw=true)
+
+
+**[Movie real-time recording](https://www.youtube.com/embed/OixZ0ILbkvc "BigDataProcessor2 Workflow") of a typical BDP2 workflow:** The movie shows a screen recording of a basic processing workflow of an 250 GB Hdf5 based image data set acquired by light-sheet microscopy. The following steps are demonstrated: `Open Luxendo HDF5 -> Brightness & Color adjustment -> Set Voxel Size -> Align Channels -> Crop -> Bin -> Save`. The 2 color early mouse embryo data were provided by Manuel Eguren, Ellenberg group EMBL Heidelberg.
 
 [![BigDataProcessor2 Workflow1](https://img.youtube.com/vi/OixZ0ILbkvc/0.jpg)](https://www.youtube.com/embed/OixZ0ILbkvc "BigDataProcessor2 Workflow")
 
-Opening, browsing and preprocessing of a 250GB Hdf5 based raw data set. Movie shows a screen recording of a basic processing workflow of an image data set acquired by light-sheet microscopy. The following steps are demonstrated: Open Luxendo HDF5 -> Brightness & Color adjustment -> Set Voxel Size -> Align Channels -> Crop -> Bin -> Save. The 2 color early mouse embryo data were provided by Manuel Eguren, Ellenberg group EMBL Heidelberg.
-
 ## Cite
 
-Publication in preparation..
+Publication in preparation!
 
 ## Install
 
@@ -47,17 +47,13 @@ Note: **Don't use the Commands**, they just serve the macro recording.
 
 The easiest way to explore BDP2's functionality is to download and open a small example data set and explore the processing options.
 
-<img width="500" alt="image" src="./docs/images/BDP-OpenSampleData.png">
+<img width="350" alt="image" src="./docs/images/BDP2-OpenSampleData.png">
 
-## User Guide 
-
-[<img align="middle" width="700" alt="image" src="./docs/images/BDP2-SIFigure_1.jpg">](/docs/images/BDP2-SIFigure_1.jpg?raw=true)
-
-Schematic representation of a lazy-processing workflow in BigDataProcessor2 (BDP2). Dashed arrows represent lazy-computation, where only the currently viewed image plane is loaded and processed. The complete data browsing, data selection and data processing workflow can be configured in a few minutes even for TB-sized image data. Only the final saving to disk requires processing of the whole data set and will take a correspondingly long time (up to hours).
+# User Guide 
 
 ## Main user interface
 
-<img width="500" alt="image" src="./docs/images/BDP-MainUI.png">
+<img width="350" alt="image" src="./docs/images/BDP2-MainUI.png">
 
 BDP2 comes with its own a user interface (UI) where all functionality can be accessed (the menus in the ImageJ UI will typically not work here). 
 The UI shows information about the currently active image as well as the current and average image data reading speed.
@@ -133,7 +129,6 @@ Interactively specify a 4D (x,y,z,t) subset of the data to be displayed in a new
 Motivation: Imaging processes in living samples require setting up imaging parameters before knowing exactly when and where the process of interest takes place. Therefore the imaging field of view (x,y,z) and temporal extent (t) are usually set generously to accommodate sample drift, motion, or growth. Using the crop function one can reduce the dataset to the necessary spatial and temporal dimensions.
 see also the [video_example_cropping](#croppinglink) demonstrating how the BigDataProcessor2 can be interactively used to crop the data to only contain the relevant parts.
 
-
 ***Process > Bin…***
 Performs arbitrary binning along x y and z coordinates.
 Motivation: For camera-based microscopy systems the effective pixel size often cannot be freely chosen during acquisition. Thus, the user may be forced to over-sample, leading to large data volumes with noise since the information is spread across many pixels and therefore resulting in (vastly) increased image processing times. Thus, binning the data post-acquisition is can be very useful as it both reduces data size and noise, often without compromising scientific accuracy.
@@ -144,7 +139,6 @@ attain a binning at which the corresponding scientific question can be efficient
 ***Process > Convert to 8-bit…***
 Convert the data set from 16 to 8-bit depth. 
 Motivation: Cameras typically produce image data at 12, 14, or 16 bit-depths. For many image analysis tasks, 8-bit depth is sufficient affording the user to reduce data size by a factor of 2. However, converting 16-bit to 8-bit data is not trivial as it entails deciding on a specific mapping from the higher to the lower bit-depth, which will lose information. Choosing a mapping of 65535 to 255 and 0 to 0 can lead to a low dynamic range in the 8-bit range especially when the input contains only a subset of the full 16-bit range. Also mapping max(image) to 255 and min(image) to 0 can be sub-optimal if there are spurious pixels with very high values, again leading to a low dynamic range for the relevant grey values in the 8-bit converted data. We thus provide the possibility to freely specify a mapping while browsing the data set to inspect at each position current result of the conversion. See also [video_example_convert_to_8-bit](#bitdepthlink)
-
 
 ***Process > Align Channels…***
 Shift one channel in relation to the other to compensate pixel offsets e.g. due to chromatic shifts. 
@@ -158,13 +152,11 @@ Motivation: For the sake of acquisition speed, some fluorescence microscope syst
 Renders an affine view of the data. 
 Motivation: Useful when data is warped due to an acquisition process that renders x-y-z non-orthogonal. Examples are when a stage movement is not orthogonal to the field of view. Also useful in single objective light sheet microscopy.  
  
- 
 
 ## Save
 
  
 <img width="300" alt="image" src="./docs/images/BDP2-Process.png">
-
 
 ***Save > Save as Imaris Volumes…***
 Save data set as an hdf5 based pyramidal Imaris file (http://open.bitplane.com/ims), with each channel and time point saved as an individual .h5 file and one .ims header file that can be used to view the data both in Fiji’s BigDataViewer and in the commercial Imaris software.
@@ -188,7 +180,7 @@ Motivation: As BigDataViewer is a relatively recent addition to the ImageJ ecosy
 
 # Additional information
 
-### More example videos *(click images to play)* :
+### More example videos
 
 #### <a name="binninglink"></a>Binning
     
@@ -200,5 +192,3 @@ Motivation: As BigDataViewer is a relatively recent addition to the ImageJ ecosy
 #### <a name="bitdepthlink"></a>Bit-depth conversion
 [<img width="300" alt="image" src="./docs/images/4.png">](https://drive.google.com/open?id=1jRZEepD1C8rM5t2gDi7tYnFh092vUztm)
 
-The movie demonstrates interactive 8-bit conversion, where the user can interactively develop different mappings while browsing the entire data. 
-This is done lazily, i.e. the data on disk is not altered at this stage.
