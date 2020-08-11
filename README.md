@@ -1,12 +1,23 @@
 <img src="https://user-images.githubusercontent.com/2157566/89096211-1e6a5000-d3d5-11ea-822c-af526b9b1d7b.png" width="300">
 
-BigDataProcessor2 (BDP2) is a [Fiji](http://fiji.sc/) plugin for interactive processing of TB-sized image data. Please see our videos of example work flows and the user guide below:  
+BigDataProcessor2 (BDP2) is a [Fiji](http://fiji.sc/) plugin for interactive processing of TB-sized image data. BDP2 uses [BigDataViewer](https://imagej.net/BigDataViewer) for rendering and the [ImgLib2](https://imagej.net/ImgLib2) library for image processing. 
 
-## Example video of a BDP2 workflow
+BDP2 implements a [Lazy Loading design pattern](https://en.wikipedia.org/wiki/Lazy_loading) to render Terabyte sized big data image data produced by light-sheet and electron microscopy, also on laptops with limited RAM. 
+
+The BDP2 is the new version of [BigDataProcessor1](https://github.com/bigdataprocessor/bigdataprocessor1). 
+
+Main features:
+- [lazy loading](https://en.wikipedia.org/wiki/Lazy_loading) of TB sized image data
+- [lazy processing](https://en.wikipedia.org/wiki/Lazy_evaluation) of TB sized image data
+- [ImageJ macro](https://imagej.nih.gov/ij/developer/macro/macros.html) recording for automation
+
+## Example videos
+
+### Typical BDP2 workflow
+
 [![BigDataProcessor2 Workflow1](https://img.youtube.com/vi/OixZ0ILbkvc/0.jpg)](https://www.youtube.com/embed/OixZ0ILbkvc "BigDataProcessor2 Workflow")
 
-Opening, browsing and preprocessing of a 250GB Hdf5 based raw data set. Movie shows a screen recording of a basic preprocessing workflow of a 250 GB Hdf5 image data set acquired by light-sheet microscopy. The following steps are demonstrated: Open Luxendo HDF5 -> Brightness & Color adjustment -> Set Voxel Size -> Align Channels -> Crop -> Bin -> Save. The 2 color early mouse embryo data waswere provided by Manuel Eguren, Ellenberg group EMBL Heidelberg.
-
+Opening, browsing and preprocessing of a 250GB Hdf5 based raw data set. Movie shows a screen recording of a basic processing workflow of an image data set acquired by light-sheet microscopy. The following steps are demonstrated: Open Luxendo HDF5 -> Brightness & Color adjustment -> Set Voxel Size -> Align Channels -> Crop -> Bin -> Save. The 2 color early mouse embryo data were provided by Manuel Eguren, Ellenberg group EMBL Heidelberg.
 
 ## Cite
 
@@ -32,11 +43,24 @@ This opens up an empty BigDataViewer window with additional menu entries.
 
 Note: **Don't use the Commands**, they just serve the macro recording.
 
+## Quick start
+
+The easiest way to explore BDP2's functionality is to download and open a small example data set.
+
 ## User Guide 
 
-[<img align="middle" width="700" alt="image" src="./docs/images/BDP2-SIFigure_1.jpg">](https://github.com/bigdataprocessor/bigdataprocessor2/tree/master/docs/images/BDP2-SIFigure_1.jpg?raw=true)
+[<img align="middle" width="700" alt="image" src="./docs/images/BDP2-SIFigure_1.jpg">](/docs/images/BDP2-SIFigure_1.jpg?raw=true)
 
 Schematic representation of a lazy-processing workflow in BigDataProcessor2 (BDP2). Dashed arrows represent lazy-computation, where only the currently viewed image plane is loaded and processed. The complete data browsing, data selection and data processing workflow can be configured in a few minutes even for TB-sized image data. Only the final saving to disk requires processing of the whole data set and will take a correspondingly long time (up to hours).
+
+## Main user interface
+
+
+
+
+BDP2 comes with a user interface (UI) where all functionality can be accessed. 
+In addition, the UI shows information about the currently active image and the current and average image data reading speed.
+It is possible to have multiple images (BigDataViewer windows) open at the same time. Following the usual ImageJ convention, the "active" image is the one that you clicked on last.
 
 ## Record macro
 
@@ -61,6 +85,7 @@ Screenshot of the Open menu
 
 **Open > Open Custom…**
 Open datasets consisting of a collection of Tiff or Hdf5 volumes. The assignment of each file (volume) to a channel and time point can be specified by a regular expression.  
+
 **Open > Open Custom Help...**
 Shows and explains a number of regular expressions that can be used in the [ Open > Open Custom… ] menu item. 
 
@@ -160,52 +185,19 @@ Motivation: Saving a volume as a series of Tiff planes is popular e.g. in the EM
 Opens the current image virtually in the “classic” ImageJ hyperstack viewer.
 Motivation: As BigDataViewer is a relatively recent addition to the ImageJ ecosystem  most users are still more comfortable with the ImageJ hyperstack viewer. In addition, with the data being displayed in the hyperstack viewer, one has access to many useful inspection tools such as intensity histograms and intensity line profiles.
 
+# Additional information
 
-## Additional information
+### More example videos *(click images to play)* :
 
-More example videos *(click below to play)* :
-#### <a name="binninglink"></a>Binning:
+#### <a name="binninglink"></a>Binning
     
 [<img width="300" alt="image" src="./docs/images/2.png">](https://drive.google.com/open?id=1AVFW3M5QYEDH9XUgR-q2LWUsuy16zF1A)
 
-#### <a name="croppinglink"></a>Cropping:
+#### <a name="croppinglink"></a>Cropping
 [<img width="300" alt="image" src="./docs/images/3.png">](https://drive.google.com/open?id=1iabVP9jbISI1WclMRjtDHvcNWxMTC95-)
 
-
-#### <a name="bitdepthlink"></a>Bit-depth conversion:
+#### <a name="bitdepthlink"></a>Bit-depth conversion
 [<img width="300" alt="image" src="./docs/images/4.png">](https://drive.google.com/open?id=1jRZEepD1C8rM5t2gDi7tYnFh092vUztm)
 
 The movie demonstrates interactive 8-bit conversion, where the user can interactively develop different mappings while browsing the entire data. 
 This is done lazily, i.e. the data on disk is not altered at this stage.
-
-
-
-
-***BigDataProcessor2 (BDP2)*** is an [ImageJ](https://imagej.net) plugin designed for inspection, manipulation and conversion of big data image formats even on a basic laptop or a computer.
-
-BigDataProcessor2 is based on [BigDataViewer](https://imagej.net/BigDataViewer) for rendering and the [ImgLib2](https://imagej.net/ImgLib2) library for image processing. 
-
-BigDataProcessor2 implements a [Lazy Loading design pattern](https://en.wikipedia.org/wiki/Lazy_loading) to render Terabyte sized big data image data produced by light-sheet and electron microscopy, also on laptops with limited RAM. 
-
-The plugin facilitates loading & saving of TIFF, HDF5 and Imaris file formats meanwhile allowing the user to shear, crop or bin. *(check out the User Guide above for all things you can do!)*
-
-The plugin also encloses **BigDataTracker**, an object tracker tool for the big data images and also allowing to view and save just the tracked regions.
-
-### History
-
-The BigDataProcessor2 is a new version of the **BigDataTools** plugin, a.k.a [BigDataProcessor](https://github.com/embl-cba/fiji-plugin-bigDataProcessor). BigDataProcessor2 is developed almost from scratch using the ImgLib2 framework.
-
-### Supported Formats
-
-- Multi-stack TIFF
-- Single plane TIFF
-- Multi-stack HDF
-- Multi-stack IMARIS HDF
-
-### Contributors
-
-Ashis Ravindran&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;Christian Tischer  
-ashis.r91@gmail.com&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;christian.tischer@embl.de
-
-
