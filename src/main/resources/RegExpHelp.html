@@ -63,41 +63,47 @@ The file extensions can be selected via a drop down in the "Open..." menu item a
 be added to the regular expression automatically.
 </p>
 <p>
-Below examples work both with and without zero-padding, e.g. "T0000", "T0001" works, but also "T0", "T2", "T11" works (and will have the correct numeric-based ordering).
+Below examples work both with and without zero-padding, e.g. "T0000", "T0001" works, but also "T0", "T2", "T11" works (and will have the correct numeric-based ordering). Also, the numberings do not have to start with 0 but can also start with a higher number, e.g., 1.
 </p>
 
 <p>
 <table border="1">
-
-<tr>
-  <td class="a"><b>.*--C(?&lt;C&gt;\d+)--T(?&lt;T&gt;\d+)</b></td>
-  <td>Channel and timepoint encoded in filenames such as "image--C00--T0000" and "image--C01--T0000"</td>
-</tr>
-<tr>
-  <td class="a"><b>T(?&lt;T&gt;\d+)_(?&lt;C&gt;.*)</b></td>
-  <td>Channel and timepoint encoded in filenames such as "T0000_gfp" and "T0001_rfp"</td>
-</tr>
-<tr>
-  <td class="a"><b>t(?&lt;T&gt;\d+)_(?&lt;C&gt;.*)</b></td>
-  <td>Same as above but with lower case "t" such as "t0000_gfp" and "t0001_rfp"</td>
-</tr>
-<tr>
-  <td class="a"><b>(?&lt;C&gt;.*)_T(?&lt;T&gt;\d+)</b></td>
-  <td>Channel and timepoint encoded in filenames such as "gfp_T0000" and "rfp_T0000"</td>
-</tr>
-<tr>
-  <td class="a"><b>(?&lt;C&gt;.*)/.*T(?&lt;T&gt;\d+)</b></td>
-  <td>Channels are specified by subfolders and timepoints are encoded in filenames such as "gfp/T0000" and "rfp/T0000"</td>
-</tr>
-<tr>
+  <tr>
+    <td class="a"><b>.*--C(?&lt;C&gt;\d+)--T(?&lt;T&gt;\d+)</b></td>
+    <td>Channel and time point encoded in filenames such as "image--C00--T0000" and "image--C01--T0000"</td>
+  </tr>
+  <tr>
+    <td class="a"><b>T(?&lt;T&gt;\d+)_(?&lt;C&gt;.*)</b></td>
+    <td>Channel and time point encoded in filenames such as "T0000_gfp" and "T0001_rfp"</td>
+  </tr>
+  <tr>
+    <td class="a"><b>t(?&lt;T&gt;\d+)_(?&lt;C&gt;.*)</b></td>
+    <td>Same as above but with lower case "t" such as "t0000_gfp" and "t0001_rfp"</td>
+  </tr>
+  <tr>
+    <td class="a"><b>(?&lt;C&gt;.*)_T(?&lt;T&gt;\d+)</b></td>
+    <td>Channel and time point encoded in filenames such as "gfp_T0000" and "rfp_T0000"</td>
+  </tr>
+  <tr>
+    <td class="a"><b>(?&lt;C&gt;.*)_(?&lt;T&gt;\d+)</b></td>
+    <td>Channel and time point encoded in filenames such as "gfp_0000" and "rfp_0000". The difference to the example above is that there is no "T" in front of the time points.</td>
+  </tr>
+  <tr>
+    <td class="a"><b>(?&lt;C&gt;.*)/.*T(?&lt;T&gt;\d+)</b></td>
+    <td>Channels are specified by subfolders and time-points are encoded in filenames such as   "gfp/T0000" and "rfp/T0000"</td>
+  </tr>
+  <tr>
   <td class="a"><b>.*T(?&lt;T&gt;\d+)</b></td>
-  <td>No channel grouping specified, e.g. "gpf-T0000", "gfo-T0001", etc. (in this case the name of the containing folder will be used as the channel name).</td>
-</tr>
-<tr>
-  <td class="a"><b>.*-(?&lt;T&gt;\d+)</b></td>
-  <td>No channel grouping specified, and e.g. "gfp-00", "gfp-01", etc. (in this case the name of the containing folder will be used as the channel name).</td>
-</tr>
-
+  <td>No channel grouping specified, e.g. "gpf-T0001", "gfo-T0002", etc. (in this case the name of the containing folder will be used as the channel name).</td>
+  </tr>
+  <tr>
+    <td class="a"><b>.*-(?&lt;T&gt;\d+)</b></td>
+    <td>No channel grouping specified, and no "T" but only a dash "-" as prefix for the time points, e.g. "gfp-00", "gfp-01", etc. (in this case the name of the containing folder will be used as the channel name).</td>
+  </tr>
+  <tr>
+    <td class="a"><b>.*_(?&lt;T&gt;\d+)</b></td>
+    <td>No channel grouping specified, and just an underscore "_" proceeding the time points, e.g. "Cam_Left_01", "Cam_Left_02", etc. (in this case the name of the containing folder will be used as the channel name).</td>
+  </tr>
 </table>
 </p>
 
