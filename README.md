@@ -69,7 +69,7 @@ All actions can be recorded as ImageJ macros. To enable this please:
 
 Note: This is equivalent to [ Plugins > Macros > Record... ] in the ImageJ menu, we just thought it is more convenient to also have it in the BigDataProcessor2 menu tree.
 
-<img width="600" alt="image" src="./docs/images/BDP2-Macro.png">
+<img width="600" alt="image" src="./docs/images/BDP2-Macro2.png">
 
 Example of recorded macro. 
 
