@@ -39,8 +39,8 @@ public class Menu extends JMenu
     public static final String MACRO_RECORDING = "Record Macro...";
     public static final String ABOUT = "About";
     public static final String HELP = "Help";
+    public static final String ISSUE = "Report an issue";
     public static final String CITE = "Cite";
-
 
     private final MenuActions menuActions;
     private final ArrayList< JMenu > menus;
@@ -56,6 +56,7 @@ public class Menu extends JMenu
         menus.add( mainMenu );
         addMenuItem( mainMenu, ABOUT );
         addMenuItem( mainMenu, HELP );
+        addMenuItem( mainMenu, ISSUE );
         addMenuItem( mainMenu, CITE );
 
         final JMenu recordMenu = addMenu( "Record" );
