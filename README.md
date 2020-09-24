@@ -23,7 +23,7 @@ Main features:
 
 ## Cite
 
-Publication in preparation!
+https://doi.org/10.1101/2020.09.23.244095
 
 ## Install
 
