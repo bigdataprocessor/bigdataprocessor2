@@ -26,6 +26,7 @@ import ome.units.quantity.Length;
 import ome.xml.model.enums.DimensionOrder;
 import ome.xml.model.enums.PixelType;
 import ome.xml.model.primitives.PositiveInteger;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -83,7 +84,9 @@ public class TiffVolumesFrameSaver< R extends RealType< R > & NativeType< R > > 
                         settings.voxelUnit,
                         "" );
 
-                saveAsTiff( imp, c, t, settings.compression, settings.rowsPerStrip, settings.volumesFilePathStump );
+                String channelName = getChannelName( c );
+
+                saveAsTiff( imp, t, settings.compression, settings.rowsPerStrip, settings.volumesFilePathStump, channelName );
             }
 
             if ( settings.saveProjections )
@@ -95,6 +98,16 @@ public class TiffVolumesFrameSaver< R extends RealType< R > & NativeType< R > > 
 
             System.gc();
         }
+    }
+
+    public String getChannelName( int c )
+    {
+        if ( settings.channelNamesInSavedImages.equals( SavingSettings.CHANNEL_INDEXING ) )
+            return String.format( "C%1$02d", c );
+        else if ( settings.channelNamesInSavedImages.equals( SavingSettings.CHANNEL_NAMES ) )
+            return settings.channelNames[ c  ];
+        else
+            return String.format( "C%1$02d", c );
     }
 
     public void checkMemoryRequirements()
@@ -164,16 +177,15 @@ public class TiffVolumesFrameSaver< R extends RealType< R > & NativeType< R > > 
 
     private void saveAsTiff(
             ImagePlus imp,
-            int c,
             int t,
             String compression,
             int rowsPerStrip,
-            String path) {
+            String path,
+            String sC ) {
 
         DebugTools.setRootLevel( "OFF" ); // Bio-Formats
 
-        String sC = String.format( "%1$02d", c );
-        String sT = String.format( "%1$05d", t );
+        String sT = String.format( "T%1$05d", t );
 
         if ( compression.equals( SavingSettings.COMPRESSION_NONE ) )
         {
@@ -189,7 +201,7 @@ public class TiffVolumesFrameSaver< R extends RealType< R > & NativeType< R > > 
     {
         // Use Bio-Formats for compressing the data
 
-        String pathCT = path + "--C" + sC + "--T" + sT + ".ome.tif";
+        String pathCT = getFullPath( path, sC, sT, ".ome.tif" );
 
         if ( new File( pathCT ).exists() ) new File( pathCT ).delete();
 
@@ -302,9 +314,15 @@ public class TiffVolumesFrameSaver< R extends RealType< R > & NativeType< R > > 
         }
 
         FileSaver fileSaver = new FileSaver( imp );
-        String pathCT = path + "--C" + sC + "--T" + sT + ".tif";
+        String pathCT = getFullPath( path, sC, sT, ".tif" );
 
         fileSaver.saveAsTiffStack( pathCT );
+    }
+
+    @NotNull
+    private String getFullPath( String path, String sC, String sT, String suffix )
+    {
+        return path + "--" + sC + "--" + sT + suffix;
     }
 
     private static void gate(ImagePlus imp, int min, int max) //TODO: May be this can goto a new SaveHelper class

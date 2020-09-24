@@ -260,7 +260,7 @@ public class FileInfosHelper
             fileInfos.nT = 1;
             fileInfos.nZ = fileLists[ 0 ].length;
             fileInfos.fileType = OpenFileType.TIFF_PLANES;
-            fileInfos.channelNames = new String[]{ new File( fileInfos.directory ).getParent() };
+            fileInfos.channelNames = new String[]{ "ch0" };
             fetchAndSetImageMetadata( fileInfos, fileInfos.directory, namingScheme, fileLists[ 0 ] );
             populateFileList( fileInfos, namingScheme, fileLists );
         }

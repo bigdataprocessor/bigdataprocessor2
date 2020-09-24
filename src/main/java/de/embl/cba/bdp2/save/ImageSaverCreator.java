@@ -44,6 +44,8 @@ public class ImageSaverCreator < R extends RealType< R > & NativeType< R > >
 			savingSettings.rai = image.getRai();
 		}
 
+		// TODO: consider giving the whole image to the SavingSettings instead of the rai?
+		savingSettings.channelNames = image.getChannelNames();
 		savingSettings.voxelSize = image.getVoxelSize();
 		savingSettings.voxelUnit = image.getVoxelUnit();
 		ImgSaverFactory factory = new ImgSaverFactory();

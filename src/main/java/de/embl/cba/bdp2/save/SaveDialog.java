@@ -32,7 +32,15 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > > extends JFr
                     SavingSettings.COMPRESSION_NONE,
                     SavingSettings.COMPRESSION_ZLIB,
                     SavingSettings.COMPRESSION_LZW
-    } );private static final JCheckBox cbSaveProjection = new JCheckBox("Save Projections");
+    } );
+    private static final JCheckBox cbSaveProjection = new JCheckBox("Save Projections");
+
+    private static final JComboBox comboChannelNames = new JComboBox(
+            new String[]{
+                    SavingSettings.CHANNEL_NAMES,
+                    SavingSettings.CHANNEL_INDEXING
+            }
+    );
     private static final JTextField tfRowsPerStrip = new JTextField("10", 3);
     private static final JTextField tfNumIOThreads = new JTextField("" + defaults.numIOThreads, 2);
     private static final JTextField tfNumProcessingThreads = new JTextField( "" + defaults.numProcessingThreads, 2);
@@ -85,6 +93,12 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > > extends JFr
         panels.get(panelIndex).add(cbSaveVolume);
         cbSaveProjection.setSelected(true);
         panels.get(panelIndex).add(cbSaveProjection);
+        mainPanel.add( panels.get(panelIndex++));
+
+        if ( saveFileType.equals( SavingSettings.SaveFileType.TIFF_VOLUMES ) )
+        {
+            panelIndex = addChannelNamingSchemeChoice( panelIndex );
+        }
 
 //        panels.get(j).add(tfVolumesFilePath);
 //        final JButton volumesPathSelectionButton = new JButton( "Folder" );
@@ -101,7 +115,6 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > > extends JFr
 //                tfProjectionsFilePath.setText( IJ.getDirectory( "Projections" ) ) );
 //        panels.get(j).add(projectionsPathSelectionButton);
 //        mainPanels.get(k).add(panels.get(j++));
-        mainPanel.add( panels.get(panelIndex++));
 
         panelIndex = addTiffCompressionPanel( panelIndex );
 
@@ -152,19 +165,28 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > > extends JFr
         pack();
     }
 
-    public int addTiffCompressionPanel( int j )
+    public int addChannelNamingSchemeChoice( int panelIndex )
+    {
+        panels.add( new JPanel() );
+        panels.get( panelIndex ).add( new JLabel( "Channel naming scheme" ) );
+        panels.get( panelIndex ).add( comboChannelNames );
+        mainPanel.add( panels.get( panelIndex++ ) );
+        return panelIndex;
+    }
+
+    public int addTiffCompressionPanel( int panelIndex )
     {
         if ( saveFileType.equals( SavingSettings.SaveFileType.TIFF_VOLUMES ) ||
              saveFileType.equals( SavingSettings.SaveFileType.TIFF_PLANES ) )
         {
             panels.add( new JPanel() );
-            panels.get( j ).add( new JLabel( "Tiff Compression" ) );
-            panels.get( j ).add( comboCompression );
+            panels.get( panelIndex ).add( new JLabel( "Tiff Compression" ) );
+            panels.get( panelIndex ).add( comboCompression );
             //panels.get(j).add(new JLabel("Rows per Strip [ny]"));
             //panels.get(j).add(tfRowsPerStrip);
-            mainPanel.add( panels.get( j++ ) );
+            mainPanel.add( panels.get( panelIndex++ ) );
         }
-        return j;
+        return panelIndex;
     }
 
     @Override
@@ -226,7 +248,7 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > > extends JFr
         savingSettings.numProcessingThreads = Integer.parseInt( tfNumProcessingThreads.getText() );
         savingSettings.voxelSize = viewer.getImage().getVoxelSize();
         savingSettings.voxelUnit = viewer.getImage().getVoxelUnit();
-
+        savingSettings.channelNamesInSavedImages = (String) comboChannelNames.getSelectedItem();
         return savingSettings;
     }
 

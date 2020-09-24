@@ -13,6 +13,9 @@ public class SavingSettings {
     public static final String HDF_5_VOLUMES = "Hdf5 Volumes";
     public static final String IMARIS_VOLUMES = "Imaris Volumes";
 
+    public static final String CHANNEL_NAMES = "Channel names";
+    public static final String CHANNEL_INDEXING = "Channel index (C00, C01, ...)";
+
     // TODO: remove the image itself from the settings
     public RandomAccessibleInterval rai;
     public double[] voxelSize;
@@ -41,8 +44,10 @@ public class SavingSettings {
     public int rowsPerStrip = -1;
     public int numIOThreads = 1;
     public int numProcessingThreads = 1;
+    public String[] channelNames;
+    public String channelNamesInSavedImages = CHANNEL_INDEXING;
 
-	public enum SaveFileType
+    public enum SaveFileType
     {
         TIFF_PLANES( SavingSettings.TIFF_PLANES ),
         TIFF_VOLUMES( SavingSettings.TIFF_VOLUMES ),
