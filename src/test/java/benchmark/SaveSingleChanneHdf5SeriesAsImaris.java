@@ -28,7 +28,6 @@ public class SaveSingleChanneHdf5SeriesAsImaris
         final String filterPattern = ".*.h5";
         final String dataset = "Data";
 
-
         final Image image = bdp.openImageFromHdf5(
                 directory,
                 loadingScheme,
@@ -51,7 +50,7 @@ public class SaveSingleChanneHdf5SeriesAsImaris
                         dataset );
 
         final CachedCellImg volumeCachedCellImg
-                = CachedCellImgReader.getVolumeCachedCellImg( fileInfos );
+                = CachedCellImgReader.createVolumeCachedCellImg( fileInfos );
 
         final RandomAccessibleInterval replaced =
                 new CachedCellImgReplacer( binnedImage.getRai(),

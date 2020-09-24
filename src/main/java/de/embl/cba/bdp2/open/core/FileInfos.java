@@ -88,7 +88,8 @@ public class FileInfos
         this.directory  = Utils.fixDirectoryFormatAndAppendFileSeparator( aDirectory );
         this.h5DataSetName = h5DataSetName;
 
-        if ( ! namingScheme.equals( NamingSchemes.LEICA_LIGHT_SHEET_TIFF ) )
+        if ( ! namingScheme.equals( NamingSchemes.LEICA_LIGHT_SHEET_TIFF )
+                && ! namingScheme.equals( NamingSchemes.TIFF_SLICES ))
         {
             if ( ! namingScheme.contains( "?<C" ) )
             {

@@ -122,8 +122,14 @@ public class ImageLoader< T extends NativeType< T > > implements CellLoader< T >
         return infos_c_t;
     }
 
+    /**
+     * TODO: I remove the "synchronized" from the load function.
+     *   Maybe this will speed up loading non-hdf5 based images
+     *
+     * @param cell
+     */
     @Override
-    public synchronized void load( final SingleCellArrayImg< T, ? > cell )
+    public void load( final SingleCellArrayImg< T, ? > cell )
     {
         long[] min = new long[ FileInfos.TOTAL_AXES ];
         long[] max = new long[ FileInfos.TOTAL_AXES ];
@@ -191,7 +197,6 @@ public class ImageLoader< T extends NativeType< T > > implements CellLoader< T >
 
             PerformanceService.getPerformanceMonitor().addReadPerformance( 4 * storageArray.length, System.currentTimeMillis() - start  );
         }
-
     }
 
     public String getFilePath( SerializableFileInfo fileInfo )

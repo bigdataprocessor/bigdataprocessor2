@@ -270,6 +270,14 @@ public class MenuActions implements ActionListener {
                 Services.commandService.run( DownloadAndOpenSampleDataCommand.class, true );
             });
         }
+        else if( e.getActionCommand().equalsIgnoreCase( OpenEMTiffPlanesCommand.COMMAND_NAME ) )
+        {
+            BigDataProcessor2.threadPool.submit(() ->
+            {
+                OpenEMTiffPlanesCommand.parentBdvImageViewer = viewer;
+                Services.commandService.run( OpenEMTiffPlanesCommand.class, true );
+            });
+        }
         else if( e.getActionCommand().equalsIgnoreCase( OpenCustomCommand.COMMAND_NAME ) )
         {
             BigDataProcessor2.threadPool.submit(() ->

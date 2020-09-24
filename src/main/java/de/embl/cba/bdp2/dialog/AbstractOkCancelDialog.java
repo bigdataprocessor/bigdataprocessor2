@@ -42,9 +42,9 @@ public abstract class AbstractOkCancelDialog extends JDialog
 	{
 		setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
 		getContentPane().add( panel, BorderLayout.CENTER );
-		setBounds(
-				MouseInfo.getPointerInfo().getLocation().x,
-				MouseInfo.getPointerInfo().getLocation().y,
+		this.setBounds(
+				MouseInfo.getPointerInfo().getLocation().x - 50,
+				MouseInfo.getPointerInfo().getLocation().y - 50,
 				120, 10);
 		setResizable( false );
 		pack();

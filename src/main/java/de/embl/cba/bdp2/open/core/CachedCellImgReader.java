@@ -5,6 +5,7 @@ import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.open.OpenFileType;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.cache.img.CachedCellImg;
+import net.imglib2.cache.img.DiskCachedCellImgOptions;
 import net.imglib2.cache.img.ReadOnlyCachedCellImgFactory;
 import net.imglib2.cache.img.ReadOnlyCachedCellImgOptions;
 import net.imglib2.type.NativeType;
@@ -101,8 +102,7 @@ public class CachedCellImgReader
     public static CachedCellImg createCachedCellImg( FileInfos fileInfos,
                                                      int[] cellDimsXYZCT )
     {
-        final ImageLoader loader =
-                new ImageLoader( fileInfos, cellDimsXYZCT );
+        final ImageLoader loader = new ImageLoader( fileInfos, cellDimsXYZCT );
 
         final ReadOnlyCachedCellImgOptions options = options()
                 .cellDimensions( loader.getCellDims() );
@@ -117,7 +117,14 @@ public class CachedCellImgReader
         return cachedCellImg;
     }
 
-    public static CachedCellImg getVolumeCachedCellImg( FileInfos fileInfos )
+    /**
+     * Useful for saving to load the whole volume in one go as this
+     * speeds up performance.
+     *
+     * @param fileInfos
+     * @return
+     */
+    public static CachedCellImg createVolumeCachedCellImg( FileInfos fileInfos )
     {
         int cellDimX = fileInfos.nX;
         int cellDimY = fileInfos.nY;
@@ -137,8 +144,10 @@ public class CachedCellImgReader
                 fileInfos, new int[]{ cellDimX, cellDimY, cellDimZ, 1, 1 } );
 
         final ReadOnlyCachedCellImgOptions options = options()
-                .cellDimensions( loader.getCellDims() ).maxCacheSize( 0 );
-        
+                .cellDimensions( loader.getCellDims() )
+                .cacheType( DiskCachedCellImgOptions.CacheType.BOUNDED )
+                .maxCacheSize( 0 );
+
         final CachedCellImg cachedCellImg = new ReadOnlyCachedCellImgFactory().create(
                 loader.getDimensions(),
                 fileInfos.getType(),

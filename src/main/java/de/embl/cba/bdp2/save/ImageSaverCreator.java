@@ -34,7 +34,7 @@ public class ImageSaverCreator < R extends RealType< R > & NativeType< R > >
 			// TODO: for cropped images only fully load the cropped region
 			// TODO: for input data distributed across Tiff planes this should be reconsidered
 			final CachedCellImg< R, ? > volumeCachedCellImg
-					= CachedCellImgReader.getVolumeCachedCellImg( image.getFileInfos() );
+					= CachedCellImgReader.createVolumeCachedCellImg( image.getFileInfos() );
 			final RandomAccessibleInterval< R > volumeLoadedRAI =
 					new CachedCellImgReplacer( image.getRai(), volumeCachedCellImg ).get();
 			savingSettings.rai = volumeLoadedRAI;

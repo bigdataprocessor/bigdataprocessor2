@@ -24,7 +24,7 @@ public class OpenEMTiffPlanesCommand< R extends RealType< R > & NativeType< R > 
             outputImage = BigDataProcessor2.openImage(
                             directory.toString(),
                             NamingSchemes.TIFF_SLICES,
-                            ".*.tif" );
+                            ".*" );
 
             handleOutputImage( true, false );
         });

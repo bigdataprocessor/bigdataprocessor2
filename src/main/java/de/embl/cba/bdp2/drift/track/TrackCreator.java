@@ -272,7 +272,7 @@ public class TrackCreator extends JFrame
 		panel.setOpaque( true ); //content panes must be opaque
 		panel.setLayout( new BoxLayout( panel, BoxLayout.Y_AXIS ) );
 		this.setContentPane( panel );
-		this.setLocation( MouseInfo.getPointerInfo().getLocation().x, MouseInfo.getPointerInfo().getLocation().y );
+		this.setLocation( MouseInfo.getPointerInfo().getLocation().x - 50, MouseInfo.getPointerInfo().getLocation().y - 50 );
 		this.pack();
 		this.setVisible( true );
 	}

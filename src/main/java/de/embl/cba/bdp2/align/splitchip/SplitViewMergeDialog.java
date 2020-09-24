@@ -366,8 +366,8 @@ public class SplitViewMergeDialog< R extends RealType< R > & NativeType< R > > e
 
 		frame.setContentPane( panel );
 		frame.setBounds(
-				MouseInfo.getPointerInfo().getLocation().x,
-				MouseInfo.getPointerInfo().getLocation().y,
+				MouseInfo.getPointerInfo().getLocation().x - 50,
+				MouseInfo.getPointerInfo().getLocation().y - 50,
 				120, 10);
 		frame.setResizable( false );
 		frame.pack();

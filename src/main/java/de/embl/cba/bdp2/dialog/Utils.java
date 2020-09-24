@@ -81,7 +81,7 @@ public class Utils
 	public static void moveWindowToCurrentMousePosition( JComponent component )
 	{
 		final Window window = SwingUtilities.getWindowAncestor( component );
-		window.setLocation( MouseInfo.getPointerInfo().getLocation().x, MouseInfo.getPointerInfo().getLocation().y );
+		window.setLocation( MouseInfo.getPointerInfo().getLocation().x - 50, MouseInfo.getPointerInfo().getLocation().y - 50 );
 	}
 
 	public static void moveWindowToPosition( JComponent component, int x, int y )

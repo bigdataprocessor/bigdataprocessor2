@@ -4,6 +4,7 @@ import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.record.MacroRecorder;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import ij.IJ;
 import ij.gui.GenericDialog;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -46,6 +47,16 @@ public class CalibrationDialog< R extends RealType< R > & NativeType< R > >
 		voxelSize[ 0 ] = genericDialog.getNextNumber();
 		voxelSize[ 1 ] = genericDialog.getNextNumber();
 		voxelSize[ 2 ] = genericDialog.getNextNumber();
+
+		for ( int d = 0; d < 3; d++ )
+		{
+			if ( voxelSize[ d ] <= 0 )
+			{
+				IJ.showMessage( "Voxel sizes must be larger than zero.\nPlease try again." );
+				return;
+			}
+		}
+
 		outputImage.setVoxelSize( voxelSize );
 		Logger.info( "Image voxel unit: " + outputImage.getVoxelUnit() );
 		Logger.info( "Image voxel size: " + Arrays.toString( outputImage.getVoxelSize() ) );
