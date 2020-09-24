@@ -6,6 +6,7 @@ import ch.systemsx.cisd.hdf5.HDF5Factory;
 import ch.systemsx.cisd.hdf5.IHDF5Reader;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.luxendo.Luxendos;
+import de.embl.cba.bdp2.utils.Utils;
 import ij.gui.GenericDialog;
 
 import java.util.Arrays;
@@ -66,26 +67,6 @@ public class FileInfosHDF5Helper
 
         imageDataInfo.voxelSize = Luxendos.getVoxelSizeMicrometer( reader, imageDataInfo.h5DataSetName );
         imageDataInfo.voxelUnit = "micrometer";
-        fixVoxelSize( imageDataInfo );
-
-        if ( imageDataInfo.voxelSize == null )
-            imageDataInfo.voxelSize = new double[]{1,1,1};
-
-    }
-
-    public static void fixVoxelSize( FileInfos imageDataInfo )
-    {
-        // check for and replace weird values
-        for ( int d = 0; d < 3; d++ )
-        {
-            if ( Double.isNaN( imageDataInfo.voxelSize[ d ] ) || imageDataInfo.voxelSize[ d ] <= 0.0 )
-            {
-                Logger.warning( "Voxel size in dimension " + d +
-                        " was " + imageDataInfo.voxelSize[ d ] +
-                        " setting to 1.0");
-                imageDataInfo.voxelSize[ d ] = 1.0;
-            }
-        }
     }
 
     private static int assignHDF5TypeToImagePlusBitdepth(HDF5DataSetInformation dsInfo) {

@@ -57,9 +57,9 @@ public class SerializableFileInfo implements Cloneable, Serializable {
     public long[] stripLengths = null;
     public int rowsPerStrip = 0;
 
-    public double pixelWidth=1.0;
-    public double pixelHeight=1.0;
-    public double pixelDepth=1.0;
+    public double pixelWidth = Double.NaN;
+    public double pixelHeight = Double.NaN;
+    public double pixelDepth = Double.NaN;
     public double frameInterval;
 
     public int nImages;

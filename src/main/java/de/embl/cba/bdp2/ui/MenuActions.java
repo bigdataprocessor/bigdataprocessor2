@@ -139,7 +139,7 @@ public class MenuActions implements ActionListener {
         {
             BigDataProcessor2.threadPool.submit(() -> {
                 if (! isImageSelected() ) return;
-                new CalibrationDialog< >( viewer );
+                new CalibrationDialog< >( viewer ).showDialog();
             });
         }
         else if (e.getActionCommand().equalsIgnoreCase( Menu.MACRO_RECORDING ))
@@ -274,7 +274,7 @@ public class MenuActions implements ActionListener {
         {
             BigDataProcessor2.threadPool.submit(() ->
             {
-                OpenEMTiffPlanesCommand.parentBdvImageViewer = viewer;
+                OpenEMTiffPlanesCommand.parentViewer = viewer;
                 Services.commandService.run( OpenEMTiffPlanesCommand.class, true );
             });
         }
@@ -282,7 +282,7 @@ public class MenuActions implements ActionListener {
         {
             BigDataProcessor2.threadPool.submit(() ->
             {
-                AbstractOpenCommand.parentBdvImageViewer = viewer;
+                AbstractOpenCommand.parentViewer = viewer;
                 Services.commandService.run( OpenCustomCommand.class, true );
             });
         }
@@ -290,7 +290,7 @@ public class MenuActions implements ActionListener {
         {
             BigDataProcessor2.threadPool.submit(() ->
             {
-                AbstractOpenCommand.parentBdvImageViewer = viewer;
+                AbstractOpenCommand.parentViewer = viewer;
                 Services.commandService.run( OpenLeicaDSLTiffPlanesCommand.class, true );
             });
         }
@@ -298,7 +298,7 @@ public class MenuActions implements ActionListener {
         {
             BigDataProcessor2.threadPool.submit(() ->
             {
-                AbstractOpenCommand.parentBdvImageViewer = viewer;
+                AbstractOpenCommand.parentViewer = viewer;
                 Services.commandService.run( OpenLuxendoCommand.class, true );
             });
         }

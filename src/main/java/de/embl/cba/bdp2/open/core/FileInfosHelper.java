@@ -166,7 +166,6 @@ public class FileInfosHelper
         else
         {
             fileInfos.nZ = info.length;
-            info[0].pixelDepth = info[0].pixelWidth; // assume this since we do not know
         }
 
         fileInfos.nX = info[0].width;

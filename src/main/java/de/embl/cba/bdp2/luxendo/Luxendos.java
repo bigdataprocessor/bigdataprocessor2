@@ -42,8 +42,8 @@ public class Luxendos
 		}
 		else
 		{
-			Logger.warning( "Could not read voxel size! Setting voxel size to 1.0 micrometer in all dimensions.");
-			return new double[]{1.0,1.0,1.0};
+			Logger.warning( "Could not read voxel size!");
+			return null;
 		}
 	}
 }

@@ -263,6 +263,27 @@ public class Utils {
 		return array[ 0 ] + ", " + array[ 1 ] + ", " + array[ 2 ];
 	}
 
+	public static boolean checkVoxelSize( double[] voxelSize )
+	{
+		boolean isOK = true;
+
+		if ( voxelSize == null )
+		{
+			Logger.warning( "Voxel size not set!" );
+			return false;
+		}
+
+		for ( int d = 0; d < 3; d++ )
+		{
+			if ( Double.isNaN( voxelSize[ d ] ) || voxelSize[ d ] <= 0.0 )
+			{
+				Logger.warning( "Voxel size along dimension " + d + " is " + voxelSize[ d ] );
+				isOK = false;
+			}
+		}
+		return isOK;
+	}
+
 	public enum ImageFilterTypes {
         NONE("None"),
         THRESHOLD("Threshold"),

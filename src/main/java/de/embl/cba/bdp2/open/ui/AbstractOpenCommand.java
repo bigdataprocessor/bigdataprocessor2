@@ -1,12 +1,14 @@
 package de.embl.cba.bdp2.open.ui;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
+import de.embl.cba.bdp2.calibrate.CalibrationCheckerDialog;
 import de.embl.cba.bdp2.dialog.HelpWindow;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.service.ImageService;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
+import org.jetbrains.annotations.Nullable;
 import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 
@@ -22,7 +24,7 @@ public abstract class AbstractOpenCommand< R extends RealType< R > & NativeType<
     public static final String SHOW_IN_NEW_VIEWER = "Show in new viewer";
 
     // TODO: this is not concurrency save
-    public static BdvImageViewer parentBdvImageViewer = null;
+    public static BdvImageViewer parentViewer = null;
 
     @Parameter(label = "Image data directory", style = "directory")
     File directory;
@@ -50,22 +52,35 @@ public abstract class AbstractOpenCommand< R extends RealType< R > & NativeType<
     {
         ImageService.imageNameToImage.put( outputImage.getName(), outputImage );
 
-        if ( viewingModality.equals( SHOW_IN_NEW_VIEWER ) )
+        if ( ! viewingModality.equals( DO_NOT_SHOW ) )
         {
-            BigDataProcessor2.showImage( outputImage, autoContrast, enableArbitraryPlaneSlicing );
+            // if DO_NOT_SHOW is selected this may be the headless mode and we do not want a UI
+            // to pop up.
+            outputImage = new CalibrationCheckerDialog().checkAndCorrectCalibration( outputImage );
         }
-        else if ( viewingModality.equals( SHOW_IN_CURRENT_VIEWER ))
-        {
-            final BdvImageViewer viewer = parentBdvImageViewer;
-            if ( viewer != null )
-                viewer.replaceImage( outputImage, autoContrast, keepViewerTransform );
-            else
-                BigDataProcessor2.showImage( outputImage, autoContrast, enableArbitraryPlaneSlicing );
 
+        BdvImageViewer viewer = showInViewer( autoContrast, keepViewerTransform );
+    }
+
+    @Nullable
+    private BdvImageViewer showInViewer( boolean autoContrast, boolean keepViewerTransform )
+    {
+        if ( viewingModality.equals( SHOW_IN_NEW_VIEWER ) || parentViewer == null )
+        {
+            return BigDataProcessor2.showImage( outputImage, autoContrast, enableArbitraryPlaneSlicing );
+        }
+        else if ( viewingModality.equals( SHOW_IN_CURRENT_VIEWER ) )
+        {
+            parentViewer.replaceImage( outputImage, autoContrast, keepViewerTransform );
+            return parentViewer;
         }
         else if ( viewingModality.equals( DO_NOT_SHOW ) )
         {
-            // do nothing
+            return null;
+        }
+        else
+        {
+            return null;
         }
     }
 
