@@ -1,6 +1,7 @@
 package de.embl.cba.bdp2.luxendo;
 
 import ch.systemsx.cisd.hdf5.IHDF5Reader;
+import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.utils.Utils;
 
 import java.util.regex.Matcher;
@@ -32,15 +33,17 @@ public class Luxendos
 		{
 			final double[] voxelSizeZYX = reader.float64().getArrayAttr( "/" + h5DataSetName, "element_size_um");
 			double[] voxelSizeXYZ = new double[ 3 ];
+
+			// reorder the dimensions
 			for ( int d = 0; d < 3; d++ )
-			{
 				voxelSizeXYZ[ d ] = voxelSizeZYX[ 2 - d];
-			}
+
 			return voxelSizeXYZ;
 		}
 		else
 		{
-			return null;
+			Logger.warning( "Could not read voxel size! Setting voxel size to 1.0 micrometer in all dimensions.");
+			return new double[]{1.0,1.0,1.0};
 		}
 	}
 }

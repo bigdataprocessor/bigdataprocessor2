@@ -47,7 +47,6 @@ public class OpenLuxendoCommand< R extends RealType< R > & NativeType< R > > ext
 
             outputImage = BigDataProcessor2.openImageFromHdf5( directory.toString(), regExp, regExp, "Data", channelSubsetter );
 
-            outputImage.getInfos().add( Image.WARNING_VOXEL_SIZE );
             handleOutputImage( true, false );
         });
     }
