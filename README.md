@@ -1,3 +1,5 @@
+# Overview
+
 <img src="./docs/images/BDP2-icon.png" width="300">
 
 BigDataProcessor2 (BDP2) is a [Fiji](http://fiji.sc/) plugin for interactive processing of TB-sized image data. BDP2 uses [BigDataViewer](https://imagej.net/BigDataViewer) for rendering and the [ImgLib2](https://imagej.net/ImgLib2) library for image processing. 
@@ -21,13 +23,13 @@ Main features:
 
 ## Cite
 
-Publication in preparation!
+https://doi.org/10.1101/2020.09.23.244095
 
 ## Install
 
 BigDataProcessor2 is a Fiji plugin and can be installed via an update site.
 
-- Please install [Fiji](fiji.sc)
+- Please download a new [Fiji](fiji.sc)
 - Within Fiji, please enable the following [Update Site](https://imagej.net/Update_Sites): 
     - [X] BigDataProcessor
     - Note: The (deprecated) EMBL-CBA update site must **not** be checked because of compatibility issues!
@@ -69,7 +71,7 @@ All actions can be recorded as ImageJ macros. To enable this please:
 
 Note: This is equivalent to [ Plugins > Macros > Record... ] in the ImageJ menu, we just thought it is more convenient to also have it in the BigDataProcessor2 menu tree.
 
-<img width="600" alt="image" src="./docs/images/BDP2-Macro.png">
+<img width="600" alt="image" src="./docs/images/BDP2-Macro2.jpg">
 
 Example of recorded macro. 
 
