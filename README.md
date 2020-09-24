@@ -23,7 +23,7 @@ Main features:
 
 ## Cite
 
-https://doi.org/10.1101/2020.09.23.244095
+Please cite our bioRxiv preprint: https://www.biorxiv.org/content/10.1101/2020.09.23.244095v1
 
 ## Install
 
