@@ -52,7 +52,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		this.infos = infos;
 	}
 
-	public long[] getVoxelDimensionsXYZCT()
+	public long[] getDimensionsXYZCT()
 	{
 		final long[] longs = new long[ raiXYZCT.numDimensions() ];
 		raiXYZCT.dimensions( longs );
@@ -70,9 +70,16 @@ public class Image< R extends RealType< R > & NativeType< R > >
 			return "???";
 	}
 
-	public double getSizeGB()
+	public double getTotalSizeGB()
 	{
 		return Utils.getSizeGB( this.getRai() );
+	}
+
+	public double getOneVolumeSizeGB()
+	{
+		long[] dimensionsXYZCT = getDimensionsXYZCT();
+		long numVolumes = dimensionsXYZCT[ DimensionOrder.C ] * dimensionsXYZCT[ DimensionOrder.T ];
+		return getTotalSizeGB() / numVolumes;
 	}
 
 	public String[] getChannelNames()
@@ -188,10 +195,10 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		{
 			info += "\n  Channel name " + c + ": " + channelNames[ c ];
 		}
-		info += "\nSize [GB]: " + getSizeGB();
+		info += "\nSize [GB]: " + getTotalSizeGB();
 		info += "\nData type: " + getDataType();
-		info += "\nSize X,Y,Z [Voxels]: " + Utils.create3DArrayString( getVoxelDimensionsXYZCT() );
-		info += "\nTime-points: " + getVoxelDimensionsXYZCT()[4];
+		info += "\nSize X,Y,Z [Voxels]: " + Utils.create3DArrayString( getDimensionsXYZCT() );
+		info += "\nTime-points: " + getDimensionsXYZCT()[4];
 		info += "\nVoxel size ["+ getVoxelUnit() +"]: " + Utils.create3DArrayString( getVoxelSize() );
 
 		return info;

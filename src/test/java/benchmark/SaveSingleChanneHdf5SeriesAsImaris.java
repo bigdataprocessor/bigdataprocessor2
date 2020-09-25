@@ -51,7 +51,7 @@ public class SaveSingleChanneHdf5SeriesAsImaris
                         dataset );
 
         final CachedCellImg volumeCachedCellImg
-                = CachedCellImgReader.createVolumeCachedCellImg( fileInfos, image.getVoxelDimensionsXYZCT()[ DimensionOrder.C ] * numIOThreads );
+                = CachedCellImgReader.createVolumeCachedCellImg( fileInfos, image.getDimensionsXYZCT()[ DimensionOrder.C ] * numIOThreads );
 
         final RandomAccessibleInterval replaced =
                 new CachedCellImgReplacer( binnedImage.getRai(),

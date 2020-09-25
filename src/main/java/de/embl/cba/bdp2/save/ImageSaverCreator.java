@@ -33,10 +33,11 @@ public class ImageSaverCreator < R extends RealType< R > & NativeType< R > >
 			// TODO: for cropped images only fully load the cropped region
 			// TODO: for input data distributed across Tiff planes this should be reconsidered
 
-			long cacheSize = image.getVoxelDimensionsXYZCT()[ DimensionOrder.C ] * numIOThreads;
+			long cacheSize = image.getDimensionsXYZCT()[ DimensionOrder.C ] * numIOThreads;
 
 			Logger.info( "Configuring volume reader with a cache size of " + cacheSize + " volumes." );
-			Logger.info( "Given the size of one volume this will amount to a memory load of about " + cacheSize * image.getSizeGB() + " GB." );
+			Logger.info( "The size of one volume is " + image.getOneVolumeSizeGB() + " GB." );
+			Logger.info( "Thus, the memory requirements during saving will be about " + cacheSize * image.getOneVolumeSizeGB() + " GB." );
 
 			final CachedCellImg< R, ? > volumeCachedCellImg = CachedCellImgReader.createVolumeCachedCellImg( image.getFileInfos(), cacheSize );
 			final RandomAccessibleInterval< R > volumeLoadedRAI = new CachedCellImgReplacer( image.getRai(), volumeCachedCellImg ).get();

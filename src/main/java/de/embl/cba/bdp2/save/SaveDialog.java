@@ -110,7 +110,7 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > > extends JFr
         panels.get( panelIndex ).add( new JLabel( "From time frame (zero-based) " ) );
         panels.get( panelIndex ).add( tfTStart );
         panels.get( panelIndex ).add( new JLabel( " to (inclusive) " ) );
-        tfTEnd.setText( Long.toString( inputImage.getVoxelDimensionsXYZCT()[ DimensionOrder.T ] - 1 ) );
+        tfTEnd.setText( Long.toString( inputImage.getDimensionsXYZCT()[ DimensionOrder.T ] - 1 ) );
         panels.get( panelIndex ).add( tfTEnd );
         mainPanel.add( panels.get( panelIndex++ ) );
 

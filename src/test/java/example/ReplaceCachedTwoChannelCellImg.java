@@ -42,7 +42,7 @@ public class ReplaceCachedTwoChannelCellImg
 
 		final CachedCellImg cachedCellImg2 = CachedCellImgReader
 				.createVolumeCachedCellImg(
-				fileInfos, image.getVoxelDimensionsXYZCT()[ DimensionOrder.C ] * numIOThreads );
+				fileInfos, image.getDimensionsXYZCT()[ DimensionOrder.C ] * numIOThreads );
 
 		final RandomAccessibleInterval replaced =
 				new CachedCellImgReplacer( cachedCellImg, cachedCellImg2 ).get();
