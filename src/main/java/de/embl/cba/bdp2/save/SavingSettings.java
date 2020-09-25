@@ -46,6 +46,8 @@ public class SavingSettings {
     public int numProcessingThreads = 1;
     public String[] channelNames;
     public String channelNamesInSavedImages = CHANNEL_INDEXING;
+    public int tStart; // inclusive, zero-based
+    public int tEnd; // inclusive
 
     public enum SaveFileType
     {

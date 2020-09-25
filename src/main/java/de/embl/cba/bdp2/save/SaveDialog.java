@@ -41,13 +41,20 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > > extends JFr
                     SavingSettings.CHANNEL_INDEXING
             }
     );
+    private static final JTextField tfTStart = new JTextField("0", 3);
+    private static final JTextField tfTEnd = new JTextField("0", 3);
+
     private static final JTextField tfRowsPerStrip = new JTextField("10", 3);
     private static final JTextField tfNumIOThreads = new JTextField("" + defaults.numIOThreads, 2);
     private static final JTextField tfNumProcessingThreads = new JTextField( "" + defaults.numProcessingThreads, 2);
     private static final JTextField tfDirectory = new JTextField("", 50);
 
     private final String SAVE = "Save";
-    protected final JButton save = new JButton(SAVE);
+    protected final JButton saveButton = new JButton(SAVE);
+
+    private final String RECORD = "Record Only";
+    protected final JButton recordButton = new JButton(RECORD);
+
     private final String STOP_SAVING = "Stop Saving";
     private final JButton stopSaving = new JButton(STOP_SAVING);
     protected final JLabel MESSAGE = new JLabel("");
@@ -69,8 +76,7 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > > extends JFr
         createDialog();
     }
 
-
-    public void createDialog()
+    private void createDialog()
     {
         JTabbedPane menu = new JTabbedPane();
         mainPanel = new JPanel();
@@ -99,6 +105,15 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > > extends JFr
         {
             panelIndex = addChannelNamingSchemeChoice( panelIndex );
         }
+
+        panels.add( new JPanel() );
+        panels.get( panelIndex ).add( new JLabel( "From time frame (zero-based) " ) );
+        panels.get( panelIndex ).add( tfTStart );
+        panels.get( panelIndex ).add( new JLabel( " to (inclusive) " ) );
+        tfTEnd.setText( Long.toString( inputImage.getVoxelDimensionsXYZCT()[ DimensionOrder.T ] - 1 ) );
+        panels.get( panelIndex ).add( tfTEnd );
+        mainPanel.add( panels.get( panelIndex++ ) );
+
 
 //        panels.get(j).add(tfVolumesFilePath);
 //        final JButton volumesPathSelectionButton = new JButton( "Folder" );
@@ -140,12 +155,19 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > > extends JFr
         mainPanel.add( panels.get(panelIndex++));
 
         panels.add(new JPanel());
-        save.setActionCommand(SAVE);
-        save.addActionListener(this);
-        panels.get(panelIndex).add(save);
+
+        saveButton.setActionCommand(SAVE);
+        saveButton.addActionListener(this);
+        panels.get(panelIndex).add( saveButton );
+
+        recordButton.setActionCommand(RECORD);
+        recordButton.addActionListener(this);
+        panels.get(panelIndex).add( recordButton );
+
         stopSaving.setActionCommand(STOP_SAVING);
         stopSaving.addActionListener(this);
         panels.get(panelIndex).add(stopSaving);
+
         mainPanel.add( panels.get(panelIndex++));
 
         panels.add(new JPanel());
@@ -190,13 +212,19 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > > extends JFr
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed( ActionEvent e ) {
 
         SwingUtilities.invokeLater( () -> {
 
             if ( e.getActionCommand().equals( SAVE ) )
             {
                 save();
+                recordMacro();
+            }
+            else if ( e.getActionCommand().equals( RECORD ) )
+            {
+                // only record the macro command, useful for batch analysis
+                savingSettings = getSavingSettings();
                 recordMacro();
             }
             else if ( e.getActionCommand().equals( STOP_SAVING ) )
@@ -209,7 +237,7 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > > extends JFr
     public void stopSave()
     {
         saver.stopSave(); // Don't submit to thread pool. Let the main thread handle it.
-        save.setEnabled( true );
+        saveButton.setEnabled( true );
         progressBar.setVisible( false );
         MESSAGE.setText( MESSAGE_SAVE_INTERRUPTED );
         pack();
@@ -221,7 +249,7 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > > extends JFr
         savingSettings = getSavingSettings();
         progressBar.setVisible( true );
         pack();
-        save.setEnabled( false );
+        saveButton.setEnabled( false );
         BigDataProcessor2.threadPool.submit( () -> {
             this.saver = BigDataProcessor2.saveImage(
                     viewer.getImage(),
@@ -249,6 +277,9 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > > extends JFr
         savingSettings.voxelSize = viewer.getImage().getVoxelSize();
         savingSettings.voxelUnit = viewer.getImage().getVoxelUnit();
         savingSettings.channelNamesInSavedImages = (String) comboChannelNames.getSelectedItem();
+        savingSettings.tStart = Integer.parseInt( tfTStart.getText() );
+        savingSettings.tEnd = Integer.parseInt( tfTEnd.getText() );
+
         return savingSettings;
     }
 
@@ -261,7 +292,7 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > > extends JFr
             if ( progressPercent >= 100 )
             {
                 progressBar.setVisible( false );
-                save.setEnabled( true );
+                saveButton.setEnabled( true );
                 progressBar.setValue( 0 );
                 pack();
                 saver.stopSave();
@@ -280,6 +311,9 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > > extends JFr
         recorder.addOption( SaveAdvancedCommand.SAVE_PROJECTIONS_PARAMETER, savingSettings.saveProjections);
         recorder.addOption( SaveAdvancedCommand.SAVE_VOLUMES_PARAMETER, savingSettings.saveVolumes);
         recorder.addOption( SaveAdvancedCommand.TIFF_COMPRESSION_PARAMETER, savingSettings.compression);
+
+        recorder.addOption( SaveAdvancedCommand.T_START_PARAMETER, savingSettings.tStart);
+        recorder.addOption( SaveAdvancedCommand.T_END_PARAMETER, savingSettings.tEnd);
 
         recorder.record();
     }

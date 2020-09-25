@@ -33,8 +33,7 @@ public class TiffVolumesImageSaver extends AbstractImageSaver
         AtomicInteger counter = new AtomicInteger( 0 );
         final long startTime = System.currentTimeMillis();
 
-        long timeFrames = savingSettings.rai.dimension( DimensionOrder.T );
-        for (int t = 0; t < timeFrames; t++)
+        for (int t = savingSettings.tStart; t <= savingSettings.tEnd; t++)
         {
             futures.add(
                     es.submit(

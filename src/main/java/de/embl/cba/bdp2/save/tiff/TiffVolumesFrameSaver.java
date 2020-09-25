@@ -44,7 +44,6 @@ public class TiffVolumesFrameSaver< R extends RealType< R > & NativeType< R > > 
     private final AtomicBoolean stop;
     private RandomAccessibleInterval rai;
 
-    // TODO: feed back to progress listener
     public TiffVolumesFrameSaver( int t,
                                   SavingSettings settings,
                                   AtomicInteger counter,

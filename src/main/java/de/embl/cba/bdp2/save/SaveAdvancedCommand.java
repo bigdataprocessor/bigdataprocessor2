@@ -43,6 +43,13 @@ public class SaveAdvancedCommand< R extends RealType< R > & NativeType< R > > im
     boolean saveProjections;
     public static String SAVE_PROJECTIONS_PARAMETER = "saveProjections";
 
+    @Parameter(label = "First time frame (zero-based)")
+    int tStart = 0;
+    public static String T_START_PARAMETER = "tStart";
+
+    @Parameter(label = "Last time frame (inclusive)")
+    int tEnd = 0;
+    public static String T_END_PARAMETER = "tEnd";
 
     @Parameter(label = "File type", choices =
             {
@@ -100,6 +107,10 @@ public class SaveAdvancedCommand< R extends RealType< R > & NativeType< R > > im
 
         savingSettings.voxelSize = inputImage.getVoxelSize();
         savingSettings.voxelUnit = inputImage.getVoxelUnit();
+
+        savingSettings.tStart = tStart;
+        savingSettings.tEnd = tEnd;
+
 
         return savingSettings;
     }
