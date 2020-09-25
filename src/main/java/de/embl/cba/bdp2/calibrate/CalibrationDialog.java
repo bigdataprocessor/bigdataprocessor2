@@ -2,7 +2,7 @@ package de.embl.cba.bdp2.calibrate;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.record.MacroRecorder;
+import de.embl.cba.bdp2.macro.MacroRecorder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import ij.IJ;

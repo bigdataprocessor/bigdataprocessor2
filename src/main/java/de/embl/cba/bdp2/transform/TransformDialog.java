@@ -3,7 +3,7 @@ package de.embl.cba.bdp2.transform;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.dialog.AbstractProcessingDialog;
 import de.embl.cba.bdp2.open.ui.AbstractOpenCommand;
-import de.embl.cba.bdp2.record.MacroRecorder;
+import de.embl.cba.bdp2.macro.MacroRecorder;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import ij.gui.GenericDialog;
 import net.imglib2.type.NativeType;

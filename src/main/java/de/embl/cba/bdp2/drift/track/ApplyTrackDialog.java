@@ -1,9 +1,8 @@
 package de.embl.cba.bdp2.drift.track;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
-import de.embl.cba.bdp2.calibrate.CalibrateCommand;
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.record.MacroRecorder;
+import de.embl.cba.bdp2.macro.MacroRecorder;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import de.embl.cba.bdv.utils.BdvUtils;
 import fiji.util.gui.GenericDialogPlus;

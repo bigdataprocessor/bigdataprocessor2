@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.record;
+package de.embl.cba.bdp2.macro;
 
 import ij.gui.GenericDialog;
 import ij.plugin.frame.Recorder;

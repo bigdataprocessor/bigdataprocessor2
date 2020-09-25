@@ -5,7 +5,7 @@ import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.log.progress.ProgressListener;
 import de.embl.cba.bdp2.open.OpenFileType;
-import de.embl.cba.bdp2.record.MacroRecorder;
+import de.embl.cba.bdp2.macro.MacroRecorder;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import ij.IJ;
@@ -37,8 +37,8 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > > extends JFr
 
     private static final JComboBox comboChannelNames = new JComboBox(
             new String[]{
-                    SavingSettings.CHANNEL_NAMES,
-                    SavingSettings.CHANNEL_INDEXING
+                    SavingSettings.CHANNEL_INDEXING,
+                    SavingSettings.CHANNEL_NAMES
             }
     );
     private static final JTextField tfTStart = new JTextField("0", 3);

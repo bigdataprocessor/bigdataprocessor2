@@ -18,7 +18,7 @@ import de.embl.cba.bdp2.image.ImageRenameCommand;
 import de.embl.cba.bdp2.image.ImageRenameDialog;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.open.ui.*;
-import de.embl.cba.bdp2.record.MacroRecordingDialog;
+import de.embl.cba.bdp2.macro.MacroRecordingDialog;
 import de.embl.cba.bdp2.save.SaveDialog;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.scijava.Services;

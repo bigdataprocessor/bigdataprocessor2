@@ -1,5 +1,6 @@
 package de.embl.cba.bdp2.calibrate;
 
+import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.process.AbstractProcessingCommand;
 import de.embl.cba.bdp2.utils.Utils;
 import net.imglib2.type.NativeType;
@@ -34,6 +35,16 @@ public class CalibrateCommand< R extends RealType< R > & NativeType< R > > exten
         outputImage = inputImage;
         outputImage.setVoxelUnit( unit );
         outputImage.setVoxelSize( new double[]{ voxelSizeX, voxelSizeY, voxelSizeZ } );
+
+        log();
+
         handleOutputImage( false, false );
+    }
+
+    private void log()
+    {
+        Logger.log( COMMAND_FULL_NAME );
+        for ( int d = 0; d < 3; d++ )
+            Logger.log( "Voxel size ["+d+"]: " + outputImage.getVoxelSize()[d]);
     }
 }

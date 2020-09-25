@@ -1,22 +1,9 @@
 package de.embl.cba.bdp2.open.ui;
 
-import de.embl.cba.bdp2.BigDataProcessor2;
-import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.log.progress.ProgressListener;
-import de.embl.cba.bdp2.open.OpenFileType;
-import de.embl.cba.bdp2.record.MacroRecorder;
-import de.embl.cba.bdp2.save.SaveAdvancedCommand;
-import de.embl.cba.bdp2.save.SavingSettings;
-import de.embl.cba.bdp2.utils.DimensionOrder;
-import ij.IJ;
-import net.imglib2.type.NativeType;
-import net.imglib2.type.numeric.RealType;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
 
 public class ProgressBar implements ProgressListener
 {

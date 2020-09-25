@@ -1,6 +1,7 @@
 package de.embl.cba.bdp2.log.progress;
 
 import de.embl.cba.bdp2.log.Logger;
+import de.embl.cba.bdp2.scijava.Services;
 import de.embl.cba.bdp2.utils.Utils;
 
 import java.util.List;
@@ -12,7 +13,6 @@ import java.util.concurrent.Future;
  */
 public class Progress
 {
-
     public static void informProgressListeners( List< Future > futures,
                                                 int updateFrequencyMilliseconds,
                                                 List< ProgressListener > progressListeners ) {
@@ -53,12 +53,26 @@ public class Progress
 
             if ( error )
             {
-                Logger.error( "There was an error in one of the threads.\n" +
+
+                String msg = "There was an error in one of the threads.\n" +
                         "Please see the Console for more details.\n" +
                         "In case of an out-of-memory error, please increase the RAM and/or " +
-                        "reduce the number of threads.");
-            }
+                        "reduce the number of threads.";
 
+                if ( Services.uiService.isHeadless()) {
+                    Logger.info( msg + "\nError in headless mode: exiting..." );
+                    try {
+                        Services.context.dispose();
+                    }
+                    finally {
+                        System.exit(1);
+                    }
+                }
+                else
+                {
+                    Logger.error( msg );
+                }
+            }
 
             if ( numFinishedFutures != previousFinishedFutures )
                 if ( progressListeners != null )

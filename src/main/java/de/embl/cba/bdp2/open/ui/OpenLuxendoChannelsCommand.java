@@ -49,7 +49,6 @@ public class OpenLuxendoChannelsCommand< R extends RealType< R > & NativeType< R
                                 channelSubsetter );
 
             handleOutputImage( true, false );
-
         });
     }
 }

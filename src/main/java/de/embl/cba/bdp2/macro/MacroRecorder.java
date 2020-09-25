@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.record;
+package de.embl.cba.bdp2.macro;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.open.ui.AbstractOpenCommand;

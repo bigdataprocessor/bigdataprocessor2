@@ -1,6 +1,6 @@
 package de.embl.cba.bdp2.image;
 
-import de.embl.cba.bdp2.record.MacroRecorder;
+import de.embl.cba.bdp2.macro.MacroRecorder;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import ij.gui.GenericDialog;
 import net.imglib2.type.NativeType;

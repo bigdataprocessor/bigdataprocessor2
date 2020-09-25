@@ -4,8 +4,7 @@ import de.embl.cba.bdp2.open.ui.AbstractOpenCommand;
 import de.embl.cba.bdp2.open.ui.ChannelChooserDialog;
 import de.embl.cba.bdp2.open.ui.OpenLuxendoChannelsCommand;
 import de.embl.cba.bdp2.open.ui.OpenLuxendoCommand;
-import de.embl.cba.bdp2.process.AbstractProcessingCommand;
-import de.embl.cba.bdp2.record.MacroRecorder;
+import de.embl.cba.bdp2.macro.MacroRecorder;
 import ij.plugin.frame.Recorder;
 
 import java.awt.*;
