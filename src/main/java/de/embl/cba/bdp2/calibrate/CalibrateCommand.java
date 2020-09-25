@@ -44,7 +44,10 @@ public class CalibrateCommand< R extends RealType< R > & NativeType< R > > exten
     private void log()
     {
         Logger.log( COMMAND_FULL_NAME );
+        double[] voxelSize = outputImage.getVoxelSize();
         for ( int d = 0; d < 3; d++ )
-            Logger.log( "Voxel size ["+d+"]: " + outputImage.getVoxelSize()[d]);
+        {
+            Logger.log( "Voxel size [" + d + "]: " + voxelSize[ d ] );
+        }
     }
 }

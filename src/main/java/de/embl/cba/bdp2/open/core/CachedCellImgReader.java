@@ -140,13 +140,12 @@ public class CachedCellImgReader
             Logger.info( "Adapted cell size in Z: " + cellDimZ );
         }
 
-        final ImageLoader loader = new ImageLoader(
-                fileInfos, new int[]{ cellDimX, cellDimY, cellDimZ, 1, 1 } );
+        final ImageLoader loader = new ImageLoader( fileInfos, new int[]{ cellDimX, cellDimY, cellDimZ, 1, 1 } );
 
         final ReadOnlyCachedCellImgOptions options = options()
                 .cellDimensions( loader.getCellDims() )
                 .cacheType( DiskCachedCellImgOptions.CacheType.BOUNDED )
-                .maxCacheSize( 0 );
+                .maxCacheSize( 1 );
 
         final CachedCellImg cachedCellImg = new ReadOnlyCachedCellImgFactory().create(
                 loader.getDimensions(),

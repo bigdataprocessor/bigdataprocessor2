@@ -18,7 +18,7 @@ public class PerformanceMonitor
 		copyPerformances = Collections.synchronizedList(new ArrayList<>( ));
 	}
 
-	public void addReadPerformance( int numBytes, long timeMillis )
+	public synchronized void addReadPerformance( long numBytes, long timeMillis )
 	{
 		final double mbps = toMBPS( numBytes, timeMillis );
 		synchronized ( readPerformances )
@@ -34,7 +34,7 @@ public class PerformanceMonitor
 	 * @param timeMillis
 	 * @return mega bits per second
 	 */
-	private double toMBPS( int numBytes, long timeMillis )
+	private double toMBPS( long numBytes, long timeMillis )
 	{
 		return 1.0 * numBytes * 8 / MEGA / ( timeMillis / 1000.0 );
 	}

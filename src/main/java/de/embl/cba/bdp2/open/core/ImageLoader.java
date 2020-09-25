@@ -144,9 +144,7 @@ public class ImageLoader< T extends NativeType< T > > implements CellLoader< T >
             final byte[] storageArray = (byte[]) cell.getStorageArray();
             int destPos = 0;
             ImagePlus imagePlus = getDataCube( min, max );
-            PerformanceService.getPerformanceMonitor().addReadPerformance( storageArray.length, System.currentTimeMillis() - start  );
 
-            start = System.currentTimeMillis();
             final ImageStack stack = imagePlus.getStack();
             for ( int i = 0; i < stack.size(); i++ )
             {
@@ -155,7 +153,10 @@ public class ImageLoader< T extends NativeType< T > > implements CellLoader< T >
                 System.arraycopy( impData, 0, storageArray, destPos, impData.length );
                 destPos += impData.length;
             }
-            PerformanceService.getPerformanceMonitor().addCopyPerformance( storageArray.length, System.currentTimeMillis() - start  );
+
+            PerformanceService.getPerformanceMonitor().addReadPerformance( storageArray.length, System.currentTimeMillis() - start  );
+
+            //PerformanceService.getPerformanceMonitor().addCopyPerformance( storageArray.length, System.currentTimeMillis() - start  );
 
         }
         else if ( cell.firstElement() instanceof UnsignedShortType )
@@ -185,7 +186,7 @@ public class ImageLoader< T extends NativeType< T > > implements CellLoader< T >
                 }
             }
 
-            PerformanceService.getPerformanceMonitor().addReadPerformance( 2 * storageArray.length, System.currentTimeMillis() - start  );
+            PerformanceService.getPerformanceMonitor().addReadPerformance( 2L * (long) storageArray.length, System.currentTimeMillis() - start  );
 
         }
         else if (cell.firstElement() instanceof FloatType)
@@ -195,7 +196,7 @@ public class ImageLoader< T extends NativeType< T > > implements CellLoader< T >
             final float[] storageArray = (float[]) cell.getStorageArray();
             System.arraycopy(impData, 0, storageArray, 0, storageArray.length);
 
-            PerformanceService.getPerformanceMonitor().addReadPerformance( 4 * storageArray.length, System.currentTimeMillis() - start  );
+            PerformanceService.getPerformanceMonitor().addReadPerformance( 4L * (long) storageArray.length, System.currentTimeMillis() - start  );
         }
     }
 

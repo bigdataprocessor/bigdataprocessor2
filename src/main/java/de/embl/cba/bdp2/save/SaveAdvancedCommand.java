@@ -2,6 +2,7 @@ package de.embl.cba.bdp2.save;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
+import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.service.ImageService;
 import de.embl.cba.bdp2.utils.Utils;
 import net.imglib2.type.NativeType;
@@ -79,11 +80,13 @@ public class SaveAdvancedCommand< R extends RealType< R > & NativeType< R > > im
 
     public void run()
     {
+        Logger.info( COMMAND_FULL_NAME );
+
         SavingSettings savingSettings = getSavingSettings();
 
-        BigDataProcessor2.saveImageAndWaitUntilDone(
-                    inputImage,
-                    savingSettings );
+        BigDataProcessor2.saveImageAndWaitUntilDone( inputImage, savingSettings );
+
+        Utils.shutDownIfHeadless();
     }
 
     private SavingSettings getSavingSettings()
@@ -110,7 +113,6 @@ public class SaveAdvancedCommand< R extends RealType< R > & NativeType< R > > im
 
         savingSettings.tStart = tStart;
         savingSettings.tEnd = tEnd;
-
 
         return savingSettings;
     }

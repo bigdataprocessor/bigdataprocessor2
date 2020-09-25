@@ -38,6 +38,7 @@ import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.luxendo.Luxendos;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.dialog.DisplaySettings;
+import de.embl.cba.bdp2.scijava.Services;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
@@ -282,6 +283,19 @@ public class Utils {
 			}
 		}
 		return isOK;
+	}
+
+	public static void shutDownIfHeadless()
+	{
+		if ( Services.uiService.isHeadless() ) {
+			Logger.info( "Headless mode detected: Exiting...." );
+			try {
+				Services.context.dispose();
+			}
+			finally {
+				System.exit(1);
+			}
+		}
 	}
 
 	public enum ImageFilterTypes {

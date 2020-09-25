@@ -4,6 +4,7 @@ import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.calibrate.CalibrationCheckerDialog;
 import de.embl.cba.bdp2.dialog.HelpWindow;
 import de.embl.cba.bdp2.image.Image;
+import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.scijava.Services;
 import de.embl.cba.bdp2.service.ImageService;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;

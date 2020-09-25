@@ -5,6 +5,7 @@ import de.embl.cba.bdp2.save.ProjectionXYZ;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.utils.IntervalImageViews;
 import de.embl.cba.bdp2.utils.Utils;
+import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.io.FileSaver;
@@ -95,8 +96,9 @@ public class TiffVolumesFrameSaver< R extends RealType< R > & NativeType< R > > 
 
             counter.incrementAndGet();
 
-            System.gc();
+            System.gc(); // TODO: test whether this could be removed
         }
+
     }
 
     public String getChannelName( int c )
@@ -312,7 +314,11 @@ public class TiffVolumesFrameSaver< R extends RealType< R > & NativeType< R > > 
             return;
         }
 
-        FileSaver fileSaver = new FileSaver( imp );
+        // The FileTiffSaverFromImageJ has a minimal modification
+        // compared to the FileSaver, which that makes it much faster
+        // for virtual stacks; see commented line in the saveAsTiffStack()
+        // function
+        FileTiffSaverFromImageJ fileSaver = new FileTiffSaverFromImageJ( imp );
         String pathCT = getFullPath( path, sC, sT, ".tif" );
 
         fileSaver.saveAsTiffStack( pathCT );
