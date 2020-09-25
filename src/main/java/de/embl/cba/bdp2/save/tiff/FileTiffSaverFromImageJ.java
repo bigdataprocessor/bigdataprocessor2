@@ -19,7 +19,11 @@ import java.util.zip.ZipOutputStream;
 
 import static ij.io.FileSaver.getOverlay;
 
-
+/**
+ * This is a copy of the class
+ * FileSaver from ImageJ with only one slight modification (see NOTE below).
+ *
+ */
 public class FileTiffSaverFromImageJ
 {
 	public static final int DEFAULT_JPEG_QUALITY = 85;

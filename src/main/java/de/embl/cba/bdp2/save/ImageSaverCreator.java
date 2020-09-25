@@ -4,6 +4,7 @@ import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.log.progress.ProgressListener;
 import de.embl.cba.bdp2.open.core.CachedCellImgReader;
+import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.cache.img.CachedCellImg;
@@ -21,22 +22,24 @@ public class ImageSaverCreator < R extends RealType< R > & NativeType< R > >
 
 	public ImageSaverCreator( Image< R > image, SavingSettings savingSettings, ProgressListener progressListener )
 	{
-		int nIOThread = Math.max( 1, Math.min( savingSettings.numIOThreads, MAX_THREAD_LIMIT ));
+		int numIOThreads = Math.max( 1, Math.min( savingSettings.numIOThreads, MAX_THREAD_LIMIT ));
 
-		Logger.info( "Saving started; I/O threads: " + nIOThread );
+		Logger.info( "Saving started; I/O threads: " + numIOThreads );
 
-		ExecutorService saveExecutorService = Executors.newFixedThreadPool( nIOThread );
+		ExecutorService saveExecutorService = Executors.newFixedThreadPool( numIOThreads );
 
 		if ( ! savingSettings.saveFileType.equals( SavingSettings.SaveFileType.TIFF_PLANES ) )
 		{
-			Logger.info( "Saving: Configuring volume reader..." );
-
 			// TODO: for cropped images only fully load the cropped region
 			// TODO: for input data distributed across Tiff planes this should be reconsidered
-			final CachedCellImg< R, ? > volumeCachedCellImg
-					= CachedCellImgReader.createVolumeCachedCellImg( image.getFileInfos() );
-			final RandomAccessibleInterval< R > volumeLoadedRAI =
-					new CachedCellImgReplacer( image.getRai(), volumeCachedCellImg ).get();
+
+			long cacheSize = image.getVoxelDimensionsXYZCT()[ DimensionOrder.C ] * numIOThreads;
+
+			Logger.info( "Configuring volume reader with a cache size of " + cacheSize + " volumes." );
+			Logger.info( "Given the size of one volume this will amount to a memory load of about " + cacheSize * image.getSizeGB() + " GB." );
+
+			final CachedCellImg< R, ? > volumeCachedCellImg = CachedCellImgReader.createVolumeCachedCellImg( image.getFileInfos(), cacheSize );
+			final RandomAccessibleInterval< R > volumeLoadedRAI = new CachedCellImgReplacer( image.getRai(), volumeCachedCellImg ).get();
 			savingSettings.rai = volumeLoadedRAI;
 		}
 		else

@@ -119,12 +119,15 @@ public class CachedCellImgReader
 
     /**
      * Useful for saving to load the whole volume in one go as this
-     * speeds up performance.
+     * speeds up read performance significantly
      *
      * @param fileInfos
-     * @return
+     * @param cacheSize
+     *                  This should be set taking into consideration potential concurrent
+     *                  access to different timepoints and channels.
+	 * @return
      */
-    public static CachedCellImg createVolumeCachedCellImg( FileInfos fileInfos )
+    public static CachedCellImg createVolumeCachedCellImg( FileInfos fileInfos, long cacheSize )
     {
         int cellDimX = fileInfos.nX;
         int cellDimY = fileInfos.nY;
@@ -145,7 +148,7 @@ public class CachedCellImgReader
         final ReadOnlyCachedCellImgOptions options = options()
                 .cellDimensions( loader.getCellDims() )
                 .cacheType( DiskCachedCellImgOptions.CacheType.BOUNDED )
-                .maxCacheSize( 1 );
+                .maxCacheSize( cacheSize );
 
         final CachedCellImg cachedCellImg = new ReadOnlyCachedCellImgFactory().create(
                 loader.getDimensions(),

@@ -6,6 +6,7 @@ import de.embl.cba.bdp2.open.core.FileInfos;
 import de.embl.cba.bdp2.open.core.NamingSchemes;
 import de.embl.cba.bdp2.save.CachedCellImgReplacer;
 import de.embl.cba.bdp2.BigDataProcessor2;
+import de.embl.cba.bdp2.utils.DimensionOrder;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.cache.img.CachedCellImg;
 
@@ -41,7 +42,7 @@ public class ReplaceCachedTwoChannelCellImg
 
 		final CachedCellImg cachedCellImg2 = CachedCellImgReader
 				.createVolumeCachedCellImg(
-				fileInfos );
+				fileInfos, image.getVoxelDimensionsXYZCT()[ DimensionOrder.C ] * numIOThreads );
 
 		final RandomAccessibleInterval replaced =
 				new CachedCellImgReplacer( cachedCellImg, cachedCellImg2 ).get();
