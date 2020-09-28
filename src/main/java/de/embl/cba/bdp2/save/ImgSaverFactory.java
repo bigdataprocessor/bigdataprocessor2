@@ -16,7 +16,7 @@ public class ImgSaverFactory {
         }
         else if (savingSettings.saveFileType.equals( SavingSettings.SaveFileType.TIFF_VOLUMES ))
         {
-            return new TiffVolumesImageSaver(savingSettings, es);
+            return new TiffVolumesImageSaver( savingSettings, es );
         }
         else if (savingSettings.saveFileType.equals( SavingSettings.SaveFileType.HDF5_VOLUMES ))
         {

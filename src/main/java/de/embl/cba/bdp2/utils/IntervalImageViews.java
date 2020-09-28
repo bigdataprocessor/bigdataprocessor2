@@ -103,18 +103,20 @@ public class IntervalImageViews
 		return frame;
 	}
 
+	/**
+	 * If the input image is composed of stacked views,
+	 * this function will effectively do all the computations.
+	 *
+	 *
+	 * @param image
+	 * @param c
+	 * @param t
+	 * @param numThreads
+	 * @param <R>
+	 * @return
+	 */
 	public static < R extends RealType< R > & NativeType< R > >
-	RandomAccessibleInterval< R > getVolumeForSaving(
-			RandomAccessibleInterval< R > raiXYZCT,
-			long c,
-			long t,
-			int numThreads )
-	{
-		return getVolumeView( raiXYZCT, c, t );
-	}
-
-	public static < R extends RealType< R > & NativeType< R > >
-	RandomAccessibleInterval< R > getNonVolatileVolumeCopy(
+	RandomAccessibleInterval< R > createNonVolatileVolumeCopy(
 			RandomAccessibleInterval< R > image,
 			long c,
 			long t,
@@ -150,7 +152,7 @@ public class IntervalImageViews
 
 
 	public static < R extends RealType< R > & NativeType< R > >
-	RandomAccessibleInterval< R > getNonVolatileVolumeCopy(
+	RandomAccessibleInterval< R > createNonVolatileVolumeCopy(
 			RandomAccessibleInterval< R > rai,
 			FinalInterval volume,
 			long c,

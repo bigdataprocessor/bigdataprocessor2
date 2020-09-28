@@ -80,7 +80,7 @@ public class ImarisFrameSaver< R extends RealType< R > & NativeType< R >> implem
             }
 
             RandomAccessibleInterval< R > raiXYZ =
-                    IntervalImageViews.getVolumeForSaving( raiXYZCT, c, t, settings.numProcessingThreads );
+                    IntervalImageViews.createNonVolatileVolumeCopy( raiXYZCT, c, t, settings.numProcessingThreads );
 
             ImagePlus imagePlus =
                     Utils.wrap3DRaiToCalibratedImagePlus(

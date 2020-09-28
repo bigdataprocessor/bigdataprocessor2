@@ -26,15 +26,20 @@ public class BDP2MacroClusterExecutionCommand extends AbstractClusterSubmitterCo
 	@Parameter ( label = "Macro files" )
 	File[] macros;
 
-	@Parameter ( label = "Time points per job" )
+	@Parameter ( label = "Timepoints per job" )
 	int timePointsPerJob = 10;
+
+	@Parameter ( label = "Minutes per timepoint" )
+	int minutesPerTimePoint = 5;
 
 	@Override
 	public void run()
 	{
 		createJobSubmitter( executable.toString() + JobSubmitter.RUN_IJ_MACRO_OPTIONS );
 		jobFutures = submitJobs( macros );
-		new Thread( () ->  monitorJobs( jobFutures ) ).start();
+		new Thread( () ->  {
+			monitorJobs( jobFutures );
+		} ).start();
 	}
 
 	private ArrayList< JobFuture > submitJobs( File[] macros )
@@ -49,12 +54,12 @@ public class BDP2MacroClusterExecutionCommand extends AbstractClusterSubmitterCo
 			int tStart = getTimepoint( macro, ".*" + T_START + "(?<TSTART>\\d+).*" );
 			int tEnd = getTimepoint( macro, ".*" + T_END + "(?<TSTART>\\d+).*" );
 
-			for ( int t = tStart; t <= tEnd; t+=timePointsPerJob )
+			for ( int t = tStart; t <= tEnd; t+= minutesPerTimePoint )
 			{
 				jobSubmitter.clearCommands();
 
 				int t0 = t;
-				int t1 = t + timePointsPerJob - 1;
+				int t1 = t + minutesPerTimePoint - 1;
 				t1 = t1 <= tEnd ? t1 : tEnd;
 
 				String timeSubsetMacro = macro
@@ -90,7 +95,7 @@ public class BDP2MacroClusterExecutionCommand extends AbstractClusterSubmitterCo
 		jobSettings.numWorkersPerNode = numWorkers;
 		jobSettings.queue = JobSettings.DEFAULT_QUEUE;
 		jobSettings.memoryPerJobInMegaByte = 16000; // TODO
-		jobSettings.timePerJobInMinutes = ( t1 - t0 + 1) * 5; // assume 5 minutes per timepoint (usually much faster).
+		jobSettings.timePerJobInMinutes = ( t1 - t0 + 1) * minutesPerTimePoint;
 		return jobSettings;
 	}
 

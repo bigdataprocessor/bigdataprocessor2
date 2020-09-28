@@ -5,10 +5,8 @@ import de.embl.cba.bdp2.save.ProjectionXYZ;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.utils.IntervalImageViews;
 import de.embl.cba.bdp2.utils.Utils;
-import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
-import ij.io.FileSaver;
 import loci.common.DebugTools;
 import loci.common.services.DependencyException;
 import loci.common.services.ServiceException;
@@ -74,7 +72,7 @@ public class TiffVolumesFrameSaver< R extends RealType< R > & NativeType< R > > 
                 return;
             }
 
-            RandomAccessibleInterval< R > raiXYZ = IntervalImageViews.getVolumeForSaving( rai, c, t, settings.numProcessingThreads );
+            RandomAccessibleInterval< R > raiXYZ = IntervalImageViews.createNonVolatileVolumeCopy( rai, c, t, settings.numProcessingThreads );
 
             if ( settings.saveVolumes )
             {
