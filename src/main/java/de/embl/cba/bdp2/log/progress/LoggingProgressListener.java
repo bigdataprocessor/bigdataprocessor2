@@ -6,21 +6,19 @@ public class LoggingProgressListener implements ProgressListener
 {
 	private long current;
 	private long total;
-	private long startTimeMillis = -1;
+	private long startTimeMillis;
 	private final String msg;
 
 	public LoggingProgressListener( String msg )
 	{
 		this.msg = msg;
+		this.startTimeMillis = System.currentTimeMillis();
 		reset();
 	}
 
 	@Override
 	public void progress( long current, long total )
 	{
-		if ( startTimeMillis == -1 )
-			startTimeMillis = System.currentTimeMillis();
-
 		this.current = current;
 		this.total = total;
 

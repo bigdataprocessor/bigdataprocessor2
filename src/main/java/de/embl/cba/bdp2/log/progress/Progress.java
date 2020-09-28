@@ -53,7 +53,6 @@ public class Progress
 
             if ( error )
             {
-
                 String msg = "There was an error in one of the threads.\n" +
                         "Please see the Console for more details.\n" +
                         "In case of an out-of-memory error, please increase the RAM and/or " +
