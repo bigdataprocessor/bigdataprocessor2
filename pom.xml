@@ -83,6 +83,7 @@
 		<ome.version>6.0.1</ome.version>
 		<imaris-writer.version>0.2.2</imaris-writer.version>
 		<imagej-utils.version>0.5.4</imagej-utils.version>
+		<imagej-cluster.version>0.6.3-SNAPSHPOT</imagej-cluster.version>
 	</properties>
 
 	<repositories>
@@ -184,5 +185,12 @@
 			<artifactId>imagej-utils</artifactId>
 			<version>${imagej-utils.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>de.embl.cba</groupId>
+			<artifactId>imagej-cluster</artifactId>
+			<version>${imagej-cluster.version}</version>
+		</dependency>
+
+
 	</dependencies>
 </project>

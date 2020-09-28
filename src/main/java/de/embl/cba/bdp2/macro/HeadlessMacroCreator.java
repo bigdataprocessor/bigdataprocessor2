@@ -52,8 +52,6 @@ public class HeadlessMacroCreator
 			headlessCommands.add( command );
 		}
 
-		headlessCommands.add( "run(\"Quit\");");
-
 		String join = headlessCommands.stream().collect( Collectors.joining( ";" ) );
 
 		return join;

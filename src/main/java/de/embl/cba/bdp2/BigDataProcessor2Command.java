@@ -12,13 +12,6 @@ import org.scijava.plugin.Plugin;
 
 import javax.swing.*;
 
-
-/**
- * TODO: How to add a HELP button for the regular expression without screwing up the macro recording?
- *
- *
- * @param <R>
- */
 @Plugin(type = Command.class, menuPath = "Plugins>BigDataProcessor>" + BigDataProcessor2Command.COMMAND_FULL_NAME )
 public class BigDataProcessor2Command< R extends RealType< R > & NativeType< R > > implements Command
 {
@@ -34,24 +27,7 @@ public class BigDataProcessor2Command< R extends RealType< R > & NativeType< R >
         CropDialog.askForUnitsChoice = true;
 
         SwingUtilities.invokeLater( () -> {
-
             BigDataProcessor2UI.showUI();
-
-//            ArrayImgs.unsignedShorts( 10, 10, 10, 1, 1 );
-//            final Image< UnsignedShortType > image = new Image<>( ArrayImgs.unsignedShorts( 10, 10, 10, 1, 1 ),
-//                    "Welcome!",
-//					new String[]{"channel 0"},
-//                    new double[]{ 1, 1, 1 },
-//                    "micrometer",
-//                    null );
-//
-//            final BdvImageViewer viewer = BigDataProcessor2.showImage( image );
-//
-//            new Thread( () ->  {
-//                IJ.wait( 2000 );
-//                viewer.getBdvHandle().getViewerPanel().addOverlayAnimator ( new TextOverlayAnimator( "Go to Menu > BigDataProcessor2 > Open", 10000, TextOverlayAnimator.TextPosition.CENTER ) );
-//            }).start();
-
         } );
     }
 }
