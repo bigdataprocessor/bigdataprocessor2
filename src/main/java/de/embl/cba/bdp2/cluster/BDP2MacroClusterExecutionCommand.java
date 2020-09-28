@@ -1,6 +1,5 @@
 package de.embl.cba.bdp2.cluster;
 
-import de.embl.cba.bdp2.BigDataProcessor2Command;
 import de.embl.cba.bdp2.macro.HeadlessMacroCreator;
 import de.embl.cba.bdp2.scijava.Services;
 import de.embl.cba.cluster.AbstractClusterSubmitterCommand;
@@ -9,18 +8,13 @@ import de.embl.cba.cluster.JobSettings;
 import de.embl.cba.cluster.JobSubmitter;
 import de.embl.cba.morphometry.Utils;
 import de.embl.cba.util.PathMapper;
-import ij.IJ;
-import ij.plugin.frame.Recorder;
 import net.imagej.ImageJ;
 import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 @Plugin(type = Command.class, menuPath = "Plugins>EMBL>BDP2 Execute Macro on Cluster" )
 public class BDP2MacroClusterExecutionCommand extends AbstractClusterSubmitterCommand
@@ -46,6 +40,7 @@ public class BDP2MacroClusterExecutionCommand extends AbstractClusterSubmitterCo
 			jobSubmitter.clearCommands();
 
 			String macroString = new HeadlessMacroCreator( macros[ 0 ] ).createHeadlessExecutableMacroString();
+			macroString = PathMapper.asEMBLClusterMounted( macroString );
 			jobSubmitter.addIJMacroExecution( macroString );
 			JobSettings jobSettings = getJobSettings( macro );
 			jobFutures.add( jobSubmitter.submitJobs( jobSettings ) );
