@@ -9,6 +9,7 @@ import de.embl.cba.bdp2.convert.MultiChannelConvertToUnsignedByteTypeCommand;
 import de.embl.cba.bdp2.convert.MultiChannelUnsignedByteTypeConversionDialog;
 import de.embl.cba.bdp2.convert.singlechannel.ConvertToUnsignedByteTypeCommand;
 import de.embl.cba.bdp2.crop.CropDialog;
+import de.embl.cba.bdp2.log.DebugDialog;
 import de.embl.cba.bdp2.open.ui.DownloadAndOpenSampleDataCommand;
 import de.embl.cba.bdp2.dialog.MiscMenu;
 import de.embl.cba.bdp2.dialog.Utils;
@@ -311,6 +312,14 @@ public class MenuActions implements ActionListener {
                 new TransformDialog<>( viewer );
             });
         }
+        else if( e.getActionCommand().equalsIgnoreCase( Menu.DEBUG_MENU_ITEM ) )
+        {
+            BigDataProcessor2.threadPool.submit(() ->
+            {
+                new DebugDialog();
+            });
+        }
+
     }
 
     private boolean isImageSelected()

@@ -3,6 +3,8 @@ package de.embl.cba.bdp2;
 import de.embl.cba.bdp2.crop.CropDialog;
 import de.embl.cba.bdp2.scijava.Services;
 import de.embl.cba.bdp2.ui.BigDataProcessor2UI;
+import ij.plugin.frame.Recorder;
+import net.imagej.ImageJ;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;
@@ -29,5 +31,17 @@ public class BigDataProcessor2Command< R extends RealType< R > & NativeType< R >
         SwingUtilities.invokeLater( () -> {
             BigDataProcessor2UI.showUI();
         } );
+    }
+
+    public static void main ( String... args )
+    {
+        final ImageJ ij = new ImageJ();
+        ij.ui().showUI();
+
+        new Recorder();
+
+        Services.commandService = ij.command();
+
+        ij.command().run( BigDataProcessor2Command.class, true );
     }
 }
