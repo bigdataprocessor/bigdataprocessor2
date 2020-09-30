@@ -6,14 +6,17 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class FileInfoTiffPlanesHelper
 {
-    public static boolean initFileInfos( FileInfos fileInfos, String directory, String filterPattern, String[] fileList, int nC, int nZ, boolean isLeicaDSL, String namingScheme )
+    public static boolean initFileInfos( FileInfos fileInfos, String directory, String filterPattern, String[] fileList, String namingScheme )
     {
+        boolean isLeicaDSL = namingScheme.equals( NamingSchemes.LEICA_LIGHT_SHEET_TIFF );
+
         if ( fileList.length == 0 )
         {
             Logger.error( "No file matching this pattern were found: " + filterPattern );
@@ -22,7 +25,6 @@ public class FileInfoTiffPlanesHelper
 
         fileInfos.fileType = OpenFileType.TIFF_PLANES;
 
-        int nT;
         int z,t,c;
         Matcher matcherZ, matcherC, matcherT, matcherID;
         Pattern patternZ = null, patternC = null, patternT = null, patternID = null;
@@ -60,18 +62,18 @@ public class FileInfoTiffPlanesHelper
         String[] fileIDs = fileIDset.toArray( new String[fileIDset.size()] );
 
         // check which different C, T and Z there are for each FileID
-        ArrayList<HashSet<String>> channelsHS = new ArrayList();
-        ArrayList<HashSet<String>> timepointsHS = new ArrayList();
-        ArrayList<HashSet<String>> slicesHS = new ArrayList();
+        ArrayList<HashSet<String>> channels = new ArrayList();
+        ArrayList<HashSet<String>> timepoints = new ArrayList();
+        ArrayList<HashSet<String>> slices = new ArrayList();
 
         // Deal with different file-names (fileIDs) due to
         // series being restarted during the imaging
         //
         for ( String fileID : fileIDs )
         {
-            channelsHS.add( new HashSet() );
-            timepointsHS.add( new HashSet() );
-            slicesHS.add( new HashSet() );
+            channels.add( new LinkedHashSet<>() );
+            timepoints.add( new LinkedHashSet() );
+            slices.add( new LinkedHashSet() );
         }
 
         for (int iFileID = 0; iFileID < fileIDs.length; iFileID++)
@@ -93,18 +95,17 @@ public class FileInfoTiffPlanesHelper
                 {
                     matcherC = patternC.matcher( fileName );
 
-                    if ( matcherC.matches() )
+                    if ( matcherC.matches() ) // has multi-channels
                     {
-                        // has multi-channels
-                        channelsHS.get( iFileID ).add( matcherC.group(1) );
+                        channels.get( iFileID ).add( matcherC.group(1) );
                         matcherZ = patternZ.matcher( fileName );
                         if ( matcherZ.matches() )
                         {
-                            slicesHS.get( iFileID ).add( matcherZ.group(1) );
+                            slices.get( iFileID ).add( matcherZ.group(1) );
                         }
                         else
                         {
-                            slicesHS.get( iFileID ).add( "Z00" ); // Leica DSL
+                            slices.get( iFileID ).add( "Z00" ); // Leica DSL
                         }
                     }
                     else
@@ -114,11 +115,11 @@ public class FileInfoTiffPlanesHelper
 
                         if ( matcherZ.matches() )
                         {
-                            slicesHS.get( iFileID ).add( matcherZ.group(1) );
+                            slices.get( iFileID ).add( matcherZ.group(1) );
                         }
                         else
                         {
-                            slicesHS.get( iFileID ).add( "Z00" ); // Leica DSL
+                            slices.get( iFileID ).add( "Z00" ); // Leica DSL
                         }
                     }
 
@@ -126,44 +127,49 @@ public class FileInfoTiffPlanesHelper
 
                     if ( matcherT.matches() )
                     {
-                        timepointsHS.get( iFileID ).add( matcherT.group( 1 ) );
+                        timepoints.get( iFileID ).add( matcherT.group( 1 ) );
                     }
                     else
                     {
                         // has only one timepoint
-                        timepointsHS.get( iFileID ).add( "T00" ); // Leica DSL
+                        timepoints.get( iFileID ).add( "T00" ); // Leica DSL
                     }
                 }
             }
         }
 
-        nT = 0;
+        fileInfos.nT = 0;
         int[] tOffsets = new int[ fileIDs.length + 1 ]; // last offset is not used, but added anyway
         tOffsets[0] = 0;
 
         for (int iFileID = 0; iFileID < fileIDs.length; iFileID++)
         {
-            nC = Math.max( 1, channelsHS.get(iFileID).size()) ;
-            nZ = slicesHS.get( iFileID ).size(); // must be the same for all fileIDs
+            fileInfos.nC = Math.max( 1, channels.get( iFileID ).size()) ;
+            fileInfos.nZ = slices.get( iFileID ).size(); // must be the same for all fileIDs
+            fileInfos.nT += timepoints.get( iFileID ).size();
 
             Logger.info("FileID: " + fileIDs[iFileID]);
-            Logger.info("  Channels: " + nC);
-            Logger.info("  TimePoints: " + timepointsHS.get( iFileID ).size());
-            Logger.info("  Slices: " + nZ);
+            Logger.info("  Channels: " + fileInfos.nC);
+            Logger.info("  TimePoints: " + timepoints.get( iFileID ).size() );
+            Logger.info("  Slices: " + fileInfos.nZ);
 
-            nT += timepointsHS.get( iFileID ).size();
-            tOffsets[iFileID + 1] = nT;
+            tOffsets[iFileID + 1] = fileInfos.nT;
         }
 
         //
         // sort into  final file list
         //
 
-        fileInfos.ctzFiles = new String[nC][nT][nZ];
+        fileInfos.ctzFiles = new String[fileInfos.nC][fileInfos.nT][fileInfos.nZ];
 
         for (int iFileID = 0; iFileID < fileIDs.length; iFileID++)
         {
             Pattern patternFileID = Pattern.compile(".*" + fileIDs[iFileID] + ".*");
+
+            ArrayList zList = new ArrayList( slices.get( iFileID ) );
+            ArrayList cList = new ArrayList( channels.get( iFileID ) );
+            ArrayList tList = new ArrayList( timepoints.get( iFileID ) );
+
 
             for ( String fileName : fileList )
             {
@@ -176,7 +182,7 @@ public class FileInfoTiffPlanesHelper
 
                     if ( matcherZ.matches() )
                     {
-                        z = Integer.parseInt( matcherZ.group(1) );
+                        z = zList.indexOf( matcherZ.group( 1 ) );
                     }
                     else
                     {
@@ -185,7 +191,7 @@ public class FileInfoTiffPlanesHelper
 
                     if ( matcherT.matches() )
                     {
-                        t = Integer.parseInt( matcherT.group(1) );
+                        t = tList.indexOf( matcherT.group( 1 ) );
                         t += tOffsets[iFileID];
                     }
                     else
@@ -195,13 +201,13 @@ public class FileInfoTiffPlanesHelper
 
                     if ( matcherC.matches() )
                     {
-                        if ( nC == 1 )
+                        if ( fileInfos.nC == 1 )
                         {
                             c = 0; // in case the channel string is not "C00", but e.g. "C01"
                         }
                         else
                         {
-                            c = Integer.parseInt(  matcherC.group(1) );
+                            c = cList.indexOf( matcherC.group(1) );
                         }
                     }
                     else
@@ -214,12 +220,12 @@ public class FileInfoTiffPlanesHelper
             }
         }
 
-        FileInfosHelper.setImageMetadataFromTiff(fileInfos, directory, fileInfos.ctzFiles[0][0][0]);
+        int nZ = fileInfos.nZ; // because this will be set to 1 by below function for planar files
+        FileInfosHelper.setImageMetadataFromTiff( fileInfos, directory, fileInfos.ctzFiles[0][0][0] );
         fileInfos.nZ = nZ;
-        fileInfos.nC = nC;
-        fileInfos.nT = nT;
-        fileInfos.channelNames = new String[ nC ];
-        for ( int channel = 0; channel < nC; channel++ )
+
+        fileInfos.channelNames = new String[ fileInfos.nC ];
+        for ( int channel = 0; channel < fileInfos.nC; channel++ )
         {
             fileInfos.channelNames[ channel ] = "channel " + channel;
         }

@@ -202,7 +202,7 @@ public class FileInfosHelper
         {
             // tiff planes
             fileInfos.fileType = OpenFileType.TIFF_PLANES;
-            FileInfoTiffPlanesHelper.initFileInfos( fileInfos, directory, filterPattern, fileLists[ 0 ], fileInfos.nC, fileInfos.nZ, namingScheme.equals( NamingSchemes.LEICA_LIGHT_SHEET_TIFF ), namingScheme );
+            FileInfoTiffPlanesHelper.initFileInfos( fileInfos, directory, filterPattern, fileLists[ 0 ], namingScheme );
         }
         else // tiff or h5 volumes
         {
