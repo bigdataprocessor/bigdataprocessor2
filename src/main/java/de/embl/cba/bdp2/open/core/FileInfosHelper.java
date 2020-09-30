@@ -186,45 +186,6 @@ public class FileInfosHelper
             fileInfos.voxelUnit = fileInfos.voxelUnit.trim();
     }
 
-    public static void configureFileInfos( FileInfos fileInfos, String namingScheme, String filterPattern, ChannelSubsetter channels )
-    {
-        String directory = fileInfos.directory;
-
-        String[][] fileLists = getFilesInFolders( directory, filterPattern );
-
-        if ( fileLists == null )
-        {
-            Logger.error( "Error during file parsing..." );
-            return;
-        }
-
-        if ( namingScheme.equals( NamingSchemes.LEICA_LIGHT_SHEET_TIFF ) || namingScheme.contains( NamingSchemes.Z ) )
-        {
-            // tiff planes
-            fileInfos.fileType = OpenFileType.TIFF_PLANES;
-            FileInfoTiffPlanesHelper.initFileInfos( fileInfos, directory, filterPattern, fileLists[ 0 ], namingScheme );
-        }
-        else // tiff or h5 volumes
-        {
-            if ( NamingSchemes.isLuxendoNamingScheme( namingScheme ) )
-            {
-                fileInfos.fileType = OpenFileType.LUXENDO;
-            }
-
-            initVolumeFileInfos( fileInfos, namingScheme, fileLists, channels );
-        }
-
-        fileInfos.ctzFileInfos = new SerializableFileInfo[fileInfos.nC][fileInfos.nT][fileInfos.nZ];
-        fileInfos.dimensions = new long[ 5 ];
-        fileInfos.dimensions[ DimensionOrder.X ] = fileInfos.nX;
-        fileInfos.dimensions[ DimensionOrder.Y ] = fileInfos.nY;
-        fileInfos.dimensions[ DimensionOrder.Z ] = fileInfos.nZ;
-        fileInfos.dimensions[ DimensionOrder.C ] = fileInfos.nC;
-        fileInfos.dimensions[ DimensionOrder.T ] = fileInfos.nT;
-        if ( fileInfos.voxelUnit == null || fileInfos.voxelUnit.equals( "" ) ) fileInfos.voxelUnit = "pixel";
-
-    }
-
     public static void configureFileInfos5D( FileInfos fileInfos, String namingScheme, String filterPattern, ChannelSubsetter channels )
     {
         String directory = fileInfos.directory;
@@ -260,17 +221,15 @@ public class FileInfosHelper
     {
         if ( fileList[ 0 ].endsWith(".tif") )
         {
-            setImageMetadataFromTiff(
-                    fileInfos,
-                    directory,
-                    fileList[ 0 ] );
+            int nZ = fileInfos.nZ;
+            setImageMetadataFromTiff( fileInfos, directory, fileList[ 0 ] );
 
-            if ( namingScheme.equals( NamingSchemes.TIFF_SLICES ) )
+            if ( namingScheme.contains( NamingSchemes.Z ) )
             {
                 fileInfos.fileType = OpenFileType.TIFF_PLANES;
-                fileInfos.nZ = fileList.length;
+                fileInfos.nZ = nZ; // correct back for single plane files
             }
-            else
+            else // volumes
             {
                 fileInfos.fileType = OpenFileType.TIFF_STACKS;
             }
@@ -294,89 +253,11 @@ public class FileInfosHelper
         }
     }
 
-    private static void initVolumeFileInfos( FileInfos fileInfos, String namingScheme, String[][] fileLists, ChannelSubsetter channelSubset )
-    {
-        if ( namingScheme.equals( NamingSchemes.TIFF_SLICES ) )
-        {
-            fileInfos.nC = 1;
-            fileInfos.nT = 1;
-            fileInfos.nZ = fileLists[ 0 ].length;
-            fileInfos.fileType = OpenFileType.TIFF_PLANES;
-            fileInfos.channelNames = new String[]{ "ch0" };
-            fetchAndSetImageMetadata( fileInfos, fileInfos.directory, namingScheme, fileLists[ 0 ] );
-            populateFileList( fileInfos, namingScheme, fileLists );
-        }
-        else // h5 or tif volumes
-        {
-            HashSet<String> channels = new HashSet();
-            HashSet<String> timepoints = new HashSet();
-
-            Pattern pattern = Pattern.compile( namingScheme );
-
-            // get channel and time groups
-            final Map< String, Integer > groupIndexToGroupName = getGroupIndexToGroupName( pattern );
-            final ArrayList< Integer > channelGroups = new ArrayList<>();
-            final ArrayList< Integer > timeGroups = new ArrayList<>();
-            for ( Map.Entry< String, Integer > entry : groupIndexToGroupName.entrySet() )
-            {
-                if ( entry.getKey().contains( "C" ) )
-                {
-                    channelGroups.add( entry.getValue() );
-                }
-                else if ( entry.getKey().contains( "T" ) )
-                {
-                    timeGroups.add( entry.getValue() );
-                }
-            }
-
-            for ( String fileName : fileLists[ 0 ] )
-            {
-                Matcher matcher = pattern.matcher( fileName );
-                if ( matcher.matches() )
-                {
-                    String channelId = getId( channelGroups, matcher );
-                    channels.add( channelId );
-
-                    String timeId = getId( timeGroups, matcher );
-                    timepoints.add( timeId );
-                }
-            }
-
-            if ( channels.size() == 0 )
-                throw new UnsupportedOperationException( "No channels found!" );
-
-            if ( timepoints.size() == 0 )
-                throw new UnsupportedOperationException( "No time-points found!" );
-
-            List< String > sortedChannels = sort( channels );
-
-            sortedChannels = subSetChannelsIfNecessary( channelSubset, sortedChannels );
-
-            fileInfos.nC = sortedChannels.size();
-            fileInfos.channelNames = sortedChannels.stream().toArray( String[]::new );
-
-            // sort timepoints
-            List< String > sortedTimepoints = sort( timepoints );
-            fileInfos.nT = sortedTimepoints.size() ;
-
-            fetchAndSetImageMetadata( fileInfos, fileInfos.directory, namingScheme, fileLists[ 0 ] );
-
-            populateFileInfosFromChannelTimeRegExp(
-                    fileInfos,
-                    namingScheme,
-                    fileLists[ 0 ],
-                    sortedChannels,
-                    sortedTimepoints,
-                    channelGroups,
-                    timeGroups);
-        }
-    }
-
-
     private static void initFileInfos5D( FileInfos fileInfos, String namingScheme, String[][] fileLists, ChannelSubsetter channelSubset )
     {
         if ( namingScheme.equals( NamingSchemes.TIFF_SLICES ) )
         {
+            // TODO: get rid of this, and rather adapt the naming scheme regexp
             fileInfos.nC = 1;
             fileInfos.nT = 1;
             fileInfos.nZ = fileLists[ 0 ].length;
@@ -426,26 +307,28 @@ public class FileInfosHelper
             }
 
             List< String > sortedChannels = sort( channels );
-
             sortedChannels = subSetChannelsIfNecessary( channelSubset, sortedChannels );
-
             fileInfos.nC = sortedChannels.size();
             fileInfos.channelNames = sortedChannels.stream().toArray( String[]::new );
 
-            // sort timepoints
             List< String > sortedTimepoints = sort( timepoints );
-            fileInfos.nT = sortedTimepoints.size() ;
+            fileInfos.nT = sortedTimepoints.size();
+
+            List< String > sortedSlices = sort( slices );
+            fileInfos.nZ = sortedSlices.size();
 
             fetchAndSetImageMetadata( fileInfos, fileInfos.directory, namingScheme, fileLists[ 0 ] );
 
-            populateFileInfosFromChannelTimeRegExp(
+            populateFileInfosFromRegExp(
                     fileInfos,
                     namingScheme,
                     fileLists[ 0 ],
                     sortedChannels,
                     sortedTimepoints,
+                    sortedSlices,
                     channelGroups,
-                    timeGroups);
+                    timeGroups,
+                    sliceGroups);
         }
     }
 
@@ -453,7 +336,6 @@ public class FileInfosHelper
     {
         if ( channelSubsetter != null )
         {
-            // TODO: this could invoke a UI, maybe i need a SwingUtilities.invokeLater here?
             sortedChannels = sort( channelSubsetter.getChannelSubset( sortedChannels ) );
         }
 
@@ -571,14 +453,16 @@ public class FileInfosHelper
         }
     }
 
-    private static void populateFileInfosFromChannelTimeRegExp(
+    private static void populateFileInfosFromRegExp(
             FileInfos fileInfos,
             String regExp,
             String[] fileList,
             List< String > channels,
             List< String > timepoints,
+            List< String > slices,
             ArrayList< Integer > channelGroups,
-            ArrayList< Integer > timeGroups )
+            ArrayList< Integer > timeGroups,
+            ArrayList< Integer > sliceGroups )
     {
         fileInfos.ctzFiles = new String[ fileInfos.nC ][ fileInfos.nT ][ fileInfos.nZ ];
 
@@ -591,15 +475,26 @@ public class FileInfosHelper
             {
                 int c = channels.indexOf( getId( channelGroups, matcher ) );
                 if ( c == -1 )
-                    continue; // channels have been subset => not all fileNames are matching
+                    continue; // channels may have been subset => not all fileNames are matching
 
                 int t = timepoints.indexOf( getId( timeGroups, matcher ) );
                 if ( t == -1 )
                     throw new RuntimeException( "Could get time index for " + fileName );
 
-                for ( int z = 0; z < fileInfos.nZ; z++)
+                if ( regExp.contains( NamingSchemes.Z ) )
                 {
-                    fileInfos.ctzFiles[c][t][z] = fileName; // all z with same file-name, because it is stacks
+                    int z = slices.indexOf( getId( sliceGroups, matcher ) );
+                    if ( z == -1 )
+                        throw new RuntimeException( "Could get slice index for " + fileName );
+                    fileInfos.ctzFiles[ c ][ t ][ z ] = fileName;
+                }
+                else
+                {
+                    for ( int z = 0; z < fileInfos.nZ; z++ )
+                    {
+                        // all z with same file-name, because each file contains the whole volume
+                        fileInfos.ctzFiles[ c ][ t ][ z ] = fileName;
+                    }
                 }
             }
             else

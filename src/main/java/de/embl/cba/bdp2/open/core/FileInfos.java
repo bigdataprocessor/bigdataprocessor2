@@ -95,11 +95,9 @@ public class FileInfos
         this.directory  = Utils.fixDirectoryFormatAndAppendFileSeparator( directory );
         this.h5DataSetName = h5DataSetName;
 
-        adaptFilterAndNamingSchemeForSingleChannelData();
-
         adaptDirectorySeparatorToOperatingSystem( this.namingScheme );
 
-        FileInfosHelper.configureFileInfos( this, this.namingScheme, this.filter, this.channelSubsetter );
+        FileInfosHelper.configureFileInfos5D( this, this.namingScheme, this.filter, this.channelSubsetter );
 
         Logger.info( this.toString() );
     }
