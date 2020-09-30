@@ -2,6 +2,7 @@ package de.embl.cba.bdp2.open.core;
 
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.open.OpenFileType;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -9,62 +10,63 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class FileInfosLeicaHelper
+public class FileInfoTiffPlanesHelper
 {
-    public static boolean initLeicaSinglePlaneTiffData(
-            FileInfos fileInfos, String directory, String filterPattern, String[] fileList, int nC, int nZ )
+    public static boolean initFileInfos( FileInfos fileInfos, String directory, String filterPattern, String[] fileList, int nC, int nZ, boolean isLeicaDSL, String namingScheme )
     {
-        int nT;
-        int z,t,c;
-        fileInfos.fileType = OpenFileType.TIFF_PLANES;
-
-        //
-        // Do special stuff related to Leica file
-        //
-        Matcher matcherZ, matcherC, matcherT, matcherID;
-        Pattern patternC = Pattern.compile(".*--C(\\d+).*");
-        Pattern patternZ = Pattern.compile(".*--Z(\\d+).*");
-        Pattern patternT = Pattern.compile(".*--t(\\d+).*");
-        Pattern patternID = Pattern.compile(".*?_(\\d+).*");
-
         if ( fileList.length == 0 )
         {
-            Logger.error("No file matching this pattern were found: " + filterPattern);
+            Logger.error( "No file matching this pattern were found: " + filterPattern );
             return false;
         }
 
-        // check which different fileIDs there are
-        // those are three numbers after the first _
-        // this happens due to restarting the imaging
-        Set<String> fileIDset = new HashSet();
+        fileInfos.fileType = OpenFileType.TIFF_PLANES;
 
-        for ( String fileName : fileList )
+        int nT;
+        int z,t,c;
+        Matcher matcherZ, matcherC, matcherT, matcherID;
+        Pattern patternZ = null, patternC = null, patternT = null, patternID = null;
+
+        if ( isLeicaDSL )
         {
-            matcherID = patternID.matcher( fileName );
-            if (matcherID.matches())
+            patternC = Pattern.compile( ".*--C(\\d+).*" );
+            patternZ = Pattern.compile( ".*--Z(\\d+).*" );
+            patternT = Pattern.compile( ".*--t(\\d+).*" );
+            patternID = Pattern.compile( ".*?_(\\d+).*" );
+        }
+        else
+        {
+            String[] split = namingScheme.split( "\\)" );
+            for ( String s : split )
             {
-                fileIDset.add( matcherID.group(1) );
+                if ( s.contains( NamingSchemes.T ) )
+                    patternT = Pattern.compile( completeRegex( s ) );
+                if ( s.contains( NamingSchemes.C ) )
+                    patternC = Pattern.compile( completeRegex( s ) );
+                if ( s.contains( NamingSchemes.Z ) )
+                    patternZ = Pattern.compile( completeRegex( s ) );
             }
+            patternID = Pattern.compile( ".*" );
+            int a = 1;
         }
 
-        if( fileIDset.size() == 0 )
+        if ( patternC == null || patternT == null || patternZ == null )
         {
-            fileIDset.add( ".*" );
+            Logger.error( "Could not parse naming scheme: " + namingScheme );
+            return false;
         }
 
+        Set< String > fileIDset = getFileIDs( fileList, isLeicaDSL, patternID );
         String[] fileIDs = fileIDset.toArray( new String[fileIDset.size()] );
 
         // check which different C, T and Z there are for each FileID
-
         ArrayList<HashSet<String>> channelsHS = new ArrayList();
         ArrayList<HashSet<String>> timepointsHS = new ArrayList();
         ArrayList<HashSet<String>> slicesHS = new ArrayList();
 
-        //
         // Deal with different file-names (fileIDs) due to
         // series being restarted during the imaging
         //
-
         for ( String fileID : fileIDs )
         {
             channelsHS.add( new HashSet() );
@@ -94,7 +96,7 @@ public class FileInfosLeicaHelper
                     if ( matcherC.matches() )
                     {
                         // has multi-channels
-                        channelsHS.get(iFileID).add( matcherC.group(1) );
+                        channelsHS.get( iFileID ).add( matcherC.group(1) );
                         matcherZ = patternZ.matcher( fileName );
                         if ( matcherZ.matches() )
                         {
@@ -102,7 +104,7 @@ public class FileInfosLeicaHelper
                         }
                         else
                         {
-                            slicesHS.get( iFileID ).add( "Z00" );
+                            slicesHS.get( iFileID ).add( "Z00" ); // Leica DSL
                         }
                     }
                     else
@@ -116,9 +118,8 @@ public class FileInfosLeicaHelper
                         }
                         else
                         {
-                            slicesHS.get( iFileID ).add( "Z00" );
+                            slicesHS.get( iFileID ).add( "Z00" ); // Leica DSL
                         }
-
                     }
 
                     matcherT = patternT.matcher( fileName );
@@ -130,11 +131,10 @@ public class FileInfosLeicaHelper
                     else
                     {
                         // has only one timepoint
-                        timepointsHS.get( iFileID ).add( "T00" );
+                        timepointsHS.get( iFileID ).add( "T00" ); // Leica DSL
                     }
                 }
             }
-
         }
 
         nT = 0;
@@ -143,7 +143,6 @@ public class FileInfosLeicaHelper
 
         for (int iFileID = 0; iFileID < fileIDs.length; iFileID++)
         {
-
             nC = Math.max( 1, channelsHS.get(iFileID).size()) ;
             nZ = slicesHS.get( iFileID ).size(); // must be the same for all fileIDs
 
@@ -171,13 +170,13 @@ public class FileInfosLeicaHelper
                 if ( patternFileID.matcher(fileName).matches() )
                 {
                     // figure out which C,Z,T the file is
-                    matcherC = patternC.matcher(fileName);
-                    matcherT = patternT.matcher(fileName);
-                    matcherZ = patternZ.matcher(fileName);
+                    matcherC = patternC.matcher( fileName );
+                    matcherT = patternT.matcher( fileName );
+                    matcherZ = patternZ.matcher( fileName );
 
                     if ( matcherZ.matches() )
                     {
-                        z = Integer.parseInt( matcherZ.group(1).toString() );
+                        z = Integer.parseInt( matcherZ.group(1) );
                     }
                     else
                     {
@@ -186,7 +185,7 @@ public class FileInfosLeicaHelper
 
                     if ( matcherT.matches() )
                     {
-                        t = Integer.parseInt( matcherT.group(1).toString() );
+                        t = Integer.parseInt( matcherT.group(1) );
                         t += tOffsets[iFileID];
                     }
                     else
@@ -226,5 +225,53 @@ public class FileInfosLeicaHelper
         }
 
         return true;
+    }
+
+    @NotNull
+    public static String completeRegex( String s )
+    {
+        return ".*" + s + ").*";
+    }
+
+    @NotNull
+    public static Set< String > getFileIDs( String[] fileList, boolean isLeicaDSL, Pattern patternID )
+    {
+        // a fileID is the base file name, which can change during imaging for Leica naming scheme
+        Set< String > fileIDset;
+        if ( isLeicaDSL )
+        {
+            fileIDset = getLeicaFileIDs( fileList, patternID );
+        }
+        else
+        {
+            fileIDset = new HashSet<>();
+            fileIDset.add( ".*" );
+        }
+        return fileIDset;
+    }
+
+    @NotNull
+    public static Set< String > getLeicaFileIDs( String[] fileList, Pattern patternID )
+    {
+        Matcher matcherID;// check which different fileIDs there are
+        // those are three numbers after the first _
+        // this happens due to restarting the imaging
+        Set<String> fileIDset = new HashSet();
+
+        for ( String fileName : fileList )
+        {
+            matcherID = patternID.matcher( fileName );
+            if (matcherID.matches())
+            {
+                fileIDset.add( matcherID.group(1) );
+            }
+        }
+
+        if( fileIDset.size() == 0 )
+        {
+            fileIDset.add( ".*" );
+        }
+
+        return fileIDset;
     }
 }

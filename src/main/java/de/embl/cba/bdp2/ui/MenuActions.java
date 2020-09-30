@@ -5,6 +5,7 @@ import de.embl.cba.bdp2.bin.BinCommand;
 import de.embl.cba.bdp2.bin.BinDialog;
 import de.embl.cba.bdp2.calibrate.CalibrateCommand;
 import de.embl.cba.bdp2.calibrate.CalibrationDialog;
+import de.embl.cba.bdp2.convert.MultiChannelConvertToUnsignedByteTypeCommand;
 import de.embl.cba.bdp2.convert.MultiChannelUnsignedByteTypeConversionDialog;
 import de.embl.cba.bdp2.convert.singlechannel.ConvertToUnsignedByteTypeCommand;
 import de.embl.cba.bdp2.crop.CropDialog;
@@ -208,7 +209,7 @@ public class MenuActions implements ActionListener {
                 ImageJFunctions.show( permuted, BigDataProcessor2.threadPool );
             });
         }
-        else if(e.getActionCommand().equalsIgnoreCase( ConvertToUnsignedByteTypeCommand.COMMAND_NAME ))
+        else if(e.getActionCommand().equalsIgnoreCase( MultiChannelConvertToUnsignedByteTypeCommand.COMMAND_NAME ))
         {
             BigDataProcessor2.threadPool.submit(() ->
 			{

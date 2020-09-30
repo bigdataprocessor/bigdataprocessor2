@@ -1,6 +1,6 @@
 package develop;
 
-import de.embl.cba.bdp2.open.core.CachedCellImgReader;
+import de.embl.cba.bdp2.open.core.CachedCellImgCreator;
 import de.embl.cba.bdp2.open.core.FileInfos;
 import de.embl.cba.bdp2.open.core.NamingSchemes;
 import net.imglib2.cache.img.CachedCellImg;
@@ -13,7 +13,7 @@ public class TestTHdf5StackSaving
         String imageDirectory = "src/test/resources/shear_transform_test";
         final FileInfos fileInfos = new FileInfos( imageDirectory, NamingSchemes.SINGLE_CHANNEL_TIMELAPSE,
                 ".*", "");
-        CachedCellImg cachedCellImg = CachedCellImgReader.createCachedCellImg( fileInfos );
+        CachedCellImg cachedCellImg = CachedCellImgCreator.createCachedCellImg( fileInfos );
 
 //        new Image< UnsignedShortType >
 //        BdvImageViewer imageViewer = new BdvImageViewer<UnsignedShortType>(

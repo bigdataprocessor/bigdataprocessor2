@@ -85,6 +85,7 @@ import static de.embl.cba.bdp2.open.core.NamingSchemes.MULTI_CHANNEL_VOLUMES_FRO
 public class Utils {
 
 	public static final String COMMAND_BDP2_PREFIX = "BDP2 ";
+	public static final long GIGA = 1000000000L;
 
 	public static boolean verbose = false;
 
@@ -121,11 +122,11 @@ public class Utils {
 
 		final Object type = Util.getTypeFromInterval( rai );
 		if ( type instanceof UnsignedByteType )
-			sizeGB *= 8;
+			sizeGB *= 1;
 		else if ( type instanceof UnsignedShortType )
-			sizeGB *= 16;
+			sizeGB *= 2;
 
-		sizeGB /= 8.0 * 1000000000L;
+		sizeGB /= GIGA;
 		return sizeGB;
 	}
 

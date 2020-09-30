@@ -77,9 +77,14 @@ public class Image< R extends RealType< R > & NativeType< R > >
 
 	public double getOneVolumeSizeGB()
 	{
-		long[] dimensionsXYZCT = getDimensionsXYZCT();
-		long numVolumes = dimensionsXYZCT[ DimensionOrder.C ] * dimensionsXYZCT[ DimensionOrder.T ];
-		return getTotalSizeGB() / numVolumes;
+		long numVolumes = numTimePoints() * numChannels();
+		double totalSizeGB = getTotalSizeGB();
+
+		System.out.println( "Total " + getTotalSizeGB() );
+		System.out.println( "Timepoints " + numTimePoints() );
+		System.out.println( "Channels " + numChannels() );
+
+		return totalSizeGB / numVolumes;
 	}
 
 	public String[] getChannelNames()

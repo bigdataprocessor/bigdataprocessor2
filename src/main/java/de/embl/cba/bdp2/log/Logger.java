@@ -56,7 +56,7 @@ public class Logger
 
 	public static void debug( String msg )
 	{
-		if ( debug.get() )
+		// if ( debug.get() )
 			IJ.log( "[DEBUG] " + msg );
 	}
 

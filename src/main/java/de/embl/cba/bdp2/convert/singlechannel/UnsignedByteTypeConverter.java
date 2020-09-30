@@ -8,6 +8,8 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 
+
+@Deprecated
 public class UnsignedByteTypeConverter < R extends RealType< R > & NativeType< R > >
 {
 	private final Image< R > inputImage;

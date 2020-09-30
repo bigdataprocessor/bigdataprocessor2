@@ -19,6 +19,7 @@ import net.imglib2.util.Util;
 
 import javax.swing.*;
 
+@Deprecated
 public class UnsignedByteTypeConversionDialog< R extends RealType< R > & NativeType< R > > extends AbstractProcessingDialog< R >
 {
 	private double mapTo0;

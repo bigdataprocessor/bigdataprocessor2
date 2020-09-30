@@ -191,6 +191,5 @@
 			<version>${imagej-cluster.version}</version>
 		</dependency>
 
-
 	</dependencies>
 </project>

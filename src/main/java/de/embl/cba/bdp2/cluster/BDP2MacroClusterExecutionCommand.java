@@ -9,6 +9,7 @@ import de.embl.cba.cluster.JobSubmitter;
 import de.embl.cba.morphometry.Utils;
 import de.embl.cba.util.PathMapper;
 import net.imagej.ImageJ;
+import org.jetbrains.annotations.NotNull;
 import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
@@ -23,6 +24,7 @@ public class BDP2MacroClusterExecutionCommand extends AbstractClusterSubmitterCo
 {
 	public static final String T_START = "tstart=";
 	public static final String T_END = "tend=";
+	public static final String NUMPROCESSINGTHREADS = "numprocessingthreads=";
 	@Parameter ( label = "Macro files" )
 	File[] macros;
 
@@ -51,8 +53,10 @@ public class BDP2MacroClusterExecutionCommand extends AbstractClusterSubmitterCo
 			String macro = new HeadlessMacroCreator( file ).createHeadlessExecutableMacroString();
 			macro = PathMapper.asEMBLClusterMounted( macro );
 
-			int tStart = getTimepoint( macro, ".*" + T_START + "(?<TSTART>\\d+).*" );
-			int tEnd = getTimepoint( macro, ".*" + T_END + "(?<TSTART>\\d+).*" );
+			int tStart = getNumber( macro, ".*" + T_START + "(?<x>\\d+).*" );
+			int tEnd = getNumber( macro, ".*" + T_END + "(?<x>\\d+).*" );
+
+			macro = setNumThreads( macro );
 
 			for ( int t = tStart; t <= tEnd; t+= minutesPerTimePoint )
 			{
@@ -76,7 +80,16 @@ public class BDP2MacroClusterExecutionCommand extends AbstractClusterSubmitterCo
 		return jobFutures;
 	}
 
-	private int getTimepoint( String macroString, String patternStart )
+	@NotNull
+	private String setNumThreads( String macro )
+	{
+		int numProcessingThreads = getNumber( macro, ".*" + NUMPROCESSINGTHREADS + "(?<x>\\d+).*" );
+
+		macro = macro.replace( NUMPROCESSINGTHREADS + numProcessingThreads, NUMPROCESSINGTHREADS + numWorkers );
+		return macro;
+	}
+
+	private int getNumber( String macroString, String patternStart )
 	{
 		Matcher matcher = Pattern.compile( patternStart ).matcher(macroString);
 		if ( matcher.matches() )

@@ -1,7 +1,7 @@
 package example;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.open.core.CachedCellImgReader;
+import de.embl.cba.bdp2.open.core.CachedCellImgCreator;
 import de.embl.cba.bdp2.open.core.FileInfos;
 import de.embl.cba.bdp2.open.core.NamingSchemes;
 import de.embl.cba.bdp2.save.CachedCellImgReplacer;
@@ -37,10 +37,10 @@ public class ReplaceCachedTwoChannelCellImg
 						filterPattern,
 						dataset );
 
-		final CachedCellImg cachedCellImg = CachedCellImgReader
+		final CachedCellImg cachedCellImg = CachedCellImgCreator
 				.createCachedCellImg( fileInfos );
 
-		final CachedCellImg cachedCellImg2 = CachedCellImgReader
+		final CachedCellImg cachedCellImg2 = CachedCellImgCreator
 				.createVolumeCachedCellImg(
 				fileInfos, image.getDimensionsXYZCT()[ DimensionOrder.C ] * 1 );
 

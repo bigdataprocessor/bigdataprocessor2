@@ -14,6 +14,9 @@ public class MultiChannelConvertToUnsignedByteTypeCommand< R extends RealType< R
 {
     public static final String COMMAND_NAME = "Convert to 8-Bit...";
     public static final String COMMAND_FULL_NAME = Utils.COMMAND_BDP2_PREFIX + COMMAND_NAME;
+
+    // TODO: Multichannel, probably comma separated list for channels
+
     @Parameter(label = "Map to 0", min = "0")
     int mapTo0 = 0;
 
@@ -29,6 +32,7 @@ public class MultiChannelConvertToUnsignedByteTypeCommand< R extends RealType< R
 
     private void process()
     {
+        // TODO: Multichannel
         final UnsignedByteTypeConverter< R > converter = new UnsignedByteTypeConverter<>( inputImage, mapTo0, mapTo255 );
 
         outputImage = converter.getConvertedImage();

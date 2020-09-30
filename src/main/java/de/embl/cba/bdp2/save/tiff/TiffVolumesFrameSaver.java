@@ -5,6 +5,7 @@ import de.embl.cba.bdp2.save.ProjectionXYZ;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.utils.IntervalImageViews;
 import de.embl.cba.bdp2.utils.Utils;
+import de.embl.cba.bdv.utils.BdvUtils;
 import ij.ImagePlus;
 import ij.ImageStack;
 import loci.common.DebugTools;
@@ -21,6 +22,7 @@ import loci.formats.tiff.IFD;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.view.Views;
 import ome.units.quantity.Length;
 import ome.xml.model.enums.DimensionOrder;
 import ome.xml.model.enums.PixelType;
@@ -60,7 +62,7 @@ public class TiffVolumesFrameSaver< R extends RealType< R > & NativeType< R > > 
     public void run()
     {
         // TODO:
-        checkMemoryRequirements();
+        // checkMemoryRequirements();
 
         int totalChannels = Math.toIntExact( rai.dimension( C ));
 
@@ -72,7 +74,10 @@ public class TiffVolumesFrameSaver< R extends RealType< R > & NativeType< R > > 
                 return;
             }
 
-            RandomAccessibleInterval< R > raiXYZ = IntervalImageViews.createNonVolatileVolumeCopy( rai, c, t, settings.numProcessingThreads );
+            // Note; below call will both
+            // (i) load the raw image into RAM
+            // (ii) make a copy in RAM with all processing done
+            RandomAccessibleInterval< R > raiXYZ = IntervalImageViews.createNonVolatileVolumeCopy( rai, c, t, settings.numProcessingThreads, ( R )settings.type );
 
             if ( settings.saveVolumes )
             {
@@ -161,8 +166,7 @@ public class TiffVolumesFrameSaver< R extends RealType< R > & NativeType< R > > 
 
         ProjectionXYZ.saveAsTiffXYZMaxProjection( imp3D, c, t, settings.projectionsFilePathStump );
 
-        Logger.debug( "Computing and save projections  [ s ]: "
-                + ( System.currentTimeMillis() - start ) / 1000);
+        Logger.debug( "Computed and saved projections in [ s ]: " + ( System.currentTimeMillis() - start ) / 1000);
 
     }
 
@@ -180,9 +184,9 @@ public class TiffVolumesFrameSaver< R extends RealType< R > & NativeType< R > > 
             String compression,
             int rowsPerStrip,
             String path,
-            String sC ) {
-
-        DebugTools.setRootLevel( "OFF" ); // Bio-Formats
+            String sC )
+    {
+        long start = System.currentTimeMillis();
 
         String sT = String.format( "T%1$05d", t );
 
@@ -192,13 +196,18 @@ public class TiffVolumesFrameSaver< R extends RealType< R > & NativeType< R > > 
         }
         else
         {
+            // super slow!
             saveWithBioFormats( imp, t, rowsPerStrip, path, sC, sT );
         }
+
+        Logger.debug( "Saved volume in [ s ]: " + ( System.currentTimeMillis() - start ) / 1000);
     }
 
     private void saveWithBioFormats( ImagePlus imp, int t, int rowsPerStrip, String path, String sC, String sT )
     {
         // Use Bio-Formats for compressing the data
+
+        DebugTools.setRootLevel( "OFF" ); // Bio-Formats
 
         String pathCT = getFullPath( path, sC, sT, ".ome.tif" );
 
@@ -254,6 +263,7 @@ public class TiffVolumesFrameSaver< R extends RealType< R > & NativeType< R > > 
                     tiffWriter.saveBytes(z, (byte[]) (imp.getStack().getProcessor(z + 1).getPixels()), ifd);
                 }
             }
+
             writer.close();
         }
         catch (Exception e)

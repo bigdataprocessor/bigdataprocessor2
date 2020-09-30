@@ -4,7 +4,12 @@ import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.save.SavingSettings;
+import de.embl.cba.bdp2.utils.IntervalImageViews;
 import net.imagej.ImageJ;
+import net.imglib2.RandomAccess;
+import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.util.Util;
+import net.imglib2.view.Views;
 
 import static de.embl.cba.bdp2.open.core.NamingSchemes.LUXENDO_REGEXP;
 
@@ -24,8 +29,22 @@ public class DevelopSavingWithoutMemoryLeak
 				regExp,
 				"Data" );
 
-		BigDataProcessor2.showImage( image );
+		RandomAccessibleInterval volumeView = Views.dropSingletonDimensions(  IntervalImageViews.getVolumeView( image.getRai(), 0, 10 ) );
 
+		// TODO: this method always accesses the first image! remove this!
+		// create RandomAccess
+		final RandomAccess< ? > randomAccess = volumeView.randomAccess( );
+
+		// place it at the first pixel
+
+		// volumeView.min( randomAccess );
+
+		//Util.getTypeFromInterval(  )
+
+		//Object o = randomAccess.get();
+
+//		BigDataProcessor2.showImage( image );
+//
 //		final SavingSettings savingSettings = SavingSettings.getDefaults();
 //		savingSettings.saveFileType = SavingSettings.SaveFileType.TIFF_VOLUMES;
 //		savingSettings.numIOThreads = 1;

@@ -1,11 +1,15 @@
 package de.embl.cba.bdp2.save;
 
+import de.embl.cba.bdp2.image.Image;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.type.NativeType;
+import net.imglib2.type.Type;
+import net.imglib2.type.numeric.RealType;
 
 /**
  * Created by tischi on 22/05/17.
  */
-public class SavingSettings {
+public class SavingSettings < R extends RealType< R > & NativeType< R > > {
 
     public static final int AVAILABLE_PROCESSORS = Runtime.getRuntime().availableProcessors();
     public static final String TIFF_PLANES = "Tiff Planes";
@@ -48,6 +52,8 @@ public class SavingSettings {
     public String channelNamesInSavedImages = CHANNEL_INDEXING;
     public int tStart; // inclusive, zero-based
     public int tEnd; // inclusive
+    public Image< R > image;
+    public R type;
 
     public enum SaveFileType
     {

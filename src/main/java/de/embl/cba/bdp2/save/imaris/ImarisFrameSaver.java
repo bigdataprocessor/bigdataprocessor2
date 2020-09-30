@@ -79,8 +79,7 @@ public class ImarisFrameSaver< R extends RealType< R > & NativeType< R >> implem
                 return;
             }
 
-            RandomAccessibleInterval< R > raiXYZ =
-                    IntervalImageViews.createNonVolatileVolumeCopy( raiXYZCT, c, t, settings.numProcessingThreads );
+            RandomAccessibleInterval< R > raiXYZ = IntervalImageViews.createNonVolatileVolumeCopy( raiXYZCT, c, t, settings.numProcessingThreads, ( R ) settings.type );
 
             ImagePlus imagePlus =
                     Utils.wrap3DRaiToCalibratedImagePlus(
@@ -101,7 +100,7 @@ public class ImarisFrameSaver< R extends RealType< R > & NativeType< R >> implem
                         c,
                         t );
 
-                Logger.debug( "Save data cube as Imaris [ s ]: "
+                Logger.debug( "Saved volume in [ s ]: "
                         + ( System.currentTimeMillis() - start ) / 1000);
             }
 

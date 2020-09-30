@@ -4,6 +4,7 @@ import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.open.ChannelSubsetter;
 import de.embl.cba.bdp2.open.OpenFileType;
 import de.embl.cba.bdp2.utils.BioFormatsCalibrationReader;
+import de.embl.cba.bdp2.utils.DimensionOrder;
 import org.apache.commons.lang.ArrayUtils;
 
 import java.io.File;
@@ -185,7 +186,7 @@ public class FileInfosHelper
             fileInfos.voxelUnit = fileInfos.voxelUnit.trim();
     }
 
-    public static void setFileInfos( FileInfos fileInfos, String namingScheme, String filterPattern, ChannelSubsetter channels )
+    public static void configureFileInfos( FileInfos fileInfos, String namingScheme, String filterPattern, ChannelSubsetter channels )
     {
         String directory = fileInfos.directory;
 
@@ -197,20 +198,31 @@ public class FileInfosHelper
             return;
         }
 
-        if ( namingScheme.equals( NamingSchemes.LEICA_LIGHT_SHEET_TIFF ) )
+        if ( namingScheme.equals( NamingSchemes.LEICA_LIGHT_SHEET_TIFF ) || namingScheme.contains( NamingSchemes.Z ) )
         {
+            // tiff planes
             fileInfos.fileType = OpenFileType.TIFF_PLANES;
-            FileInfosLeicaHelper.initLeicaSinglePlaneTiffData( fileInfos, directory, filterPattern, fileLists[ 0 ], fileInfos.nC, fileInfos.nZ );
+            FileInfoTiffPlanesHelper.initFileInfos( fileInfos, directory, filterPattern, fileLists[ 0 ], fileInfos.nC, fileInfos.nZ, namingScheme.equals( NamingSchemes.LEICA_LIGHT_SHEET_TIFF ), namingScheme );
         }
-        else // tiff or h5
+        else // tiff or h5 volumes
         {
             if ( NamingSchemes.isLuxendoNamingScheme( namingScheme ) )
             {
                 fileInfos.fileType = OpenFileType.LUXENDO;
             }
 
-            setFileInfos( fileInfos, namingScheme, fileLists, channels );
+            initVolumeFileInfos( fileInfos, namingScheme, fileLists, channels );
         }
+
+        fileInfos.ctzFileInfos = new SerializableFileInfo[fileInfos.nC][fileInfos.nT][fileInfos.nZ];
+        fileInfos.dimensions = new long[ 5 ];
+        fileInfos.dimensions[ DimensionOrder.X ] = fileInfos.nX;
+        fileInfos.dimensions[ DimensionOrder.Y ] = fileInfos.nY;
+        fileInfos.dimensions[ DimensionOrder.Z ] = fileInfos.nZ;
+        fileInfos.dimensions[ DimensionOrder.C ] = fileInfos.nC;
+        fileInfos.dimensions[ DimensionOrder.T ] = fileInfos.nT;
+        if ( fileInfos.voxelUnit == null || fileInfos.voxelUnit.equals( "" ) ) fileInfos.voxelUnit = "pixel";
+
     }
 
     private static void fetchAndSetImageMetadata( FileInfos fileInfos, String directory, String namingScheme, String[] fileList )
@@ -251,7 +263,7 @@ public class FileInfosHelper
         }
     }
 
-    private static void setFileInfos( FileInfos fileInfos, String namingScheme, String[][] fileLists, ChannelSubsetter channelSubset )
+    private static void initVolumeFileInfos( FileInfos fileInfos, String namingScheme, String[][] fileLists, ChannelSubsetter channelSubset )
     {
         if ( namingScheme.equals( NamingSchemes.TIFF_SLICES ) )
         {
@@ -377,7 +389,7 @@ public class FileInfosHelper
         return String.join( NamingSchemes.CHANNEL_ID_DELIMITER, ids );
     }
 
-    private static Map< String, Integer > getGroupIndexToGroupName( Pattern pattern )
+    public static Map< String, Integer > getGroupIndexToGroupName( Pattern pattern )
     {
         final Field namedGroups;
         try

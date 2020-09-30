@@ -8,7 +8,7 @@ import de.embl.cba.bdp2.bin.Binner;
 import de.embl.cba.bdp2.convert.singlechannel.UnsignedByteTypeConversionDialog;
 import de.embl.cba.bdp2.crop.Cropper;
 import de.embl.cba.bdp2.open.ChannelSubsetter;
-import de.embl.cba.bdp2.open.core.CachedCellImgReader;
+import de.embl.cba.bdp2.open.core.CachedCellImgCreator;
 import de.embl.cba.bdp2.open.core.FileInfos;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
@@ -20,7 +20,6 @@ import de.embl.cba.bdp2.align.ChannelShifter;
 import de.embl.cba.bdp2.service.BdvService;
 import de.embl.cba.bdp2.transform.ImageTransformer;
 import de.embl.cba.bdp2.ui.BigDataProcessor2UI;
-import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import loci.common.DebugTools;
 import net.imglib2.*;
@@ -78,7 +77,7 @@ public class BigDataProcessor2
     {
         FileInfos fileInfos = new FileInfos( directory, namingScheme, filterPattern );
 
-        final Image< R > image = CachedCellImgReader.loadImage( fileInfos );
+        final Image< R > image = CachedCellImgCreator.loadImage( fileInfos );
 
         return image;
     }
@@ -100,7 +99,7 @@ public class BigDataProcessor2
 
         FileInfos fileInfos = new FileInfos( directory, loadingScheme, filterPattern, hdf5DataSetName, null );
 
-        final Image< R > image = CachedCellImgReader.loadImage( fileInfos );
+        final Image< R > image = CachedCellImgCreator.loadImage( fileInfos );
 
         return image;
     }
@@ -117,7 +116,7 @@ public class BigDataProcessor2
 
         FileInfos fileInfos = new FileInfos( directory, loadingScheme, filterPattern, hdf5DataSetName, channelSubsetter );
 
-        final Image< R > image = CachedCellImgReader.loadImage( fileInfos );
+        final Image< R > image = CachedCellImgCreator.loadImage( fileInfos );
 
         return image;
     }

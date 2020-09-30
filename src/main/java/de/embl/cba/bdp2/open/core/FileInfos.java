@@ -6,7 +6,6 @@ import ch.systemsx.cisd.hdf5.IHDF5Reader;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.open.ChannelSubsetter;
 import de.embl.cba.bdp2.open.OpenFileType;
-import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.imaris.ImarisUtils;
 import ij.io.FileInfo;
@@ -16,6 +15,7 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.type.numeric.real.FloatType;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,6 +25,8 @@ public class FileInfos
 {
     public static final int PROGRESS_UPDATE_MILLISECONDS = 100;
 	public static final int TOTAL_AXES = 5;
+
+	// TODO: below must be in synch with DimensionOrder
 	public static final AxisType[] AXES_ORDER = { Axes.X, Axes.Y, Axes.Z, Axes.CHANNEL, Axes.TIME};
     public static final String[] HDF5_DATASET_NAMES = new String[] {
             "None", "Data", "Data111", "Data222", "Data444", // Luxendo
@@ -34,8 +36,12 @@ public class FileInfos
 			ImarisUtils.RESOLUTION_LEVEL +"3/Data",
 			"ITKImage/0/VoxelData" // Elastix
     };
-	private final SerializableFileInfo[][][] ctzFileInfos;
-    private final long[] dimensions;
+	public SerializableFileInfo[][][] ctzFileInfos;
+    public long[] dimensions;
+    @NotNull
+    private String namingScheme;
+    private String filter;
+    private ChannelSubsetter channelSubsetter;
     public int bitDepth;
     public int nC;
     public int nT;
@@ -73,48 +79,51 @@ public class FileInfos
     }
 
     public FileInfos(
-            String aDirectory,
+            String directory,
             String namingScheme,
             String filter,
             String h5DataSetName,
             ChannelSubsetter channelSubsetter
     )
     {
-        Logger.info( "" );
-        Logger.info( "" );
-        Logger.info( "Directory: " + aDirectory );
+        Logger.info( "Directory: " + directory );
         Logger.info( "Regular expression: " +  namingScheme );
 
-        this.directory  = Utils.fixDirectoryFormatAndAppendFileSeparator( aDirectory );
+        this.namingScheme = namingScheme;
+        this.filter = filter;
+        this.channelSubsetter = channelSubsetter;
+        this.directory  = Utils.fixDirectoryFormatAndAppendFileSeparator( directory );
         this.h5DataSetName = h5DataSetName;
 
-        if ( ! namingScheme.equals( NamingSchemes.LEICA_LIGHT_SHEET_TIFF )
-                && ! namingScheme.equals( NamingSchemes.TIFF_SLICES ))
-        {
-            if ( ! namingScheme.contains( "?<C" ) )
-            {
-                // assign containing folder as channel
-                final String channelFolder = new File( directory ).getName();
-                namingScheme = "(?<C>" + channelFolder + ")/" + namingScheme;
-                filter = channelFolder + "/" + filter;
-                directory = new File( directory ).getParent() + "/";
-            }
-        }
+        adaptFilterAndNamingSchemeForSingleChannelData();
+        adaptDirectorySeparatorToOperatingSystem( this.namingScheme );
 
-        namingScheme = namingScheme.replace( "/", Pattern.quote( File.separator ) );
-
-        FileInfosHelper.setFileInfos( this, namingScheme, filter, channelSubsetter );
-
-        ctzFileInfos = new SerializableFileInfo[nC][nT][nZ];
-        dimensions = new long[ 5 ];
-        dimensions[ DimensionOrder.X ] = nX;
-        dimensions[ DimensionOrder.Y ] = nY;
-        dimensions[ DimensionOrder.Z ] = nZ;
-        dimensions[ DimensionOrder.C ] = nC;
-        dimensions[ DimensionOrder.T ] = nT;
-        if ( voxelUnit == null || voxelUnit.equals( "" ) ) voxelUnit = "pixel";
+        FileInfosHelper.configureFileInfos( this, this.namingScheme, this.filter, this.channelSubsetter );
 
         Logger.info( this.toString() );
+    }
+
+    public void adaptFilterAndNamingSchemeForSingleChannelData()
+    {
+        if ( ! this.namingScheme.equals( NamingSchemes.LEICA_LIGHT_SHEET_TIFF )
+                && ! this.namingScheme.equals( NamingSchemes.TIFF_SLICES ))
+        {
+            if ( ! this.namingScheme.contains( "?<C" ) )
+            {
+                // assign containing folder as channel
+                final String channelFolder = new File( this.directory ).getName();
+                this.namingScheme = "(?<C>" + channelFolder + ")/" + this.namingScheme;
+                this.filter = channelFolder + "/" + this.filter;
+                this.directory = new File( this.directory ).getParent() + "/";
+            }
+        }
+    }
+
+    @NotNull
+    public String adaptDirectorySeparatorToOperatingSystem( String namingScheme )
+    {
+        namingScheme = namingScheme.replace( "/", Pattern.quote( File.separator ) );
+        return namingScheme;
     }
 
     @Override

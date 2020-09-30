@@ -3,13 +3,15 @@ package de.embl.cba.bdp2.save;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.log.progress.ProgressListener;
-import de.embl.cba.bdp2.open.core.CachedCellImgReader;
+import de.embl.cba.bdp2.open.core.CachedCellImgCreator;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.cache.img.CachedCellImg;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.Type;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.util.Util;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -36,10 +38,7 @@ public class ImageSaverCreator < R extends RealType< R > & NativeType< R > >
 			long cacheSize = image.getDimensionsXYZCT()[ DimensionOrder.C ] * numIOThreads;
 
 			Logger.info( "Configuring volume reader with a cache size of " + cacheSize + " volumes." );
-			Logger.info( "The size of one volume is " + image.getOneVolumeSizeGB() + " GB." );
-			Logger.info( "Thus, the memory requirements during saving will be about " + 2 *  cacheSize * image.getOneVolumeSizeGB() + " GB." ); // * 2 for raw and processed image
-
-			final CachedCellImg< R, ? > volumeCachedCellImg = CachedCellImgReader.createVolumeCachedCellImg( image.getFileInfos(), cacheSize );
+			final CachedCellImg< R, ? > volumeCachedCellImg = CachedCellImgCreator.createVolumeCachedCellImg( image.getFileInfos(), cacheSize );
 			final RandomAccessibleInterval< R > volumeLoadedRAI = new CachedCellImgReplacer( image.getRai(), volumeCachedCellImg ).get();
 			savingSettings.rai = volumeLoadedRAI;
 		}
@@ -49,6 +48,7 @@ public class ImageSaverCreator < R extends RealType< R > & NativeType< R > >
 		}
 
 		// TODO: consider giving the whole image to the SavingSettings instead of the rai?
+		savingSettings.type = Util.getTypeFromInterval( savingSettings.rai );
 		savingSettings.channelNames = image.getChannelNames();
 		savingSettings.voxelSize = image.getVoxelSize();
 		savingSettings.voxelUnit = image.getVoxelUnit();

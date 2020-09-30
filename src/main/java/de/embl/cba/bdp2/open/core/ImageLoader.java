@@ -4,6 +4,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import de.embl.cba.bdp2.BigDataProcessor2;
+import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.open.OpenFileType;
 import de.embl.cba.bdp2.service.PerformanceService;
 import de.embl.cba.bdp2.utils.DimensionOrder;
@@ -33,6 +34,7 @@ public class ImageLoader< T extends NativeType< T > > implements CellLoader< T >
     private int[] cellDims;
     private LoadingCache< List< Integer >, SerializableFileInfo[] > serializableFileInfoCache;
     private final OpenFileType fileType;
+    private short[][] cache;
 
     public ImageLoader( FileInfos fileInfos, int[] cellDimsXYZCT )
     {
@@ -123,8 +125,6 @@ public class ImageLoader< T extends NativeType< T > > implements CellLoader< T >
     }
 
     /**
-     * TODO: I remove the "synchronized" from the load function.
-     *   Maybe this will speed up loading non-hdf5 based images
      *
      * @param cell
      */
@@ -135,6 +135,8 @@ public class ImageLoader< T extends NativeType< T > > implements CellLoader< T >
         long[] max = new long[ FileInfos.TOTAL_AXES ];
         cell.min( min );
         cell.max( max );
+
+        Logger.debug( "Reading from " + Arrays.toString( min ) + " to " + Arrays.toString( max ) );
 
         long start = System.currentTimeMillis();
 
@@ -162,6 +164,27 @@ public class ImageLoader< T extends NativeType< T > > implements CellLoader< T >
         else if ( cell.firstElement() instanceof UnsignedShortType )
         {
             final short[] storageArray = ( short[] ) cell.getStorageArray();
+
+//            Don't do it, hope for better fix!
+//
+//            if ( min[ DimensionOrder.T ] == 0 )
+//            {
+//                if ( cache == null )
+//                {
+//                    cache = new short[ (int) dimensions[ DimensionOrder.C ] ][];
+//                }
+//
+//                if ( cache[ DimensionOrder.C ] == null )
+//                {
+//                    // hold on to the data of time-point zero to avoid reloading of it
+//                    cache[ DimensionOrder.C ] = storageArray;
+//                }
+//                else
+//                {
+//                    System.arraycopy( cache[ DimensionOrder.C ], 0, storageArray, 0, storageArray.length );
+//                    return;
+//                }
+//            }
 
             if ( fileType.toString().toLowerCase().contains( "hdf5" ) )
             {

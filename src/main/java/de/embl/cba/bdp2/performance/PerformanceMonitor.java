@@ -1,5 +1,7 @@
 package de.embl.cba.bdp2.performance;
 
+import de.embl.cba.bdp2.log.Logger;
+import de.embl.cba.bdp2.open.core.CachedCellImgCreator;
 import de.embl.cba.bdp2.ui.BigDataProcessor2UI;
 
 import java.util.ArrayList;
@@ -25,18 +27,33 @@ public class PerformanceMonitor
 		{
 			readPerformances.add( mbps );
 		}
+		if ( CachedCellImgCreator.isReadingVolumes )
+		{
+			Logger.debug( "Read " + toMB( numBytes ) + " MB in " + toSeconds( timeMillis ) + " seconds; Speed [MB/s] = " + mbps );
+		}
+
 		BigDataProcessor2UI.setReadPerformanceInformation( mbps, getMedianReadPerformance() );
 	}
 
 	/**
 	 *
-	 * @param numBytes
-	 * @param timeMillis
+	 * @param bytes
+	 * @param millis
 	 * @return mega bits per second
 	 */
-	private double toMBPS( long numBytes, long timeMillis )
+	private double toMBPS( long bytes, long millis )
 	{
-		return 1.0 * numBytes * 8 / MEGA / ( timeMillis / 1000.0 );
+		return toMB( bytes ) / toSeconds( millis );
+	}
+
+	private double toSeconds( long timeMillis )
+	{
+		return timeMillis / 1000.0;
+	}
+
+	private double toMB( long bytes )
+	{
+		return 1.0 * bytes * 8 / MEGA;
 	}
 
 	public double getMedianReadPerformance()

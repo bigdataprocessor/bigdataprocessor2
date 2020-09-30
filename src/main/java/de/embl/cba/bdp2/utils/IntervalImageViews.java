@@ -6,6 +6,7 @@ import net.imglib2.algorithm.util.Grids;
 import net.imglib2.img.AbstractImg;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.array.ArrayImgFactory;
+import net.imglib2.img.cell.AbstractCellImg;
 import net.imglib2.img.cell.CellImgFactory;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
@@ -17,7 +18,7 @@ import net.imglib2.view.Views;
 
 import java.util.List;
 
-import static de.embl.cba.bdp2.open.core.CachedCellImgReader.MAX_ARRAY_LENGTH;
+import static de.embl.cba.bdp2.open.core.CachedCellImgCreator.MAX_ARRAY_LENGTH;
 import static de.embl.cba.bdp2.utils.DimensionOrder.*;
 
 public class IntervalImageViews
@@ -112,6 +113,8 @@ public class IntervalImageViews
 	 * @param c
 	 * @param t
 	 * @param numThreads
+	 * @param type One could also get the type within this function from the image, but this creates
+	 *             accesses into cells, which causes loading of data, which can be expensive
 	 * @param <R>
 	 * @return
 	 */
@@ -120,7 +123,8 @@ public class IntervalImageViews
 			RandomAccessibleInterval< R > image,
 			long c,
 			long t,
-			int numThreads )
+			int numThreads,
+			R type )
 	{
 		long start = System.currentTimeMillis();
 
@@ -142,7 +146,7 @@ public class IntervalImageViews
 				Views.dropSingletonDimensions(
 						Views.interval( image, minInterval, maxInterval ) );
 
-		raiXYZ = copyVolumeRAI( raiXYZ, numThreads );
+		raiXYZ = copyVolumeRAI( raiXYZ, numThreads, type );
 
 		Logger.debug( "Produce processed data cube [ s ]: "
 				+ ( System.currentTimeMillis() - start ) / 1000);
@@ -150,46 +154,6 @@ public class IntervalImageViews
 		return raiXYZ;
 	}
 
-
-	public static < R extends RealType< R > & NativeType< R > >
-	RandomAccessibleInterval< R > createNonVolatileVolumeCopy(
-			RandomAccessibleInterval< R > rai,
-			FinalInterval volume,
-			long c,
-			long t,
-			int numThreads )
-	{
-		long start = System.currentTimeMillis();
-
-		long[] minInterval = new long[]{
-				volume.min( X ),
-				volume.min( Y ),
-				volume.min( Z ),
-				c,
-				t };
-
-		long[] maxInterval = new long[]{
-				volume.max( X ),
-				volume.max( Y ),
-				volume.max( Z ),
-				c,
-				t };
-
-		// Accommodate cases where the asked-for volume is out-of-bounds
-		RandomAccessible< R > extended = Views.extendBorder( rai );
-
-		RandomAccessibleInterval raiXYZ =
-				Views.zeroMin(
-						Views.dropSingletonDimensions(
-								Views.interval( extended, minInterval, maxInterval ) ) );
-
-		raiXYZ = copyVolumeRAI( raiXYZ, numThreads );
-
-		Logger.debug( "Produce processed data cube [ s ]: "
-				+ ( System.currentTimeMillis() - start ) / 1000);
-
-		return raiXYZ;
-	}
 
 	public static < R extends RealType< R > & NativeType< R > >
 	RandomAccessibleInterval< R > getNonVolatilePlaneCopy(
@@ -233,18 +197,18 @@ public class IntervalImageViews
 
 
 	/**
-	 *
 	 * Create a copyVolumeRAI, thereby forcing computation of a potential
 	 * cascade of views.
 	 *
 	 * @param volume
 	 * @param numThreads
+	 * @param type
 	 * @param <R>
 	 * @return
 	 */
 	public static < R extends RealType< R > & NativeType< R > >
 	RandomAccessibleInterval< R > copyVolumeRAI( RandomAccessibleInterval< R > volume,
-												 int numThreads )
+												 int numThreads, R type )
 	{
 		final int dimensionX = ( int ) volume.dimension( 0 );
 		final int dimensionY = ( int ) volume.dimension( 1 );
@@ -254,8 +218,6 @@ public class IntervalImageViews
 				AbstractImg.numElements( Intervals.dimensionsAsLongArray( volume ) );
 
 		RandomAccessibleInterval< R > copy;
-
-		R type = getType( volume );
 
 		if ( numElements < MAX_ARRAY_LENGTH )
 		{

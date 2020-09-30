@@ -20,9 +20,10 @@ import java.io.File;
 import static de.embl.cba.bdp2.open.core.OpenerExtension.readCroppedPlaneFromTiffIntoImageStack.COMPRESSION_NONE;
 import static net.imglib2.cache.img.ReadOnlyCachedCellImgOptions.options;
 
-public class CachedCellImgReader
+public class CachedCellImgCreator
 {
     public static final int MAX_ARRAY_LENGTH = Integer.MAX_VALUE - 100;
+    public static boolean isReadingVolumes = false;
 
     public static CachedCellImg createCachedCellImg( FileInfos fileInfos )
     {
@@ -129,6 +130,8 @@ public class CachedCellImgReader
      */
     public static CachedCellImg createVolumeCachedCellImg( FileInfos fileInfos, long cacheSize )
     {
+        isReadingVolumes = true;
+
         int cellDimX = fileInfos.nX;
         int cellDimY = fileInfos.nY;
         int cellDimZ = fileInfos.nZ;
