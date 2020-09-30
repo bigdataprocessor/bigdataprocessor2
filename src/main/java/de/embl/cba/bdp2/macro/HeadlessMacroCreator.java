@@ -11,25 +11,27 @@ import java.util.stream.Collectors;
 public class HeadlessMacroCreator
 {
 	private final File macroFile;
-	private ArrayList< String > commands;
+	private ArrayList< String > lines;
 
 	public HeadlessMacroCreator( File macroFile )
 	{
 		this.macroFile = macroFile;
-		readCommands( macroFile );
+		readLines( macroFile );
 	}
 
-	private void readCommands( File macroFile )
+	private void readLines( File macroFile )
 	{
 		try
 		{
 			BufferedReader bufferedReader = new BufferedReader( new FileReader( macroFile ) );
 
-			commands = new ArrayList<>();
+			lines = new ArrayList<>();
 			String line;
 			while ( ( line = bufferedReader.readLine() ) != null )
 			{
-				commands.add( line );
+				if ( ! line.endsWith( ";" ) )
+					line = line + ";";
+				lines.add( line );
 			}
 			
 		} catch ( Exception e )
@@ -42,7 +44,7 @@ public class HeadlessMacroCreator
 	{
 		ArrayList< String > headlessCommands = new ArrayList<>();
 
-		for ( String command : commands )
+		for ( String command : lines )
 		{
 			if ( command.contains( "BigDataProcessor2") ) continue;
 			if ( command.equals( "" ) ) continue;
@@ -52,7 +54,9 @@ public class HeadlessMacroCreator
 			headlessCommands.add( command );
 		}
 
-		String join = headlessCommands.stream().collect( Collectors.joining( ";" ) );
+		headlessCommands.add( "run(\"Quit Fiji\");" );
+
+		String join = headlessCommands.stream().collect( Collectors.joining( " " ) );
 
 		return join;
 	}

@@ -11,6 +11,7 @@ import org.scijava.command.Command;
 import org.scijava.command.CommandService;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
+import org.scijava.ui.UIService;
 
 import javax.swing.*;
 
@@ -18,17 +19,22 @@ import javax.swing.*;
 public class BigDataProcessor2Command< R extends RealType< R > & NativeType< R > > implements Command
 {
     @Parameter
-    CommandService cs;
+    CommandService commandService;
+
+    @Parameter
+    UIService uiService;
 
     public static final String COMMAND_NAME = "BigDataProcessor2";
     public static final String COMMAND_FULL_NAME = "" + COMMAND_NAME;
 
     public void run()
     {
-        Services.commandService = cs;
-        CropDialog.askForUnitsChoice = true;
+        Services.setCommandService( commandService );
+        Services.setUiService( uiService );
 
         SwingUtilities.invokeLater( () -> {
+            CropDialog.askForUnitsChoice = true;
+            new Recorder();
             BigDataProcessor2UI.showUI();
         } );
     }
@@ -37,11 +43,6 @@ public class BigDataProcessor2Command< R extends RealType< R > & NativeType< R >
     {
         final ImageJ ij = new ImageJ();
         ij.ui().showUI();
-
-        new Recorder();
-
-        Services.commandService = ij.command();
-
         ij.command().run( BigDataProcessor2Command.class, true );
     }
 }
