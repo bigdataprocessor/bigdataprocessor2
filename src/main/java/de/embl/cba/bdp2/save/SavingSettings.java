@@ -84,16 +84,18 @@ public class SavingSettings < R extends RealType< R > & NativeType< R > > {
     }
 
     /**
-     * Loads minimum settings for save TIFF as Planes.
+     * Loads minimum settings.
      * Useful for testing purposes.
      * @return SavingSettings
      */
-    public static SavingSettings getDefaults() {
+    public static SavingSettings getDefaults()
+    {
         SavingSettings savingSettings = new SavingSettings();
         savingSettings.bin = "1,1,1";
         savingSettings.voxelSize = new double[]{1,1,1};
         savingSettings.voxelUnit = "pixel";
         savingSettings.saveVolumes = true;
+        savingSettings.saveProjections = false;
         savingSettings.saveFileType = SaveFileType.TIFF_PLANES;
         savingSettings.volumesFilePathStump = "/Users/tischer/Desktop/bdp2-out/image";
         savingSettings.compression = COMPRESSION_NONE;

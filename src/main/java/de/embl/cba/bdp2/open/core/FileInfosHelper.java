@@ -225,6 +225,37 @@ public class FileInfosHelper
 
     }
 
+    public static void configureFileInfos5D( FileInfos fileInfos, String namingScheme, String filterPattern, ChannelSubsetter channels )
+    {
+        String directory = fileInfos.directory;
+
+        String[][] fileLists = getFilesInFolders( directory, filterPattern );
+
+        if ( fileLists == null )
+        {
+            Logger.error( "Error during file parsing..." );
+            return;
+        }
+
+        if ( NamingSchemes.isLuxendoNamingScheme( namingScheme ) )
+        {
+            fileInfos.fileType = OpenFileType.LUXENDO;
+        }
+
+        initFileInfos5D( fileInfos, namingScheme, fileLists, channels );
+
+        fileInfos.ctzFileInfos = new SerializableFileInfo[fileInfos.nC][fileInfos.nT][fileInfos.nZ];
+        fileInfos.dimensions = new long[ 5 ];
+        fileInfos.dimensions[ DimensionOrder.X ] = fileInfos.nX;
+        fileInfos.dimensions[ DimensionOrder.Y ] = fileInfos.nY;
+        fileInfos.dimensions[ DimensionOrder.Z ] = fileInfos.nZ;
+        fileInfos.dimensions[ DimensionOrder.C ] = fileInfos.nC;
+        fileInfos.dimensions[ DimensionOrder.T ] = fileInfos.nT;
+
+        if ( fileInfos.voxelUnit == null || fileInfos.voxelUnit.equals( "" ) ) fileInfos.voxelUnit = "pixel";
+
+    }
+
     private static void fetchAndSetImageMetadata( FileInfos fileInfos, String directory, String namingScheme, String[] fileList )
     {
         if ( fileList[ 0 ].endsWith(".tif") )
@@ -341,6 +372,83 @@ public class FileInfosHelper
         }
     }
 
+
+    private static void initFileInfos5D( FileInfos fileInfos, String namingScheme, String[][] fileLists, ChannelSubsetter channelSubset )
+    {
+        if ( namingScheme.equals( NamingSchemes.TIFF_SLICES ) )
+        {
+            fileInfos.nC = 1;
+            fileInfos.nT = 1;
+            fileInfos.nZ = fileLists[ 0 ].length;
+            fileInfos.fileType = OpenFileType.TIFF_PLANES;
+            fileInfos.channelNames = new String[]{ "ch0" };
+            fetchAndSetImageMetadata( fileInfos, fileInfos.directory, namingScheme, fileLists[ 0 ] );
+            populateFileList( fileInfos, namingScheme, fileLists );
+        }
+        else
+        {
+            HashSet<String> channels = new HashSet();
+            HashSet<String> timepoints = new HashSet();
+            HashSet<String> slices = new HashSet();
+
+            Pattern pattern = Pattern.compile( namingScheme );
+
+            final Map< String, Integer > groupIndexToGroupName = getGroupIndexToGroupName( pattern );
+            final ArrayList< Integer > channelGroups = new ArrayList<>();
+            final ArrayList< Integer > timeGroups = new ArrayList<>();
+            final ArrayList< Integer > sliceGroups = new ArrayList<>();
+
+            for ( Map.Entry< String, Integer > entry : groupIndexToGroupName.entrySet() )
+            {
+                if ( entry.getKey().contains( "C" ) )
+                {
+                    channelGroups.add( entry.getValue() );
+                }
+                else if ( entry.getKey().contains( "T" ) )
+                {
+                    timeGroups.add( entry.getValue() );
+                }
+                else if ( entry.getKey().contains( "Z" ) )
+                {
+                    sliceGroups.add( entry.getValue() );
+                }
+            }
+
+            for ( String fileName : fileLists[ 0 ] )
+            {
+                Matcher matcher = pattern.matcher( fileName );
+                if ( matcher.matches() )
+                {
+                    channels.add( getId( channelGroups, matcher ) );
+                    timepoints.add( getId( timeGroups, matcher ) );
+                    slices.add( getId( sliceGroups, matcher ) );
+                }
+            }
+
+            List< String > sortedChannels = sort( channels );
+
+            sortedChannels = subSetChannelsIfNecessary( channelSubset, sortedChannels );
+
+            fileInfos.nC = sortedChannels.size();
+            fileInfos.channelNames = sortedChannels.stream().toArray( String[]::new );
+
+            // sort timepoints
+            List< String > sortedTimepoints = sort( timepoints );
+            fileInfos.nT = sortedTimepoints.size() ;
+
+            fetchAndSetImageMetadata( fileInfos, fileInfos.directory, namingScheme, fileLists[ 0 ] );
+
+            populateFileInfosFromChannelTimeRegExp(
+                    fileInfos,
+                    namingScheme,
+                    fileLists[ 0 ],
+                    sortedChannels,
+                    sortedTimepoints,
+                    channelGroups,
+                    timeGroups);
+        }
+    }
+
     private static List< String > subSetChannelsIfNecessary( ChannelSubsetter channelSubsetter, List< String > sortedChannels )
     {
         if ( channelSubsetter != null )
@@ -380,6 +488,9 @@ public class FileInfosHelper
 
     private static String getId( ArrayList< Integer > groups, Matcher matcher )
     {
+        if ( groups.size() == 0 )
+            return "0";
+
         ArrayList< String > ids = new ArrayList<>(  );
         for ( Integer group : groups )
         {
@@ -421,7 +532,7 @@ public class FileInfosHelper
             for ( int c = 0; c < fileInfos.nC; c++ )
                 for ( int t = 0; t < fileInfos.nT; t++ )
                     for ( int z = 0; z < fileInfos.nZ; z++ )
-                        // all z with same file-name, because it is stacks
+                        // all z with same file-name, because each file contains a stack
                         fileInfos.ctzFiles[ c ][ t ][ z ] = fileLists[ c ][ t ];
         }
     }

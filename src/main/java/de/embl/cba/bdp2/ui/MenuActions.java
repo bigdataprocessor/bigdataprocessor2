@@ -7,9 +7,7 @@ import de.embl.cba.bdp2.calibrate.CalibrateCommand;
 import de.embl.cba.bdp2.calibrate.CalibrationDialog;
 import de.embl.cba.bdp2.convert.MultiChannelConvertToUnsignedByteTypeCommand;
 import de.embl.cba.bdp2.convert.MultiChannelUnsignedByteTypeConversionDialog;
-import de.embl.cba.bdp2.convert.singlechannel.ConvertToUnsignedByteTypeCommand;
 import de.embl.cba.bdp2.crop.CropDialog;
-import de.embl.cba.bdp2.log.DebugDialog;
 import de.embl.cba.bdp2.open.ui.DownloadAndOpenSampleDataCommand;
 import de.embl.cba.bdp2.dialog.MiscMenu;
 import de.embl.cba.bdp2.dialog.Utils;
@@ -316,7 +314,7 @@ public class MenuActions implements ActionListener {
         {
             BigDataProcessor2.threadPool.submit(() ->
             {
-                new DebugDialog();
+                Logger.showLoggingLevelDialog();
             });
         }
 

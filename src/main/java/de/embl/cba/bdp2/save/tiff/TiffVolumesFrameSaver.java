@@ -196,11 +196,11 @@ public class TiffVolumesFrameSaver< R extends RealType< R > & NativeType< R > > 
         }
         else
         {
-            // super slow!
+//             super slow!
             saveWithBioFormats( imp, t, rowsPerStrip, path, sC, sT );
         }
 
-        Logger.debug( "Saved volume in [ s ]: " + ( System.currentTimeMillis() - start ) / 1000);
+        Logger.debug( "Saved volume in [ s ]: " + ( System.currentTimeMillis() - start ) / 1000.0);
     }
 
     private void saveWithBioFormats( ImagePlus imp, int t, int rowsPerStrip, String path, String sC, String sT )
@@ -217,6 +217,7 @@ public class TiffVolumesFrameSaver< R extends RealType< R > & NativeType< R > > 
         {
             ImageWriter writer = getImageWriter( imp, pathCT );
 
+            final String compression = writer.getCompression();
             if ( settings.compression.equals( SavingSettings.COMPRESSION_ZLIB ) )
                 writer.setCompression( TiffWriter.COMPRESSION_ZLIB );
             else if ( settings.compression.equals( SavingSettings.COMPRESSION_LZW ) )
@@ -227,6 +228,7 @@ public class TiffVolumesFrameSaver< R extends RealType< R > & NativeType< R > > 
             if ( rowsPerStrip == -1 )
                 rowsPerStrip = imp.getHeight(); // use all rows
 
+            //rowsPerStrip = 1;
             long[] rowsPerStripArray = new long[]{ rowsPerStrip };
 
             for (int z = 0; z < imp.getNSlices(); z++)
@@ -238,29 +240,24 @@ public class TiffVolumesFrameSaver< R extends RealType< R > & NativeType< R > > 
                     return;
                 }
 
-                // save using single strips for compression
-                // TODO: in BioFormats below code appears to compress each strip on its own :-(
-//                if (imp.getBytesPerPixel() == 2)
-//                {
-//                    final short[] pixels = ( short[] ) imp.getStack().getProcessor( z + 1 ).getPixels();
-//                    final byte[] buf = ShortToByteBigEndian( pixels );
-//                    writer.saveBytes( z, buf );
-//                }
-//                else if (imp.getBytesPerPixel() == 1)
-//                {
-//                    writer.saveBytes( z, (byte[]) (imp.getStack().getProcessor(z + 1).getPixels() ) );
-//                }
-
-                // save using strips for compression
+                // save, configuring myself how many strips to use for compression
                 IFD ifd = new IFD();
                 ifd.put( IFD.ROWS_PER_STRIP, rowsPerStripArray );
                 if (imp.getBytesPerPixel() == 2)
                 {
-                    tiffWriter.saveBytes(z, ShortToByteBigEndian( (short[]) imp.getStack().getProcessor(z + 1).getPixels()), ifd);
+                    long start = System.currentTimeMillis();
+                    byte[] bytes = ShortToByteBigEndian( ( short[] ) imp.getStack().getProcessor( z + 1 ).getPixels() );
+                    System.out.println( "convert: " + (System.currentTimeMillis() - start) );
+
+                    start = System.currentTimeMillis();
+                    tiffWriter.saveBytes(z, bytes, ifd);
+                    System.out.println( "save: " + (System.currentTimeMillis() - start) );
+
                 }
                 else if (imp.getBytesPerPixel() == 1)
                 {
-                    tiffWriter.saveBytes(z, (byte[]) (imp.getStack().getProcessor(z + 1).getPixels()), ifd);
+                    byte[] bytes = ( byte[] ) ( imp.getStack().getProcessor( z + 1 ).getPixels() );
+                    tiffWriter.saveBytes(z, bytes, ifd);
                 }
             }
 

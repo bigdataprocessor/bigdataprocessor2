@@ -11,11 +11,11 @@ public class TestOpenMultiChannelTiffVolumesFromSubfolders
 {
     public static void main(String[] args)
     {
-        new TestOpenMultiChannelTiffVolumesFromSubfolders().open();
+        new TestOpenMultiChannelTiffVolumesFromSubfolders().run();
     }
 
     @Test
-    public void open()
+    public void run()
     {
         final String directory = "/Users/tischer/Documents/bigdataprocessor2/src/test/resources/test/tiff-nc2-nt6-subfolders";
 

@@ -161,9 +161,9 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		return image;
 	}
 
-	public long numTimePoints()
+	public int numTimePoints()
 	{
-		return raiXYZCT.dimension( DimensionOrder.T );
+		return (int) raiXYZCT.dimension( DimensionOrder.T );
 	}
 
 	public long numChannels()

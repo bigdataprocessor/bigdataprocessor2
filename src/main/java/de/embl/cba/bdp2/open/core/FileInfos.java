@@ -96,6 +96,7 @@ public class FileInfos
         this.h5DataSetName = h5DataSetName;
 
         adaptFilterAndNamingSchemeForSingleChannelData();
+
         adaptDirectorySeparatorToOperatingSystem( this.namingScheme );
 
         FileInfosHelper.configureFileInfos( this, this.namingScheme, this.filter, this.channelSubsetter );
@@ -103,6 +104,7 @@ public class FileInfos
         Logger.info( this.toString() );
     }
 
+    @Deprecated
     public void adaptFilterAndNamingSchemeForSingleChannelData()
     {
         if ( ! this.namingScheme.equals( NamingSchemes.LEICA_LIGHT_SHEET_TIFF )

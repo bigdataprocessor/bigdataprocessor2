@@ -10,11 +10,11 @@ public class TestOpenLeicaDSL
 {
     public static void main(String[] args)
     {
-        new TestOpenLeicaDSL().open();
+        new TestOpenLeicaDSL().run();
     }
 
     @Test
-    public void open()
+    public void run()
     {
         final String directory = "/Users/tischer/Documents/bigdataprocessor2/src/test/resources/test/leica-dsl-tiff-planes";
 

@@ -148,8 +148,7 @@ public class IntervalImageViews
 
 		raiXYZ = copyVolumeRAI( raiXYZ, numThreads, type );
 
-		Logger.debug( "Produce processed data cube [ s ]: "
-				+ ( System.currentTimeMillis() - start ) / 1000);
+		Logger.debug( "Processed volume [ s ]: " + ( System.currentTimeMillis() - start ) / 1000);
 
 		return raiXYZ;
 	}

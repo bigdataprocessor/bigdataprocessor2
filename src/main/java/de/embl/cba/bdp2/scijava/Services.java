@@ -1,5 +1,6 @@
 package de.embl.cba.bdp2.scijava;
 
+import de.embl.cba.bdp2.log.Logger;
 import org.scijava.Context;
 import org.scijava.command.CommandService;
 import org.scijava.ui.UIService;
@@ -19,6 +20,11 @@ public class Services
 	{
 		System.out.println( "Setting SciJava uiService.");
 		Services.uiService = uiService;
+		if ( uiService.isHeadless() )
+		{
+			Logger.info( "Detected headless mode." );
+			Logger.setLevel( Logger.Level.Debug );
+		}
 	}
 
 	public static void setContext( Context context )

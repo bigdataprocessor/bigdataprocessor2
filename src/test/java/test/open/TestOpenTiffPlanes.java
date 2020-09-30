@@ -5,18 +5,17 @@ import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.open.core.NamingSchemes;
 import org.junit.Test;
 
-import static de.embl.cba.bdp2.open.core.NamingSchemes.LEICA_LIGHT_SHEET_TIFF;
 import static de.embl.cba.bdp2.open.core.NamingSchemes.Z;
 
 public class TestOpenTiffPlanes
 {
     public static void main(String[] args)
     {
-        new TestOpenTiffPlanes().open();
+        new TestOpenTiffPlanes().run();
     }
 
     @Test
-    public void open()
+    public void run()
     {
         final String directory = "/Users/tischer/Documents/bigdataprocessor2/src/test/resources/test/tiff-planes";
 
