@@ -29,25 +29,30 @@ public abstract class NamingSchemes
 	public static final String LUXENDO_REGEXP_ID = "(?<C1>.*channel_.*)/(?<C2>Cam_.*)_(" + T + "\\d+).h5";
 	public static final String CHANNEL_ID_DELIMITER = "_";
 
+	public static final String LEICA_DSL_TIFF_PLANES_REG_EXP = ".*" +
+			"--t(" + T + "\\d+)" +
+			"--Z(" + Z + "\\d+)" +
+			"--C(" + C + "\\d+).*";
 
-
-	public static boolean isLuxendoNamingScheme( String namingScheme )
-	{
-		return namingScheme.contains( LUXENDO_REGEXP_ID );
-	}
 
 	public static final String LUXENDO_STACKINDEX_REGEXP = ".*stack_(?<StackIndex>\\d+)_channel_.*";
 	public static final String PATTERN_LUXENDO = "Cam_.*_(\\d)+.h5$";
 	public static final String PATTERN_ALL= ".*";
 	public static final String PATTERN_6= "Cam_<c>_<t>.h5";
+
 	@Deprecated
 	public static final String LOAD_CHANNELS_FROM_FOLDERS = "Channels from Subfolders";
+	@Deprecated
 	public static final String TIFF_SLICES = "Tiff Slices";
-	public static final String LEICA_LIGHT_SHEET_TIFF = "Leica Light Sheet Tiff";
 
 	// File extensions
 	public static final String TIF = ".tif";
 	public static final String OME_TIF = ".ome.tif";
 	public static final String TIFF = ".tiff";
 	public static final String H_5 = ".h5";
+
+	public static boolean isLuxendoNamingScheme( String namingScheme )
+	{
+		return namingScheme.contains( LUXENDO_REGEXP_ID );
+	}
 }

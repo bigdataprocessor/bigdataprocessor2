@@ -13,14 +13,14 @@ public class TestOpenLeicaDSL
         new TestOpenLeicaDSL().run();
     }
 
-    @Test
+    //@Test
     public void run()
     {
         final String directory = "/Users/tischer/Documents/bigdataprocessor2/src/test/resources/test/leica-dsl-tiff-planes";
 
         final Image image = BigDataProcessor2.openImage(
                 directory,
-                LEICA_LIGHT_SHEET_TIFF,
+                LEICA_DSL_TIFF_PLANES_REG_EXP,
                 ".*"
         );
 

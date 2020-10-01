@@ -255,81 +255,67 @@ public class FileInfosHelper
 
     private static void initFileInfos5D( FileInfos fileInfos, String namingScheme, String[][] fileLists, ChannelSubsetter channelSubset )
     {
-        if ( namingScheme.equals( NamingSchemes.TIFF_SLICES ) )
+        HashSet<String> channels = new HashSet();
+        HashSet<String> timepoints = new HashSet();
+        HashSet<String> slices = new HashSet();
+
+        Pattern pattern = Pattern.compile( namingScheme );
+
+        final Map< String, Integer > groupIndexToGroupName = getGroupIndexToGroupName( pattern );
+        final ArrayList< Integer > channelGroups = new ArrayList<>();
+        final ArrayList< Integer > timeGroups = new ArrayList<>();
+        final ArrayList< Integer > sliceGroups = new ArrayList<>();
+
+        for ( Map.Entry< String, Integer > entry : groupIndexToGroupName.entrySet() )
         {
-            // TODO: get rid of this, and rather adapt the naming scheme regexp
-            fileInfos.nC = 1;
-            fileInfos.nT = 1;
-            fileInfos.nZ = fileLists[ 0 ].length;
-            fileInfos.fileType = OpenFileType.TIFF_PLANES;
-            fileInfos.channelNames = new String[]{ "ch0" };
-            fetchAndSetImageMetadata( fileInfos, fileInfos.directory, namingScheme, fileLists[ 0 ] );
-            populateFileList( fileInfos, namingScheme, fileLists );
+            if ( entry.getKey().contains( "C" ) )
+            {
+                channelGroups.add( entry.getValue() );
+            }
+            else if ( entry.getKey().contains( "T" ) )
+            {
+                timeGroups.add( entry.getValue() );
+            }
+            else if ( entry.getKey().contains( "Z" ) )
+            {
+                sliceGroups.add( entry.getValue() );
+            }
         }
-        else
+
+        for ( String fileName : fileLists[ 0 ] )
         {
-            HashSet<String> channels = new HashSet();
-            HashSet<String> timepoints = new HashSet();
-            HashSet<String> slices = new HashSet();
-
-            Pattern pattern = Pattern.compile( namingScheme );
-
-            final Map< String, Integer > groupIndexToGroupName = getGroupIndexToGroupName( pattern );
-            final ArrayList< Integer > channelGroups = new ArrayList<>();
-            final ArrayList< Integer > timeGroups = new ArrayList<>();
-            final ArrayList< Integer > sliceGroups = new ArrayList<>();
-
-            for ( Map.Entry< String, Integer > entry : groupIndexToGroupName.entrySet() )
+            Matcher matcher = pattern.matcher( fileName );
+            if ( matcher.matches() )
             {
-                if ( entry.getKey().contains( "C" ) )
-                {
-                    channelGroups.add( entry.getValue() );
-                }
-                else if ( entry.getKey().contains( "T" ) )
-                {
-                    timeGroups.add( entry.getValue() );
-                }
-                else if ( entry.getKey().contains( "Z" ) )
-                {
-                    sliceGroups.add( entry.getValue() );
-                }
+                channels.add( getId( channelGroups, matcher ) );
+                timepoints.add( getId( timeGroups, matcher ) );
+                slices.add( getId( sliceGroups, matcher ) );
             }
-
-            for ( String fileName : fileLists[ 0 ] )
-            {
-                Matcher matcher = pattern.matcher( fileName );
-                if ( matcher.matches() )
-                {
-                    channels.add( getId( channelGroups, matcher ) );
-                    timepoints.add( getId( timeGroups, matcher ) );
-                    slices.add( getId( sliceGroups, matcher ) );
-                }
-            }
-
-            List< String > sortedChannels = sort( channels );
-            sortedChannels = subSetChannelsIfNecessary( channelSubset, sortedChannels );
-            fileInfos.nC = sortedChannels.size();
-            fileInfos.channelNames = sortedChannels.stream().toArray( String[]::new );
-
-            List< String > sortedTimepoints = sort( timepoints );
-            fileInfos.nT = sortedTimepoints.size();
-
-            List< String > sortedSlices = sort( slices );
-            fileInfos.nZ = sortedSlices.size();
-
-            fetchAndSetImageMetadata( fileInfos, fileInfos.directory, namingScheme, fileLists[ 0 ] );
-
-            populateFileInfosFromRegExp(
-                    fileInfos,
-                    namingScheme,
-                    fileLists[ 0 ],
-                    sortedChannels,
-                    sortedTimepoints,
-                    sortedSlices,
-                    channelGroups,
-                    timeGroups,
-                    sliceGroups);
         }
+
+        List< String > sortedChannels = sort( channels );
+        sortedChannels = subSetChannelsIfNecessary( channelSubset, sortedChannels );
+        fileInfos.nC = sortedChannels.size();
+        fileInfos.channelNames = sortedChannels.stream().toArray( String[]::new );
+
+        List< String > sortedTimepoints = sort( timepoints );
+        fileInfos.nT = sortedTimepoints.size();
+
+        List< String > sortedSlices = sort( slices );
+        fileInfos.nZ = sortedSlices.size();
+
+        fetchAndSetImageMetadata( fileInfos, fileInfos.directory, namingScheme, fileLists[ 0 ] );
+
+        populateFileInfosFromRegExp(
+                fileInfos,
+                namingScheme,
+                fileLists[ 0 ],
+                sortedChannels,
+                sortedTimepoints,
+                sortedSlices,
+                channelGroups,
+                timeGroups,
+                sliceGroups);
     }
 
     private static List< String > subSetChannelsIfNecessary( ChannelSubsetter channelSubsetter, List< String > sortedChannels )

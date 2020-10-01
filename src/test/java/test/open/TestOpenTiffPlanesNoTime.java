@@ -28,6 +28,6 @@ public class TestOpenTiffPlanesNoTime
         double[] voxelSize = image.getVoxelSize();
         image.setVoxelSize( voxelSize[ 0 ], voxelSize[ 1 ], 1.0 ); // necessary because voxel size in z is NaN for single plane Tiff
 
-        //BigDataProcessor2.showImage( image, true );
+        BigDataProcessor2.showImage( image, true );
     }
 }

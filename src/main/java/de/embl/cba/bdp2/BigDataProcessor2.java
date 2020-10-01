@@ -44,8 +44,7 @@ public class BigDataProcessor2
     public static int MAX_THREAD_LIMIT = Runtime.getRuntime().availableProcessors() * 2;
 
     public static< R extends RealType< R > & NativeType< R > >
-    void saveImageAndWaitUntilDone(
-            Image< R > image, SavingSettings savingSettings )
+    void saveImageAndWaitUntilDone( Image< R > image, SavingSettings savingSettings )
     {
         final LoggingProgressListener progressListener = new LoggingProgressListener( "Frames saved" );
         saveImage( image, savingSettings, progressListener );

@@ -16,7 +16,6 @@ public class TestCompressed16bitTiffStackSaving
         new TestCompressed16bitTiffStackSaving().run();
     }
 
-    @Test
     public void run()
     {
         final String directory = "/Users/tischer/Downloads/tmp-luxendo";

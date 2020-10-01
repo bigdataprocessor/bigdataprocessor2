@@ -21,6 +21,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
+import static de.embl.cba.bdp2.open.core.NamingSchemes.*;
+
 public class FileInfos
 {
     public static final int PROGRESS_UPDATE_MILLISECONDS = 100;
@@ -36,7 +38,7 @@ public class FileInfos
 			ImarisUtils.RESOLUTION_LEVEL +"3/Data",
 			"ITKImage/0/VoxelData" // Elastix
     };
-	public SerializableFileInfo[][][] ctzFileInfos;
+    public SerializableFileInfo[][][] ctzFileInfos;
     public long[] dimensions;
     @NotNull
     private String namingScheme;
@@ -96,27 +98,9 @@ public class FileInfos
         this.h5DataSetName = h5DataSetName;
 
         adaptDirectorySeparatorToOperatingSystem( this.namingScheme );
-
         FileInfosHelper.configureFileInfos5D( this, this.namingScheme, this.filter, this.channelSubsetter );
 
         Logger.info( this.toString() );
-    }
-
-    @Deprecated
-    public void adaptFilterAndNamingSchemeForSingleChannelData()
-    {
-        if ( ! this.namingScheme.equals( NamingSchemes.LEICA_LIGHT_SHEET_TIFF )
-                && ! this.namingScheme.equals( NamingSchemes.TIFF_SLICES ))
-        {
-            if ( ! this.namingScheme.contains( "?<C" ) )
-            {
-                // assign containing folder as channel
-                final String channelFolder = new File( this.directory ).getName();
-                this.namingScheme = "(?<C>" + channelFolder + ")/" + this.namingScheme;
-                this.filter = channelFolder + "/" + this.filter;
-                this.directory = new File( this.directory ).getParent() + "/";
-            }
-        }
     }
 
     @NotNull

@@ -28,7 +28,7 @@ public class SaveAdvancedCommand< R extends RealType< R > & NativeType< R > > im
     public static final String COMMAND_NAME = "Save As...";
     public static final String COMMAND_FULL_NAME = Utils.COMMAND_BDP2_PREFIX + COMMAND_NAME;
 
-    @Parameter(label = "Input image name", persist = true)
+    @Parameter(label = "Input image name")
     protected Image< R > inputImage = ImageService.imageNameToImage.values().iterator().next();
     public static final String INPUT_IMAGE_PARAMETER = "inputImage";
 
@@ -86,7 +86,7 @@ public class SaveAdvancedCommand< R extends RealType< R > & NativeType< R > > im
 
         BigDataProcessor2.saveImageAndWaitUntilDone( inputImage, savingSettings );
 
-        Utils.shutDownIfHeadless();
+        Logger.info( "Save as... is done!" );
     }
 
     private SavingSettings getSavingSettings()

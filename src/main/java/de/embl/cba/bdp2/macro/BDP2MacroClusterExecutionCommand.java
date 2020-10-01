@@ -1,6 +1,5 @@
-package de.embl.cba.bdp2.cluster;
+package de.embl.cba.bdp2.macro;
 
-import de.embl.cba.bdp2.macro.HeadlessMacroCreator;
 import de.embl.cba.bdp2.scijava.Services;
 import de.embl.cba.cluster.AbstractClusterSubmitterCommand;
 import de.embl.cba.cluster.JobFuture;
@@ -25,6 +24,7 @@ public class BDP2MacroClusterExecutionCommand extends AbstractClusterSubmitterCo
 	public static final String T_START = "tstart=";
 	public static final String T_END = "tend=";
 	public static final String NUMPROCESSINGTHREADS = "numprocessingthreads=";
+
 	@Parameter ( label = "Macro files" )
 	File[] macros;
 
@@ -37,7 +37,7 @@ public class BDP2MacroClusterExecutionCommand extends AbstractClusterSubmitterCo
 	@Override
 	public void run()
 	{
-		createJobSubmitter( executable.toString() + JobSubmitter.RUN_IJ_MACRO_OPTIONS );
+		createJobSubmitter( executable + JobSubmitter.RUN_IJ_MACRO_OPTIONS );
 		jobFutures = submitJobs( macros );
 		new Thread( () ->  {
 			monitorJobs( jobFutures );
@@ -58,12 +58,12 @@ public class BDP2MacroClusterExecutionCommand extends AbstractClusterSubmitterCo
 
 			macro = setNumThreads( macro );
 
-			for ( int t = tStart; t <= tEnd; t+= minutesPerTimePoint )
+			for ( int t = tStart; t <= tEnd; t+= timePointsPerJob )
 			{
 				jobSubmitter.clearCommands();
 
 				int t0 = t;
-				int t1 = t + minutesPerTimePoint - 1;
+				int t1 = t + timePointsPerJob - 1;
 				t1 = t1 <= tEnd ? t1 : tEnd;
 
 				String timeSubsetMacro = macro

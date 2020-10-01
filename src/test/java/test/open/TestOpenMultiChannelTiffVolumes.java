@@ -25,7 +25,8 @@ public class TestOpenMultiChannelTiffVolumes
                 ".*"
         );
 
+        image.setVoxelSize( new double[]{1.0, 1.0, 1.0} );
 //        BigDataProcessor2UI.showUI();
-//        BigDataProcessor2.showImage( image, true );
+        BigDataProcessor2.showImage( image, true );
     }
 }

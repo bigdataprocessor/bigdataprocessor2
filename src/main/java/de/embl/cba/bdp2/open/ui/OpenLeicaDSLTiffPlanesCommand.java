@@ -26,7 +26,7 @@ public class OpenLeicaDSLTiffPlanesCommand< R extends RealType< R > & NativeType
             outputImage =
                     BigDataProcessor2.openImage(
                             directory.toString(),
-                            NamingSchemes.LEICA_LIGHT_SHEET_TIFF,
+                            NamingSchemes.LEICA_DSL_TIFF_PLANES_REG_EXP,
                             ".*.tif" );
 
             fixVoxelSpacing( outputImage );

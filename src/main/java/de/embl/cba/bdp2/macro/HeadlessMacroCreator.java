@@ -1,6 +1,7 @@
 package de.embl.cba.bdp2.macro;
 
 import de.embl.cba.bdp2.open.ui.AbstractOpenCommand;
+import de.embl.cba.bdp2.quit.QuitCommand;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -54,7 +55,7 @@ public class HeadlessMacroCreator
 			headlessCommands.add( command );
 		}
 
-		headlessCommands.add( "run(\"Quit Fiji\");" );
+		headlessCommands.add( "run(\"" + QuitCommand.COMMAND_FULL_NAME +"\");" );
 
 		String join = headlessCommands.stream().collect( Collectors.joining( " " ) );
 
