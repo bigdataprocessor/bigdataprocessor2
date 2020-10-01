@@ -32,6 +32,7 @@ public class LuxendoInteractiveChannelSubsetter implements ChannelSubsetter
 		try
 		{
 			Recorder recorder = Recorder.getInstance();
+			if ( recorder == null ) return;
 			Field f = recorder.getClass().getDeclaredField("textArea"); //NoSuchFieldException
 			f.setAccessible(true);
 			TextArea textArea = (TextArea) f.get(recorder); //IllegalAccessException
@@ -39,10 +40,10 @@ public class LuxendoInteractiveChannelSubsetter implements ChannelSubsetter
 			int start = text.indexOf( OpenLuxendoCommand.COMMAND_FULL_NAME ) - 5;
 			int end = text.length() - 1;
 			textArea.replaceRange("", start, end );
-			//(( TextArea ) textArea).replaceRange(  );
-		} catch ( Exception e )
+		}
+		catch ( Exception e )
 		{
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 

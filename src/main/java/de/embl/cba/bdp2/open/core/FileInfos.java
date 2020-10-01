@@ -97,17 +97,16 @@ public class FileInfos
         this.directory  = Utils.fixDirectoryFormatAndAppendFileSeparator( directory );
         this.h5DataSetName = h5DataSetName;
 
-        adaptDirectorySeparatorToOperatingSystem( this.namingScheme );
+        adaptDirectorySeparatorToOperatingSystem();
+
         FileInfosHelper.configureFileInfos5D( this, this.namingScheme, this.filter, this.channelSubsetter );
 
         Logger.info( this.toString() );
     }
 
-    @NotNull
-    public String adaptDirectorySeparatorToOperatingSystem( String namingScheme )
+    private void adaptDirectorySeparatorToOperatingSystem( )
     {
         namingScheme = namingScheme.replace( "/", Pattern.quote( File.separator ) );
-        return namingScheme;
     }
 
     @Override

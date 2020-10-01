@@ -196,7 +196,7 @@ public class TiffVolumesFrameSaver< R extends RealType< R > & NativeType< R > > 
         }
         else
         {
-//             super slow!
+            // very slow even for uncompressed data: https://forum.image.sc/t/bioformats-saving-with-compression-is-too-slow/20522/10
             saveWithBioFormats( imp, t, rowsPerStrip, path, sC, sT );
         }
 

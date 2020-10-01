@@ -17,7 +17,6 @@ import java.util.regex.Pattern;
 
 public class FileInfosHelper
 {
-
     public static void configureFileInfos5D( FileInfos fileInfos, String namingScheme, String filterPattern, ChannelSubsetter channels )
     {
         String directory = fileInfos.directory;

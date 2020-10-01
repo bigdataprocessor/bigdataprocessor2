@@ -34,7 +34,6 @@ public class BigDataProcessor2Command< R extends RealType< R > & NativeType< R >
 
         SwingUtilities.invokeLater( () -> {
             CropDialog.askForUnitsChoice = true;
-            new Recorder();
             BigDataProcessor2UI.showUI();
         } );
     }

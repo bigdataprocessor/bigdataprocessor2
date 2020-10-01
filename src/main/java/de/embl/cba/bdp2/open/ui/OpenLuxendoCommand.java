@@ -34,7 +34,7 @@ public class OpenLuxendoCommand< R extends RealType< R > & NativeType< R > > ext
 
             if ( directory.getName().contains( "stack_" ) )
             {
-                // User mistakenly clicked one level too deep
+                // In case the user mistakenly clicked one level too deep
                 directory = new File( directory.getParent() );
             }
 
