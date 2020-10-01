@@ -18,128 +18,34 @@ import java.util.regex.Pattern;
 public class FileInfosHelper
 {
 
-    /**
-     * This used to be used in case of namingScheme.contains("<Z")
-     * Not sure I should still support this.
-     *
-     * @param infoSource
-     * @param directory
-     * @param namingPattern
-     * @return
-     */
-    @Deprecated
-    public static boolean setFileInfosDeprecated(
-            FileInfos infoSource,
-            String directory,
-            String namingPattern)
-    { // previously, setMissingInfos
-        int[] ctzMin = new int[3];
-        int[] ctzMax = new int[3];
-        int[] ctzPad = new int[3];
-        int[] ctzSize = new int[3];
-        boolean hasC = false;
-        boolean hasT = false;
-        boolean hasZ = false;
+    public static void configureFileInfos5D( FileInfos fileInfos, String namingScheme, String filterPattern, ChannelSubsetter channels )
+    {
+        String directory = fileInfos.directory;
 
-        Matcher matcher;
+        String[][] fileLists = getFilesInFolders( directory, filterPattern );
 
-        Logger.info("Importing/creating file information from pre-defined naming scheme.");
-        // channels
-        matcher = Pattern.compile(".*<C(\\d+)-(\\d+)>.*").matcher(namingPattern);
-        if (matcher.matches()) {
-            hasC = true;
-            ctzMin[0] = Integer.parseInt(matcher.group(1));
-            ctzMax[0] = Integer.parseInt(matcher.group(2));
-            ctzPad[0] = matcher.group(1).length();
-        } else {
-            ctzMin[0] = ctzMax[0] = ctzPad[0] = 0;
+        if ( fileLists == null )
+        {
+            Logger.error( "Error during file parsing..." );
+            return;
         }
 
-        // frames
-        matcher = Pattern.compile(".*<T(\\d+)-(\\d+)>.*").matcher(namingPattern);
-        if (matcher.matches()) {
-            hasT = true;
-            ctzMin[1] = Integer.parseInt(matcher.group(1));
-            ctzMax[1] = Integer.parseInt(matcher.group(2));
-            ctzPad[1] = matcher.group(1).length();
-        } else {
-            ctzMin[1] = ctzMax[1] = ctzPad[1] = 0;
+        if ( NamingSchemes.isLuxendoNamingScheme( namingScheme ) )
+        {
+            fileInfos.fileType = OpenFileType.LUXENDO;
         }
 
-        // slices
-        matcher = Pattern.compile(".*<Z(\\d+)-(\\d+)>.*").matcher(namingPattern);
-        if (matcher.matches()) {
-            hasZ = true;
-            ctzMin[2] = Integer.parseInt(matcher.group(1));
-            ctzMax[2] = Integer.parseInt(matcher.group(2));
-            ctzPad[2] = matcher.group(1).length();
-        } else {
-            // determine number of slices from a file...
-            Logger.error("Please provide a z range as well.");
-            return false;
-        }
+        initFileInfos5D( fileInfos, namingScheme, fileLists, channels );
 
-        for (int i = 0; i < 3; ++i){
-            ctzSize[i] = ctzMax[i] - ctzMin[i] + 1;
-        }
-        infoSource.nC = ctzSize[0];
-        infoSource.nT = ctzSize[1];
-        infoSource.nZ = ctzSize[2];
+        fileInfos.ctzFileInfos = new SerializableFileInfo[fileInfos.nC][fileInfos.nT][fileInfos.nZ];
+        fileInfos.dimensions = new long[ 5 ];
+        fileInfos.dimensions[ DimensionOrder.X ] = fileInfos.nX;
+        fileInfos.dimensions[ DimensionOrder.Y ] = fileInfos.nY;
+        fileInfos.dimensions[ DimensionOrder.Z ] = fileInfos.nZ;
+        fileInfos.dimensions[ DimensionOrder.C ] = fileInfos.nC;
+        fileInfos.dimensions[ DimensionOrder.T ] = fileInfos.nT;
 
-        infoSource.ctzFiles = new String[ctzSize[0]][ctzSize[1]][ctzSize[2]];
-
-        if (namingPattern.contains("<Z") && namingPattern.contains(".tif")) {
-            infoSource.fileType = OpenFileType.TIFF_PLANES;
-        } else {
-            Logger.error("Sorry, currently only single tiff planes supported");
-            return false;
-        }
-
-        boolean isObtainedImageDataInfo = false;
-
-        for (int c = ctzMin[0]; c <= ctzMax[0]; c++) {
-            for (int t = ctzMin[1]; t <= ctzMax[1]; t++) {
-                for (int z = ctzMin[2]; z <= ctzMax[2]; z++) {
-
-                    String fileName = "";
-
-                    if (infoSource.fileType.equals( OpenFileType.TIFF_PLANES)) {
-                        fileName = namingPattern.replaceFirst("<Z(\\d+)-(\\d+)>",String.format("%1$0" + ctzPad[2] + "d", z));
-                    } else {
-                        Logger.error("BigDataProcessor:setMissingInfos:unsupported file type");
-                    }
-                    if (hasC) {
-                        fileName = fileName.replaceFirst("<C(\\d+)-(\\d+)>",String.format("%1$0" + ctzPad[0] + "d", c));
-                    }
-
-                    if (hasT) {
-                        fileName = fileName.replaceFirst("<T(\\d+)-(\\d+)>",String.format("%1$0" + ctzPad[1] + "d", t));
-                    }
-
-                    infoSource.ctzFiles[c - ctzMin[0]][t - ctzMin[1]][z - ctzMin[2]] = fileName;
-
-                    if (!isObtainedImageDataInfo) {
-                        File f = new File(directory, fileName);
-
-                        if (f.exists() && !f.isDirectory())
-                        {
-                            setImageMetadataFromTiff( infoSource, directory, fileName);
-
-                            if (infoSource.fileType.equals( OpenFileType.TIFF_PLANES))
-                                infoSource.nZ = ctzSize[2];
-
-                            Logger.info("Found one file; setting nx,ny,nz and bit-depth from this file: "+ fileName);
-                            isObtainedImageDataInfo = true;
-                        }
-                    }
-                }
-            }
-        }
-        if (!isObtainedImageDataInfo) {
-            Logger.error("Could not open data set. There needs to be at least one file matching the naming scheme.");
-        }
-
-        return isObtainedImageDataInfo;
+        if ( fileInfos.voxelUnit == null || fileInfos.voxelUnit.equals( "" ) ) fileInfos.voxelUnit = "pixel";
     }
 
     public static void setImageMetadataFromTiff(
@@ -184,37 +90,6 @@ public class FileInfosHelper
 
         if ( fileInfos.voxelUnit != null )
             fileInfos.voxelUnit = fileInfos.voxelUnit.trim();
-    }
-
-    public static void configureFileInfos5D( FileInfos fileInfos, String namingScheme, String filterPattern, ChannelSubsetter channels )
-    {
-        String directory = fileInfos.directory;
-
-        String[][] fileLists = getFilesInFolders( directory, filterPattern );
-
-        if ( fileLists == null )
-        {
-            Logger.error( "Error during file parsing..." );
-            return;
-        }
-
-        if ( NamingSchemes.isLuxendoNamingScheme( namingScheme ) )
-        {
-            fileInfos.fileType = OpenFileType.LUXENDO;
-        }
-
-        initFileInfos5D( fileInfos, namingScheme, fileLists, channels );
-
-        fileInfos.ctzFileInfos = new SerializableFileInfo[fileInfos.nC][fileInfos.nT][fileInfos.nZ];
-        fileInfos.dimensions = new long[ 5 ];
-        fileInfos.dimensions[ DimensionOrder.X ] = fileInfos.nX;
-        fileInfos.dimensions[ DimensionOrder.Y ] = fileInfos.nY;
-        fileInfos.dimensions[ DimensionOrder.Z ] = fileInfos.nZ;
-        fileInfos.dimensions[ DimensionOrder.C ] = fileInfos.nC;
-        fileInfos.dimensions[ DimensionOrder.T ] = fileInfos.nT;
-
-        if ( fileInfos.voxelUnit == null || fileInfos.voxelUnit.equals( "" ) ) fileInfos.voxelUnit = "pixel";
-
     }
 
     private static void fetchAndSetImageMetadata( FileInfos fileInfos, String directory, String namingScheme, String[] fileList )
@@ -306,7 +181,7 @@ public class FileInfosHelper
 
         fetchAndSetImageMetadata( fileInfos, fileInfos.directory, namingScheme, fileLists[ 0 ] );
 
-        populateFileInfosFromRegExp(
+        populateFileInfos5D(
                 fileInfos,
                 namingScheme,
                 fileLists[ 0 ],
@@ -383,63 +258,7 @@ public class FileInfosHelper
         }
     }
 
-    private static void populateFileList(
-            FileInfos fileInfos,
-            String namingScheme,
-            String[][] fileLists )
-    {
-        fileInfos.ctzFiles = new String[ fileInfos.nC ][ fileInfos.nT ][ fileInfos.nZ ];
-
-        if ( namingScheme.equals( NamingSchemes.TIFF_SLICES ) )
-        {
-            for ( int z = 0; z < fileInfos.nZ; z++ )
-                fileInfos.ctzFiles[ 0 ][ 0 ][ z ] = fileLists[ 0 ][ z ];
-        }
-        else
-        {
-            for ( int c = 0; c < fileInfos.nC; c++ )
-                for ( int t = 0; t < fileInfos.nT; t++ )
-                    for ( int z = 0; z < fileInfos.nZ; z++ )
-                        // all z with same file-name, because each file contains a stack
-                        fileInfos.ctzFiles[ c ][ t ][ z ] = fileLists[ c ][ t ];
-        }
-    }
-
-    private static void populateFileInfosFromChannelTimePattern(
-            FileInfos fileInfos,
-            String namingScheme,
-            String[] fileList,
-            List< String > channels,
-            List< String > timepoints )
-    {
-        fileInfos.ctzFiles = new String[ fileInfos.nC ][ fileInfos.nT ][ fileInfos.nZ ];
-
-        Pattern patternCT = Pattern.compile( namingScheme );
-
-        for ( String fileName : fileList )
-        {
-            Matcher matcherCT = patternCT.matcher( fileName );
-            if ( matcherCT.matches() ) {
-                try {
-                    int c = channels.indexOf( matcherCT.group("C") );
-                    int t = timepoints.indexOf( matcherCT.group("T") );
-                    for ( int z = 0; z < fileInfos.nZ; z++) {
-                        fileInfos.ctzFiles[c][t][z] = fileName; // all z with same file-name, because it is stacks
-                    }
-                }
-                catch (Exception e)
-                {
-                    Logger.error("The multi-channel load did not match the filenames.\n" +
-                            "Please change the pattern.\n\n" +
-                            "The Java error message was:\n" +
-                            e.toString());
-                    fileInfos = null;
-                }
-            }
-        }
-    }
-
-    private static void populateFileInfosFromRegExp(
+    private static void populateFileInfos5D(
             FileInfos fileInfos,
             String regExp,
             String[] fileList,
@@ -677,17 +496,6 @@ public class FileInfosHelper
 
     private static String[] getFilesInFolder(String directory, String filterPattern)
     {
-        // TODO: can getting the file-list be faster?
-
-//        Path folder = Paths.get( directory );
-//        try (DirectoryStream<Path> stream = Files.newDirectoryStream(folder)) {
-//            for (Path entry : stream) {
-//                 Process the entry
-//            }
-//        } catch (IOException ex) {
-//             An I/O problem has occurred
-//        }
-
         String[] list = new File( directory ).list();
 
         if (list == null || list.length == 0)
