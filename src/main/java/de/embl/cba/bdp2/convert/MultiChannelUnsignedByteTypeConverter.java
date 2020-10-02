@@ -19,13 +19,13 @@ public class MultiChannelUnsignedByteTypeConverter< R extends RealType< R > & Na
 	private final Image< R > inputImage;
 	private final List< RealUnsignedByteConverter< R > > converters;
 
-	public MultiChannelUnsignedByteTypeConverter( Image< R > inputImage, List< double[] > initialMappings )
+	public MultiChannelUnsignedByteTypeConverter( Image< R > inputImage, List< double[] > contrastLimits )
 	{
 		this.inputImage = inputImage;
 		this.converters = new ArrayList<>(  );
-		for ( double[] mapping : initialMappings )
+		for ( double[] contrastLimit : contrastLimits )
 		{
-			converters.add( new RealUnsignedByteConverter<>( mapping[ 0 ], mapping[ 1] ) );
+			converters.add( new RealUnsignedByteConverter<>( contrastLimit[ 0 ], contrastLimit[ 1] ) );
 		}
 	}
 
@@ -33,7 +33,7 @@ public class MultiChannelUnsignedByteTypeConverter< R extends RealType< R > & Na
 	{
 		final ArrayList< RandomAccessibleInterval< R > > convertedChannelRais = new ArrayList<>();
 
-		for ( int c = 0; c < inputImage.numChannels(); c++ )
+		for ( int c = 0; c < inputImage.getNumChannels(); c++ )
 		{
 			final IntervalView< R > channel = Views.hyperSlice( inputImage.getRai(), DimensionOrder.C, c );
 			final RandomAccessibleInterval< R > convertedRai =

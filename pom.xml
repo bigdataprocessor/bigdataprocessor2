@@ -84,6 +84,9 @@
 		<imaris-writer.version>0.2.2</imaris-writer.version>
 		<imagej-utils.version>0.5.4</imagej-utils.version>
 		<imagej-cluster.version>0.6.3-SNAPSHPOT</imagej-cluster.version>
+		<bigdataviewer-playground.version>0.2.4-SNAPSHOT</bigdataviewer-playground.version>
+		<bigdataviewer-bioformats.version>0.2.7-SNAPSHOT</bigdataviewer-bioformats.version>
+
 	</properties>
 
 	<repositories>
@@ -190,6 +193,18 @@
 			<groupId>de.embl.cba</groupId>
 			<artifactId>imagej-cluster</artifactId>
 			<version>${imagej-cluster.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>sc.fiji</groupId>
+			<artifactId>bigdataviewer-playground</artifactId>
+			<version>${bigdataviewer-playground.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>ch.epfl.biop</groupId>
+			<artifactId>bigdataviewer-bioformats</artifactId>
+			<version>${bigdataviewer-bioformats.version}</version>
 		</dependency>
 
 	</dependencies>

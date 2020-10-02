@@ -34,7 +34,7 @@ public class TrackApplier< R extends RealType< R > & NativeType< R > >
 		for (int t = track.tMin(); t < track.tMax(); ++t)
 		{
 			final ArrayList< RandomAccessibleInterval< R > > channels = new ArrayList<>();
-			for ( int c = 0; c < image.numChannels(); c++ )
+			for ( int c = 0; c < image.getNumChannels(); c++ )
 			{
 				volumeView = IntervalImageViews.getVolumeView( image.getRai(), c, t );
 

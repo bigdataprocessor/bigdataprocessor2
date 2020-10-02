@@ -33,7 +33,7 @@ public class ProcessEMfromServer
 					new long[]{ 4050, 4800, 910, 0, 0 }
 			) );
 
-			final Image< R > convert = BigDataProcessor2.convert( crop, 65535, 0 );
+			final Image< R > convert = BigDataProcessor2.convertToUnsignedByte( crop, 65535, 0 );
 
 			final SavingSettings savingSettings = SavingSettings.getDefaults();
 			savingSettings.saveFileType = SavingSettings.SaveFileType.TIFF_PLANES;

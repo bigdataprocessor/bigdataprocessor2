@@ -5,7 +5,6 @@ import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.save.SavingSettings;
-import org.junit.Test;
 
 import static de.embl.cba.bdp2.open.core.NamingSchemes.*;
 
@@ -39,7 +38,7 @@ public class TestCompressed16bitTiffStackSaving
         settings.voxelUnit = image.getVoxelUnit();
         settings.compression = SavingSettings.COMPRESSION_LZW;
         settings.tStart = 0;
-        settings.tEnd = image.numTimePoints() - 1;
+        settings.tEnd = image.getNumTimePoints() - 1;
 
         Logger.setLevel( Logger.Level.Debug );
         BigDataProcessor2.saveImage( image, settings, new LoggingProgressListener( "Files saved" ) );

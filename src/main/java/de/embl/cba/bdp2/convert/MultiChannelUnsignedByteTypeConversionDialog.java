@@ -20,10 +20,11 @@ import net.imglib2.util.Util;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MultiChannelUnsignedByteTypeConversionDialog< R extends RealType< R > & NativeType< R > > extends AbstractProcessingDialog< R >
 {
-	private List< double[] > mappings;
+	private List< double[] > contrastLimits; // to be mapped onto 0 and 255
 	private List< RealUnsignedByteConverter< R > > converters;
 
 	public MultiChannelUnsignedByteTypeConversionDialog( final BdvImageViewer< R > viewer )
@@ -34,30 +35,38 @@ public class MultiChannelUnsignedByteTypeConversionDialog< R extends RealType< R
 
 		if ( ( Util.getTypeFromInterval( rai ) instanceof UnsignedByteType) )
 		{
-			IJ.showMessage("This image is already 8-bit.");
+			IJ.showMessage("This image is already of unsigned byte type.");
 			return;
 		}
 
-		mappings = new ArrayList<>(  );
-		for ( int c = 0; c < inputImage.numChannels(); c++ )
-		{
-			mappings.add( new double[]{ viewer.getDisplaySettings().get( c ).getDisplayRangeMin(), viewer.getDisplaySettings().get( c ).getDisplayRangeMax()});
-		}
+		initContrastLimits( viewer );
+		showConvertedImage( viewer );
+		prepareDialog();
+		showDialog( panel );
+	}
 
-		final MultiChannelUnsignedByteTypeConverter< R > byteTypeConverter = new MultiChannelUnsignedByteTypeConverter<>( inputImage, mappings );
+	public void showConvertedImage( BdvImageViewer< R > viewer )
+	{
+		final MultiChannelUnsignedByteTypeConverter< R > byteTypeConverter = new MultiChannelUnsignedByteTypeConverter<>( inputImage, contrastLimits );
 
 		converters = byteTypeConverter.getConverters();
 		outputImage = byteTypeConverter.getConvertedImage();
 
 		viewer.replaceImage( outputImage, true, true );
 
-		for ( int c = 0; c < viewer.getImage().numChannels(); c++ )
+		for ( int c = 0; c < viewer.getImage().getNumChannels(); c++ )
 			viewer.setDisplaySettings( 0, 255, null, c );
 
 		Logger.info( "8-bit view size [GB]: " + Utils.getSizeGB( outputImage.getRai() ) );
+	}
 
-		prepareDialog();
-		showDialog( panel );
+	public void initContrastLimits( BdvImageViewer< R > viewer )
+	{
+		contrastLimits = new ArrayList<>(  );
+		for ( int c = 0; c < inputImage.getNumChannels(); c++ )
+		{
+			contrastLimits.add( new double[]{ viewer.getDisplaySettings().get( c ).getDisplayRangeMin(), viewer.getDisplaySettings().get( c ).getDisplayRangeMax()});
+		}
 	}
 
 	@Override
@@ -65,9 +74,8 @@ public class MultiChannelUnsignedByteTypeConversionDialog< R extends RealType< R
 	{
 		final MacroRecorder recorder = new MacroRecorder( MultiChannelConvertToUnsignedByteTypeCommand.COMMAND_FULL_NAME, inputImage, outputImage);
 
-		// TODO
-		//recorder.addOption( "mapTo0", (int) mapTo0 );
-		//recorder.addOption( "mapTo255",  (int) mapTo255 );
+		recorder.addOption( "mapTo0", contrastLimits.stream().map( x -> "" + x[ 0 ] ).collect( Collectors.joining( ",") ) );
+		recorder.addOption( "mapTo255",  contrastLimits.stream().map( x -> "" + x[ 1 ] ).collect( Collectors.joining( ",") ));
 
 		recorder.record();
 	}
@@ -77,7 +85,7 @@ public class MultiChannelUnsignedByteTypeConversionDialog< R extends RealType< R
 		panel = new JPanel();
 		panel.setLayout( new BoxLayout( panel, BoxLayout.PAGE_AXIS ) );
 
-		for ( int c = 0; c < inputImage.numChannels(); c++ )
+		for ( int c = 0; c < inputImage.getNumChannels(); c++ )
 		{
 			final int channel = c;
 			final double rangeMin = 0;
@@ -86,12 +94,12 @@ public class MultiChannelUnsignedByteTypeConversionDialog< R extends RealType< R
 			final BoundedValueDouble min = new BoundedValueDouble(
 					rangeMin,
 					rangeMax,
-					mappings.get( c )[ 0 ] );
+					contrastLimits.get( c )[ 0 ] );
 
 			final BoundedValueDouble max = new BoundedValueDouble(
 					rangeMin,
 					rangeMax,
-					mappings.get( c )[ 1 ] );
+					contrastLimits.get( c )[ 1 ] );
 
 			final SliderPanelDouble minSlider =
 					new SliderPanelDouble( " 0    <= ", min, 1 );

@@ -145,25 +145,9 @@ public class BigDataProcessor2
         return saver;
     }
 
-    public static < R extends RealType< R > & NativeType< R > > Image< R > convert( Image< R > image, double mapTo0, double mapTo255 )
+    public static < R extends RealType< R > & NativeType< R > > Image< R > convertToUnsignedByte( Image< R > image, double mapTo0, double mapTo255 )
     {
         return UnsignedByteTypeConversionDialog.convert( image, mapTo0, mapTo255 );
-    }
-
-    public static <T extends RealType<T>> RandomAccessibleInterval unsignedByteTypeConverter( RandomAccessibleInterval rai, DisplaySettings displaySettings)
-    {
-        RandomAccessibleInterval<UnsignedByteType> newRai;
-        if (!(Util.getTypeFromInterval(rai) instanceof UnsignedByteType)){
-            newRai = Converters.convert(
-                    rai,
-                    new RealUnsignedByteConverter<T>(
-                            displaySettings.getDisplayRangeMin(),
-                            displaySettings.getDisplayRangeMax()),
-                    new UnsignedByteType());
-        }else{
-            newRai = rai;
-        }
-        return newRai;
     }
 
     public static void calibrate( Image image, double[] doubles, String voxelUnit )
