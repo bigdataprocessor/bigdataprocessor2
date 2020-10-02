@@ -24,8 +24,8 @@ import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.scijava.Services;
 import de.embl.cba.bdp2.align.AlignChannelsCommand;
 import de.embl.cba.bdp2.align.splitchip.AlignChannelsSplitChipCommand;
-import de.embl.cba.bdp2.align.splitchip.SplitViewMergeDialog;
-import de.embl.cba.bdp2.align.ChromaticShiftDialog;
+import de.embl.cba.bdp2.align.splitchip.AlignChannelsSplitChipDialog;
+import de.embl.cba.bdp2.align.AlignChannelsDialog;
 import de.embl.cba.bdp2.register.RegisteredViews;
 import de.embl.cba.bdp2.register.Registration;
 import de.embl.cba.bdp2.service.BdvService;
@@ -229,7 +229,7 @@ public class MenuActions implements ActionListener {
             BigDataProcessor2.threadPool.submit(() ->
             {
                 if (! isImageSelected() ) return;
-                new ChromaticShiftDialog<>( viewer );
+                new AlignChannelsDialog<>( viewer );
             });
         }
         else if( e.getActionCommand().equalsIgnoreCase( AlignChannelsSplitChipCommand.COMMAND_NAME ) )
@@ -237,7 +237,7 @@ public class MenuActions implements ActionListener {
             BigDataProcessor2.threadPool.submit(() ->
             {
                 if (! isImageSelected() ) return;
-                new SplitViewMergeDialog( viewer );
+                new AlignChannelsSplitChipDialog( viewer );
             });
         }
         else if( e.getActionCommand().equalsIgnoreCase( Menu.CONFIGURE_LOGGING_MENU_ITEM ))

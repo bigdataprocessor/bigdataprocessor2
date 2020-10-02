@@ -32,7 +32,7 @@ package de.embl.cba.bdp2.utils;
 
 import bdv.util.Bdv;
 import bdv.viewer.animate.SimilarityTransformAnimator;
-import de.embl.cba.bdp2.align.splitchip.SplitViewMerger;
+import de.embl.cba.bdp2.align.splitchip.SplitChipMerger;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.luxendo.Luxendos;
@@ -190,7 +190,7 @@ public class Utils {
 				voxelSpacingMicrometerY,
 				voxelSpacingMicrometerZ );
 
-		final SplitViewMerger merger = new SplitViewMerger();
+		final SplitChipMerger merger = new SplitChipMerger();
 
 		return merger.mergeIntervalsXYC( image, intervalsXYC );
 	}
@@ -233,9 +233,9 @@ public class Utils {
 		executorService.shutdown();
 	}
 
-	public static String longsToDelimitedString( ArrayList< long[] > shifts )
+	public static String longsToDelimitedString( ArrayList< long[] > longs )
 	{
-		final String collect = shifts.stream().map( t ->
+		final String collect = longs.stream().map( t ->
 				Arrays.stream( t ).mapToObj( x -> String.valueOf( x ) )
 						.collect( Collectors.joining( "," ) ) )
 						.collect( Collectors.joining( ";" ) );

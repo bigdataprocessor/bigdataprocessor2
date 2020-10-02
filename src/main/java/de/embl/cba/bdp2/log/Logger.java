@@ -16,7 +16,7 @@ public class Logger
 	public static synchronized void setLevel( Level level )
 	{
 		Logger.level = level;
-		info( "Settings logging level to " + level );
+		info( "Setting logging level to: " + level );
 	}
 
 	public static void log( String msg )
@@ -78,7 +78,7 @@ public class Logger
 	public synchronized static void showLoggingLevelDialog()
 	{
 		final GenericDialog gd = new GenericDialog( "Logging" );
-		gd.addChoice( "Logging", new String[]{
+		gd.addChoice( "Level", new String[]{
 				Level.Debug.toString(), Level.Normal.toString()
 		}, Level.Normal.toString() );
 

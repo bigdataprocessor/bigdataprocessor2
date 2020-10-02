@@ -7,12 +7,14 @@ import bdv.util.BoundedValue;
 import bdv.util.ModifiableInterval;
 import bdv.viewer.ViewerPanel;
 import de.embl.cba.bdp2.BigDataProcessor2;
+import de.embl.cba.bdp2.align.AlignChannelsDialog;
 import de.embl.cba.bdp2.dialog.AbstractProcessingDialog;
 import de.embl.cba.bdp2.dialog.DisplaySettings;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.macro.MacroRecorder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import ij.Prefs;
 import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessibleInterval;
@@ -32,7 +34,7 @@ import static de.embl.cba.bdp2.dialog.Utils.setOutputViewerPosition;
 import static de.embl.cba.bdp2.align.splitchip.RegionOptimiser.adjustModifiableInterval;
 
 
-public class SplitViewMergeDialog< R extends RealType< R > & NativeType< R > > extends AbstractProcessingDialog< R >
+public class AlignChannelsSplitChipDialog< R extends RealType< R > & NativeType< R > > extends AbstractProcessingDialog< R >
 {
 	public static final int X = 0;
 	public static final int Y = 1;
@@ -48,7 +50,7 @@ public class SplitViewMergeDialog< R extends RealType< R > & NativeType< R > > e
 	private int numChannelsAfterMerge;
 	private ArrayList< OverlayRenderer > overlayRenderers;
 
-	public SplitViewMergeDialog( final BdvImageViewer< R > viewer )
+	public AlignChannelsSplitChipDialog( final BdvImageViewer< R > viewer )
 	{
 		this.viewer = viewer;
 		this.inputImage = viewer.getImage();
@@ -91,8 +93,9 @@ public class SplitViewMergeDialog< R extends RealType< R > & NativeType< R > > e
 		final MacroRecorder recorder = new MacroRecorder( AlignChannelsSplitChipCommand.COMMAND_FULL_NAME, inputImage, outputImage );
 
 		ArrayList< long[] > intervals = intervals3dAsLongsList();
-
-		recorder.addOption( "intervalsString", Utils.longsToDelimitedString( intervals ) );
+		String intervalsString = Utils.longsToDelimitedString( intervals );
+		Prefs.set( AlignChannelsDialog.class.getSimpleName(), intervalsString );
+		recorder.addOption( "intervalsString", intervalsString );
 
 		recorder.record();
 	}
@@ -131,19 +134,6 @@ public class SplitViewMergeDialog< R extends RealType< R > & NativeType< R > > e
 
 		addRegionSliders();
 
-//		final JButton showMerge = new JButton( "Preview" );
-//		panel.add( showMerge );
-//
-//		showMerge.addActionListener( e -> {
-//			updateMerge( );
-//		} );
-//		final JButton optimise = new JButton( "Optimise Region Centres" );
-//		panel.add( optimise );
-//		optimise.addActionListener( e -> {
-//			optimise();
-//			showOrUpdateMerge();
-//		} );
-
 		return panel;
 	}
 
@@ -180,7 +170,7 @@ public class SplitViewMergeDialog< R extends RealType< R > & NativeType< R > > e
 	private void createOutputImage()
 	{
 		final RandomAccessibleInterval< R > merge =
-				SplitViewMerger.mergeIntervalsXYZ(
+				SplitChipMerger.mergeIntervalsXYZ(
 						inputImage.getRai(),
 						intervals3D, // in the UI this contains 2 channels
 						CHANNEL ); // TODO: Could be different channel?
@@ -331,25 +321,54 @@ public class SplitViewMergeDialog< R extends RealType< R > & NativeType< R > > e
 	{
 		final long[] min = new long[ 3 ];
 		final long[] max = new long[ 3 ];
-		
-		int d = X;
+		int d;
+		boolean couldUsePreviousChoice = true;
 
-		if ( c == 0 )
+		String recentChoice = Prefs.get( AlignChannelsDialog.class.getSimpleName(), null );
+
+		if ( recentChoice != null )
 		{
-			min[ d ] = rai.min( d ) + margin;
-			max[ d ] = rai.max( d ) / 2 - margin;
+			// format: minX,minY,dimX,dimY
+			String channelChoice = recentChoice.split( ";" )[ c ];
+
+			for ( d = 0; d < 3; d++ )
+			{
+				min[ d ] = Integer.parseInt( channelChoice.split( "," )[ d ] );
+				max[ d ] = min[ d ] + Integer.parseInt( channelChoice.split( "," )[ d + 2 ] ) - 1;
+
+				if ( min[ d ] < rai.min( d ) ) couldUsePreviousChoice = false;
+				if ( max[ d ] > rai.max( d ) ) couldUsePreviousChoice = false;
+			}
+		}
+		else
+		{
+			couldUsePreviousChoice = false;
 		}
 
-		if ( c == 1 )
+		if ( ! couldUsePreviousChoice )
 		{
-			min[ d ] = rai.max( d ) / 2 + margin;
+			// set some defaults
+
+			d = X;
+
+			if ( c == 0 )
+			{
+				min[ d ] = rai.min( d ) + margin;
+				max[ d ] = rai.max( d ) / 2 - margin;
+			}
+
+			if ( c == 1 )
+			{
+				min[ d ] = rai.max( d ) / 2 + margin;
+				max[ d ] = rai.max( d ) - margin;
+			}
+
+			d = Y;
+
+			min[ d ] = rai.min( d ) + margin ;
 			max[ d ] = rai.max( d ) - margin;
 		}
 
-		d = Y;
-
-		min[ d ] = rai.min( d ) + margin ;
-		max[ d ] = rai.max( d ) - margin;
 
 		d = Z;
 

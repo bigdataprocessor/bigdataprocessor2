@@ -86,7 +86,7 @@ public class SaveAdvancedCommand< R extends RealType< R > & NativeType< R > > im
 
         BigDataProcessor2.saveImageAndWaitUntilDone( inputImage, savingSettings );
 
-        Logger.info( "Save as... is done!" );
+        Logger.info( COMMAND_FULL_NAME + ": Done!" );
     }
 
     private SavingSettings getSavingSettings()

@@ -3,7 +3,7 @@ package users.isabell;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.open.core.NamingSchemes;
-import de.embl.cba.bdp2.align.splitchip.SplitViewMerger;
+import de.embl.cba.bdp2.align.splitchip.SplitChipMerger;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import net.imagej.ImageJ;
@@ -35,7 +35,7 @@ public class MergeSplitChipWorkflow
         savingSettings.saveFileType = SavingSettings.SaveFileType.TIFF_VOLUMES;
         savingSettings.numIOThreads = Runtime.getRuntime().availableProcessors();
 
-        final SplitViewMerger merger = new SplitViewMerger();
+        final SplitChipMerger merger = new SplitChipMerger();
         merger.addIntervalXYC( 86, 5, 1000, 1000, 0 );
         merger.addIntervalXYC( 1, 65, 1000, 1000, 0 );
 

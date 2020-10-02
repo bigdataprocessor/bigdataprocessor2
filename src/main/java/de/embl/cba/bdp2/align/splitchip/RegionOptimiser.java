@@ -13,7 +13,6 @@ import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
 
 import java.util.ArrayList;
-import java.util.concurrent.Executors;
 
 import static de.embl.cba.bdp2.utils.DimensionOrder.*;
 
@@ -59,7 +58,7 @@ public class RegionOptimiser
 
 		for ( Interval interval : intervals )
 		{
-			final FinalInterval interval5D = SplitViewMerger.intervalXYZasXYZCT( rai5D, interval );
+			final FinalInterval interval5D = SplitChipMerger.intervalXYZasXYZCT( rai5D, interval );
 
 			final IntervalView< R > crop =
 					Views.zeroMin(

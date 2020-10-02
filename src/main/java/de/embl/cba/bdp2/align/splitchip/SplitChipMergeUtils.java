@@ -6,7 +6,7 @@ import net.imglib2.type.numeric.RealType;
 
 import java.util.ArrayList;
 
-public class SplitViewMergeUtils
+public class SplitChipMergeUtils
 {
 
 	public static < R extends RealType< R > >

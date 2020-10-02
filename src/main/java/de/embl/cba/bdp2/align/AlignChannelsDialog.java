@@ -14,7 +14,7 @@ import net.imglib2.type.numeric.RealType;
 import javax.swing.*;
 import java.util.ArrayList;
 
-public class ChromaticShiftDialog< T extends RealType< T > & NativeType< T > > extends AbstractProcessingDialog
+public class AlignChannelsDialog< T extends RealType< T > & NativeType< T > > extends AbstractProcessingDialog
 {
 	private ArrayList< BoundedValue > boundedValues;
 	private ArrayList< SliderPanel > sliderPanels;
@@ -24,7 +24,7 @@ public class ChromaticShiftDialog< T extends RealType< T > & NativeType< T > > e
 	private final long numChannels;
 	private ArrayList< long[] > shifts;
 
-	public ChromaticShiftDialog( final BdvImageViewer< T > viewer  )
+	public AlignChannelsDialog( final BdvImageViewer< T > viewer  )
 	{
 		this.viewer = viewer;
 		this.inputImage = viewer.getImage();

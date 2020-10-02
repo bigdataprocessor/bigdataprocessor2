@@ -14,14 +14,14 @@ import net.imglib2.view.Views;
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.embl.cba.bdp2.align.splitchip.SplitViewMergeUtils.asIntervalXYC;
+import static de.embl.cba.bdp2.align.splitchip.SplitChipMergeUtils.asIntervalXYC;
 import static de.embl.cba.bdp2.utils.DimensionOrder.C;
 
-public class SplitViewMerger
+public class SplitChipMerger
 {
 	private ArrayList< FinalInterval > intervalsXYC;
 
-	public SplitViewMerger()
+	public SplitChipMerger()
 	{
 		intervalsXYC = new ArrayList<>(  );
 	}
