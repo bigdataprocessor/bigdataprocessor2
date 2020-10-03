@@ -2,7 +2,7 @@ package test.open;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.ui.BigDataProcessor2UI;
+import de.embl.cba.bdp2.BigDataProcessor2UserInterface;
 import org.junit.Test;
 
 import static de.embl.cba.bdp2.open.core.NamingSchemes.MULTI_CHANNEL_VOLUMES;
@@ -28,7 +28,7 @@ public class TestOpenMultiChannel8BitTiffVolumes
 
         image.setVoxelSize( new double[]{1.0, 1.0, 1.0} );
 
-        BigDataProcessor2UI.showUI();
+        BigDataProcessor2UserInterface.showUI();
         BigDataProcessor2.showImage( image, true );
     }
 }

@@ -1,6 +1,6 @@
 package users.isabell;
 
-import de.embl.cba.bdp2.batch.LuxendoBatchConvertAndCropCommand;
+import de.embl.cba.bdp2.tools.batch.LuxendoBatchConvertAndCropCommand;
 
 import java.io.File;
 import java.util.ArrayList;

@@ -10,11 +10,11 @@ import bdv.viewer.SourceAndConverter;
 import de.embl.cba.bdp2.boundingbox.BoundingBoxDialog;
 import de.embl.cba.bdp2.dialog.DisplaySettings;
 import de.embl.cba.bdp2.dialog.Utils;
-import de.embl.cba.bdp2.drift.track.Track;
+import de.embl.cba.bdp2.process.track.Track;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.service.BdvService;
 import de.embl.cba.bdp2.service.ImageService;
-import de.embl.cba.bdp2.ui.MenuActions;
+import de.embl.cba.bdp2.BigDataProcessor2MenuActions;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.volatiles.VolatileCachedCellImgs;
 import de.embl.cba.bdv.utils.BdvUtils;
@@ -35,7 +35,6 @@ import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -187,7 +186,7 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
         }
     }
 
-    public void addMenus( MenuActions menuActions )
+    public void addMenus( BigDataProcessor2MenuActions menuActions )
     {
         menuActions.setViewer(this);
 

@@ -2,7 +2,7 @@ package headless;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.open.core.NamingSchemes;
-import de.embl.cba.bdp2.align.AlignChannelsDialog;
+import de.embl.cba.bdp2.process.align.channelshift.AlignChannelsDialog;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 

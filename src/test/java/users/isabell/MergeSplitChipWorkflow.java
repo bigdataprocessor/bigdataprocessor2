@@ -3,7 +3,7 @@ package users.isabell;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.open.core.NamingSchemes;
-import de.embl.cba.bdp2.align.splitchip.SplitChipMerger;
+import de.embl.cba.bdp2.process.align.splitchip.SplitChipMerger;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import net.imagej.ImageJ;

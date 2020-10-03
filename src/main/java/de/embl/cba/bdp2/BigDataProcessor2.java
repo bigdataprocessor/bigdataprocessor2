@@ -1,12 +1,12 @@
 package de.embl.cba.bdp2;
 
-import de.embl.cba.bdp2.drift.track.Track;
-import de.embl.cba.bdp2.drift.track.TrackApplier;
-import de.embl.cba.bdp2.drift.track.Tracks;
+import de.embl.cba.bdp2.process.track.Track;
+import de.embl.cba.bdp2.process.track.TrackApplier;
+import de.embl.cba.bdp2.process.track.Tracks;
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.bin.Binner;
-import de.embl.cba.bdp2.convert.singlechannel.UnsignedByteTypeConversionDialog;
-import de.embl.cba.bdp2.crop.Cropper;
+import de.embl.cba.bdp2.process.bin.Binner;
+import de.embl.cba.bdp2.process.convert.singlechannel.UnsignedByteTypeConversionDialog;
+import de.embl.cba.bdp2.process.crop.Cropper;
 import de.embl.cba.bdp2.open.ChannelSubsetter;
 import de.embl.cba.bdp2.open.core.CachedCellImgCreator;
 import de.embl.cba.bdp2.open.core.FileInfos;
@@ -15,22 +15,16 @@ import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.log.progress.Progress;
 import de.embl.cba.bdp2.log.progress.ProgressListener;
 import de.embl.cba.bdp2.save.*;
-import de.embl.cba.bdp2.dialog.DisplaySettings;
-import de.embl.cba.bdp2.align.ChannelShifter;
+import de.embl.cba.bdp2.process.align.channelshift.ChannelShifter;
 import de.embl.cba.bdp2.service.BdvService;
-import de.embl.cba.bdp2.transform.ImageTransformer;
-import de.embl.cba.bdp2.ui.BigDataProcessor2UI;
+import de.embl.cba.bdp2.process.transform.ImageTransformer;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import loci.common.DebugTools;
 import net.imglib2.*;
-import net.imglib2.converter.Converters;
-import net.imglib2.converter.RealUnsignedByteConverter;
 import net.imglib2.interpolation.InterpolatorFactory;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
-import net.imglib2.type.numeric.integer.UnsignedByteType;
-import net.imglib2.util.Util;
 import net.imglib2.view.Views;
 
 import java.io.File;
@@ -181,7 +175,7 @@ public class BigDataProcessor2
 
 	public static void showUI()
     {
-        BigDataProcessor2UI.showUI();
+        BigDataProcessor2UserInterface.showUI();
     }
 
     public static < R extends RealType< R > & NativeType< R > > BdvImageViewer showImageInheritingDisplaySettings( Image< R > image, Image< R > parentImage )

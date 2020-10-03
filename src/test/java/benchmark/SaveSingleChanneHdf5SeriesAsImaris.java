@@ -3,7 +3,7 @@ package benchmark;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.open.core.CachedCellImgCreator;
 import de.embl.cba.bdp2.open.core.FileInfos;
-import de.embl.cba.bdp2.bin.Binner;
+import de.embl.cba.bdp2.process.bin.Binner;
 import de.embl.cba.bdp2.open.core.NamingSchemes;
 import de.embl.cba.bdp2.save.CachedCellImgReplacer;
 import de.embl.cba.bdp2.save.SavingSettings;

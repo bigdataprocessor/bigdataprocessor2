@@ -1,6 +1,6 @@
 package develop;
 
-import de.embl.cba.bdp2.drift.track.TrackingSettings;
+import de.embl.cba.bdp2.process.track.TrackingSettings;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import de.embl.cba.bdp2.utils.Point3D;

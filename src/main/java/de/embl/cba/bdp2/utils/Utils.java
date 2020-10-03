@@ -32,10 +32,10 @@ package de.embl.cba.bdp2.utils;
 
 import bdv.util.Bdv;
 import bdv.viewer.animate.SimilarityTransformAnimator;
-import de.embl.cba.bdp2.align.splitchip.SplitChipMerger;
+import de.embl.cba.bdp2.process.align.splitchip.SplitChipMerger;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.luxendo.Luxendos;
+import de.embl.cba.bdp2.open.core.Luxendos;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.dialog.DisplaySettings;
 import de.embl.cba.bdp2.scijava.Services;
@@ -192,7 +192,7 @@ public class Utils {
 
 		final SplitChipMerger merger = new SplitChipMerger();
 
-		return merger.mergeIntervalsXYC( image, intervalsXYC );
+		return merger.mergeRegionsXYC( image, intervalsXYC );
 	}
 
 	public static < R extends RealType< R > & NativeType< R > >

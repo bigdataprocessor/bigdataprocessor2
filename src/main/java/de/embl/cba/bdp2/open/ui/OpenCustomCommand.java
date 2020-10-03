@@ -1,6 +1,6 @@
 package de.embl.cba.bdp2.open.ui;
 
-import de.embl.cba.bdp2.calibrate.CalibrationUtils;
+import de.embl.cba.bdp2.process.calibrate.CalibrationUtils;
 import de.embl.cba.bdp2.dialog.Utils;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.BigDataProcessor2;

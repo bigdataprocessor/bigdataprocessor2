@@ -1,6 +1,6 @@
 package de.embl.cba.bdp2.service;
 
-import de.embl.cba.bdp2.performance.PerformanceMonitor;
+import de.embl.cba.bdp2.log.PerformanceMonitor;
 
 public abstract class PerformanceService
 {

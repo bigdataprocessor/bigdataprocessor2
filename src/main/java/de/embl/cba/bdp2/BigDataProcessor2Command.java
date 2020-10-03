@@ -1,9 +1,8 @@
 package de.embl.cba.bdp2;
 
-import de.embl.cba.bdp2.crop.CropDialog;
+import de.embl.cba.bdp2.process.crop.CropDialog;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.scijava.Services;
-import de.embl.cba.bdp2.ui.BigDataProcessor2UI;
 import ij.plugin.frame.Recorder;
 import net.imagej.ImageJ;
 import net.imglib2.type.NativeType;
@@ -35,7 +34,7 @@ public class BigDataProcessor2Command< R extends RealType< R > & NativeType< R >
 
         SwingUtilities.invokeLater( () -> {
             CropDialog.askForUnitsChoice = true;
-            BigDataProcessor2UI.showUI();
+            BigDataProcessor2UserInterface.showUI();
         } );
     }
 
