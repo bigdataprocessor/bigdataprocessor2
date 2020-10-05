@@ -1,12 +1,14 @@
-package de.embl.cba.bdp2.image;
+package de.embl.cba.bdp2.process.rename;
 
+import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.macro.MacroRecorder;
 import de.embl.cba.bdp2.viewers.BdvImageViewer;
 import ij.gui.GenericDialog;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
+import org.jetbrains.annotations.NotNull;
 
-import static de.embl.cba.bdp2.image.ImageRenameCommand.CHANNEL_NAMES_PARAMETER;
+import static de.embl.cba.bdp2.process.rename.ImageRenameCommand.CHANNEL_NAMES_PARAMETER;
 
 public class ImageRenameDialog< R extends RealType< R > & NativeType< R > >
 {
@@ -46,14 +48,15 @@ public class ImageRenameDialog< R extends RealType< R > & NativeType< R > >
 
 		if( gd.wasCanceled() ) return;
 
-		inputImage.setName( gd.getNextString() );
+		outputImage = new Image<>( inputImage );
+
+		outputImage.setName( gd.getNextString() );
 		for ( int c = 0; c < channelNames.length; c++ )
 		{
 			channelNames[ c ] = gd.getNextString();
 		}
-		inputImage.setChannelNames( channelNames );
+		outputImage.setChannelNames( channelNames );
 
-		outputImage = inputImage;
 		viewer.replaceImage( outputImage, false, true );
 
 		recordMacro();

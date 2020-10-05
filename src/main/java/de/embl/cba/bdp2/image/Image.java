@@ -36,10 +36,20 @@ public class Image< R extends RealType< R > & NativeType< R > >
 	{
 		this.raiXYZCT = raiXYZCT;
 		this.name = name;
-		this.channelNames = channelNames;
-		this.voxelSize = voxelSize;
+		this.channelNames = channelNames.clone();
+		this.voxelSize = voxelSize.clone();
 		this.voxelUnit = voxelUnit;
 		this.fileInfos = fileInfos;
+	}
+
+	public Image( Image< R > image )
+	{
+		this.raiXYZCT = image.getRai();
+		this.name = image.getName();
+		this.channelNames = image.getChannelNames().clone();
+		this.voxelSize = image.getVoxelSize().clone();
+		this.voxelUnit = image.getVoxelUnit();
+		this.fileInfos = image.getFileInfos();
 	}
 
 	public ArrayList< String > getInfos()

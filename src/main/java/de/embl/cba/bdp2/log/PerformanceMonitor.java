@@ -1,8 +1,7 @@
 package de.embl.cba.bdp2.log;
 
-import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.open.core.CachedCellImgCreator;
 import de.embl.cba.bdp2.BigDataProcessor2UserInterface;
+import de.embl.cba.bdp2.open.core.CachedCellImgCreator;
 
 import java.util.ArrayList;
 import java.util.Collections;

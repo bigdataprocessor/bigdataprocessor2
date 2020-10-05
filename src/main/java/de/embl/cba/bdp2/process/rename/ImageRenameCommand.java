@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.image;
+package de.embl.cba.bdp2.process.rename;
 
 import de.embl.cba.bdp2.process.AbstractProcessingCommand;
 import de.embl.cba.bdp2.service.ImageService;

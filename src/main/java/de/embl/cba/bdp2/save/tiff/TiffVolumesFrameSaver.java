@@ -247,11 +247,11 @@ public class TiffVolumesFrameSaver< R extends RealType< R > & NativeType< R > > 
                 {
                     long start = System.currentTimeMillis();
                     byte[] bytes = ShortToByteBigEndian( ( short[] ) imp.getStack().getProcessor( z + 1 ).getPixels() );
-                    System.out.println( "convert: " + (System.currentTimeMillis() - start) );
+                    //System.out.println( "convert: " + (System.currentTimeMillis() - start) );
 
                     start = System.currentTimeMillis();
                     tiffWriter.saveBytes(z, bytes, ifd);
-                    System.out.println( "save: " + (System.currentTimeMillis() - start) );
+                    //System.out.println( "save: " + (System.currentTimeMillis() - start) );
 
                 }
                 else if (imp.getBytesPerPixel() == 1)

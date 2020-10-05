@@ -28,6 +28,9 @@ public class BDP2MacroClusterExecutionCommand extends AbstractClusterSubmitterCo
 	@Parameter ( label = "Macro files" )
 	File[] macros;
 
+	@Parameter ( label = "Timepoints to process [-1 = all]" )
+	int timePointsToProcess = -1;
+
 	@Parameter ( label = "Timepoints per job" )
 	int timePointsPerJob = 10;
 
@@ -53,10 +56,22 @@ public class BDP2MacroClusterExecutionCommand extends AbstractClusterSubmitterCo
 			String macro = new HeadlessMacroCreator( file ).createHeadlessExecutableMacroString();
 			macro = PathMapper.asEMBLClusterMounted( macro );
 
-			int tStart = getNumber( macro, ".*" + T_START + "(?<x>\\d+).*" );
-			int tEnd = getNumber( macro, ".*" + T_END + "(?<x>\\d+).*" );
+			int tStartInMacro = getNumber( macro, ".*" + T_START + "(?<x>\\d+).*" );
+			int tEndInMacro = getNumber( macro, ".*" + T_END + "(?<x>\\d+).*" );
 
 			macro = setNumThreads( macro );
+
+			int tStart = tStartInMacro;
+
+			int tEnd;
+			if ( timePointsToProcess == -1 )
+			{
+				tEnd = tEndInMacro; // process all
+			}
+			else
+			{
+				tEnd = Math.min( tEndInMacro, tStart + timePointsToProcess - 1);
+			}
 
 			for ( int t = tStart; t <= tEnd; t+= timePointsPerJob )
 			{
@@ -67,8 +82,8 @@ public class BDP2MacroClusterExecutionCommand extends AbstractClusterSubmitterCo
 				t1 = t1 <= tEnd ? t1 : tEnd;
 
 				String timeSubsetMacro = macro
-						.replace( T_START + tStart, T_START + t0 )
-						.replace( T_END + tEnd, T_END + t1 );
+						.replace( T_START + tStartInMacro, T_START + t0 )
+						.replace( T_END + tEndInMacro, T_END + t1 );
 
 				jobSubmitter.addIJMacroExecution( timeSubsetMacro );
 				JobSettings jobSettings = getJobSettings( timeSubsetMacro, t0, t1 );

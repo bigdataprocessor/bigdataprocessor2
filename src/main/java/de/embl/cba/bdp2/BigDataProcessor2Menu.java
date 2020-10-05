@@ -5,7 +5,7 @@ import de.embl.cba.bdp2.process.calibrate.CalibrateCommand;
 import de.embl.cba.bdp2.process.convert.singlechannel.ConvertToUnsignedByteTypeCommand;
 import de.embl.cba.bdp2.open.ui.DownloadAndOpenSampleDataCommand;
 import de.embl.cba.bdp2.process.track.ApplyTrackCommand;
-import de.embl.cba.bdp2.image.ImageRenameCommand;
+import de.embl.cba.bdp2.process.rename.ImageRenameCommand;
 import de.embl.cba.bdp2.process.align.channelshift.AlignChannelsCommand;
 import de.embl.cba.bdp2.process.align.splitchip.SplitChipCommand;
 import de.embl.cba.bdp2.open.ui.*;

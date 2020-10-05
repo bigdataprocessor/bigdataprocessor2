@@ -89,8 +89,7 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > > extends JFr
         panels.add(new JPanel());
         panels.get(panelIndex).add( tfDirectory );
         final JButton volumesPathSelectionButton = new JButton( "Folder" );
-        volumesPathSelectionButton.addActionListener( e ->
-                tfDirectory.setText( IJ.getDirectory( "Directory" ) ) );
+        volumesPathSelectionButton.addActionListener( e -> tfDirectory.setText( IJ.getDirectory( "Directory" ) ) );
         panels.get(panelIndex).add(volumesPathSelectionButton);
         mainPanel.add( panels.get(panelIndex++));
 

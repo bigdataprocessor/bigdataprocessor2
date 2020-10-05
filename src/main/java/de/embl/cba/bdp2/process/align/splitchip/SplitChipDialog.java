@@ -95,7 +95,7 @@ public class SplitChipDialog< R extends RealType< R > & NativeType< R > > extend
 
 		ArrayList< long[] > intervals = intervals3dAsLongsList();
 		String intervalsString = Utils.longsToDelimitedString( intervals );
-		Prefs.set( AlignChannelsDialog.class.getSimpleName(), intervalsString );
+		Prefs.set( AlignChannelsDialog.class.getSimpleName() + "." + "Regions", intervalsString );
 		recorder.addOption( "intervalsString", intervalsString );
 
 		recorder.record();
@@ -179,7 +179,7 @@ public class SplitChipDialog< R extends RealType< R > & NativeType< R > > extend
 
 		outputImage = new Image(
 				merge,
-				inputImage.getName() + "_merged",
+				inputImage.getName() + "-splitchip",
 				createMergedChannelNames(),
 				inputImage.getVoxelSize(),
 				inputImage.getVoxelUnit(),
