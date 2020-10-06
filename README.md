@@ -21,6 +21,10 @@ Main features:
 
 [![BigDataProcessor2 Workflow1](https://img.youtube.com/vi/OixZ0ILbkvc/0.jpg)](https://www.youtube.com/embed/OixZ0ILbkvc "BigDataProcessor2 Workflow")
 
+## Contribute
+
+[How to contribute.](https://github.com/bigdataprocessor/bigdataprocessor2/blob/master/CONTRIBUTE.md)
+
 ## Cite
 
 Please cite our bioRxiv preprint: https://www.biorxiv.org/content/10.1101/2020.09.23.244095v1
