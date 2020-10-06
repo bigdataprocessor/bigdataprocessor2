@@ -22,12 +22,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class MultiChannelUnsignedByteTypeConversionDialog< R extends RealType< R > & NativeType< R > > extends AbstractProcessingDialog< R >
+public class MultiChannelUnsignedByteTypeConverterDialog< R extends RealType< R > & NativeType< R > > extends AbstractProcessingDialog< R >
 {
 	private List< double[] > contrastLimits; // to be mapped onto 0 and 255
 	private List< RealUnsignedByteConverter< R > > converters;
 
-	public MultiChannelUnsignedByteTypeConversionDialog( final ImageViewer< R > viewer )
+	public MultiChannelUnsignedByteTypeConverterDialog( final ImageViewer< R > viewer )
 	{
 		this.viewer = viewer;
 		this.inputImage = viewer.getImage();
@@ -71,7 +71,7 @@ public class MultiChannelUnsignedByteTypeConversionDialog< R extends RealType< R
 	@Override
 	protected void recordMacro()
 	{
-		final MacroRecorder recorder = new MacroRecorder( MultiChannelConvertToUnsignedByteTypeCommand.COMMAND_FULL_NAME, inputImage, outputImage);
+		final MacroRecorder recorder = new MacroRecorder( MultiChannelUnsignedByteTypeConverterCommand.COMMAND_FULL_NAME, inputImage, outputImage);
 
 		recorder.addOption( "mapTo0", contrastLimits.stream().map( x -> "" + x[ 0 ] ).collect( Collectors.joining( ",") ) );
 		recorder.addOption( "mapTo255",  contrastLimits.stream().map( x -> "" + x[ 1 ] ).collect( Collectors.joining( ",") ));

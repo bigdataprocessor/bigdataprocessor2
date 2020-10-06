@@ -11,7 +11,20 @@ import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 
-public abstract class AbstractImageProcessingCommand< R extends RealType< R > & NativeType< R > > implements Command, ImageProcessingDialog< R >
+
+/**
+ * The AbstractImageProcessingCommand serves to process an input image
+ * and generate an output image.
+ *
+ * One key benefit of implementing this functionality as a SciJava command is
+ * to enable calling the processing step (headless) from an ImageJ macro.
+ *
+ * Example of an implementation of this class:
+ * - MultiChannelUnsignedByteTypeConverterCommand
+ *
+ * @param <R>
+ */
+public abstract class AbstractImageProcessingCommand< R extends RealType< R > & NativeType< R > > implements Command
 {
     public static final String COMMAND_PROCESS_PATH = "Commands>Process>";
 
@@ -62,4 +75,26 @@ public abstract class AbstractImageProcessingCommand< R extends RealType< R > & 
             throw new RuntimeException( "Unsupported viewing modality: " + viewingModality );
         }
     }
+
+    /**
+     * This is the method that is called from the BigDataProcessor2 menu.
+     * It should provide interactive functionality to process the
+     * image that is currently shown in the imageViewer.
+     *
+     * In principle, the SciJava user interface that can be auto-generated from the
+     * implementation of the AbstractImageProcessingCommand (using commandService.run()),
+     * could be shown here. However, in practice this often is not flexible enough
+     * and thus creating an own user interface instead may be necessary.
+     *
+     * When implementing below dialog, please ensure that a macro command will be recorded
+     * that runs the AbstractImageProcessingCommand implementation.
+     *
+     * It is recommended to use AbstractProcessingDialog for creating the dialog.
+     * Example:
+     * - MultiChannelUnsignedByteTypeConverterDialog
+     *
+     * @param imageViewer
+     */
+    public abstract void showDialog( ImageViewer< R > imageViewer );
+
 }

@@ -4,8 +4,8 @@ import de.embl.cba.bdp2.process.bin.BinCommand;
 import de.embl.cba.bdp2.process.bin.BinDialog;
 import de.embl.cba.bdp2.process.calibrate.CalibrateCommand;
 import de.embl.cba.bdp2.process.calibrate.CalibrationDialog;
-import de.embl.cba.bdp2.process.convert.MultiChannelConvertToUnsignedByteTypeCommand;
-import de.embl.cba.bdp2.process.convert.MultiChannelUnsignedByteTypeConversionDialog;
+import de.embl.cba.bdp2.process.convert.MultiChannelUnsignedByteTypeConverterCommand;
+import de.embl.cba.bdp2.process.convert.MultiChannelUnsignedByteTypeConverterDialog;
 import de.embl.cba.bdp2.process.crop.CropDialog;
 import de.embl.cba.bdp2.open.ui.DownloadAndOpenSampleDataCommand;
 import de.embl.cba.bdp2.dialog.Utils;
@@ -195,12 +195,12 @@ public class BigDataProcessor2MenuActions implements ActionListener {
                 ImageJFunctions.show( permuted, BigDataProcessor2.threadPool );
             });
         }
-        else if(e.getActionCommand().equalsIgnoreCase( MultiChannelConvertToUnsignedByteTypeCommand.COMMAND_NAME ))
+        else if(e.getActionCommand().equalsIgnoreCase( MultiChannelUnsignedByteTypeConverterCommand.COMMAND_NAME ))
         {
             BigDataProcessor2.threadPool.submit(() ->
 			{
                 if (! isImageSelected( viewer ) ) return;
-                new MultiChannelUnsignedByteTypeConversionDialog<>( viewer );
+                new MultiChannelUnsignedByteTypeConverterDialog<>( viewer );
             });
         }
         else if(e.getActionCommand().equalsIgnoreCase( BinCommand.COMMAND_NAME ))
