@@ -7,7 +7,7 @@ import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
-import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import de.embl.cba.bdp2.viewers.ImageViewer;
 import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
 import net.imglib2.type.NativeType;
@@ -87,7 +87,7 @@ public class LuxendoBatchMergeSplitChipCommand< R extends RealType< R > & Native
                         intervalsXYC,
                         directory );
 
-                final BdvImageViewer viewer = BigDataProcessor2.showImage( merge );
+                final ImageViewer viewer = BigDataProcessor2.showImage( merge );
 
                 final FinalInterval interval = viewer.getVoxelIntervalXYZCTViaDialog( );
 

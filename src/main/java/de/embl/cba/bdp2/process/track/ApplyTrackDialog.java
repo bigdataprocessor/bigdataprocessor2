@@ -3,7 +3,7 @@ package de.embl.cba.bdp2.process.track;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.macro.MacroRecorder;
-import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import de.embl.cba.bdp2.viewers.ImageViewer;
 import de.embl.cba.bdv.utils.BdvUtils;
 import fiji.util.gui.GenericDialogPlus;
 import net.imglib2.type.NativeType;
@@ -18,13 +18,12 @@ public class ApplyTrackDialog< R extends RealType< R > & NativeType< R > >
 	private static File trackFile = new File( "" );
 	private static boolean centerImage = false;
 
-	public ApplyTrackDialog( final BdvImageViewer< R > viewer )
+	public ApplyTrackDialog( final ImageViewer< R > viewer )
 	{
 		this.inputImage = viewer.getImage();
-		showGenericDialog();
 	}
 
-	private void showGenericDialog()
+	public void showDialog()
 	{
 		final GenericDialogPlus genericDialog = new GenericDialogPlus( "Apply Track" );
 		genericDialog.addFileField( "Track", trackFile.getAbsolutePath(), 50 );
@@ -37,7 +36,7 @@ public class ApplyTrackDialog< R extends RealType< R > & NativeType< R > >
 		centerImage = genericDialog.getNextBoolean();
 		outputImage = BigDataProcessor2.applyTrack( trackFile, inputImage, centerImage );
 
-		final BdvImageViewer viewer = BigDataProcessor2.showImage( outputImage );
+		final ImageViewer viewer = BigDataProcessor2.showImage( outputImage );
 		if ( centerImage )
 			BdvUtils.moveToPosition( viewer.getBdvHandle(), new double[]{ 0, 0, 0 }, 0 , 0);
 

@@ -3,7 +3,7 @@ package headless;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.open.core.NamingSchemes;
-import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import de.embl.cba.bdp2.viewers.ImageViewer;
 import net.imagej.ImageJ;
 
 public class TrackingUI
@@ -24,7 +24,7 @@ public class TrackingUI
 		image.setVoxelUnit( "pixel" );
 		image.setVoxelSize( 1.0, 1.0, 1.0 );
 
-		final BdvImageViewer viewer = BigDataProcessor2.showImage( image);
+		final ImageViewer viewer = BigDataProcessor2.showImage( image);
 		viewer.setDisplaySettings( 0, 150,0 );
 	}
 

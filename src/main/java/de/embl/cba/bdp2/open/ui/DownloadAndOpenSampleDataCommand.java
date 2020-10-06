@@ -3,7 +3,7 @@ package de.embl.cba.bdp2.open.ui;
 import de.embl.cba.bdp2.open.core.SampleDataDownloader;
 import de.embl.cba.bdp2.dialog.Utils;
 import de.embl.cba.bdp2.scijava.Services;
-import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import de.embl.cba.bdp2.viewers.ImageViewer;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;
@@ -11,7 +11,6 @@ import org.scijava.command.CommandService;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
-import javax.swing.*;
 import java.io.File;
 
 import static de.embl.cba.bdp2.open.core.SampleDataDownloader.DUAL_COLOR_MOUSE;
@@ -27,7 +26,7 @@ public class DownloadAndOpenSampleDataCommand< R extends RealType< R > & NativeT
 {
     public static final String COMMAND_NAME = "Download and Open Sample Data...";
     public static final String COMMAND_FULL_NAME = COMMAND_BDP2_PREFIX + COMMAND_NAME;
-    public static BdvImageViewer parentBdvImageViewer;
+    public static ImageViewer parentImageViewer;
 
     @Parameter
     CommandService commandService;
@@ -45,7 +44,7 @@ public class DownloadAndOpenSampleDataCommand< R extends RealType< R > & NativeT
         final SampleDataDownloader downloader = new SampleDataDownloader();
         downloader.setProgressListener( new ProgressBar( "Downloading...") );
         new Thread( () -> {
-            downloader.downloadAndOpen( sampleDataName, outputDirectory, parentBdvImageViewer );
+            downloader.downloadAndOpen( sampleDataName, outputDirectory, parentImageViewer );
         } ).start();
     }
 }

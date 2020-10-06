@@ -2,26 +2,29 @@ package de.embl.cba.bdp2.process.transform;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.dialog.AbstractProcessingDialog;
+import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.open.ui.AbstractOpenCommand;
 import de.embl.cba.bdp2.macro.MacroRecorder;
-import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import de.embl.cba.bdp2.viewers.ImageViewer;
 import ij.gui.GenericDialog;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
-public class TransformDialog< T extends RealType< T > & NativeType< T > > extends AbstractProcessingDialog< T >
+public class TransformDialog< T extends RealType< T > & NativeType< T > >
 {
 	private static String affine = "1,0,0,0,0,1,0,0,0,0,1,0";
 	private static String interpolation = TransformCommand.NEAREST;
+	private final ImageViewer< T > viewer;
+	private final Image< T > inputImage;
+	private Image< T > outputImage;
 
-	public TransformDialog( final BdvImageViewer< T > viewer )
+	public TransformDialog( final ImageViewer< T > viewer )
 	{
 		this.viewer = viewer;
 		this.inputImage = viewer.getImage();
-		showDialog();
 	}
 
-	private void showDialog()
+	public void showDialog()
 	{
 		final GenericDialog genericDialog = new GenericDialog( "Transform" );
 		genericDialog.addStringField( TransformCommand.AFFINE_LABEL, affine, 30 );
@@ -36,8 +39,7 @@ public class TransformDialog< T extends RealType< T > & NativeType< T > > extend
 		recordMacro();
 	}
 
-	@Override
-	protected void recordMacro()
+	private void recordMacro()
 	{
 		final MacroRecorder recorder = new MacroRecorder( TransformCommand.COMMAND_FULL_NAME, inputImage, outputImage, AbstractOpenCommand.SHOW_IN_NEW_VIEWER );
 		recorder.addOption( TransformCommand.AFFINE_STRING_PARAMETER, affine );

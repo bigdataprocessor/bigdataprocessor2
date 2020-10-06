@@ -1,10 +1,5 @@
 package de.embl.cba.bdp2.dialog;
 
-import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.viewers.BdvImageViewer;
-import net.imglib2.type.NativeType;
-import net.imglib2.type.numeric.RealType;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -34,11 +29,7 @@ public abstract class AbstractOkCancelDialog extends JDialog
 		buttons.onCancel( this::cancel );
 	}
 
-	protected abstract void ok();
-
-	protected abstract void cancel();
-
-	protected void showDialog( JPanel panel )
+	public void showDialog()
 	{
 		setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
 		getContentPane().add( panel, BorderLayout.CENTER );
@@ -50,6 +41,16 @@ public abstract class AbstractOkCancelDialog extends JDialog
 		pack();
 		SwingUtilities.invokeLater( () -> setVisible( true ) );
 	}
+
+	/**
+	 * Fill JPanel panel field with content,
+	 * such that it can be displayed by showDialog()
+	 */
+	protected abstract void createPanel();
+
+	protected abstract void ok();
+
+	protected abstract void cancel();
 
 	public static class OkCancelPanel extends JPanel
 	{

@@ -4,7 +4,7 @@ import bdv.util.BdvFunctions;
 import bdv.util.BdvHandle;
 import bdv.util.BdvOptions;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import de.embl.cba.bdp2.viewers.ImageViewer;
 import de.embl.cba.bdv.utils.BdvUtils;
 import de.embl.cba.tables.SwingUtils;
 import net.imglib2.RealPoint;
@@ -29,7 +29,7 @@ public class TrackCreator extends JFrame
 	private Behaviours behaviours;
 	private static File recentTrackSavingDirectory = null;
 
-	public TrackCreator( BdvImageViewer viewer, String trackName )
+	public TrackCreator( ImageViewer viewer, String trackName )
 	{
 		bdvHandle = viewer.getBdvHandle();
 		panel = new JPanel();
@@ -183,7 +183,7 @@ public class TrackCreator extends JFrame
 		}
 	}
 
-	public void initTrackAndOverlay( BdvImageViewer viewer, String trackName )
+	public void initTrackAndOverlay( ImageViewer viewer, String trackName )
 	{
 		track = new Track( trackName, viewer.getImage().getVoxelSize() );
 		final TrackOverlay trackOverlay = new TrackOverlay( bdvHandle, track, 20 );

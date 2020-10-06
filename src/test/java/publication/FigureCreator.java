@@ -3,7 +3,7 @@ package publication;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.open.core.NamingSchemes;
-import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import de.embl.cba.bdp2.viewers.ImageViewer;
 import net.imagej.ImageJ;
 import net.imglib2.FinalInterval;
 import net.imglib2.type.NativeType;
@@ -44,7 +44,7 @@ public class FigureCreator
 		// show processed
 		//
 		bin.setName( "processed" );
-		final BdvImageViewer viewer = BigDataProcessor2.showImage( bin, true );
+		final ImageViewer viewer = BigDataProcessor2.showImage( bin, true );
 		viewer.setDisplaySettings( 100, 300, 0);
 
 		/**

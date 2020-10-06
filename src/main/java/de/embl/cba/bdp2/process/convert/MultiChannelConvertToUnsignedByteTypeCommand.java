@@ -1,8 +1,9 @@
 package de.embl.cba.bdp2.process.convert;
 
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.process.AbstractProcessingCommand;
+import de.embl.cba.bdp2.process.AbstractImageProcessingCommand;
 import de.embl.cba.bdp2.utils.Utils;
+import de.embl.cba.bdp2.viewers.ImageViewer;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;
@@ -11,8 +12,8 @@ import org.scijava.plugin.Plugin;
 
 import java.util.ArrayList;
 
-@Plugin(type = Command.class, menuPath = de.embl.cba.bdp2.dialog.Utils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractProcessingCommand.COMMAND_PROCESS_PATH + MultiChannelConvertToUnsignedByteTypeCommand.COMMAND_FULL_NAME )
-public class MultiChannelConvertToUnsignedByteTypeCommand< R extends RealType< R > & NativeType< R > > extends AbstractProcessingCommand implements Command
+@Plugin(type = Command.class, menuPath = de.embl.cba.bdp2.dialog.Utils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractImageProcessingCommand.COMMAND_PROCESS_PATH + MultiChannelConvertToUnsignedByteTypeCommand.COMMAND_FULL_NAME )
+public class MultiChannelConvertToUnsignedByteTypeCommand< R extends RealType< R > & NativeType< R > > extends AbstractImageProcessingCommand< R >
 {
     public static final String COMMAND_NAME = "Convert to 8-Bit...";
     public static final String COMMAND_FULL_NAME = Utils.COMMAND_BDP2_PREFIX + COMMAND_NAME;
@@ -53,5 +54,11 @@ public class MultiChannelConvertToUnsignedByteTypeCommand< R extends RealType< R
         MultiChannelUnsignedByteTypeConverter converter = new MultiChannelUnsignedByteTypeConverter<>( inputImage, contrastLimits );
 
         outputImage = converter.getConvertedImage();
+    }
+
+    @Override
+    public void showDialog( ImageViewer< R > imageViewer )
+    {
+        new MultiChannelUnsignedByteTypeConversionDialog< R >( imageViewer ).showDialog();
     }
 }

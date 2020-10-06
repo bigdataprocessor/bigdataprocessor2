@@ -4,7 +4,7 @@ import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.macro.MacroRecorder;
 import de.embl.cba.bdp2.utils.Utils;
-import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import de.embl.cba.bdp2.viewers.ImageViewer;
 import ij.IJ;
 import ij.gui.GenericDialog;
 import net.imglib2.type.NativeType;
@@ -14,10 +14,12 @@ import java.util.Arrays;
 
 import static de.embl.cba.bdp2.process.calibrate.CalibrationUtils.fixVoxelSizeAndUnit;
 
+
+// TODO: Can one make it a child of AbstractProcessingDialog?
 public class CalibrationDialog< R extends RealType< R > & NativeType< R > >
 {
 	private final Image< R > inputImage;
-	private BdvImageViewer< R > viewer;
+	private ImageViewer< R > viewer;
 	private Image< R > outputImage;
 
 	public CalibrationDialog( Image< R > inputImage )
@@ -25,7 +27,7 @@ public class CalibrationDialog< R extends RealType< R > & NativeType< R > >
 		this.inputImage = inputImage;
 	}
 
-	public CalibrationDialog( final BdvImageViewer< R > viewer )
+	public CalibrationDialog( final ImageViewer< R > viewer )
 	{
 		this.inputImage = viewer.getImage();
 		this.viewer = viewer;

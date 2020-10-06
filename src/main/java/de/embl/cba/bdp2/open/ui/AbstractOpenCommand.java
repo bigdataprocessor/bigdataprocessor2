@@ -6,7 +6,7 @@ import de.embl.cba.bdp2.dialog.HelpWindow;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.scijava.Services;
 import de.embl.cba.bdp2.service.ImageService;
-import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import de.embl.cba.bdp2.viewers.ImageViewer;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.jetbrains.annotations.Nullable;
@@ -27,7 +27,7 @@ public abstract class AbstractOpenCommand< R extends RealType< R > & NativeType<
     public static final String SHOW_IN_NEW_VIEWER = "Show in new viewer";
 
     // TODO: this is not concurrency save
-    public static BdvImageViewer parentViewer = null;
+    public static ImageViewer parentViewer = null;
 
     @Parameter
     UIService uiService;
@@ -71,11 +71,11 @@ public abstract class AbstractOpenCommand< R extends RealType< R > & NativeType<
             outputImage = new CalibrationCheckerDialog().checkAndCorrectCalibration( outputImage );
         }
 
-        BdvImageViewer viewer = showInViewer( autoContrast, keepViewerTransform );
+        ImageViewer viewer = showInViewer( autoContrast, keepViewerTransform );
     }
 
     @Nullable
-    private BdvImageViewer showInViewer( boolean autoContrast, boolean keepViewerTransform )
+    private ImageViewer showInViewer( boolean autoContrast, boolean keepViewerTransform )
     {
         if ( viewingModality.equals( DO_NOT_SHOW ) )
         {

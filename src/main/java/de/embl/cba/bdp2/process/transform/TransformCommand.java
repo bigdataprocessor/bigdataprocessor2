@@ -1,8 +1,9 @@
 package de.embl.cba.bdp2.process.transform;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
-import de.embl.cba.bdp2.process.AbstractProcessingCommand;
+import de.embl.cba.bdp2.process.AbstractImageProcessingCommand;
 import de.embl.cba.bdp2.utils.Utils;
+import de.embl.cba.bdp2.viewers.ImageViewer;
 import net.imglib2.interpolation.InterpolatorFactory;
 import net.imglib2.interpolation.randomaccess.ClampingNLinearInterpolatorFactory;
 import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
@@ -13,8 +14,8 @@ import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
-@Plugin(type = Command.class, menuPath = de.embl.cba.bdp2.dialog.Utils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractProcessingCommand.COMMAND_PROCESS_PATH + TransformCommand.COMMAND_FULL_NAME )
-public class TransformCommand< R extends RealType< R > & NativeType< R > > extends AbstractProcessingCommand implements Command
+@Plugin(type = Command.class, menuPath = de.embl.cba.bdp2.dialog.Utils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractImageProcessingCommand.COMMAND_PROCESS_PATH + TransformCommand.COMMAND_FULL_NAME )
+public class TransformCommand< R extends RealType< R > & NativeType< R > > extends AbstractImageProcessingCommand< R > implements Command
 {
     public static final String COMMAND_NAME = "Transform...";
     public static final String COMMAND_FULL_NAME = Utils.COMMAND_BDP2_PREFIX + COMMAND_NAME;
@@ -60,5 +61,11 @@ public class TransformCommand< R extends RealType< R > & NativeType< R > > exten
             return new NearestNeighborInterpolatorFactory();
         else
             throw new RuntimeException( "Interpolation not supported: " + interpolation );
+    }
+
+    @Override
+    public void showDialog( ImageViewer< R > imageViewer )
+    {
+
     }
 }

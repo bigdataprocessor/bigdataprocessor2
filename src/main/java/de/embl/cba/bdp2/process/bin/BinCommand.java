@@ -1,16 +1,17 @@
 package de.embl.cba.bdp2.process.bin;
 
-import de.embl.cba.bdp2.process.AbstractProcessingCommand;
+import de.embl.cba.bdp2.process.AbstractImageProcessingCommand;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.utils.Utils;
+import de.embl.cba.bdp2.viewers.ImageViewer;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
-@Plugin(type = Command.class, menuPath = de.embl.cba.bdp2.dialog.Utils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractProcessingCommand.COMMAND_PROCESS_PATH + BinCommand.COMMAND_FULL_NAME )
-public class BinCommand< R extends RealType< R > & NativeType< R > > extends AbstractProcessingCommand implements Command
+@Plugin(type = Command.class, name = BinCommand.COMMAND_NAME, menuPath = de.embl.cba.bdp2.dialog.Utils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractImageProcessingCommand.COMMAND_PROCESS_PATH + BinCommand.COMMAND_FULL_NAME)
+public class BinCommand< R extends RealType< R > & NativeType< R > > extends AbstractImageProcessingCommand< R >
 {
     public static final String COMMAND_NAME = "Bin...";
     public static final String COMMAND_FULL_NAME = Utils.COMMAND_BDP2_PREFIX + COMMAND_NAME;
@@ -36,4 +37,9 @@ public class BinCommand< R extends RealType< R > & NativeType< R > > extends Abs
         outputImage = BigDataProcessor2.bin( inputImage, new long[]{ binWidthXPixels, binWidthYPixels, binWidthZPixels, 1, 1 } );
     }
 
+    @Override
+    public void showDialog( ImageViewer< R > imageViewer )
+    {
+        new BinDialog<>( imageViewer ).showDialog();
+    }
 }

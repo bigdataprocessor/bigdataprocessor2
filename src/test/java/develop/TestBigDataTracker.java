@@ -2,7 +2,7 @@ package develop;
 
 import de.embl.cba.bdp2.process.track.TrackingSettings;
 import de.embl.cba.bdp2.utils.Utils;
-import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import de.embl.cba.bdp2.viewers.ImageViewer;
 import de.embl.cba.bdp2.utils.Point3D;
 
 public class TestBigDataTracker {
@@ -40,7 +40,7 @@ public class TestBigDataTracker {
 //        bdt.trackObject(trackingSettings, imageViewer);
     }
 
-    private static TrackingSettings< ? > createTrackingSettings(BdvImageViewer imageViewer) {
+    private static TrackingSettings< ? > createTrackingSettings( ImageViewer imageViewer) {
         Point3D maxDisplacement = new Point3D(20, 20, 1);
         TrackingSettings< ? > trackingSettings = new TrackingSettings<>();
         trackingSettings.rai = imageViewer.getImage().getRai();

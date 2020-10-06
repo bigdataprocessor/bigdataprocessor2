@@ -11,7 +11,7 @@ import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.open.core.CachedCellImgCreator;
 import de.embl.cba.bdp2.open.core.FileInfos;
 import de.embl.cba.bdp2.open.core.NamingSchemes;
-import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import de.embl.cba.bdp2.viewers.ImageViewer;
 import net.imglib2.FinalRealInterval;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessibleInterval;
@@ -27,7 +27,7 @@ public class BoundingBoxSelection
 	{
 
 		final Image< R > image = openImage();
-		final BdvImageViewer< R > viewer = new BdvImageViewer<>( image );
+		final ImageViewer< R > viewer = new ImageViewer<>( image );
 
 		final RandomAccessibleInterval rai = viewer.getImage().getRai();
 		final double[] min = new double[ 3 ];
@@ -73,7 +73,7 @@ public class BoundingBoxSelection
 
 	}
 
-	public static void showBox( BdvImageViewer viewer, FinalRealInterval finalInterval, String title )
+	public static void showBox( ImageViewer viewer, FinalRealInterval finalInterval, String title )
 	{
 		final TransformedRealBoxSelectionDialog.Result result = BdvFunctions.selectRealBox(
 				viewer.getBdvHandle(),

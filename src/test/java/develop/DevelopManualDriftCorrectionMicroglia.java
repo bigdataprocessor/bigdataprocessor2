@@ -4,7 +4,7 @@ import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.process.track.TrackCreator;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.scijava.Services;
-import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import de.embl.cba.bdp2.viewers.ImageViewer;
 import ij.plugin.frame.Recorder;
 import net.imagej.ImageJ;
 
@@ -29,7 +29,7 @@ public class DevelopManualDriftCorrectionMicroglia
                 ".*"
         );
 
-        final BdvImageViewer viewer = BigDataProcessor2.showImage( image, true );
+        final ImageViewer viewer = BigDataProcessor2.showImage( image, true );
 
         final TrackCreator trackCreator = new TrackCreator( viewer, "drift" );
     }

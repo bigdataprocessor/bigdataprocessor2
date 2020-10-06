@@ -38,7 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
+public class ImageViewer< R extends RealType< R > & NativeType< R > >
 {
     public static final String VIEWER_TITLE_STUMP = "Image: ";
     public static boolean enableArbitraryPlaneSlicing = false;
@@ -49,17 +49,17 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
     private Map< String, Track > tracks;
     private int numRenderingThreads = Runtime.getRuntime().availableProcessors(); // TODO
 
-    public BdvImageViewer( final Image< R > image )
+    public ImageViewer( final Image< R > image )
     {
         this( image, true, false );
     }
 
-    public BdvImageViewer( final Image< R > image, final boolean autoContrast )
+    public ImageViewer( final Image< R > image, final boolean autoContrast )
     {
         this( image, autoContrast, enableArbitraryPlaneSlicing );
     }
 
-    public BdvImageViewer( final Image< R > image, final boolean autoContrast, final boolean enableArbitraryPlaneSlicing )
+    public ImageViewer( final Image< R > image, final boolean autoContrast, final boolean enableArbitraryPlaneSlicing )
     {
         this.image = image;
         this.enableArbitraryPlaneSlicing = enableArbitraryPlaneSlicing;
@@ -139,17 +139,17 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
             setDisplaySettings( displaySettings );
     }
 
-    public BdvImageViewer< R > showImageInNewWindow( Image< R > image )
+    public ImageViewer< R > showImageInNewWindow( Image< R > image )
     {
         final AffineTransform3D viewerTransform = getViewerTransform();
         final List< DisplaySettings > displaySettings = getDisplaySettings();
 
-        final BdvImageViewer< R > bdvImageViewer = new BdvImageViewer<>( image );
+        final ImageViewer< R > imageViewer = new ImageViewer<>( image );
 
-        bdvImageViewer.getBdvHandle().getViewerPanel().setCurrentViewerTransform( viewerTransform );
-        bdvImageViewer.setDisplaySettings( displaySettings );
+        imageViewer.getBdvHandle().getViewerPanel().setCurrentViewerTransform( viewerTransform );
+        imageViewer.setDisplaySettings( displaySettings );
 
-        return bdvImageViewer;
+        return imageViewer;
     }
 
     public void setDisplaySettings( List< DisplaySettings > displaySettings )
@@ -388,7 +388,7 @@ public class BdvImageViewer < R extends RealType< R > & NativeType< R > >
 
     private void addFocusListener( JFrame topFrame )
     {
-        final BdvImageViewer viewer = this;
+        final ImageViewer viewer = this;
         topFrame.addWindowListener( new WindowAdapter()
         {
             @Override

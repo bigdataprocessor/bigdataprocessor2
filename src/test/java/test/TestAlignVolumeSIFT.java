@@ -5,7 +5,7 @@ import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.open.core.NamingSchemes;
 import de.embl.cba.bdp2.devel.register.RegisteredViews;
 import de.embl.cba.bdp2.BigDataProcessor2;
-import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import de.embl.cba.bdp2.viewers.ImageViewer;
 import loci.common.DebugTools;
 import net.imagej.ImageJ;
 import net.imglib2.type.NativeType;
@@ -34,7 +34,7 @@ public class TestAlignVolumeSIFT< R extends RealType< R > & NativeType< R > >
 
 		if ( showImages )
 		{
-			final BdvImageViewer viewer = BigDataProcessor2.showImage( alignedImage, false );
+			final ImageViewer viewer = BigDataProcessor2.showImage( alignedImage, false );
 			viewer.setDisplaySettings( 0, 65535,0 );
 		}
 

@@ -1,7 +1,7 @@
 package de.embl.cba.bdp2.service;
 
 import de.embl.cba.bdp2.BigDataProcessor2UserInterface;
-import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import de.embl.cba.bdp2.viewers.ImageViewer;
 
 import java.util.Collections;
 import java.util.Map;
@@ -9,12 +9,12 @@ import java.util.WeakHashMap;
 
 public abstract class BdvService
 {
-	public static Map< String, BdvImageViewer > imageNameToBdvImageViewer =
+	public static Map< String, ImageViewer > imageNameToBdvImageViewer =
 			Collections.synchronizedMap( new WeakHashMap<>( ) );
 
-	private static BdvImageViewer focusedViewer;
+	private static ImageViewer focusedViewer;
 
-	public static synchronized void setFocusedViewer( BdvImageViewer viewer )
+	public static synchronized void setFocusedViewer( ImageViewer viewer )
 	{
 		focusedViewer = viewer;
 		if ( viewer != null )
@@ -23,7 +23,7 @@ public abstract class BdvService
 			BigDataProcessor2UserInterface.setImageInformation( null );
 	}
 
-	public static synchronized BdvImageViewer getActiveViewer()
+	public static synchronized ImageViewer getActiveViewer()
 	{
 		return focusedViewer;
 	}

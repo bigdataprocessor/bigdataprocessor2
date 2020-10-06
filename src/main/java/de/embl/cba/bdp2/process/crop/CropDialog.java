@@ -7,7 +7,7 @@ import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.open.ui.AbstractOpenCommand;
 import de.embl.cba.bdp2.macro.MacroRecorder;
 import de.embl.cba.bdp2.utils.Utils;
-import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import de.embl.cba.bdp2.viewers.ImageViewer;
 import ij.gui.GenericDialog;
 import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
@@ -22,10 +22,17 @@ public class CropDialog< R extends RealType< R > & NativeType< R > >
 {
 	public static final String SHOW_IN_VOXEL_UNITS = "Use voxel units";
 	public static final String SHOW_IN_CALIBRATED_UNITS = "Use calibrated units";
-	public static boolean askForUnitsChoice = true;
 	private String unitsChoice = SHOW_IN_CALIBRATED_UNITS;
 
-	public CropDialog( BdvImageViewer< R > viewer )
+	public static boolean askForUnitsChoice = true;
+	private final ImageViewer< R > viewer;
+
+	public CropDialog( ImageViewer< R > viewer )
+	{
+		this.viewer = viewer;
+	}
+
+	public void showDialog()
 	{
 		if ( askForUnitsChoice )
 		{
@@ -48,12 +55,7 @@ public class CropDialog< R extends RealType< R > & NativeType< R > >
 		}
 	}
 
-	public CropDialog( BdvImageViewer< R > viewer, boolean calibratedUnits )
-	{
-		showDialog( viewer, calibratedUnits );
-	}
-
-	private void showDialog( BdvImageViewer< R > viewer, boolean calibratedUnits )
+	private void showDialog( ImageViewer< R > viewer, boolean calibratedUnits )
 	{
 		final Image< R > inputImage = viewer.getImage();
 
@@ -81,7 +83,7 @@ public class CropDialog< R extends RealType< R > & NativeType< R > >
 		} );
 
 
-		final BdvImageViewer< R > newViewer = BigDataProcessor2.showImage( outputImage, false );
+		final ImageViewer< R > newViewer = BigDataProcessor2.showImage( outputImage, false );
 		final List< DisplaySettings > displaySettings = viewer.getDisplaySettings();
 		newViewer.setDisplaySettings( displaySettings );
 	}

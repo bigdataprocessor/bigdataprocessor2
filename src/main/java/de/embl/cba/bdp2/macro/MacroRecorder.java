@@ -6,7 +6,7 @@ import ij.plugin.frame.Recorder;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
-import static de.embl.cba.bdp2.process.AbstractProcessingCommand.*;
+import static de.embl.cba.bdp2.process.AbstractImageProcessingCommand.*;
 
 public class MacroRecorder< R extends RealType< R > & NativeType< R > >
 {

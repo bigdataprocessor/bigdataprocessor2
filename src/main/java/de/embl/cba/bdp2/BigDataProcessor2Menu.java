@@ -2,8 +2,8 @@ package de.embl.cba.bdp2;
 
 import de.embl.cba.bdp2.process.bin.BinCommand;
 import de.embl.cba.bdp2.process.calibrate.CalibrateCommand;
-import de.embl.cba.bdp2.process.convert.singlechannel.ConvertToUnsignedByteTypeCommand;
 import de.embl.cba.bdp2.open.ui.DownloadAndOpenSampleDataCommand;
+import de.embl.cba.bdp2.process.convert.MultiChannelConvertToUnsignedByteTypeCommand;
 import de.embl.cba.bdp2.process.track.ApplyTrackCommand;
 import de.embl.cba.bdp2.process.rename.ImageRenameCommand;
 import de.embl.cba.bdp2.process.align.channelshift.AlignChannelsCommand;
@@ -74,6 +74,7 @@ public class BigDataProcessor2Menu extends JMenu
         addMenuItem( openMenu, OpenLeicaDSLTiffPlanesCommand.COMMAND_NAME );
 
         final JMenu processMenu = addMenu( "Process" );
+        // TODO: auto-populate
         menus.add( processMenu );
         addMenuItem( processMenu, ImageRenameCommand.COMMAND_NAME );
         addMenuItem( processMenu, CalibrateCommand.COMMAND_NAME );
@@ -86,7 +87,7 @@ public class BigDataProcessor2Menu extends JMenu
         addMenuItem( processMenu, CROP );
         addMenuItem( processMenu, TransformCommand.COMMAND_NAME );
         addMenuItem( processMenu, BinCommand.COMMAND_NAME );
-        addMenuItem( processMenu, ConvertToUnsignedByteTypeCommand.COMMAND_NAME );
+        addMenuItem( processMenu, MultiChannelConvertToUnsignedByteTypeCommand.COMMAND_NAME );
         addMenuItem( processMenu, AlignChannelsCommand.COMMAND_NAME );
         addMenuItem( processMenu, SplitChipCommand.COMMAND_NAME );
 //        addMenuItem( OBLIQUE_MENU_ITEM );

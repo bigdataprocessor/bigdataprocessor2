@@ -69,12 +69,12 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		return longs;
 	}
 
-	public String getDataType()
+	public String getDataTypeString()
 	{
 		final R type = Util.getTypeFromInterval( raiXYZCT );
-		if ( type instanceof UnsignedShortType )
+		if ( type instanceof UnsignedByteType )
 			return "unsigned 8 bit";
-		else if ( type instanceof UnsignedByteType )
+		else if ( type instanceof UnsignedShortType )
 			return "unsigned 16 bit";
 		else
 			return "???";
@@ -211,7 +211,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 			info += "\n  Channel name " + c + ": " + channelNames[ c ];
 		}
 		info += "\nSize [GB]: " + getTotalSizeGB();
-		info += "\nData type: " + getDataType();
+		info += "\nData type: " + getDataTypeString();
 		info += "\nSize X,Y,Z [Voxels]: " + Utils.create3DArrayString( getDimensionsXYZCT() );
 		info += "\nTime-points: " + getDimensionsXYZCT()[4];
 		info += "\nVoxel size ["+ getVoxelUnit() +"]: " + Utils.create3DArrayString( getVoxelSize() );

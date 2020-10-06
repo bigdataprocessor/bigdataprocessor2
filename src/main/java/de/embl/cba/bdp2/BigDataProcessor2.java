@@ -18,7 +18,7 @@ import de.embl.cba.bdp2.save.*;
 import de.embl.cba.bdp2.process.align.channelshift.ChannelShifter;
 import de.embl.cba.bdp2.service.BdvService;
 import de.embl.cba.bdp2.process.transform.ImageTransformer;
-import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import de.embl.cba.bdp2.viewers.ImageViewer;
 import loci.common.DebugTools;
 import net.imglib2.*;
 import net.imglib2.interpolation.InterpolatorFactory;
@@ -115,21 +115,21 @@ public class BigDataProcessor2
     }
 
     public static < R extends RealType< R > & NativeType< R > >
-    BdvImageViewer showImage( Image< R > image, boolean autoContrast, boolean enableArbitraryPlaneSlicing )
+    ImageViewer showImage( Image< R > image, boolean autoContrast, boolean enableArbitraryPlaneSlicing )
     {
-        return new BdvImageViewer( image, autoContrast, enableArbitraryPlaneSlicing );
+        return new ImageViewer( image, autoContrast, enableArbitraryPlaneSlicing );
     }
 
     public static < R extends RealType< R > & NativeType< R > >
-    BdvImageViewer showImage( Image< R > image, boolean autoContrast )
+    ImageViewer showImage( Image< R > image, boolean autoContrast )
     {
-        return new BdvImageViewer( image, autoContrast, BdvImageViewer.enableArbitraryPlaneSlicing );
+        return new ImageViewer( image, autoContrast, ImageViewer.enableArbitraryPlaneSlicing );
     }
 
     public static < R extends RealType< R > & NativeType< R > >
-    BdvImageViewer showImage( Image< R > image )
+    ImageViewer showImage( Image< R > image )
     {
-        return new BdvImageViewer( image, true, BdvImageViewer.enableArbitraryPlaneSlicing );
+        return new ImageViewer( image, true, ImageViewer.enableArbitraryPlaneSlicing );
     }
 
     public static < R extends RealType< R > & NativeType< R > > ImageSaver saveImage( Image< R > image, SavingSettings savingSettings, ProgressListener progressListener )
@@ -178,11 +178,11 @@ public class BigDataProcessor2
         BigDataProcessor2UserInterface.showUI();
     }
 
-    public static < R extends RealType< R > & NativeType< R > > BdvImageViewer showImageInheritingDisplaySettings( Image< R > image, Image< R > parentImage )
+    public static < R extends RealType< R > & NativeType< R > > ImageViewer showImageInheritingDisplaySettings( Image< R > image, Image< R > parentImage )
     {
-        final BdvImageViewer viewer = showImage( image, false );
+        final ImageViewer viewer = showImage( image, false );
 
-        final BdvImageViewer inputImageViewer = BdvService.imageNameToBdvImageViewer.get( parentImage.getName() );
+        final ImageViewer inputImageViewer = BdvService.imageNameToBdvImageViewer.get( parentImage.getName() );
         if ( inputImageViewer != null )
                 viewer.setDisplaySettings( inputImageViewer.getDisplaySettings() );
 

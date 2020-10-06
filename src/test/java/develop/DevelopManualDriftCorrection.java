@@ -4,7 +4,7 @@ import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.scijava.Services;
 import de.embl.cba.bdp2.process.track.TrackCreator;
-import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import de.embl.cba.bdp2.viewers.ImageViewer;
 import net.imagej.ImageJ;
 
 import static de.embl.cba.bdp2.open.core.NamingSchemes.MULTI_CHANNEL_VOLUMES;
@@ -26,7 +26,7 @@ public class DevelopManualDriftCorrection
                 ".*"
         );
 
-        final BdvImageViewer viewer = BigDataProcessor2.showImage( image, true );
+        final ImageViewer viewer = BigDataProcessor2.showImage( image, true );
 
         final TrackCreator trackCreator = new TrackCreator( viewer, "drift" );
     }

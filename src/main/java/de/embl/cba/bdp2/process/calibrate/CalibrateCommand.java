@@ -1,16 +1,17 @@
 package de.embl.cba.bdp2.process.calibrate;
 
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.process.AbstractProcessingCommand;
+import de.embl.cba.bdp2.process.AbstractImageProcessingCommand;
 import de.embl.cba.bdp2.utils.Utils;
+import de.embl.cba.bdp2.viewers.ImageViewer;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
-@Plugin(type = Command.class, menuPath = de.embl.cba.bdp2.dialog.Utils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractProcessingCommand.COMMAND_PROCESS_PATH + CalibrateCommand.COMMAND_FULL_NAME )
-public class CalibrateCommand< R extends RealType< R > & NativeType< R > > extends AbstractProcessingCommand< R >
+@Plugin(type = Command.class, menuPath = de.embl.cba.bdp2.dialog.Utils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractImageProcessingCommand.COMMAND_PROCESS_PATH + CalibrateCommand.COMMAND_FULL_NAME )
+public class CalibrateCommand< R extends RealType< R > & NativeType< R > > extends AbstractImageProcessingCommand< R >
 {
     public static final String COMMAND_NAME = "Set Voxel Size...";
     public static final String COMMAND_FULL_NAME = Utils.COMMAND_BDP2_PREFIX + COMMAND_NAME;
@@ -49,5 +50,11 @@ public class CalibrateCommand< R extends RealType< R > & NativeType< R > > exten
         {
             Logger.log( "Voxel size [" + d + "]: " + voxelSize[ d ] );
         }
+    }
+
+    @Override
+    public void showDialog( ImageViewer< R > imageViewer )
+    {
+        new CalibrationDialog< R >( imageViewer ).showDialog();
     }
 }

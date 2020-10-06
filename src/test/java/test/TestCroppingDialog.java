@@ -3,7 +3,7 @@ package test;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.open.core.NamingSchemes;
-import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import de.embl.cba.bdp2.viewers.ImageViewer;
 import loci.common.DebugTools;
 import net.imagej.ImageJ;
 import net.imglib2.type.NativeType;
@@ -28,7 +28,7 @@ public class TestCroppingDialog
         image.setVoxelUnit( "pixel" );
         image.setVoxelSize( 1.0, 1.0, 1.0 );
 
-        final BdvImageViewer viewer = BigDataProcessor2.showImage( image);
+        final ImageViewer viewer = BigDataProcessor2.showImage( image);
         viewer.getVoxelIntervalXYZCTViaDialog( );
     }
 

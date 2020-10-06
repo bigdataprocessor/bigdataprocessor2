@@ -6,7 +6,7 @@ import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.macro.MacroRecorder;
 import de.embl.cba.bdp2.dialog.AbstractProcessingDialog;
 import de.embl.cba.bdp2.utils.Utils;
-import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import de.embl.cba.bdp2.viewers.ImageViewer;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
@@ -14,19 +14,17 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class BinDialog< T extends RealType< T > & NativeType< T > > extends AbstractProcessingDialog< T >
+public class BinDialog< R extends RealType< R > & NativeType< R > > extends AbstractProcessingDialog< R >
 {
 	private long[] span;
 
-	public BinDialog( final BdvImageViewer< T > viewer )
+	public BinDialog( final ImageViewer< R > viewer )
 	{
 		this.inputImage = viewer.getImage();
 		this.viewer = viewer;
 
 		Logger.info( "Image size [GB]: " + Utils.getSizeGB( this.inputImage.getRai() ) );
-
-		panel = createContent();
-		showDialog( panel );
+		createPanel();
 	}
 
 	@Override
@@ -41,9 +39,10 @@ public class BinDialog< T extends RealType< T > & NativeType< T > > extends Abst
 		recorder.record();
 	}
 
-	protected JPanel createContent()
+	@Override
+	protected void createPanel()
 	{
-		JPanel panel = new JPanel();
+		panel = new JPanel();
 		panel.setLayout( new BoxLayout( panel, BoxLayout.PAGE_AXIS ) );
 
 		final ArrayList< BoundedValue > boundedValues = new ArrayList<>();
@@ -120,8 +119,6 @@ public class BinDialog< T extends RealType< T > & NativeType< T > > extends Abst
 			boundedValues.get( d ).setUpdateListener( updateListener );
 			panel.add( sliderPanels.get( d ) );
 		}
-
-		return panel;
 	}
 
 }

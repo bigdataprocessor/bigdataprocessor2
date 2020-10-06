@@ -2,26 +2,24 @@ package de.embl.cba.bdp2.process.rename;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.macro.MacroRecorder;
-import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import de.embl.cba.bdp2.viewers.ImageViewer;
 import ij.gui.GenericDialog;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
-import org.jetbrains.annotations.NotNull;
 
 import static de.embl.cba.bdp2.process.rename.ImageRenameCommand.CHANNEL_NAMES_PARAMETER;
 
 public class ImageRenameDialog< R extends RealType< R > & NativeType< R > >
 {
 	private final Image< R > inputImage;
-	private final BdvImageViewer< R > viewer;
+	private final ImageViewer< R > viewer;
 	private Image< R > outputImage;
 	private String[] channelNames;
 
-	public ImageRenameDialog( final BdvImageViewer< R > viewer  )
+	public ImageRenameDialog( final ImageViewer< R > viewer  )
 	{
 		this.viewer = viewer;
 		this.inputImage = viewer.getImage();
-		showDialog();
 	}
 
 	protected void recordMacro()

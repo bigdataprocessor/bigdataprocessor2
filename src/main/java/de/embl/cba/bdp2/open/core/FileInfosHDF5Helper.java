@@ -16,7 +16,7 @@ public class FileInfosHDF5Helper
     public static final String HDF5_PARSING_ERROR = "Error during hdf5 metadata extraction from ";
 
     public static void setImageDataInfoFromH5(
-            FileInfos imageDataInfo,
+            FileInfos fileInfos,
             String directory,
             String fileName)
     {
@@ -24,16 +24,16 @@ public class FileInfosHDF5Helper
         IHDF5Reader reader = HDF5Factory.openForReading( filePath );
 
         StringBuilder hdf5DataSetSB = new StringBuilder();
-        if (imageDataInfo.h5DataSetName != null && !imageDataInfo.h5DataSetName.isEmpty()
-                && !imageDataInfo.h5DataSetName.trim().isEmpty())
+        if (fileInfos.h5DataSetName != null && !fileInfos.h5DataSetName.isEmpty()
+                && !fileInfos.h5DataSetName.trim().isEmpty())
         {
             // TODO: improve this, try different names recursively
-            hdf5DataSetSB = new StringBuilder( imageDataInfo.h5DataSetName );
+            hdf5DataSetSB = new StringBuilder( fileInfos.h5DataSetName );
             if ( ! hdf5DataSetExists(reader, hdf5DataSetSB ) )
             {
-                if ( imageDataInfo.h5DataSetName.equals( "Data" ) )
+                if ( fileInfos.h5DataSetName.equals( "Data" ) )
                 {
-                    imageDataInfo.h5DataSetName = "Data111";
+                    fileInfos.h5DataSetName = "Data111";
                 }
 
                 if ( ! hdf5DataSetExists(reader, hdf5DataSetSB ) )
@@ -49,22 +49,22 @@ public class FileInfosHDF5Helper
                 throw new RuntimeException( HDF5_PARSING_ERROR + filePath );
         }
 
-        imageDataInfo.h5DataSetName = hdf5DataSetSB.toString();
-        HDF5DataSetInformation dsInfo = reader.object().getDataSetInformation("/" + imageDataInfo.h5DataSetName);
+        fileInfos.h5DataSetName = hdf5DataSetSB.toString();
+        HDF5DataSetInformation dsInfo = reader.object().getDataSetInformation("/" + fileInfos.h5DataSetName);
 
         if (dsInfo.getDimensions().length == 3) {
-            imageDataInfo.nZ = (int) dsInfo.getDimensions()[0];
-            imageDataInfo.nY = (int) dsInfo.getDimensions()[1];
-            imageDataInfo.nX = (int) dsInfo.getDimensions()[2];
+            fileInfos.nZ = (int) dsInfo.getDimensions()[0];
+            fileInfos.nY = (int) dsInfo.getDimensions()[1];
+            fileInfos.nX = (int) dsInfo.getDimensions()[2];
         } else if (dsInfo.getDimensions().length == 2) {
-            imageDataInfo.nZ = 1;
-            imageDataInfo.nY = (int) dsInfo.getDimensions()[0];
-            imageDataInfo.nX = (int) dsInfo.getDimensions()[1];
+            fileInfos.nZ = 1;
+            fileInfos.nY = (int) dsInfo.getDimensions()[0];
+            fileInfos.nX = (int) dsInfo.getDimensions()[1];
         }
-        imageDataInfo.bitDepth = assignHDF5TypeToImagePlusBitdepth(dsInfo);
+        fileInfos.bitDepth = assignHDF5TypeToImagePlusBitdepth(dsInfo);
 
-        imageDataInfo.voxelSize = Luxendos.getVoxelSizeMicrometer( reader, imageDataInfo.h5DataSetName );
-        imageDataInfo.voxelUnit = "micrometer";
+        fileInfos.voxelSize = Luxendos.getVoxelSizeMicrometer( reader, fileInfos.h5DataSetName );
+        fileInfos.voxelUnit = "micrometer";
     }
 
     private static int assignHDF5TypeToImagePlusBitdepth(HDF5DataSetInformation dsInfo) {

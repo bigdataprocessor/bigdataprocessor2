@@ -7,7 +7,7 @@ import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.macro.MacroRecorder;
 import de.embl.cba.bdp2.utils.Utils;
-import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import de.embl.cba.bdp2.viewers.ImageViewer;
 import ij.IJ;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.Converters;
@@ -27,7 +27,7 @@ public class MultiChannelUnsignedByteTypeConversionDialog< R extends RealType< R
 	private List< double[] > contrastLimits; // to be mapped onto 0 and 255
 	private List< RealUnsignedByteConverter< R > > converters;
 
-	public MultiChannelUnsignedByteTypeConversionDialog( final BdvImageViewer< R > viewer )
+	public MultiChannelUnsignedByteTypeConversionDialog( final ImageViewer< R > viewer )
 	{
 		this.viewer = viewer;
 		this.inputImage = viewer.getImage();
@@ -41,11 +41,10 @@ public class MultiChannelUnsignedByteTypeConversionDialog< R extends RealType< R
 
 		initContrastLimits( viewer );
 		showConvertedImage( viewer );
-		prepareDialog();
-		showDialog( panel );
+		createPanel();
 	}
 
-	public void showConvertedImage( BdvImageViewer< R > viewer )
+	public void showConvertedImage( ImageViewer< R > viewer )
 	{
 		final MultiChannelUnsignedByteTypeConverter< R > byteTypeConverter = new MultiChannelUnsignedByteTypeConverter<>( inputImage, contrastLimits );
 
@@ -60,7 +59,7 @@ public class MultiChannelUnsignedByteTypeConversionDialog< R extends RealType< R
 		Logger.info( "8-bit view size [GB]: " + Utils.getSizeGB( outputImage.getRai() ) );
 	}
 
-	public void initContrastLimits( BdvImageViewer< R > viewer )
+	public void initContrastLimits( ImageViewer< R > viewer )
 	{
 		contrastLimits = new ArrayList<>(  );
 		for ( int c = 0; c < inputImage.getNumChannels(); c++ )
@@ -80,7 +79,7 @@ public class MultiChannelUnsignedByteTypeConversionDialog< R extends RealType< R
 		recorder.record();
 	}
 	
-	protected void prepareDialog()
+	protected void createPanel()
 	{
 		panel = new JPanel();
 		panel.setLayout( new BoxLayout( panel, BoxLayout.PAGE_AXIS ) );

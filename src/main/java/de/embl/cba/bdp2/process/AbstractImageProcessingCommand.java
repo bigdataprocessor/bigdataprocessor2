@@ -5,13 +5,13 @@ import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.open.ui.AbstractOpenCommand;
 import de.embl.cba.bdp2.service.BdvService;
 import de.embl.cba.bdp2.service.ImageService;
-import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import de.embl.cba.bdp2.viewers.ImageViewer;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 
-public abstract class AbstractProcessingCommand< R extends RealType< R > & NativeType< R > > implements Command
+public abstract class AbstractImageProcessingCommand< R extends RealType< R > & NativeType< R > > implements Command, ImageProcessingDialog< R >
 {
     public static final String COMMAND_PROCESS_PATH = "Commands>Process>";
 
@@ -33,7 +33,7 @@ public abstract class AbstractProcessingCommand< R extends RealType< R > & Nativ
 
     protected Image< R > outputImage;
 
-    protected BdvImageViewer handleOutputImage( boolean autoContrast, boolean keepViewerTransform )
+    protected ImageViewer handleOutputImage( boolean autoContrast, boolean keepViewerTransform )
     {
         outputImage.setName( outputImageName );
         ImageService.imageNameToImage.put( outputImageName, outputImage );
@@ -48,7 +48,7 @@ public abstract class AbstractProcessingCommand< R extends RealType< R > & Nativ
         }
         else if ( viewingModality.equals( AbstractOpenCommand.SHOW_IN_CURRENT_VIEWER ))
         {
-            final BdvImageViewer viewer = BdvService.imageNameToBdvImageViewer.get( inputImage.getName() );
+            final ImageViewer viewer = BdvService.imageNameToBdvImageViewer.get( inputImage.getName() );
             viewer.replaceImage( outputImage, autoContrast, keepViewerTransform );
             return viewer;
         }
@@ -62,5 +62,4 @@ public abstract class AbstractProcessingCommand< R extends RealType< R > & Nativ
             throw new RuntimeException( "Unsupported viewing modality: " + viewingModality );
         }
     }
-
 }

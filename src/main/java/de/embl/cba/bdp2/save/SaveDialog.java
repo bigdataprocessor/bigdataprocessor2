@@ -7,7 +7,7 @@ import de.embl.cba.bdp2.log.progress.ProgressListener;
 import de.embl.cba.bdp2.open.OpenFileType;
 import de.embl.cba.bdp2.macro.MacroRecorder;
 import de.embl.cba.bdp2.utils.DimensionOrder;
-import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import de.embl.cba.bdp2.viewers.ImageViewer;
 import ij.IJ;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 public class SaveDialog< R extends RealType< R > & NativeType< R > > extends JFrame implements ActionListener
 {
-    private final BdvImageViewer viewer;
+    private final ImageViewer viewer;
     private final Image< R > inputImage;
     private final SavingSettings.SaveFileType saveFileType;
 
@@ -67,7 +67,7 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > > extends JFr
     private JPanel mainPanel;
     private ArrayList< JPanel > panels;
 
-    public SaveDialog( BdvImageViewer viewer, SavingSettings.SaveFileType saveFileType )
+    public SaveDialog( ImageViewer viewer, SavingSettings.SaveFileType saveFileType )
     {
         this.viewer = viewer;
         this.inputImage = viewer.getImage();

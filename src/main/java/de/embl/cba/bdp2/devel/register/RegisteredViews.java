@@ -6,7 +6,7 @@ import de.embl.cba.bdp2.utils.IntervalImageViews;
 import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.log.progress.ProgressListener;
 import de.embl.cba.bdp2.utils.DimensionOrder;
-import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import de.embl.cba.bdp2.viewers.ImageViewer;
 import de.embl.cba.bdv.utils.BdvUtils;
 import net.imglib2.FinalInterval;
 import net.imglib2.FinalRealInterval;
@@ -145,7 +145,7 @@ public class RegisteredViews
 	}
 
 	// TODO: put as method into BigDataProcessor2
-	public static void showSIFTVolumeAlignedBdvView( BdvImageViewer imageViewer )
+	public static void showSIFTVolumeAlignedBdvView( ImageViewer imageViewer )
 	{
 		logRegistrationStart();
 
@@ -161,7 +161,7 @@ public class RegisteredViews
 	}
 
 	// TODO: put as method into BigDataProcessor2
-	public static void createAlignedMovieView( BdvImageViewer imageViewer,
+	public static void createAlignedMovieView( ImageViewer imageViewer,
 											   String registrationMethod,
 											   long channel )
 	{
@@ -190,7 +190,7 @@ public class RegisteredViews
 	}
 
 
-	private static double getCurrentPlane( BdvImageViewer imageViewer )
+	private static double getCurrentPlane( ImageViewer imageViewer )
 	{
 		final FinalRealInterval interval =
 				BdvUtils.getViewerGlobalBoundingInterval( imageViewer.getBdvHandle() );

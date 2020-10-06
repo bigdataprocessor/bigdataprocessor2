@@ -14,7 +14,7 @@ import de.embl.cba.bdp2.dialog.DisplaySettings;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.macro.MacroRecorder;
 import de.embl.cba.bdp2.utils.Utils;
-import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import de.embl.cba.bdp2.viewers.ImageViewer;
 import ij.Prefs;
 import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
@@ -47,11 +47,11 @@ public class SplitChipDialog< R extends RealType< R > & NativeType< R > > extend
 	private SelectionUpdateListener updateListener;
 	private JPanel panel;
 	private ArrayList< ModifiableInterval > intervals3D;
-	private BdvImageViewer outputViewer;
+	private ImageViewer outputViewer;
 	private int numChannelsAfterMerge;
 	private ArrayList< OverlayRenderer > overlayRenderers;
 
-	public SplitChipDialog( final BdvImageViewer< R > viewer )
+	public SplitChipDialog( final ImageViewer< R > viewer )
 	{
 		this.viewer = viewer;
 		this.inputImage = viewer.getImage();
@@ -61,7 +61,7 @@ public class SplitChipDialog< R extends RealType< R > & NativeType< R > > extend
 		initIntervals();
 		showIntervalOverlays();
 		showMerge();
-		showDialog( createContent() );
+		createPanel();
 	}
 
 	@Override
@@ -129,14 +129,11 @@ public class SplitChipDialog< R extends RealType< R > & NativeType< R > > extend
 		numChannelsAfterMerge = intervals3D.size();
 	}
 
-	private JPanel createContent()
+	protected void createPanel()
 	{
 		panel = new JPanel();
 		panel.setLayout( new BoxLayout( panel, BoxLayout.PAGE_AXIS ) );
-
 		addRegionSliders();
-
-		return panel;
 	}
 
 	/**

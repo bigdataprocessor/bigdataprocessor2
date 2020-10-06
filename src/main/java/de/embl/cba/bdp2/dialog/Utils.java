@@ -1,8 +1,7 @@
 package de.embl.cba.bdp2.dialog;
 
 import de.embl.cba.bdp2.utils.DimensionOrder;
-import de.embl.cba.bdp2.viewers.BdvImageViewer;
-import de.embl.cba.bdv.utils.BdvUtils;
+import de.embl.cba.bdp2.viewers.ImageViewer;
 import fiji.util.gui.GenericDialogPlus;
 
 import javax.swing.*;
@@ -54,7 +53,7 @@ public class Utils
 		return dirs;
 	}
 
-	public static Integer getChannel( BdvImageViewer imageViewer )
+	public static Integer getChannel( ImageViewer imageViewer )
 	{
 		final GenericDialogPlus gd = new GenericDialogPlus( "Select channel" );
 		final String[] channels = new String[ ( int ) imageViewer.getImage().getRai().dimension( DimensionOrder.C ) ];
@@ -68,7 +67,7 @@ public class Utils
 		return channel;
 	}
 
-	public static void setOutputViewerPosition( BdvImageViewer viewer, BdvImageViewer outputViewer )
+	public static void setOutputViewerPosition( ImageViewer viewer, ImageViewer outputViewer )
 	{
 		JFrame inputViewerFrame = ( JFrame ) SwingUtilities.getWindowAncestor( viewer.getBdvHandle().getViewerPanel() );
 		final int x = inputViewerFrame.getLocationOnScreen().x + inputViewerFrame.getWidth() + 10;

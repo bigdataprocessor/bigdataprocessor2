@@ -6,7 +6,7 @@ import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.open.core.NamingSchemes;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.BigDataProcessor2;
-import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import de.embl.cba.bdp2.viewers.ImageViewer;
 import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
 import net.imglib2.type.NativeType;
@@ -79,7 +79,7 @@ public class LuxendoBatchConvertAndCropCommand< R extends RealType< R > & Native
 
                 image.setVoxelUnit( voxelUnit );
                 image.setVoxelSize( new double[]{ voxelSpacingX, voxelSpacingY, voxelSpacingZ } );
-                final BdvImageViewer viewer = BigDataProcessor2.showImage( image);
+                final ImageViewer viewer = BigDataProcessor2.showImage( image);
 
                 final FinalInterval interval = viewer.getVoxelIntervalXYZCTViaDialog( );
 

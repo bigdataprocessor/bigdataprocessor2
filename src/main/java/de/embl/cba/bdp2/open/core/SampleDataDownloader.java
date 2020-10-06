@@ -3,7 +3,7 @@ package de.embl.cba.bdp2.open.core;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.progress.ProgressListener;
-import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import de.embl.cba.bdp2.viewers.ImageViewer;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -70,7 +70,7 @@ public class SampleDataDownloader
 		this.progressListener = progressListener;
 	}
 
-	public void downloadAndOpen( String datasetName, File outputDirectory, BdvImageViewer viewer )
+	public void downloadAndOpen( String datasetName, File outputDirectory, ImageViewer viewer )
 	{
 		final File download = download( datasetName, outputDirectory );
 

@@ -6,7 +6,7 @@ import de.embl.cba.bdp2.macro.MacroRecorder;
 import de.embl.cba.bdp2.dialog.AbstractProcessingDialog;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
-import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import de.embl.cba.bdp2.viewers.ImageViewer;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -14,7 +14,7 @@ import net.imglib2.type.numeric.RealType;
 import javax.swing.*;
 import java.util.ArrayList;
 
-public class AlignChannelsDialog< T extends RealType< T > & NativeType< T > > extends AbstractProcessingDialog
+public class AlignChannelsDialog< T extends RealType< T > & NativeType< T > > extends AbstractProcessingDialog< T >
 {
 	private ArrayList< BoundedValue > boundedValues;
 	private ArrayList< SliderPanel > sliderPanels;
@@ -24,15 +24,14 @@ public class AlignChannelsDialog< T extends RealType< T > & NativeType< T > > ex
 	private final long numChannels;
 	private ArrayList< long[] > shifts;
 
-	public AlignChannelsDialog( final BdvImageViewer< T > viewer  )
+	public AlignChannelsDialog( final ImageViewer< T > viewer  )
 	{
 		this.viewer = viewer;
 		this.inputImage = viewer.getImage();
 
 		channelShifter = new ChannelShifter( inputImage.getRai() );
 		numChannels = inputImage.getRai().dimension( DimensionOrder.C );
-
-		showDialog( createContent() );
+		createPanel();
 	}
 
 	@Override
@@ -43,7 +42,7 @@ public class AlignChannelsDialog< T extends RealType< T > & NativeType< T > > ex
 		recorder.record();
 	}
 
-	protected JPanel createContent()
+	protected void createPanel()
 	{
 		panel = new JPanel();
 		panel.setLayout( new BoxLayout( panel, BoxLayout.PAGE_AXIS ) );
@@ -55,10 +54,12 @@ public class AlignChannelsDialog< T extends RealType< T > & NativeType< T > > ex
 		final String[] xyz = { "X", "Y", "Z" };
 
 		for ( int c = 0; c < numChannels; c++ )
+		{
 			for ( String axis : xyz )
+			{
 				createValueAndSlider( c, axis );
-
-		return panel;
+			}
+		}
 	}
 
 	private void createValueAndSlider( int c, String axis )

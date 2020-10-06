@@ -31,7 +31,7 @@ import de.embl.cba.bdp2.service.BdvService;
 import de.embl.cba.bdp2.process.transform.TransformCommand;
 import de.embl.cba.bdp2.process.transform.TransformDialog;
 import de.embl.cba.bdp2.utils.DimensionOrder;
-import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import de.embl.cba.bdp2.viewers.ImageViewer;
 import de.embl.cba.tables.FileAndUrlUtils;
 import ij.IJ;
 import net.imglib2.RandomAccessibleInterval;
@@ -44,11 +44,14 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+
+// TODO: Add to Menu
+@Deprecated
 public class BigDataProcessor2MenuActions implements ActionListener {
 
     private  MiscMenu miscMenu;
     private final BigDataProcessor2Menu menu;
-    private BdvImageViewer viewer;
+    private ImageViewer viewer;
     private final ArrayList< JMenu > menus;
 
     public BigDataProcessor2MenuActions()
@@ -59,7 +62,7 @@ public class BigDataProcessor2MenuActions implements ActionListener {
 //        menus.add( miscMenu );
     }
 
-    public void setViewer( BdvImageViewer viewer ){
+    public void setViewer( ImageViewer viewer ){
         this.viewer = viewer;
     }
 
@@ -79,7 +82,7 @@ public class BigDataProcessor2MenuActions implements ActionListener {
     @Override
     public synchronized void actionPerformed(ActionEvent e)
     {
-        final BdvImageViewer activeViewer = BdvService.getActiveViewer();
+        final ImageViewer activeViewer = BdvService.getActiveViewer();
 
         this.viewer = activeViewer;
 
@@ -265,7 +268,7 @@ public class BigDataProcessor2MenuActions implements ActionListener {
         {
             BigDataProcessor2.threadPool.submit(() ->
             {
-                DownloadAndOpenSampleDataCommand.parentBdvImageViewer = viewer;
+                DownloadAndOpenSampleDataCommand.parentImageViewer = viewer;
                 Services.commandService.run( DownloadAndOpenSampleDataCommand.class, true );
             });
         }

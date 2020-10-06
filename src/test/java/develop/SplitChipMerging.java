@@ -5,7 +5,7 @@ import de.embl.cba.bdp2.open.core.FileInfos;
 import de.embl.cba.bdp2.open.core.CachedCellImgCreator;
 import de.embl.cba.bdp2.open.core.NamingSchemes;
 import de.embl.cba.bdp2.process.align.splitchip.SplitChipDialog;
-import de.embl.cba.bdp2.viewers.BdvImageViewer;
+import de.embl.cba.bdp2.viewers.ImageViewer;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
@@ -16,7 +16,7 @@ public class SplitChipMerging
 	{
 		final Image< R > image = openImage();
 
-		final BdvImageViewer< R > viewer = new BdvImageViewer<>( image );
+		final ImageViewer< R > viewer = new ImageViewer<>( image );
 
 		new SplitChipDialog< R >( viewer );
 	}
