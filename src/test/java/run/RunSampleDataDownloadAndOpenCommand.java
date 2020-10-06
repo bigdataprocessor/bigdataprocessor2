@@ -14,8 +14,6 @@ public class RunSampleDataDownloadAndOpenCommand
 
 		new Recorder();
 
-		Services.commandService = ij.command();
-
 		ij.command().run( DownloadAndOpenSampleDataCommand.class, true );
 	}
 }

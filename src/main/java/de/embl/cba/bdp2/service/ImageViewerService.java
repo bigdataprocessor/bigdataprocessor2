@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-public abstract class BdvService
+public abstract class ImageViewerService
 {
 	public static Map< String, ImageViewer > imageNameToBdvImageViewer =
 			Collections.synchronizedMap( new WeakHashMap<>( ) );

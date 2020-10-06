@@ -288,10 +288,10 @@ public class Utils {
 
 	public static void shutDownIfHeadless()
 	{
-		if ( Services.uiService.isHeadless() ) {
+		if ( Services.getUiService().isHeadless() ) {
 			Logger.info( "Headless mode detected: Exiting...." );
 			try {
-				Services.context.dispose();
+				Services.getContext().dispose();
 			}
 			finally {
 				System.exit(1);

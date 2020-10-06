@@ -3,7 +3,7 @@ package de.embl.cba.bdp2.process;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.open.ui.AbstractOpenCommand;
-import de.embl.cba.bdp2.service.BdvService;
+import de.embl.cba.bdp2.service.ImageViewerService;
 import de.embl.cba.bdp2.service.ImageService;
 import de.embl.cba.bdp2.viewers.ImageViewer;
 import net.imglib2.type.NativeType;
@@ -16,11 +16,11 @@ public abstract class AbstractImageProcessingCommand< R extends RealType< R > & 
     public static final String COMMAND_PROCESS_PATH = "Commands>Process>";
 
     @Parameter(label = "Input image")
-    protected Image inputImage = ImageService.imageNameToImage.values().iterator().next();
+    protected Image inputImage; // = ImageService.imageNameToImage.values().iterator().next();
     public static final String INPUT_IMAGE_PARAMETER = "inputImage";
 
     @Parameter(label = "Output image name")
-    protected String outputImageName = ImageService.imageNameToImage.keySet().iterator().next();
+    protected String outputImageName; // = ImageService.imageNameToImage.keySet().iterator().next();
     public static final String OUTPUT_IMAGE_NAME_PARAMETER = "outputImageName";
 
     @Parameter(label = "Output image handling", choices = {
@@ -48,7 +48,7 @@ public abstract class AbstractImageProcessingCommand< R extends RealType< R > & 
         }
         else if ( viewingModality.equals( AbstractOpenCommand.SHOW_IN_CURRENT_VIEWER ))
         {
-            final ImageViewer viewer = BdvService.imageNameToBdvImageViewer.get( inputImage.getName() );
+            final ImageViewer viewer = ImageViewerService.imageNameToBdvImageViewer.get( inputImage.getName() );
             viewer.replaceImage( outputImage, autoContrast, keepViewerTransform );
             return viewer;
         }

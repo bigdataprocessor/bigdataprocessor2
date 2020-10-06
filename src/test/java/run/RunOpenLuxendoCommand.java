@@ -14,8 +14,6 @@ public class RunOpenLuxendoCommand
 
 		new Recorder();
 
-		Services.commandService = ij.command();
-
 		ij.command().run( OpenLuxendoCommand.class, true );
 	}
 }

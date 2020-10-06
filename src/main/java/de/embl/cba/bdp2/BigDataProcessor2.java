@@ -1,11 +1,11 @@
 package de.embl.cba.bdp2;
 
+import de.embl.cba.bdp2.process.convert.MultiChannelUnsignedByteTypeConverter;
 import de.embl.cba.bdp2.process.track.Track;
 import de.embl.cba.bdp2.process.track.TrackApplier;
 import de.embl.cba.bdp2.process.track.Tracks;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.process.bin.Binner;
-import de.embl.cba.bdp2.process.convert.singlechannel.UnsignedByteTypeConversionDialog;
 import de.embl.cba.bdp2.process.crop.Cropper;
 import de.embl.cba.bdp2.open.ChannelSubsetter;
 import de.embl.cba.bdp2.open.core.CachedCellImgCreator;
@@ -16,7 +16,7 @@ import de.embl.cba.bdp2.log.progress.Progress;
 import de.embl.cba.bdp2.log.progress.ProgressListener;
 import de.embl.cba.bdp2.save.*;
 import de.embl.cba.bdp2.process.align.channelshift.ChannelShifter;
-import de.embl.cba.bdp2.service.BdvService;
+import de.embl.cba.bdp2.service.ImageViewerService;
 import de.embl.cba.bdp2.process.transform.ImageTransformer;
 import de.embl.cba.bdp2.viewers.ImageViewer;
 import loci.common.DebugTools;
@@ -29,6 +29,7 @@ import net.imglib2.view.Views;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -110,7 +111,6 @@ public class BigDataProcessor2
         FileInfos fileInfos = new FileInfos( directory, loadingScheme, filterPattern, hdf5DataSetName, channelSubsetter );
 
         final Image< R > image = CachedCellImgCreator.loadImage( fileInfos );
-
         return image;
     }
 
@@ -139,9 +139,11 @@ public class BigDataProcessor2
         return saver;
     }
 
-    public static < R extends RealType< R > & NativeType< R > > Image< R > convertToUnsignedByte( Image< R > image, double mapTo0, double mapTo255 )
+    public static < R extends RealType< R > & NativeType< R > > Image< R > convertToUnsignedByteType( Image< R > image, List< double[] > contrastLimits )
     {
-        return UnsignedByteTypeConversionDialog.convert( image, mapTo0, mapTo255 );
+        MultiChannelUnsignedByteTypeConverter< R > converter = new MultiChannelUnsignedByteTypeConverter<>( image, contrastLimits );
+
+        return converter.getConvertedImage();
     }
 
     public static void calibrate( Image image, double[] doubles, String voxelUnit )
@@ -182,7 +184,7 @@ public class BigDataProcessor2
     {
         final ImageViewer viewer = showImage( image, false );
 
-        final ImageViewer inputImageViewer = BdvService.imageNameToBdvImageViewer.get( parentImage.getName() );
+        final ImageViewer inputImageViewer = ImageViewerService.imageNameToBdvImageViewer.get( parentImage.getName() );
         if ( inputImageViewer != null )
                 viewer.setDisplaySettings( inputImageViewer.getDisplaySettings() );
 

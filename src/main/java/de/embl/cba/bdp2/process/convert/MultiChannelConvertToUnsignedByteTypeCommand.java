@@ -12,7 +12,7 @@ import org.scijava.plugin.Plugin;
 
 import java.util.ArrayList;
 
-@Plugin(type = Command.class, menuPath = de.embl.cba.bdp2.dialog.Utils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractImageProcessingCommand.COMMAND_PROCESS_PATH + MultiChannelConvertToUnsignedByteTypeCommand.COMMAND_FULL_NAME )
+@Plugin(type = AbstractImageProcessingCommand.class, name = MultiChannelConvertToUnsignedByteTypeCommand.COMMAND_NAME, menuPath = de.embl.cba.bdp2.dialog.Utils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractImageProcessingCommand.COMMAND_PROCESS_PATH + MultiChannelConvertToUnsignedByteTypeCommand.COMMAND_FULL_NAME )
 public class MultiChannelConvertToUnsignedByteTypeCommand< R extends RealType< R > & NativeType< R > > extends AbstractImageProcessingCommand< R >
 {
     public static final String COMMAND_NAME = "Convert to 8-Bit...";

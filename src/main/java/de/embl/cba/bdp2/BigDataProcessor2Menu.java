@@ -1,18 +1,28 @@
 package de.embl.cba.bdp2;
 
+import de.embl.cba.bdp2.process.AbstractImageProcessingCommand;
 import de.embl.cba.bdp2.process.bin.BinCommand;
 import de.embl.cba.bdp2.process.calibrate.CalibrateCommand;
 import de.embl.cba.bdp2.open.ui.DownloadAndOpenSampleDataCommand;
 import de.embl.cba.bdp2.process.convert.MultiChannelConvertToUnsignedByteTypeCommand;
+import de.embl.cba.bdp2.process.crop.CropCommand;
 import de.embl.cba.bdp2.process.track.ApplyTrackCommand;
 import de.embl.cba.bdp2.process.rename.ImageRenameCommand;
 import de.embl.cba.bdp2.process.align.channelshift.AlignChannelsCommand;
 import de.embl.cba.bdp2.process.align.splitchip.SplitChipCommand;
 import de.embl.cba.bdp2.open.ui.*;
 import de.embl.cba.bdp2.process.transform.TransformCommand;
+import de.embl.cba.bdp2.scijava.Services;
+import de.embl.cba.bdp2.service.ImageViewerService;
+import de.embl.cba.bdp2.utils.PluginProvider;
+import de.embl.cba.bdp2.viewers.ImageViewer;
+import ij.IJ;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.List;
 
 public class BigDataProcessor2Menu extends JMenu
 {
@@ -74,22 +84,15 @@ public class BigDataProcessor2Menu extends JMenu
         addMenuItem( openMenu, OpenLeicaDSLTiffPlanesCommand.COMMAND_NAME );
 
         final JMenu processMenu = addMenu( "Process" );
-        // TODO: auto-populate
         menus.add( processMenu );
-        addMenuItem( processMenu, ImageRenameCommand.COMMAND_NAME );
-        addMenuItem( processMenu, CalibrateCommand.COMMAND_NAME );
+
+        populateProcessMenu( processMenu );
 
         final JMenu correctDriftMenu = new JMenu( "Correct Drift" );
         processMenu.add( correctDriftMenu );
         addMenuItem( correctDriftMenu, CREATE_TRACK );
         addMenuItem( correctDriftMenu, ApplyTrackCommand.COMMAND_NAME );
 
-        addMenuItem( processMenu, CROP );
-        addMenuItem( processMenu, TransformCommand.COMMAND_NAME );
-        addMenuItem( processMenu, BinCommand.COMMAND_NAME );
-        addMenuItem( processMenu, MultiChannelConvertToUnsignedByteTypeCommand.COMMAND_NAME );
-        addMenuItem( processMenu, AlignChannelsCommand.COMMAND_NAME );
-        addMenuItem( processMenu, SplitChipCommand.COMMAND_NAME );
 //        addMenuItem( OBLIQUE_MENU_ITEM );
 
         final JMenu saveMenu = addMenu( "Save" );
@@ -102,6 +105,28 @@ public class BigDataProcessor2Menu extends JMenu
         menus.add( miscMenu );
         addMenuItem( miscMenu, IMAGEJ_VIEW_MENU_ITEM );
         addMenuItem( miscMenu, DEBUG_MENU_ITEM );
+    }
+
+    public void populateProcessMenu( JMenu processMenu )
+    {
+        PluginProvider< AbstractImageProcessingCommand > pluginProvider = new PluginProvider<>( AbstractImageProcessingCommand.class );
+        pluginProvider.setContext( Services.getContext() );
+        List< String > names = pluginProvider.getNames();
+
+        for ( String name : names )
+        {
+            addMenuItemAndProcessingAction( processMenu, name, pluginProvider.getInstance( name ) );
+        }
+
+        // TODO: auto-populate as much as possible
+        addMenuItem( processMenu, ImageRenameCommand.COMMAND_NAME );
+        addMenuItem( processMenu, CalibrateCommand.COMMAND_NAME );
+        addMenuItem( processMenu, CropCommand.COMMAND_NAME );
+        addMenuItem( processMenu, TransformCommand.COMMAND_NAME );
+        addMenuItem( processMenu, BinCommand.COMMAND_NAME );
+        addMenuItem( processMenu, MultiChannelConvertToUnsignedByteTypeCommand.COMMAND_NAME );
+        addMenuItem( processMenu, AlignChannelsCommand.COMMAND_NAME );
+        addMenuItem( processMenu, SplitChipCommand.COMMAND_NAME );
     }
 
     public ArrayList< JMenu > getMenus()
@@ -128,6 +153,25 @@ public class BigDataProcessor2Menu extends JMenu
     {
         JMenuItem jMenuItem = new JMenuItem( name );
         jMenuItem.addActionListener( menuActions );
+        jMenu.add( jMenuItem );
+        return jMenuItem;
+    }
+
+    private JMenuItem addMenuItemAndProcessingAction( JMenu jMenu, String name, AbstractImageProcessingCommand< ? > processingCommand )
+    {
+        JMenuItem jMenuItem = new JMenuItem( name );
+        jMenuItem.addActionListener( e -> {
+
+            ImageViewer activeViewer = ImageViewerService.getActiveViewer();
+
+            if ( activeViewer == null )
+            {
+                IJ.showMessage( "No image selected.\n\nPlease select an image by either\n- clicking on an existing BigDataViewer window, or\n- open a new image using the [ BigDataProcessor2 > Open ] menu." );
+                return;
+            }
+
+            processingCommand.showDialog( activeViewer );
+        } );
         jMenu.add( jMenuItem );
         return jMenuItem;
     }

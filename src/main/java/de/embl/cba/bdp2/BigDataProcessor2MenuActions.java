@@ -8,7 +8,6 @@ import de.embl.cba.bdp2.process.convert.MultiChannelConvertToUnsignedByteTypeCom
 import de.embl.cba.bdp2.process.convert.MultiChannelUnsignedByteTypeConversionDialog;
 import de.embl.cba.bdp2.process.crop.CropDialog;
 import de.embl.cba.bdp2.open.ui.DownloadAndOpenSampleDataCommand;
-import de.embl.cba.bdp2.dialog.MiscMenu;
 import de.embl.cba.bdp2.dialog.Utils;
 import de.embl.cba.bdp2.process.track.ApplyTrackCommand;
 import de.embl.cba.bdp2.process.track.ApplyTrackDialog;
@@ -27,7 +26,7 @@ import de.embl.cba.bdp2.process.align.splitchip.SplitChipDialog;
 import de.embl.cba.bdp2.process.align.channelshift.AlignChannelsDialog;
 import de.embl.cba.bdp2.devel.register.RegisteredViews;
 import de.embl.cba.bdp2.devel.register.Registration;
-import de.embl.cba.bdp2.service.BdvService;
+import de.embl.cba.bdp2.service.ImageViewerService;
 import de.embl.cba.bdp2.process.transform.TransformCommand;
 import de.embl.cba.bdp2.process.transform.TransformDialog;
 import de.embl.cba.bdp2.utils.DimensionOrder;
@@ -44,12 +43,8 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-
-// TODO: Add to Menu
-@Deprecated
 public class BigDataProcessor2MenuActions implements ActionListener {
 
-    private  MiscMenu miscMenu;
     private final BigDataProcessor2Menu menu;
     private ImageViewer viewer;
     private final ArrayList< JMenu > menus;
@@ -58,8 +53,6 @@ public class BigDataProcessor2MenuActions implements ActionListener {
     {
         menu = new BigDataProcessor2Menu(this);
         menus = menu.getMenus();
-//        miscMenu = new MiscMenu(this); // TODO: rethink the Misc Menu, probably move to BDP2
-//        menus.add( miscMenu );
     }
 
     public void setViewer( ImageViewer viewer ){
@@ -71,18 +64,10 @@ public class BigDataProcessor2MenuActions implements ActionListener {
         return menus;
     }
 
-    public List< JMenu > getMainMenus()
-    {
-        List<JMenu> jMenuList = new ArrayList<>();
-        jMenuList.add( menu );
-        jMenuList.add( miscMenu );
-        return jMenuList;
-    }
-
     @Override
     public synchronized void actionPerformed(ActionEvent e)
     {
-        final ImageViewer activeViewer = BdvService.getActiveViewer();
+        final ImageViewer activeViewer = ImageViewerService.getActiveViewer();
 
         this.viewer = activeViewer;
 
@@ -124,7 +109,7 @@ public class BigDataProcessor2MenuActions implements ActionListener {
         else if (e.getActionCommand().equalsIgnoreCase( BigDataProcessor2Menu.SAVE_AS_TIFF_VOLUMES_MENU_ITEM ))
         {
             BigDataProcessor2.threadPool.submit(() -> {
-                if (! isImageSelected() ) return;
+                if (! isImageSelected( viewer ) ) return;
                 SaveDialog saveDialog = new SaveDialog( viewer, SavingSettings.SaveFileType.TIFF_VOLUMES );
                 saveDialog.setVisible(true);
             });
@@ -132,7 +117,7 @@ public class BigDataProcessor2MenuActions implements ActionListener {
         else if (e.getActionCommand().equalsIgnoreCase( BigDataProcessor2Menu.SAVE_AS_TIFF_PLANES_MENU_ITEM ))
         {
             BigDataProcessor2.threadPool.submit(() -> {
-                if (! isImageSelected() ) return;
+                if (! isImageSelected( viewer ) ) return;
                 SaveDialog saveDialog = new SaveDialog( viewer, SavingSettings.SaveFileType.TIFF_PLANES );
                 saveDialog.setVisible(true);
             });
@@ -140,7 +125,7 @@ public class BigDataProcessor2MenuActions implements ActionListener {
         else if (e.getActionCommand().equalsIgnoreCase( CalibrateCommand.COMMAND_NAME ))
         {
             BigDataProcessor2.threadPool.submit(() -> {
-                if (! isImageSelected() ) return;
+                if (! isImageSelected( viewer ) ) return;
                 new CalibrationDialog< >( viewer ).showDialog();
             });
         }
@@ -153,14 +138,14 @@ public class BigDataProcessor2MenuActions implements ActionListener {
         else if (e.getActionCommand().equalsIgnoreCase( BigDataProcessor2Menu.CREATE_TRACK ))
         {
             BigDataProcessor2.threadPool.submit(() -> {
-                if (! isImageSelected() ) return;
+                if (! isImageSelected( viewer ) ) return;
                 new TrackCreator( viewer, "track" );
             });
         }
         else if (e.getActionCommand().equalsIgnoreCase( ApplyTrackCommand.COMMAND_NAME ))
         {
             BigDataProcessor2.threadPool.submit(() -> {
-                if (! isImageSelected() ) return;
+                if (! isImageSelected( viewer ) ) return;
                 new ApplyTrackDialog( viewer );
             });
         }
@@ -168,7 +153,7 @@ public class BigDataProcessor2MenuActions implements ActionListener {
         {
             BigDataProcessor2.threadPool.submit(() ->
 			{
-                if (! isImageSelected() ) return;
+                if (! isImageSelected( viewer ) ) return;
                 Integer channel = Utils.getChannel( viewer );
                 if ( channel == null ) return;
                 RegisteredViews.showSIFTVolumeAlignedBdvView( viewer );
@@ -177,7 +162,7 @@ public class BigDataProcessor2MenuActions implements ActionListener {
         else if (e.getActionCommand().equalsIgnoreCase( BigDataProcessor2Menu.REGISTER_MOVIE_SIFT_MENU_ITEM ))
         {
             BigDataProcessor2.threadPool.submit(() -> {
-                if (! isImageSelected() ) return;
+                if (! isImageSelected( viewer ) ) return;
                 Integer channel = Utils.getChannel( viewer );
                 if ( channel == null ) return;
                 RegisteredViews.createAlignedMovieView( viewer, Registration.SIFT_CORRESPONDENCES, channel );
@@ -186,7 +171,7 @@ public class BigDataProcessor2MenuActions implements ActionListener {
         else if (e.getActionCommand().equalsIgnoreCase( BigDataProcessor2Menu.REGISTER_MOVIE_PHASE_CORRELATION_MENU_ITEM ))
         {
             BigDataProcessor2.threadPool.submit(() -> {
-                if (! isImageSelected() ) return;
+                if (! isImageSelected( viewer ) ) return;
                 Integer channel = Utils.getChannel( viewer );
                 if ( channel == null ) return;
                 RegisteredViews.createAlignedMovieView( viewer, Registration.PHASE_CORRELATION, 0 );
@@ -195,14 +180,14 @@ public class BigDataProcessor2MenuActions implements ActionListener {
         else if(e.getActionCommand().equalsIgnoreCase( BigDataProcessor2Menu.CROP ))
         {
             BigDataProcessor2.threadPool.submit(() -> {
-                if (! isImageSelected() ) return;
+                if (! isImageSelected( viewer ) ) return;
                 new CropDialog<>( viewer );
             });
         }
         else if(e.getActionCommand().equalsIgnoreCase( BigDataProcessor2Menu.IMAGEJ_VIEW_MENU_ITEM ))
         {
             BigDataProcessor2.threadPool.submit(() -> {
-                if (! isImageSelected() ) return;
+                if (! isImageSelected( viewer ) ) return;
                 // TODO:
                 // - make own class
                 // - add calibration
@@ -214,7 +199,7 @@ public class BigDataProcessor2MenuActions implements ActionListener {
         {
             BigDataProcessor2.threadPool.submit(() ->
 			{
-                if (! isImageSelected() ) return;
+                if (! isImageSelected( viewer ) ) return;
                 new MultiChannelUnsignedByteTypeConversionDialog<>( viewer );
             });
         }
@@ -222,7 +207,7 @@ public class BigDataProcessor2MenuActions implements ActionListener {
         {
             BigDataProcessor2.threadPool.submit(() ->
             {
-                if (! isImageSelected() ) return;
+                if (! isImageSelected( viewer ) ) return;
                 new BinDialog<>( viewer );
             });
         }
@@ -230,7 +215,7 @@ public class BigDataProcessor2MenuActions implements ActionListener {
         {
             BigDataProcessor2.threadPool.submit(() ->
             {
-                if (! isImageSelected() ) return;
+                if (! isImageSelected( viewer ) ) return;
                 new AlignChannelsDialog<>( viewer );
             });
         }
@@ -238,7 +223,7 @@ public class BigDataProcessor2MenuActions implements ActionListener {
         {
             BigDataProcessor2.threadPool.submit(() ->
             {
-                if (! isImageSelected() ) return;
+                if (! isImageSelected( viewer ) ) return;
                 new SplitChipDialog( viewer );
             });
         }
@@ -253,7 +238,7 @@ public class BigDataProcessor2MenuActions implements ActionListener {
         {
             BigDataProcessor2.threadPool.submit(() ->
             {
-                if (! isImageSelected() ) return;
+                if (! isImageSelected( viewer ) ) return;
                 new ImageRenameDialog<>( viewer );
             });
         }
@@ -261,7 +246,7 @@ public class BigDataProcessor2MenuActions implements ActionListener {
         {
             BigDataProcessor2.threadPool.submit(() ->
             {
-                Services.commandService.run( OpenCustomHelpCommand.class, true );
+                Services.getCommandService().run( OpenCustomHelpCommand.class, true );
             });
         }
         else if( e.getActionCommand().equalsIgnoreCase( DownloadAndOpenSampleDataCommand.COMMAND_NAME ) )
@@ -269,7 +254,7 @@ public class BigDataProcessor2MenuActions implements ActionListener {
             BigDataProcessor2.threadPool.submit(() ->
             {
                 DownloadAndOpenSampleDataCommand.parentImageViewer = viewer;
-                Services.commandService.run( DownloadAndOpenSampleDataCommand.class, true );
+                Services.getCommandService().run( DownloadAndOpenSampleDataCommand.class, true );
             });
         }
         else if( e.getActionCommand().equalsIgnoreCase( OpenEMTiffPlanesCommand.COMMAND_NAME ) )
@@ -277,7 +262,7 @@ public class BigDataProcessor2MenuActions implements ActionListener {
             BigDataProcessor2.threadPool.submit(() ->
             {
                 OpenEMTiffPlanesCommand.parentViewer = viewer;
-                Services.commandService.run( OpenEMTiffPlanesCommand.class, true );
+                Services.getCommandService().run( OpenEMTiffPlanesCommand.class, true );
             });
         }
         else if( e.getActionCommand().equalsIgnoreCase( OpenCustomCommand.COMMAND_NAME ) )
@@ -285,7 +270,7 @@ public class BigDataProcessor2MenuActions implements ActionListener {
             BigDataProcessor2.threadPool.submit(() ->
             {
                 AbstractOpenCommand.parentViewer = viewer;
-                Services.commandService.run( OpenCustomCommand.class, true );
+                Services.getCommandService().run( OpenCustomCommand.class, true );
             });
         }
         else if( e.getActionCommand().equalsIgnoreCase( OpenLeicaDSLTiffPlanesCommand.COMMAND_NAME ) )
@@ -293,7 +278,7 @@ public class BigDataProcessor2MenuActions implements ActionListener {
             BigDataProcessor2.threadPool.submit(() ->
             {
                 AbstractOpenCommand.parentViewer = viewer;
-                Services.commandService.run( OpenLeicaDSLTiffPlanesCommand.class, true );
+                Services.getCommandService().run( OpenLeicaDSLTiffPlanesCommand.class, true );
             });
         }
         else if( e.getActionCommand().equalsIgnoreCase( OpenLuxendoCommand.COMMAND_NAME ) )
@@ -301,14 +286,14 @@ public class BigDataProcessor2MenuActions implements ActionListener {
             BigDataProcessor2.threadPool.submit(() ->
             {
                 AbstractOpenCommand.parentViewer = viewer;
-                Services.commandService.run( OpenLuxendoCommand.class, true );
+                Services.getCommandService().run( OpenLuxendoCommand.class, true );
             });
         }
         else if( e.getActionCommand().equalsIgnoreCase( TransformCommand.COMMAND_NAME ) )
         {
             BigDataProcessor2.threadPool.submit(() ->
             {
-                if (! isImageSelected() ) return;
+                if (! isImageSelected( viewer ) ) return;
                 new TransformDialog<>( viewer );
             });
         }
@@ -322,7 +307,7 @@ public class BigDataProcessor2MenuActions implements ActionListener {
 
     }
 
-    private boolean isImageSelected()
+    private boolean isImageSelected( ImageViewer viewer )
     {
         if ( viewer == null )
         {

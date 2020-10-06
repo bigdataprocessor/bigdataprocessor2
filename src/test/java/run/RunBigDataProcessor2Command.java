@@ -14,8 +14,6 @@ public class RunBigDataProcessor2Command
 
 		new Recorder();
 
-		Services.commandService = ij.command();
-
 		ij.command().run( BigDataProcessor2Command.class, true );
 	}
 }

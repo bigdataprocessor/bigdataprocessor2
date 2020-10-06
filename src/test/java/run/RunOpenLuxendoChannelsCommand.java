@@ -15,8 +15,6 @@ public class RunOpenLuxendoChannelsCommand
 
 		new Recorder();
 
-		Services.commandService = ij.command();
-
 		ij.command().run( OpenLuxendoChannelsCommand.class, true );
 	}
 }

@@ -17,7 +17,6 @@ public class DevelopManualDriftCorrectionMicroglia
     {
         final ImageJ imageJ = new ImageJ();
         imageJ.ui().showUI();
-        Services.commandService = imageJ.command();
 
         new Recorder();
 

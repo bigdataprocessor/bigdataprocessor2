@@ -19,7 +19,7 @@ public class QuitCommand< R extends RealType< R > & NativeType< R > > implements
     {
         Logger.info( "Shutting down...." );
         try {
-            Services.context.dispose();
+            Services.getContext().dispose();
         }
         finally {
             System.exit(1);

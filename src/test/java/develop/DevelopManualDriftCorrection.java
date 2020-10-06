@@ -16,7 +16,6 @@ public class DevelopManualDriftCorrection
     {
         final ImageJ imageJ = new ImageJ();
         imageJ.ui().showUI();
-        Services.commandService = imageJ.command();
 
         final String directory = "/Users/tischer/Documents/bigdataprocessor2/src/test/resources/test/tiff-nc2-nt6";
 

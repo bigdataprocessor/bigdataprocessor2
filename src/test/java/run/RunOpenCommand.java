@@ -14,8 +14,7 @@ public class RunOpenCommand
 
 		new Recorder();
 
-		Services.commandService = ij.command();
-
-		Services.commandService.run( OpenCustomCommand.class, true );
+		Services.setCommandService( ij.command() );
+		Services.getCommandService().run( OpenCustomCommand.class, true );
 	}
 }

@@ -58,10 +58,10 @@ public class Progress
                         "In case of an out-of-memory error, please increase the RAM and/or " +
                         "reduce the number of threads.";
 
-                if ( Services.uiService.isHeadless()) {
+                if ( Services.getUiService().isHeadless()) {
                     Logger.info( msg + "\nError in headless mode: exiting..." );
                     try {
-                        Services.context.dispose();
+                        Services.getContext().dispose();
                     }
                     finally {
                         System.exit(1);

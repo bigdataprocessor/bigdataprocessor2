@@ -14,7 +14,7 @@ public class RunOpenLeicaDSLTiffPlanesCommand
 
 		new Recorder();
 
-		Services.commandService = ij.command();
+		Services.setCommandService( ij.command() );
 
 		ij.command().run( OpenLeicaDSLTiffPlanesCommand.class, true );
 	}

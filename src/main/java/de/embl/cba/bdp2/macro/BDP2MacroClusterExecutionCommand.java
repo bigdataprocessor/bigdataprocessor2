@@ -132,7 +132,7 @@ public class BDP2MacroClusterExecutionCommand extends AbstractClusterSubmitterCo
 		final ImageJ ij = new ImageJ();
 		ij.ui().showUI();
 
-		Services.commandService = ij.command();
+		Services.setCommandService( ij.command() );
 		ij.command().run( BDP2MacroClusterExecutionCommand.class, true );
 	}
 

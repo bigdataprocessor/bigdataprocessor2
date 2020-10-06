@@ -28,9 +28,6 @@ public class DownloadAndOpenSampleDataCommand< R extends RealType< R > & NativeT
     public static final String COMMAND_FULL_NAME = COMMAND_BDP2_PREFIX + COMMAND_NAME;
     public static ImageViewer parentImageViewer;
 
-    @Parameter
-    CommandService commandService;
-
     @Parameter (label="Sample data", choices={ MINIMAL_SYNTHETIC, DUAL_COLOR_MOUSE  })
     String sampleDataName = MINIMAL_SYNTHETIC;
 
@@ -39,8 +36,6 @@ public class DownloadAndOpenSampleDataCommand< R extends RealType< R > & NativeT
 
     public void run()
     {
-        Services.commandService = commandService;
-
         final SampleDataDownloader downloader = new SampleDataDownloader();
         downloader.setProgressListener( new ProgressBar( "Downloading...") );
         new Thread( () -> {

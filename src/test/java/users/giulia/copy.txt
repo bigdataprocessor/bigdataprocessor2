@@ -1,2 +1,0 @@
-cp /Applications/Fiji.app/jars/fiji-plugin-bigDataProcessor2-0.3.1.jar /Volumes/emcf/Mizzon/software/Fiji.app/jars/
-

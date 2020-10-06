@@ -120,5 +120,4 @@ public class BinDialog< R extends RealType< R > & NativeType< R > > extends Abst
 			panel.add( sliderPanels.get( d ) );
 		}
 	}
-
 }

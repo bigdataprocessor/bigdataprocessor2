@@ -12,9 +12,8 @@ import de.embl.cba.bdp2.dialog.DisplaySettings;
 import de.embl.cba.bdp2.dialog.Utils;
 import de.embl.cba.bdp2.process.track.Track;
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.service.BdvService;
+import de.embl.cba.bdp2.service.ImageViewerService;
 import de.embl.cba.bdp2.service.ImageService;
-import de.embl.cba.bdp2.BigDataProcessor2MenuActions;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.volatiles.VolatileCachedCellImgs;
 import de.embl.cba.bdv.utils.BdvUtils;
@@ -186,21 +185,6 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
         }
     }
 
-    public void addMenus( BigDataProcessor2MenuActions menuActions )
-    {
-        menuActions.setViewer(this);
-
-        final BdvHandleFrame bdvHandleFrame = ( BdvHandleFrame ) this.bdvHandle;
-        final JMenuBar bdvMenuBar = bdvHandleFrame.getBigDataViewer().getViewerFrame().getJMenuBar();
-
-        for ( JMenu menu : menuActions.getMainMenus() )
-        {
-            bdvMenuBar.add( menu );
-        }
-
-        bdvMenuBar.updateUI();
-    }
-
     public void setDisplaySettings( double min, double max, int channel )
     {
         setDisplaySettings( min, max, null, channel );
@@ -362,7 +346,7 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
     {
         this.image = image;
 
-        BdvService.imageNameToBdvImageViewer.put( image.getName(), this );
+        ImageViewerService.imageNameToBdvImageViewer.put( image.getName(), this );
         ImageService.imageNameToImage.put( image.getName(), image );
 
         addToBdv( image );
@@ -375,7 +359,7 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
             new Thread( () -> autoContrast() ).start();
 
         JFrame topFrame = setWindowTitle( image );
-        BdvService.setFocusedViewer( this );
+        ImageViewerService.setFocusedViewer( this );
         addFocusListener( topFrame );
     }
 
@@ -395,14 +379,14 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
             public void windowClosed( WindowEvent e )
             {
                 super.windowClosed( e );
-                BdvService.setFocusedViewer( null );
+                ImageViewerService.setFocusedViewer( null );
             }
 
             @Override
             public void windowActivated( WindowEvent e )
             {
                 super.windowActivated( e );
-                BdvService.setFocusedViewer( viewer );
+                ImageViewerService.setFocusedViewer( viewer );
             }
         } );
     }

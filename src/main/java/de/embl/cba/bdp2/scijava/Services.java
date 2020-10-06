@@ -7,9 +7,9 @@ import org.scijava.ui.UIService;
 
 public class Services
 {
-	public static CommandService commandService;
-	public static UIService uiService;
-	public static Context context;
+	private static CommandService commandService;
+	private static UIService uiService;
+	private static Context context;
 
 	public static void setCommandService( CommandService commandService )
 	{
@@ -31,5 +31,20 @@ public class Services
 	{
 		System.out.println( "Setting SciJava context.");
 		Services.context = context;
+	}
+
+	public static CommandService getCommandService()
+	{
+		return commandService;
+	}
+
+	public static UIService getUiService()
+	{
+		return uiService;
+	}
+
+	public static Context getContext()
+	{
+		return context;
 	}
 }

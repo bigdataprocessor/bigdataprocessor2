@@ -12,7 +12,6 @@ public abstract class AbstractProcessingDialog< R extends RealType< R > & Native
 	protected ImageViewer< R > viewer;
 	protected Image< R > inputImage;
 	protected Image< R > outputImage;
-	protected JPanel panel;
 
 	public AbstractProcessingDialog( )
 	{
