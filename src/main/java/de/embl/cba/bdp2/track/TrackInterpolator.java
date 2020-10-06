@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.process.track;
+package de.embl.cba.bdp2.track;
 
 import net.imglib2.util.LinAlgHelpers;
 

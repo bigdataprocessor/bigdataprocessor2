@@ -1,6 +1,6 @@
 package develop;
 
-import de.embl.cba.bdp2.process.track.TrackingSettings;
+import de.embl.cba.bdp2.track.TrackingSettings;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewers.ImageViewer;
 import de.embl.cba.bdp2.utils.Point3D;

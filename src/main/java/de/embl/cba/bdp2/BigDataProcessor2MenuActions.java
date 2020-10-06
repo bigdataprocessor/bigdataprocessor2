@@ -9,9 +9,9 @@ import de.embl.cba.bdp2.process.convert.MultiChannelUnsignedByteTypeConversionDi
 import de.embl.cba.bdp2.process.crop.CropDialog;
 import de.embl.cba.bdp2.open.ui.DownloadAndOpenSampleDataCommand;
 import de.embl.cba.bdp2.dialog.Utils;
-import de.embl.cba.bdp2.process.track.ApplyTrackCommand;
-import de.embl.cba.bdp2.process.track.ApplyTrackDialog;
-import de.embl.cba.bdp2.process.track.TrackCreator;
+import de.embl.cba.bdp2.track.ApplyTrackCommand;
+import de.embl.cba.bdp2.track.ApplyTrackDialog;
+import de.embl.cba.bdp2.track.TrackCreator;
 import de.embl.cba.bdp2.process.rename.ImageRenameCommand;
 import de.embl.cba.bdp2.process.rename.ImageRenameDialog;
 import de.embl.cba.bdp2.log.Logger;

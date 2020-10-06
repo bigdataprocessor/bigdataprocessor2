@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.process.track;
+package de.embl.cba.bdp2.track;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;

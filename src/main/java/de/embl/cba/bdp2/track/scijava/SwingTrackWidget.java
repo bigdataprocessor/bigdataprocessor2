@@ -1,7 +1,7 @@
-package de.embl.cba.bdp2.process.track.scijava;
+package de.embl.cba.bdp2.track.scijava;
 
-import de.embl.cba.bdp2.process.track.Track;
-import de.embl.cba.bdp2.process.track.TrackManager;
+import de.embl.cba.bdp2.track.Track;
+import de.embl.cba.bdp2.track.TrackManager;
 import org.scijava.Priority;
 import org.scijava.object.ObjectService;
 import org.scijava.plugin.Parameter;

@@ -1,9 +1,9 @@
 package de.embl.cba.bdp2;
 
 import de.embl.cba.bdp2.process.convert.MultiChannelUnsignedByteTypeConverter;
-import de.embl.cba.bdp2.process.track.Track;
-import de.embl.cba.bdp2.process.track.TrackApplier;
-import de.embl.cba.bdp2.process.track.Tracks;
+import de.embl.cba.bdp2.track.Track;
+import de.embl.cba.bdp2.track.TrackApplier;
+import de.embl.cba.bdp2.track.Tracks;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.process.bin.Binner;
 import de.embl.cba.bdp2.process.crop.Cropper;

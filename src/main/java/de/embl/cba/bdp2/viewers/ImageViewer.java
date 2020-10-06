@@ -10,7 +10,7 @@ import bdv.viewer.SourceAndConverter;
 import de.embl.cba.bdp2.boundingbox.BoundingBoxDialog;
 import de.embl.cba.bdp2.dialog.DisplaySettings;
 import de.embl.cba.bdp2.dialog.Utils;
-import de.embl.cba.bdp2.process.track.Track;
+import de.embl.cba.bdp2.track.Track;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.service.ImageViewerService;
 import de.embl.cba.bdp2.service.ImageService;

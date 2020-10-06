@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.process.track;
+package de.embl.cba.bdp2.track;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.utils.IntervalImageViews;

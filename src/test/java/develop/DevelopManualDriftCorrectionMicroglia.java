@@ -1,9 +1,8 @@
 package develop;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
-import de.embl.cba.bdp2.process.track.TrackCreator;
+import de.embl.cba.bdp2.track.TrackCreator;
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.scijava.Services;
 import de.embl.cba.bdp2.viewers.ImageViewer;
 import ij.plugin.frame.Recorder;
 import net.imagej.ImageJ;

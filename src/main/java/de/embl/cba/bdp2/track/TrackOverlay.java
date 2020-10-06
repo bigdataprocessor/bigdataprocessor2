@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.process.track;
+package de.embl.cba.bdp2.track;
 
 import bdv.util.BdvHandle;
 import bdv.util.BdvOverlay;
