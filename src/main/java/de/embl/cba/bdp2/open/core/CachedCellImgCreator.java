@@ -1,5 +1,8 @@
 package de.embl.cba.bdp2.open.core;
 
+import bdv.viewer.Source;
+import ch.epfl.biop.bdv.bioformats.bioformatssource.BioFormatsBdvOpener;
+import ch.epfl.biop.bdv.bioformats.bioformatssource.BioFormatsBdvSource;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.open.OpenFileType;
@@ -14,8 +17,12 @@ import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.util.Intervals;
 import net.imglib2.util.Util;
+import ome.units.UNITS;
+import ome.units.quantity.Length;
 
 import java.io.File;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static de.embl.cba.bdp2.open.core.OpenerExtension.readCroppedPlaneFromTiffIntoImageStack.COMPRESSION_NONE;
 import static net.imglib2.cache.img.ReadOnlyCachedCellImgOptions.options;
@@ -24,6 +31,54 @@ public class CachedCellImgCreator
 {
     public static final int MAX_ARRAY_LENGTH = Integer.MAX_VALUE - 100;
     public static boolean isReadingVolumes = false;
+
+    public static < R extends RealType< R > & NativeType< R > >
+    Image< R > loadImage(String directory,
+                         String dataLocation,
+                         int series ) {
+
+        List<Source> sources =
+                BioFormatsBdvOpener.getOpener()
+                        .location(dataLocation)
+                        .auto() // patches opener based on specific file formats (-> PR to be  modified)
+                        //.splitRGBChannels() // split RGB channels into 3 channels
+                        //.switchZandC(true) // switch Z and C
+                        //.centerPositionConvention() // bioformats location is center of the image
+                        .cornerPositionConvention() // bioformats location is corner of the image
+                        //.useCacheBlockSizeFromBioFormats(true) // true by default
+                        //.cacheBlockSize(512,512,10) // size of cache block used by diskcached image
+                        //.micronmeter() // unit = micrometer
+                        .millimeter() // unit = millimeter
+                        //.unit(UNITS.YARD) // Ok, if you really want...
+                        //.getConcreteSources()
+                        .positionReferenceFrameLength(new Length(1, UNITS.MICROMETER)) // Compulsory
+                        .voxSizeReferenceFrameLength(new Length(100, UNITS.MICROMETER))
+                        .getConcreteSources(series+".*") // code for all channels of the series indexed 'series'
+                        .stream().map(src -> (Source) src).collect(Collectors.toList());
+
+
+        List<BioFormatsBdvSource> sourcesBF = sources.stream().map(src ->
+            BioFormatsBdvSource.class.cast( src )
+        ).collect(Collectors.toList());
+
+        BioFormatsBdvSource modelSource = sourcesBF.get(0);
+        RandomAccessibleInterval modelRAI = sourcesBF.get(0).createSource(0,0);
+
+        long sizeX = modelRAI.dimension(0); // limited to 2GPixels in one dimension
+        long sizeY = modelRAI.dimension(1);
+        long sizeZ = modelRAI.dimension(2);
+        int sizeC = sourcesBF.size();
+        long sizeT = modelSource.numberOfTimePoints;
+
+        // TODO : sanity check identical size in XYZCT for all channels
+
+        int[] cellDimsXYZCT = new int[]{(int)sizeX, (int)sizeY, (int)sizeZ, sizeC, (int)sizeT};
+
+        CachedCellImg cache TODO
+
+
+        throw new UnsupportedOperationException();
+    }
 
     public static CachedCellImg createCachedCellImg( FileInfos fileInfos )
     {

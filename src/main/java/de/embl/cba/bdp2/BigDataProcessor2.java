@@ -115,6 +115,18 @@ public class BigDataProcessor2
     }
 
     public static < R extends RealType< R > & NativeType< R > >
+    Image< R > openImageWithBioformats(
+            String directory,
+            String dataLocation,
+            int series )
+    {
+        DebugTools.setRootLevel( "OFF" ); // Bio-Formats
+        final Image< R > image = CachedCellImgCreator.loadImage( directory, dataLocation, series );
+        return image;
+        //return null;
+    }
+
+    public static < R extends RealType< R > & NativeType< R > >
     ImageViewer showImage( Image< R > image, boolean autoContrast, boolean enableArbitraryPlaneSlicing )
     {
         return new ImageViewer( image, autoContrast, enableArbitraryPlaneSlicing );
