@@ -153,16 +153,18 @@ public class BigDataProcessor2Menu extends JMenu
     {
         JMenuItem jMenuItem = new JMenuItem( name );
         jMenuItem.addActionListener( e -> {
-
-            ImageViewer activeViewer = ImageViewerService.getActiveViewer();
-
-            if ( activeViewer == null )
+            new Thread( () ->
             {
-                IJ.showMessage( "No image selected.\n\nPlease select an image by either\n- clicking on an existing BigDataViewer window, or\n- open a new image using the [ BigDataProcessor2 > Open ] menu." );
-                return;
-            }
+                ImageViewer activeViewer = ImageViewerService.getActiveViewer();
 
-            processingCommand.showDialog( activeViewer );
+                if ( activeViewer == null )
+                {
+                    IJ.showMessage( "No image selected.\n\nPlease select an image by either\n- clicking on an existing BigDataViewer window, or\n- open a new image using the [ BigDataProcessor2 > Open ] menu." );
+                    return;
+                }
+
+                processingCommand.showDialog( activeViewer );
+            }).start();
         } );
         jMenu.add( jMenuItem );
         return jMenuItem;

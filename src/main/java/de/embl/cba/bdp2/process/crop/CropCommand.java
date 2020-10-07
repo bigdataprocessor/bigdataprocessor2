@@ -68,6 +68,6 @@ public class CropCommand< R extends RealType< R > & NativeType< R > > extends Ab
     @Override
     public void showDialog( ImageViewer< R > imageViewer )
     {
-
+        new CropDialog<>( imageViewer ).showDialog();
     }
 }
