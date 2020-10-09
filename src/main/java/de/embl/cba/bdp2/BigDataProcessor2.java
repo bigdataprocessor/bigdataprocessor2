@@ -8,7 +8,7 @@ import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.process.bin.Binner;
 import de.embl.cba.bdp2.process.crop.Cropper;
 import de.embl.cba.bdp2.open.ChannelSubsetter;
-import de.embl.cba.bdp2.open.fileseries.FileSeriesCachedCellImageCreator;
+import de.embl.cba.bdp2.open.fileseries.FileSeriesCachedCellImgCreator;
 import de.embl.cba.bdp2.open.fileseries.FileInfos;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
@@ -71,7 +71,7 @@ public class BigDataProcessor2
     {
         FileInfos fileInfos = new FileInfos( directory, namingScheme, filterPattern );
 
-        final Image< R > image = new FileSeriesCachedCellImageCreator( fileInfos ).createImage();
+        final Image< R > image = new FileSeriesCachedCellImgCreator( fileInfos ).createImage();
 
         return image;
     }
@@ -93,7 +93,7 @@ public class BigDataProcessor2
 
         FileInfos fileInfos = new FileInfos( directory, loadingScheme, filterPattern, hdf5DataSetName, null );
 
-        final Image< R > image = new FileSeriesCachedCellImageCreator( fileInfos ).createImage();
+        final Image< R > image = new FileSeriesCachedCellImgCreator( fileInfos ).createImage();
 
         return image;
     }
@@ -110,7 +110,7 @@ public class BigDataProcessor2
 
         FileInfos fileInfos = new FileInfos( directory, loadingScheme, filterPattern, hdf5DataSetName, channelSubsetter );
 
-        final Image< R > image = new FileSeriesCachedCellImageCreator( fileInfos ).createImage();
+        final Image< R > image = new FileSeriesCachedCellImgCreator( fileInfos ).createImage();
 
         return image;
     }

@@ -1,9 +1,10 @@
 package develop;
 
-import de.embl.cba.bdp2.open.fileseries.FileSeriesCachedCellImageCreator;
+import de.embl.cba.bdp2.open.fileseries.FileSeriesCachedCellImgCreator;
 import de.embl.cba.bdp2.open.fileseries.FileInfos;
 import de.embl.cba.bdp2.open.NamingSchemes;
 import net.imglib2.cache.img.CachedCellImg;
+import net.imglib2.cache.img.DiskCachedCellImgOptions;
 
 public class TestTHdf5ImarisSaving {
 
@@ -11,7 +12,7 @@ public class TestTHdf5ImarisSaving {
         String imageDirectory = "src/test/resources/shear_transform_test";
         final FileInfos fileInfos = new FileInfos(imageDirectory, NamingSchemes.SINGLE_CHANNEL_TIMELAPSE,
                 ".*", "");
-        CachedCellImg cachedCellImg = FileSeriesCachedCellImageCreator.createCachedCellImg( fileInfos, cacheSize );
+        CachedCellImg cachedCellImg = FileSeriesCachedCellImgCreator.createCachedCellImg( fileInfos, DiskCachedCellImgOptions.CacheType.BOUNDED, cacheSize );
 
 //       BdvImageViewer imageViewer = new BdvImageViewer<UnsignedShortType>(
 //                cachedCellImg,

@@ -3,7 +3,7 @@ package de.embl.cba.bdp2.save;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.log.progress.ProgressListener;
-import de.embl.cba.bdp2.open.fileseries.FileSeriesCachedCellImageCreator;
+import de.embl.cba.bdp2.open.fileseries.FileSeriesCachedCellImgCreator;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import net.imglib2.RandomAccessibleInterval;
@@ -38,7 +38,7 @@ public class ImageSaverCreator < R extends RealType< R > & NativeType< R > >
 
 			Logger.info( "Configuring volume reader with a cache size of " + cacheSize + " volumes." );
 
-			FileSeriesCachedCellImageCreator fileSeriesCachedCellImageCreator = new FileSeriesCachedCellImageCreator( image.getFileInfos() );
+			FileSeriesCachedCellImgCreator fileSeriesCachedCellImageCreator = new FileSeriesCachedCellImgCreator( image.getFileInfos() );
 			final CachedCellImg< R, ? > volumeCachedCellImg = fileSeriesCachedCellImageCreator.createVolumeCachedCellImg( cacheSize );
 			final RandomAccessibleInterval< R > volumeLoadedRAI = new CachedCellImgReplacer( image.getRai(), volumeCachedCellImg ).get();
 			savingSettings.rai = volumeLoadedRAI;

@@ -1,7 +1,7 @@
 package example;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.open.fileseries.FileSeriesCachedCellImageCreator;
+import de.embl.cba.bdp2.open.fileseries.FileSeriesCachedCellImgCreator;
 import de.embl.cba.bdp2.open.fileseries.FileInfos;
 import de.embl.cba.bdp2.open.NamingSchemes;
 import de.embl.cba.bdp2.save.CachedCellImgReplacer;
@@ -9,6 +9,7 @@ import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.cache.img.CachedCellImg;
+import net.imglib2.cache.img.DiskCachedCellImgOptions;
 
 public class ReplaceCachedTwoChannelCellImg
 {
@@ -37,9 +38,9 @@ public class ReplaceCachedTwoChannelCellImg
 						filterPattern,
 						dataset );
 
-		final CachedCellImg cachedCellImg = FileSeriesCachedCellImageCreator.createCachedCellImg( fileInfos, cacheSize );
+		final CachedCellImg cachedCellImg = FileSeriesCachedCellImgCreator.createCachedCellImg( fileInfos, DiskCachedCellImgOptions.CacheType.BOUNDED, cacheSize );
 
-		final CachedCellImg cachedCellImg2 = FileSeriesCachedCellImageCreator.createVolumeCachedCellImg( fileInfos, image.getDimensionsXYZCT()[ DimensionOrder.C ] * 1 );
+		final CachedCellImg cachedCellImg2 = FileSeriesCachedCellImgCreator.createVolumeCachedCellImg( fileInfos, image.getDimensionsXYZCT()[ DimensionOrder.C ] * 1 );
 
 		final RandomAccessibleInterval replaced = new CachedCellImgReplacer( cachedCellImg, cachedCellImg2 ).get();
 	}

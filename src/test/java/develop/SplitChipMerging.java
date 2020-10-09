@@ -2,7 +2,7 @@ package develop;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.open.fileseries.FileInfos;
-import de.embl.cba.bdp2.open.fileseries.FileSeriesCachedCellImageCreator;
+import de.embl.cba.bdp2.open.fileseries.FileSeriesCachedCellImgCreator;
 import de.embl.cba.bdp2.open.NamingSchemes;
 import de.embl.cba.bdp2.process.align.splitchip.SplitChipDialog;
 import de.embl.cba.bdp2.viewers.ImageViewer;
@@ -31,7 +31,7 @@ public class SplitChipMerging
 
 		fileInfos.voxelSize = new double[]{ 0.5, 0.5, 5.0 };
 
-		return FileSeriesCachedCellImageCreator.createImage( fileInfos );
+		return FileSeriesCachedCellImgCreator.createImage( fileInfos );
 	}
 
 }

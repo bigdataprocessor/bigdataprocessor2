@@ -3,9 +3,10 @@ package develop;
 import bdv.util.AxisOrder;
 import bdv.util.BdvFunctions;
 import bdv.util.BdvOptions;
-import de.embl.cba.bdp2.open.fileseries.FileSeriesCachedCellImageCreator;
+import de.embl.cba.bdp2.open.fileseries.FileSeriesCachedCellImgCreator;
 import de.embl.cba.bdp2.open.fileseries.FileInfos;
 import de.embl.cba.bdp2.open.NamingSchemes;
+import net.imglib2.cache.img.DiskCachedCellImgOptions;
 import net.imglib2.img.Img;
 
 public class TestOpenEmTiffSlices {
@@ -16,7 +17,7 @@ public class TestOpenEmTiffSlices {
         System.out.println( fileInfos.nT);
         System.out.println( fileInfos.nC);
         System.out.println( fileInfos.nX);
-        Img myImg = new FileSeriesCachedCellImageCreator().createCachedCellImg( fileInfos, cacheSize );
+        Img myImg = new FileSeriesCachedCellImgCreator().createCachedCellImg( fileInfos, DiskCachedCellImgOptions.CacheType.BOUNDED, cacheSize );
         BdvFunctions.show(myImg,"stream", BdvOptions.options().axisOrder( AxisOrder.XYCZT));
 
     }
