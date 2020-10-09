@@ -1,7 +1,6 @@
 package de.embl.cba.bdp2.log;
 
 import de.embl.cba.bdp2.BigDataProcessor2UserInterface;
-import de.embl.cba.bdp2.open.core.CachedCellImgCreator;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,7 +25,8 @@ public class PerformanceMonitor
 		{
 			readPerformances.add( mbps );
 		}
-		if ( CachedCellImgCreator.isReadingVolumes )
+		// TODO: handle this differently, maybe isHeadless()
+		if ( false ) // FileSeriesCachedCellImageCreator.isReadingVolumes )
 		{
 			Logger.debug( "Read " + toMB( numBytes ) + " MB in " + toSeconds( timeMillis ) + " seconds; Speed [MB/s] = " + mbps );
 		}

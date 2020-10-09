@@ -6,8 +6,8 @@ import de.embl.cba.bdp2.track.TrackCreator;
 import de.embl.cba.bdp2.viewers.ImageViewer;
 import net.imagej.ImageJ;
 
-import static de.embl.cba.bdp2.open.core.NamingSchemes.MULTI_CHANNEL_VOLUMES;
-import static de.embl.cba.bdp2.open.core.NamingSchemes.TIF;
+import static de.embl.cba.bdp2.open.NamingSchemes.MULTI_CHANNEL_VOLUMES;
+import static de.embl.cba.bdp2.open.NamingSchemes.TIF;
 
 public class DevelopManualDriftCorrection
 {

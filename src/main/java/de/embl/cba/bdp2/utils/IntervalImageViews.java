@@ -6,7 +6,6 @@ import net.imglib2.algorithm.util.Grids;
 import net.imglib2.img.AbstractImg;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.array.ArrayImgFactory;
-import net.imglib2.img.cell.AbstractCellImg;
 import net.imglib2.img.cell.CellImgFactory;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
@@ -18,7 +17,7 @@ import net.imglib2.view.Views;
 
 import java.util.List;
 
-import static de.embl.cba.bdp2.open.core.CachedCellImgCreator.MAX_ARRAY_LENGTH;
+import static de.embl.cba.bdp2.open.fileseries.FileSeriesCachedCellImageCreator.MAX_ARRAY_LENGTH;
 import static de.embl.cba.bdp2.utils.DimensionOrder.*;
 
 public class IntervalImageViews

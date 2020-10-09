@@ -1,11 +1,11 @@
 package develop;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.open.core.CachedCellImgCreator;
+import de.embl.cba.bdp2.open.fileseries.FileSeriesCachedCellImageCreator;
 import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.BigDataProcessor2;
-import de.embl.cba.bdp2.open.core.FileInfos;
-import de.embl.cba.bdp2.open.core.NamingSchemes;
+import de.embl.cba.bdp2.open.fileseries.FileInfos;
+import de.embl.cba.bdp2.open.NamingSchemes;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.viewers.ImageViewer;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
@@ -17,7 +17,7 @@ public class TestTiffPlaneSaving
         String imageDirectory = "src/test/resources/shear_transform_test";
         final FileInfos fileInfos = new FileInfos( imageDirectory, NamingSchemes.SINGLE_CHANNEL_TIMELAPSE,
                 ".*", "");
-        final Image image = CachedCellImgCreator.loadImage( fileInfos );
+        final Image image = FileSeriesCachedCellImageCreator.createImage( fileInfos );
 
         ImageViewer imageViewer = new ImageViewer<UnsignedShortType>( image );
 

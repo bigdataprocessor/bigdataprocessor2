@@ -28,7 +28,7 @@
  * #L%
  */
 
-package de.embl.cba.bdp2.open.core;
+package de.embl.cba.bdp2.open.fileseries;
 
 import ij.io.FileInfo;
 

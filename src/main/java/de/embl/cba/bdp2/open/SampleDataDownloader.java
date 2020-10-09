@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.open.core;
+package de.embl.cba.bdp2.open;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
@@ -14,7 +14,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.embl.cba.bdp2.open.core.NamingSchemes.TIF;
+import static de.embl.cba.bdp2.open.NamingSchemes.TIF;
 
 public class SampleDataDownloader
 {

@@ -1,7 +1,7 @@
 package de.embl.cba.bdp2.image;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import de.embl.cba.bdp2.open.core.FileInfos;
+import de.embl.cba.bdp2.open.fileseries.FileInfos;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import mpicbg.imglib.multithreading.Stopable;
@@ -219,4 +219,8 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		return info;
 	}
 
+	public int[] getCellDims()
+	{
+		return new int[ 0 ];
+	}
 }

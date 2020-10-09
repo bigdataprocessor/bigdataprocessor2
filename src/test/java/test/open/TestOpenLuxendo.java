@@ -3,8 +3,7 @@ package test.open;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
 
-import static de.embl.cba.bdp2.open.core.NamingSchemes.LEICA_DSL_TIFF_PLANES_REG_EXP;
-import static de.embl.cba.bdp2.open.core.NamingSchemes.LUXENDO_REGEXP;
+import static de.embl.cba.bdp2.open.NamingSchemes.LUXENDO_REGEXP;
 
 public class TestOpenLuxendo
 {

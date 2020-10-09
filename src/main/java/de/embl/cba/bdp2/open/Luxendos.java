@@ -1,13 +1,12 @@
-package de.embl.cba.bdp2.open.core;
+package de.embl.cba.bdp2.open;
 
 import ch.systemsx.cisd.hdf5.IHDF5Reader;
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.utils.Utils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static de.embl.cba.bdp2.open.core.NamingSchemes.LUXENDO_STACKINDEX_REGEXP;
+import static de.embl.cba.bdp2.open.NamingSchemes.LUXENDO_STACKINDEX_REGEXP;
 
 public class Luxendos
 {

@@ -1,10 +1,11 @@
-package de.embl.cba.bdp2.open.core;
+package de.embl.cba.bdp2.open.fileseries;
 
 import ch.systemsx.cisd.hdf5.HDF5DataSetInformation;
 import ch.systemsx.cisd.hdf5.HDF5DataTypeInformation;
 import ch.systemsx.cisd.hdf5.HDF5Factory;
 import ch.systemsx.cisd.hdf5.IHDF5Reader;
 import de.embl.cba.bdp2.log.Logger;
+import de.embl.cba.bdp2.open.Luxendos;
 import ij.gui.GenericDialog;
 
 import java.util.Arrays;

@@ -9,7 +9,7 @@
 * GNU General Public License for more details.
 */
 
-package de.embl.cba.bdp2.open.core;
+package de.embl.cba.bdp2.open.fileseries;
 
 import ch.systemsx.cisd.base.mdarray.MDByteArray;
 import ch.systemsx.cisd.base.mdarray.MDShortArray;

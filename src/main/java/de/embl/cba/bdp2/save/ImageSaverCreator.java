@@ -3,13 +3,12 @@ package de.embl.cba.bdp2.save;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.log.progress.ProgressListener;
-import de.embl.cba.bdp2.open.core.CachedCellImgCreator;
+import de.embl.cba.bdp2.open.fileseries.FileSeriesCachedCellImageCreator;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.cache.img.CachedCellImg;
 import net.imglib2.type.NativeType;
-import net.imglib2.type.Type;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Util;
 
@@ -38,7 +37,9 @@ public class ImageSaverCreator < R extends RealType< R > & NativeType< R > >
 			long cacheSize = image.getDimensionsXYZCT()[ DimensionOrder.C ] * numIOThreads;
 
 			Logger.info( "Configuring volume reader with a cache size of " + cacheSize + " volumes." );
-			final CachedCellImg< R, ? > volumeCachedCellImg = CachedCellImgCreator.createVolumeCachedCellImg( image.getFileInfos(), cacheSize );
+
+			FileSeriesCachedCellImageCreator fileSeriesCachedCellImageCreator = new FileSeriesCachedCellImageCreator( image.getFileInfos() );
+			final CachedCellImg< R, ? > volumeCachedCellImg = fileSeriesCachedCellImageCreator.createVolumeCachedCellImg( cacheSize );
 			final RandomAccessibleInterval< R > volumeLoadedRAI = new CachedCellImgReplacer( image.getRai(), volumeCachedCellImg ).get();
 			savingSettings.rai = volumeLoadedRAI;
 		}

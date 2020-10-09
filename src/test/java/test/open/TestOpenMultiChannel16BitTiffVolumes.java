@@ -5,8 +5,8 @@ import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.BigDataProcessor2UserInterface;
 import org.junit.Test;
 
-import static de.embl.cba.bdp2.open.core.NamingSchemes.MULTI_CHANNEL_VOLUMES;
-import static de.embl.cba.bdp2.open.core.NamingSchemes.TIF;
+import static de.embl.cba.bdp2.open.NamingSchemes.MULTI_CHANNEL_VOLUMES;
+import static de.embl.cba.bdp2.open.NamingSchemes.TIF;
 
 public class TestOpenMultiChannel16BitTiffVolumes
 {

@@ -1,7 +1,6 @@
 package de.embl.cba.bdp2.volatiles;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.open.core.CachedCellImgCreator;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.cache.img.CachedCellImg;
 import net.imglib2.cache.img.RandomAccessibleCacheLoader;
@@ -65,9 +64,7 @@ public class VolatileCachedCellImgs
 	public static RandomAccessibleInterval< ? > asVolatileCachedCellImg( Image< ? > image )
 	{
 		final Type typeFromInterval = Util.getTypeFromInterval( image.getRai() );
-		final CellGrid grid = new CellGrid(
-				Intervals.dimensionsAsLongArray( image.getRai() ),
-				CachedCellImgCreator.getCellDimsXYZCT( image.getRai() ) );
+		final CellGrid grid = new CellGrid( Intervals.dimensionsAsLongArray( image.getRai() ), image.getCellDims() );
 
 		RandomAccessibleInterval< ? > cachedCellImg;
 

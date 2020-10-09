@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.open.core;
+package de.embl.cba.bdp2.open.fileseries;
 
 import ch.systemsx.cisd.base.mdarray.MDShortArray;
 import ch.systemsx.cisd.hdf5.HDF5DataSetInformation;

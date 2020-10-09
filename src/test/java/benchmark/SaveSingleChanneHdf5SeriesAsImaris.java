@@ -1,10 +1,10 @@
 package benchmark;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.open.core.CachedCellImgCreator;
-import de.embl.cba.bdp2.open.core.FileInfos;
+import de.embl.cba.bdp2.open.fileseries.FileSeriesCachedCellImageCreator;
+import de.embl.cba.bdp2.open.fileseries.FileInfos;
 import de.embl.cba.bdp2.process.bin.Binner;
-import de.embl.cba.bdp2.open.core.NamingSchemes;
+import de.embl.cba.bdp2.open.NamingSchemes;
 import de.embl.cba.bdp2.save.CachedCellImgReplacer;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.BigDataProcessor2;
@@ -51,7 +51,7 @@ public class SaveSingleChanneHdf5SeriesAsImaris
                         dataset );
 
         final CachedCellImg volumeCachedCellImg
-                = CachedCellImgCreator.createVolumeCachedCellImg( fileInfos, image.getDimensionsXYZCT()[ DimensionOrder.C ] * numIOThreads );
+                = FileSeriesCachedCellImageCreator.createVolumeCachedCellImg( fileInfos, image.getDimensionsXYZCT()[ DimensionOrder.C ] * numIOThreads );
 
         final RandomAccessibleInterval replaced =
                 new CachedCellImgReplacer( binnedImage.getRai(),

@@ -1,20 +1,18 @@
 package de.embl.cba.bdp2.open.ui;
 
-import de.embl.cba.bdp2.open.core.SampleDataDownloader;
+import de.embl.cba.bdp2.open.SampleDataDownloader;
 import de.embl.cba.bdp2.dialog.Utils;
-import de.embl.cba.bdp2.scijava.Services;
 import de.embl.cba.bdp2.viewers.ImageViewer;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;
-import org.scijava.command.CommandService;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
 import java.io.File;
 
-import static de.embl.cba.bdp2.open.core.SampleDataDownloader.DUAL_COLOR_MOUSE;
-import static de.embl.cba.bdp2.open.core.SampleDataDownloader.MINIMAL_SYNTHETIC;
+import static de.embl.cba.bdp2.open.SampleDataDownloader.DUAL_COLOR_MOUSE;
+import static de.embl.cba.bdp2.open.SampleDataDownloader.MINIMAL_SYNTHETIC;
 import static de.embl.cba.bdp2.utils.Utils.COMMAND_BDP2_PREFIX;
 
 

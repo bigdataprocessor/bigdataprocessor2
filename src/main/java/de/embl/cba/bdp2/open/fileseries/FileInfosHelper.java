@@ -1,8 +1,9 @@
-package de.embl.cba.bdp2.open.core;
+package de.embl.cba.bdp2.open.fileseries;
 
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.open.ChannelSubsetter;
 import de.embl.cba.bdp2.open.OpenFileType;
+import de.embl.cba.bdp2.open.NamingSchemes;
 import de.embl.cba.bdp2.utils.BioFormatsCalibrationReader;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import org.apache.commons.lang.ArrayUtils;

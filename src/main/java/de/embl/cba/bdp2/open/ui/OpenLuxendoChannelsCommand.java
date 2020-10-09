@@ -3,7 +3,7 @@ package de.embl.cba.bdp2.open.ui;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.dialog.Utils;
 import de.embl.cba.bdp2.open.FixedListChannelSubsetter;
-import de.embl.cba.bdp2.open.core.NamingSchemes;
+import de.embl.cba.bdp2.open.NamingSchemes;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;

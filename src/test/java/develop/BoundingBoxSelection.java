@@ -8,9 +8,9 @@ import bdv.util.BdvFunctions;
 import bdv.util.ModifiableRealInterval;
 import bdv.viewer.ViewerPanel;
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.open.core.CachedCellImgCreator;
-import de.embl.cba.bdp2.open.core.FileInfos;
-import de.embl.cba.bdp2.open.core.NamingSchemes;
+import de.embl.cba.bdp2.open.fileseries.FileSeriesCachedCellImageCreator;
+import de.embl.cba.bdp2.open.fileseries.FileInfos;
+import de.embl.cba.bdp2.open.NamingSchemes;
 import de.embl.cba.bdp2.viewers.ImageViewer;
 import net.imglib2.FinalRealInterval;
 import net.imglib2.Interval;
@@ -101,6 +101,6 @@ public class BoundingBoxSelection
 
 		fileInfos.voxelSize = new double[]{ 0.5, 0.5, 5.0};
 
-		return CachedCellImgCreator.loadImage( fileInfos );
+		return FileSeriesCachedCellImageCreator.createImage( fileInfos );
 	}
 }

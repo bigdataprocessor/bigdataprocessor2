@@ -1,9 +1,9 @@
 package example;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.open.core.CachedCellImgCreator;
-import de.embl.cba.bdp2.open.core.FileInfos;
-import de.embl.cba.bdp2.open.core.NamingSchemes;
+import de.embl.cba.bdp2.open.fileseries.FileSeriesCachedCellImageCreator;
+import de.embl.cba.bdp2.open.fileseries.FileInfos;
+import de.embl.cba.bdp2.open.NamingSchemes;
 import de.embl.cba.bdp2.save.CachedCellImgReplacer;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.utils.DimensionOrder;
@@ -37,14 +37,10 @@ public class ReplaceCachedTwoChannelCellImg
 						filterPattern,
 						dataset );
 
-		final CachedCellImg cachedCellImg = CachedCellImgCreator
-				.createCachedCellImg( fileInfos );
+		final CachedCellImg cachedCellImg = FileSeriesCachedCellImageCreator.createCachedCellImg( fileInfos );
 
-		final CachedCellImg cachedCellImg2 = CachedCellImgCreator
-				.createVolumeCachedCellImg(
-				fileInfos, image.getDimensionsXYZCT()[ DimensionOrder.C ] * 1 );
+		final CachedCellImg cachedCellImg2 = FileSeriesCachedCellImageCreator.createVolumeCachedCellImg( fileInfos, image.getDimensionsXYZCT()[ DimensionOrder.C ] * 1 );
 
-		final RandomAccessibleInterval replaced =
-				new CachedCellImgReplacer( cachedCellImg, cachedCellImg2 ).get();
+		final RandomAccessibleInterval replaced = new CachedCellImgReplacer( cachedCellImg, cachedCellImg2 ).get();
 	}
 }

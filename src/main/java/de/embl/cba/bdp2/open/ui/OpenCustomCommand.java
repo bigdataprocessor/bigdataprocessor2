@@ -12,7 +12,7 @@ import org.scijava.plugin.Plugin;
 
 import javax.swing.*;
 
-import static de.embl.cba.bdp2.open.core.NamingSchemes.*;
+import static de.embl.cba.bdp2.open.NamingSchemes.*;
 import static de.embl.cba.bdp2.utils.Utils.COMMAND_BDP2_PREFIX;
 
 

@@ -29,7 +29,7 @@
  */
 
 
-package de.embl.cba.bdp2.open.core;
+package de.embl.cba.bdp2.open.fileseries;
 
 
 import de.embl.cba.bdp2.log.Logger;

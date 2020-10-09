@@ -7,8 +7,8 @@ import de.embl.cba.bdp2.viewers.ImageViewer;
 import ij.plugin.frame.Recorder;
 import net.imagej.ImageJ;
 
-import static de.embl.cba.bdp2.open.core.NamingSchemes.MULTI_CHANNEL_VOLUMES;
-import static de.embl.cba.bdp2.open.core.NamingSchemes.TIF;
+import static de.embl.cba.bdp2.open.NamingSchemes.MULTI_CHANNEL_VOLUMES;
+import static de.embl.cba.bdp2.open.NamingSchemes.TIF;
 
 public class DevelopManualDriftCorrectionMicroglia
 {

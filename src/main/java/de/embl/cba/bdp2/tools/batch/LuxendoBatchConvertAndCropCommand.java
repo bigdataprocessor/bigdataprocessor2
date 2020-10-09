@@ -3,7 +3,7 @@ package de.embl.cba.bdp2.tools.batch;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.process.crop.Cropper;
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.open.core.NamingSchemes;
+import de.embl.cba.bdp2.open.NamingSchemes;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.viewers.ImageViewer;

@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.open.core;
+package de.embl.cba.bdp2.open.fileseries;
 
 import ch.systemsx.cisd.hdf5.HDF5DataSetInformation;
 import ch.systemsx.cisd.hdf5.HDF5Factory;
@@ -20,8 +20,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.IOException;
 import java.util.regex.Pattern;
-
-import static de.embl.cba.bdp2.open.core.NamingSchemes.*;
 
 public class FileInfos
 {

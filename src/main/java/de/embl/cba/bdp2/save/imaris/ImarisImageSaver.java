@@ -1,6 +1,6 @@
 package de.embl.cba.bdp2.save.imaris;
 
-import de.embl.cba.bdp2.open.core.FileInfos;
+import de.embl.cba.bdp2.open.fileseries.FileInfos;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.save.AbstractImageSaver;
 import de.embl.cba.bdp2.save.SavingSettings;
@@ -41,7 +41,7 @@ public class ImarisImageSaver extends AbstractImageSaver
     public void startSave() {
         List<Future> futures = new ArrayList<>();
         AtomicInteger counter = new AtomicInteger(0);
-        ImarisDataSet imarisDataSetProperties = getImarisDataSet( savingSettings, stop );
+        ImarisDataSet imarisDataSet = getImarisDataSet( savingSettings, stop );
         final long startTime = System.currentTimeMillis();
         long timeFrames = savingSettings.rai.dimension(DimensionOrder.T);
         NativeType imageType = Util.getTypeFromInterval(savingSettings.rai);
@@ -52,7 +52,7 @@ public class ImarisImageSaver extends AbstractImageSaver
                 futures.add(es.submit(
                         new ImarisFrameSaver<UnsignedByteType>(
                                 savingSettings,
-                                imarisDataSetProperties,
+                                imarisDataSet,
                                 t, counter, startTime, stop)
                 ));
             }
@@ -62,7 +62,7 @@ public class ImarisImageSaver extends AbstractImageSaver
                         es.submit(
                                 new ImarisFrameSaver<UnsignedShortType>(
                                         savingSettings,
-                                        imarisDataSetProperties,
+                                        imarisDataSet,
                                         t, counter, startTime, stop)
                         ));
             } else if (imageType instanceof FloatType) {
@@ -70,7 +70,7 @@ public class ImarisImageSaver extends AbstractImageSaver
                         es.submit(
                                 new ImarisFrameSaver<FloatType>(
                                         savingSettings,
-                                        imarisDataSetProperties,
+                                        imarisDataSet,
                                         t, counter, startTime, stop)
                         ));
             }
