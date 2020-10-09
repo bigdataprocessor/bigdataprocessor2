@@ -24,7 +24,7 @@ public class OpenLeicaDSLTiffPlanesCommand< R extends RealType< R > & NativeType
     {
         SwingUtilities.invokeLater( () ->  {
             outputImage =
-                    BigDataProcessor2.openImage(
+                    BigDataProcessor2.openTiffSeries(
                             directory.toString(),
                             NamingSchemes.LEICA_DSL_TIFF_PLANES_REG_EXP,
                             ".*.tif" );

@@ -17,7 +17,7 @@ public class MergeSplitChipDialog
         final ImageJ imageJ = new ImageJ();
         imageJ.ui().showUI();
 
-        final Image< R > image = BigDataProcessor2.openImageFromHdf5(
+        final Image< R > image = BigDataProcessor2.openHdf5Series(
                 "/Users/tischer/Desktop/stack_0_channel_0",
                 NamingSchemes.SINGLE_CHANNEL_TIMELAPSE,
                 ".*.h5",

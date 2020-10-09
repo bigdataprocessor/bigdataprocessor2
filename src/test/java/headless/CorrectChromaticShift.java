@@ -20,7 +20,7 @@ public class CorrectChromaticShift
                 CorrectChromaticShift.class
                         .getResource( "/nc2-nt3-calibrated-tiff"  ).getFile();
 
-        final Image image = bdp.openImage(
+        final Image image = bdp.openTiffSeries(
                 imageDirectory,
                 NamingSchemes.LOAD_CHANNELS_FROM_FOLDERS,
                 ".*" );

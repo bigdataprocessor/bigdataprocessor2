@@ -41,7 +41,7 @@ public class OpenLuxendoChannelsCommand< R extends RealType< R > & NativeType< R
 
             final FixedListChannelSubsetter channelSubsetter = new FixedListChannelSubsetter( channelList );
 
-            outputImage = BigDataProcessor2.openImageFromHdf5(
+            outputImage = BigDataProcessor2.openHdf5Series(
                                 directory.toString(),
                                 regExp,
                                 regExp,

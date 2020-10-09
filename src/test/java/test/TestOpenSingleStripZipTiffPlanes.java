@@ -17,7 +17,7 @@ public class TestOpenSingleStripZipTiffPlanes
 	{
 		DebugTools.setRootLevel("OFF"); // Bio-Formats
 
-		final Image< R > image = BigDataProcessor2.openImage(
+		final Image< R > image = BigDataProcessor2.openTiffSeries(
 				"/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-data/em-slices-zip-strips",
 				NamingSchemes.TIFF_SLICES,
 				".*.tif" );

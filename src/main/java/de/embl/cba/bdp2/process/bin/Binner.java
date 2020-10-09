@@ -24,14 +24,11 @@ public class Binner
 	{
 		RandomAccessibleInterval< T > binnedRai = binImageWithNonZeroSpatialOffset( inputImage, span );
 
-		return ( Image< T > ) new Image(
-					binnedRai,
-					inputImage.getName(),
-					inputImage.getChannelNames(),
-					getBinnedVoxelSize( span, inputImage.getVoxelSize() ),
-					inputImage.getVoxelUnit(),
-					inputImage.getFileInfos()
-		);
+		Image< T > binnedImage = new Image( inputImage );
+		binnedImage.setRai( binnedRai );
+		binnedImage.setVoxelSize( getBinnedVoxelSize( span, inputImage.getVoxelSize() ) );
+
+		return binnedImage;
 	}
 
 	public static < T extends RealType< T > & NativeType< T > > RandomAccessibleInterval< T > binImageWithNonZeroSpatialOffset( Image< T > inputImage, long[] span )

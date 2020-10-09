@@ -18,7 +18,7 @@ public class DevelopGenericSinglePlaneTiffLoading
     {
         final String directory = "/Users/tischer/Downloads/data_as_sequence";
 
-        final Image image = BigDataProcessor2.openImage(
+        final Image image = BigDataProcessor2.openTiffSeries(
                 directory,
                 ".*_T(" + NamingSchemes.T + "\\d+)__z(" + Z + "\\d+).*_c(" + NamingSchemes.C + "\\d+).*",
                 ".*"

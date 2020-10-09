@@ -16,7 +16,7 @@ public class TrackingUI
 		String imageDirectory = "/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/" +
 				"src/test/resources/test-data/microglia-drift-nt123/volumes";
 
-		final Image image = BigDataProcessor2.openImage(
+		final Image image = BigDataProcessor2.openTiffSeries(
 				imageDirectory,
 				NamingSchemes.SINGLE_CHANNEL_TIMELAPSE,
 				".*" );

@@ -178,13 +178,11 @@ public class SplitChipDialog< R extends RealType< R > & NativeType< R > > extend
 						intervals3D, // in the UI this contains 2 channels
 						CHANNEL ); // TODO: Could be different channel?
 
-		outputImage = new Image(
-				merge,
-				inputImage.getName() + "-splitchip",
-				createMergedChannelNames(),
-				inputImage.getVoxelSize(),
-				inputImage.getVoxelUnit(),
-				inputImage.getFileInfos() );
+
+		outputImage = new Image( inputImage );
+		outputImage.setRai( merge );
+		outputImage.setName( inputImage.getName() + "-splitchip" );
+		outputImage.setChannelNames( createMergedChannelNames() );
 	}
 
 	private String[] createMergedChannelNames()

@@ -8,7 +8,7 @@ public class OpenLuxendoTwoChannelMovie
 {
 	public static void main( String[] args )
 	{
-		final Image image = BigDataProcessor2.openImageFromHdf5( "/Volumes/USB Drive/tim2020/luxendo-two-channel-movie",
+		final Image image = BigDataProcessor2.openHdf5Series( "/Volumes/USB Drive/tim2020/luxendo-two-channel-movie",
 				NamingSchemes.LOAD_CHANNELS_FROM_FOLDERS,
 				NamingSchemes.PATTERN_LUXENDO,
 				"Data");

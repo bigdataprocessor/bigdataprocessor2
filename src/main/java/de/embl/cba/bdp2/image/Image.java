@@ -186,6 +186,16 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		return rai.dimension( DimensionOrder.C );
 	}
 
+	public CachedCellImg< R, ? > getCachedCellImg()
+	{
+		return cachedCellImg;
+	}
+
+	public void setCachedCellImg( CachedCellImg< R, ? > cachedCellImg )
+	{
+		this.cachedCellImg = cachedCellImg;
+	}
+
 	public void addStopableProcess( Stopable stopable )
 	{
 		stopables.add( stopable );

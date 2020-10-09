@@ -21,7 +21,7 @@ public class TestAlignMovieSIFT< R extends RealType< R > & NativeType< R > >
 	{
 		DebugTools.setRootLevel("OFF"); // Bio-Formats
 
-		final Image< R > image = BigDataProcessor2.openImage(
+		final Image< R > image = BigDataProcessor2.openTiffSeries(
 				"/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-data/gustavo-drift",
 				NamingSchemes.LOAD_CHANNELS_FROM_FOLDERS,
 				".*");

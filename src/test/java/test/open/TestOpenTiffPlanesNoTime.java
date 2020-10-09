@@ -19,7 +19,7 @@ public class TestOpenTiffPlanesNoTime
     {
         final String directory = "/Users/tischer/Documents/bigdataprocessor2/src/test/resources/test/tiff-planes-no-time";
 
-        final Image image = BigDataProcessor2.openImage(
+        final Image image = BigDataProcessor2.openTiffSeries(
                 directory,
                 ".*_z(" + Z + "\\d+).*_c(" + NamingSchemes.C + "\\d+).*",
                 ".*"

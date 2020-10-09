@@ -27,7 +27,7 @@ public class TestAlignMoviePhaseCorrelation< R extends RealType< R > & NativeTyp
 //				".*");
 
 		// long movie
-		final Image< R > image = BigDataProcessor2.openImage(
+		final Image< R > image = BigDataProcessor2.openTiffSeries(
 				"/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-data/light-sheet-drift-01",
 				NamingSchemes.SINGLE_CHANNEL_TIMELAPSE,
 				".*");
@@ -68,7 +68,7 @@ public class TestAlignMoviePhaseCorrelation< R extends RealType< R > & NativeTyp
 	{
 		DebugTools.setRootLevel("OFF"); // Bio-Formats
 
-		final Image< R > image = BigDataProcessor2.openImage(
+		final Image< R > image = BigDataProcessor2.openTiffSeries(
 				"/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-data/gustavo-drift",
 				NamingSchemes.LOAD_CHANNELS_FROM_FOLDERS,
 				".*");

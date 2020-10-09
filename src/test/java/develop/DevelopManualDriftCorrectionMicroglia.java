@@ -21,7 +21,7 @@ public class DevelopManualDriftCorrectionMicroglia
 
         final String directory = "/Users/tischer/Documents/bigdataprocessor2/src/test/resources/test-data/microglia-tracking-nt123/volumes";
 
-        final Image image = BigDataProcessor2.openImage(
+        final Image image = BigDataProcessor2.openTiffSeries(
                 directory,
                 MULTI_CHANNEL_VOLUMES + TIF,
                 ".*"

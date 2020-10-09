@@ -8,7 +8,7 @@ public class OpenShearingSingleChannelMovie
 {
 	public static void main( String[] args )
 	{
-		final Image image = BigDataProcessor2.openImage( "/Volumes/cba/exchange/bigdataprocessor/data/nils/",
+		final Image image = BigDataProcessor2.openTiffSeries( "/Volumes/cba/exchange/bigdataprocessor/data/nils/",
 				NamingSchemes.SINGLE_CHANNEL_TIMELAPSE,
 				NamingSchemes.PATTERN_ALL
 		);

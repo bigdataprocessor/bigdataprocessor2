@@ -20,7 +20,7 @@ public class TestAlignVolumeSIFT< R extends RealType< R > & NativeType< R > >
 	{
 		DebugTools.setRootLevel("OFF"); // Bio-Formats
 
-		final Image< R > image = BigDataProcessor2.openImage(
+		final Image< R > image = BigDataProcessor2.openTiffSeries(
 				"/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-data/em-2d-sift-align-01",
 				NamingSchemes.TIFF_SLICES,
 				".*.tif" );

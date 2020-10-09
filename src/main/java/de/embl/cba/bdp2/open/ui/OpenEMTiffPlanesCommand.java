@@ -21,7 +21,7 @@ public class OpenEMTiffPlanesCommand< R extends RealType< R > & NativeType< R > 
     public void run()
     {
         SwingUtilities.invokeLater( () ->  {
-            outputImage = BigDataProcessor2.openImage(
+            outputImage = BigDataProcessor2.openTiffSeries(
                             directory.toString(),
                             NamingSchemes.TIFF_SLICES,
                             ".*" );

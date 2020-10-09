@@ -14,7 +14,7 @@ public class Read2kBy2kImage
 
 		final String directory = "/Users/tischer/Desktop/test/";
 
-		final Image image = bdp.openImage(
+		final Image image = bdp.openTiffSeries(
 				directory,
 				NamingSchemes.SINGLE_CHANNEL_VOLUMES + TIF,
 				".*" );

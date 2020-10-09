@@ -20,7 +20,7 @@ public class DevelopSavingWithoutMemoryLeak
 		String regExp = LUXENDO_REGEXP.replace( "STACK", "" + 6 );
 
 		// /Volumes/cba/exchange/bigdataprocessor/data/mouse_2cam_publication_figure/stack_6_channel_2
-		final Image image = BigDataProcessor2.openImageFromHdf5(
+		final Image image = BigDataProcessor2.openHdf5Series(
 				"/Volumes/cba/exchange/bigdataprocessor/data/mouse_2cam_publication_figure",
 				regExp,
 				regExp,

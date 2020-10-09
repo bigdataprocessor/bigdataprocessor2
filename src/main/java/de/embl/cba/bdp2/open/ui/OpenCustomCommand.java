@@ -52,7 +52,7 @@ public class OpenCustomCommand< R extends RealType< R > & NativeType< R > > exte
 
             if ( regExp.endsWith( ".h5" ) )
             {
-                outputImage = BigDataProcessor2.openImageFromHdf5(
+                outputImage = BigDataProcessor2.openHdf5Series(
                         directory.toString(),
                         regExp,
                         ".*",
@@ -60,7 +60,7 @@ public class OpenCustomCommand< R extends RealType< R > & NativeType< R > > exte
             }
             else if ( regExp.contains( ".tif" ) ) // .tiff .ome.tif
             {
-                outputImage = BigDataProcessor2.openImage(
+                outputImage = BigDataProcessor2.openTiffSeries(
                         directory.toString(),
                         regExp,
                         ".*" );

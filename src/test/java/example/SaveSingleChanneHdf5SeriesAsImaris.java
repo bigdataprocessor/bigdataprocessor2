@@ -19,7 +19,7 @@ public class SaveSingleChanneHdf5SeriesAsImaris
         final String filterPattern = ".*.h5";
         final String dataset = "Data";
 
-        final Image image = bdp.openImageFromHdf5(
+        final Image image = bdp.openHdf5Series(
                 directory,
                 loadingScheme,
                 filterPattern,

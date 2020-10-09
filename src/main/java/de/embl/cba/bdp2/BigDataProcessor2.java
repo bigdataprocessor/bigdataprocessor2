@@ -55,23 +55,23 @@ public class BigDataProcessor2
     }
 
     public static < R extends RealType< R > & NativeType< R > >
-    Image< R > openImage(
+    Image< R > openTiffSeries(
             File directory,
             String namingScheme,
             String filterPattern )
     {
-        return openImage( directory.getAbsolutePath(), namingScheme, filterPattern);
+        return openTiffSeries( directory.getAbsolutePath(), namingScheme, filterPattern);
     }
 
     public static < R extends RealType< R > & NativeType< R > >
-    Image< R > openImage(
+    Image< R > openTiffSeries(
             String directory,
             String namingScheme,
             String filterPattern )
     {
         FileInfos fileInfos = new FileInfos( directory, namingScheme, filterPattern );
 
-        final Image< R > image = FileSeriesCachedCellImageCreator.createImage( fileInfos );
+        final Image< R > image = new FileSeriesCachedCellImageCreator( fileInfos ).createImage();
 
         return image;
     }
@@ -83,7 +83,7 @@ public class BigDataProcessor2
     }
 
     public static < R extends RealType< R > & NativeType< R > >
-    Image< R > openImageFromHdf5(
+    Image< R > openHdf5Series(
             String directory,
             String loadingScheme,
             String filterPattern,
@@ -93,13 +93,13 @@ public class BigDataProcessor2
 
         FileInfos fileInfos = new FileInfos( directory, loadingScheme, filterPattern, hdf5DataSetName, null );
 
-        final Image< R > image = FileSeriesCachedCellImageCreator.createImage( fileInfos );
+        final Image< R > image = new FileSeriesCachedCellImageCreator( fileInfos ).createImage();
 
         return image;
     }
 
     public static < R extends RealType< R > & NativeType< R > >
-    Image< R > openImageFromHdf5(
+    Image< R > openHdf5Series(
             String directory,
             String loadingScheme,
             String filterPattern,
@@ -110,7 +110,8 @@ public class BigDataProcessor2
 
         FileInfos fileInfos = new FileInfos( directory, loadingScheme, filterPattern, hdf5DataSetName, channelSubsetter );
 
-        final Image< R > image = FileSeriesCachedCellImageCreator.createImage( fileInfos );
+        final Image< R > image = new FileSeriesCachedCellImageCreator( fileInfos ).createImage();
+
         return image;
     }
 
@@ -155,7 +156,12 @@ public class BigDataProcessor2
     public static < R extends RealType< R > & NativeType< R > > Image< R > correctChromaticShift( Image< R > image, ArrayList< long[] > shifts )
     {
         final ChannelShifter< R > shifter = new ChannelShifter< >( image.getRai() );
-        return image.newImage( shifter.getShiftedRai( shifts ) );
+        RandomAccessibleInterval< R > shiftedRai = shifter.getShiftedRai( shifts );
+
+        Image< R > outputImage = new Image( image );
+        outputImage.setRai( shiftedRai );
+
+        return outputImage;
     }
 
     public static < R extends RealType< R > & NativeType< R > > Image< R > transform( Image< R > image, AffineTransform3D transform3D, InterpolatorFactory interpolatorFactory )

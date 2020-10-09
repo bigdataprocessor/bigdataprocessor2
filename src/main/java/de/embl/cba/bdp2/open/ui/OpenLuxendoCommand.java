@@ -44,7 +44,7 @@ public class OpenLuxendoCommand< R extends RealType< R > & NativeType< R > > ext
                             enableArbitraryPlaneSlicing,
                             stackIndex );
 
-            outputImage = BigDataProcessor2.openImageFromHdf5( directory.toString(), regExp, regExp, "Data", channelSubsetter );
+            outputImage = BigDataProcessor2.openHdf5Series( directory.toString(), regExp, regExp, "Data", channelSubsetter );
 
             handleOutputImage( true, false );
         });

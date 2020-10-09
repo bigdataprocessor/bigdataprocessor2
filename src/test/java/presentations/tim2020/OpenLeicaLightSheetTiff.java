@@ -9,7 +9,7 @@ public class OpenLeicaLightSheetTiff
 {
 	public static void main( String[] args )
 	{
-		final Image image = BigDataProcessor2.openImage( "/g/cba/exchange/bigdataprocessor/data/tim2020/leica-light-sheet-tiff-planes",
+		final Image image = BigDataProcessor2.openTiffSeries( "/g/cba/exchange/bigdataprocessor/data/tim2020/leica-light-sheet-tiff-planes",
 				NamingSchemes.LEICA_DSL_TIFF_PLANES_REG_EXP,
 				".*"
 		);

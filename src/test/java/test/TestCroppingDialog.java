@@ -20,7 +20,7 @@ public class TestCroppingDialog
 
         String imageDirectory = "/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-data/microglia-tracking-nt123/volumes";
 
-        final Image< R > image = BigDataProcessor2.openImage(
+        final Image< R > image = BigDataProcessor2.openTiffSeries(
                 imageDirectory,
                 NamingSchemes.SINGLE_CHANNEL_TIMELAPSE,
                 ".*" );

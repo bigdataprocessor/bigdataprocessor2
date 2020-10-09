@@ -178,7 +178,7 @@ public class Utils {
 		String regExp = MULTI_CHANNEL_VOLUMES_FROM_SUBFOLDERS.replace( "STACK", "" + stackIndex );
 
 		final Image< R > image =
-				BigDataProcessor2.openImageFromHdf5(
+				BigDataProcessor2.openHdf5Series(
 						directoryOfChannel0.getParent(),
 						regExp,
 						regExp,

@@ -133,8 +133,7 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > > extends JFr
         panelIndex = addTiffCompressionPanel( panelIndex );
 
         if ( ( saveFileType.equals( SavingSettings.SaveFileType.TIFF_PLANES ) ||
-                saveFileType.equals( SavingSettings.SaveFileType.TIFF_VOLUMES ) )
-                && ! viewer.getImage().getFileInfos().fileType.equals( OpenFileType.HDF5 ) )
+                saveFileType.equals( SavingSettings.SaveFileType.TIFF_VOLUMES ) ) )
         {
             panels.add( new JPanel() );
             panels.get( panelIndex ).add( new JLabel( "I/O Threads" ) );
