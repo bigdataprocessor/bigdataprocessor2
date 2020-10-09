@@ -37,7 +37,7 @@ public class ReplaceCachedTwoChannelCellImg
 						filterPattern,
 						dataset );
 
-		final CachedCellImg cachedCellImg = FileSeriesCachedCellImageCreator.createCachedCellImg( fileInfos );
+		final CachedCellImg cachedCellImg = FileSeriesCachedCellImageCreator.createCachedCellImg( fileInfos, cacheSize );
 
 		final CachedCellImg cachedCellImg2 = FileSeriesCachedCellImageCreator.createVolumeCachedCellImg( fileInfos, image.getDimensionsXYZCT()[ DimensionOrder.C ] * 1 );
 

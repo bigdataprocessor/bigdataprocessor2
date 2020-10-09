@@ -70,13 +70,11 @@ public class VolatileCachedCellImgs
 
 		if( UnsignedShortType.class.isInstance( typeFromInterval ) )
 		{
-			cachedCellImg = asVolatileShortTypeCachedCellImg(
-					( RandomAccessibleInterval ) image.getRai(), grid );
+			cachedCellImg = asVolatileShortTypeCachedCellImg( ( RandomAccessibleInterval ) image.getRai(), grid );
 		}
 		else if ( UnsignedByteType.class.isInstance( typeFromInterval ) )
 		{
-			cachedCellImg = asVolatileByteTypeCachedCellImg(
-					( RandomAccessibleInterval ) image.getRai(), grid );
+			cachedCellImg = asVolatileByteTypeCachedCellImg( ( RandomAccessibleInterval ) image.getRai(), grid );
 		}
 		else
 		{

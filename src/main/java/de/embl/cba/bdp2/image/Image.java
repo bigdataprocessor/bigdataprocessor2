@@ -6,6 +6,7 @@ import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import mpicbg.imglib.multithreading.Stopable;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.cache.img.CachedCellImg;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
@@ -18,60 +19,71 @@ public class Image< R extends RealType< R > & NativeType< R > >
 {
 	public static final String WARNING_VOXEL_SIZE = "Please check voxel size.";
 
-	private RandomAccessibleInterval< R > raiXYZCT;
+	/**
+	 * The cachedCellImg loads the data for the rai.
+	 * This must be 5D with dimension order XYZCT.
+	 *
+	 * The optimal sizes of the cells depend on the use-case
+	 */
+	private CachedCellImg< R, ? > cachedCellImg;
+
+	/**
+	 * The rai holds the (processed) image data.
+	 * Initially, the rai simply is above cachedCellImg,
+	 * but as more and more processing steps are applied,
+	 * the rai accumulates a cascade of views and conversions.
+	 * The loading of the actual image data is however still
+	 * backed by above cachedCellImg.
+	 */
+	private RandomAccessibleInterval< R > rai;
+
 	private String name;
 	private String[] channelNames;
 	private double[] voxelSize;
 	private String voxelUnit;
-	private FileInfos fileInfos;
-	private ArrayList< Stopable > stopables = new ArrayList<>(  );
-	private ArrayList< String > infos = new ArrayList<>(  );
 
-	public Image( RandomAccessibleInterval< R > raiXYZCT,
+	// Note: currently not used, consider moving to a branch
+	private ArrayList< Stopable > stopables = new ArrayList<>(  );
+
+	public Image( CachedCellImg< R, ? > cachedCellImg,
 				  String name,
 				  String[] channelNames,
 				  double[] voxelSize,
-				  String voxelUnit,
-				  FileInfos fileInfos )
+				  String voxelUnit )
 	{
-		this.raiXYZCT = raiXYZCT;
+		this.cachedCellImg = cachedCellImg;
+		this.rai = cachedCellImg;
 		this.name = name;
 		this.channelNames = channelNames.clone();
 		this.voxelSize = voxelSize.clone();
 		this.voxelUnit = voxelUnit;
-		this.fileInfos = fileInfos;
 	}
 
+	/**
+	 * Copy constructor.
+	 *
+	 * @param image
+	 */
 	public Image( Image< R > image )
 	{
-		this.raiXYZCT = image.getRai();
-		this.name = image.getName();
-		this.channelNames = image.getChannelNames().clone();
-		this.voxelSize = image.getVoxelSize().clone();
-		this.voxelUnit = image.getVoxelUnit();
-		this.fileInfos = image.getFileInfos();
-	}
-
-	public ArrayList< String > getInfos()
-	{
-		return infos;
-	}
-
-	public void setInfos( ArrayList< String > infos )
-	{
-		this.infos = infos;
+		this.cachedCellImg = image.cachedCellImg; // want to use same cache, thus by-reference
+		this.rai = image.rai; // don't know how copy this, thus by-reference... TODO?
+		this.name = image.name; // immutable anyway
+		this.channelNames = image.channelNames.clone();
+		this.voxelSize = image.voxelSize.clone();
+		this.voxelUnit = image.getVoxelUnit(); // immutable anyway
 	}
 
 	public long[] getDimensionsXYZCT()
 	{
-		final long[] longs = new long[ raiXYZCT.numDimensions() ];
-		raiXYZCT.dimensions( longs );
+		final long[] longs = new long[ rai.numDimensions() ];
+		rai.dimensions( longs );
 		return longs;
 	}
 
 	public String getDataTypeString()
 	{
-		final R type = Util.getTypeFromInterval( raiXYZCT );
+		final R type = Util.getTypeFromInterval( rai );
 		if ( type instanceof UnsignedByteType )
 			return "unsigned 8 bit";
 		else if ( type instanceof UnsignedShortType )
@@ -108,27 +120,24 @@ public class Image< R extends RealType< R > & NativeType< R > >
 	}
 
 	@JsonIgnore
-	public FileInfos getFileInfos()
-	{
-		return fileInfos;
-	}
-
-	@JsonIgnore
-	public void setFileInfos( FileInfos fileInfos )
-	{
-		this.fileInfos = fileInfos;
-	}
-
-	@JsonIgnore
 	public RandomAccessibleInterval< R > getRai()
 	{
-		return raiXYZCT;
+		return rai;
 	}
 
 	@JsonIgnore
+	/**
+	 * This method should be used to update the rai
+	 * in case a processing step was added.
+	 *
+	 * Typically, before doing that one would make a
+	 * new instance of the image using the copy constructor.
+	 * In case the processing changed the voxel size
+	 * one must also adapt this.
+	 */
 	public void setRai( RandomAccessibleInterval< R > raiXYZCT )
 	{
-		this.raiXYZCT = raiXYZCT;
+		this.rai = raiXYZCT;
 	}
 
 	public double[] getVoxelSize()
@@ -141,12 +150,15 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		this.name = name;
 	}
 
+	/**
+	 * Adapt the voxel size, e.g., in case a processing step like
+	 * binning was applied.
+	 *
+	 * @param voxelSize
+	 */
 	public void setVoxelSize( double... voxelSize )
 	{
 		this.voxelSize = voxelSize;
-		if ( infos.indexOf( WARNING_VOXEL_SIZE ) != -1 ){
-			infos.remove( infos.indexOf( WARNING_VOXEL_SIZE ) );
-		};
 	}
 
 	public String getVoxelUnit()
@@ -164,21 +176,14 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		return name;
 	}
 
-	public Image< R > newImage( RandomAccessibleInterval< R > raiXYZCT )
-	{
-		final Image< R > image = new Image<>( raiXYZCT, getName(), getChannelNames(), getVoxelSize(), getVoxelUnit(), getFileInfos() );
-		image.setInfos( this.infos );
-		return image;
-	}
-
 	public int getNumTimePoints()
 	{
-		return (int) raiXYZCT.dimension( DimensionOrder.T );
+		return (int) rai.dimension( DimensionOrder.T );
 	}
 
 	public long getNumChannels()
 	{
-		return raiXYZCT.dimension( DimensionOrder.C );
+		return rai.dimension( DimensionOrder.C );
 	}
 
 	public void addStopableProcess( Stopable stopable )
@@ -190,7 +195,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 	{
 		for ( Stopable stopable : stopables )
 		{
-			if ( stopable != null ) // might be devel an Garbage collected already
+			if ( stopable != null ) // might be Garbage collected already
 				stopable.stopThread();
 		}
 	}
@@ -221,6 +226,8 @@ public class Image< R extends RealType< R > & NativeType< R > >
 
 	public int[] getCellDims()
 	{
-		return new int[ 0 ];
+		int[] cellDims = new int[ 5 ];
+		cachedCellImg.getCellGrid().cellDimensions( cellDims );
+		return cellDims;
 	}
 }

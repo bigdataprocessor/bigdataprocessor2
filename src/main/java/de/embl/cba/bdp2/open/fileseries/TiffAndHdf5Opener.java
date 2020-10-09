@@ -36,18 +36,25 @@ import java.util.concurrent.Future;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
-public class OpenerExtension extends Opener {
+public class TiffAndHdf5Opener extends Opener {
+
+    // Compression modes
+    public static final int COMPRESSION_UNKNOWN = 0;
+    public static final int COMPRESSION_NONE = 1;
+    public static final int LZW = 2;
+    public static final int LZW_WITH_DIFFERENCING = 3;
 
     // TODO: make it NOT an extension
-    public OpenerExtension()
+    public TiffAndHdf5Opener()
     {
 
     }
 /*
     public void loadDataIntoCell(SingleCellArrayImg cell, directory, SerializableFileInfo[] info, ExecutorService executorService) {
-        // TODO: implement :-)
+        // TODO: implement!
     }
 */
+
     public ImagePlus readDataCube(
             String directory,
             SerializableFileInfo[] info,
@@ -569,18 +576,13 @@ public class OpenerExtension extends Opener {
 
 
     /** Decompresses and sorts data into an ImageStack **/
-    class readCroppedPlaneFromTiffIntoImageStack implements Runnable
+    public class readCroppedPlaneFromTiffIntoImageStack implements Runnable
     {
         private Thread t;
         private String threadName;
 
         // todo: make the compression modes part of the fi object?
 
-        // Compression modes
-        public static final int COMPRESSION_UNKNOWN = 0;
-        public static final int COMPRESSION_NONE = 1;
-        public static final int LZW = 2;
-        public static final int LZW_WITH_DIFFERENCING = 3;
         public static final int JPEG = 4;
         public static final int PACK_BITS = 5;
         public static final int ZIP = 6;

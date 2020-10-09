@@ -299,6 +299,20 @@ public class Utils {
 		}
 	}
 
+	public static int getBitDepth( RandomAccessibleInterval< ? > raiXYZCT )
+	{
+		int bitDepth;
+		final Object typeFromInterval = Util.getTypeFromInterval( raiXYZCT );
+		if ( typeFromInterval instanceof UnsignedByteType )
+			bitDepth = 8;
+		else if ( typeFromInterval instanceof UnsignedShortType )
+			bitDepth = 16;
+		else
+			throw new UnsupportedOperationException( "Type not supported: " + typeFromInterval );
+
+		return bitDepth;
+	}
+
 	public enum ImageFilterTypes {
         NONE("None"),
         THRESHOLD("Threshold"),

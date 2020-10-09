@@ -6,10 +6,6 @@ import com.google.common.cache.LoadingCache;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.open.OpenFileType;
-import de.embl.cba.bdp2.open.fileseries.FileInfos;
-import de.embl.cba.bdp2.open.fileseries.Hdf5DataCubeReader;
-import de.embl.cba.bdp2.open.fileseries.OpenerExtension;
-import de.embl.cba.bdp2.open.fileseries.SerializableFileInfo;
 import de.embl.cba.bdp2.service.PerformanceService;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import ij.ImagePlus;
@@ -192,7 +188,7 @@ public class FileSeriesCellLoader< T extends NativeType< T > > implements CellLo
         Point3D ps = getSize( min, max );
 
         //TODO: get rid of ImagePlus
-        ImagePlus imagePlus = new OpenerExtension().readDataCube(
+        ImagePlus imagePlus = new TiffAndHdf5Opener().readDataCube(
                 directory,
                 infos_c_t,
                 1,

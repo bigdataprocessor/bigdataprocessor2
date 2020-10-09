@@ -25,7 +25,7 @@ public class TestOpenHDF5WithUI {
                 ".*.h5",
                 "Data");
         //FileInfoSource file = new FileInfoSource(directory,"None",".*.h5","Datawrong",true,10);
-        Img myImg = new FileSeriesCachedCellImageCreator().createCachedCellImg( fileInfos );
+        Img myImg = new FileSeriesCachedCellImageCreator().createCachedCellImg( fileInfos, cacheSize );
 
         BdvSource bdvSource = BdvFunctions.show(
                 VolatileViews.wrapAsVolatile( myImg ), "stream", BdvOptions.options().axisOrder(AxisOrder.XYCZT)
