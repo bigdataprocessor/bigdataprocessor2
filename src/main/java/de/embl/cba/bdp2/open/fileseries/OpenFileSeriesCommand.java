@@ -1,5 +1,6 @@
-package de.embl.cba.bdp2.open.ui;
+package de.embl.cba.bdp2.open.fileseries;
 
+import de.embl.cba.bdp2.open.AbstractOpenCommand;
 import de.embl.cba.bdp2.process.calibrate.CalibrationUtils;
 import de.embl.cba.bdp2.dialog.Utils;
 import de.embl.cba.bdp2.image.Image;
@@ -22,10 +23,10 @@ import static de.embl.cba.bdp2.utils.Utils.COMMAND_BDP2_PREFIX;
  *
  * @param <R>
  */
-@Plugin(type = Command.class, menuPath = Utils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractOpenCommand.COMMAND_OPEN_PATH + OpenCustomCommand.COMMAND_FULL_NAME )
-public class OpenCustomCommand< R extends RealType< R > & NativeType< R > > extends AbstractOpenCommand< R >
+@Plugin(type = Command.class, menuPath = Utils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractOpenCommand.COMMAND_OPEN_PATH + OpenFileSeriesCommand.COMMAND_FULL_NAME )
+public class OpenFileSeriesCommand< R extends RealType< R > & NativeType< R > > extends AbstractOpenCommand< R >
 {
-    public static final String COMMAND_NAME = "Open Custom...";
+    public static final String COMMAND_NAME = "Open File Series...";
     public static final String COMMAND_FULL_NAME = COMMAND_BDP2_PREFIX + COMMAND_NAME;
     public static final String USE_CUSTOM = "Use below custom regular expression";
 
@@ -76,7 +77,7 @@ public class OpenCustomCommand< R extends RealType< R > & NativeType< R > > exte
     {
         // Sometimes Leica is calibrated as cm, which makes no sense
         final double[] voxelSpacing = image.getVoxelSize();
-        final String voxelUnit = CalibrationUtils.fixVoxelSizeAndUnit( voxelSpacing, image.getVoxelUnit() );
+        final String voxelUnit = CalibrationUtils.fixVoxelSizeAndUnit( voxelSpacing, image.getVoxelUnit().toString() );
         image.setVoxelSize( voxelSpacing );
         image.setVoxelUnit( voxelUnit );
     }

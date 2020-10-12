@@ -4,7 +4,7 @@ import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.open.NamingSchemes;
 import de.embl.cba.bdp2.process.align.splitchip.SplitChipDialog;
 import de.embl.cba.bdp2.BigDataProcessor2;
-import de.embl.cba.bdp2.viewers.ImageViewer;
+import de.embl.cba.bdp2.viewer.ImageViewer;
 import net.imagej.ImageJ;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;

@@ -6,7 +6,7 @@ import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.macro.MacroRecorder;
 import de.embl.cba.bdp2.dialog.AbstractProcessingDialog;
 import de.embl.cba.bdp2.utils.Utils;
-import de.embl.cba.bdp2.viewers.ImageViewer;
+import de.embl.cba.bdp2.viewer.ImageViewer;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 

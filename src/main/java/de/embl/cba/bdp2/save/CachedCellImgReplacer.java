@@ -143,7 +143,6 @@ public class CachedCellImgReplacer< T extends Type< T > & NativeType< T >, S ext
 
 				return converted;
 			}
-
 		}
 		else if ( ra instanceof StackView )
 		{
@@ -196,6 +195,4 @@ public class CachedCellImgReplacer< T extends Type< T > & NativeType< T >, S ext
 			throw new IllegalArgumentException();
 		}
 	}
-
-
 }

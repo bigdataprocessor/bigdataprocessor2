@@ -2,10 +2,10 @@ package de.embl.cba.bdp2.process;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.open.ui.AbstractOpenCommand;
+import de.embl.cba.bdp2.open.AbstractOpenCommand;
 import de.embl.cba.bdp2.service.ImageViewerService;
 import de.embl.cba.bdp2.service.ImageService;
-import de.embl.cba.bdp2.viewers.ImageViewer;
+import de.embl.cba.bdp2.viewer.ImageViewer;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;

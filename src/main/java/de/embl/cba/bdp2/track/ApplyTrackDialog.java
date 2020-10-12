@@ -3,7 +3,7 @@ package de.embl.cba.bdp2.track;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.macro.MacroRecorder;
-import de.embl.cba.bdp2.viewers.ImageViewer;
+import de.embl.cba.bdp2.viewer.ImageViewer;
 import de.embl.cba.bdv.utils.BdvUtils;
 import fiji.util.gui.GenericDialogPlus;
 import net.imglib2.type.NativeType;

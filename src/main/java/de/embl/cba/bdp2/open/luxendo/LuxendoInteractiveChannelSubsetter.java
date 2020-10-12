@@ -1,9 +1,10 @@
-package de.embl.cba.bdp2.open;
+package de.embl.cba.bdp2.open.luxendo;
 
-import de.embl.cba.bdp2.open.ui.AbstractOpenCommand;
-import de.embl.cba.bdp2.open.ui.ChannelChooserDialog;
-import de.embl.cba.bdp2.open.ui.OpenLuxendoChannelsCommand;
-import de.embl.cba.bdp2.open.ui.OpenLuxendoCommand;
+import de.embl.cba.bdp2.open.AbstractOpenCommand;
+import de.embl.cba.bdp2.open.ChannelChooserDialog;
+import de.embl.cba.bdp2.open.ChannelSubsetter;
+import de.embl.cba.bdp2.open.luxendo.OpenLuxendoChannelsCommand;
+import de.embl.cba.bdp2.open.luxendo.OpenLuxendoCommand;
 import de.embl.cba.bdp2.macro.MacroRecorder;
 import ij.plugin.frame.Recorder;
 

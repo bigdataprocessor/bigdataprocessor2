@@ -84,7 +84,7 @@ public class TiffVolumesFrameSaver< R extends RealType< R > & NativeType< R > > 
                 ImagePlus imp = Utils.wrap3DRaiToCalibratedImagePlus(
                         raiXYZ,
                         settings.voxelSize,
-                        settings.voxelUnit,
+                        settings.voxelUnit.getSymbol(),
                         "" );
 
                 String channelName = getChannelName( c );
@@ -161,7 +161,7 @@ public class TiffVolumesFrameSaver< R extends RealType< R > & NativeType< R > > 
         ImagePlus imp3D = Utils.wrap3DRaiToCalibratedImagePlus(
                 rai3D,
                 settings.voxelSize,
-                settings.voxelUnit,
+                settings.voxelUnit.getSymbol(),
                 "" );
 
         ProjectionXYZ.saveAsTiffXYZMaxProjection( imp3D, c, t, settings.projectionsFilePathStump );

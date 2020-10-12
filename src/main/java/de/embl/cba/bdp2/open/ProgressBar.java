@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.open.ui;
+package de.embl.cba.bdp2.open;
 
 import de.embl.cba.bdp2.log.progress.ProgressListener;
 

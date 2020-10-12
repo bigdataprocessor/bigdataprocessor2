@@ -1,10 +1,9 @@
-package de.embl.cba.bdp2.viewers;
+package de.embl.cba.bdp2.viewer;
 
 import bdv.tools.brightness.ConverterSetup;
 import bdv.util.Bdv;
 import bdv.util.BdvOverlay;
 import bdv.util.PlaceHolderConverterSetup;
-import bdv.util.PlaceHolderSource;
 import de.embl.cba.bdv.utils.BdvUtils;
 import net.imglib2.RealPoint;
 import net.imglib2.type.numeric.ARGBType;
@@ -12,10 +11,8 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ArrayBlockingQueue;
 
 public class BdvGrayValuesOverlay extends BdvOverlay implements MouseMotionListener {
     private final Bdv bdv;

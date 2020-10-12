@@ -105,7 +105,7 @@ public class BoundingBoxDialog < R extends RealType< R > & NativeType< R > >
 
         setInitialSelectionAndRange( true );
 
-        final TransformedRealBoxSelectionDialog.Result result = showRealBox( image.getVoxelUnit() );
+        final TransformedRealBoxSelectionDialog.Result result = showRealBox( image.getVoxelUnit().toString() );
         if ( result.isValid() )
         {
             collectSelection( result.getInterval(), result.getMinTimepoint(), result.getMaxTimepoint() );

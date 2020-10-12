@@ -1,9 +1,10 @@
-package de.embl.cba.bdp2.open;
+package de.embl.cba.bdp2.open.samples;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.progress.ProgressListener;
-import de.embl.cba.bdp2.viewers.ImageViewer;
+import de.embl.cba.bdp2.open.NamingSchemes;
+import de.embl.cba.bdp2.viewer.ImageViewer;
 
 import java.io.BufferedInputStream;
 import java.io.File;

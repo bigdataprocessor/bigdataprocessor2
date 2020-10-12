@@ -18,7 +18,6 @@ import ch.systemsx.cisd.hdf5.HDF5DataTypeInformation;
 import ch.systemsx.cisd.hdf5.HDF5Factory;
 import ch.systemsx.cisd.hdf5.IHDF5Reader;
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.open.OpenFileType;
 import de.embl.cba.bdp2.utils.Point3D;
 import ij.IJ;
 import ij.ImagePlus;
@@ -80,15 +79,15 @@ public class TiffAndHdf5Opener extends Opener {
 
         ImagePlus imp = null;
 
-        if( info[ zs ].fileTypeString.equals( OpenFileType.TIFF_STACKS.toString() ) )
+        if( info[ zs ].fileTypeString.equals( FileSeriesFileType.TIFF_STACKS.toString() ) )
         {
             imp = readDataCubeFromTiff(directory, info, executorService, zs, ze, nz, dz, xs, xe, ys, ye);
         }
-        else if( info[ zs ].fileTypeString.equals( OpenFileType.TIFF_PLANES.toString()  ) )
+        else if( info[ zs ].fileTypeString.equals( FileSeriesFileType.TIFF_PLANES.toString()  ) )
         {
             imp = readDataCubeFromTiff(directory, info, executorService, zs, ze, nz, dz, xs, xe, ys, ye);
         }
-        else if( info[ zs ].fileTypeString.equals( OpenFileType.HDF5.toString()  ) )
+        else if( info[ zs ].fileTypeString.equals( FileSeriesFileType.HDF5.toString()  ) )
         {
             imp = readDataCubeFromHdf5(directory, info, zs, ze, nz, dz, xs, xe, ys, ye);
         }

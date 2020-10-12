@@ -3,7 +3,7 @@ package de.embl.cba.bdp2.process.convert;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.process.AbstractImageProcessingCommand;
 import de.embl.cba.bdp2.utils.Utils;
-import de.embl.cba.bdp2.viewers.ImageViewer;
+import de.embl.cba.bdp2.viewer.ImageViewer;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.plugin.Parameter;

@@ -1,7 +1,7 @@
 package de.embl.cba.bdp2.image;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import de.embl.cba.bdp2.open.CacheUtils;
+import ch.epfl.biop.bdv.bioformats.BioFormatsMetaDataHelper;
+import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.open.CachedCellImgCreator;
 import de.embl.cba.bdp2.save.CachedCellImgReplacer;
 import de.embl.cba.bdp2.utils.DimensionOrder;
@@ -15,9 +15,13 @@ import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.util.Util;
+import ome.units.quantity.Length;
+import ome.units.unit.Unit;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+
+// TODO: make an interface and get rid of CachedCellImgCreator?!!
 
 public class Image< R extends RealType< R > & NativeType< R > >
 {
@@ -29,7 +33,8 @@ public class Image< R extends RealType< R > & NativeType< R > >
 	 *
 	 * The optimal sizes of the cells depend on the use-case
 	 */
-	private CachedCellImgCreator< R > cachedCellImgCreator;
+	private final CachedCellImgCreator< R > cachedCellImgCreator;
+	private int[] cellDims;
 
 	/**
 	 * The rai holds the (processed) image data.
@@ -44,26 +49,20 @@ public class Image< R extends RealType< R > & NativeType< R > >
 	private String name;
 	private String[] channelNames;
 	private double[] voxelSize;
-	private String voxelUnit;
+	private Unit< Length > voxelUnit;
 
 	// Note: currently not used, consider moving to a branch
 	private ArrayList< Stopable > stopables = new ArrayList<>(  );
-	private int[] cellDims;
 
-	public Image( CachedCellImgCreator< R > cachedCellImgCreator,
-				  String name,
-				  String[] channelNames,
-				  double[] voxelSize,
-				  String voxelUnit )
+	public Image( CachedCellImgCreator< R > cachedCellImgCreator )
 	{
 		this.cachedCellImgCreator = cachedCellImgCreator;
-		this.name = name;
-		this.channelNames = channelNames.clone();
-		this.voxelSize = voxelSize.clone();
-		this.voxelUnit = voxelUnit;
+		this.name = cachedCellImgCreator.getImageName();
+		this.channelNames = cachedCellImgCreator.getChannelNames();
+		this.voxelSize = cachedCellImgCreator.getVoxelSize();
+		this.voxelUnit = cachedCellImgCreator.getVoxelUnit();
 
-		// set to default plane wise loading
-		cellDims = CacheUtils.planeWiseCellDims( getDimensionsXYZ(), getBitDepth(), cachedCellImgCreator.isPlaneWiseChunked() );
+		setCache( cachedCellImgCreator.getDefaultCellDimsXYZCT(), DiskCachedCellImgOptions.CacheType.BOUNDED, 100 );
 		this.rai = cachedCellImgCreator.createCachedCellImg( cellDims, DiskCachedCellImgOptions.CacheType.BOUNDED, 100 );
 	}
 
@@ -79,13 +78,8 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		this.name = image.name; // immutable
 		this.channelNames = image.channelNames.clone();
 		this.voxelSize = image.voxelSize.clone();
-		this.voxelUnit = image.getVoxelUnit(); // immutable
-	}
-
-	public long[] getDimensionsXYZ()
-	{
-		long[] dimensionsXYZCT = getDimensionsXYZCT();
-		return Arrays.stream( dimensionsXYZCT ).limit( 3 ).toArray();
+		this.voxelUnit = image.getVoxelUnit();
+		this.cellDims = image.cellDims.clone();
 	}
 
 	public long[] getDimensionsXYZCT()
@@ -144,13 +138,11 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		this.channelNames = channelNames;
 	}
 
-	@JsonIgnore
 	public RandomAccessibleInterval< R > getRai()
 	{
 		return rai;
 	}
 
-	@JsonIgnore
 	/**
 	 * This method should be used to update the rai
 	 * in case a processing step was added.
@@ -189,14 +181,21 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		this.voxelSize = voxelSize;
 	}
 
-	public String getVoxelUnit()
+	public Unit< Length > getVoxelUnit()
 	{
 		return voxelUnit;
 	}
 
-	public void setVoxelUnit( String voxelUnit )
+	public void setVoxelUnit( Unit< Length > voxelUnit )
 	{
 		this.voxelUnit = voxelUnit;
+	}
+
+	// use method above in the future
+	@Deprecated
+	public void setVoxelUnit( String voxelUnit )
+	{
+		this.voxelUnit = BioFormatsMetaDataHelper.getUnitFromString( voxelUnit );
 	}
 
 	public String getName()
@@ -245,9 +244,9 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		}
 		info += "\nSize [GB]: " + getTotalSizeGB();
 		info += "\nData type: " + getDataType();
-		info += "\nSize X,Y,Z [Voxels]: " + Utils.create3DArrayString( getDimensionsXYZCT() );
+		info += "\nSize X,Y,Z [Voxels]: " + Arrays.toString( getDimensionsXYZCT() );
 		info += "\nTime-points: " + getDimensionsXYZCT()[4];
-		info += "\nVoxel size ["+ getVoxelUnit() +"]: " + Utils.create3DArrayString( getVoxelSize() );
+		info += "\nVoxel size ["+ getVoxelUnit().getSymbol() +"]: " + Arrays.toString( getVoxelSize() );
 
 		return info;
 	}
@@ -265,10 +264,19 @@ public class Image< R extends RealType< R > & NativeType< R > >
 	 * @param cacheType
 	 * @param cacheSize
 	 */
-	public void replaceCachedCellImg( int[] cellDims, DiskCachedCellImgOptions.CacheType cacheType, int cacheSize )
+	public void setCache( int[] cellDims, DiskCachedCellImgOptions.CacheType cacheType, int cacheSize )
 	{
+		Logger.info( "Setting cache of image: " + getName() );
+		Logger.info( "  Cache cell dimensions: " + Arrays.toString( cellDims ) );
+		Logger.info( "  Cache size: " + cacheSize );
+		Logger.info( "  Cache type: " + cacheType.toString() );
+
 		this.cellDims = cellDims;
 		CachedCellImg< R, ? > cachedCellImg = cachedCellImgCreator.createCachedCellImg( cellDims, cacheType, cacheSize );
-		rai = new CachedCellImgReplacer<>( rai, cachedCellImg ).get();
+
+		if ( rai == null )
+			rai = cachedCellImg;
+		else
+			rai = new CachedCellImgReplacer<>( rai, cachedCellImg ).get();
 	}
 }

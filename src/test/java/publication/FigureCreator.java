@@ -3,7 +3,7 @@ package publication;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.open.NamingSchemes;
-import de.embl.cba.bdp2.viewers.ImageViewer;
+import de.embl.cba.bdp2.viewer.ImageViewer;
 import net.imagej.ImageJ;
 import net.imglib2.FinalInterval;
 import net.imglib2.type.NativeType;
@@ -23,7 +23,7 @@ public class FigureCreator
 				NamingSchemes.PATTERN_LUXENDO,
 				"Data");
 		image.setName( "raw" );
-		BigDataProcessor2.calibrate( image,  new double[]{0.3, 0.3, 1.0}, image.getVoxelUnit() );
+		BigDataProcessor2.calibrate( image,  new double[]{0.3, 0.3, 1.0}, image.getVoxelUnit().getSymbol() );
 		BigDataProcessor2.showImage( image);
 
 		// crop

@@ -2,7 +2,6 @@ package de.embl.cba.bdp2.open.fileseries;
 
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.open.ChannelSubsetter;
-import de.embl.cba.bdp2.open.OpenFileType;
 import de.embl.cba.bdp2.open.NamingSchemes;
 import de.embl.cba.bdp2.utils.BioFormatsCalibrationReader;
 import de.embl.cba.bdp2.utils.DimensionOrder;
@@ -32,7 +31,7 @@ public class FileInfosHelper
 
         if ( NamingSchemes.isLuxendoNamingScheme( namingScheme ) )
         {
-            fileInfos.fileType = OpenFileType.LUXENDO;
+            fileInfos.fileType = FileSeriesFileType.LUXENDO;
         }
 
         initFileInfos5D( fileInfos, namingScheme, fileLists, channels );
@@ -101,12 +100,12 @@ public class FileInfosHelper
 
             if ( namingScheme.contains( NamingSchemes.Z ) )
             {
-                fileInfos.fileType = OpenFileType.TIFF_PLANES;
+                fileInfos.fileType = FileSeriesFileType.TIFF_PLANES;
                 fileInfos.nZ = nZ; // correct back for single plane files
             }
             else // volumes
             {
-                fileInfos.fileType = OpenFileType.TIFF_STACKS;
+                fileInfos.fileType = FileSeriesFileType.TIFF_STACKS;
             }
 
             final File omeCompanion = new File( directory, "ome-tiff.companion.ome" );
@@ -119,7 +118,7 @@ public class FileInfosHelper
         }
         else if ( fileList[0].endsWith(".h5") )
         {
-            fileInfos.fileType = OpenFileType.HDF5;
+            fileInfos.fileType = FileSeriesFileType.HDF5;
             FileInfosHDF5Helper.setImageDataInfoFromH5( fileInfos, directory, fileList[ 0 ] );
         }
         else

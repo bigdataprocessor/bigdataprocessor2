@@ -1,6 +1,7 @@
-package de.embl.cba.bdp2.open.ui;
+package de.embl.cba.bdp2.open.leica;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
+import de.embl.cba.bdp2.open.AbstractOpenCommand;
 import de.embl.cba.bdp2.process.calibrate.CalibrationUtils;
 import de.embl.cba.bdp2.dialog.Utils;
 import de.embl.cba.bdp2.image.Image;
@@ -39,7 +40,7 @@ public class OpenLeicaDSLTiffPlanesCommand< R extends RealType< R > & NativeType
     {
         // Sometimes Leica is calibrated as cm, which makes no sense
         final double[] voxelSpacing = image.getVoxelSize();
-        final String voxelUnit = CalibrationUtils.fixVoxelSizeAndUnit( voxelSpacing, image.getVoxelUnit() );
+        final String voxelUnit = CalibrationUtils.fixVoxelSizeAndUnit( voxelSpacing, image.getVoxelUnit().toString() );
         image.setVoxelSize( voxelSpacing );
         image.setVoxelUnit( voxelUnit );
     }

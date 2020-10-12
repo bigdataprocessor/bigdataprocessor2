@@ -18,7 +18,7 @@ import de.embl.cba.bdp2.save.*;
 import de.embl.cba.bdp2.process.align.channelshift.ChannelShifter;
 import de.embl.cba.bdp2.service.ImageViewerService;
 import de.embl.cba.bdp2.process.transform.ImageTransformer;
-import de.embl.cba.bdp2.viewers.ImageViewer;
+import de.embl.cba.bdp2.viewer.ImageViewer;
 import loci.common.DebugTools;
 import net.imglib2.*;
 import net.imglib2.interpolation.InterpolatorFactory;

@@ -1,7 +1,7 @@
 package de.embl.cba.bdp2.dialog;
 
 import de.embl.cba.bdp2.utils.DimensionOrder;
-import de.embl.cba.bdp2.viewers.ImageViewer;
+import de.embl.cba.bdp2.viewer.ImageViewer;
 import fiji.util.gui.GenericDialogPlus;
 
 import javax.swing.*;

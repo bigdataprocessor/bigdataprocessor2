@@ -5,6 +5,8 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.RealType;
+import ome.units.UNITS;
+import ome.units.unit.Unit;
 
 /**
  * Created by tischi on 22/05/17.
@@ -23,7 +25,7 @@ public class SavingSettings < R extends RealType< R > & NativeType< R > > {
     // TODO: remove the image itself from the settings
     public RandomAccessibleInterval rai;
     public double[] voxelSize;
-    public String voxelUnit;
+    public Unit voxelUnit;
 
     // TODO: also remove the binning
     public String bin;
@@ -93,7 +95,7 @@ public class SavingSettings < R extends RealType< R > & NativeType< R > > {
         SavingSettings savingSettings = new SavingSettings();
         savingSettings.bin = "1,1,1";
         savingSettings.voxelSize = new double[]{1,1,1};
-        savingSettings.voxelUnit = "pixel";
+        savingSettings.voxelUnit = UNITS.MICROMETER;
         savingSettings.saveVolumes = true;
         savingSettings.saveProjections = false;
         savingSettings.saveFileType = SaveFileType.TIFF_PLANES;

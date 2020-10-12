@@ -85,7 +85,7 @@ public class ImarisFrameSaver< R extends RealType< R > & NativeType< R >> implem
                     Utils.wrap3DRaiToCalibratedImagePlus(
                             raiXYZ,
                             settings.voxelSize,
-                            settings.voxelUnit,
+                            settings.voxelUnit.getSymbol(),
                             "");
 
             // Save volume

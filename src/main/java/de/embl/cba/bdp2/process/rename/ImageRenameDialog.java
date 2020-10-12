@@ -2,7 +2,7 @@ package de.embl.cba.bdp2.process.rename;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.macro.MacroRecorder;
-import de.embl.cba.bdp2.viewers.ImageViewer;
+import de.embl.cba.bdp2.viewer.ImageViewer;
 import ij.gui.GenericDialog;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;

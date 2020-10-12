@@ -1,6 +1,6 @@
 package de.embl.cba.bdp2.macro;
 
-import de.embl.cba.bdp2.open.ui.AbstractOpenCommand;
+import de.embl.cba.bdp2.open.AbstractOpenCommand;
 import de.embl.cba.bdp2.quit.QuitCommand;
 
 import java.io.BufferedReader;

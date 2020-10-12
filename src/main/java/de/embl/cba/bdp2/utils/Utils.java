@@ -35,7 +35,7 @@ import bdv.viewer.animate.SimilarityTransformAnimator;
 import de.embl.cba.bdp2.process.align.splitchip.SplitChipMerger;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.open.Luxendos;
+import de.embl.cba.bdp2.open.luxendo.Luxendos;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.dialog.DisplaySettings;
 import de.embl.cba.bdp2.scijava.Services;
@@ -56,6 +56,7 @@ import net.imglib2.img.cell.CellImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
@@ -311,6 +312,26 @@ public class Utils {
 			throw new UnsupportedOperationException( "Type not supported: " + typeFromInterval );
 
 		return bitDepth;
+	}
+
+	public static ARGBType getAutoColor( int channelIndex, int numChannels )
+	{
+		if ( numChannels == 1 )
+			return new ARGBType( ARGBType.rgba( 255, 255, 255, 255 / numChannels ) );
+
+		switch ( channelIndex )
+		{
+			case 0:
+				return new ARGBType( ARGBType.rgba( 0, 255, 0, 255 / numChannels ) );
+			case 1:
+				return new ARGBType( ARGBType.rgba( 255, 0, 255, 255 / numChannels ) );
+			case 2:
+				return new ARGBType( ARGBType.rgba( 0, 255, 255, 255 / numChannels ) );
+			case 3:
+				return new ARGBType( ARGBType.rgba( 255, 0, 0, 255 / numChannels ) );
+			default:
+				return new ARGBType( ARGBType.rgba( 255, 255, 255, 255 / numChannels ) );
+		}
 	}
 
 	public enum ImageFilterTypes {

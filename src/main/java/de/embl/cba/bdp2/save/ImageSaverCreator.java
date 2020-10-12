@@ -37,7 +37,7 @@ public class ImageSaverCreator < R extends RealType< R > & NativeType< R > >
 
 			Logger.info( "Configuring volume reader with a cache size of " + cacheSize + " volumes." );
 
-			image.replaceCachedCellImg( CacheUtils.volumeWiseCellDims( image.getDimensionsXYZCT() ), DiskCachedCellImgOptions.CacheType.BOUNDED, 100 );
+			image.setCache( CacheUtils.volumeWiseCellDims( image.getDimensionsXYZCT() ), DiskCachedCellImgOptions.CacheType.BOUNDED, 100 );
 
 			savingSettings.rai = image.getRai();
 		}

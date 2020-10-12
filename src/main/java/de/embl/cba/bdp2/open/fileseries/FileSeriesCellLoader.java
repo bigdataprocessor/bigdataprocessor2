@@ -5,7 +5,6 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.open.OpenFileType;
 import de.embl.cba.bdp2.service.PerformanceService;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import ij.ImagePlus;
@@ -32,7 +31,7 @@ public class FileSeriesCellLoader< T extends NativeType< T > > implements CellLo
     private long[] dimensions;
     private int[] cellDims;
     private LoadingCache< List< Integer >, SerializableFileInfo[] > serializableFileInfoCache;
-    private final OpenFileType fileType;
+    private final FileSeriesFileType fileType;
     private short[][] cache;
 
     public FileSeriesCellLoader( FileInfos fileInfos, int[] cellDimsXYZCT )

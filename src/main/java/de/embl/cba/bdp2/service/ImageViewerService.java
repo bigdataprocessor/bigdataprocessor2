@@ -1,7 +1,7 @@
 package de.embl.cba.bdp2.service;
 
 import de.embl.cba.bdp2.BigDataProcessor2UserInterface;
-import de.embl.cba.bdp2.viewers.ImageViewer;
+import de.embl.cba.bdp2.viewer.ImageViewer;
 
 import java.util.Collections;
 import java.util.Map;

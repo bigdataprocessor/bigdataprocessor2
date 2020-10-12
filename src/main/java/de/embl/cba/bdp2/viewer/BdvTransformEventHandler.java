@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.viewers;
+package de.embl.cba.bdp2.viewer;
 
 import bdv.BehaviourTransformEventHandler;
 import bdv.BehaviourTransformEventHandlerFactory;

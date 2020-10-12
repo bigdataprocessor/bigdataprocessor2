@@ -1,7 +1,6 @@
 package run;
 
-import de.embl.cba.bdp2.open.ui.DownloadAndOpenSampleDataCommand;
-import de.embl.cba.bdp2.scijava.Services;
+import de.embl.cba.bdp2.open.samples.DownloadAndOpenSampleDataCommand;
 import ij.plugin.frame.Recorder;
 import net.imagej.ImageJ;
 

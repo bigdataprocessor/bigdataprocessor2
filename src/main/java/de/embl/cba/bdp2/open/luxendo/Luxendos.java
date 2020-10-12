@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.open;
+package de.embl.cba.bdp2.open.luxendo;
 
 import ch.systemsx.cisd.hdf5.IHDF5Reader;
 import de.embl.cba.bdp2.log.Logger;

@@ -1,6 +1,6 @@
-package de.embl.cba.bdp2.open;
+package de.embl.cba.bdp2.open.fileseries;
 
-public enum OpenFileType
+public enum FileSeriesFileType
 {
 	HDF5("Hdf5"),
 	LUXENDO("Luxendo Hdf5"),
@@ -9,7 +9,7 @@ public enum OpenFileType
 	TIFF_PLANES("Tiff Planes");
 
 	private final String text;
-	private OpenFileType( String s)
+	private FileSeriesFileType( String s)
 {
 text = s;
 }

@@ -5,7 +5,6 @@ import ch.systemsx.cisd.hdf5.HDF5Factory;
 import ch.systemsx.cisd.hdf5.IHDF5Reader;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.open.ChannelSubsetter;
-import de.embl.cba.bdp2.open.OpenFileType;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.imaris.ImarisUtils;
 import ij.io.FileInfo;
@@ -50,7 +49,7 @@ public class FileInfos
     public int nZ;
     public String voxelUnit;
     public double[] voxelSize;
-    public OpenFileType fileType;
+    public FileSeriesFileType fileType;
     public String h5DataSetName;
     public String[][][] ctzFiles;
     public String directory;
@@ -179,13 +178,13 @@ public class FileInfos
 
     public SerializableFileInfo[] getSerializableFileStackInfo( int channel, int time ) {
         int z = 0;
-        if ( fileType.equals( OpenFileType.TIFF_STACKS ) ) {
+        if ( fileType.equals( FileSeriesFileType.TIFF_STACKS ) ) {
             setInfosFromFile(channel, time, z, true);
         }
-        else if ( fileType.equals( OpenFileType.HDF5 ) ) {
+        else if ( fileType.equals( FileSeriesFileType.HDF5 ) ) {
             setInfosFromFile(channel, time, z, true);
         }
-        else if ( fileType.equals( OpenFileType.TIFF_PLANES ) ) {
+        else if ( fileType.equals( FileSeriesFileType.TIFF_PLANES ) ) {
             int nZ = ctzFiles[channel][time].length;
             for (; z < nZ; ++z) {
                 setInfosFromFile(channel, time, z, true);
@@ -202,7 +201,7 @@ public class FileInfos
         File file = new File( directory, ctzFiles[c][t][z] );
         if ( file.exists() )
         {
-            if ( fileType.equals( OpenFileType.TIFF_STACKS ) )
+            if ( fileType.equals( FileSeriesFileType.TIFF_STACKS ) )
             {
                 ftd = new FastTiffDecoder( directory, ctzFiles[c][t][0] );
                 try {
@@ -234,7 +233,7 @@ public class FileInfos
 
                 ctzFileInfos[c][t] = infoCT;
             }
-            else if ( fileType.equals( OpenFileType.HDF5 ) )
+            else if ( fileType.equals( FileSeriesFileType.HDF5 ) )
             {
                 //
                 // construct a FileInfoSer
@@ -273,7 +272,7 @@ public class FileInfos
                 }
                 ctzFileInfos[c][t] = infoCT;
             }
-            else if ( fileType.equals( OpenFileType.TIFF_PLANES))
+            else if ( fileType.equals( FileSeriesFileType.TIFF_PLANES))
             {
                 ftd = new FastTiffDecoder(directory, ctzFiles[c][t][z]);
                 try{

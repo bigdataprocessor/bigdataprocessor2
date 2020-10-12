@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.open;
+package de.embl.cba.bdp2.open.samples;
 
 import java.io.File;
 import java.io.FileInputStream;

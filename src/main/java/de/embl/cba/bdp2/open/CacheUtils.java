@@ -2,6 +2,7 @@ package de.embl.cba.bdp2.open;
 
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.open.fileseries.FileInfos;
+import de.embl.cba.bdp2.open.fileseries.FileSeriesFileType;
 
 import static de.embl.cba.bdp2.open.fileseries.TiffAndHdf5Opener.COMPRESSION_NONE;
 
@@ -11,7 +12,7 @@ public abstract class CacheUtils
 
 	public static boolean isPlaneWiseCompressed( FileInfos fileInfos )
 	{
-		if ( fileInfos.fileType.equals( OpenFileType.TIFF_PLANES ) || fileInfos.fileType.equals( OpenFileType.TIFF_STACKS ) )
+		if ( fileInfos.fileType.equals( FileSeriesFileType.TIFF_PLANES ) || fileInfos.fileType.equals( FileSeriesFileType.TIFF_STACKS ) )
 		{
 			if ( fileInfos.numTiffStrips == 1 && fileInfos.compression != COMPRESSION_NONE )
 			{

@@ -99,7 +99,7 @@ public class ImarisImageSaver extends AbstractImageSaver
         ImagePlus image = Utils.wrap5DRaiToCalibratedImagePlus(
                 settings.rai,
                 settings.voxelSize,
-                settings.voxelUnit,
+                settings.voxelUnit.getSymbol(),
                 "wrapped");
 
         int[] binning = new int[]{1,1,1};

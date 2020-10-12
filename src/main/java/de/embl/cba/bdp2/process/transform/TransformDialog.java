@@ -1,11 +1,10 @@
 package de.embl.cba.bdp2.process.transform;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
-import de.embl.cba.bdp2.dialog.AbstractProcessingDialog;
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.open.ui.AbstractOpenCommand;
+import de.embl.cba.bdp2.open.AbstractOpenCommand;
 import de.embl.cba.bdp2.macro.MacroRecorder;
-import de.embl.cba.bdp2.viewers.ImageViewer;
+import de.embl.cba.bdp2.viewer.ImageViewer;
 import ij.gui.GenericDialog;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;

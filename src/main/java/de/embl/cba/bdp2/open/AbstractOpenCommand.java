@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.open.ui;
+package de.embl.cba.bdp2.open;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.process.calibrate.CalibrationCheckerDialog;
@@ -6,7 +6,7 @@ import de.embl.cba.bdp2.dialog.HelpWindow;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.scijava.Services;
 import de.embl.cba.bdp2.service.ImageService;
-import de.embl.cba.bdp2.viewers.ImageViewer;
+import de.embl.cba.bdp2.viewer.ImageViewer;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.jetbrains.annotations.Nullable;
@@ -36,7 +36,7 @@ public abstract class AbstractOpenCommand< R extends RealType< R > & NativeType<
     Context context;
 
     @Parameter(label = "Image data directory", style = "directory")
-    File directory;
+    protected File directory;
     public static String DIRECTORY_PARAMETER = "directory";
 
     @Parameter(label = "Output image handling", choices = {

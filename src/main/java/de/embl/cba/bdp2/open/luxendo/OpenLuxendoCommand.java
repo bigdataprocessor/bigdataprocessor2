@@ -1,8 +1,8 @@
-package de.embl.cba.bdp2.open.ui;
+package de.embl.cba.bdp2.open.luxendo;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.dialog.Utils;
-import de.embl.cba.bdp2.open.LuxendoInteractiveChannelSubsetter;
+import de.embl.cba.bdp2.open.AbstractOpenCommand;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;

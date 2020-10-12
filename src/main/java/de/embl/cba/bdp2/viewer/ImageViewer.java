@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.viewers;
+package de.embl.cba.bdp2.viewer;
 
 import bdv.tools.brightness.ConverterSetup;
 import bdv.tools.brightness.MinMaxGroup;
@@ -452,36 +452,16 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
                 final ConverterSetup converterSetup =
                         bdvHandle.getSetupAssignments().getConverterSetups().get( sourceIndex );
 
-                converterSetup.setColor( getAutoColor( sourceIndex, numSources ) );
+                converterSetup.setColor( de.embl.cba.bdp2.utils.Utils.getAutoColor( sourceIndex, numSources ) );
             }
         }
     }
 
-    private ARGBType getAutoColor( int sourceIndex, int numSources )
-    {
-        if ( numSources == 1 )
-            return new ARGBType( ARGBType.rgba( 255, 255, 255, 255 / numSources ) );
-
-        switch ( sourceIndex )
-        {
-            case 0:
-                return new ARGBType( ARGBType.rgba( 0, 255, 0, 255 / numSources ) );
-            case 1:
-                return new ARGBType( ARGBType.rgba( 255, 0, 255, 255 / numSources ) );
-            case 2:
-                return new ARGBType( ARGBType.rgba( 0, 255, 255, 255 / numSources ) );
-            case 3:
-                return new ARGBType( ARGBType.rgba( 255, 0, 0, 255 / numSources ) );
-            default:
-                return new ARGBType( ARGBType.rgba( 255, 255, 255, 255 / numSources ) );
-        }
-    }
-
+    @Deprecated
     private RandomAccessibleInterval< Volatile< R > > asVolatile( RandomAccessibleInterval< R > rai ) {
 
         try {
-            final RandomAccessibleInterval< Volatile< R > > volatileRai
-                    = VolatileViews.wrapAsVolatile( rai );
+            final RandomAccessibleInterval< Volatile< R > > volatileRai = VolatileViews.wrapAsVolatile( rai );
             final Volatile< R > typeFromInterval = Util.getTypeFromInterval( volatileRai );
             return volatileRai;
         }
