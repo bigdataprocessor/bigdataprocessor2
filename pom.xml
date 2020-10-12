@@ -87,6 +87,10 @@
 		<bigdataviewer-playground.version>0.2.4-SNAPSHOT</bigdataviewer-playground.version>
 		<bigdataviewer-bioformats.version>0.2.7-SNAPSHOT</bigdataviewer-bioformats.version>
 
+		<bigdataviewer-core.version>10.0.2</bigdataviewer-core.version>
+		<bigdataviewer-vistools.version>1.0.0-beta-23</bigdataviewer-vistools.version>
+		<imglib2-cache.version>1.0.0-beta-15</imglib2-cache.version>
+
 	</properties>
 
 	<repositories>
@@ -193,12 +197,6 @@
 			<groupId>de.embl.cba</groupId>
 			<artifactId>imagej-cluster</artifactId>
 			<version>${imagej-cluster.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>sc.fiji</groupId>
-			<artifactId>bigdataviewer-playground</artifactId>
-			<version>${bigdataviewer-playground.version}</version>
 		</dependency>
 
 		<dependency>

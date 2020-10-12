@@ -427,7 +427,7 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
 
         if ( ! enableArbitraryPlaneSlicing )
         {
-            options = options.transformEventHandlerFactory( new BehaviourTransformEventHandler3DWithoutRotation.BehaviourTransformEventHandler3DFactory() );
+           //options = options.transformEventHandlerFactory( new BehaviourTransformEventHandler3DWithoutRotation.BehaviourTransformEventHandler3DFactory() ); TODO : find replacemennt
         }
         return options;
     }

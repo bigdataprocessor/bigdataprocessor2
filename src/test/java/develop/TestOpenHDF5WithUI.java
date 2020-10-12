@@ -1,6 +1,6 @@
 package develop;
 
-import bdv.BehaviourTransformEventHandler3D;
+import bdv.TransformEventHandler3D;
 import bdv.util.AxisOrder;
 import bdv.util.BdvFunctions;
 import bdv.util.BdvOptions;
@@ -29,8 +29,10 @@ public class TestOpenHDF5WithUI {
 
         BdvSource bdvSource = BdvFunctions.show(
                 VolatileViews.wrapAsVolatile( myImg ), "stream", BdvOptions.options().axisOrder(AxisOrder.XYCZT)
-                .doubleBuffered(false)
-                .transformEventHandlerFactory(new BehaviourTransformEventHandler3D.BehaviourTransformEventHandler3DFactory()));
+
+                //.doubleBuffered(false) TODO : useless ?
+        //        .transformEventHandlerFactory(new TransformEventHandler3D.TransformEventHandler3DFactory()) TODO : find replacement
+        );
 
             bdvSource.setDisplayRange( fileInfos.min_pixel_val, fileInfos.max_pixel_val);
 

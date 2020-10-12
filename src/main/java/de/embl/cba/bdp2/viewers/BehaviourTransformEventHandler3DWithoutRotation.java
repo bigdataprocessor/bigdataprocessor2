@@ -1,7 +1,5 @@
 package de.embl.cba.bdp2.viewers;
 
-import bdv.BehaviourTransformEventHandler;
-import bdv.BehaviourTransformEventHandlerFactory;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.ui.TransformEventHandler;
 import net.imglib2.ui.TransformEventHandlerFactory;
@@ -21,18 +19,18 @@ import org.scijava.ui.behaviour.util.TriggerBehaviourBindings;
  * @author Stephan Saalfeld
  * @author Tobias Pietzsch &lt;tobias.pietzsch@gmail.com&gt;
  */
-public class BehaviourTransformEventHandler3DWithoutRotation implements BehaviourTransformEventHandler< AffineTransform3D >
+public class BehaviourTransformEventHandler3DWithoutRotation implements TransformEventHandler< AffineTransform3D >
 {
 	public static TransformEventHandlerFactory< AffineTransform3D > factory()
 	{
 		return new BehaviourTransformEventHandler3DFactory();
 	}
 
-	public static class BehaviourTransformEventHandler3DFactory implements BehaviourTransformEventHandlerFactory< AffineTransform3D >
+	public static class BehaviourTransformEventHandler3DFactory implements TransformEventHandlerFactory< AffineTransform3D >
 	{
 		private InputTriggerConfig config = new InputTriggerConfig();
 
-		@Override
+		//@Override
 		public void setConfig( final InputTriggerConfig config )
 		{
 			this.config = config;
@@ -129,7 +127,7 @@ public class BehaviourTransformEventHandler3DWithoutRotation implements Behaviou
 		}
 	}
 
-	@Override
+	//@Override
 	public void install( final TriggerBehaviourBindings bindings )
 	{
 		behaviours.install( bindings, "transform" );

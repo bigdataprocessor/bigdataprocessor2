@@ -1,8 +1,8 @@
 package de.embl.cba.bdp2.viewers;
 
-import bdv.BehaviourTransformEventHandler;
-import bdv.BehaviourTransformEventHandlerFactory;
 import net.imglib2.realtransform.AffineTransform3D;
+import net.imglib2.ui.TransformEventHandler;
+import net.imglib2.ui.TransformEventHandlerFactory;
 import net.imglib2.ui.TransformListener;
 import org.scijava.ui.behaviour.ClickBehaviour;
 import org.scijava.ui.behaviour.DragBehaviour;
@@ -11,7 +11,7 @@ import org.scijava.ui.behaviour.io.InputTriggerConfig;
 import org.scijava.ui.behaviour.util.Behaviours;
 import org.scijava.ui.behaviour.util.TriggerBehaviourBindings;
 
-public class BdvTransformEventHandler implements BehaviourTransformEventHandler<AffineTransform3D> {
+public class BdvTransformEventHandler implements TransformEventHandler<AffineTransform3D> {
     protected final AffineTransform3D affine = new AffineTransform3D();
     private TransformListener<AffineTransform3D> listener;
     protected final AffineTransform3D affineDragStart = new AffineTransform3D();
@@ -315,7 +315,7 @@ public class BdvTransformEventHandler implements BehaviourTransformEventHandler<
         }
     }
 
-    public static class BehaviourTransformEventHandler3DFactory implements BehaviourTransformEventHandlerFactory<AffineTransform3D> {
+    public static class BehaviourTransformEventHandler3DFactory implements TransformEventHandlerFactory<AffineTransform3D> {
 
         final double[] voxelSpacing;
 

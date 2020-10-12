@@ -349,14 +349,14 @@ public class Utils {
         final double cY = 0; //- bdv.getBdvHandle().getViewerPanel().getDisplay().getHeight() / 2.0;
 
         final AffineTransform3D currentViewerTransform = new AffineTransform3D();
-        bdv.getBdvHandle().getViewerPanel().getState().getViewerTransform( currentViewerTransform );
+        bdv.getBdvHandle().getViewerPanel().state().getViewerTransform( currentViewerTransform );
 
         final SimilarityTransformAnimator similarityTransformAnimator =
                 new SimilarityTransformAnimator( currentViewerTransform, newViewerTransform, cX ,cY, 3000 );
 
         bdv.getBdvHandle().getViewerPanel().setTransformAnimator( similarityTransformAnimator );
 
-        bdv.getBdvHandle().getViewerPanel().transformChanged( currentViewerTransform );
+        bdv.getBdvHandle().getViewerPanel().state().setViewerTransform( currentViewerTransform );
     }
 
     private static AffineTransform3D getNewViewerTransform( double[] position, double scale, Bdv bdv, AffineTransform3D currentViewerTransform )

@@ -23,7 +23,7 @@ import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.ui.InteractiveDisplayCanvasComponent;
-import net.imglib2.ui.OverlayRenderer;
+import bdv.viewer.OverlayRenderer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -298,18 +298,21 @@ public class SplitChipDialog< R extends RealType< R > & NativeType< R > > extend
 				TransformedBoxOverlay.BoxDisplayMode.SECTION );
 
 		final ViewerPanel viewerPanel = viewer.getBdvHandle().getViewerPanel();
-		viewerPanel.getDisplay().addOverlayRenderer( transformedBoxOverlay );
-		viewerPanel.addRenderTransformListener( transformedBoxOverlay );
+		viewerPanel.getDisplay().overlays().add( transformedBoxOverlay );
+		viewerPanel.renderTransformListeners().add( transformedBoxOverlay );
 
 		overlayRenderers.add( transformedBoxOverlay );
 	}
 
 	private void removeOverlays()
 	{
-		final InteractiveDisplayCanvasComponent< AffineTransform3D > display = viewer.getBdvHandle().getViewerPanel().getDisplay();
+		//final InteractiveDisplayCanvasComponent< AffineTransform3D > display = viewer.getBdvHandle().getViewerPanel().getDisplay();
+
+		final ViewerPanel viewerPanel = viewer.getBdvHandle().getViewerPanel();
+
 		for ( OverlayRenderer overlayRenderer : overlayRenderers )
 		{
-			display.removeOverlayRenderer( overlayRenderer );
+			viewerPanel.getDisplay().overlays().remove(overlayRenderer);//display.removeOverlayRenderer( overlayRenderer );
 		}
 	}
 

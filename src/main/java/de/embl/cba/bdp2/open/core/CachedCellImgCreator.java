@@ -74,7 +74,8 @@ public class CachedCellImgCreator
 
         int[] cellDimsXYZCT = new int[]{(int)sizeX, (int)sizeY, (int)sizeZ, sizeC, (int)sizeT};
 
-        CachedCellImg cache TODO
+        //CachedCellImg cache TODO
+
 
 
         throw new UnsupportedOperationException();

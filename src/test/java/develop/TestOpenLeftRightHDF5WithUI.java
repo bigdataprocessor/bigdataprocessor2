@@ -27,17 +27,15 @@ public class TestOpenLeftRightHDF5WithUI {
         Img myImgRight = new CachedCellImgCreator().createCachedCellImg( fileInfosRight );
         double [] voxelSpacing = new double[]{0,0};
         final BdvStackSource bdvss0 = BdvFunctions.show(myImgLeft, "left", BdvOptions.options().axisOrder(AxisOrder.XYCZT)
-                .doubleBuffered(false)
-                .transformEventHandlerFactory(new BdvTransformEventHandler.BehaviourTransformEventHandler3DFactory( voxelSpacing )));
-
-
+                //.doubleBuffered(false)
+                //.transformEventHandlerFactory(new BdvTransformEventHandler.BehaviourTransformEventHandler3DFactory( voxelSpacing ))
+                );
 
         final BdvStackSource bdvss1 = BdvFunctions.show(myImgRight, "right", BdvOptions.options().axisOrder(AxisOrder.XYCZT)
-                .doubleBuffered(false)
+                //.doubleBuffered(false)
                 .addTo(bdvss0)
-                .transformEventHandlerFactory(new BdvTransformEventHandler.BehaviourTransformEventHandler3DFactory( voxelSpacing )));
-
-
+                //.transformEventHandlerFactory(new BdvTransformEventHandler.BehaviourTransformEventHandler3DFactory( voxelSpacing ))
+        );
 
     }
 
