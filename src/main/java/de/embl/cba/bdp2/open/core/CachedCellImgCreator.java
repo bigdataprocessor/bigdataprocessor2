@@ -1,5 +1,7 @@
 package de.embl.cba.bdp2.open.core;
 
+import bdv.util.BdvFunctions;
+import bdv.util.BdvOptions;
 import bdv.viewer.Source;
 import ch.epfl.biop.bdv.bioformats.bioformatssource.BioFormatsBdvOpener;
 import ch.epfl.biop.bdv.bioformats.bioformatssource.BioFormatsBdvSource;
@@ -17,10 +19,12 @@ import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.util.Intervals;
 import net.imglib2.util.Util;
+import net.imglib2.view.Views;
 import ome.units.UNITS;
 import ome.units.quantity.Length;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -62,7 +66,7 @@ public class CachedCellImgCreator
         ).collect(Collectors.toList());
 
         BioFormatsBdvSource modelSource = sourcesBF.get(0);
-        RandomAccessibleInterval modelRAI = sourcesBF.get(0).createSource(0,0);
+        RandomAccessibleInterval<R> modelRAI = sourcesBF.get(0).createSource(0,0);
 
         long sizeX = modelRAI.dimension(0); // limited to 2GPixels in one dimension
         long sizeY = modelRAI.dimension(1);
@@ -75,8 +79,28 @@ public class CachedCellImgCreator
         int[] cellDimsXYZCT = new int[]{(int)sizeX, (int)sizeY, (int)sizeZ, sizeC, (int)sizeT};
 
         //CachedCellImg cache TODO
+        List<RandomAccessibleInterval<R>> raisXYZCT = new ArrayList<>();
+        // Option 1
+        /*for (int iTime = 0; iTime<sizeT;iTime++) {
+            List<RandomAccessibleInterval<R>> raisXYZC = new ArrayList<>();
+            for (int iChannel = 0; iChannel<sizeC;iChannel++) {
+                raisXYZC.add(sourcesBF.get(iChannel).createSource(iTime,0));
+            }
+            raisXYZCT.add(Views.stack(raisXYZC));
+        }*/
 
+        // Option 2
+        for (int iChannel = 0; iChannel<sizeC;iChannel++) {
+            List<RandomAccessibleInterval<R>> raisXYZC = new ArrayList<>();
+            for (int iTime = 0; iTime<sizeT;iTime++) {
+                raisXYZC.add(sourcesBF.get(iChannel).createSource(iTime,0));
+            }
+            raisXYZCT.add(Views.stack(raisXYZC));
+        }
 
+        RandomAccessibleInterval raiXYCZT = Views.stack(raisXYZCT);
+
+        BdvFunctions.show(raiXYCZT, "BioFormats output", BdvOptions.options());
 
         throw new UnsupportedOperationException();
     }
