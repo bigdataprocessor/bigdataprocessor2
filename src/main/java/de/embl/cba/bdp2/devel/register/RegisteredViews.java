@@ -46,7 +46,8 @@ public class RegisteredViews
 		RandomAccessibleInterval< R > registered =
 				new TransformedStackView( hyperslices, registration );
 
-		final Image< R > alignedImage = image.newImage( volumeTo5D( registered ) );
+		final Image< R > alignedImage = new Image<>( image );
+		alignedImage.setRai( volumeTo5D( registered ) );
 		alignedImage.setName( "SIFT aligned" );
 
 		if ( lazy )
@@ -87,7 +88,8 @@ public class RegisteredViews
 		RandomAccessibleInterval< R > registered =
 				new TransformedStackView( hyperslices, registration );
 
-		final Image< R > alignedImage = image.newImage( registered  );
+		final Image< R > alignedImage = new Image<>( image );
+		alignedImage.setRai( registered  );
 		alignedImage.setName( "aligned with " + registrationMethod );
 
 		if ( lazy )

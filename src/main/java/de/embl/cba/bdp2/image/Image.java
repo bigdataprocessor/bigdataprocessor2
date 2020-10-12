@@ -1,12 +1,15 @@
 package de.embl.cba.bdp2.image;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import de.embl.cba.bdp2.open.fileseries.FileInfos;
+import de.embl.cba.bdp2.open.CacheUtils;
+import de.embl.cba.bdp2.open.CachedCellImgCreator;
+import de.embl.cba.bdp2.save.CachedCellImgReplacer;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import mpicbg.imglib.multithreading.Stopable;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.cache.img.CachedCellImg;
+import net.imglib2.cache.img.DiskCachedCellImgOptions;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
@@ -14,6 +17,7 @@ import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.util.Util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Image< R extends RealType< R > & NativeType< R > >
 {
@@ -25,7 +29,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 	 *
 	 * The optimal sizes of the cells depend on the use-case
 	 */
-	private CachedCellImg< R, ? > cachedCellImg;
+	private CachedCellImgCreator< R > cachedCellImgCreator;
 
 	/**
 	 * The rai holds the (processed) image data.
@@ -44,19 +48,23 @@ public class Image< R extends RealType< R > & NativeType< R > >
 
 	// Note: currently not used, consider moving to a branch
 	private ArrayList< Stopable > stopables = new ArrayList<>(  );
+	private int[] cellDims;
 
-	public Image( CachedCellImg< R, ? > cachedCellImg,
+	public Image( CachedCellImgCreator< R > cachedCellImgCreator,
 				  String name,
 				  String[] channelNames,
 				  double[] voxelSize,
 				  String voxelUnit )
 	{
-		this.cachedCellImg = cachedCellImg;
-		this.rai = cachedCellImg;
+		this.cachedCellImgCreator = cachedCellImgCreator;
 		this.name = name;
 		this.channelNames = channelNames.clone();
 		this.voxelSize = voxelSize.clone();
 		this.voxelUnit = voxelUnit;
+
+		// set to default plane wise loading
+		cellDims = CacheUtils.planeWiseCellDims( getDimensionsXYZ(), getBitDepth(), cachedCellImgCreator.isPlaneWiseChunked() );
+		this.rai = cachedCellImgCreator.createCachedCellImg( cellDims, DiskCachedCellImgOptions.CacheType.BOUNDED, 100 );
 	}
 
 	/**
@@ -66,12 +74,18 @@ public class Image< R extends RealType< R > & NativeType< R > >
 	 */
 	public Image( Image< R > image )
 	{
-		this.cachedCellImg = image.cachedCellImg; // want to use same cache, thus by-reference
-		this.rai = image.rai; // don't know how copy this, thus by-reference... TODO?
-		this.name = image.name; // immutable anyway
+		this.cachedCellImgCreator = image.cachedCellImgCreator; // want to use same cache, thus by reference
+		this.rai = image.rai; // practically immutable
+		this.name = image.name; // immutable
 		this.channelNames = image.channelNames.clone();
 		this.voxelSize = image.voxelSize.clone();
-		this.voxelUnit = image.getVoxelUnit(); // immutable anyway
+		this.voxelUnit = image.getVoxelUnit(); // immutable
+	}
+
+	public long[] getDimensionsXYZ()
+	{
+		long[] dimensionsXYZCT = getDimensionsXYZCT();
+		return Arrays.stream( dimensionsXYZCT ).limit( 3 ).toArray();
 	}
 
 	public long[] getDimensionsXYZCT()
@@ -81,7 +95,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		return longs;
 	}
 
-	public String getDataTypeString()
+	public String getDataType()
 	{
 		final R type = Util.getTypeFromInterval( rai );
 		if ( type instanceof UnsignedByteType )
@@ -89,7 +103,18 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		else if ( type instanceof UnsignedShortType )
 			return "unsigned 16 bit";
 		else
-			return "???";
+			throw new RuntimeException("Could not determine the bit-depth.");
+	}
+
+	public int getBitDepth()
+	{
+		final R type = Util.getTypeFromInterval( rai );
+		if ( type instanceof UnsignedByteType )
+			return 8;
+		else if ( type instanceof UnsignedShortType )
+			return 16;
+		else
+			throw new RuntimeException("Could not determine the bit-depth.");
 	}
 
 	public double getTotalSizeGB()
@@ -129,6 +154,9 @@ public class Image< R extends RealType< R > & NativeType< R > >
 	/**
 	 * This method should be used to update the rai
 	 * in case a processing step was added.
+	 *
+	 * The rai that is set here must use the same
+	 * backing cachedCellImg as the image. // TODO: how to enforce this?
 	 *
 	 * Typically, before doing that one would make a
 	 * new instance of the image using the copy constructor.
@@ -186,16 +214,6 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		return rai.dimension( DimensionOrder.C );
 	}
 
-	public CachedCellImg< R, ? > getCachedCellImg()
-	{
-		return cachedCellImg;
-	}
-
-	public void setCachedCellImg( CachedCellImg< R, ? > cachedCellImg )
-	{
-		this.cachedCellImg = cachedCellImg;
-	}
-
 	public void addStopableProcess( Stopable stopable )
 	{
 		stopables.add( stopable );
@@ -226,7 +244,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 			info += "\n  Channel name " + c + ": " + channelNames[ c ];
 		}
 		info += "\nSize [GB]: " + getTotalSizeGB();
-		info += "\nData type: " + getDataTypeString();
+		info += "\nData type: " + getDataType();
 		info += "\nSize X,Y,Z [Voxels]: " + Utils.create3DArrayString( getDimensionsXYZCT() );
 		info += "\nTime-points: " + getDimensionsXYZCT()[4];
 		info += "\nVoxel size ["+ getVoxelUnit() +"]: " + Utils.create3DArrayString( getVoxelSize() );
@@ -236,8 +254,21 @@ public class Image< R extends RealType< R > & NativeType< R > >
 
 	public int[] getCellDims()
 	{
-		int[] cellDims = new int[ 5 ];
-		cachedCellImg.getCellGrid().cellDimensions( cellDims );
 		return cellDims;
+	}
+
+	/**
+	 * Replaces the cachedCellImg that backs the rai of this image,
+	 * leaving all modifications (views and conversions) intact.
+	 *
+	 * @param cellDims
+	 * @param cacheType
+	 * @param cacheSize
+	 */
+	public void replaceCachedCellImg( int[] cellDims, DiskCachedCellImgOptions.CacheType cacheType, int cacheSize )
+	{
+		this.cellDims = cellDims;
+		CachedCellImg< R, ? > cachedCellImg = cachedCellImgCreator.createCachedCellImg( cellDims, cacheType, cacheSize );
+		rai = new CachedCellImgReplacer<>( rai, cachedCellImg ).get();
 	}
 }

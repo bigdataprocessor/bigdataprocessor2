@@ -2,6 +2,7 @@ package de.embl.cba.bdp2.process.align.channelshift;
 
 import bdv.tools.brightness.SliderPanel;
 import bdv.util.BoundedValue;
+import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.macro.MacroRecorder;
 import de.embl.cba.bdp2.dialog.AbstractProcessingDialog;
 import de.embl.cba.bdp2.utils.DimensionOrder;
@@ -97,7 +98,8 @@ public class AlignChannelsDialog< T extends RealType< T > & NativeType< T > > ex
 
 			final RandomAccessibleInterval< T > correctedRAI = channelShifter.getShiftedRai( shifts );
 
-			outputImage = inputImage.newImage( correctedRAI );
+			outputImage = new Image( inputImage );
+			outputImage.setRai( correctedRAI );
 
 			viewer.replaceImage( outputImage, false, true );
 		}

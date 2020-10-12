@@ -45,7 +45,8 @@ public class ImageTransformer < R extends RealType< R > & NativeType< R > >
 
 		final RandomAccessibleInterval< R > transformedXYZCT = Views.zeroMin( Views.stack( timePoints ) );
 
-		final Image< R > transformedImage = image.newImage( transformedXYZCT );
+		final Image< R > transformedImage = new Image( this.image );
+		transformedImage.setRai( transformedXYZCT );
 		// TODO: also adapt voxel size
 		return transformedImage;
 	}

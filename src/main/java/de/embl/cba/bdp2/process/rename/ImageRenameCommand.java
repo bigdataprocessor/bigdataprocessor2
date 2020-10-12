@@ -1,5 +1,6 @@
 package de.embl.cba.bdp2.process.rename;
 
+import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.process.AbstractImageProcessingCommand;
 import de.embl.cba.bdp2.service.ImageService;
 import de.embl.cba.bdp2.utils.Utils;
@@ -32,7 +33,8 @@ public class ImageRenameCommand< R extends RealType< R > & NativeType< R > > ext
 
     private void process()
     {
-        outputImage = inputImage.newImage( inputImage.getRai() );
+        outputImage = new Image<>( inputImage );
+        outputImage.setRai( inputImage.getRai() );
         outputImage.setName( outputImageName );
         final String[] names = Arrays.stream( channelNames.split( "," ) ).map( String::trim ).toArray( String[]::new );
         outputImage.setChannelNames( names );

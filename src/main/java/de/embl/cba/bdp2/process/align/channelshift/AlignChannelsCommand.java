@@ -1,5 +1,6 @@
 package de.embl.cba.bdp2.process.align.channelshift;
 
+import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.process.AbstractImageProcessingCommand;
 import de.embl.cba.bdp2.service.ImageService;
 import de.embl.cba.bdp2.utils.Utils;
@@ -34,7 +35,9 @@ public class AlignChannelsCommand< R extends RealType< R > & NativeType< R > > e
         final List< long[] > longs = Utils.delimitedStringToLongs( shifts, ";" );
 
         final ChannelShifter< R > shifter = new ChannelShifter< R >( inputImage.getRai() );
-        outputImage = inputImage.newImage( shifter.getShiftedRai( longs ) );
+
+        outputImage = new Image( inputImage );
+        outputImage.setRai( shifter.getShiftedRai( longs ) );
         outputImage.setName( outputImageName );
     }
 

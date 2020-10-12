@@ -46,9 +46,9 @@ public class MultiChannelUnsignedByteTypeConverter< R extends RealType< R > & Na
 
 		final IntervalView< R > convertedRai = Views.permute( Views.stack( convertedChannelRais ), 3, 4 );
 
-		final Image< R > outputImage = inputImage.newImage( convertedRai );
+		final Image< R > outputImage = new Image< >( inputImage );
+		outputImage.setRai( convertedRai );
 		outputImage.setName( inputImage.getName() + "-8bit" );
-
 		return outputImage;
 	}
 

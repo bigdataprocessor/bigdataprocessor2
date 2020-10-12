@@ -145,7 +145,8 @@ public class MultiChannelUnsignedByteTypeConverterDialog< R extends RealType< R 
 						converter,
 						new UnsignedByteType() );
 
-		final Image< R > convertedImage = image.newImage( convertedRai );
+		final Image< R > convertedImage = new Image<>( image );
+		convertedImage.setRai( convertedRai );
 
 		return convertedImage;
 	}

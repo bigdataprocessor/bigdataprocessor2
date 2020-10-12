@@ -12,11 +12,13 @@ import net.imglib2.type.numeric.RealType;
 
 import java.io.File;
 
+import static de.embl.cba.bdp2.open.CacheUtils.isPlaneWiseCompressed;
 import static net.imglib2.cache.img.ReadOnlyCachedCellImgOptions.options;
 
 public class FileSeriesCachedCellImgCreator< R extends RealType< R > & NativeType< R > > implements CachedCellImgCreator< R >
 {
     private final FileInfos fileInfos;
+    private final String imageName;
     private int[] imageDimsXYZ;
     private String[] channelNames;
     private double[] voxelSize;
@@ -29,21 +31,43 @@ public class FileSeriesCachedCellImgCreator< R extends RealType< R > & NativeTyp
         this.channelNames = fileInfos.channelNames;
         this.voxelSize = fileInfos.voxelSize;
         this.voxelUnit = fileInfos.voxelUnit;
+        this.imageName = new File( fileInfos.directory ).getName();
     }
 
     public Image< R > createImage()
     {
-        int[] cellDimsXYZCT = CacheUtils.planeWiseCellDims( imageDimsXYZ, fileInfos.bitDepth, CacheUtils.isPlaneWiseCompressed( fileInfos ) );
-        CachedCellImg< R, ? > planeWiseCachedCellImg = createCachedCellImg( cellDimsXYZCT, DiskCachedCellImgOptions.CacheType.BOUNDED, 100 );
-
         Image< R > image = new Image(
-                planeWiseCachedCellImg,
+                this,
                 new File( fileInfos.directory ).getName(),
                 channelNames,
                 voxelSize,
                 voxelUnit );
 
         return image;
+    }
+
+    @Override
+    public String getImageName()
+    {
+        return imageName;
+    }
+
+    @Override
+    public String[] getChannelNames()
+    {
+        return channelNames;
+    }
+
+    @Override
+    public double[] getVoxelSize()
+    {
+        return voxelSize;
+    }
+
+    @Override
+    public String getVoxelUnit()
+    {
+        return voxelUnit;
     }
 
     public CachedCellImg< R, ? > createCachedCellImg( int[] cellDimsXYZCT, DiskCachedCellImgOptions.CacheType cacheType, long cacheSize )
@@ -63,5 +87,12 @@ public class FileSeriesCachedCellImgCreator< R extends RealType< R > & NativeTyp
 
         return cachedCellImg;
     }
+
+    @Override
+    public boolean isPlaneWiseChunked()
+    {
+        return isPlaneWiseCompressed( fileInfos );
+    }
+
 
 }

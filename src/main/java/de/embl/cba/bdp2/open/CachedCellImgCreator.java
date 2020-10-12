@@ -17,5 +17,7 @@ public interface CachedCellImgCreator< R extends RealType< R > & NativeType< R >
 
 	CachedCellImg< R, ? > createCachedCellImg( int[] cellDimsXYZCT, DiskCachedCellImgOptions.CacheType cacheType, long cacheSize );
 
+	boolean isPlaneWiseChunked();
+
 	// TODO: maybe add something like getDisplaySettings();
 }

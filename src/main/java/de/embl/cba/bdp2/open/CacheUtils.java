@@ -22,6 +22,34 @@ public abstract class CacheUtils
 	}
 
 	/**
+	 * Create cell dimensions to load a whole channel and time point in one go.
+	 *
+	 * This method takes care that the cells for one such volume are not too large
+	 * in terms of the Java array indexing limit.
+	 *
+ 	 * @param imageDimsXYZ
+	 * @return
+	 */
+	public static int[] volumeWiseCellDims( long[] imageDimsXYZ )
+	{
+		long cellDimX = imageDimsXYZ[ 0 ];
+		long cellDimY = imageDimsXYZ[ 1 ];
+		long cellDimZ = imageDimsXYZ[ 2 ];
+
+		long numPixels = cellDimX * cellDimY * cellDimZ;
+
+		if ( numPixels > MAX_ARRAY_LENGTH )
+		{
+			Logger.info( "Adapting cell size in Z to satisfy java array indexing limit.");
+			Logger.info( "Desired cell size in Z: " + cellDimZ );
+			cellDimZ = MAX_ARRAY_LENGTH / ( cellDimX * cellDimY ) ;
+			Logger.info( "Adapted cell size in Z: " + cellDimZ );
+		}
+
+		return new int[]{ (int) cellDimX, (int) cellDimY, (int) cellDimZ, 1, 1 };
+	}
+
+	/**
 	 * Compute cell dimensions that are good for fast z-plane-wise loading
 	 *
 	 * @param imageDimsXYZ
@@ -29,14 +57,14 @@ public abstract class CacheUtils
 	 * @param loadWholePlane
 	 * @return cellDimsXYZCT
 	 */
-	public static int[] planeWiseCellDims( int[] imageDimsXYZ, int bitDepth, boolean loadWholePlane )
+	public static int[] planeWiseCellDims( long[] imageDimsXYZ, int bitDepth, boolean loadWholePlane )
 	{
 		int[] cellDimsXYZCT = new int[ 5 ];
 
 		if ( loadWholePlane )
 		{
-			cellDimsXYZCT[ 0 ] = imageDimsXYZ[ 0 ];
-			cellDimsXYZCT[ 1 ] = imageDimsXYZ[ 1 ];
+			cellDimsXYZCT[ 0 ] = (int) imageDimsXYZ[ 0 ];
+			cellDimsXYZCT[ 1 ] = (int) imageDimsXYZ[ 1 ];
 		}
 		else
 		{
@@ -44,10 +72,10 @@ public abstract class CacheUtils
 
 			// load whole rows
 			// TODO: is this always good? For Tiff images probably for sure
-			cellDimsXYZCT[ 0 ] = imageDimsXYZ[ 0 ];
+			cellDimsXYZCT[ 0 ] = (int) imageDimsXYZ[ 0 ];
 
 			// TODO: check more whether this makes sense
-			final int bytesPerRow = imageDimsXYZ[ 0 ] * bitDepth / 8;
+			final int bytesPerRow = (int) imageDimsXYZ[ 0 ] * bitDepth / 8;
 			final double megaBitsPerPlane = imageDimsXYZ[ 0 ] * imageDimsXYZ[ 1 ] * bitDepth / 1000000.0;
 			final int numRowsPerFileSystemBlock = 4096 / bytesPerRow;
 
@@ -57,7 +85,7 @@ public abstract class CacheUtils
 			}
 			else
 			{
-				cellDimsXYZCT[ 1 ] = imageDimsXYZ[ 1 ];
+				cellDimsXYZCT[ 1 ] = (int) imageDimsXYZ[ 1 ];
 			}
 		}
 
@@ -71,33 +99,5 @@ public abstract class CacheUtils
 		cellDimsXYZCT[ 4 ] = 1;
 
 		return cellDimsXYZCT;
-	}
-
-	/**
-	 * Create cell dimensions to load a whole channel and time point in one go.
-	 *
-	 * This method takes care that the cells for one such volume are not too large
-	 * in terms of the Java array indexing limit.
-	 *
- 	 * @param imageDimsXYZ
-	 * @return
-	 */
-	public static int[] volumeWiseCellDims( int[] imageDimsXYZ )
-	{
-		int cellDimX = imageDimsXYZ[ 0 ];
-		int cellDimY = imageDimsXYZ[ 1 ];
-		int cellDimZ = imageDimsXYZ[ 2 ];
-
-		long numPixels = (long) cellDimX * (long) cellDimY * (long) cellDimZ;
-
-		if ( numPixels > MAX_ARRAY_LENGTH )
-		{
-			Logger.info( "Adapting cell size in Z to satisfy java array indexing limit.");
-			Logger.info( "Desired cell size in Z: " + cellDimZ );
-			cellDimZ = MAX_ARRAY_LENGTH / ( cellDimX * cellDimY ) ;
-			Logger.info( "Adapted cell size in Z: " + cellDimZ );
-		}
-
-		return new int[]{ cellDimX, cellDimY, cellDimZ, 1, 1 };
 	}
 }
