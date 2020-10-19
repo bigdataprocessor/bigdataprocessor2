@@ -1,11 +1,5 @@
 package users.alessandro;
 
-import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
-import de.embl.cba.bdp2.open.core.NamingSchemes;
-import de.embl.cba.bdp2.save.SavingSettings;
-import de.embl.cba.bdp2.BigDataProcessor2;
-
 public class OpenAndSaveLargeStacks202002
 {
 	public static void main( String[] args )

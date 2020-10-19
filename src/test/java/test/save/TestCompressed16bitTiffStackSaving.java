@@ -6,7 +6,7 @@ import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.save.SavingSettings;
 
-import static de.embl.cba.bdp2.open.core.NamingSchemes.*;
+import static de.embl.cba.bdp2.open.NamingSchemes.*;
 
 public class TestCompressed16bitTiffStackSaving
 {
@@ -21,7 +21,7 @@ public class TestCompressed16bitTiffStackSaving
 
         String regExp = LUXENDO_REGEXP.replace( "STACK", "" + 0 );
 
-        final Image image = BigDataProcessor2.openImageFromHdf5(
+        final Image image = BigDataProcessor2.openHdf5Series(
                 directory,
                 regExp,
                 ".*",

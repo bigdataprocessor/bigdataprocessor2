@@ -3,10 +3,10 @@ package de.embl.cba.bdp2.tools.batch;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.process.crop.Cropper;
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.open.core.NamingSchemes;
+import de.embl.cba.bdp2.open.NamingSchemes;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.BigDataProcessor2;
-import de.embl.cba.bdp2.viewers.ImageViewer;
+import de.embl.cba.bdp2.viewer.ImageViewer;
 import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
 import net.imglib2.type.NativeType;
@@ -71,7 +71,7 @@ public class LuxendoBatchConvertAndCropCommand< R extends RealType< R > & Native
                 // TODO: Deprecated??
 
                 // Open
-                final Image< R > image = BigDataProcessor2.openImageFromHdf5(
+                final Image< R > image = BigDataProcessor2.openHdf5Series(
                         directory.getAbsolutePath(),
                         NamingSchemes.PATTERN_6,
                         NamingSchemes.PATTERN_LUXENDO,
@@ -101,7 +101,7 @@ public class LuxendoBatchConvertAndCropCommand< R extends RealType< R > & Native
         {
             // open
             final String directory = directories.get( i ).getAbsolutePath();
-            final Image< R > image = BigDataProcessor2.openImageFromHdf5(
+            final Image< R > image = BigDataProcessor2.openHdf5Series(
                     directory,
                     NamingSchemes.PATTERN_6,
                     NamingSchemes.PATTERN_LUXENDO,

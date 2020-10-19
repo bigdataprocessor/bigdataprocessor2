@@ -59,13 +59,10 @@ public class SplitChipMerger
 
 		final RandomAccessibleInterval< R > merge = mergeRegionsXYC( image.getRai(), intervalsXYC );
 
-		final Image< R > mergeImage = new Image(
-				merge,
-				image.getName() + "_merged",
-				newChannelNames,
-				image.getVoxelSize(),
-				image.getVoxelUnit(),
-				image.getFileInfos() );
+		final Image< R > mergeImage = new Image( image );
+		mergeImage.setName( image.getName() + "_merged" );
+		mergeImage.setChannelNames( newChannelNames );
+		mergeImage.setRai( merge );
 
 		return mergeImage;
 	}

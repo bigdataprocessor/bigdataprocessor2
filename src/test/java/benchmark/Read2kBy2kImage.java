@@ -2,9 +2,9 @@ package benchmark;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.open.core.NamingSchemes;
+import de.embl.cba.bdp2.open.NamingSchemes;
 
-import static de.embl.cba.bdp2.open.core.NamingSchemes.TIF;
+import static de.embl.cba.bdp2.open.NamingSchemes.TIF;
 
 public class Read2kBy2kImage
 {
@@ -14,7 +14,7 @@ public class Read2kBy2kImage
 
 		final String directory = "/Users/tischer/Desktop/test/";
 
-		final Image image = bdp.openImage(
+		final Image image = bdp.openTiffSeries(
 				directory,
 				NamingSchemes.SINGLE_CHANNEL_VOLUMES + TIF,
 				".*" );

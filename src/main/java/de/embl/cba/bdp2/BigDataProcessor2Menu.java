@@ -1,13 +1,17 @@
 package de.embl.cba.bdp2;
 
+import de.embl.cba.bdp2.open.OpenEMTiffPlanesCommand;
+import de.embl.cba.bdp2.open.fileseries.OpenFileSeriesCommand;
+import de.embl.cba.bdp2.open.fileseries.OpenFileSeriesHelpCommand;
+import de.embl.cba.bdp2.open.leica.OpenLeicaDSLTiffPlanesCommand;
+import de.embl.cba.bdp2.open.luxendo.OpenLuxendoCommand;
 import de.embl.cba.bdp2.process.AbstractImageProcessingCommand;
-import de.embl.cba.bdp2.open.ui.DownloadAndOpenSampleDataCommand;
+import de.embl.cba.bdp2.open.samples.DownloadAndOpenSampleDataCommand;
 import de.embl.cba.bdp2.track.ApplyTrackCommand;
-import de.embl.cba.bdp2.open.ui.*;
 import de.embl.cba.bdp2.scijava.Services;
 import de.embl.cba.bdp2.service.ImageViewerService;
 import de.embl.cba.bdp2.utils.PluginProvider;
-import de.embl.cba.bdp2.viewers.ImageViewer;
+import de.embl.cba.bdp2.viewer.ImageViewer;
 import ij.IJ;
 
 import javax.swing.*;
@@ -67,8 +71,8 @@ public class BigDataProcessor2Menu extends JMenu
 
         final JMenu openMenu = addMenu( "Open" );
         menus.add( openMenu );
-        addMenuItem( openMenu, OpenCustomCommand.COMMAND_NAME );
-        addMenuItem( openMenu, OpenCustomHelpCommand.COMMAND_NAME );
+        addMenuItem( openMenu, OpenFileSeriesCommand.COMMAND_NAME );
+        addMenuItem( openMenu, OpenFileSeriesHelpCommand.COMMAND_NAME );
         addMenuItem( openMenu, OpenEMTiffPlanesCommand.COMMAND_NAME );
         addMenuItem( openMenu, DownloadAndOpenSampleDataCommand.COMMAND_NAME );
         addMenuItem( openMenu, OpenLuxendoCommand.COMMAND_NAME );
@@ -153,16 +157,18 @@ public class BigDataProcessor2Menu extends JMenu
     {
         JMenuItem jMenuItem = new JMenuItem( name );
         jMenuItem.addActionListener( e -> {
-
-            ImageViewer activeViewer = ImageViewerService.getActiveViewer();
-
-            if ( activeViewer == null )
+            new Thread( () ->
             {
-                IJ.showMessage( "No image selected.\n\nPlease select an image by either\n- clicking on an existing BigDataViewer window, or\n- open a new image using the [ BigDataProcessor2 > Open ] menu." );
-                return;
-            }
+                ImageViewer activeViewer = ImageViewerService.getActiveViewer();
 
-            processingCommand.showDialog( activeViewer );
+                if ( activeViewer == null )
+                {
+                    IJ.showMessage( "No image selected.\n\nPlease select an image by either\n- clicking on an existing BigDataViewer window, or\n- open a new image using the [ BigDataProcessor2 > Open ] menu." );
+                    return;
+                }
+
+                processingCommand.showDialog( activeViewer );
+            }).start();
         } );
         jMenu.add( jMenuItem );
         return jMenuItem;

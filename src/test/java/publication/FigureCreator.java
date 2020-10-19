@@ -2,8 +2,8 @@ package publication;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.open.core.NamingSchemes;
-import de.embl.cba.bdp2.viewers.ImageViewer;
+import de.embl.cba.bdp2.open.NamingSchemes;
+import de.embl.cba.bdp2.viewer.ImageViewer;
 import net.imagej.ImageJ;
 import net.imglib2.FinalInterval;
 import net.imglib2.type.NativeType;
@@ -18,12 +18,12 @@ public class FigureCreator
 		final ImageJ imageJ = new ImageJ();
 		imageJ.ui().showUI();
 
-		final Image image = BigDataProcessor2.openImageFromHdf5( "/Volumes/USB Drive/tim2020/luxendo-two-channel-movie",
+		final Image image = BigDataProcessor2.openHdf5Series( "/Volumes/USB Drive/tim2020/luxendo-two-channel-movie",
 				NamingSchemes.LOAD_CHANNELS_FROM_FOLDERS,
 				NamingSchemes.PATTERN_LUXENDO,
 				"Data");
 		image.setName( "raw" );
-		BigDataProcessor2.calibrate( image,  new double[]{0.3, 0.3, 1.0}, image.getVoxelUnit() );
+		BigDataProcessor2.calibrate( image,  new double[]{0.3, 0.3, 1.0}, image.getVoxelUnit().getSymbol() );
 		BigDataProcessor2.showImage( image);
 
 		// crop

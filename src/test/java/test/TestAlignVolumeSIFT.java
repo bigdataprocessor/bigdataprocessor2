@@ -2,10 +2,10 @@ package test;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
-import de.embl.cba.bdp2.open.core.NamingSchemes;
+import de.embl.cba.bdp2.open.NamingSchemes;
 import de.embl.cba.bdp2.devel.register.RegisteredViews;
 import de.embl.cba.bdp2.BigDataProcessor2;
-import de.embl.cba.bdp2.viewers.ImageViewer;
+import de.embl.cba.bdp2.viewer.ImageViewer;
 import loci.common.DebugTools;
 import net.imagej.ImageJ;
 import net.imglib2.type.NativeType;
@@ -20,7 +20,7 @@ public class TestAlignVolumeSIFT< R extends RealType< R > & NativeType< R > >
 	{
 		DebugTools.setRootLevel("OFF"); // Bio-Formats
 
-		final Image< R > image = BigDataProcessor2.openImage(
+		final Image< R > image = BigDataProcessor2.openTiffSeries(
 				"/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-data/em-2d-sift-align-01",
 				NamingSchemes.TIFF_SLICES,
 				".*.tif" );

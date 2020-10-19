@@ -2,7 +2,7 @@ package users.isabell;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.open.core.NamingSchemes;
+import de.embl.cba.bdp2.open.NamingSchemes;
 import de.embl.cba.bdp2.process.align.splitchip.SplitChipMerger;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.BigDataProcessor2;
@@ -47,7 +47,7 @@ public class MergeSplitChipWorkflow
 
         for ( File directory : directories )
         {
-            final Image< R > image = BigDataProcessor2.openImageFromHdf5(
+            final Image< R > image = BigDataProcessor2.openHdf5Series(
                     directory.toString(),
                     NamingSchemes.SINGLE_CHANNEL_TIMELAPSE,
                     ".*.h5",
@@ -80,7 +80,7 @@ public class MergeSplitChipWorkflow
         {
             // open
             final String directory = directories.get( i ).toString();
-            final Image< R > image = BigDataProcessor2.openImageFromHdf5(
+            final Image< R > image = BigDataProcessor2.openHdf5Series(
                     directory,
                     NamingSchemes.SINGLE_CHANNEL_TIMELAPSE,
                     ".*.h5",

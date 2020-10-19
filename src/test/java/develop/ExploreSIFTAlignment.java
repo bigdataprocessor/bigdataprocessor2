@@ -1,7 +1,7 @@
 package develop;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.open.core.NamingSchemes;
+import de.embl.cba.bdp2.open.NamingSchemes;
 import de.embl.cba.bdp2.utils.IntervalImageViews;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import ij.IJ;
@@ -140,7 +140,7 @@ public class ExploreSIFTAlignment < R extends RealType< R > & NativeType< R > >
 	{
 		new ImageJ().ui().showUI();
 
-		final Image< R > image = BigDataProcessor2.openImage(
+		final Image< R > image = BigDataProcessor2.openTiffSeries(
 				"/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-data/em-2d-sift-align-01",
 				NamingSchemes.TIFF_SLICES,
 				".*.tif" );

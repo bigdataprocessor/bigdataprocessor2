@@ -1,5 +1,6 @@
 package de.embl.cba.bdp2;
 
+import de.embl.cba.bdp2.open.bioformats.BioFormatsCachedCellImgCreator;
 import de.embl.cba.bdp2.process.convert.MultiChannelUnsignedByteTypeConverter;
 import de.embl.cba.bdp2.track.Track;
 import de.embl.cba.bdp2.track.TrackApplier;
@@ -8,8 +9,8 @@ import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.process.bin.Binner;
 import de.embl.cba.bdp2.process.crop.Cropper;
 import de.embl.cba.bdp2.open.ChannelSubsetter;
-import de.embl.cba.bdp2.open.core.CachedCellImgCreator;
-import de.embl.cba.bdp2.open.core.FileInfos;
+import de.embl.cba.bdp2.open.fileseries.FileSeriesCachedCellImgCreator;
+import de.embl.cba.bdp2.open.fileseries.FileInfos;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.log.progress.Progress;
@@ -18,7 +19,7 @@ import de.embl.cba.bdp2.save.*;
 import de.embl.cba.bdp2.process.align.channelshift.ChannelShifter;
 import de.embl.cba.bdp2.service.ImageViewerService;
 import de.embl.cba.bdp2.process.transform.ImageTransformer;
-import de.embl.cba.bdp2.viewers.ImageViewer;
+import de.embl.cba.bdp2.viewer.ImageViewer;
 import loci.common.DebugTools;
 import net.imglib2.*;
 import net.imglib2.interpolation.InterpolatorFactory;
@@ -55,23 +56,23 @@ public class BigDataProcessor2
     }
 
     public static < R extends RealType< R > & NativeType< R > >
-    Image< R > openImage(
+    Image< R > openTiffSeries(
             File directory,
             String namingScheme,
             String filterPattern )
     {
-        return openImage( directory.getAbsolutePath(), namingScheme, filterPattern);
+        return openTiffSeries( directory.getAbsolutePath(), namingScheme, filterPattern);
     }
 
     public static < R extends RealType< R > & NativeType< R > >
-    Image< R > openImage(
+    Image< R > openTiffSeries(
             String directory,
             String namingScheme,
             String filterPattern )
     {
         FileInfos fileInfos = new FileInfos( directory, namingScheme, filterPattern );
 
-        final Image< R > image = CachedCellImgCreator.loadImage( fileInfos );
+        final Image< R > image = new FileSeriesCachedCellImgCreator( fileInfos ).createImage();
 
         return image;
     }
@@ -83,7 +84,7 @@ public class BigDataProcessor2
     }
 
     public static < R extends RealType< R > & NativeType< R > >
-    Image< R > openImageFromHdf5(
+    Image< R > openHdf5Series(
             String directory,
             String loadingScheme,
             String filterPattern,
@@ -93,13 +94,13 @@ public class BigDataProcessor2
 
         FileInfos fileInfos = new FileInfos( directory, loadingScheme, filterPattern, hdf5DataSetName, null );
 
-        final Image< R > image = CachedCellImgCreator.loadImage( fileInfos );
+        final Image< R > image = new FileSeriesCachedCellImgCreator( fileInfos ).createImage();
 
         return image;
     }
 
     public static < R extends RealType< R > & NativeType< R > >
-    Image< R > openImageFromHdf5(
+    Image< R > openHdf5Series(
             String directory,
             String loadingScheme,
             String filterPattern,
@@ -110,7 +111,8 @@ public class BigDataProcessor2
 
         FileInfos fileInfos = new FileInfos( directory, loadingScheme, filterPattern, hdf5DataSetName, channelSubsetter );
 
-        final Image< R > image = CachedCellImgCreator.loadImage( fileInfos );
+        final Image< R > image = new FileSeriesCachedCellImgCreator( fileInfos ).createImage();
+
         return image;
     }
 
@@ -121,9 +123,7 @@ public class BigDataProcessor2
             int series )
     {
         DebugTools.setRootLevel( "OFF" ); // Bio-Formats
-        final Image< R > image = CachedCellImgCreator.loadImage( directory, dataLocation, series );
-        return image;
-        //return null;
+        return (Image< R >) (new BioFormatsCachedCellImgCreator<>(dataLocation,series).createImage());
     }
 
     public static < R extends RealType< R > & NativeType< R > >
@@ -167,7 +167,12 @@ public class BigDataProcessor2
     public static < R extends RealType< R > & NativeType< R > > Image< R > correctChromaticShift( Image< R > image, ArrayList< long[] > shifts )
     {
         final ChannelShifter< R > shifter = new ChannelShifter< >( image.getRai() );
-        return image.newImage( shifter.getShiftedRai( shifts ) );
+        RandomAccessibleInterval< R > shiftedRai = shifter.getShiftedRai( shifts );
+
+        Image< R > outputImage = new Image( image );
+        outputImage.setRai( shiftedRai );
+
+        return outputImage;
     }
 
     public static < R extends RealType< R > & NativeType< R > > Image< R > transform( Image< R > image, AffineTransform3D transform3D, InterpolatorFactory interpolatorFactory )

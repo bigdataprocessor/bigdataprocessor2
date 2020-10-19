@@ -1,19 +1,23 @@
 package de.embl.cba.bdp2.process.calibrate;
 
+import ch.epfl.biop.bdv.bioformats.BioFormatsMetaDataHelper;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.macro.MacroRecorder;
 import de.embl.cba.bdp2.utils.Utils;
-import de.embl.cba.bdp2.viewers.ImageViewer;
+import de.embl.cba.bdp2.viewer.ImageViewer;
 import ij.IJ;
 import ij.gui.GenericDialog;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
+import ome.units.UNITS;
+import ome.units.quantity.Length;
+import ome.units.unit.Unit;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import static de.embl.cba.bdp2.process.calibrate.CalibrationUtils.fixVoxelSizeAndUnit;
-
 
 // TODO: Can one make it a child of AbstractProcessingDialog?
 public class CalibrationDialog< R extends RealType< R > & NativeType< R > >
@@ -35,12 +39,19 @@ public class CalibrationDialog< R extends RealType< R > & NativeType< R > >
 
 	public Image< R > showDialog()
 	{
+		String[] voxelUnitSymbols = { UNITS.MICROMETRE.getSymbol(), UNITS.NANOMETRE.getSymbol() };
+
 		final double[] voxelSize = inputImage.getVoxelSize();
-		String voxelUnit = inputImage.getVoxelUnit();
-		voxelUnit = fixVoxelSizeAndUnit( voxelSize, voxelUnit );
+		Unit< Length > voxelUnit = inputImage.getVoxelUnit();
+
+		if ( voxelUnit == null )
+			voxelUnit = UNITS.MICROMETER;
+
+		if ( ! Arrays.asList( voxelUnitSymbols ).contains( voxelUnit.getSymbol() ) )
+			voxelUnit = UNITS.MICROMETER;
 
 		final GenericDialog genericDialog = new GenericDialog( "Calibration" );
-		genericDialog.addStringField( "Unit", voxelUnit, 12 );
+		genericDialog.addChoice( "Unit", voxelUnitSymbols, voxelUnit.getSymbol() );
 		genericDialog.addNumericField( "Voxel size X", voxelSize[ 0 ], 3, 12, "" );
 		genericDialog.addNumericField( "Voxel size Y", voxelSize[ 1 ], 3, 12, "" );
 		genericDialog.addNumericField( "Voxel size Z", voxelSize[ 2 ], 3, 12, "" );
@@ -50,7 +61,9 @@ public class CalibrationDialog< R extends RealType< R > & NativeType< R > >
 
 		outputImage = inputImage;
 
-		outputImage.setVoxelUnit( genericDialog.getNextString() );
+		String unitChoice = genericDialog.getNextChoice();
+		Unit unitFromString = BioFormatsMetaDataHelper.getUnitFromString( unitChoice );
+		outputImage.setVoxelUnit( unitFromString );
 		voxelSize[ 0 ] = genericDialog.getNextNumber();
 		voxelSize[ 1 ] = genericDialog.getNextNumber();
 		voxelSize[ 2 ] = genericDialog.getNextNumber();

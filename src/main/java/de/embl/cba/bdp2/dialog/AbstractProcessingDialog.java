@@ -1,11 +1,9 @@
 package de.embl.cba.bdp2.dialog;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.viewers.ImageViewer;
+import de.embl.cba.bdp2.viewer.ImageViewer;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
-
-import javax.swing.*;
 
 public abstract class AbstractProcessingDialog< R extends RealType< R > & NativeType< R > > extends AbstractOkCancelDialog
 {

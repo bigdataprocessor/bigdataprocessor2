@@ -3,13 +3,11 @@ package de.embl.cba.bdp2.save;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.log.progress.ProgressListener;
-import de.embl.cba.bdp2.open.core.CachedCellImgCreator;
+import de.embl.cba.bdp2.open.CacheUtils;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
-import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.cache.img.CachedCellImg;
+import net.imglib2.cache.img.DiskCachedCellImgOptions;
 import net.imglib2.type.NativeType;
-import net.imglib2.type.Type;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Util;
 
@@ -38,9 +36,10 @@ public class ImageSaverCreator < R extends RealType< R > & NativeType< R > >
 			long cacheSize = image.getDimensionsXYZCT()[ DimensionOrder.C ] * numIOThreads;
 
 			Logger.info( "Configuring volume reader with a cache size of " + cacheSize + " volumes." );
-			final CachedCellImg< R, ? > volumeCachedCellImg = CachedCellImgCreator.createVolumeCachedCellImg( image.getFileInfos(), cacheSize );
-			final RandomAccessibleInterval< R > volumeLoadedRAI = new CachedCellImgReplacer( image.getRai(), volumeCachedCellImg ).get();
-			savingSettings.rai = volumeLoadedRAI;
+
+			image.setCache( CacheUtils.volumeWiseCellDims( image.getDimensionsXYZCT() ), DiskCachedCellImgOptions.CacheType.BOUNDED, 100 );
+
+			savingSettings.rai = image.getRai();
 		}
 		else
 		{
@@ -62,6 +61,8 @@ public class ImageSaverCreator < R extends RealType< R > & NativeType< R > >
 
 		saver = factory.getSaver( savingSettings, saveExecutorService );
 		saver.addProgressListener( progressListener );
+
+		// TODO: reset cellDims to planeWise?
 	}
 
 	public ImageSaver getSaver()

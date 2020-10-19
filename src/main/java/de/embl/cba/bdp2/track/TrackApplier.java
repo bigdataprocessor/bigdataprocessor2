@@ -50,7 +50,8 @@ public class TrackApplier< R extends RealType< R > & NativeType< R > >
 
 		final RandomAccessibleInterval< R > trackView = Views.stack( timePoints );
 
-		final Image< R > trackViewImage = image.newImage( trackView );
+		final Image< R > trackViewImage = new Image<>( image );
+		trackViewImage.setRai( trackView );
 		trackViewImage.setName( track.getName() );
 		return trackViewImage;
 	}

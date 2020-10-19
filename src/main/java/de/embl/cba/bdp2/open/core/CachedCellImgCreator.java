@@ -7,7 +7,6 @@ import ch.epfl.biop.bdv.bioformats.bioformatssource.BioFormatsBdvOpener;
 import ch.epfl.biop.bdv.bioformats.bioformatssource.BioFormatsBdvSource;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.open.OpenFileType;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.cache.img.CachedCellImg;
 import net.imglib2.cache.img.DiskCachedCellImgOptions;
@@ -28,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static de.embl.cba.bdp2.open.core.OpenerExtension.readCroppedPlaneFromTiffIntoImageStack.COMPRESSION_NONE;
+//import static de.embl.cba.bdp2.open.core.OpenerExtension.readCroppedPlaneFromTiffIntoImageStack.COMPRESSION_NONE;
 import static net.imglib2.cache.img.ReadOnlyCachedCellImgOptions.options;
 
 public class CachedCellImgCreator
@@ -41,70 +40,10 @@ public class CachedCellImgCreator
                          String dataLocation,
                          int series ) {
 
-        List<Source> sources =
-                BioFormatsBdvOpener.getOpener()
-                        .location(dataLocation)
-                        .auto() // patches opener based on specific file formats (-> PR to be  modified)
-                        //.splitRGBChannels() // split RGB channels into 3 channels
-                        //.switchZandC(true) // switch Z and C
-                        //.centerPositionConvention() // bioformats location is center of the image
-                        .cornerPositionConvention() // bioformats location is corner of the image
-                        //.useCacheBlockSizeFromBioFormats(true) // true by default
-                        //.cacheBlockSize(512,512,10) // size of cache block used by diskcached image
-                        //.micronmeter() // unit = micrometer
-                        .millimeter() // unit = millimeter
-                        //.unit(UNITS.YARD) // Ok, if you really want...
-                        //.getConcreteSources()
-                        .positionReferenceFrameLength(new Length(1, UNITS.MICROMETER)) // Compulsory
-                        .voxSizeReferenceFrameLength(new Length(100, UNITS.MICROMETER))
-                        .getConcreteSources(series+".*") // code for all channels of the series indexed 'series'
-                        .stream().map(src -> (Source) src).collect(Collectors.toList());
-
-
-        List<BioFormatsBdvSource> sourcesBF = sources.stream().map(src ->
-            BioFormatsBdvSource.class.cast( src )
-        ).collect(Collectors.toList());
-
-        BioFormatsBdvSource modelSource = sourcesBF.get(0);
-        RandomAccessibleInterval<R> modelRAI = sourcesBF.get(0).createSource(0,0);
-
-        long sizeX = modelRAI.dimension(0); // limited to 2GPixels in one dimension
-        long sizeY = modelRAI.dimension(1);
-        long sizeZ = modelRAI.dimension(2);
-        int sizeC = sourcesBF.size();
-        long sizeT = modelSource.numberOfTimePoints;
-
-        // TODO : sanity check identical size in XYZCT for all channels
-
-        int[] cellDimsXYZCT = new int[]{(int)sizeX, (int)sizeY, (int)sizeZ, sizeC, (int)sizeT};
-
-        //CachedCellImg cache TODO
-        List<RandomAccessibleInterval<R>> raisXYZCT = new ArrayList<>();
-        // Option 1
-        /*for (int iTime = 0; iTime<sizeT;iTime++) {
-            List<RandomAccessibleInterval<R>> raisXYZC = new ArrayList<>();
-            for (int iChannel = 0; iChannel<sizeC;iChannel++) {
-                raisXYZC.add(sourcesBF.get(iChannel).createSource(iTime,0));
-            }
-            raisXYZCT.add(Views.stack(raisXYZC));
-        }*/
-
-        // Option 2
-        for (int iChannel = 0; iChannel<sizeC;iChannel++) {
-            List<RandomAccessibleInterval<R>> raisXYZC = new ArrayList<>();
-            for (int iTime = 0; iTime<sizeT;iTime++) {
-                raisXYZC.add(sourcesBF.get(iChannel).createSource(iTime,0));
-            }
-            raisXYZCT.add(Views.stack(raisXYZC));
-        }
-
-        RandomAccessibleInterval raiXYCZT = Views.stack(raisXYZCT);
-
-        BdvFunctions.show(raiXYCZT, "BioFormats output", BdvOptions.options());
 
         throw new UnsupportedOperationException();
     }
-
+    /*
     public static CachedCellImg createCachedCellImg( FileInfos fileInfos )
     {
         int[] cellDimsXYZCT = getCellDimsXYZCT( fileInfos );
@@ -208,6 +147,7 @@ public class CachedCellImgCreator
      *                  access to different timepoints and channels.
 	 * @return
      */
+    /*
     public static CachedCellImg createVolumeCachedCellImg( FileInfos fileInfos, long cacheSize )
     {
         isReadingVolumes = true;
@@ -252,9 +192,9 @@ public class CachedCellImgCreator
                 fileInfos.voxelUnit,
                 fileInfos
                 );
-    }
+    }*/
 
-    public static int[] getCellDimsXYZCT( RandomAccessibleInterval< ? > raiXYZCT )
+    /*public static int[] getCellDimsXYZCT( RandomAccessibleInterval< ? > raiXYZCT )
     {
         int bitDepth = getBitDepth( raiXYZCT );
         final int[] imageDims = Intervals.dimensionsAsIntArray( raiXYZCT );
@@ -272,5 +212,5 @@ public class CachedCellImgCreator
         else
             throw new UnsupportedOperationException( "Type not supported: " + typeFromInterval );
         return bitDepth;
-    }
+    }*/
 }

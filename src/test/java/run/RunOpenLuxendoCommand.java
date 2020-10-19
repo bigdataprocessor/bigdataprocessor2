@@ -1,7 +1,6 @@
 package run;
 
-import de.embl.cba.bdp2.open.ui.OpenLuxendoCommand;
-import de.embl.cba.bdp2.scijava.Services;
+import de.embl.cba.bdp2.open.luxendo.OpenLuxendoCommand;
 import ij.plugin.frame.Recorder;
 import net.imagej.ImageJ;
 

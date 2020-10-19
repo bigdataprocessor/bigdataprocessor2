@@ -2,7 +2,7 @@ package test;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.BigDataProcessor2;
-import de.embl.cba.bdp2.open.core.NamingSchemes;
+import de.embl.cba.bdp2.open.NamingSchemes;
 import loci.common.DebugTools;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -16,7 +16,7 @@ public class TestFolderPatternOpening
 	{
 		DebugTools.setRootLevel("OFF"); // Bio-Formats
 
-		final Image< R > image = BigDataProcessor2.openImage(
+		final Image< R > image = BigDataProcessor2.openTiffSeries(
 				"/Volumes/cba/exchange/Isabell_Schneider/3-Color",
 				NamingSchemes.LOAD_CHANNELS_FROM_FOLDERS,
 				"stack_10_.*/.*" );

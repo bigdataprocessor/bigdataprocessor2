@@ -1,6 +1,6 @@
 package run;
 
-import de.embl.cba.bdp2.open.ui.OpenCustomCommand;
+import de.embl.cba.bdp2.open.fileseries.OpenFileSeriesCommand;
 import de.embl.cba.bdp2.scijava.Services;
 import ij.plugin.frame.Recorder;
 import net.imagej.ImageJ;
@@ -15,6 +15,6 @@ public class RunOpenCommand
 		new Recorder();
 
 		Services.setCommandService( ij.command() );
-		Services.getCommandService().run( OpenCustomCommand.class, true );
+		Services.getCommandService().run( OpenFileSeriesCommand.class, true );
 	}
 }

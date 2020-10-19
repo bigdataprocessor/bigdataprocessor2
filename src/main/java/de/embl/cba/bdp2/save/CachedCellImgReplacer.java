@@ -28,45 +28,48 @@ import java.util.List;
  *
  * @author Christian Tischer
  */
-public class CachedCellImgReplacer
-		< T extends Type< T > & NativeType< T >, S extends Type< S > & NativeType< S > >
+public class CachedCellImgReplacer< T extends Type< T > & NativeType< T >, S extends Type< S > & NativeType< S > >
 {
-
-
-	private final RandomAccessible< T > rai;
+	private final RandomAccessible< T > ra;
 	private final CachedCellImg< T, ? > cachedCellImg;
 
 
-	public CachedCellImgReplacer( final RandomAccessible< T > rai,
+	public CachedCellImgReplacer( final RandomAccessible< T > ra,
 								  final CachedCellImg< T, ? > cachedCellImg )
 	{
-		this.rai = rai;
+		this.ra = ra;
 		this.cachedCellImg = cachedCellImg;
 	}
 
-
+	/**
+	 * TODO: Figure out why I need to have RandomAccessible inside
+	 *   the replace function and then have to do the casting here...
+	 *
+	 * @return
+	 * 		   The input RAI but now backed by the given CachedCellImg
+	 */
 	public RandomAccessibleInterval< T > get()
 	{
-		return ( RandomAccessibleInterval< T > ) replace( rai );
+		return ( RandomAccessibleInterval< T > ) replace( ra );
 	}
 
-	private RandomAccessible< T > replace( RandomAccessible< T > rai )
+	private RandomAccessible< T > replace( RandomAccessible< T > ra )
 	{
-		if ( rai instanceof CachedCellImg )
+		if ( ra instanceof CachedCellImg )
 		{
 			// Replace the CachedCellImg with the given one
 			return cachedCellImg;
 		}
-		else if ( rai instanceof IntervalView )
+		else if ( ra instanceof IntervalView )
 		{
-			final IntervalView< T > view = ( IntervalView< T > ) rai;
+			final IntervalView< T > view = ( IntervalView< T > ) ra;
 			final RandomAccessible< T > replace = replace( view.getSource() );
 			final IntervalView intervalView = new IntervalView( replace, view );
 			return intervalView;
 		}
-		else if ( rai instanceof MixedTransformView )
+		else if ( ra instanceof MixedTransformView )
 		{
-			final MixedTransformView< T > view = ( MixedTransformView< T > ) rai;
+			final MixedTransformView< T > view = ( MixedTransformView< T > ) ra;
 
 			final RandomAccessible< T > replace = replace( view.getSource() );
 
@@ -77,9 +80,9 @@ public class CachedCellImgReplacer
 
 			return mixedTransformView;
 		}
-		else if ( rai instanceof SubsampleIntervalView )
+		else if ( ra instanceof SubsampleIntervalView )
 		{
-			final SubsampleIntervalView< T > view = ( SubsampleIntervalView< T > ) rai;
+			final SubsampleIntervalView< T > view = ( SubsampleIntervalView< T > ) ra;
 
 			final RandomAccessibleInterval< T > replace =
 					( RandomAccessibleInterval< T > ) replace( view.getSource() );
@@ -91,7 +94,7 @@ public class CachedCellImgReplacer
 
 			return subsampleIntervalView;
 		}
-		else if ( rai instanceof SubsampleView ) // TODO: do we need this ?
+		else if ( ra instanceof SubsampleView ) // TODO: do we need this ?
 		{
 			Logger.error( "SubsampleView..." );
 			return null;
@@ -107,10 +110,10 @@ public class CachedCellImgReplacer
 //
 //			return volatileViewData;
 		}
-		else if ( rai instanceof ConvertedRandomAccessibleInterval )
+		else if ( ra instanceof ConvertedRandomAccessibleInterval )
 		{
 			final ConvertedRandomAccessibleInterval< T, S > view
-					= ( ConvertedRandomAccessibleInterval< T, S > ) rai;
+					= ( ConvertedRandomAccessibleInterval< T, S > ) ra;
 
 			final RandomAccessibleInterval< T > replace =
 					( RandomAccessibleInterval< T > ) replace( view.getSource() );
@@ -140,11 +143,10 @@ public class CachedCellImgReplacer
 
 				return converted;
 			}
-
 		}
-		else if ( rai instanceof StackView )
+		else if ( ra instanceof StackView )
 		{
-			final StackView< T > view = ( StackView< T > ) rai;
+			final StackView< T > view = ( StackView< T > ) ra;
 
 			final List< RandomAccessibleInterval< T > > slices = view.getSourceSlices();
 
@@ -156,11 +158,11 @@ public class CachedCellImgReplacer
 
 			return stackView;
 		}
-		else if ( rai instanceof RectangleShape2.NeighborhoodsAccessible )
+		else if ( ra instanceof RectangleShape2.NeighborhoodsAccessible )
 		{
 			// TODO: I did not manage to put the typing here
 			final RectangleShape2.NeighborhoodsAccessible< T > view =
-					( RectangleShape2.NeighborhoodsAccessible ) rai;
+					( RectangleShape2.NeighborhoodsAccessible ) ra;
 
 			final RandomAccessible< T > replace = replace( view.getSource() );
 
@@ -172,11 +174,11 @@ public class CachedCellImgReplacer
 
 			return neighborhoodsAccessible;
 		}
-		else if ( rai instanceof ExtendedRandomAccessibleInterval )
+		else if ( ra instanceof ExtendedRandomAccessibleInterval )
 		{
 			// TODO: I did not manage to put the typing here
 			final ExtendedRandomAccessibleInterval view =
-					( ExtendedRandomAccessibleInterval ) rai;
+					( ExtendedRandomAccessibleInterval ) ra;
 
 			final RandomAccessibleInterval< T > replace =
 					( RandomAccessibleInterval< T > ) replace( view.getSource() );
@@ -193,6 +195,4 @@ public class CachedCellImgReplacer
 			throw new IllegalArgumentException();
 		}
 	}
-
-
 }

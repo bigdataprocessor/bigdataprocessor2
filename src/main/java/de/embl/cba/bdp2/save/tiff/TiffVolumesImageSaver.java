@@ -1,9 +1,8 @@
 package de.embl.cba.bdp2.save.tiff;
 
-import de.embl.cba.bdp2.open.core.FileInfos;
+import de.embl.cba.bdp2.open.fileseries.FileInfos;
 import de.embl.cba.bdp2.save.AbstractImageSaver;
 import de.embl.cba.bdp2.save.SavingSettings;
-import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.log.progress.Progress;
 import de.embl.cba.bdp2.utils.Utils;
 

@@ -62,16 +62,7 @@ public class BDP2MacroClusterExecutionCommand extends AbstractClusterSubmitterCo
 			macro = setNumThreads( macro );
 
 			int tStart = tStartInMacro;
-
-			int tEnd;
-			if ( timePointsToProcess == -1 )
-			{
-				tEnd = tEndInMacro; // process all
-			}
-			else
-			{
-				tEnd = Math.min( tEndInMacro, tStart + timePointsToProcess - 1);
-			}
+			int tEnd = getTEnd( tEndInMacro, tStart );
 
 			for ( int t = tStart; t <= tEnd; t+= timePointsPerJob )
 			{
@@ -81,9 +72,8 @@ public class BDP2MacroClusterExecutionCommand extends AbstractClusterSubmitterCo
 				int t1 = t + timePointsPerJob - 1;
 				t1 = t1 <= tEnd ? t1 : tEnd;
 
-				String timeSubsetMacro = macro
-						.replace( T_START + tStartInMacro, T_START + t0 )
-						.replace( T_END + tEndInMacro, T_END + t1 );
+				String timeSubsetMacro = macro.replace( T_START + tStartInMacro, T_START + t0 );
+				timeSubsetMacro = timeSubsetMacro.replace( T_END + tEndInMacro, T_END + t1 );
 
 				jobSubmitter.addIJMacroExecution( timeSubsetMacro );
 				JobSettings jobSettings = getJobSettings( timeSubsetMacro, t0, t1 );
@@ -93,6 +83,18 @@ public class BDP2MacroClusterExecutionCommand extends AbstractClusterSubmitterCo
 		}
 
 		return jobFutures;
+	}
+
+	private int getTEnd( int tEndInMacro, int tStart )
+	{
+		if ( timePointsToProcess == -1 )
+		{
+			return tEndInMacro; // process all
+		}
+		else
+		{
+			return Math.min( tEndInMacro, tStart + timePointsToProcess - 1);
+		}
 	}
 
 	@NotNull

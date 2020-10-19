@@ -3,7 +3,7 @@ package test;
 import bdv.img.imaris.Imaris;
 import bdv.util.BdvFunctions;
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.open.core.NamingSchemes;
+import de.embl.cba.bdp2.open.NamingSchemes;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import loci.common.DebugTools;
@@ -29,7 +29,7 @@ public class TestSaveSingleChannel16BitTiffSeriesAsImarisVolumes
         final String loadingScheme = NamingSchemes.SINGLE_CHANNEL_TIMELAPSE;
         final String filterPattern = ".*.tif";
 
-        final Image image = bdp.openImage(
+        final Image image = bdp.openTiffSeries(
                 directory,
                 loadingScheme,
                 filterPattern );

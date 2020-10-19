@@ -8,7 +8,7 @@ public class CalibrationUtils
 {
 	public static < R extends RealType< R > & NativeType< R > > String fixVoxelSizeAndUnit( double[] voxelSpacing, String voxelUnit )
 	{
-		if ( voxelUnit.equals( "cm" ) )
+		if ( voxelUnit.equals( "cm" ) || voxelUnit.equals( "centimetre" ))
 		{
 			voxelUnit = "micrometer";
 			for ( int i = 0; i < voxelSpacing.length; i++ )

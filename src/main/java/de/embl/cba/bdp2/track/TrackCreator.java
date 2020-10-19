@@ -4,7 +4,7 @@ import bdv.util.BdvFunctions;
 import bdv.util.BdvHandle;
 import bdv.util.BdvOptions;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.embl.cba.bdp2.viewers.ImageViewer;
+import de.embl.cba.bdp2.viewer.ImageViewer;
 import de.embl.cba.bdv.utils.BdvUtils;
 import de.embl.cba.tables.SwingUtils;
 import net.imglib2.RealPoint;

@@ -15,7 +15,9 @@ public class Cropper
 		// TODO: It seems like the zeroMin is currently necessary for the binning to work => fix this
 		final IntervalView< T > crop = Views.zeroMin( Views.interval( image.getRai(), intervalXYZCT ) );
 		//final IntervalView< T > crop = Views.interval( image.getRai(), intervalXYZCT );
-		final Image< T > croppedImage = image.newImage( crop );
+
+		Image< T > croppedImage = new Image<>( image );
+		croppedImage.setRai( crop );
 		croppedImage.setName( image.getName() + "-crop" );
 		return croppedImage;
 	}

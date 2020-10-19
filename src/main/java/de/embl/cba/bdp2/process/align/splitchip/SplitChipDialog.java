@@ -14,7 +14,7 @@ import de.embl.cba.bdp2.dialog.DisplaySettings;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.macro.MacroRecorder;
 import de.embl.cba.bdp2.utils.Utils;
-import de.embl.cba.bdp2.viewers.ImageViewer;
+import de.embl.cba.bdp2.viewer.ImageViewer;
 import ij.Prefs;
 import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
@@ -24,9 +24,10 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.ui.InteractiveDisplayCanvasComponent;
 import bdv.viewer.OverlayRenderer;
+//import net.imglib2.ui.OverlayRenderer;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,7 +46,6 @@ public class SplitChipDialog< R extends RealType< R > & NativeType< R > > extend
 	private Map< String, BoundedValue > boundedValues;
 	private ArrayList< SliderPanel > sliderPanels;
 	private SelectionUpdateListener updateListener;
-	private JPanel panel;
 	private ArrayList< ModifiableInterval > intervals3D;
 	private ImageViewer outputViewer;
 	private int numChannelsAfterMerge;
@@ -92,13 +92,17 @@ public class SplitChipDialog< R extends RealType< R > & NativeType< R > > extend
 	protected void recordMacro()
 	{
 		final MacroRecorder recorder = new MacroRecorder( SplitChipCommand.COMMAND_FULL_NAME, inputImage, outputImage );
-
 		ArrayList< long[] > intervals = intervals3dAsLongsList();
 		String intervalsString = Utils.longsToDelimitedString( intervals );
-		Prefs.set( AlignChannelsDialog.class.getSimpleName() + "." + "Regions", intervalsString );
+		Prefs.set( getImageJPrefsKey(), intervalsString );
 		recorder.addOption( "intervalsString", intervalsString );
-
 		recorder.record();
+	}
+
+	@NotNull
+	private String getImageJPrefsKey()
+	{
+		return AlignChannelsDialog.class.getSimpleName() + "." + "Regions";
 	}
 
 	private ArrayList< long[] > intervals3dAsLongsList()
@@ -174,13 +178,11 @@ public class SplitChipDialog< R extends RealType< R > & NativeType< R > > extend
 						intervals3D, // in the UI this contains 2 channels
 						CHANNEL ); // TODO: Could be different channel?
 
-		outputImage = new Image(
-				merge,
-				inputImage.getName() + "-splitchip",
-				createMergedChannelNames(),
-				inputImage.getVoxelSize(),
-				inputImage.getVoxelUnit(),
-				inputImage.getFileInfos() );
+
+		outputImage = new Image( inputImage );
+		outputImage.setRai( merge );
+		outputImage.setName( inputImage.getName() + "-splitchip" );
+		outputImage.setChannelNames( createMergedChannelNames() );
 	}
 
 	private String[] createMergedChannelNames()
@@ -326,7 +328,7 @@ public class SplitChipDialog< R extends RealType< R > & NativeType< R > > extend
 		int d;
 		boolean couldUsePreviousChoice;
 
-		String recentChoice = Prefs.get( AlignChannelsDialog.class.getSimpleName(), null );
+		String recentChoice = Prefs.get( getImageJPrefsKey(), null );
 
 		if ( recentChoice != null )
 		{
@@ -335,7 +337,7 @@ public class SplitChipDialog< R extends RealType< R > & NativeType< R > > extend
 			// format: minX,minY,dimX,dimY
 			String channelChoice = recentChoice.split( ";" )[ c ];
 
-			for ( d = 0; d < 3; d++ )
+			for ( d = 0; d < 2; d++ )
 			{
 				min[ d ] = Integer.parseInt( channelChoice.split( "," )[ d ] );
 				max[ d ] = min[ d ] + Integer.parseInt( channelChoice.split( "," )[ d + 2 ] ) - 1;
@@ -373,28 +375,10 @@ public class SplitChipDialog< R extends RealType< R > & NativeType< R > > extend
 			max[ d ] = rai.max( d ) - margin;
 		}
 
-
-		d = Z;
-
-		min[ d ] = 0;
-		max[ d ] = rai.dimension( d );
+		min[ Z ] = 0;
+		max[ Z ] = rai.dimension( Z );
 
 		return new FinalInterval( min, max );
-	}
-
-	private void showFrame( JPanel panel )
-	{
-		final JFrame frame = new JFrame( "Region Selection" );
-		frame.setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
-
-		frame.setContentPane( panel );
-		frame.setBounds(
-				MouseInfo.getPointerInfo().getLocation().x - 50,
-				MouseInfo.getPointerInfo().getLocation().y - 50,
-				120, 10);
-		frame.setResizable( false );
-		frame.pack();
-		frame.setVisible( true );
 	}
 
 	private String getMinimumName( int d, int c )

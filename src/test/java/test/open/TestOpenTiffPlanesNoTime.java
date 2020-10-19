@@ -2,10 +2,10 @@ package test.open;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.open.core.NamingSchemes;
+import de.embl.cba.bdp2.open.NamingSchemes;
 import org.junit.Test;
 
-import static de.embl.cba.bdp2.open.core.NamingSchemes.Z;
+import static de.embl.cba.bdp2.open.NamingSchemes.Z;
 
 public class TestOpenTiffPlanesNoTime
 {
@@ -19,7 +19,7 @@ public class TestOpenTiffPlanesNoTime
     {
         final String directory = "/Users/tischer/Documents/bigdataprocessor2/src/test/resources/test/tiff-planes-no-time";
 
-        final Image image = BigDataProcessor2.openImage(
+        final Image image = BigDataProcessor2.openTiffSeries(
                 directory,
                 ".*_z(" + Z + "\\d+).*_c(" + NamingSchemes.C + "\\d+).*",
                 ".*"

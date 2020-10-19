@@ -4,10 +4,9 @@ import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.log.progress.ProgressListener;
-import de.embl.cba.bdp2.open.OpenFileType;
 import de.embl.cba.bdp2.macro.MacroRecorder;
 import de.embl.cba.bdp2.utils.DimensionOrder;
-import de.embl.cba.bdp2.viewers.ImageViewer;
+import de.embl.cba.bdp2.viewer.ImageViewer;
 import ij.IJ;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -133,8 +132,7 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > > extends JFr
         panelIndex = addTiffCompressionPanel( panelIndex );
 
         if ( ( saveFileType.equals( SavingSettings.SaveFileType.TIFF_PLANES ) ||
-                saveFileType.equals( SavingSettings.SaveFileType.TIFF_VOLUMES ) )
-                && ! viewer.getImage().getFileInfos().fileType.equals( OpenFileType.HDF5 ) )
+                saveFileType.equals( SavingSettings.SaveFileType.TIFF_VOLUMES ) ) )
         {
             panels.add( new JPanel() );
             panels.get( panelIndex ).add( new JLabel( "I/O Threads" ) );

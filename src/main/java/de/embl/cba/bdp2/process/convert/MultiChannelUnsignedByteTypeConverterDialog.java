@@ -7,7 +7,7 @@ import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.macro.MacroRecorder;
 import de.embl.cba.bdp2.utils.Utils;
-import de.embl.cba.bdp2.viewers.ImageViewer;
+import de.embl.cba.bdp2.viewer.ImageViewer;
 import ij.IJ;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.Converters;
@@ -145,7 +145,8 @@ public class MultiChannelUnsignedByteTypeConverterDialog< R extends RealType< R 
 						converter,
 						new UnsignedByteType() );
 
-		final Image< R > convertedImage = image.newImage( convertedRai );
+		final Image< R > convertedImage = new Image<>( image );
+		convertedImage.setRai( convertedRai );
 
 		return convertedImage;
 	}

@@ -2,16 +2,13 @@ package develop;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
-import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.utils.IntervalImageViews;
 import net.imagej.ImageJ;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.util.Util;
 import net.imglib2.view.Views;
 
-import static de.embl.cba.bdp2.open.core.NamingSchemes.LUXENDO_REGEXP;
+import static de.embl.cba.bdp2.open.NamingSchemes.LUXENDO_REGEXP;
 
 public class DevelopSavingWithoutMemoryLeak
 {
@@ -23,7 +20,7 @@ public class DevelopSavingWithoutMemoryLeak
 		String regExp = LUXENDO_REGEXP.replace( "STACK", "" + 6 );
 
 		// /Volumes/cba/exchange/bigdataprocessor/data/mouse_2cam_publication_figure/stack_6_channel_2
-		final Image image = BigDataProcessor2.openImageFromHdf5(
+		final Image image = BigDataProcessor2.openHdf5Series(
 				"/Volumes/cba/exchange/bigdataprocessor/data/mouse_2cam_publication_figure",
 				regExp,
 				regExp,

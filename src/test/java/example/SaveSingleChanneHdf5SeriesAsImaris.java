@@ -2,7 +2,7 @@ package example;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.process.bin.Binner;
-import de.embl.cba.bdp2.open.core.NamingSchemes;
+import de.embl.cba.bdp2.open.NamingSchemes;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.BigDataProcessor2;
 
@@ -19,7 +19,7 @@ public class SaveSingleChanneHdf5SeriesAsImaris
         final String filterPattern = ".*.h5";
         final String dataset = "Data";
 
-        final Image image = bdp.openImageFromHdf5(
+        final Image image = bdp.openHdf5Series(
                 directory,
                 loadingScheme,
                 filterPattern,

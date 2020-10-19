@@ -1,8 +1,6 @@
 package run;
 
-import de.embl.cba.bdp2.open.ui.OpenLuxendoChannelsCommand;
-import de.embl.cba.bdp2.open.ui.OpenLuxendoCommand;
-import de.embl.cba.bdp2.scijava.Services;
+import de.embl.cba.bdp2.open.luxendo.OpenLuxendoChannelsCommand;
 import ij.plugin.frame.Recorder;
 import net.imagej.ImageJ;
 

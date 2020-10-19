@@ -1,5 +1,11 @@
 package de.embl.cba.bdp2;
 
+import de.embl.cba.bdp2.open.AbstractOpenCommand;
+import de.embl.cba.bdp2.open.OpenEMTiffPlanesCommand;
+import de.embl.cba.bdp2.open.fileseries.OpenFileSeriesCommand;
+import de.embl.cba.bdp2.open.fileseries.OpenFileSeriesHelpCommand;
+import de.embl.cba.bdp2.open.leica.OpenLeicaDSLTiffPlanesCommand;
+import de.embl.cba.bdp2.open.luxendo.OpenLuxendoCommand;
 import de.embl.cba.bdp2.process.bin.BinCommand;
 import de.embl.cba.bdp2.process.bin.BinDialog;
 import de.embl.cba.bdp2.process.calibrate.CalibrateCommand;
@@ -7,7 +13,7 @@ import de.embl.cba.bdp2.process.calibrate.CalibrationDialog;
 import de.embl.cba.bdp2.process.convert.MultiChannelUnsignedByteTypeConverterCommand;
 import de.embl.cba.bdp2.process.convert.MultiChannelUnsignedByteTypeConverterDialog;
 import de.embl.cba.bdp2.process.crop.CropDialog;
-import de.embl.cba.bdp2.open.ui.DownloadAndOpenSampleDataCommand;
+import de.embl.cba.bdp2.open.samples.DownloadAndOpenSampleDataCommand;
 import de.embl.cba.bdp2.dialog.Utils;
 import de.embl.cba.bdp2.track.ApplyTrackCommand;
 import de.embl.cba.bdp2.track.ApplyTrackDialog;
@@ -15,7 +21,6 @@ import de.embl.cba.bdp2.track.TrackCreator;
 import de.embl.cba.bdp2.process.rename.ImageRenameCommand;
 import de.embl.cba.bdp2.process.rename.ImageRenameDialog;
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.open.ui.*;
 import de.embl.cba.bdp2.macro.MacroRecordingDialog;
 import de.embl.cba.bdp2.save.SaveDialog;
 import de.embl.cba.bdp2.save.SavingSettings;
@@ -30,7 +35,7 @@ import de.embl.cba.bdp2.service.ImageViewerService;
 import de.embl.cba.bdp2.process.transform.TransformCommand;
 import de.embl.cba.bdp2.process.transform.TransformDialog;
 import de.embl.cba.bdp2.utils.DimensionOrder;
-import de.embl.cba.bdp2.viewers.ImageViewer;
+import de.embl.cba.bdp2.viewer.ImageViewer;
 import de.embl.cba.tables.FileAndUrlUtils;
 import ij.IJ;
 import net.imglib2.RandomAccessibleInterval;
@@ -242,11 +247,11 @@ public class BigDataProcessor2MenuActions implements ActionListener {
                 new ImageRenameDialog<>( viewer );
             });
         }
-        else if( e.getActionCommand().equalsIgnoreCase( OpenCustomHelpCommand.COMMAND_NAME ) )
+        else if( e.getActionCommand().equalsIgnoreCase( OpenFileSeriesHelpCommand.COMMAND_NAME ) )
         {
             BigDataProcessor2.threadPool.submit(() ->
             {
-                Services.getCommandService().run( OpenCustomHelpCommand.class, true );
+                Services.getCommandService().run( OpenFileSeriesHelpCommand.class, true );
             });
         }
         else if( e.getActionCommand().equalsIgnoreCase( DownloadAndOpenSampleDataCommand.COMMAND_NAME ) )
@@ -265,12 +270,12 @@ public class BigDataProcessor2MenuActions implements ActionListener {
                 Services.getCommandService().run( OpenEMTiffPlanesCommand.class, true );
             });
         }
-        else if( e.getActionCommand().equalsIgnoreCase( OpenCustomCommand.COMMAND_NAME ) )
+        else if( e.getActionCommand().equalsIgnoreCase( OpenFileSeriesCommand.COMMAND_NAME ) )
         {
             BigDataProcessor2.threadPool.submit(() ->
             {
                 AbstractOpenCommand.parentViewer = viewer;
-                Services.getCommandService().run( OpenCustomCommand.class, true );
+                Services.getCommandService().run( OpenFileSeriesCommand.class, true );
             });
         }
         else if( e.getActionCommand().equalsIgnoreCase( OpenLeicaDSLTiffPlanesCommand.COMMAND_NAME ) )

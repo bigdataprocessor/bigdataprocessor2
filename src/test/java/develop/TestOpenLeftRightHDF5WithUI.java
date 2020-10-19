@@ -5,8 +5,8 @@ import bdv.util.BdvFunctions;
 import bdv.util.BdvOptions;
 import bdv.util.BdvStackSource;
 import de.embl.cba.bdp2.open.core.CachedCellImgCreator;
-import de.embl.cba.bdp2.open.core.FileInfos;
-import de.embl.cba.bdp2.viewers.BdvTransformEventHandler;
+//import de.embl.cba.bdp2.open.core.FileInfos;
+//import de.embl.cba.bdp2.viewers.BdvTransformEventHandler;
 import net.imglib2.img.Img;
 
 public class TestOpenLeftRightHDF5WithUI {
@@ -17,7 +17,7 @@ public class TestOpenLeftRightHDF5WithUI {
     public static void main(String[] args) {
 
 
-        final String directory = "Y:\\ashis\\movi\\stack_0_channel_2\\";
+  /*      final String directory = "Y:\\ashis\\movi\\stack_0_channel_2\\";
         FileInfos fileInfosLeft = new FileInfos(directory,"None",
                 ".*Left.*.h5","Data");
         FileInfos fileInfosRight = new FileInfos(directory,"None",
@@ -35,7 +35,7 @@ public class TestOpenLeftRightHDF5WithUI {
                 //.doubleBuffered(false)
                 .addTo(bdvss0)
                 //.transformEventHandlerFactory(new BdvTransformEventHandler.BehaviourTransformEventHandler3DFactory( voxelSpacing ))
-        );
+        );*/
 
     }
 

@@ -3,11 +3,11 @@ package develop;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.track.TrackCreator;
-import de.embl.cba.bdp2.viewers.ImageViewer;
+import de.embl.cba.bdp2.viewer.ImageViewer;
 import net.imagej.ImageJ;
 
-import static de.embl.cba.bdp2.open.core.NamingSchemes.MULTI_CHANNEL_VOLUMES;
-import static de.embl.cba.bdp2.open.core.NamingSchemes.TIF;
+import static de.embl.cba.bdp2.open.NamingSchemes.MULTI_CHANNEL_VOLUMES;
+import static de.embl.cba.bdp2.open.NamingSchemes.TIF;
 
 public class DevelopManualDriftCorrection
 {
@@ -18,7 +18,7 @@ public class DevelopManualDriftCorrection
 
         final String directory = "/Users/tischer/Documents/bigdataprocessor2/src/test/resources/test/tiff-nc2-nt6";
 
-        final Image image = BigDataProcessor2.openImage(
+        final Image image = BigDataProcessor2.openTiffSeries(
                 directory,
                 MULTI_CHANNEL_VOLUMES + TIF,
                 ".*"
