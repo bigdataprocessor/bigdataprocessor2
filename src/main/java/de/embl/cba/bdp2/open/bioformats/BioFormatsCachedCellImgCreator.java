@@ -31,6 +31,8 @@ public class BioFormatsCachedCellImgCreator < R extends RealType< R > & NativeTy
 
 	int sizeC, sizeT;
 
+	int[] cacheSize = new int[3];
+
 	public BioFormatsCachedCellImgCreator(String dataLocation, int series ) {
 
 		imageName = dataLocation+"_s"+series;
@@ -70,19 +72,20 @@ public class BioFormatsCachedCellImgCreator < R extends RealType< R > & NativeTy
 
 		// TODO : sanity check identical size in XYZCT for all channels
 
-		int[] cellDimsXYZCT = new int[]{(int)sizeX, (int)sizeY, (int)sizeZ, sizeC, (int)sizeT};
-
-		//CachedCellImg cache TODO
 		List<RandomAccessibleInterval<R>> raisXYZCT = new ArrayList<>();
 
-		// Option 2
+		int[] cacheSizeXYZ = new int[3];
+
 		for (int iChannel = 0; iChannel<sizeC;iChannel++) {
 			List<RandomAccessibleInterval<R>> raisXYZC = new ArrayList<>();
 			for (int iTime = 0; iTime<sizeT;iTime++) {
 				raisXYZC.add(sourcesBF.get(iChannel).createSource(iTime,0));
 			}
+			((CachedCellImg) raisXYZC.get(0)).getCellGrid().cellDimensions(cacheSizeXYZ);
 			raisXYZCT.add(Views.stack(raisXYZC));
 		}
+
+		cacheSize = new int[]{cacheSizeXYZ[0], cacheSizeXYZ[1], cacheSizeXYZ[2],1,1};
 
 		raiXYCZT = Views.stack(raisXYZCT);
 
@@ -135,15 +138,13 @@ public class BioFormatsCachedCellImgCreator < R extends RealType< R > & NativeTy
 	@Override
 	public int[] getDefaultCellDimsXYZCT()
 	{
-		int[] cacheSize = new int[3];
-		((CachedCellImg) raiXYCZT).getCellGrid().cellDimensions(cacheSize);
 		return cacheSize;
 	}
 
 	@Override
-	public CachedCellImg< R, ? > createCachedCellImg( int[] cellDimsXYZCT, DiskCachedCellImgOptions.CacheType cacheType, long cacheSize )
+	public RandomAccessibleInterval< R > createCachedCellImg( int[] cellDimsXYZCT, DiskCachedCellImgOptions.CacheType cacheType, long cacheSize )
 	{
-		return (CachedCellImg< R, ? >) raiXYCZT;
+		return raiXYCZT;
 	}
 
 	// TODO: this makes not much sense, just make it this Image
@@ -153,4 +154,6 @@ public class BioFormatsCachedCellImgCreator < R extends RealType< R > & NativeTy
 
 		return image;
 	}
+
+
 }

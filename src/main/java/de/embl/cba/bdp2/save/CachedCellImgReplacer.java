@@ -31,11 +31,11 @@ import java.util.List;
 public class CachedCellImgReplacer< T extends Type< T > & NativeType< T >, S extends Type< S > & NativeType< S > >
 {
 	private final RandomAccessible< T > ra;
-	private final CachedCellImg< T, ? > cachedCellImg;
-
+	//private final CachedCellImg< T, ? > cachedCellImg;
+	private final RandomAccessibleInterval< T > cachedCellImg;
 
 	public CachedCellImgReplacer( final RandomAccessible< T > ra,
-								  final CachedCellImg< T, ? > cachedCellImg )
+								  final RandomAccessibleInterval< T > cachedCellImg )
 	{
 		this.ra = ra;
 		this.cachedCellImg = cachedCellImg;

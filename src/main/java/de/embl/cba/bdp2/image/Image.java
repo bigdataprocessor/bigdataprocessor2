@@ -272,11 +272,12 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		Logger.info( "  Cache type: " + cacheType.toString() );
 
 		this.cellDims = cellDims;
-		CachedCellImg< R, ? > cachedCellImg = cachedCellImgCreator.createCachedCellImg( cellDims, cacheType, cacheSize );
+		//CachedCellImg< R, ? > cachedCellImg = cachedCellImgCreator.createCachedCellImg( cellDims, cacheType, cacheSize );
+		RandomAccessibleInterval<R> cachedCellImg = cachedCellImgCreator.createCachedCellImg( cellDims, cacheType, cacheSize );
 
 		if ( rai == null )
 			rai = cachedCellImg;
 		else
-			rai = new CachedCellImgReplacer<>( rai, cachedCellImg ).get();
+			rai = new CachedCellImgReplacer( rai, cachedCellImg ).get();
 	}
 }

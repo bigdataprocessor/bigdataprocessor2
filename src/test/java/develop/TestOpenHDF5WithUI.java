@@ -6,7 +6,6 @@ import bdv.util.BdvFunctions;
 import bdv.util.BdvOptions;
 import bdv.util.BdvSource;
 import bdv.util.volatiles.VolatileViews;
-import de.embl.cba.bdp2.open.core.CachedCellImgCreator;
 //import de.embl.cba.bdp2.open.core.FileInfos;
 //import de.embl.cba.bdp2.open.core.NamingSchemes;
 import net.imglib2.img.Img;
