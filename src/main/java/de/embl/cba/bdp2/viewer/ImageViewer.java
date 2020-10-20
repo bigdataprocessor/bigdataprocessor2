@@ -115,7 +115,7 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
     }
 
     public void repaint( AffineTransform3D viewerTransform) {
-        this.bdvHandle.getViewerPanel().setCurrentViewerTransform(viewerTransform);
+        this.bdvHandle.getViewerPanel().state().setViewerTransform(viewerTransform);
     }
 
     public void repaint() {

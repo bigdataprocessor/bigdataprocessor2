@@ -1,6 +1,7 @@
 package de.embl.cba.bdp2.open.bioformats;
 
 import bdv.viewer.Source;
+import ch.epfl.biop.bdv.bioformats.BioFormatsMetaDataHelper;
 import ch.epfl.biop.bdv.bioformats.bioformatssource.BioFormatsBdvOpener;
 import ch.epfl.biop.bdv.bioformats.bioformatssource.BioFormatsBdvSource;
 import de.embl.cba.bdp2.image.Image;
@@ -20,6 +21,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Uses bigdataviewer-bioformats to read a series of a file
+ * @param <R>
+ */
+
 public class BioFormatsCachedCellImgCreator < R extends RealType< R > & NativeType< R > > implements CachedCellImgCreator< R >
 {
 
@@ -31,7 +37,11 @@ public class BioFormatsCachedCellImgCreator < R extends RealType< R > & NativeTy
 
 	int sizeC, sizeT;
 
-	int[] cacheSize = new int[3];
+	int[] cacheSize;
+
+	ARGBType[] channelColors;
+
+	double[] voxelSize = new double[3];
 
 	public BioFormatsCachedCellImgCreator(String dataLocation, int series ) {
 
@@ -70,26 +80,29 @@ public class BioFormatsCachedCellImgCreator < R extends RealType< R > & NativeTy
 		sizeC = sourcesBF.size();
 		sizeT = modelSource.numberOfTimePoints;
 
-		// TODO : sanity check identical size in XYZCT for all channels
+		channelColors = new ARGBType[sizeC];
+
+		// TODO : sanity check identical size in XYZCT for all channels. Currently assuming selecting one series does the trick
 
 		List<RandomAccessibleInterval<R>> raisXYZCT = new ArrayList<>();
 
 		int[] cacheSizeXYZ = new int[3];
 
-		for (int iChannel = 0; iChannel<sizeC;iChannel++) {
-			List<RandomAccessibleInterval<R>> raisXYZC = new ArrayList<>();
-			for (int iTime = 0; iTime<sizeT;iTime++) {
-				raisXYZC.add(sourcesBF.get(iChannel).createSource(iTime,0));
-			}
+        for (int iTime = 0; iTime<sizeT;iTime++) {
+            List<RandomAccessibleInterval<R>> raisXYZC = new ArrayList<>();
+            for (int iChannel = 0; iChannel<sizeC;iChannel++) {
+				BioFormatsBdvSource source = sourcesBF.get(iChannel);
+				channelColors[iChannel] = BioFormatsMetaDataHelper.getSourceColor(source);
+                raisXYZC.add(source.createSource(iTime,0));
+                source.getVoxelDimensions().dimensions(voxelSize);
+            }
 			((CachedCellImg) raisXYZC.get(0)).getCellGrid().cellDimensions(cacheSizeXYZ);
-			raisXYZCT.add(Views.stack(raisXYZC));
-		}
+            raisXYZCT.add(Views.stack(raisXYZC));
+        }
 
 		cacheSize = new int[]{cacheSizeXYZ[0], cacheSizeXYZ[1], cacheSizeXYZ[2],1,1};
 
 		raiXYCZT = Views.stack(raisXYZCT);
-
-		//BdvFunctions.show(raiXYCZT, "BioFormats output", BdvOptions.options());
 	}
 
 	@Override
@@ -125,8 +138,7 @@ public class BioFormatsCachedCellImgCreator < R extends RealType< R > & NativeTy
 	@Override
 	public double[] getVoxelSize()
 	{
-		double[] defVoxSize = {1,1,1};
-		return defVoxSize;
+		return voxelSize;
 	}
 
 	@Override
