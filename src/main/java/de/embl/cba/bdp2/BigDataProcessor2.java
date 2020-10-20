@@ -1,6 +1,7 @@
 package de.embl.cba.bdp2;
 
 import de.embl.cba.bdp2.process.convert.MultiChannelUnsignedByteTypeConverter;
+import de.embl.cba.bdp2.scijava.convert.StringToImage;
 import de.embl.cba.bdp2.track.Track;
 import de.embl.cba.bdp2.track.TrackApplier;
 import de.embl.cba.bdp2.track.Tracks;
@@ -49,7 +50,14 @@ public class BigDataProcessor2
     }
 
     public static < R extends RealType< R > & NativeType< R > >
-    Image< R > bin( Image<R> image, long[] spanXYZCT )
+    Image< R > bin( String imageName, long[] spanXYZCT )
+    {
+        Image< R > image = new StringToImage<>().getImage( imageName );
+        return bin( image, spanXYZCT );
+    }
+
+    public static < R extends RealType< R > & NativeType< R > >
+    Image< R > bin( Image< R > image, long[] spanXYZCT )
     {
         return Binner.bin( image, spanXYZCT );
     }

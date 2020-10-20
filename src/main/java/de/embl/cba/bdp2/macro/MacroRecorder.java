@@ -6,6 +6,9 @@ import ij.plugin.frame.Recorder;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
+import java.util.ArrayList;
+import java.util.stream.Collectors;
+
 import static de.embl.cba.bdp2.process.AbstractImageProcessingCommand.*;
 
 public class MacroRecorder< R extends RealType< R > & NativeType< R > >
@@ -13,11 +16,14 @@ public class MacroRecorder< R extends RealType< R > & NativeType< R > >
 	private final String commandName;
 	private String options;
 	private String message;
+	private String function;
+	private ArrayList< String > parameters;
 
 	public MacroRecorder( String commandName, String outputImageHandling )
 	{
 		this.commandName = commandName;
 		this.options = "";
+		this.parameters = new ArrayList<>();
 
 		addOption( VIEWING_MODALITY_PARAMETER, outputImageHandling );
 	}
@@ -64,7 +70,13 @@ public class MacroRecorder< R extends RealType< R > & NativeType< R > >
 		new Thread( () -> {
 			Recorder recorder = Recorder.getInstance();
 			if ( recorder != null )
-				if ( ! Recorder.scriptMode() )
+
+				if ( Recorder.scriptMode() ) // Java like recording
+				{
+					String apiCall = createAPICall();
+					recorder.recordString( apiCall );
+				}
+				else // macro recording
 				{
 					if ( message != null )
 						Recorder.recordString( message );
@@ -74,8 +86,33 @@ public class MacroRecorder< R extends RealType< R > & NativeType< R > >
 		}).start();
 	}
 
+	public String createAPICall()
+	{
+		if ( function == null )
+		{
+			return "// ERROR: no API call for:  " + commandName;
+		}
+
+		String apiCall = "BigDataProcessor2." + function + "(";
+		String arguments = parameters.stream().collect( Collectors.joining( "," ) );
+		apiCall += arguments;
+		apiCall += ");";
+
+		return apiCall;
+	}
+
 	public void setMessage( String message )
 	{
 		this.message = message;
+	}
+
+	public void addAPIFunction( String function )
+	{
+		this.function = function;
+	}
+
+	public void addAPIFunctionParameter( String parameter )
+	{
+		parameters.add( parameter );
 	}
 }

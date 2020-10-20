@@ -13,6 +13,7 @@ import net.imglib2.type.numeric.RealType;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class BinDialog< R extends RealType< R > & NativeType< R > > extends AbstractProcessingDialog< R >
 {
@@ -35,6 +36,10 @@ public class BinDialog< R extends RealType< R > & NativeType< R > > extends Abst
 		recorder.addOption( "binWidthXPixels",  span[ 0 ] );
 		recorder.addOption( "binWidthYPixels",  span[ 1 ] );
 		recorder.addOption( "binWidthZPixels",  span[ 2 ] );
+
+		recorder.addAPIFunction( "bin" );
+		recorder.addAPIFunctionParameter( "new long[]{" + Arrays.stream( span ).mapToObj( x -> String.valueOf( x ) ).collect( Collectors.joining( "," ) ) + "}" );
+
 
 		recorder.record();
 	}

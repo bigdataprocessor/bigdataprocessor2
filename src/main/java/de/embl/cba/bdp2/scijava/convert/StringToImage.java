@@ -2,6 +2,8 @@ package de.embl.cba.bdp2.scijava.convert;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.service.ImageService;
+import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.RealType;
 import org.scijava.convert.AbstractConverter;
 import org.scijava.plugin.Plugin;
 
@@ -22,4 +24,11 @@ public class StringToImage<I extends String, O extends Image > extends AbstractC
     public Class<I> getInputType() {
         return (Class<I>) String.class;
     }
+
+    public < R extends RealType< R > & NativeType< R > > Image< R > getImage( String imageName )
+    {
+        Image< R > image = new StringToImage< String, Image< R > >().convert( imageName, Image.class );
+        return image;
+    }
+
 }

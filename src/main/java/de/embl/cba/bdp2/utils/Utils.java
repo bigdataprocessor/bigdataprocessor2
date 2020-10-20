@@ -63,9 +63,12 @@ import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.util.Util;
 import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
+import ome.units.UNITS;
+import ome.units.unit.Unit;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -265,6 +268,28 @@ public class Utils {
 	{
 		return array[ 0 ] + ", " + array[ 1 ] + ", " + array[ 2 ];
 	}
+
+	public static Unit getUnitFromString( String unit_string) {
+		Field[] bfUnits = UNITS.class.getFields();
+		for (Field f:bfUnits) {
+			if (f.getType().equals(Unit.class)) {
+				if (f.getName()!=null) {
+					try {
+						if (f.getName().toUpperCase().equals(unit_string.trim().toUpperCase())||((Unit)(f.get(null))).getSymbol().toUpperCase().equals(unit_string.trim().toUpperCase())){
+							// Field found
+							Unit u = (Unit) f.get(null); // Field is assumed to be static
+							return u;
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+		// Field not found
+		return null;
+	}
+
 
 	public static boolean checkVoxelSize( double[] voxelSize )
 	{
