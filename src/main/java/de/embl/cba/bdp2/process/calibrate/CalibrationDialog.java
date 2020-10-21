@@ -1,6 +1,7 @@
 package de.embl.cba.bdp2.process.calibrate;
 
 import ch.epfl.biop.bdv.bioformats.BioFormatsMetaDataHelper;
+import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.macro.MacroRecorder;
@@ -59,11 +60,9 @@ public class CalibrationDialog< R extends RealType< R > & NativeType< R > >
 		genericDialog.showDialog();
 		if ( genericDialog.wasCanceled() ) return null;
 
-		outputImage = inputImage;
 
 		String unitChoice = genericDialog.getNextChoice();
-		Unit unitFromString = BioFormatsMetaDataHelper.getUnitFromString( unitChoice );
-		outputImage.setVoxelUnit( unitFromString );
+		Unit< Length > unit = BioFormatsMetaDataHelper.getUnitFromString( unitChoice );
 		voxelSize[ 0 ] = genericDialog.getNextNumber();
 		voxelSize[ 1 ] = genericDialog.getNextNumber();
 		voxelSize[ 2 ] = genericDialog.getNextNumber();
@@ -74,7 +73,8 @@ public class CalibrationDialog< R extends RealType< R > & NativeType< R > >
 			return null;
 		}
 
-		outputImage.setVoxelSize( voxelSize );
+		outputImage = BigDataProcessor2.calibrate( inputImage, voxelSize, unit );
+
 		Logger.info( "Image voxel unit: " + outputImage.getVoxelUnit() );
 		Logger.info( "Image voxel size: " + Arrays.toString( outputImage.getVoxelSize() ) );
 
@@ -95,6 +95,11 @@ public class CalibrationDialog< R extends RealType< R > & NativeType< R > >
 		recorder.addOption( CalibrateCommand.VOXEL_SIZE_X_PARAMETER, voxelSize[ 0 ] );
 		recorder.addOption( CalibrateCommand.VOXEL_SIZE_Y_PARAMETER, voxelSize[ 1 ] );
 		recorder.addOption( CalibrateCommand.VOXEL_SIZE_Z_PARAMETER, voxelSize[ 2 ] );
+
+		// public static void calibrate( Image image, double[] doubles, String voxelUnit )
+		recorder.setAPIFunction( "calibrate" );
+		recorder.addAPIFunctionParameter( voxelSize );
+		recorder.addAPIFunctionParameter( recorder.quote( outputImage.getVoxelUnit().getSymbol() ) );
 
 		recorder.record();
 	}

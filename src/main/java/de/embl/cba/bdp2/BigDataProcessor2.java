@@ -27,6 +27,8 @@ import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.view.Views;
+import ome.units.quantity.Length;
+import ome.units.unit.Unit;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -148,10 +150,21 @@ public class BigDataProcessor2
         return converter.getConvertedImage();
     }
 
-    public static void calibrate( Image image, double[] doubles, String voxelUnit )
+    public static < R extends RealType< R > & NativeType< R > > Image< R > calibrate( Image< R > image, double[] voxelSizes, String voxelUnit )
     {
-        image.setVoxelSize( doubles );
-        image.setVoxelUnit( voxelUnit );
+        Image< R > outputImage = new Image<>( image );
+        outputImage.setVoxelSize( voxelSizes );
+        // TODO: convert this to a Unit< Length >
+        outputImage.setVoxelUnit( voxelUnit );
+        return outputImage;
+    }
+
+    public static < R extends RealType< R > & NativeType< R > > Image< R > calibrate( Image< R > image, double[] voxelSizes, Unit< Length > voxelUnit  )
+    {
+        Image< R > outputImage = new Image<>( image );
+        outputImage.setVoxelSize( voxelSizes );
+        outputImage.setVoxelUnit( voxelUnit );
+        return outputImage;
     }
 
     public static < R extends RealType< R > & NativeType< R > > Image< R > correctChromaticShift( Image< R > image, ArrayList< long[] > shifts )

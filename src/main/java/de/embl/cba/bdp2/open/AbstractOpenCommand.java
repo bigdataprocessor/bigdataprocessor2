@@ -1,12 +1,14 @@
 package de.embl.cba.bdp2.open;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
+import de.embl.cba.bdp2.macro.MacroRecorder;
 import de.embl.cba.bdp2.process.calibrate.CalibrationCheckerDialog;
 import de.embl.cba.bdp2.dialog.HelpWindow;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.scijava.Services;
 import de.embl.cba.bdp2.service.ImageService;
 import de.embl.cba.bdp2.viewer.ImageViewer;
+import ij.plugin.frame.Recorder;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.jetbrains.annotations.Nullable;
@@ -64,24 +66,25 @@ public abstract class AbstractOpenCommand< R extends RealType< R > & NativeType<
 
         ImageService.imageNameToImage.put( outputImage.getName(), outputImage );
 
-        if ( ! viewingModality.equals( DO_NOT_SHOW ) )
+        if ( viewingModality.equals( DO_NOT_SHOW ) )
         {
-            // if DO_NOT_SHOW is selected this may be the headless mode
-            // and we do not want a UI to pop up.
-            outputImage = new CalibrationCheckerDialog().checkAndCorrectCalibration( outputImage );
+            return;
         }
+        else
+        {
+            outputImage = new CalibrationCheckerDialog().checkAndCorrectCalibration( outputImage );
+            showInViewer( autoContrast, keepViewerTransform );
 
-        ImageViewer viewer = showInViewer( autoContrast, keepViewerTransform );
+            MacroRecorder recorder = new MacroRecorder();
+            recorder.recordShowImageCall( true ); // TODO: this could be made more fine-grained
+            recorder.record();
+        }
     }
 
     @Nullable
     private ImageViewer showInViewer( boolean autoContrast, boolean keepViewerTransform )
     {
-        if ( viewingModality.equals( DO_NOT_SHOW ) )
-        {
-            return null;
-        }
-        else if ( viewingModality.equals( SHOW_IN_NEW_VIEWER ) || parentViewer == null )
+        if ( viewingModality.equals( SHOW_IN_NEW_VIEWER ) || parentViewer == null )
         {
             return BigDataProcessor2.showImage( outputImage, autoContrast, enableArbitraryPlaneSlicing );
         }

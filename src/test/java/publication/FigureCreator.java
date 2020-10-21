@@ -23,7 +23,7 @@ public class FigureCreator
 				NamingSchemes.PATTERN_LUXENDO,
 				"Data");
 		image.setName( "raw" );
-		BigDataProcessor2.calibrate( image,  new double[]{0.3, 0.3, 1.0}, image.getVoxelUnit().getSymbol() );
+		Image calibrate = BigDataProcessor2.calibrate( image, new double[]{ 0.3, 0.3, 1.0 }, image.getVoxelUnit().getSymbol() );
 		BigDataProcessor2.showImage( image);
 
 		// crop

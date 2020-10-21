@@ -79,6 +79,8 @@ public class OpenLuxendoCommand< R extends RealType< R > & NativeType< R > > ext
         recorder.addOption( AbstractOpenCommand.ARBITRARY_PLANE_SLICING_PARAMETER, enableArbitraryPlaneSlicing );
         recorder.addOption( OpenLuxendoCommand.STACK_INDEX_PARAMETER, stackIndex );
         recorder.addOption( OpenLuxendoChannelsCommand.CHANNELS_PARAMETER, String.join( ",", selectedChannels ) );
+
+        recorder.recordImportStatements( true );
         recorder.setAPIFunction( "openHdf5Series" );
         recorder.addAPIFunctionParameter( recorder.quote( directory.toString() ) );
         recorder.addAPIFunctionParameter( recorder.quote( regExp ) );

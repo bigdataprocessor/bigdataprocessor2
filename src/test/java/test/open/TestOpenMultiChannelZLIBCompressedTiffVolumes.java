@@ -23,7 +23,5 @@ public class TestOpenMultiChannelZLIBCompressedTiffVolumes
                 MULTI_CHANNEL_VOLUMES + OME_TIF,
                 ".*"
         );
-
-        // BigDataProcessor2.showImage( image, true );
     }
 }

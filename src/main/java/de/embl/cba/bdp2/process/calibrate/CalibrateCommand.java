@@ -1,6 +1,7 @@
 package de.embl.cba.bdp2.process.calibrate;
 
 import ch.epfl.biop.bdv.bioformats.BioFormatsMetaDataHelper;
+import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.process.AbstractImageProcessingCommand;
 import de.embl.cba.bdp2.utils.Utils;
@@ -35,10 +36,7 @@ public class CalibrateCommand< R extends RealType< R > & NativeType< R > > exten
 
     public void run()
     {
-        outputImage = inputImage;
-        outputImage.setVoxelUnit( BioFormatsMetaDataHelper.getUnitFromString( unit ) );
-        outputImage.setVoxelSize( new double[]{ voxelSizeX, voxelSizeY, voxelSizeZ } );
-
+        outputImage = BigDataProcessor2.calibrate( inputImage, new double[]{ voxelSizeX, voxelSizeY, voxelSizeZ }, BioFormatsMetaDataHelper.getUnitFromString( unit ) );
         log();
 
         handleOutputImage( false, false );

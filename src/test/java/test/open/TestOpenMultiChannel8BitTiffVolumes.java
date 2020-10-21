@@ -3,6 +3,8 @@ package test.open;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.BigDataProcessor2UserInterface;
+import de.embl.cba.bdp2.scijava.Services;
+import net.imagej.ImageJ;
 import org.junit.Test;
 
 import static de.embl.cba.bdp2.open.NamingSchemes.MULTI_CHANNEL_VOLUMES;
@@ -12,6 +14,8 @@ public class TestOpenMultiChannel8BitTiffVolumes
 {
     public static void main(String[] args)
     {
+        ImageJ imageJ = new ImageJ();
+        Services.setContext( imageJ.getContext() );
         new TestOpenMultiChannel8BitTiffVolumes().run();
     }
 
@@ -28,7 +32,7 @@ public class TestOpenMultiChannel8BitTiffVolumes
 
         image.setVoxelSize( new double[]{1.0, 1.0, 1.0} );
 
-        BigDataProcessor2UserInterface.showUI();
-        BigDataProcessor2.showImage( image, true );
+//        BigDataProcessor2UserInterface.showUI();
+//        BigDataProcessor2.showImage( image, true );
     }
 }

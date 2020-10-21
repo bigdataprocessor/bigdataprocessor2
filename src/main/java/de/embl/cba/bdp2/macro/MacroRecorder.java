@@ -6,6 +6,7 @@ import ij.plugin.frame.Recorder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import static de.embl.cba.bdp2.process.AbstractImageProcessingCommand.*;
@@ -13,13 +14,19 @@ import static de.embl.cba.bdp2.process.AbstractImageProcessingCommand.*;
 public class MacroRecorder
 {
 	public static final String COMMA = ", ";
-	private final String commandName;
+	private String commandName;
 	private String options;
 	private String message;
 	private String function;
 	private ArrayList< String > parameters;
 	private Image< ? > inputImage;
 	private Image< ? > outputImage;
+	private boolean recordImportStatments = false;
+	private boolean recordShowImageCall = false;
+
+	public MacroRecorder()
+	{
+	}
 
 	public MacroRecorder( String commandName, String outputImageHandling )
 	{
@@ -54,6 +61,28 @@ public class MacroRecorder
 		addOption( INPUT_IMAGE_PARAMETER, inputImage.getName() );
 	}
 
+	public static String asNewArrayString( double[] doubles )
+	{
+		// "new double[]{" + asCSV( doubles ) + "}";
+		return "array([" + asCSV( doubles ) + "], \'d\')";
+
+	}
+
+	public static String asCSV( double[] doubles )
+	{
+		return Arrays.stream( doubles ).mapToObj( x -> String.valueOf( x ) ).collect( Collectors.joining( "," ) );
+	}
+
+	public static String asNewArrayString( long[] longs )
+	{
+		return "new long[]{" + asCSV( longs ) + "}";
+	}
+
+	public static String asCSV( long[] longs )
+	{
+		return Arrays.stream( longs ).mapToObj( x -> String.valueOf( x ) ).collect( Collectors.joining( "," ) );
+	}
+
 	public void addOption( String name, Object value )
 	{
 		name = name.toLowerCase();
@@ -74,14 +103,25 @@ public class MacroRecorder
 			Recorder recorder = Recorder.getInstance();
 			if ( recorder != null )
 
-				if ( Recorder.scriptMode() ) // Java like recording
+				if ( Recorder.scriptMode() ) // Jython
 				{
-					recorder.recordString( createAPICall() );
+					if ( recordImportStatments )
+					{
+						recorder.recordString( "from de.embl.cba.bdp2 import BigDataProcessor2;\n" );
+						recorder.recordString( "from jarray import array;\n" );
+						recorder.recordString( "\n" );
+					}
+
+					if ( function != null )
+						recorder.recordString( createAPICall() );
 
 					if ( outputImage != null && ! outputImage.getName().equals( inputImage.getName() ) )
 					{
-						recorder.recordString( "image.setName( " + outputImage.getName() + "); " );
+						recorder.recordString( "image.setName( " + outputImage.getName() + ");\n" );
 					}
+
+					if ( recordShowImageCall )
+						recorder.recordString( "BigDataProcessor2.showImage( image, true );\n" );
 
 				}
 				else // macro recording
@@ -127,11 +167,27 @@ public class MacroRecorder
 		this.function = function;
 	}
 
-	public void addAPIFunctionParameter( String parameter )
+	public void addAPIFunctionParameter( Object parameter )
 	{
 		if ( parameters == null )
 			parameters = new ArrayList<>();
 
-		parameters.add( parameter );
+		if ( parameter instanceof String )
+			parameters.add( (String) parameter );
+		else if ( parameter instanceof double[] )
+			parameters.add( asNewArrayString( (double[]) parameter ) );
+		else if ( parameter instanceof long[] )
+			parameters.add( asNewArrayString( (long[]) parameter ) );
+
+	}
+
+	public void recordImportStatements( boolean recordImportStatements )
+	{
+		this.recordImportStatments = recordImportStatements;
+	}
+
+	public void recordShowImageCall( boolean recordShowImageCall )
+	{
+		this.recordShowImageCall = recordShowImageCall;
 	}
 }

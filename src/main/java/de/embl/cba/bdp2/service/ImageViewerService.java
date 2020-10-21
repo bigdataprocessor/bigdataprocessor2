@@ -9,8 +9,7 @@ import java.util.WeakHashMap;
 
 public abstract class ImageViewerService
 {
-	public static Map< String, ImageViewer > imageNameToBdvImageViewer =
-			Collections.synchronizedMap( new WeakHashMap<>( ) );
+	public static Map< String, ImageViewer > imageNameToBdvImageViewer = Collections.synchronizedMap( new WeakHashMap<>( ) );
 
 	private static ImageViewer focusedViewer;
 
