@@ -12,7 +12,7 @@ public class RunBigDataProcessor2Command
 		final ImageJ ij = new ImageJ();
 		ij.ui().showUI();
 
-		new Recorder();
+		Recorder recorder = new Recorder();
 
 		ij.command().run( BigDataProcessor2Command.class, true );
 	}

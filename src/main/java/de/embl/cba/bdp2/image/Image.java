@@ -246,7 +246,14 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		info += "\nData type: " + getDataType();
 		info += "\nSize X,Y,Z [Voxels]: " + Arrays.toString( getDimensionsXYZCT() );
 		info += "\nTime-points: " + getDimensionsXYZCT()[4];
-		info += "\nVoxel size ["+ getVoxelUnit().getSymbol() +"]: " + Arrays.toString( getVoxelSize() );
+		if ( getVoxelUnit() == null )
+		{
+			info += "\nVoxel size [???]: " + Arrays.toString( getVoxelSize() );
+		}
+		else
+		{
+			info += "\nVoxel size [" + getVoxelUnit().getSymbol() + "]: " + Arrays.toString( getVoxelSize() );
+		}
 
 		return info;
 	}

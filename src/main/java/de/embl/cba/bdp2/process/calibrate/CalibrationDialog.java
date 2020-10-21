@@ -82,6 +82,7 @@ public class CalibrationDialog< R extends RealType< R > & NativeType< R > >
 			viewer.replaceImage( outputImage, false, false );
 
 		recordMacro();
+
 		return outputImage;
 	}
 

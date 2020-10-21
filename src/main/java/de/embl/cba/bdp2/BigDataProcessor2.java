@@ -50,13 +50,6 @@ public class BigDataProcessor2
     }
 
     public static < R extends RealType< R > & NativeType< R > >
-    Image< R > bin( String imageName, long[] spanXYZCT )
-    {
-        Image< R > image = new StringToImage<>().getImage( imageName );
-        return bin( image, spanXYZCT );
-    }
-
-    public static < R extends RealType< R > & NativeType< R > >
     Image< R > bin( Image< R > image, long[] spanXYZCT )
     {
         return Binner.bin( image, spanXYZCT );
@@ -109,14 +102,14 @@ public class BigDataProcessor2
     public static < R extends RealType< R > & NativeType< R > >
     Image< R > openHdf5Series(
             String directory,
-            String loadingScheme,
+            String namingScheme,
             String filterPattern,
             String hdf5DataSetName,
-            ChannelSubsetter channelSubsetter )
+            List< String > channelSubset )
     {
         DebugTools.setRootLevel( "OFF" ); // Bio-Formats
 
-        FileInfos fileInfos = new FileInfos( directory, loadingScheme, filterPattern, hdf5DataSetName, channelSubsetter );
+        FileInfos fileInfos = new FileInfos( directory, namingScheme, filterPattern, hdf5DataSetName, channelSubset );
 
         final Image< R > image = new FileSeriesCachedCellImgCreator( fileInfos ).createImage();
 

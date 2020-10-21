@@ -18,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class FileInfos
@@ -40,7 +41,6 @@ public class FileInfos
     @NotNull
     private String namingScheme;
     private String filter;
-    private ChannelSubsetter channelSubsetter;
     public int bitDepth;
     public int nC;
     public int nT;
@@ -62,17 +62,16 @@ public class FileInfos
     public FileInfos(
             String directory,
             String namingScheme,
-            String filterPattern)
+            String filterPattern )
     {
-        this( directory, namingScheme, filterPattern, null);
+        this( directory, namingScheme, filterPattern, null, null );
     }
 
     public FileInfos(
             String directory,
             String namingScheme,
             String filterPattern,
-            String h5DataSetName
-    )
+            String h5DataSetName )
     {
         this( directory, namingScheme, filterPattern, h5DataSetName, null);
     }
@@ -82,7 +81,7 @@ public class FileInfos
             String namingScheme,
             String filter,
             String h5DataSetName,
-            ChannelSubsetter channelSubsetter
+            List< String > channelSubset
     )
     {
         Logger.info( "Directory: " + directory );
@@ -90,13 +89,12 @@ public class FileInfos
 
         this.namingScheme = namingScheme;
         this.filter = filter;
-        this.channelSubsetter = channelSubsetter;
         this.directory  = Utils.fixDirectoryFormatAndAppendFileSeparator( directory );
         this.h5DataSetName = h5DataSetName;
 
         adaptDirectorySeparatorToOperatingSystem();
 
-        FileInfosHelper.configureFileInfos5D( this, this.namingScheme, this.filter, this.channelSubsetter );
+        FileInfosHelper.configureFileInfos5D( this, this.namingScheme, this.filter, channelSubset );
 
         Logger.info( this.toString() );
     }

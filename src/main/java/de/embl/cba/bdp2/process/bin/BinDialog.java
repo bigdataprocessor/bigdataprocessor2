@@ -37,7 +37,7 @@ public class BinDialog< R extends RealType< R > & NativeType< R > > extends Abst
 		recorder.addOption( "binWidthYPixels",  span[ 1 ] );
 		recorder.addOption( "binWidthZPixels",  span[ 2 ] );
 
-		recorder.addAPIFunction( "bin" );
+		recorder.setAPIFunction( "bin" );
 		recorder.addAPIFunctionParameter( "new long[]{" + Arrays.stream( span ).mapToObj( x -> String.valueOf( x ) ).collect( Collectors.joining( "," ) ) + "}" );
 
 

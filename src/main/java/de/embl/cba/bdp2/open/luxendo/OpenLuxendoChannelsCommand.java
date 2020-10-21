@@ -2,7 +2,8 @@ package de.embl.cba.bdp2.open.luxendo;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.dialog.Utils;
-import de.embl.cba.bdp2.open.FixedListChannelSubsetter;
+import de.embl.cba.bdp2.macro.MacroRecorder;
+import de.embl.cba.bdp2.open.ChannelSubsetter;
 import de.embl.cba.bdp2.open.NamingSchemes;
 import de.embl.cba.bdp2.open.AbstractOpenCommand;
 import net.imglib2.type.NativeType;
@@ -40,14 +41,12 @@ public class OpenLuxendoChannelsCommand< R extends RealType< R > & NativeType< R
 
             final List< String > channelList = Arrays.stream( channels.split( "," ) ).map( String::trim ).collect( Collectors.toList() );
 
-            final FixedListChannelSubsetter channelSubsetter = new FixedListChannelSubsetter( channelList );
-
             outputImage = BigDataProcessor2.openHdf5Series(
                                 directory.toString(),
                                 regExp,
                                 regExp,
                                 "Data",
-                                channelSubsetter );
+                                channelList );
 
             handleOutputImage( true, false );
         });

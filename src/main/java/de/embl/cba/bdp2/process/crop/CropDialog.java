@@ -124,7 +124,7 @@ public class CropDialog< R extends RealType< R > & NativeType< R > >
 
 	private void recordMacro( Image< R > inputImage, Image< R > outputImage, Interval intervalXYZCT )
 	{
-		final MacroRecorder< R > recorder = new MacroRecorder<>( CropCommand.COMMAND_FULL_NAME, inputImage, outputImage, AbstractOpenCommand.SHOW_IN_NEW_VIEWER );
+		final MacroRecorder recorder = new MacroRecorder( CropCommand.COMMAND_FULL_NAME, inputImage, outputImage, AbstractOpenCommand.SHOW_IN_NEW_VIEWER );
 		
 		recorder.addOption( "minX", intervalXYZCT.min(0 ) );
 		recorder.addOption( "minY", intervalXYZCT.min(1 ) );

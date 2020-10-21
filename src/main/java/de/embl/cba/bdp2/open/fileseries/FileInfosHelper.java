@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 
 public class FileInfosHelper
 {
-    public static void configureFileInfos5D( FileInfos fileInfos, String namingScheme, String filterPattern, ChannelSubsetter channels )
+    public static void configureFileInfos5D( FileInfos fileInfos, String namingScheme, String filterPattern, List< String > channelSubset )
     {
         String directory = fileInfos.directory;
 
@@ -34,7 +34,7 @@ public class FileInfosHelper
             fileInfos.fileType = FileSeriesFileType.LUXENDO;
         }
 
-        initFileInfos5D( fileInfos, namingScheme, fileLists, channels );
+        initFileInfos5D( fileInfos, namingScheme, fileLists, channelSubset );
 
         fileInfos.ctzFileInfos = new SerializableFileInfo[fileInfos.nC][fileInfos.nT][fileInfos.nZ];
         fileInfos.dimensions = new long[ 5 ];
@@ -127,7 +127,7 @@ public class FileInfosHelper
         }
     }
 
-    private static void initFileInfos5D( FileInfos fileInfos, String namingScheme, String[][] fileLists, ChannelSubsetter channelSubset )
+    private static void initFileInfos5D( FileInfos fileInfos, String namingScheme, String[][] fileLists, List< String > channelSubset )
     {
         HashSet<String> channels = new HashSet();
         HashSet<String> timepoints = new HashSet();
@@ -192,14 +192,16 @@ public class FileInfosHelper
                 sliceGroups);
     }
 
-    private static List< String > subSetChannelsIfNecessary( ChannelSubsetter channelSubsetter, List< String > sortedChannels )
+    private static List< String > subSetChannelsIfNecessary( List< String > channelSubset, List< String > channels )
     {
-        if ( channelSubsetter != null )
+        if ( channelSubset != null )
         {
-            sortedChannels = sort( channelSubsetter.getChannelSubset( sortedChannels ) );
+            List< String > subset = new ChannelSubsetter( channelSubset ).getChannelSubset( channels );
+            List< String > sortedSubset = sort( subset );
+            return sortedSubset;
         }
 
-        return sortedChannels;
+        return channels;
     }
 
     public static List< String > sort( Collection< String > strings )

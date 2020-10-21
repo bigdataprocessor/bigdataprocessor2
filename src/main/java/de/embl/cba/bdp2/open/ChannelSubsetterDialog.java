@@ -1,11 +1,8 @@
-package de.embl.cba.bdp2.open.luxendo;
+package de.embl.cba.bdp2.open;
 
-import de.embl.cba.bdp2.open.AbstractOpenCommand;
-import de.embl.cba.bdp2.open.ChannelChooserDialog;
-import de.embl.cba.bdp2.open.ChannelSubsetter;
+import de.embl.cba.bdp2.macro.MacroRecorder;
 import de.embl.cba.bdp2.open.luxendo.OpenLuxendoChannelsCommand;
 import de.embl.cba.bdp2.open.luxendo.OpenLuxendoCommand;
-import de.embl.cba.bdp2.macro.MacroRecorder;
 import ij.plugin.frame.Recorder;
 
 import java.awt.*;
@@ -13,14 +10,14 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.util.List;
 
-public class LuxendoInteractiveChannelSubsetter implements ChannelSubsetter
+public class ChannelSubsetterDialog
 {
 	private final String viewingModality;
-	private final MacroRecorder< ? > recorder;
+	private final MacroRecorder recorder;
 
-	public LuxendoInteractiveChannelSubsetter(  File directory, String viewingModality, boolean enableArbitraryPlaneSlicing, int stackIndex )
+	public ChannelSubsetterDialog( File directory, String viewingModality, boolean enableArbitraryPlaneSlicing, int stackIndex )
 	{
-		recorder = new MacroRecorder<>( OpenLuxendoChannelsCommand.COMMAND_FULL_NAME, viewingModality );
+		recorder = new MacroRecorder( OpenLuxendoChannelsCommand.COMMAND_FULL_NAME, viewingModality );
 		recorder.addOption( AbstractOpenCommand.DIRECTORY_PARAMETER, directory.getAbsolutePath() );
 		recorder.addOption( AbstractOpenCommand.ARBITRARY_PLANE_SLICING_PARAMETER, enableArbitraryPlaneSlicing );
 		recorder.addOption( OpenLuxendoCommand.STACK_INDEX_PARAMETER, stackIndex );
@@ -48,14 +45,12 @@ public class LuxendoInteractiveChannelSubsetter implements ChannelSubsetter
 		}
 	}
 
-	@Override
-	public List< String > getChannelSubset( List< String > channels )
+	public List< String > showDialog( List< String > channels )
 	{
 		final ChannelChooserDialog dialog = new ChannelChooserDialog( channels );
 		channels = dialog.getChannelsViaDialog();
-		recorder.addOption( OpenLuxendoChannelsCommand.CHANNELS_PARAMETER, String.join( ",", channels ) );
+
 		removeOpenLuxendoCommandFromRecorder();
-		recorder.record();
 		return channels;
 	}
 }
