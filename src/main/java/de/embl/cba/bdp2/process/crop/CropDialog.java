@@ -14,6 +14,7 @@ import net.imglib2.Interval;
 import net.imglib2.RealInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
+import org.apache.commons.lang.ArrayUtils;
 
 import javax.swing.*;
 import java.util.List;
@@ -74,7 +75,6 @@ public class CropDialog< R extends RealType< R > & NativeType< R > >
 			if ( voxelInterval == null ) return;
 		}
 
-
 		Image< R > outputImage = BigDataProcessor2.crop( inputImage, voxelInterval );
 
 		SwingUtilities.invokeLater( () -> {
@@ -121,7 +121,6 @@ public class CropDialog< R extends RealType< R > & NativeType< R > >
 		return new FinalInterval( min, max );
 	}
 
-
 	private void recordMacro( Image< R > inputImage, Image< R > outputImage, Interval intervalXYZCT )
 	{
 		final MacroRecorder recorder = new MacroRecorder( CropCommand.COMMAND_FULL_NAME, inputImage, outputImage, AbstractOpenCommand.SHOW_IN_NEW_VIEWER );
@@ -137,6 +136,9 @@ public class CropDialog< R extends RealType< R > & NativeType< R > >
 		recorder.addOption( "maxC", intervalXYZCT.max(3 ) );
 		recorder.addOption( "maxT", intervalXYZCT.max(4 ) );
 
+		// Image< R > crop( Image< R > image, long[] minMax )
+		recorder.setAPIFunction( "crop" );
+		recorder.addAPIFunctionParameter( ArrayUtils.addAll( intervalXYZCT.minAsLongArray(), intervalXYZCT.maxAsLongArray() ) );
 		recorder.record();
 	}
 }

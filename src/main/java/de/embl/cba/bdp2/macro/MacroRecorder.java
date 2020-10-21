@@ -3,7 +3,11 @@ package de.embl.cba.bdp2.macro;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.open.AbstractOpenCommand;
 import ij.plugin.frame.Recorder;
+import net.imglib2.Interval;
+import net.imglib2.util.Intervals;
+import org.apache.commons.lang.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
+import org.scijava.command.InteractiveCommand;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -64,8 +68,7 @@ public class MacroRecorder
 	public static String asNewArrayString( double[] doubles )
 	{
 		// "new double[]{" + asCSV( doubles ) + "}";
-		return "array([" + asCSV( doubles ) + "], \'d\')";
-
+		return "array([" + asCSV( doubles ) + "], \"d\")";
 	}
 
 	public static String asCSV( double[] doubles )
@@ -121,7 +124,7 @@ public class MacroRecorder
 					}
 
 					if ( recordShowImageCall )
-						recorder.recordString( "BigDataProcessor2.showImage( image, true );\n" );
+						recorder.recordString( "BigDataProcessor2.showImage( image, True );\n" );
 
 				}
 				else // macro recording
@@ -173,12 +176,17 @@ public class MacroRecorder
 			parameters = new ArrayList<>();
 
 		if ( parameter instanceof String )
-			parameters.add( (String) parameter );
+		{
+			parameters.add( ( String ) parameter );
+		}
 		else if ( parameter instanceof double[] )
+		{
 			parameters.add( asNewArrayString( (double[]) parameter ) );
+		}
 		else if ( parameter instanceof long[] )
-			parameters.add( asNewArrayString( (long[]) parameter ) );
-
+		{
+			parameters.add( asNewArrayString( ( long[] ) parameter ) );
+		}
 	}
 
 	public void recordImportStatements( boolean recordImportStatements )

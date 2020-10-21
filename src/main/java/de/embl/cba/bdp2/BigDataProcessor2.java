@@ -26,6 +26,7 @@ import net.imglib2.interpolation.InterpolatorFactory;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
+import net.imglib2.util.Intervals;
 import net.imglib2.view.Views;
 import ome.units.quantity.Length;
 import ome.units.unit.Unit;
@@ -86,6 +87,12 @@ public class BigDataProcessor2
     }
 
     public static < R extends RealType< R > & NativeType< R > >
+    Image< R > crop( Image< R > image, long[] minMax )
+    {
+        return crop( image, Intervals.createMinMax( minMax ) );
+    }
+
+    public static < R extends RealType< R > & NativeType< R > >
     Image< R > openHdf5Series(
             String directory,
             String loadingScheme,
@@ -143,11 +150,31 @@ public class BigDataProcessor2
         return saver;
     }
 
-    public static < R extends RealType< R > & NativeType< R > > Image< R > convertToUnsignedByteType( Image< R > image, List< double[] > contrastLimits )
+    /**
+     *
+     *
+     * @param image
+     * @param contrastLimits
+     *                      each list entry consists of a double[] with two entries min and max
+     * @param <R>
+     * @return
+     */
+    public static < R extends RealType< R > & NativeType< R > >
+    Image< R > convertToUnsignedByteType( Image< R > image, List< double[] > contrastLimits )
     {
         MultiChannelUnsignedByteTypeConverter< R > converter = new MultiChannelUnsignedByteTypeConverter<>( image, contrastLimits );
 
         return converter.getConvertedImage();
+    }
+
+    public static < R extends RealType< R > & NativeType< R > >
+    Image< R > convertToUnsignedByteType( Image< R > image, double[] min, double[] max )
+    {
+        ArrayList< double[] > contrastLimits = new ArrayList<>();
+        for ( int c = 0; c < min.length; c++ )
+            contrastLimits.add( new double[]{ min[c], max[c] });
+
+        return convertToUnsignedByteType( image, contrastLimits );
     }
 
     public static < R extends RealType< R > & NativeType< R > > Image< R > calibrate( Image< R > image, double[] voxelSizes, String voxelUnit )
