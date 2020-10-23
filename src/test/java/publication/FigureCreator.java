@@ -35,7 +35,7 @@ public class FigureCreator
 		final ArrayList< long[] > shifts = new ArrayList<>();
 		shifts.add( new long[]{0,0,0,0} );
 		shifts.add( new long[]{30,-10,0,0} );
-		final Image shift = BigDataProcessor2.correctChromaticShift( crop, shifts );
+		final Image shift = BigDataProcessor2.alignChannels( crop, shifts );
 
 		// bin
 		//

@@ -4,6 +4,7 @@ import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.open.AbstractOpenCommand;
 import de.embl.cba.bdp2.macro.MacroRecorder;
+import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewer.ImageViewer;
 import ij.gui.GenericDialog;
 import net.imglib2.type.NativeType;
@@ -32,7 +33,7 @@ public class TransformDialog< T extends RealType< T > & NativeType< T > >
 		if ( genericDialog.wasCanceled() ) return;
 		affine = genericDialog.getNextString();
 		interpolation = genericDialog.getNextChoice();
-		outputImage = BigDataProcessor2.transform( inputImage, TransformCommand.getAffineTransform3D( affine ), TransformCommand.getInterpolator( interpolation ) );
+		outputImage = BigDataProcessor2.transform( inputImage, TransformCommand.getAffineTransform3D( affine ), Utils.getInterpolator( interpolation ) );
 		outputImage.setName( inputImage.getName() + "-transformed" );
 		BigDataProcessor2.showImageInheritingDisplaySettings( outputImage, inputImage );
 		recordMacro();
@@ -41,8 +42,9 @@ public class TransformDialog< T extends RealType< T > & NativeType< T > >
 	private void recordMacro()
 	{
 		final MacroRecorder recorder = new MacroRecorder( TransformCommand.COMMAND_FULL_NAME, inputImage, outputImage, AbstractOpenCommand.SHOW_IN_NEW_VIEWER );
-		recorder.addOption( TransformCommand.AFFINE_STRING_PARAMETER, affine );
-		recorder.addOption( TransformCommand.INTERPOLATION_PARAMETER, interpolation );
+		recorder.addCommandParameter( TransformCommand.AFFINE_STRING_PARAMETER, affine );
+		recorder.addCommandParameter( TransformCommand.INTERPOLATION_PARAMETER, interpolation );
+
 		recorder.record();
 	}
 }

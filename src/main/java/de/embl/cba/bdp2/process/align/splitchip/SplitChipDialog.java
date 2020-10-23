@@ -91,10 +91,15 @@ public class SplitChipDialog< R extends RealType< R > & NativeType< R > > extend
 	protected void recordMacro()
 	{
 		final MacroRecorder recorder = new MacroRecorder( SplitChipCommand.COMMAND_FULL_NAME, inputImage, outputImage );
-		ArrayList< long[] > intervals = intervals3dAsLongsList();
-		String intervalsString = Utils.longsToDelimitedString( intervals );
+		ArrayList< long[] > regions = intervals3dAsLongsList();
+		String intervalsString = Utils.longsToDelimitedString( regions );
 		Prefs.set( getImageJPrefsKey(), intervalsString );
-		recorder.addOption( "intervalsString", intervalsString );
+		recorder.addCommandParameter( "intervalsString", intervalsString );
+
+		// Image< R > alignChannelsSpitChip( Image< R > image, List< long[] > regions )
+		recorder.setAPIFunction( "alignChannelsSpitChip" );
+		recorder.addAPIFunctionParameter( regions );
+
 		recorder.record();
 	}
 

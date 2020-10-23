@@ -73,8 +73,8 @@ public class MultiChannelUnsignedByteTypeConverterDialog< R extends RealType< R 
 	{
 		final MacroRecorder recorder = new MacroRecorder( MultiChannelUnsignedByteTypeConverterCommand.COMMAND_FULL_NAME, inputImage, outputImage);
 
-		recorder.addOption( "mapTo0", contrastLimits.stream().map( x -> "" + x[ 0 ] ).collect( Collectors.joining( ",") ) );
-		recorder.addOption( "mapTo255",  contrastLimits.stream().map( x -> "" + x[ 1 ] ).collect( Collectors.joining( ",") ));
+		recorder.addCommandParameter( "mapTo0", contrastLimits.stream().map( x -> "" + x[ 0 ] ).collect( Collectors.joining( ",") ) );
+		recorder.addCommandParameter( "mapTo255", contrastLimits.stream().map( x -> "" + x[ 1 ] ).collect( Collectors.joining( ",") ));
 
 		// Image< R > convertToUnsignedByteType( Image< R > image, double[] min, double[] max )
 		double[] min = contrastLimits.stream().mapToDouble( x -> x[ 0 ] ).toArray();

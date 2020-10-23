@@ -38,6 +38,7 @@ import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.open.luxendo.Luxendos;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.dialog.DisplaySettings;
+import de.embl.cba.bdp2.process.transform.TransformCommand;
 import de.embl.cba.bdp2.scijava.Services;
 import ij.IJ;
 import ij.ImagePlus;
@@ -54,6 +55,9 @@ import net.imglib2.img.Img;
 import net.imglib2.img.ImgView;
 import net.imglib2.img.cell.CellImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;
+import net.imglib2.interpolation.InterpolatorFactory;
+import net.imglib2.interpolation.randomaccess.ClampingNLinearInterpolatorFactory;
+import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ARGBType;
@@ -357,6 +361,17 @@ public class Utils {
 			default:
 				return new ARGBType( ARGBType.rgba( 255, 255, 255, 255 / numChannels ) );
 		}
+	}
+
+	public static InterpolatorFactory getInterpolator( String interpolation )
+	{
+		if ( interpolation.equalsIgnoreCase( TransformCommand.LINEAR ) )
+			return new ClampingNLinearInterpolatorFactory<>();
+		else if ( interpolation.equalsIgnoreCase( TransformCommand.NEAREST ) )
+			return new NearestNeighborInterpolatorFactory();
+		else
+			throw new RuntimeException( "Interpolation mode not supported: " + interpolation + "; choose one of " +
+					TransformCommand.LINEAR + ", " +  TransformCommand.NEAREST);
 	}
 
 	public enum ImageFilterTypes {

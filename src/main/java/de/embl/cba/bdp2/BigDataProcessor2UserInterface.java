@@ -34,8 +34,8 @@ public abstract class BigDataProcessor2UserInterface
 		}
 
 		panel = new JPanel();
-		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-		panel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+		panel.setLayout( new BoxLayout(panel, BoxLayout.Y_AXIS) );
+		panel.setBorder( BorderFactory.createEmptyBorder(10,10,10,10) );
 		imageInfo = new JLabel( wrapAsHtml( "Please open an image..." ) );
 		readInfo = new JLabel( wrapAsHtml( SPEED + "NaN" ) );
 		panel.add( imageInfo );

@@ -18,9 +18,9 @@ public class ChannelSubsetterDialog
 	public ChannelSubsetterDialog( File directory, String viewingModality, boolean enableArbitraryPlaneSlicing, int stackIndex )
 	{
 		recorder = new MacroRecorder( OpenLuxendoChannelsCommand.COMMAND_FULL_NAME, viewingModality );
-		recorder.addOption( AbstractOpenCommand.DIRECTORY_PARAMETER, directory.getAbsolutePath() );
-		recorder.addOption( AbstractOpenCommand.ARBITRARY_PLANE_SLICING_PARAMETER, enableArbitraryPlaneSlicing );
-		recorder.addOption( OpenLuxendoCommand.STACK_INDEX_PARAMETER, stackIndex );
+		recorder.addCommandParameter( AbstractOpenCommand.DIRECTORY_PARAMETER, directory.getAbsolutePath() );
+		recorder.addCommandParameter( AbstractOpenCommand.ARBITRARY_PLANE_SLICING_PARAMETER, enableArbitraryPlaneSlicing );
+		recorder.addCommandParameter( OpenLuxendoCommand.STACK_INDEX_PARAMETER, stackIndex );
 
 		this.viewingModality = viewingModality;
 	}

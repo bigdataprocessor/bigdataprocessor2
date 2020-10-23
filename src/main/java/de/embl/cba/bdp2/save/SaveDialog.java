@@ -301,16 +301,16 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > > extends JFr
     {
         final MacroRecorder recorder = new MacroRecorder( SaveAdvancedCommand.COMMAND_FULL_NAME, inputImage );
 
-        recorder.addOption( SaveAdvancedCommand.DIRECTORY_PARAMETER, tfDirectory.getText() );
-        recorder.addOption( SaveAdvancedCommand.NUM_IO_THREADS_PARAMETER, savingSettings.numIOThreads );
-        recorder.addOption( SaveAdvancedCommand.NUM_PROCESSING_THREADS_PARAMETER, savingSettings.numProcessingThreads );
-        recorder.addOption( SaveAdvancedCommand.SAVE_FILE_TYPE_PARAMETER, savingSettings.saveFileType.toString());
-        recorder.addOption( SaveAdvancedCommand.SAVE_PROJECTIONS_PARAMETER, savingSettings.saveProjections);
-        recorder.addOption( SaveAdvancedCommand.SAVE_VOLUMES_PARAMETER, savingSettings.saveVolumes);
-        recorder.addOption( SaveAdvancedCommand.TIFF_COMPRESSION_PARAMETER, savingSettings.compression);
+        recorder.addCommandParameter( SaveAdvancedCommand.DIRECTORY_PARAMETER, tfDirectory.getText() );
+        recorder.addCommandParameter( SaveAdvancedCommand.NUM_IO_THREADS_PARAMETER, savingSettings.numIOThreads );
+        recorder.addCommandParameter( SaveAdvancedCommand.NUM_PROCESSING_THREADS_PARAMETER, savingSettings.numProcessingThreads );
+        recorder.addCommandParameter( SaveAdvancedCommand.SAVE_FILE_TYPE_PARAMETER, savingSettings.saveFileType.toString());
+        recorder.addCommandParameter( SaveAdvancedCommand.SAVE_PROJECTIONS_PARAMETER, savingSettings.saveProjections);
+        recorder.addCommandParameter( SaveAdvancedCommand.SAVE_VOLUMES_PARAMETER, savingSettings.saveVolumes);
+        recorder.addCommandParameter( SaveAdvancedCommand.TIFF_COMPRESSION_PARAMETER, savingSettings.compression);
 
-        recorder.addOption( SaveAdvancedCommand.T_START_PARAMETER, savingSettings.tStart);
-        recorder.addOption( SaveAdvancedCommand.T_END_PARAMETER, savingSettings.tEnd);
+        recorder.addCommandParameter( SaveAdvancedCommand.T_START_PARAMETER, savingSettings.tStart);
+        recorder.addCommandParameter( SaveAdvancedCommand.T_END_PARAMETER, savingSettings.tEnd);
 
         recorder.record();
     }

@@ -25,7 +25,13 @@ public class ImageRenameDialog< R extends RealType< R > & NativeType< R > >
 	protected void recordMacro()
 	{
 		final MacroRecorder recorder = new MacroRecorder( ImageRenameCommand.COMMAND_FULL_NAME, inputImage, outputImage );
-		recorder.addOption( CHANNEL_NAMES_PARAMETER, String.join( ",", channelNames ) );
+		recorder.addCommandParameter( CHANNEL_NAMES_PARAMETER, String.join( ",", channelNames ) );
+
+		// Image< R > rename( Image< R > image, String name )
+		recorder.setAPIFunction( "rename" );
+		recorder.addAPIFunctionParameter( outputImage.getName() );
+		recorder.addAPIFunctionParameter( outputImage.getChannelNames() );
+
 		recorder.record();
 	}
 

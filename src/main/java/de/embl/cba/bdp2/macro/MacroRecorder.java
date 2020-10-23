@@ -3,11 +3,6 @@ package de.embl.cba.bdp2.macro;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.open.AbstractOpenCommand;
 import ij.plugin.frame.Recorder;
-import net.imglib2.Interval;
-import net.imglib2.util.Intervals;
-import org.apache.commons.lang.ArrayUtils;
-import org.jetbrains.annotations.NotNull;
-import org.scijava.command.InteractiveCommand;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,7 +17,7 @@ public class MacroRecorder
 	private String options;
 	private String message;
 	private String function;
-	private ArrayList< String > parameters;
+	private ArrayList< String > parameters = new ArrayList<>();
 	private Image< ? > inputImage;
 	private Image< ? > outputImage;
 	private boolean recordImportStatments = false;
@@ -37,7 +32,7 @@ public class MacroRecorder
 		this.commandName = commandName;
 		this.options = "";
 
-		addOption( VIEWING_MODALITY_PARAMETER, outputImageHandling );
+		addCommandParameter( VIEWING_MODALITY_PARAMETER, outputImageHandling );
 	}
 
 	public MacroRecorder( String commandName, Image< ? > inputImage, Image< ? > outputImage )
@@ -52,9 +47,9 @@ public class MacroRecorder
 		this.inputImage = inputImage;
 		this.outputImage = outputImage;
 
-		addOption( INPUT_IMAGE_PARAMETER, this.inputImage.getName() );
-		addOption( OUTPUT_IMAGE_NAME_PARAMETER, this.outputImage.getName() );
-		addOption( VIEWING_MODALITY_PARAMETER, outputImageHandling );
+		addCommandParameter( INPUT_IMAGE_PARAMETER, this.inputImage.getName() );
+		addCommandParameter( OUTPUT_IMAGE_NAME_PARAMETER, this.outputImage.getName() );
+		addCommandParameter( VIEWING_MODALITY_PARAMETER, outputImageHandling );
 	}
 
 	public MacroRecorder( String commandName, Image< ? > inputImage )
@@ -62,13 +57,22 @@ public class MacroRecorder
 		this.commandName = commandName;
 		this.options = "";
 
-		addOption( INPUT_IMAGE_PARAMETER, inputImage.getName() );
+		addCommandParameter( INPUT_IMAGE_PARAMETER, inputImage.getName() );
 	}
 
 	public static String asNewArrayString( double[] doubles )
 	{
-		// "new double[]{" + asCSV( doubles ) + "}";
 		return "array([" + asCSV( doubles ) + "], \"d\")";
+	}
+
+	public static String asNewArrayString( long[] longs )
+	{
+		return "array([" + asCSV( longs ) + "], \"l\")";
+	}
+
+	public static String asNewArrayString( String[] strings )
+	{
+		return "array([" + asCSV( strings ) + "], \"s\")";
 	}
 
 	public static String asCSV( double[] doubles )
@@ -76,17 +80,17 @@ public class MacroRecorder
 		return Arrays.stream( doubles ).mapToObj( x -> String.valueOf( x ) ).collect( Collectors.joining( "," ) );
 	}
 
-	public static String asNewArrayString( long[] longs )
-	{
-		return "new long[]{" + asCSV( longs ) + "}";
-	}
-
 	public static String asCSV( long[] longs )
 	{
 		return Arrays.stream( longs ).mapToObj( x -> String.valueOf( x ) ).collect( Collectors.joining( "," ) );
 	}
 
-	public void addOption( String name, Object value )
+	public static String asCSV( String[] strings )
+	{
+		return Arrays.stream( strings ).collect( Collectors.joining( "," ) );
+	}
+
+	public void addCommandParameter( String name, Object value )
 	{
 		name = name.toLowerCase();
 
@@ -170,23 +174,19 @@ public class MacroRecorder
 		this.function = function;
 	}
 
-	public void addAPIFunctionParameter( Object parameter )
+	public void addAPIFunctionParameter( String parameter )
 	{
-		if ( parameters == null )
-			parameters = new ArrayList<>();
+		parameters.add( ( String ) parameter );
+	}
 
-		if ( parameter instanceof String )
-		{
-			parameters.add( ( String ) parameter );
-		}
-		else if ( parameter instanceof double[] )
-		{
-			parameters.add( asNewArrayString( (double[]) parameter ) );
-		}
-		else if ( parameter instanceof long[] )
-		{
-			parameters.add( asNewArrayString( ( long[] ) parameter ) );
-		}
+	public void addAPIFunctionParameter( double[] parameter )
+	{
+		parameters.add( asNewArrayString( parameter ) );
+	}
+
+	public void addAPIFunctionParameter( long[] parameter )
+	{
+		parameters.add( asNewArrayString( parameter ) );
 	}
 
 	public void recordImportStatements( boolean recordImportStatements )
@@ -197,5 +197,10 @@ public class MacroRecorder
 	public void recordShowImageCall( boolean recordShowImageCall )
 	{
 		this.recordShowImageCall = recordShowImageCall;
+	}
+
+	public void addAPIFunctionParameter( String[] channelNames )
+	{
+
 	}
 }

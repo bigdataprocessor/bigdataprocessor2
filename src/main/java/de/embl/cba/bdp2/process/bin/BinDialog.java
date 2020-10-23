@@ -32,9 +32,9 @@ public class BinDialog< R extends RealType< R > & NativeType< R > > extends Abst
 	{
 		final MacroRecorder recorder = new MacroRecorder( BinCommand.COMMAND_FULL_NAME, inputImage, outputImage );
 
-		recorder.addOption( "binWidthXPixels",  span[ 0 ] );
-		recorder.addOption( "binWidthYPixels",  span[ 1 ] );
-		recorder.addOption( "binWidthZPixels",  span[ 2 ] );
+		recorder.addCommandParameter( "binWidthXPixels",  span[ 0 ] );
+		recorder.addCommandParameter( "binWidthYPixels",  span[ 1 ] );
+		recorder.addCommandParameter( "binWidthZPixels",  span[ 2 ] );
 
 		// Image< R > bin( Image< R > image, long[] spanXYZCT )
 		recorder.setAPIFunction( "bin" );

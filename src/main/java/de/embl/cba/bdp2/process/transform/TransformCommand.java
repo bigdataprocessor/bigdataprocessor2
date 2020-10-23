@@ -5,8 +5,6 @@ import de.embl.cba.bdp2.process.AbstractImageProcessingCommand;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewer.ImageViewer;
 import net.imglib2.interpolation.InterpolatorFactory;
-import net.imglib2.interpolation.randomaccess.ClampingNLinearInterpolatorFactory;
-import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -41,7 +39,7 @@ public class TransformCommand< R extends RealType< R > & NativeType< R > > exten
     private void process()
     {
         final AffineTransform3D affineTransform3D = getAffineTransform3D( affineTransformCSV );
-        final InterpolatorFactory interpolatorFactory = getInterpolator( interpolation );
+        final InterpolatorFactory interpolatorFactory = Utils.getInterpolator( interpolation );
         outputImage = BigDataProcessor2.transform( inputImage, affineTransform3D, interpolatorFactory );
     }
 
@@ -51,16 +49,6 @@ public class TransformCommand< R extends RealType< R > & NativeType< R > > exten
         final AffineTransform3D transform3D = new AffineTransform3D();
         transform3D.set( doubles );
         return transform3D;
-    }
-
-    public static InterpolatorFactory getInterpolator( String interpolation )
-    {
-        if ( interpolation.equalsIgnoreCase( LINEAR ) )
-            return new ClampingNLinearInterpolatorFactory<>();
-        else if ( interpolation.equalsIgnoreCase( NEAREST ) )
-            return new NearestNeighborInterpolatorFactory();
-        else
-            throw new RuntimeException( "Interpolation not supported: " + interpolation );
     }
 
     @Override

@@ -39,7 +39,12 @@ public class AlignChannelsDialog< T extends RealType< T > & NativeType< T > > ex
 	protected void recordMacro()
 	{
 		final MacroRecorder recorder = new MacroRecorder( AlignChannelsCommand.COMMAND_FULL_NAME, inputImage, outputImage );
-		recorder.addOption( "shifts", Utils.longsToDelimitedString( shifts ) );
+		recorder.addCommandParameter( "shifts", Utils.longsToDelimitedString( shifts ) );
+
+		// Image< R > alignChannels( Image< R > image, List< long[] > shifts )
+		recorder.setAPIFunction( "alignChannels" );
+		recorder.addAPIFunctionParameter( shifts );
+
 		recorder.record();
 	}
 

@@ -125,16 +125,16 @@ public class CropDialog< R extends RealType< R > & NativeType< R > >
 	{
 		final MacroRecorder recorder = new MacroRecorder( CropCommand.COMMAND_FULL_NAME, inputImage, outputImage, AbstractOpenCommand.SHOW_IN_NEW_VIEWER );
 		
-		recorder.addOption( "minX", intervalXYZCT.min(0 ) );
-		recorder.addOption( "minY", intervalXYZCT.min(1 ) );
-		recorder.addOption( "minZ", intervalXYZCT.min(2 ) );
-		recorder.addOption( "minC", intervalXYZCT.min(3 ) );
-		recorder.addOption( "minT", intervalXYZCT.min(4 ) );
-		recorder.addOption( "maxX", intervalXYZCT.max(0 ) );
-		recorder.addOption( "maxY", intervalXYZCT.max(1 ) );
-		recorder.addOption( "maxZ", intervalXYZCT.max(2 ) );
-		recorder.addOption( "maxC", intervalXYZCT.max(3 ) );
-		recorder.addOption( "maxT", intervalXYZCT.max(4 ) );
+		recorder.addCommandParameter( "minX", intervalXYZCT.min(0 ) );
+		recorder.addCommandParameter( "minY", intervalXYZCT.min(1 ) );
+		recorder.addCommandParameter( "minZ", intervalXYZCT.min(2 ) );
+		recorder.addCommandParameter( "minC", intervalXYZCT.min(3 ) );
+		recorder.addCommandParameter( "minT", intervalXYZCT.min(4 ) );
+		recorder.addCommandParameter( "maxX", intervalXYZCT.max(0 ) );
+		recorder.addCommandParameter( "maxY", intervalXYZCT.max(1 ) );
+		recorder.addCommandParameter( "maxZ", intervalXYZCT.max(2 ) );
+		recorder.addCommandParameter( "maxC", intervalXYZCT.max(3 ) );
+		recorder.addCommandParameter( "maxT", intervalXYZCT.max(4 ) );
 
 		// Image< R > crop( Image< R > image, long[] minMax )
 		recorder.setAPIFunction( "crop" );

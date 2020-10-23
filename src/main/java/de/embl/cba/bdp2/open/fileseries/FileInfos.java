@@ -76,6 +76,7 @@ public class FileInfos
         this( directory, namingScheme, filterPattern, h5DataSetName, null);
     }
 
+    // TODO: often (always the namingScheme and the filter are the same now??)
     public FileInfos(
             String directory,
             String namingScheme,

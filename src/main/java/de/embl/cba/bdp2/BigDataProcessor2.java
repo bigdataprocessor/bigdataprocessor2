@@ -1,5 +1,7 @@
 package de.embl.cba.bdp2;
 
+import com.sun.tools.javac.api.ClientCodeWrapper;
+import de.embl.cba.bdp2.process.align.splitchip.SplitChipMerger;
 import de.embl.cba.bdp2.process.convert.MultiChannelUnsignedByteTypeConverter;
 import de.embl.cba.bdp2.scijava.convert.StringToImage;
 import de.embl.cba.bdp2.track.Track;
@@ -19,6 +21,7 @@ import de.embl.cba.bdp2.save.*;
 import de.embl.cba.bdp2.process.align.channelshift.ChannelShifter;
 import de.embl.cba.bdp2.service.ImageViewerService;
 import de.embl.cba.bdp2.process.transform.ImageTransformer;
+import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewer.ImageViewer;
 import loci.common.DebugTools;
 import net.imglib2.*;
@@ -93,7 +96,19 @@ public class BigDataProcessor2
     }
 
     public static < R extends RealType< R > & NativeType< R > >
-    Image< R > openHdf5Series(
+    Image< R > openHdf5Series( String directory, String regularExpression, String hdf5DataSetName )
+    {
+        DebugTools.setRootLevel( "OFF" ); // Bio-Formats
+
+        FileInfos fileInfos = new FileInfos( directory, regularExpression, regularExpression, hdf5DataSetName, null );
+
+        final Image< R > image = new FileSeriesCachedCellImgCreator( fileInfos ).createImage();
+
+        return image;
+    }
+
+    @Deprecated
+    public static < R extends RealType< R > & NativeType< R > > Image< R > openHdf5Series(
             String directory,
             String loadingScheme,
             String filterPattern,
@@ -194,7 +209,7 @@ public class BigDataProcessor2
         return outputImage;
     }
 
-    public static < R extends RealType< R > & NativeType< R > > Image< R > correctChromaticShift( Image< R > image, ArrayList< long[] > shifts )
+    public static < R extends RealType< R > & NativeType< R > > Image< R > alignChannels( Image< R > image, List< long[] > shifts )
     {
         final ChannelShifter< R > shifter = new ChannelShifter< >( image.getRai() );
         RandomAccessibleInterval< R > shiftedRai = shifter.getShiftedRai( shifts );
@@ -205,10 +220,51 @@ public class BigDataProcessor2
         return outputImage;
     }
 
+    /**
+     *
+     *
+     * @param image
+     * @param regions
+     *           for each channle to be create one long array: [ Xmin, Ymin, Xdim, Ydim, C ]
+     * @param <R>
+     * @return
+     */
+    public static < R extends RealType< R > & NativeType< R > > Image< R > alignChannelsSpitChip( Image< R > image, List< long[] > regions )
+    {
+        final SplitChipMerger merger = new SplitChipMerger();
+        Image< R > outputImage = merger.mergeRegionsXYC( image, regions );
+        return outputImage;
+    }
+
+    public static < R extends RealType< R > & NativeType< R > > Image< R > rename( Image< R > image, String name, String[] channelNames )
+    {
+        image.setName( name );
+        image.setChannelNames( channelNames );
+        return image;
+    }
+
     public static < R extends RealType< R > & NativeType< R > > Image< R > transform( Image< R > image, AffineTransform3D transform3D, InterpolatorFactory interpolatorFactory )
     {
         final ImageTransformer< R > transformer = new ImageTransformer<>( image, transform3D, interpolatorFactory );
         return transformer.transform();
+    }
+
+    /**
+     *
+     * @param image
+     * @param affineTransformValues
+     * @param interpolationMode
+     *              "Nearest" or "Linear"
+     * @param <R>
+     * @return
+     */
+    public static < R extends RealType< R > & NativeType< R > > Image< R > transform( Image< R > image, double[] affineTransformValues, String interpolationMode )
+    {
+        InterpolatorFactory interpolator = Utils.getInterpolator( interpolationMode );
+        final AffineTransform3D affineTransform3D = new AffineTransform3D();
+        affineTransform3D.set( affineTransformValues );
+
+        return transform( image, affineTransform3D, interpolator );
     }
 
     public static < R extends RealType< R > & NativeType< R > > Image< R > applyTrack( File file, Image< R > image, Boolean centerImage )

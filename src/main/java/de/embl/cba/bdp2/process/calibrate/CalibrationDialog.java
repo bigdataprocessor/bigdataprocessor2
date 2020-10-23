@@ -15,10 +15,7 @@ import ome.units.UNITS;
 import ome.units.quantity.Length;
 import ome.units.unit.Unit;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-
-import static de.embl.cba.bdp2.process.calibrate.CalibrationUtils.fixVoxelSizeAndUnit;
 
 // TODO: Can one make it a child of AbstractProcessingDialog?
 public class CalibrationDialog< R extends RealType< R > & NativeType< R > >
@@ -91,10 +88,10 @@ public class CalibrationDialog< R extends RealType< R > & NativeType< R > >
 		final MacroRecorder recorder = new MacroRecorder( CalibrateCommand.COMMAND_FULL_NAME, inputImage, outputImage );
 
 		final double[] voxelSize = outputImage.getVoxelSize();
-		recorder.addOption( "unit", outputImage.getVoxelUnit() );
-		recorder.addOption( CalibrateCommand.VOXEL_SIZE_X_PARAMETER, voxelSize[ 0 ] );
-		recorder.addOption( CalibrateCommand.VOXEL_SIZE_Y_PARAMETER, voxelSize[ 1 ] );
-		recorder.addOption( CalibrateCommand.VOXEL_SIZE_Z_PARAMETER, voxelSize[ 2 ] );
+		recorder.addCommandParameter( "unit", outputImage.getVoxelUnit() );
+		recorder.addCommandParameter( CalibrateCommand.VOXEL_SIZE_X_PARAMETER, voxelSize[ 0 ] );
+		recorder.addCommandParameter( CalibrateCommand.VOXEL_SIZE_Y_PARAMETER, voxelSize[ 1 ] );
+		recorder.addCommandParameter( CalibrateCommand.VOXEL_SIZE_Z_PARAMETER, voxelSize[ 2 ] );
 
 		// public static void calibrate( Image image, double[] doubles, String voxelUnit )
 		recorder.setAPIFunction( "calibrate" );

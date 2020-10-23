@@ -47,8 +47,8 @@ public class ApplyTrackDialog< R extends RealType< R > & NativeType< R > >
 	{
 		final MacroRecorder recorder = new MacroRecorder( ApplyTrackCommand.COMMAND_FULL_NAME, inputImage, outputImage );
 
-		recorder.addOption( ApplyTrackCommand.TRACK_FILE_PARAMETER, trackFile );
-		recorder.addOption( ApplyTrackCommand.CENTER_IMAGE_PARAMETER, centerImage);
+		recorder.addCommandParameter( ApplyTrackCommand.TRACK_FILE_PARAMETER, trackFile );
+		recorder.addCommandParameter( ApplyTrackCommand.CENTER_IMAGE_PARAMETER, centerImage);
 
 		recorder.record();
 	}
