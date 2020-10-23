@@ -314,17 +314,22 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > > extends JFr
         recorder.addCommandParameter( SaveAdvancedCommand.T_END_PARAMETER, savingSettings.tEnd);
 
         // void saveImageAndWaitUntilDone( Image< R > image, SavingSettings savingSettings )
+        recorder.addAPIFunctionPrequel( "\n# Save image" );
         recorder.addAPIFunctionPrequel( "savingSettings = SavingSettings();" );
         recorder.addAPIFunctionPrequel( createSettingsString( "volumesFilePathStump", SavingSettings.createFilePathStump( inputImage, "volumes", directory ) ) );
         recorder.addAPIFunctionPrequel( createSettingsString( "projectionsFilePathStump", SavingSettings.createFilePathStump( inputImage, "projections", directory ) ) );
         recorder.addAPIFunctionPrequel( createSettingsString( "numIOThreads", savingSettings.numIOThreads ) );
         recorder.addAPIFunctionPrequel( createSettingsString( "numProcessingThreads", savingSettings.numProcessingThreads ) );
-        recorder.addAPIFunctionPrequel( createSettingsString( "fileType", "SaveFileType." + savingSettings.fileType ) );
+        recorder.addAPIFunctionPrequel( createSettingsString( "fileType", savingSettings.fileType ) );
         recorder.addAPIFunctionPrequel( createSettingsString( "saveProjections", savingSettings.saveProjections ) );
         recorder.addAPIFunctionPrequel( createSettingsString( "saveVolumes", savingSettings.saveVolumes ) );
         recorder.addAPIFunctionPrequel( createSettingsString( "compression", savingSettings.compression ) );
         recorder.addAPIFunctionPrequel( createSettingsString( "tStart", savingSettings.tStart ) );
         recorder.addAPIFunctionPrequel( createSettingsString( "tEnd", savingSettings.tEnd ) );
+
+        // void saveImageAndWaitUntilDone( Image< R > image, SavingSettings savingSettings )
+        recorder.setAPIFunction( "saveImageAndWaitUntilDone" );
+        recorder.addAPIFunctionParameter( "savingSettings" );
 
         recorder.record();
     }
@@ -338,6 +343,8 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > > extends JFr
             stringValue = MacroRecorder.quote( ( String ) value );
         else if ( value instanceof Boolean )
             stringValue = (boolean) value ? "True" : "False";
+        else if ( value instanceof SaveFileType )
+            stringValue = "SaveFileType." + value;
         else
             stringValue = "" + value;
 

@@ -1,9 +1,13 @@
 package de.embl.cba.bdp2.macro;
 
+import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.open.AbstractOpenCommand;
+import de.embl.cba.bdp2.open.luxendo.OpenLuxendoCommand;
 import ij.plugin.frame.Recorder;
 
+import java.awt.*;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,11 +31,18 @@ public class MacroRecorder
 
 	public MacroRecorder()
 	{
+
 	}
 
-	public MacroRecorder( String commandName, String outputImageHandling )
+	public MacroRecorder( Image< ? > outputImage )
+	{
+		this.outputImage = outputImage;
+	}
+
+	public MacroRecorder( String commandName, String outputImageHandling, Image< ? > outputImage )
 	{
 		this.commandName = commandName;
+		this.outputImage = outputImage;
 		this.options = "";
 
 		addCommandParameter( VIEWING_MODALITY_PARAMETER, outputImageHandling );
@@ -114,12 +125,12 @@ public class MacroRecorder
 
 				if ( Recorder.scriptMode() ) // Jython
 				{
+					removeIJRunCallFromRecorder();
+
 					if ( recordImportStatments )
 					{
 						recorder.recordString( "from de.embl.cba.bdp2 import BigDataProcessor2;\n" );
 						recorder.recordString( "from jarray import array;\n" );
-						recorder.recordString( "from jarray import array;\n" );
-
 						recorder.recordString( "from de.embl.cba.bdp2.save import SavingSettings;\n" );
 						recorder.recordString( "from de.embl.cba.bdp2.save import SaveFileType;\n" );
 						recorder.recordString( "\n" );
@@ -131,16 +142,18 @@ public class MacroRecorder
 						{
 							recorder.recordString( prequel );
 						}
+
 						recorder.recordString( createAPICall() );
 					}
 
-					if ( outputImage != null && ! outputImage.getName().equals( inputImage.getName() ) )
+					if ( outputImage != null )
 					{
-						recorder.recordString( "image.setName( " + outputImage.getName() + ");\n" );
+						if ( inputImage != null && ! inputImage.getName().equals( outputImage.getName() ) )
+							recorder.recordString( "image.setName( " + outputImage.getName() + ");\n" );
 					}
 
 					if ( recordShowImageCall )
-						recorder.recordString( "BigDataProcessor2.showImage( image, True );\n" );
+						recorder.recordString( "# BigDataProcessor2.showImage( image, True );\n" );
 
 				}
 				else // macro recording
@@ -160,11 +173,10 @@ public class MacroRecorder
 			return "// ERROR: no API call for:  " + commandName + "\n";
 		}
 
-		String apiCall = "image = BigDataProcessor2." + apiFunction + "( ";
-
-		if ( inputImage != null )
-			apiCall += "image" + COMMA;
-
+		String apiCall = "";
+		if ( outputImage != null ) apiCall += "image = ";
+		apiCall += "BigDataProcessor2." + apiFunction + "( ";
+		if ( inputImage != null ) apiCall += "image" + COMMA;
 		apiCall += parameters.stream().collect( Collectors.joining( COMMA ) );
 		apiCall += " );\n";
 
@@ -218,7 +230,7 @@ public class MacroRecorder
 
 	public void addAPIFunctionPrequel( String apiFunctionPrequel )
 	{
-		apiFunctionPrequels.add( apiFunctionPrequel );
+		apiFunctionPrequels.add( apiFunctionPrequel + "\n" );
 	}
 
 	public void addAPIFunctionParameter( ArrayList< long[] > longsList )
@@ -229,9 +241,29 @@ public class MacroRecorder
 			listItems.add( asJythonArray( longs ) );
 		}
 
-		String parameter = " ArrayList( [ ";
+		String parameter = "ArrayList( [ ";
 		parameter += listItems.stream().collect( Collectors.joining( " ," ) );
 		parameter += " ] )";
 		parameters.add( parameter );
+	}
+
+	private void removeIJRunCallFromRecorder()
+	{
+		try
+		{
+			Recorder recorder = Recorder.getInstance();
+			if ( recorder == null ) return;
+			Field f = recorder.getClass().getDeclaredField("textArea"); //NoSuchFieldException
+			f.setAccessible(true);
+			TextArea textArea = (TextArea) f.get(recorder); //IllegalAccessException
+			String text = textArea.getText();
+			int start = text.indexOf( "IJ.run" );
+			int end = text.length() - 1;
+			textArea.replaceRange("", start, end );
+		}
+		catch ( Exception e )
+		{
+			//e.printStackTrace();
+		}
 	}
 }

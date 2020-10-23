@@ -8,6 +8,7 @@ import de.embl.cba.bdp2.open.ChannelSubsetter;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.imaris.ImarisUtils;
 import ij.io.FileInfo;
+import loci.common.DebugTools;
 import net.imagej.axis.Axes;
 import net.imagej.axis.AxisType;
 import net.imglib2.type.NativeType;
@@ -93,6 +94,8 @@ public class FileInfos
             List< String > channelSubset
     )
     {
+        DebugTools.setRootLevel( "OFF" ); // Bio-Formats
+
         Logger.info( "Directory: " + directory );
         Logger.info( "Regular expression: " +  namingScheme );
 

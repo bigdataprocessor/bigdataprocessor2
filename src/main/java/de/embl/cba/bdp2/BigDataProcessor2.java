@@ -1,30 +1,30 @@
 package de.embl.cba.bdp2;
 
-import com.sun.tools.javac.api.ClientCodeWrapper;
-import de.embl.cba.bdp2.process.align.splitchip.SplitChipMerger;
-import de.embl.cba.bdp2.process.convert.MultiChannelUnsignedByteTypeConverter;
-import de.embl.cba.bdp2.scijava.convert.StringToImage;
-import de.embl.cba.bdp2.track.Track;
-import de.embl.cba.bdp2.track.TrackApplier;
-import de.embl.cba.bdp2.track.Tracks;
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.process.bin.Binner;
-import de.embl.cba.bdp2.process.crop.Cropper;
-import de.embl.cba.bdp2.open.ChannelSubsetter;
-import de.embl.cba.bdp2.open.fileseries.FileSeriesCachedCellImgCreator;
-import de.embl.cba.bdp2.open.fileseries.FileInfos;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.log.progress.Progress;
 import de.embl.cba.bdp2.log.progress.ProgressListener;
-import de.embl.cba.bdp2.save.*;
+import de.embl.cba.bdp2.open.fileseries.FileInfos;
+import de.embl.cba.bdp2.open.fileseries.FileSeriesCachedCellImgCreator;
 import de.embl.cba.bdp2.process.align.channelshift.ChannelShifter;
-import de.embl.cba.bdp2.service.ImageViewerService;
+import de.embl.cba.bdp2.process.align.splitchip.SplitChipMerger;
+import de.embl.cba.bdp2.process.bin.Binner;
+import de.embl.cba.bdp2.process.convert.MultiChannelUnsignedByteTypeConverter;
+import de.embl.cba.bdp2.process.crop.Cropper;
 import de.embl.cba.bdp2.process.transform.ImageTransformer;
+import de.embl.cba.bdp2.save.ImageSaver;
+import de.embl.cba.bdp2.save.ImageSaverCreator;
+import de.embl.cba.bdp2.save.SavingSettings;
+import de.embl.cba.bdp2.service.ImageViewerService;
+import de.embl.cba.bdp2.track.Track;
+import de.embl.cba.bdp2.track.TrackApplier;
+import de.embl.cba.bdp2.track.Tracks;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewer.ImageViewer;
 import loci.common.DebugTools;
-import net.imglib2.*;
+import net.imglib2.Interval;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.interpolation.InterpolatorFactory;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
@@ -136,14 +136,12 @@ public class BigDataProcessor2
             String hdf5DataSetName )
     {
         DebugTools.setRootLevel( "OFF" ); // Bio-Formats
-
         FileInfos fileInfos = new FileInfos( directory, loadingScheme, filterPattern, hdf5DataSetName, null );
-
         final Image< R > image = new FileSeriesCachedCellImgCreator( fileInfos ).createImage();
-
         return image;
     }
 
+    @Deprecated
     public static < R extends RealType< R > & NativeType< R > >
     Image< R > openHdf5Series(
             String directory,
@@ -152,12 +150,26 @@ public class BigDataProcessor2
             String hdf5DataSetName,
             List< String > channelSubset )
     {
-        DebugTools.setRootLevel( "OFF" ); // Bio-Formats
-
         FileInfos fileInfos = new FileInfos( directory, namingScheme, filterPattern, hdf5DataSetName, channelSubset );
-
         final Image< R > image = new FileSeriesCachedCellImgCreator( fileInfos ).createImage();
+        return image;
+    }
 
+    public static < R extends RealType< R > & NativeType< R > >
+    Image< R > openHdf5Series(
+            String directory,
+            String regExp,
+            String hdf5DataSetName,
+            List< String > channelSubset )
+    {
+        FileInfos fileInfos = new FileInfos( directory, regExp, regExp, hdf5DataSetName, channelSubset );
+        final Image< R > image = new FileSeriesCachedCellImgCreator( fileInfos ).createImage();
+        return image;
+    }
+    public static < R extends RealType< R > & NativeType< R > >
+    Image< R > openFileSeries( FileInfos fileInfos )
+    {
+        final Image< R > image = new FileSeriesCachedCellImgCreator( fileInfos ).createImage();
         return image;
     }
 

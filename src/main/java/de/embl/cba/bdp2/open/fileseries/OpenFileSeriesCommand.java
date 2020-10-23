@@ -59,7 +59,7 @@ public class OpenFileSeriesCommand< R extends RealType< R > & NativeType< R > > 
                         regExp,
                         hdf5DataSetName );
 
-                MacroRecorder recorder = new MacroRecorder();
+                MacroRecorder recorder = new MacroRecorder( outputImage );
                 recorder.recordImportStatements( true );
                 recorder.setAPIFunction( "openHdf5Series" );
                 recorder.addAPIFunctionParameter( recorder.quote( directory.toString() ) );
@@ -74,7 +74,7 @@ public class OpenFileSeriesCommand< R extends RealType< R > & NativeType< R > > 
                         directory.toString(),
                         regExp );
 
-                MacroRecorder recorder = new MacroRecorder();
+                MacroRecorder recorder = new MacroRecorder( outputImage );
                 recorder.recordImportStatements( true );
                 recorder.setAPIFunction( "openTiffSeries" );
                 recorder.addAPIFunctionParameter( recorder.quote( directory.toString() ) );

@@ -5,7 +5,6 @@ import de.embl.cba.bdp2.dialog.Utils;
 import de.embl.cba.bdp2.macro.MacroRecorder;
 import de.embl.cba.bdp2.open.AbstractOpenCommand;
 import de.embl.cba.bdp2.open.ChannelChooserDialog;
-import de.embl.cba.bdp2.open.ChannelSubsetterDialog;
 import de.embl.cba.bdp2.open.fileseries.FileInfos;
 import ij.plugin.frame.Recorder;
 import net.imglib2.type.NativeType;
@@ -46,35 +45,30 @@ public class OpenLuxendoCommand< R extends RealType< R > & NativeType< R > > ext
                 directory = new File( directory.getParent() );
             }
 
-            final ChannelSubsetterDialog channelSubsetter =
-                    new ChannelSubsetterDialog(
-                            directory,
-                            viewingModality,
-                            enableArbitraryPlaneSlicing,
-                            stackIndex );
 
             FileInfos fileInfos = new FileInfos( directory.toString(), regExp, regExp, "Data" );
             final ChannelChooserDialog dialog = new ChannelChooserDialog( Arrays.asList( fileInfos.channelNames ) );
             List< String > selectedChannels = dialog.getChannelsViaDialog();
 
+            // TODO: avoid that the fileInfos are fetched two times....
+
             outputImage = BigDataProcessor2.openHdf5Series(
                     directory.toString(),
-                    regExp,
                     regExp,
                     "Data",
                     selectedChannels );
 
-            recordMacroCallForOpenLuxendoChannelCommand( regExp, selectedChannels );
+            recordMacro( regExp, selectedChannels );
 
             handleOutputImage( true, false );
         });
     }
 
-    public void recordMacroCallForOpenLuxendoChannelCommand( String regExp, List< String > selectedChannels )
+    public void recordMacro( String regExp, List< String > selectedChannels )
     {
         removeOpenLuxendoCommandCallFromRecorder();
 
-        MacroRecorder recorder = new MacroRecorder( OpenLuxendoChannelsCommand.COMMAND_FULL_NAME, viewingModality );
+        MacroRecorder recorder = new MacroRecorder( OpenLuxendoChannelsCommand.COMMAND_FULL_NAME, viewingModality, outputImage );
         recorder.addCommandParameter( AbstractOpenCommand.DIRECTORY_PARAMETER, directory.getAbsolutePath() );
         recorder.addCommandParameter( AbstractOpenCommand.ARBITRARY_PLANE_SLICING_PARAMETER, enableArbitraryPlaneSlicing );
         recorder.addCommandParameter( OpenLuxendoCommand.STACK_INDEX_PARAMETER, stackIndex );

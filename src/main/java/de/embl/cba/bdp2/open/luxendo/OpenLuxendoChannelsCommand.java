@@ -44,8 +44,7 @@ public class OpenLuxendoChannelsCommand< R extends RealType< R > & NativeType< R
             outputImage = BigDataProcessor2.openHdf5Series(
                                 directory.toString(),
                                 regExp,
-                                regExp,
-                                "Data",
+                               "Data",
                                 channelList );
 
             handleOutputImage( true, false );
