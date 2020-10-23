@@ -20,7 +20,6 @@ public class AlignChannelsDialog< T extends RealType< T > & NativeType< T > > ex
 	private ArrayList< BoundedValue > boundedValues;
 	private ArrayList< SliderPanel > sliderPanels;
 	private ChromaticShiftUpdateListener updateListener;
-	private JPanel panel;
 	private final ChannelShifter channelShifter;
 	private final long numChannels;
 	private ArrayList< long[] > shifts;
@@ -44,7 +43,6 @@ public class AlignChannelsDialog< T extends RealType< T > & NativeType< T > > ex
 		// Image< R > alignChannels( Image< R > image, List< long[] > shifts )
 		recorder.setAPIFunction( "alignChannels" );
 		recorder.addAPIFunctionParameter( shifts );
-
 		recorder.record();
 	}
 

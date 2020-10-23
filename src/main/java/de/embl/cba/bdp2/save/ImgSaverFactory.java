@@ -18,10 +18,10 @@ public class ImgSaverFactory {
         {
             return new TiffVolumesImageSaver( savingSettings, es );
         }
-        else if (savingSettings.fileType.equals( SaveFileType.Hdf5Volumes ))
-        {
-            return new HDF5StacksSaver(savingSettings, es);
-        }
+//        else if (savingSettings.fileType.equals( SaveFileType.Hdf5Volumes ))
+//        {
+//            return new HDF5StacksSaver(savingSettings, es);
+//        }
         else if (savingSettings.fileType.equals( SaveFileType.ImarisVolumes ))
         {
             return new ImarisImageSaver(savingSettings, es);

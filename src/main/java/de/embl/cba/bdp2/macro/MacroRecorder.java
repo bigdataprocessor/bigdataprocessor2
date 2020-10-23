@@ -62,17 +62,17 @@ public class MacroRecorder
 		addCommandParameter( INPUT_IMAGE_PARAMETER, inputImage.getName() );
 	}
 
-	public static String asNewArrayString( double[] doubles )
+	public static String asJythonArray( double[] doubles )
 	{
 		return "array([" + asCSV( doubles ) + "], \"d\")";
 	}
 
-	public static String asNewArrayString( long[] longs )
+	public static String asJythonArray( long[] longs )
 	{
 		return "array([" + asCSV( longs ) + "], \"l\")";
 	}
 
-	public static String asNewArrayString( String[] strings )
+	public static String asJythonArray( String[] strings )
 	{
 		return "array([" + asCSV( strings ) + "], \"s\")";
 	}
@@ -118,6 +118,8 @@ public class MacroRecorder
 					{
 						recorder.recordString( "from de.embl.cba.bdp2 import BigDataProcessor2;\n" );
 						recorder.recordString( "from jarray import array;\n" );
+						recorder.recordString( "from jarray import array;\n" );
+
 						recorder.recordString( "from de.embl.cba.bdp2.save import SavingSettings;\n" );
 						recorder.recordString( "from de.embl.cba.bdp2.save import SaveFileType;\n" );
 						recorder.recordString( "\n" );
@@ -191,12 +193,12 @@ public class MacroRecorder
 
 	public void addAPIFunctionParameter( double[] parameter )
 	{
-		parameters.add( asNewArrayString( parameter ) );
+		parameters.add( asJythonArray( parameter ) );
 	}
 
 	public void addAPIFunctionParameter( long[] parameter )
 	{
-		parameters.add( asNewArrayString( parameter ) );
+		parameters.add( asJythonArray( parameter ) );
 	}
 
 	public void recordImportStatements( boolean recordImportStatements )
@@ -217,5 +219,19 @@ public class MacroRecorder
 	public void addAPIFunctionPrequel( String apiFunctionPrequel )
 	{
 		apiFunctionPrequels.add( apiFunctionPrequel );
+	}
+
+	public void addAPIFunctionParameter( ArrayList< long[] > longsList )
+	{
+		List< String > listItems = new ArrayList<>( );
+		for ( long[] longs : longsList )
+		{
+			listItems.add( asJythonArray( longs ) );
+		}
+
+		String parameter = " ArrayList( [ ";
+		parameter += listItems.stream().collect( Collectors.joining( " ," ) );
+		parameter += " ] )";
+		parameters.add( parameter );
 	}
 }

@@ -43,6 +43,6 @@ public class AlignChannelsCommand< R extends RealType< R > & NativeType< R > > e
     @Override
     public void showDialog( ImageViewer< R > imageViewer )
     {
-
+        new AlignChannelsDialog<>( imageViewer ).showDialog();
     }
 }

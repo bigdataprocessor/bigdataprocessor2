@@ -59,6 +59,14 @@ public class FileInfos
     public int numTiffStrips;
     public String[] channelNames;
 
+
+    public FileInfos(
+            String directory,
+            String regExp )
+    {
+        this( directory, regExp, regExp, null, null );
+    }
+
     public FileInfos(
             String directory,
             String namingScheme,

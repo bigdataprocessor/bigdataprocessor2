@@ -72,6 +72,27 @@ public class BigDataProcessor2
 
     public static < R extends RealType< R > & NativeType< R > >
     Image< R > openTiffSeries(
+            File directory,
+            String regExp )
+    {
+        return openTiffSeries( directory.getAbsolutePath(), regExp );
+    }
+
+    public static < R extends RealType< R > & NativeType< R > >
+    Image< R > openTiffSeries(
+            String directory,
+            String regExp )
+    {
+        FileInfos fileInfos = new FileInfos( directory, regExp );
+
+        final Image< R > image = new FileSeriesCachedCellImgCreator( fileInfos ).createImage();
+
+        return image;
+    }
+
+    @Deprecated
+    public static < R extends RealType< R > & NativeType< R > >
+    Image< R > openTiffSeries(
             String directory,
             String namingScheme,
             String filterPattern )

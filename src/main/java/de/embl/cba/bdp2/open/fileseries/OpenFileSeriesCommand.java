@@ -1,5 +1,6 @@
 package de.embl.cba.bdp2.open.fileseries;
 
+import de.embl.cba.bdp2.macro.MacroRecorder;
 import de.embl.cba.bdp2.open.AbstractOpenCommand;
 import de.embl.cba.bdp2.process.calibrate.CalibrationUtils;
 import de.embl.cba.bdp2.dialog.Utils;
@@ -56,15 +57,29 @@ public class OpenFileSeriesCommand< R extends RealType< R > & NativeType< R > > 
                 outputImage = BigDataProcessor2.openHdf5Series(
                         directory.toString(),
                         regExp,
-                        ".*",
                         hdf5DataSetName );
+
+                MacroRecorder recorder = new MacroRecorder();
+                recorder.recordImportStatements( true );
+                recorder.setAPIFunction( "openHdf5Series" );
+                recorder.addAPIFunctionParameter( recorder.quote( directory.toString() ) );
+                recorder.addAPIFunctionParameter( recorder.quote( regExp ) );
+                recorder.addAPIFunctionParameter( recorder.quote( hdf5DataSetName ) );
+                recorder.record();
+
             }
             else if ( regExp.contains( ".tif" ) ) // .tiff .ome.tif
             {
                 outputImage = BigDataProcessor2.openTiffSeries(
                         directory.toString(),
-                        regExp,
-                        ".*" );
+                        regExp );
+
+                MacroRecorder recorder = new MacroRecorder();
+                recorder.recordImportStatements( true );
+                recorder.setAPIFunction( "openTiffSeries" );
+                recorder.addAPIFunctionParameter( recorder.quote( directory.toString() ) );
+                recorder.addAPIFunctionParameter( recorder.quote( regExp ) );
+                recorder.record();
             }
 
             fixVoxelSpacing( outputImage );

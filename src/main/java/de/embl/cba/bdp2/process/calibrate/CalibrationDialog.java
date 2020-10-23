@@ -72,6 +72,7 @@ public class CalibrationDialog< R extends RealType< R > & NativeType< R > >
 
 		outputImage = BigDataProcessor2.calibrate( inputImage, voxelSize, unit );
 
+		Logger.info( "# " + CalibrateCommand.COMMAND_NAME );
 		Logger.info( "Image voxel unit: " + outputImage.getVoxelUnit() );
 		Logger.info( "Image voxel size: " + Arrays.toString( outputImage.getVoxelSize() ) );
 
