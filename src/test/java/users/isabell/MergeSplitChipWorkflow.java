@@ -4,6 +4,7 @@ import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.open.NamingSchemes;
 import de.embl.cba.bdp2.process.align.splitchip.SplitChipMerger;
+import de.embl.cba.bdp2.save.SaveFileType;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import net.imagej.ImageJ;
@@ -32,7 +33,7 @@ public class MergeSplitChipWorkflow
         double voxelSpacingMicrometerZ = 1.04;
 
         final SavingSettings savingSettings = SavingSettings.getDefaults();
-        savingSettings.saveFileType = SavingSettings.SaveFileType.TIFF_VOLUMES;
+        savingSettings.fileType = SaveFileType.TiffVolumes;
         savingSettings.numIOThreads = Runtime.getRuntime().availableProcessors();
 
         final SplitChipMerger merger = new SplitChipMerger();

@@ -4,6 +4,7 @@ import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
+import de.embl.cba.bdp2.save.SaveFileType;
 import de.embl.cba.bdp2.save.SavingSettings;
 
 import static de.embl.cba.bdp2.open.NamingSchemes.*;
@@ -31,7 +32,7 @@ public class TestCompressed16bitTiffStackSaving
         image.setVoxelSize( 1.0, 1.0, 1.0 );
 
         final SavingSettings settings = SavingSettings.getDefaults();
-        settings.saveFileType = SavingSettings.SaveFileType.TIFF_VOLUMES;
+        settings.fileType = SaveFileType.TiffVolumes;
         settings.numProcessingThreads = 4;
         settings.numIOThreads = 1;
         settings.voxelSize = image.getVoxelSize();

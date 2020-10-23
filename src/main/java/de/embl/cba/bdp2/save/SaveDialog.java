@@ -10,6 +10,7 @@ import de.embl.cba.bdp2.viewer.ImageViewer;
 import ij.IJ;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -21,7 +22,7 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > > extends JFr
 {
     private final ImageViewer viewer;
     private final Image< R > inputImage;
-    private final SavingSettings.SaveFileType saveFileType;
+    private final SaveFileType saveFileType;
 
     private static SavingSettings defaults = SavingSettings.getDefaults();
 
@@ -66,7 +67,7 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > > extends JFr
     private JPanel mainPanel;
     private ArrayList< JPanel > panels;
 
-    public SaveDialog( ImageViewer viewer, SavingSettings.SaveFileType saveFileType )
+    public SaveDialog( ImageViewer viewer, SaveFileType saveFileType )
     {
         this.viewer = viewer;
         this.inputImage = viewer.getImage();
@@ -99,7 +100,7 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > > extends JFr
         panels.get(panelIndex).add(cbSaveProjection);
         mainPanel.add( panels.get(panelIndex++));
 
-        if ( saveFileType.equals( SavingSettings.SaveFileType.TIFF_VOLUMES ) )
+        if ( saveFileType.equals( SaveFileType.TiffVolumes ) )
         {
             panelIndex = addChannelNamingSchemeChoice( panelIndex );
         }
@@ -131,8 +132,8 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > > extends JFr
 
         panelIndex = addTiffCompressionPanel( panelIndex );
 
-        if ( ( saveFileType.equals( SavingSettings.SaveFileType.TIFF_PLANES ) ||
-                saveFileType.equals( SavingSettings.SaveFileType.TIFF_VOLUMES ) ) )
+        if ( ( saveFileType.equals( SaveFileType.TiffPlanes ) ||
+                saveFileType.equals( SaveFileType.TiffVolumes ) ) )
         {
             panels.add( new JPanel() );
             panels.get( panelIndex ).add( new JLabel( "I/O Threads" ) );
@@ -195,8 +196,8 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > > extends JFr
 
     public int addTiffCompressionPanel( int panelIndex )
     {
-        if ( saveFileType.equals( SavingSettings.SaveFileType.TIFF_VOLUMES ) ||
-             saveFileType.equals( SavingSettings.SaveFileType.TIFF_PLANES ) )
+        if ( saveFileType.equals( SaveFileType.TiffVolumes ) ||
+             saveFileType.equals( SaveFileType.TiffPlanes ) )
         {
             panels.add( new JPanel() );
             panels.get( panelIndex ).add( new JLabel( "Tiff Compression" ) );
@@ -259,7 +260,7 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > > extends JFr
     private SavingSettings getSavingSettings()
     {
         SavingSettings savingSettings = new SavingSettings();
-        savingSettings.saveFileType = saveFileType;
+        savingSettings.fileType = saveFileType;
         savingSettings.compression = (String) comboCompression.getSelectedItem();
         // compress plane wise
         savingSettings.rowsPerStrip = (int) viewer.getImage().getRai().dimension( DimensionOrder.Y );  //Integer.parseInt( tfRowsPerStrip.getText() );
@@ -301,18 +302,46 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > > extends JFr
     {
         final MacroRecorder recorder = new MacroRecorder( SaveAdvancedCommand.COMMAND_FULL_NAME, inputImage );
 
-        recorder.addCommandParameter( SaveAdvancedCommand.DIRECTORY_PARAMETER, tfDirectory.getText() );
+        String directory = tfDirectory.getText();
+        recorder.addCommandParameter( SaveAdvancedCommand.DIRECTORY_PARAMETER, directory );
         recorder.addCommandParameter( SaveAdvancedCommand.NUM_IO_THREADS_PARAMETER, savingSettings.numIOThreads );
         recorder.addCommandParameter( SaveAdvancedCommand.NUM_PROCESSING_THREADS_PARAMETER, savingSettings.numProcessingThreads );
-        recorder.addCommandParameter( SaveAdvancedCommand.SAVE_FILE_TYPE_PARAMETER, savingSettings.saveFileType.toString());
+        recorder.addCommandParameter( SaveAdvancedCommand.SAVE_FILE_TYPE_PARAMETER, savingSettings.fileType.toString());
         recorder.addCommandParameter( SaveAdvancedCommand.SAVE_PROJECTIONS_PARAMETER, savingSettings.saveProjections);
         recorder.addCommandParameter( SaveAdvancedCommand.SAVE_VOLUMES_PARAMETER, savingSettings.saveVolumes);
         recorder.addCommandParameter( SaveAdvancedCommand.TIFF_COMPRESSION_PARAMETER, savingSettings.compression);
-
         recorder.addCommandParameter( SaveAdvancedCommand.T_START_PARAMETER, savingSettings.tStart);
         recorder.addCommandParameter( SaveAdvancedCommand.T_END_PARAMETER, savingSettings.tEnd);
 
+        // void saveImageAndWaitUntilDone( Image< R > image, SavingSettings savingSettings )
+        recorder.addAPIFunctionPrequel( "savingSettings = SavingSettings();" );
+        recorder.addAPIFunctionPrequel( createSettingsString( "volumesFilePathStump", SavingSettings.createFilePathStump( inputImage, "volumes", directory ) ) );
+        recorder.addAPIFunctionPrequel( createSettingsString( "projectionsFilePathStump", SavingSettings.createFilePathStump( inputImage, "projections", directory ) ) );
+        recorder.addAPIFunctionPrequel( createSettingsString( "numIOThreads", savingSettings.numIOThreads ) );
+        recorder.addAPIFunctionPrequel( createSettingsString( "numProcessingThreads", savingSettings.numProcessingThreads ) );
+        recorder.addAPIFunctionPrequel( createSettingsString( "fileType", "SaveFileType." + savingSettings.fileType ) );
+        recorder.addAPIFunctionPrequel( createSettingsString( "saveProjections", savingSettings.saveProjections ) );
+        recorder.addAPIFunctionPrequel( createSettingsString( "saveVolumes", savingSettings.saveVolumes ) );
+        recorder.addAPIFunctionPrequel( createSettingsString( "compression", savingSettings.compression ) );
+        recorder.addAPIFunctionPrequel( createSettingsString( "tStart", savingSettings.tStart ) );
+        recorder.addAPIFunctionPrequel( createSettingsString( "tEnd", savingSettings.tEnd ) );
+
         recorder.record();
+    }
+
+    @NotNull
+    private String createSettingsString( final String parameter, Object value )
+    {
+        String stringValue;
+
+        if ( value instanceof String )
+            stringValue = MacroRecorder.quote( ( String ) value );
+        else if ( value instanceof Boolean )
+            stringValue = (boolean) value ? "True" : "False";
+        else
+            stringValue = "" + value;
+
+        return "savingSettings."+ parameter + " = " + stringValue + ";";
     }
 }
 

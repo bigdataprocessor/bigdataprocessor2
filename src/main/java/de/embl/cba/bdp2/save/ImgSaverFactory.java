@@ -10,19 +10,19 @@ public class ImgSaverFactory {
 
     public AbstractImageSaver getSaver( SavingSettings savingSettings, ExecutorService es)
     {
-        if (savingSettings.saveFileType.equals( SavingSettings.SaveFileType.TIFF_PLANES))
+        if (savingSettings.fileType.equals( SaveFileType.TiffPlanes ))
         {
             return new TiffPlanesSaver(savingSettings, es);
         }
-        else if (savingSettings.saveFileType.equals( SavingSettings.SaveFileType.TIFF_VOLUMES ))
+        else if (savingSettings.fileType.equals( SaveFileType.TiffVolumes ))
         {
             return new TiffVolumesImageSaver( savingSettings, es );
         }
-        else if (savingSettings.saveFileType.equals( SavingSettings.SaveFileType.HDF5_VOLUMES ))
+        else if (savingSettings.fileType.equals( SaveFileType.Hdf5Volumes ))
         {
             return new HDF5StacksSaver(savingSettings, es);
         }
-        else if (savingSettings.saveFileType.equals( SavingSettings.SaveFileType.IMARIS_VOLUMES ))
+        else if (savingSettings.fileType.equals( SaveFileType.ImarisVolumes ))
         {
             return new ImarisImageSaver(savingSettings, es);
         }

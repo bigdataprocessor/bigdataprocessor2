@@ -52,11 +52,15 @@ public class SaveAdvancedCommand< R extends RealType< R > & NativeType< R > > im
     int tEnd = 0;
     public static String T_END_PARAMETER = "tEnd";
 
+
+    /**
+     * Must be one of the SaveFileType enum class entries
+     */
     @Parameter(label = "File type", choices =
             {
-                    SavingSettings.TIFF_VOLUMES,
-                    SavingSettings.IMARIS_VOLUMES,
-                    SavingSettings.TIFF_PLANES
+                    "TiffPlanes",
+                    "TiffVolumes",
+                    "ImarisVolumes"
             })
     String fileType;
     public static String SAVE_FILE_TYPE_PARAMETER = "fileType";
@@ -93,7 +97,7 @@ public class SaveAdvancedCommand< R extends RealType< R > & NativeType< R > > im
     {
         SavingSettings savingSettings = new SavingSettings();
 
-        savingSettings.saveFileType = SavingSettings.SaveFileType.getEnum( fileType );
+        savingSettings.fileType = SaveFileType.valueOf( fileType );
 
         savingSettings.compression = tiffCompression;
         savingSettings.rowsPerStrip = 10;
@@ -101,9 +105,8 @@ public class SaveAdvancedCommand< R extends RealType< R > & NativeType< R > > im
         savingSettings.saveVolumes = saveVolumes;
         savingSettings.saveProjections = saveProjections;
 
-        final String imageName = inputImage.getName();
-        savingSettings.volumesFilePathStump = directory + File.separator + "volumes" + File.separator + imageName;
-        savingSettings.projectionsFilePathStump = directory + File.separator + "projections" + File.separator + imageName;
+        savingSettings.volumesFilePathStump = SavingSettings.createFilePathStump( inputImage, "volumes", directory.toString() );
+        savingSettings.projectionsFilePathStump = SavingSettings.createFilePathStump( inputImage, "projections", directory.toString() );
 
         savingSettings.numIOThreads = numIOThreads;
         savingSettings.numProcessingThreads = numProcessingThreads;
@@ -116,4 +119,5 @@ public class SaveAdvancedCommand< R extends RealType< R > & NativeType< R > > im
 
         return savingSettings;
     }
+
 }

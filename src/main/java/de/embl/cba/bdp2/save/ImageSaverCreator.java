@@ -28,7 +28,7 @@ public class ImageSaverCreator < R extends RealType< R > & NativeType< R > >
 
 		ExecutorService saveExecutorService = Executors.newFixedThreadPool( numIOThreads );
 
-		if ( ! savingSettings.saveFileType.equals( SavingSettings.SaveFileType.TIFF_PLANES ) )
+		if ( ! savingSettings.fileType.equals( SaveFileType.TiffPlanes ) )
 		{
 			// TODO: for cropped images only fully load the cropped region
 			// TODO: for input data distributed across Tiff planes this should be reconsidered

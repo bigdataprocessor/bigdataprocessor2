@@ -15,6 +15,7 @@ import de.embl.cba.bdp2.process.convert.MultiChannelUnsignedByteTypeConverterDia
 import de.embl.cba.bdp2.process.crop.CropDialog;
 import de.embl.cba.bdp2.open.samples.DownloadAndOpenSampleDataCommand;
 import de.embl.cba.bdp2.dialog.Utils;
+import de.embl.cba.bdp2.save.SaveFileType;
 import de.embl.cba.bdp2.track.ApplyTrackCommand;
 import de.embl.cba.bdp2.track.ApplyTrackDialog;
 import de.embl.cba.bdp2.track.TrackCreator;
@@ -23,7 +24,6 @@ import de.embl.cba.bdp2.process.rename.ImageRenameDialog;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.macro.MacroRecordingDialog;
 import de.embl.cba.bdp2.save.SaveDialog;
-import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.scijava.Services;
 import de.embl.cba.bdp2.process.align.channelshift.AlignChannelsCommand;
 import de.embl.cba.bdp2.process.align.splitchip.SplitChipCommand;
@@ -79,7 +79,7 @@ public class BigDataProcessor2MenuActions implements ActionListener {
         if (e.getActionCommand().equalsIgnoreCase( BigDataProcessor2Menu.SAVE_AS_IMARIS_VOLUMES_MENU_ITEM ))
         {
             BigDataProcessor2.threadPool.submit(() -> {
-                SaveDialog saveDialog = new SaveDialog( viewer, SavingSettings.SaveFileType.IMARIS_VOLUMES );
+                SaveDialog saveDialog = new SaveDialog( viewer, SaveFileType.ImarisVolumes );
                 saveDialog.setVisible(true);
             });
         }
@@ -115,7 +115,7 @@ public class BigDataProcessor2MenuActions implements ActionListener {
         {
             BigDataProcessor2.threadPool.submit(() -> {
                 if (! isImageSelected( viewer ) ) return;
-                SaveDialog saveDialog = new SaveDialog( viewer, SavingSettings.SaveFileType.TIFF_VOLUMES );
+                SaveDialog saveDialog = new SaveDialog( viewer, SaveFileType.TiffVolumes );
                 saveDialog.setVisible(true);
             });
         }
@@ -123,7 +123,7 @@ public class BigDataProcessor2MenuActions implements ActionListener {
         {
             BigDataProcessor2.threadPool.submit(() -> {
                 if (! isImageSelected( viewer ) ) return;
-                SaveDialog saveDialog = new SaveDialog( viewer, SavingSettings.SaveFileType.TIFF_PLANES );
+                SaveDialog saveDialog = new SaveDialog( viewer, SaveFileType.TiffPlanes );
                 saveDialog.setVisible(true);
             });
         }

@@ -3,10 +3,12 @@ package de.embl.cba.bdp2.save;
 import de.embl.cba.bdp2.image.Image;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;
-import net.imglib2.type.Type;
 import net.imglib2.type.numeric.RealType;
 import ome.units.UNITS;
 import ome.units.unit.Unit;
+import org.jetbrains.annotations.NotNull;
+
+import java.io.File;
 
 /**
  * Created by tischi on 22/05/17.
@@ -44,7 +46,7 @@ public class SavingSettings < R extends RealType< R > & NativeType< R > > {
     public boolean convertTo16Bit;
     public boolean gate;
     public int gateMin, gateMax;
-    public SaveFileType saveFileType;
+    public SaveFileType fileType;
     public String compression;
     public int compressionLevel;
     public int rowsPerStrip = -1;
@@ -57,33 +59,11 @@ public class SavingSettings < R extends RealType< R > & NativeType< R > > {
     public Image< R > image;
     public R type;
 
-    public enum SaveFileType
-    {
-        TIFF_PLANES( SavingSettings.TIFF_PLANES ),
-        TIFF_VOLUMES( SavingSettings.TIFF_VOLUMES ),
-        HDF5_VOLUMES( HDF_5_VOLUMES ),
-        IMARIS_VOLUMES( SavingSettings.IMARIS_VOLUMES );
-
-        private final String text;
-
-        SaveFileType( String s )
-        {
-            text = s;
-        }
-
-        @Override
-        public String toString()
-        {
-            return text;
-        }
-
-        public static SaveFileType getEnum( String value )
-        {
-            for ( SaveFileType v : values() )
-                if ( v.toString().equalsIgnoreCase( value ) ) return v;
-            throw new IllegalArgumentException();
-        }
-    }
+	@NotNull
+	public static String createFilePathStump( Image image, String type, String directory )
+	{
+		return directory + File.separator + type + File.separator + image.getName();
+	}
 
     /**
      * Loads minimum settings.
@@ -98,7 +78,7 @@ public class SavingSettings < R extends RealType< R > & NativeType< R > > {
         savingSettings.voxelUnit = UNITS.MICROMETER;
         savingSettings.saveVolumes = true;
         savingSettings.saveProjections = false;
-        savingSettings.saveFileType = SaveFileType.TIFF_PLANES;
+        savingSettings.fileType = SaveFileType.TiffPlanes;
         savingSettings.volumesFilePathStump = "/Users/tischer/Desktop/bdp2-out/image";
         savingSettings.compression = COMPRESSION_NONE;
         savingSettings.numProcessingThreads = (int) Math.ceil( Math.sqrt( AVAILABLE_PROCESSORS ) + 1 );

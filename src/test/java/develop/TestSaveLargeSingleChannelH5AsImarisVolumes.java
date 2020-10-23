@@ -2,6 +2,7 @@ package develop;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.open.NamingSchemes;
+import de.embl.cba.bdp2.save.SaveFileType;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.BigDataProcessor2;
 
@@ -31,7 +32,7 @@ public class TestSaveLargeSingleChannelH5AsImarisVolumes
         // bdp.showImage( image );
 
         final SavingSettings savingSettings = SavingSettings.getDefaults();
-        savingSettings.saveFileType = SavingSettings.SaveFileType.IMARIS_VOLUMES;
+        savingSettings.fileType = SaveFileType.ImarisVolumes;
         savingSettings.numIOThreads = 1;
         savingSettings.numProcessingThreads = 4;
         savingSettings.saveProjections = false;

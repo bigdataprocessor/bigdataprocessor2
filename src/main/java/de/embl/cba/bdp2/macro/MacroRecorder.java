@@ -6,6 +6,7 @@ import ij.plugin.frame.Recorder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static de.embl.cba.bdp2.process.AbstractImageProcessingCommand.*;
@@ -16,12 +17,13 @@ public class MacroRecorder
 	private String commandName;
 	private String options;
 	private String message;
-	private String function;
+	private String apiFunction;
 	private ArrayList< String > parameters = new ArrayList<>();
 	private Image< ? > inputImage;
 	private Image< ? > outputImage;
 	private boolean recordImportStatments = false;
 	private boolean recordShowImageCall = false;
+	private List< String > apiFunctionPrequels = new ArrayList<>(  );
 
 	public MacroRecorder()
 	{
@@ -116,11 +118,19 @@ public class MacroRecorder
 					{
 						recorder.recordString( "from de.embl.cba.bdp2 import BigDataProcessor2;\n" );
 						recorder.recordString( "from jarray import array;\n" );
+						recorder.recordString( "from de.embl.cba.bdp2.save import SavingSettings;\n" );
+						recorder.recordString( "from de.embl.cba.bdp2.save import SaveFileType;\n" );
 						recorder.recordString( "\n" );
 					}
 
-					if ( function != null )
+					if ( apiFunction != null )
+					{
+						for ( String prequel : apiFunctionPrequels )
+						{
+							recorder.recordString( prequel );
+						}
 						recorder.recordString( createAPICall() );
+					}
 
 					if ( outputImage != null && ! outputImage.getName().equals( inputImage.getName() ) )
 					{
@@ -143,12 +153,12 @@ public class MacroRecorder
 
 	private String createAPICall()
 	{
-		if ( function == null )
+		if ( apiFunction == null )
 		{
 			return "// ERROR: no API call for:  " + commandName + "\n";
 		}
 
-		String apiCall = "image = BigDataProcessor2." + function + "( ";
+		String apiCall = "image = BigDataProcessor2." + apiFunction + "( ";
 
 		if ( inputImage != null )
 			apiCall += "image" + COMMA;
@@ -171,7 +181,7 @@ public class MacroRecorder
 
 	public void setAPIFunction( String function )
 	{
-		this.function = function;
+		this.apiFunction = function;
 	}
 
 	public void addAPIFunctionParameter( String parameter )
@@ -202,5 +212,10 @@ public class MacroRecorder
 	public void addAPIFunctionParameter( String[] channelNames )
 	{
 
+	}
+
+	public void addAPIFunctionPrequel( String apiFunctionPrequel )
+	{
+		apiFunctionPrequels.add( apiFunctionPrequel );
 	}
 }
