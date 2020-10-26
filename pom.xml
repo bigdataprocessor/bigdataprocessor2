@@ -81,11 +81,11 @@
 
 		<bioformats.version>6.1.0-m2</bioformats.version>
 		<ome.version>6.0.1</ome.version>
-		<imaris-writer.version>0.2.2</imaris-writer.version>
+		<imaris-writer.version>0.2.3-SNAPSHOT</imaris-writer.version>
 		<imagej-utils.version>0.5.4</imagej-utils.version>
 		<imagej-cluster.version>0.6.3-SNAPSHPOT</imagej-cluster.version>
-		<bigdataviewer-playground.version>0.2.4-SNAPSHOT</bigdataviewer-playground.version>
-		<bigdataviewer-bioformats.version>0.2.7-SNAPSHOT</bigdataviewer-bioformats.version>
+		<!--<bigdataviewer-playground.version>0.2.4-SNAPSHOT</bigdataviewer-playground.version>-->
+		<bigdataviewer-bioformats.version>0.2.10-SNAPSHOT</bigdataviewer-bioformats.version>
 
 	</properties>
 
@@ -195,11 +195,11 @@
 			<version>${imagej-cluster.version}</version>
 		</dependency>
 
-		<dependency>
+		<!--<dependency>
 			<groupId>sc.fiji</groupId>
 			<artifactId>bigdataviewer-playground</artifactId>
 			<version>${bigdataviewer-playground.version}</version>
-		</dependency>
+		</dependency>-->
 
 		<dependency>
 			<groupId>ch.epfl.biop</groupId>
