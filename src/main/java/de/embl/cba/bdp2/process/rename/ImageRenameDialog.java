@@ -31,7 +31,6 @@ public class ImageRenameDialog< R extends RealType< R > & NativeType< R > >
 		recorder.setAPIFunction( "rename" );
 		recorder.addAPIFunctionParameter( outputImage.getName() );
 		recorder.addAPIFunctionParameter( outputImage.getChannelNames() );
-
 		recorder.record();
 	}
 

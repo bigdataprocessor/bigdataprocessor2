@@ -58,34 +58,18 @@ public class OpenFileSeriesFileSeriesCommand< R extends RealType< R > & NativeTy
                         directory.toString(),
                         regExp,
                         hdf5DataSetName );
-
-                recordJythonCall( "openHdf5Series" );
             }
             else if ( regExp.contains( ".tif" ) ) // covers .tif, .tiff, .ome.tif
             {
                 outputImage = BigDataProcessor2.openTiffSeries(
                         directory.toString(),
                         regExp );
-
-                recordJythonCall( "openTiffSeries" );
             }
 
+            recordJythonCall();
             fixVoxelSpacing( outputImage );
-
             handleOutputImage( autoContrast, false );
         });
-    }
-
-    private void recordJythonCall( String apiFunctionName )
-    {
-        MacroRecorder recorder = new MacroRecorder( outputImage );
-        recorder.recordImportStatements( true );
-        recorder.setAPIFunction( apiFunctionName );
-        recorder.addAPIFunctionParameter( recorder.quote( directory.toString() ) );
-        recorder.addAPIFunctionParameter( recorder.quote( regExp ) );
-        if ( apiFunctionName.equals( "openHdf5Series" ) )
-            recorder.addAPIFunctionParameter( recorder.quote( hdf5DataSetName ) );
-        recorder.record();
     }
 
     private void fixVoxelSpacing( Image< R > image )
@@ -100,6 +84,22 @@ public class OpenFileSeriesFileSeriesCommand< R extends RealType< R > & NativeTy
     @Override
     public void recordJythonCall()
     {
+        if ( regExp.endsWith( ".h5" ) )
+            recordJythonCall( "openHdf5Series" );
 
+        if ( regExp.contains( ".tif" ) )
+            recordJythonCall( "openTiffSeries" );
+    }
+
+    private void recordJythonCall( String apiFunctionName )
+    {
+        MacroRecorder recorder = new MacroRecorder( outputImage );
+        recorder.recordImportStatements( true );
+        recorder.setAPIFunction( apiFunctionName );
+        recorder.addAPIFunctionParameter( recorder.quote( directory.toString() ) );
+        recorder.addAPIFunctionParameter( recorder.quote( regExp ) );
+        if ( apiFunctionName.equals( "openHdf5Series" ) )
+            recorder.addAPIFunctionParameter( recorder.quote( hdf5DataSetName ) );
+        recorder.record();
     }
 }

@@ -108,6 +108,10 @@ Below examples work both with and without zero-padding, e.g. "T0000", "T0001" wo
     <td class="a"><b>.*_t(?&lt;T&gt;\d+).*_z(?&lt;Z&gt;\d+).*_c(?&lt;C>\d+).*</b></td>
     <td>One file contains a a single plane, such as e.g., "image_t00_z000_c1.tif, image_t00_z000_c2.tif, ...".</td>
   </tr>
+  <tr>
+    <td class="a"><b>.*--t(?&lt;T&gt;\d+)--Z(?&lt;Z&gt;\d+)--C(?&lt;C>\d+).*</b></td>
+    <td>Works for Leica DSL. One file contains a a single plane, such as e.g., "Position001_Target--t00--Z00--C00.tif".</td>
+  </tr>
 </table>
 </p>
 

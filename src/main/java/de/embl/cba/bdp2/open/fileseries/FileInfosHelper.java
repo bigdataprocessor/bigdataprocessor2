@@ -17,15 +17,13 @@ import java.util.regex.Pattern;
 
 public class FileInfosHelper
 {
-    public static void configureFileInfos5D( FileInfos fileInfos, String namingScheme, String filterPattern, List< String > channelSubset )
+    public static void configureFileInfos5D( FileInfos fileInfos, String namingScheme, List< String > channelSubset, String[][] fileLists )
     {
         String directory = fileInfos.directory;
 
-        String[][] fileLists = getFilesInFolders( directory, filterPattern );
-
         if ( fileLists == null )
         {
-            Logger.error( "Error during file parsing..." );
+            Logger.error( "Not files matching the regular expression found in directory " + directory );
             return;
         }
 
@@ -312,7 +310,7 @@ public class FileInfosHelper
         }
     }
 
-    private static String[][] getFilesInFolders( String directory, String filterPattern )
+    public static String[][] getFilesInFolders( String directory, String filterPattern )
     {
         if ( ! new File( directory ).exists() )
         {

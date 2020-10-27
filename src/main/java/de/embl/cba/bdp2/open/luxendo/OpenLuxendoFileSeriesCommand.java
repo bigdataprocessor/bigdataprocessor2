@@ -35,6 +35,7 @@ public class OpenLuxendoFileSeriesCommand< R extends RealType< R > & NativeType<
     public static String STACK_INDEX_PARAMETER = "stackIndex";
     private MacroRecorder recorder;
     private String regExp;
+    private List< String > selectedChannels;
 
     public void run()
     {
@@ -47,45 +48,38 @@ public class OpenLuxendoFileSeriesCommand< R extends RealType< R > & NativeType<
                 directory = new File( directory.getParent() );
             }
 
-
             FileInfos fileInfos = new FileInfos( directory.toString(), regExp, regExp, "Data" );
             final ChannelChooserDialog dialog = new ChannelChooserDialog( Arrays.asList( fileInfos.channelNames ) );
-            List< String > selectedChannels = dialog.getChannelsViaDialog();
-
-            // TODO: avoid that the fileInfos are fetched two times....
+            selectedChannels = dialog.getChannelsViaDialog();
 
             outputImage = BigDataProcessor2.openHdf5Series(
                     directory.toString(),
+                    fileInfos.getFilesInFolders(), // pass this on for performance
                     regExp,
                     "Data",
                     selectedChannels );
 
-            recordMacro( regExp, selectedChannels );
-
+            recordMacro();
             handleOutputImage( true, false );
         });
     }
 
-    public void recordMacro( String regExp, List< String > selectedChannels )
+    public void recordMacro()
     {
-        removeOpenLuxendoCommandCallFromRecorder();
-
-        // TODO: one does not need both! depends on the recording mode! make a distinction!
-        recorder = new MacroRecorder( OpenLuxendoChannelsFileSeriesCommand.COMMAND_FULL_NAME, viewingModality, outputImage );
-        recorder.addCommandParameter( AbstractOpenFileSeriesCommand.DIRECTORY_PARAMETER, directory.getAbsolutePath() );
-        recorder.addCommandParameter( AbstractOpenFileSeriesCommand.ARBITRARY_PLANE_SLICING_PARAMETER, enableArbitraryPlaneSlicing );
-        recorder.addCommandParameter( OpenLuxendoFileSeriesCommand.STACK_INDEX_PARAMETER, stackIndex );
-        recorder.addCommandParameter( OpenLuxendoChannelsFileSeriesCommand.CHANNELS_PARAMETER, String.join( ",", selectedChannels ) );
-
-        // use the recordJythonCall function instead.
-        recorder.recordImportStatements( true );
-        recorder.setAPIFunction( "openHdf5Series" );
-        recorder.addAPIFunctionParameter( recorder.quote( directory.toString() ) );
-        recorder.addAPIFunctionParameter( recorder.quote( regExp ) );
-        recorder.addAPIFunctionParameter( recorder.quote( "Data" ) );
-        recorder.record();
+        if ( MacroRecorder.isScriptMode() )
+        {
+            recordJythonCall();
+        }
+        else
+        {
+            removeOpenLuxendoCommandCallFromRecorder();
+            recorder = new MacroRecorder( OpenLuxendoChannelsFileSeriesCommand.COMMAND_FULL_NAME, viewingModality, outputImage );
+            recorder.addCommandParameter( AbstractOpenFileSeriesCommand.DIRECTORY_PARAMETER, directory.getAbsolutePath() );
+            recorder.addCommandParameter( AbstractOpenFileSeriesCommand.ARBITRARY_PLANE_SLICING_PARAMETER, enableArbitraryPlaneSlicing );
+            recorder.addCommandParameter( OpenLuxendoFileSeriesCommand.STACK_INDEX_PARAMETER, stackIndex );
+            recorder.addCommandParameter( OpenLuxendoChannelsFileSeriesCommand.CHANNELS_PARAMETER, String.join( ",", selectedChannels ) );
+        }
     }
-
 
     private void removeOpenLuxendoCommandCallFromRecorder()
     {
@@ -111,6 +105,13 @@ public class OpenLuxendoFileSeriesCommand< R extends RealType< R > & NativeType<
     @Override
     public void recordJythonCall()
     {
-        // TODO: use this instead
+        recorder = new MacroRecorder();
+        recorder.recordImportStatements( true );
+        recorder.setAPIFunction( "openHdf5Series" );
+        recorder.addAPIFunctionParameter( recorder.quote( directory.toString() ) );
+        recorder.addAPIFunctionParameter( recorder.quote( regExp ) );
+        recorder.addAPIFunctionParameter( recorder.quote( "Data" ) );
+        recorder.addAPIFunctionParameter( selectedChannels.toArray( new String[0] ) );
+        recorder.record();
     }
 }

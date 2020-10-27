@@ -37,6 +37,7 @@ import ome.units.unit.Unit;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -64,12 +65,21 @@ public class BigDataProcessor2
 
 
     public static < R extends RealType< R > & NativeType< R > >
-    Image< R > openWithBioFormats(
+    Image< R > openBioFormats(
             String filePath,
             int seriesIndex )
     {
         DebugTools.setRootLevel( "OFF" ); // Bio-Formats
         BioFormatsCachedCellImgCreator< R > cellImgCreator = new BioFormatsCachedCellImgCreator<>( filePath, seriesIndex );
+
+        // TODO: support selecting from multi-series files
+        int seriesCount = cellImgCreator.getSeriesCount();
+        if ( seriesCount > 1 )
+        {
+            Logger.warning( "File contains " + seriesCount + " image series, opening the first one." );
+            Logger.warning( "If you need better support for multi-series files please report here:" );
+            Logger.warning( "https://forum.image.sc/t/bigdataprocessor/34963" );
+        }
         Image< R > image = new Image<>( cellImgCreator );
         return image;
     }
@@ -151,16 +161,28 @@ public class BigDataProcessor2
         return image;
     }
 
-    @Deprecated
+    /**
+     *
+     * @param directory
+     * @param filesInFolders
+     *                  The list of all files (in subfolders). Depending on the circumstances obtaining this file list
+     *                  can take quite long. Thus, if one has obtained it already one can provide it here for performance reasons.
+     * @param regExp
+     * @param hdf5DataSetName
+     * @param channelSubset
+     *                  The channels to be loaded.
+     * @param <R>
+     * @return
+     */
     public static < R extends RealType< R > & NativeType< R > >
     Image< R > openHdf5Series(
             String directory,
-            String namingScheme,
-            String filterPattern,
+            String[][] filesInFolders,
+            String regExp,
             String hdf5DataSetName,
             List< String > channelSubset )
     {
-        FileInfos fileInfos = new FileInfos( directory, namingScheme, filterPattern, hdf5DataSetName, channelSubset );
+        FileInfos fileInfos = new FileInfos( directory, regExp, regExp, hdf5DataSetName, channelSubset, filesInFolders );
         FileSeriesCachedCellImgCreator< R > cachedCellImgCreator = new FileSeriesCachedCellImgCreator( fileInfos );
         Image< R > image = new Image( cachedCellImgCreator );
         return image;
@@ -178,6 +200,17 @@ public class BigDataProcessor2
         Image< R > image = new Image( cachedCellImgCreator );
         return image;
     }
+
+    public static < R extends RealType< R > & NativeType< R > >
+    Image< R > openHdf5Series(
+            String directory,
+            String regExp,
+            String hdf5DataSetName,
+            String[] channelSubset )
+    {
+        return openHdf5Series( directory, regExp, hdf5DataSetName, Arrays.asList( channelSubset ) );
+    }
+
     public static < R extends RealType< R > & NativeType< R > >
     Image< R > openFileSeries( FileInfos fileInfos )
     {

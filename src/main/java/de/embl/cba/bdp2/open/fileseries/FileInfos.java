@@ -4,7 +4,6 @@ import ch.systemsx.cisd.hdf5.HDF5DataSetInformation;
 import ch.systemsx.cisd.hdf5.HDF5Factory;
 import ch.systemsx.cisd.hdf5.IHDF5Reader;
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.open.ChannelSubsetter;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.imaris.ImarisUtils;
 import ij.io.FileInfo;
@@ -59,6 +58,7 @@ public class FileInfos
     public int compression;
     public int numTiffStrips;
     public String[] channelNames;
+    private String[][] filesInFolders;
 
 
     public FileInfos(
@@ -94,6 +94,24 @@ public class FileInfos
             List< String > channelSubset
     )
     {
+        fetchFileInfos( directory, namingScheme, filter, h5DataSetName, channelSubset );
+    }
+
+    public FileInfos(
+            String directory,
+            String namingScheme,
+            String filter,
+            String h5DataSetName,
+            List< String > channelSubset,
+            String[][] filesInFolders
+    )
+    {
+        this.filesInFolders = filesInFolders;
+        fetchFileInfos( directory, namingScheme, filter, h5DataSetName, channelSubset );
+    }
+
+    private void fetchFileInfos( String directory, String namingScheme, String filter, String h5DataSetName, List< String > channelSubset )
+    {
         DebugTools.setRootLevel( "OFF" ); // Bio-Formats
 
         Logger.info( "Directory: " + directory );
@@ -101,14 +119,22 @@ public class FileInfos
 
         this.namingScheme = namingScheme;
         this.filter = filter;
-        this.directory  = Utils.fixDirectoryFormatAndAppendFileSeparator( directory );
+        this.directory  = Utils.ensureDirectoryEndsWithFileSeparator( directory );
         this.h5DataSetName = h5DataSetName;
 
         adaptDirectorySeparatorToOperatingSystem();
 
-        FileInfosHelper.configureFileInfos5D( this, this.namingScheme, this.filter, channelSubset );
+        if ( filesInFolders == null )
+            filesInFolders = FileInfosHelper.getFilesInFolders( this.directory, this.filter );
+
+        FileInfosHelper.configureFileInfos5D( this, this.namingScheme, channelSubset, filesInFolders );
 
         Logger.info( this.toString() );
+    }
+
+    public String[][] getFilesInFolders()
+    {
+        return filesInFolders;
     }
 
     private void adaptDirectorySeparatorToOperatingSystem( )

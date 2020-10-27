@@ -6,27 +6,22 @@ import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.macro.MacroRecorder;
 import de.embl.cba.bdp2.open.AbstractOpenCommand;
 import de.embl.cba.bdp2.open.AbstractOpenFileCommand;
-import de.embl.cba.bdp2.open.AbstractOpenFileSeriesCommand;
-import mdbtools.libmdb.file;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;
-import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
 import javax.swing.*;
 
-import java.io.File;
-
 import static de.embl.cba.bdp2.utils.Utils.COMMAND_BDP2_PREFIX;
 
-@Plugin(type = Command.class, menuPath = Utils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractOpenCommand.COMMAND_OPEN_PATH + OpenWithBdvBioFormatsCommand.COMMAND_FULL_NAME )
-public class OpenWithBdvBioFormatsCommand< R extends RealType< R > & NativeType< R >> extends AbstractOpenFileCommand< R >
+@Plugin(type = Command.class, menuPath = Utils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractOpenCommand.COMMAND_OPEN_PATH + OpenBdvBioFormatsCommand.COMMAND_FULL_NAME )
+public class OpenBdvBioFormatsCommand< R extends RealType< R > & NativeType< R >> extends AbstractOpenFileCommand< R >
 {
-    public static final String COMMAND_NAME = "Open with Bio-Formats...";
+    public static final String COMMAND_NAME = "Open Bio-Formats...";
     public static final String COMMAND_FULL_NAME = COMMAND_BDP2_PREFIX + COMMAND_NAME;
 
-    @Parameter( label = "Series index"  )
+//    @Parameter( label = "Series index"  )
     private int seriesIndex = 0;
 
     @Override
@@ -35,7 +30,8 @@ public class OpenWithBdvBioFormatsCommand< R extends RealType< R > & NativeType<
             String filePath = file.getAbsolutePath();
             Logger.info( "# " + COMMAND_NAME);
             Logger.info( "Opening file: " + filePath);
-            outputImage = BigDataProcessor2.openWithBioFormats( filePath, seriesIndex );
+
+            outputImage = BigDataProcessor2.openBioFormats( filePath, seriesIndex );
             handleOutputImage( true, false );
             recordJythonCall();
         });
@@ -45,7 +41,7 @@ public class OpenWithBdvBioFormatsCommand< R extends RealType< R > & NativeType<
     {
         MacroRecorder recorder = new MacroRecorder( outputImage );
         recorder.recordImportStatements( true );
-        recorder.setAPIFunction( "openWithBioFormats" );
+        recorder.setAPIFunction( "openBioFormats" );
         recorder.addAPIFunctionParameter( recorder.quote( file.getAbsolutePath() ) );
         recorder.addAPIFunctionParameter( String.valueOf( seriesIndex ) );
         recorder.record();

@@ -6,6 +6,10 @@ import ch.epfl.biop.bdv.bioformats.bioformatssource.BioFormatsBdvOpener;
 import ch.epfl.biop.bdv.bioformats.bioformatssource.BioFormatsBdvSource;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.open.CachedCellImgCreator;
+import loci.formats.ChannelSeparator;
+import loci.formats.IFormatReader;
+import loci.formats.ImageReader;
+import loci.formats.Memoizer;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.cache.img.CachedCellImg;
 import net.imglib2.cache.img.DiskCachedCellImgOptions;
@@ -33,31 +37,34 @@ public class BioFormatsCachedCellImgCreator < R extends RealType< R > & NativeTy
 	private int[] cacheSize;
 	private ARGBType[] channelColors;
 	private double[] voxelSize = new double[3];
+	private final int seriesCount;
 
 	public BioFormatsCachedCellImgCreator( String filePath, int series ) {
 
 		imageName = FilenameUtils.removeExtension( new File( filePath ).getName() ); // + "_S"+series;
 
-		List<Source> sources =
-				BioFormatsBdvOpener.getOpener()
-						.location(filePath)
-						.auto() // patches opener based on specific file formats (-> PR to be  modified)
-						//.splitRGBChannels() // split RGB channels into 3 channels
-						//.switchZandC(true) // switch Z and C
-						//.centerPositionConvention() // bioformats location is center of the image
-						.cornerPositionConvention() // bioformats location is corner of the image
-						//.useCacheBlockSizeFromBioFormats(true) // true by default
-						//.cacheBlockSize(512,512,10) // size of cache block used by diskcached image
-						.micrometer() // unit = micrometer
-						//.millimeter() // unit = millimeter
-						//.unit(UNITS.YARD) // Ok, if you really want...
-						//.getConcreteSources()
-						.cacheBounded( 100 ) // TODO : is this value ok ?
-						.positionReferenceFrameLength( new Length(1, UNITS.MICROMETER) ) // Compulsory
-						.voxSizeReferenceFrameLength( new Length(100, UNITS.MICROMETER ))
-						.getConcreteSources(series+".*") // code for all channels of the series indexed 'series'
-						.stream().map(src -> (Source) src).collect(Collectors.toList());
+		BioFormatsBdvOpener opener = BioFormatsBdvOpener.getOpener()
+				.location( filePath )
+				.auto() // patches opener based on specific file formats (-> PR to be  modified)
+				//.splitRGBChannels() // split RGB channels into 3 channels
+				//.switchZandC(true) // switch Z and C
+				//.centerPositionConvention() // bioformats location is center of the image
+				.cornerPositionConvention() // bioformats location is corner of the image
+				//.useCacheBlockSizeFromBioFormats(true) // true by default
+				//.cacheBlockSize(512,512,10) // size of cache block used by diskcached image
+				.micrometer() // unit = micrometer
+				//.millimeter() // unit = millimeter
+				//.unit(UNITS.YARD) // Ok, if you really want...
+				//.getConcreteSources()
+				.cacheBounded( 100 ) // TODO : is this value ok ?
+				.positionReferenceFrameLength( new Length( 1, UNITS.MICROMETER ) ) // Compulsory
+				.voxSizeReferenceFrameLength( new Length( 100, UNITS.MICROMETER ) );
 
+		seriesCount = opener.getNewReader().getSeriesCount();
+
+		List<Source> sources = opener
+				.getConcreteSources(series+".*") // code for all channels of the series indexed 'series'
+				.stream().map(src -> (Source) src).collect(Collectors.toList());
 
 		List<BioFormatsBdvSource> sourcesBF = sources.stream().map(src ->
 				BioFormatsBdvSource.class.cast( src )
@@ -150,5 +157,10 @@ public class BioFormatsCachedCellImgCreator < R extends RealType< R > & NativeTy
 	{
 		// TODO: in fact here the raiXYCZT should be built with a cache according to the function arguments
 		return raiXYCZT;
+	}
+
+	public int getSeriesCount()
+	{
+		return seriesCount;
 	}
 }

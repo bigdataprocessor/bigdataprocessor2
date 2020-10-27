@@ -17,7 +17,7 @@ public class DevelopBioFormatsOpening
 
 		String filePath = "/Volumes/cba/exchange/bigdataprocessor/data/czi/20180125CAGtdtomato_ERT2CreLuVeLu_notamox_03_Average_Subset.czi";
 		int series = 0;
-		Image< R > image = BigDataProcessor2.openWithBioFormats( filePath, series );
+		Image< R > image = BigDataProcessor2.openBioFormats( filePath, series );
 		BigDataProcessor2.showImage( image );
 	}
 }

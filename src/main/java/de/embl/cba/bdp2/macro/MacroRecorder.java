@@ -115,6 +115,11 @@ public class MacroRecorder
 		}
 	}
 
+	public static boolean isScriptMode()
+	{
+		return Recorder.scriptMode();
+	}
+
 	public void record()
 	{
 		new Thread( () -> {
@@ -127,6 +132,7 @@ public class MacroRecorder
 
 					if ( recordImportStatments )
 					{
+						recorder.recordString( "# To run this script, please select language: Python\n" );
 						recorder.recordString( "from de.embl.cba.bdp2 import BigDataProcessor2;\n" );
 						recorder.recordString( "from jarray import array;\n" );
 						recorder.recordString( "from de.embl.cba.bdp2.save import SavingSettings;\n" );
@@ -147,7 +153,7 @@ public class MacroRecorder
 					if ( outputImage != null )
 					{
 						if ( inputImage != null && ! inputImage.getName().equals( outputImage.getName() ) )
-							recorder.recordString( "image.setName( " + outputImage.getName() + ");\n" );
+							recorder.recordString( "image.setName( " + quote(outputImage.getName() ) + " );\n" );
 					}
 
 					if ( recordShowImageCall )
@@ -221,9 +227,9 @@ public class MacroRecorder
 		this.recordShowImageCall = recordShowImageCall;
 	}
 
-	public void addAPIFunctionParameter( String[] channelNames )
+	public void addAPIFunctionParameter( String[] strings )
 	{
-
+		parameters.add( asJythonArray( strings ) );
 	}
 
 	public void addAPIFunctionPrequel( String apiFunctionPrequel )

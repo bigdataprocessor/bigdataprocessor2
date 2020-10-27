@@ -12,6 +12,7 @@ import javax.swing.*;
 import static de.embl.cba.bdp2.utils.Utils.COMMAND_BDP2_PREFIX;
 
 @Plugin(type = Command.class, menuPath = Utils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractOpenCommand.COMMAND_OPEN_PATH + OpenEMTiffPlanesFileSeriesCommand.COMMAND_FULL_NAME )
+@Deprecated
 public class OpenEMTiffPlanesFileSeriesCommand< R extends RealType< R > & NativeType< R > > extends AbstractOpenFileSeriesCommand< R >
 {
     public static final String COMMAND_NAME = "Open EM Tiff Planes...";
