@@ -1,5 +1,7 @@
 package de.embl.cba.bdp2.open;
 
+import bdv.util.RandomAccessibleSource;
+import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.cache.img.CachedCellImg;
 import net.imglib2.cache.img.DiskCachedCellImgOptions;
 import net.imglib2.type.NativeType;
@@ -27,5 +29,7 @@ public interface CachedCellImgCreator< R extends RealType< R > & NativeType< R >
 
 	int[] getDefaultCellDimsXYZCT(); // "default": good for fast browsing in BDV
 
-	CachedCellImg< R, ? > createCachedCellImg( int[] cellDimsXYZCT, DiskCachedCellImgOptions.CacheType cacheType, long cacheSize );
+	//CachedCellImg< R, ? > createCachedCellImg( int[] cellDimsXYZCT, DiskCachedCellImgOptions.CacheType cacheType, long cacheSize );
+
+	RandomAccessibleInterval< R > createCachedCellImg(int[] cellDimsXYZCT, DiskCachedCellImgOptions.CacheType cacheType, long cacheSize );
 }

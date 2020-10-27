@@ -5,6 +5,7 @@ import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.log.progress.Progress;
 import de.embl.cba.bdp2.log.progress.ProgressListener;
+import de.embl.cba.bdp2.open.bioformats.BioFormatsCachedCellImgCreator;
 import de.embl.cba.bdp2.open.fileseries.FileInfos;
 import de.embl.cba.bdp2.open.fileseries.FileSeriesCachedCellImgCreator;
 import de.embl.cba.bdp2.process.align.channelshift.ChannelShifter;
@@ -59,6 +60,17 @@ public class BigDataProcessor2
     Image< R > bin( Image< R > image, long[] spanXYZCT )
     {
         return Binner.bin( image, spanXYZCT );
+    }
+
+
+    public static < R extends RealType< R > & NativeType< R > >
+    Image< R > openImageWithBioformats(
+            String directory,
+            String dataLocation,
+            int series )
+    {
+        DebugTools.setRootLevel( "OFF" ); // Bio-Formats
+        return (Image< R >) (new BioFormatsCachedCellImgCreator<>(dataLocation,series).createImage());
     }
 
     public static < R extends RealType< R > & NativeType< R > >
