@@ -1,11 +1,10 @@
 package de.embl.cba.bdp2;
 
 import de.embl.cba.bdp2.open.AbstractOpenFileSeriesCommand;
-import de.embl.cba.bdp2.open.OpenEMTiffPlanesFileSeriesCommand;
 import de.embl.cba.bdp2.open.bioformats.OpenBdvBioFormatsCommand;
+import de.embl.cba.bdp2.open.fileseries.OpenEMTiffPlanesFileSeriesCommand;
 import de.embl.cba.bdp2.open.fileseries.OpenFileSeriesFileSeriesCommand;
 import de.embl.cba.bdp2.open.fileseries.OpenFileSeriesHelpCommand;
-import de.embl.cba.bdp2.open.leica.OpenLeicaDSLTiffPlanesFileSeriesCommand;
 import de.embl.cba.bdp2.open.luxendo.OpenLuxendoFileSeriesCommand;
 import de.embl.cba.bdp2.process.bin.BinCommand;
 import de.embl.cba.bdp2.process.bin.BinDialog;
@@ -270,14 +269,14 @@ public class BigDataProcessor2MenuActions implements ActionListener {
                 Services.getCommandService().run( DownloadAndOpenSampleDataCommand.class, true );
             });
         }
-//        else if( e.getActionCommand().equalsIgnoreCase( OpenEMTiffPlanesFileSeriesCommand.COMMAND_NAME ) )
-//        {
-//            BigDataProcessor2.threadPool.submit(() ->
-//            {
-//                OpenEMTiffPlanesFileSeriesCommand.parentViewer = viewer;
-//                Services.getCommandService().run( OpenEMTiffPlanesFileSeriesCommand.class, true );
-//            });
-//        }
+        else if( e.getActionCommand().equalsIgnoreCase( OpenEMTiffPlanesFileSeriesCommand.COMMAND_NAME ) )
+        {
+            BigDataProcessor2.threadPool.submit(() ->
+            {
+                OpenEMTiffPlanesFileSeriesCommand.parentViewer = viewer;
+                Services.getCommandService().run( OpenEMTiffPlanesFileSeriesCommand.class, true );
+            });
+        }
         else if( e.getActionCommand().equalsIgnoreCase( OpenFileSeriesFileSeriesCommand.COMMAND_NAME ) )
         {
             BigDataProcessor2.threadPool.submit(() ->

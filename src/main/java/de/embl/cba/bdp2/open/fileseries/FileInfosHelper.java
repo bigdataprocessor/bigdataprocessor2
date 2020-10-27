@@ -351,7 +351,7 @@ public class FileInfosHelper
 
             if ( filesInFolder == null )
             {
-                throw new UnsupportedOperationException( "No files found in folder: " + subFolder);
+                throw new UnsupportedOperationException( "No files found in folder: " + subFolder + " that match " + filterPattern );
             }
             else
             {

@@ -1,10 +1,9 @@
 package de.embl.cba.bdp2;
 
-import de.embl.cba.bdp2.open.OpenEMTiffPlanesFileSeriesCommand;
 import de.embl.cba.bdp2.open.bioformats.OpenBdvBioFormatsCommand;
+import de.embl.cba.bdp2.open.fileseries.OpenEMTiffPlanesFileSeriesCommand;
 import de.embl.cba.bdp2.open.fileseries.OpenFileSeriesFileSeriesCommand;
 import de.embl.cba.bdp2.open.fileseries.OpenFileSeriesHelpCommand;
-import de.embl.cba.bdp2.open.leica.OpenLeicaDSLTiffPlanesFileSeriesCommand;
 import de.embl.cba.bdp2.open.luxendo.OpenLuxendoFileSeriesCommand;
 import de.embl.cba.bdp2.process.AbstractImageProcessingCommand;
 import de.embl.cba.bdp2.open.samples.DownloadAndOpenSampleDataCommand;
@@ -75,8 +74,8 @@ public class BigDataProcessor2Menu extends JMenu
         // TODO: could this be auto-populated using SciJava annotation?
         addMenuItem( openMenu, OpenFileSeriesFileSeriesCommand.COMMAND_NAME );
         addMenuItem( openMenu, OpenFileSeriesHelpCommand.COMMAND_NAME );
+        addMenuItem( openMenu, OpenEMTiffPlanesFileSeriesCommand.COMMAND_NAME ); // TODO: Remove and use regExp instead?
         addMenuItem( openMenu, OpenBdvBioFormatsCommand.COMMAND_NAME );
-//        addMenuItem( openMenu, OpenEMTiffPlanesFileSeriesCommand.COMMAND_NAME ); // TODO: Remove and use regExp instead?
         addMenuItem( openMenu, OpenLuxendoFileSeriesCommand.COMMAND_NAME );
 //        addMenuItem( openMenu, OpenLeicaDSLTiffPlanesFileSeriesCommand.COMMAND_NAME ); // TODO: Remove and use regExp instead?
         addMenuItem( openMenu, DownloadAndOpenSampleDataCommand.COMMAND_NAME );
