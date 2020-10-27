@@ -16,34 +16,31 @@ import net.imglib2.view.Views;
 import ome.units.UNITS;
 import ome.units.quantity.Length;
 import ome.units.unit.Unit;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class BioFormatsCachedCellImgCreator < R extends RealType< R > & NativeType< R > > implements CachedCellImgCreator< R >
 {
-	RandomAccessibleInterval raiXYCZT;
+	private RandomAccessibleInterval raiXYCZT;
+	private String imageName = "";
+	private long sizeX, sizeY, sizeZ;
+	private int sizeC, sizeT;
+	private int[] cacheSize;
+	private ARGBType[] channelColors;
+	private double[] voxelSize = new double[3];
 
-	String imageName = "";
+	public BioFormatsCachedCellImgCreator( String filePath, int series ) {
 
-	long sizeX, sizeY, sizeZ;
-
-	int sizeC, sizeT;
-
-	int[] cacheSize;
-
-	ARGBType[] channelColors;
-
-	double[] voxelSize = new double[3];
-
-	public BioFormatsCachedCellImgCreator(String dataLocation, int series ) {
-
-		imageName = dataLocation+"_s"+series;
+		imageName = FilenameUtils.removeExtension( new File( filePath ).getName() ); // + "_S"+series;
 
 		List<Source> sources =
 				BioFormatsBdvOpener.getOpener()
-						.location(dataLocation)
+						.location(filePath)
 						.auto() // patches opener based on specific file formats (-> PR to be  modified)
 						//.splitRGBChannels() // split RGB channels into 3 channels
 						//.switchZandC(true) // switch Z and C
@@ -51,13 +48,13 @@ public class BioFormatsCachedCellImgCreator < R extends RealType< R > & NativeTy
 						.cornerPositionConvention() // bioformats location is corner of the image
 						//.useCacheBlockSizeFromBioFormats(true) // true by default
 						//.cacheBlockSize(512,512,10) // size of cache block used by diskcached image
-						//.micronmeter() // unit = micrometer
-						.millimeter() // unit = millimeter
+						.micrometer() // unit = micrometer
+						//.millimeter() // unit = millimeter
 						//.unit(UNITS.YARD) // Ok, if you really want...
 						//.getConcreteSources()
-						.cacheBounded(100) // TODO : is this value ok ?
-						.positionReferenceFrameLength(new Length(1, UNITS.MICROMETER)) // Compulsory
-						.voxSizeReferenceFrameLength(new Length(100, UNITS.MICROMETER))
+						.cacheBounded( 100 ) // TODO : is this value ok ?
+						.positionReferenceFrameLength( new Length(1, UNITS.MICROMETER) ) // Compulsory
+						.voxSizeReferenceFrameLength( new Length(100, UNITS.MICROMETER ))
 						.getConcreteSources(series+".*") // code for all channels of the series indexed 'series'
 						.stream().map(src -> (Source) src).collect(Collectors.toList());
 
@@ -97,7 +94,7 @@ public class BioFormatsCachedCellImgCreator < R extends RealType< R > & NativeTy
 
 		cacheSize = new int[]{cacheSizeXYZ[0], cacheSizeXYZ[1], cacheSizeXYZ[2],1,1};
 
-		raiXYCZT = Views.stack(raisXYZCT);
+		raiXYCZT = Views.stack( raisXYZCT );
 	}
 
 	@Override
@@ -139,7 +136,7 @@ public class BioFormatsCachedCellImgCreator < R extends RealType< R > & NativeTy
 	@Override
 	public Unit< Length > getVoxelUnit()
 	{
-		return UNITS.MILLIMETER;
+		return UNITS.MICROMETER;
 	}
 
 	@Override
@@ -149,16 +146,9 @@ public class BioFormatsCachedCellImgCreator < R extends RealType< R > & NativeTy
 	}
 
 	@Override
-	public RandomAccessibleInterval< R > createCachedCellImg(int[] cellDimsXYZCT, DiskCachedCellImgOptions.CacheType cacheType, long cacheSize )
+	public RandomAccessibleInterval< R > createCachedCellImg( int[] cellDimsXYZCT, DiskCachedCellImgOptions.CacheType cacheType, long cacheSize )
 	{
+		// TODO: in fact here the raiXYCZT should be built with a cache according to the function arguments
 		return raiXYCZT;
-	}
-
-	// TODO: this makes not much sense, just make it this Image
-	public Image< R > createImage()
-	{
-		Image< R > image = new Image( this );
-
-		return image;
 	}
 }

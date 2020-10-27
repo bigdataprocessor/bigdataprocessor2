@@ -30,7 +30,7 @@ public class OpenWithBdvBioFormatsCommand< R extends RealType< R > & NativeType<
     @Override
     public void run() {
         SwingUtilities.invokeLater( () ->  {
-            outputImage = BigDataProcessor2.openImageWithBioformats( directory.toString(), file.getAbsolutePath(), seriesIndex );
+            outputImage = BigDataProcessor2.openWithBioFormats( file.getAbsolutePath(), seriesIndex );
 
             handleOutputImage( true, false );
         });

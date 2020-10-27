@@ -64,15 +64,17 @@ public class BigDataProcessor2
 
 
     public static < R extends RealType< R > & NativeType< R > >
-    Image< R > openImageWithBioformats(
-            String directory,
-            String dataLocation,
-            int series )
+    Image< R > openWithBioFormats(
+            String filePath,
+            int seriesIndex )
     {
         DebugTools.setRootLevel( "OFF" ); // Bio-Formats
-        return (Image< R >) (new BioFormatsCachedCellImgCreator<>(dataLocation,series).createImage());
+        BioFormatsCachedCellImgCreator< R > cellImgCreator = new BioFormatsCachedCellImgCreator<>( filePath, seriesIndex );
+        Image< R > image = new Image<>( cellImgCreator );
+        return image;
     }
 
+    @Deprecated
     public static < R extends RealType< R > & NativeType< R > >
     Image< R > openTiffSeries(
             File directory,
@@ -96,9 +98,8 @@ public class BigDataProcessor2
             String regExp )
     {
         FileInfos fileInfos = new FileInfos( directory, regExp );
-
-        final Image< R > image = new FileSeriesCachedCellImgCreator( fileInfos ).createImage();
-
+        FileSeriesCachedCellImgCreator< R > cachedCellImgCreator = new FileSeriesCachedCellImgCreator( fileInfos );
+        Image< R > image = new Image( cachedCellImgCreator );
         return image;
     }
 
@@ -110,9 +111,8 @@ public class BigDataProcessor2
             String filterPattern )
     {
         FileInfos fileInfos = new FileInfos( directory, namingScheme, filterPattern );
-
-        final Image< R > image = new FileSeriesCachedCellImgCreator( fileInfos ).createImage();
-
+        FileSeriesCachedCellImgCreator< R > cachedCellImgCreator = new FileSeriesCachedCellImgCreator( fileInfos );
+        Image< R > image = new Image( cachedCellImgCreator );
         return image;
     }
 
@@ -131,12 +131,9 @@ public class BigDataProcessor2
     public static < R extends RealType< R > & NativeType< R > >
     Image< R > openHdf5Series( String directory, String regularExpression, String hdf5DataSetName )
     {
-        DebugTools.setRootLevel( "OFF" ); // Bio-Formats
-
         FileInfos fileInfos = new FileInfos( directory, regularExpression, regularExpression, hdf5DataSetName, null );
-
-        final Image< R > image = new FileSeriesCachedCellImgCreator( fileInfos ).createImage();
-
+        FileSeriesCachedCellImgCreator< R > cachedCellImgCreator = new FileSeriesCachedCellImgCreator( fileInfos );
+        Image< R > image = new Image( cachedCellImgCreator );
         return image;
     }
 
@@ -149,7 +146,8 @@ public class BigDataProcessor2
     {
         DebugTools.setRootLevel( "OFF" ); // Bio-Formats
         FileInfos fileInfos = new FileInfos( directory, loadingScheme, filterPattern, hdf5DataSetName, null );
-        final Image< R > image = new FileSeriesCachedCellImgCreator( fileInfos ).createImage();
+        FileSeriesCachedCellImgCreator< R > cachedCellImgCreator = new FileSeriesCachedCellImgCreator( fileInfos );
+        Image< R > image = new Image( cachedCellImgCreator );
         return image;
     }
 
@@ -163,7 +161,8 @@ public class BigDataProcessor2
             List< String > channelSubset )
     {
         FileInfos fileInfos = new FileInfos( directory, namingScheme, filterPattern, hdf5DataSetName, channelSubset );
-        final Image< R > image = new FileSeriesCachedCellImgCreator( fileInfos ).createImage();
+        FileSeriesCachedCellImgCreator< R > cachedCellImgCreator = new FileSeriesCachedCellImgCreator( fileInfos );
+        Image< R > image = new Image( cachedCellImgCreator );
         return image;
     }
 
@@ -175,13 +174,15 @@ public class BigDataProcessor2
             List< String > channelSubset )
     {
         FileInfos fileInfos = new FileInfos( directory, regExp, regExp, hdf5DataSetName, channelSubset );
-        final Image< R > image = new FileSeriesCachedCellImgCreator( fileInfos ).createImage();
+        FileSeriesCachedCellImgCreator< R > cachedCellImgCreator = new FileSeriesCachedCellImgCreator( fileInfos );
+        Image< R > image = new Image( cachedCellImgCreator );
         return image;
     }
     public static < R extends RealType< R > & NativeType< R > >
     Image< R > openFileSeries( FileInfos fileInfos )
     {
-        final Image< R > image = new FileSeriesCachedCellImgCreator( fileInfos ).createImage();
+        FileSeriesCachedCellImgCreator< R > cachedCellImgCreator = new FileSeriesCachedCellImgCreator( fileInfos );
+        Image< R > image = new Image( cachedCellImgCreator );
         return image;
     }
 

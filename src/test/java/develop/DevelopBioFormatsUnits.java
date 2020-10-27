@@ -8,10 +8,6 @@ public class DevelopBioFormatsUnits
 {
 	public static void main( String[] args )
 	{
-		Unit micrometer = BioFormatsMetaDataHelper.getUnitFromString( "micrometer" );
-		System.out.println( micrometer.getSymbol() );
 
-		Unit unitFromString = Utils.getUnitFromString( micrometer.getSymbol() );
-		System.out.println( unitFromString.getSymbol() );
 	}
 }

@@ -52,14 +52,6 @@ public class FileSeriesCachedCellImgCreator< R extends RealType< R > & NativeTyp
         }
     }
 
-    // TODO: this makes not much sense, just make it this Image
-    public Image< R > createImage()
-    {
-        Image< R > image = new Image( this );
-
-        return image;
-    }
-
     @Override
     public String getImageName()
     {
