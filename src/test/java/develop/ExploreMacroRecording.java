@@ -1,6 +1,6 @@
 package develop;
 
-import de.embl.cba.bdp2.open.fileseries.OpenFileSeriesCommand;
+import de.embl.cba.bdp2.open.fileseries.OpenFileSeriesFileSeriesCommand;
 import ij.plugin.frame.Recorder;
 import net.imagej.ImageJ;
 
@@ -14,6 +14,6 @@ public class ExploreMacroRecording
 		final Recorder recorder = new Recorder();
 
 		// invoke the plugin
-		ij.command().run( OpenFileSeriesCommand.class, true );
+		ij.command().run( OpenFileSeriesFileSeriesCommand.class, true );
 	}
 }

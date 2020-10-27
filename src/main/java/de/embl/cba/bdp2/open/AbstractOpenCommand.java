@@ -1,14 +1,13 @@
 package de.embl.cba.bdp2.open;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
-import de.embl.cba.bdp2.macro.MacroRecorder;
-import de.embl.cba.bdp2.process.calibrate.CalibrationCheckerDialog;
 import de.embl.cba.bdp2.dialog.HelpWindow;
 import de.embl.cba.bdp2.image.Image;
+import de.embl.cba.bdp2.macro.MacroRecorder;
+import de.embl.cba.bdp2.process.calibrate.CalibrationCheckerDialog;
 import de.embl.cba.bdp2.scijava.Services;
 import de.embl.cba.bdp2.service.ImageService;
 import de.embl.cba.bdp2.viewer.ImageViewer;
-import ij.plugin.frame.Recorder;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.jetbrains.annotations.Nullable;
@@ -20,10 +19,9 @@ import org.scijava.ui.UIService;
 import javax.swing.*;
 import java.io.File;
 
-public abstract class AbstractOpenCommand< R extends RealType< R > & NativeType< R > > implements Command {
-
+public abstract class AbstractOpenCommand< R extends RealType< R > & NativeType< R > > implements Command, OpenCommand
+{
     public static final String COMMAND_OPEN_PATH = "Commands>Open>";
-
     public static final String DO_NOT_SHOW = "Do not show";
     public static final String SHOW_IN_CURRENT_VIEWER = "Show in current viewer";
     public static final String SHOW_IN_NEW_VIEWER = "Show in new viewer";
@@ -32,19 +30,16 @@ public abstract class AbstractOpenCommand< R extends RealType< R > & NativeType<
     public static ImageViewer parentViewer = null;
 
     @Parameter
-    UIService uiService;
+    protected UIService uiService;
 
     @Parameter
-    Context context;
-
-    @Parameter(label = "Image data directory", style = "directory")
-    protected File directory;
-    public static String DIRECTORY_PARAMETER = "directory";
+    protected Context context;
 
     @Parameter(label = "Output image handling", choices = {
             SHOW_IN_CURRENT_VIEWER,
             SHOW_IN_NEW_VIEWER,
             DO_NOT_SHOW })
+
     protected String viewingModality = SHOW_IN_NEW_VIEWER; // Note: this must be the same variable name as in AbstractProcessingCommand
     public static final String[] VIEWING_CHOICES = new String[]{
             SHOW_IN_CURRENT_VIEWER,
@@ -81,8 +76,7 @@ public abstract class AbstractOpenCommand< R extends RealType< R > & NativeType<
         }
     }
 
-    @Nullable
-    private ImageViewer showInViewer( boolean autoContrast, boolean keepViewerTransform )
+    protected ImageViewer showInViewer( boolean autoContrast, boolean keepViewerTransform )
     {
         if ( viewingModality.equals( SHOW_IN_NEW_VIEWER ) || parentViewer == null )
         {
@@ -97,13 +91,5 @@ public abstract class AbstractOpenCommand< R extends RealType< R > & NativeType<
         {
             return null;
         }
-    }
-
-    protected void showRegExpHelp()
-    {
-        SwingUtilities.invokeLater( () -> {
-            final HelpWindow helpWindow = new HelpWindow( AbstractOpenCommand.class.getResource( "/RegExpHelp.html" ) );
-            helpWindow.setVisible( true );
-        } );
     }
 }

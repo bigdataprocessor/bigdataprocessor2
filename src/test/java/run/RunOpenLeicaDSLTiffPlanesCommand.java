@@ -1,6 +1,6 @@
 package run;
 
-import de.embl.cba.bdp2.open.leica.OpenLeicaDSLTiffPlanesCommand;
+import de.embl.cba.bdp2.open.leica.OpenLeicaDSLTiffPlanesFileSeriesCommand;
 import de.embl.cba.bdp2.scijava.Services;
 import ij.plugin.frame.Recorder;
 import net.imagej.ImageJ;
@@ -16,6 +16,6 @@ public class RunOpenLeicaDSLTiffPlanesCommand
 
 		Services.setCommandService( ij.command() );
 
-		ij.command().run( OpenLeicaDSLTiffPlanesCommand.class, true );
+		ij.command().run( OpenLeicaDSLTiffPlanesFileSeriesCommand.class, true );
 	}
 }

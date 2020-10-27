@@ -2,7 +2,7 @@ package de.embl.cba.bdp2.open.fileseries;
 
 import de.embl.cba.bdp2.dialog.HelpWindow;
 import de.embl.cba.bdp2.dialog.Utils;
-import de.embl.cba.bdp2.open.AbstractOpenCommand;
+import de.embl.cba.bdp2.open.AbstractOpenFileSeriesCommand;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;
@@ -12,7 +12,7 @@ import javax.swing.*;
 
 import static de.embl.cba.bdp2.utils.Utils.COMMAND_BDP2_PREFIX;
 
-@Plugin(type = Command.class, menuPath = Utils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractOpenCommand.COMMAND_OPEN_PATH + OpenFileSeriesHelpCommand.COMMAND_FULL_NAME )
+@Plugin(type = Command.class, menuPath = Utils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractOpenFileSeriesCommand.COMMAND_OPEN_PATH + OpenFileSeriesHelpCommand.COMMAND_FULL_NAME )
 public class OpenFileSeriesHelpCommand< R extends RealType< R > & NativeType< R > > implements Command
 {
     public static final String COMMAND_NAME = "Open File Series Help...";
@@ -20,9 +20,8 @@ public class OpenFileSeriesHelpCommand< R extends RealType< R > & NativeType< R 
 
     public void run()
     {
-
         SwingUtilities.invokeLater( () -> {
-            final HelpWindow helpWindow = new HelpWindow( AbstractOpenCommand.class.getResource( "/RegExpHelp.html" ) );
+            final HelpWindow helpWindow = new HelpWindow( AbstractOpenFileSeriesCommand.class.getResource( "/RegExpHelp.html" ) );
             helpWindow.setVisible( true );
         } );
     }

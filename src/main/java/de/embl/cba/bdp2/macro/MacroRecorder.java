@@ -1,9 +1,7 @@
 package de.embl.cba.bdp2.macro;
 
-import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.open.AbstractOpenCommand;
-import de.embl.cba.bdp2.open.luxendo.OpenLuxendoCommand;
+import de.embl.cba.bdp2.open.AbstractOpenFileSeriesCommand;
 import ij.plugin.frame.Recorder;
 
 import java.awt.*;
@@ -50,7 +48,7 @@ public class MacroRecorder
 
 	public MacroRecorder( String commandName, Image< ? > inputImage, Image< ? > outputImage )
 	{
-		this( commandName, inputImage, outputImage, AbstractOpenCommand.SHOW_IN_CURRENT_VIEWER );
+		this( commandName, inputImage, outputImage, AbstractOpenFileSeriesCommand.SHOW_IN_CURRENT_VIEWER );
 	}
 
 	public MacroRecorder( String commandName, Image< ? > inputImage, Image< ? > outputImage, String outputImageHandling )
@@ -200,7 +198,7 @@ public class MacroRecorder
 
 	public void addAPIFunctionParameter( String parameter )
 	{
-		parameters.add( ( String ) parameter );
+		parameters.add( parameter );
 	}
 
 	public void addAPIFunctionParameter( double[] parameter )

@@ -1,6 +1,6 @@
 package run;
 
-import de.embl.cba.bdp2.open.luxendo.OpenLuxendoChannelsCommand;
+import de.embl.cba.bdp2.open.luxendo.OpenLuxendoChannelsFileSeriesCommand;
 import ij.plugin.frame.Recorder;
 import net.imagej.ImageJ;
 
@@ -13,6 +13,6 @@ public class RunOpenLuxendoChannelsCommand
 
 		new Recorder();
 
-		ij.command().run( OpenLuxendoChannelsCommand.class, true );
+		ij.command().run( OpenLuxendoChannelsFileSeriesCommand.class, true );
 	}
 }

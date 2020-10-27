@@ -1,6 +1,6 @@
 package run;
 
-import de.embl.cba.bdp2.open.luxendo.OpenLuxendoCommand;
+import de.embl.cba.bdp2.open.luxendo.OpenLuxendoFileSeriesCommand;
 import ij.plugin.frame.Recorder;
 import net.imagej.ImageJ;
 
@@ -13,6 +13,6 @@ public class RunOpenLuxendoCommand
 
 		new Recorder();
 
-		ij.command().run( OpenLuxendoCommand.class, true );
+		ij.command().run( OpenLuxendoFileSeriesCommand.class, true );
 	}
 }

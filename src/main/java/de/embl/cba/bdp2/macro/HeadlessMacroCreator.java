@@ -1,6 +1,6 @@
 package de.embl.cba.bdp2.macro;
 
-import de.embl.cba.bdp2.open.AbstractOpenCommand;
+import de.embl.cba.bdp2.open.AbstractOpenFileSeriesCommand;
 import de.embl.cba.bdp2.quit.QuitCommand;
 
 import java.io.BufferedReader;
@@ -50,8 +50,8 @@ public class HeadlessMacroCreator
 			if ( command.contains( "BigDataProcessor2") ) continue;
 			if ( command.equals( "" ) ) continue;
 
-			command = command.replace( AbstractOpenCommand.SHOW_IN_NEW_VIEWER, AbstractOpenCommand.DO_NOT_SHOW );
-			command = command.replace( AbstractOpenCommand.SHOW_IN_CURRENT_VIEWER, AbstractOpenCommand.DO_NOT_SHOW );
+			command = command.replace( AbstractOpenFileSeriesCommand.SHOW_IN_NEW_VIEWER, AbstractOpenFileSeriesCommand.DO_NOT_SHOW );
+			command = command.replace( AbstractOpenFileSeriesCommand.SHOW_IN_CURRENT_VIEWER, AbstractOpenFileSeriesCommand.DO_NOT_SHOW );
 			headlessCommands.add( command );
 		}
 

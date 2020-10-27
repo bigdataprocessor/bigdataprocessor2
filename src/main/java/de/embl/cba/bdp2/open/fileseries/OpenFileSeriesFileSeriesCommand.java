@@ -1,7 +1,7 @@
 package de.embl.cba.bdp2.open.fileseries;
 
 import de.embl.cba.bdp2.macro.MacroRecorder;
-import de.embl.cba.bdp2.open.AbstractOpenCommand;
+import de.embl.cba.bdp2.open.AbstractOpenFileSeriesCommand;
 import de.embl.cba.bdp2.process.calibrate.CalibrationUtils;
 import de.embl.cba.bdp2.dialog.Utils;
 import de.embl.cba.bdp2.image.Image;
@@ -24,8 +24,8 @@ import static de.embl.cba.bdp2.utils.Utils.COMMAND_BDP2_PREFIX;
  *
  * @param <R>
  */
-@Plugin(type = Command.class, menuPath = Utils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractOpenCommand.COMMAND_OPEN_PATH + OpenFileSeriesCommand.COMMAND_FULL_NAME )
-public class OpenFileSeriesCommand< R extends RealType< R > & NativeType< R > > extends AbstractOpenCommand< R >
+@Plugin(type = Command.class, menuPath = Utils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractOpenFileSeriesCommand.COMMAND_OPEN_PATH + OpenFileSeriesFileSeriesCommand.COMMAND_FULL_NAME )
+public class OpenFileSeriesFileSeriesCommand< R extends RealType< R > & NativeType< R > > extends AbstractOpenFileSeriesCommand< R >
 {
     public static final String COMMAND_NAME = "Open File Series...";
     public static final String COMMAND_FULL_NAME = COMMAND_BDP2_PREFIX + COMMAND_NAME;
@@ -59,33 +59,33 @@ public class OpenFileSeriesCommand< R extends RealType< R > & NativeType< R > > 
                         regExp,
                         hdf5DataSetName );
 
-                MacroRecorder recorder = new MacroRecorder( outputImage );
-                recorder.recordImportStatements( true );
-                recorder.setAPIFunction( "openHdf5Series" );
-                recorder.addAPIFunctionParameter( recorder.quote( directory.toString() ) );
-                recorder.addAPIFunctionParameter( recorder.quote( regExp ) );
-                recorder.addAPIFunctionParameter( recorder.quote( hdf5DataSetName ) );
-                recorder.record();
-
+                recordJythonCall( "openHdf5Series" );
             }
-            else if ( regExp.contains( ".tif" ) ) // .tiff .ome.tif
+            else if ( regExp.contains( ".tif" ) ) // covers .tif, .tiff, .ome.tif
             {
                 outputImage = BigDataProcessor2.openTiffSeries(
                         directory.toString(),
                         regExp );
 
-                MacroRecorder recorder = new MacroRecorder( outputImage );
-                recorder.recordImportStatements( true );
-                recorder.setAPIFunction( "openTiffSeries" );
-                recorder.addAPIFunctionParameter( recorder.quote( directory.toString() ) );
-                recorder.addAPIFunctionParameter( recorder.quote( regExp ) );
-                recorder.record();
+                recordJythonCall( "openTiffSeries" );
             }
 
             fixVoxelSpacing( outputImage );
 
             handleOutputImage( autoContrast, false );
         });
+    }
+
+    private void recordJythonCall( String apiFunctionName )
+    {
+        MacroRecorder recorder = new MacroRecorder( outputImage );
+        recorder.recordImportStatements( true );
+        recorder.setAPIFunction( apiFunctionName );
+        recorder.addAPIFunctionParameter( recorder.quote( directory.toString() ) );
+        recorder.addAPIFunctionParameter( recorder.quote( regExp ) );
+        if ( apiFunctionName.equals( "openHdf5Series" ) )
+            recorder.addAPIFunctionParameter( recorder.quote( hdf5DataSetName ) );
+        recorder.record();
     }
 
     private void fixVoxelSpacing( Image< R > image )
@@ -95,5 +95,11 @@ public class OpenFileSeriesCommand< R extends RealType< R > & NativeType< R > > 
         final String voxelUnit = CalibrationUtils.fixVoxelSizeAndUnit( voxelSpacing, image.getVoxelUnit().toString() );
         image.setVoxelSize( voxelSpacing );
         image.setVoxelUnit( voxelUnit );
+    }
+
+    @Override
+    public void recordJythonCall()
+    {
+
     }
 }

@@ -3,7 +3,7 @@ package de.embl.cba.bdp2.open.luxendo;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.dialog.Utils;
 import de.embl.cba.bdp2.macro.MacroRecorder;
-import de.embl.cba.bdp2.open.AbstractOpenCommand;
+import de.embl.cba.bdp2.open.AbstractOpenFileSeriesCommand;
 import de.embl.cba.bdp2.open.ChannelChooserDialog;
 import de.embl.cba.bdp2.open.fileseries.FileInfos;
 import ij.plugin.frame.Recorder;
@@ -24,8 +24,8 @@ import java.util.List;
 import static de.embl.cba.bdp2.open.NamingSchemes.LUXENDO_REGEXP;
 import static de.embl.cba.bdp2.utils.Utils.COMMAND_BDP2_PREFIX;
 
-@Plugin(type = Command.class, menuPath = Utils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractOpenCommand.COMMAND_OPEN_PATH + OpenLuxendoCommand.COMMAND_FULL_NAME )
-public class OpenLuxendoCommand< R extends RealType< R > & NativeType< R > > extends AbstractOpenCommand< R >
+@Plugin(type = Command.class, menuPath = Utils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractOpenFileSeriesCommand.COMMAND_OPEN_PATH + OpenLuxendoFileSeriesCommand.COMMAND_FULL_NAME )
+public class OpenLuxendoFileSeriesCommand< R extends RealType< R > & NativeType< R > > extends AbstractOpenFileSeriesCommand< R >
 {
     public static final String COMMAND_NAME = "Open Luxendo Hdf5...";
     public static final String COMMAND_FULL_NAME = COMMAND_BDP2_PREFIX + COMMAND_NAME;
@@ -33,11 +33,13 @@ public class OpenLuxendoCommand< R extends RealType< R > & NativeType< R > > ext
     @Parameter( label = "Stack index"  )
     protected int stackIndex = 0;
     public static String STACK_INDEX_PARAMETER = "stackIndex";
+    private MacroRecorder recorder;
+    private String regExp;
 
     public void run()
     {
         SwingUtilities.invokeLater( () ->  {
-            String regExp = LUXENDO_REGEXP.replace( "STACK", "" + stackIndex );
+            regExp = LUXENDO_REGEXP.replace( "STACK", "" + stackIndex );
 
             if ( directory.getName().contains( "stack_" ) )
             {
@@ -68,12 +70,14 @@ public class OpenLuxendoCommand< R extends RealType< R > & NativeType< R > > ext
     {
         removeOpenLuxendoCommandCallFromRecorder();
 
-        MacroRecorder recorder = new MacroRecorder( OpenLuxendoChannelsCommand.COMMAND_FULL_NAME, viewingModality, outputImage );
-        recorder.addCommandParameter( AbstractOpenCommand.DIRECTORY_PARAMETER, directory.getAbsolutePath() );
-        recorder.addCommandParameter( AbstractOpenCommand.ARBITRARY_PLANE_SLICING_PARAMETER, enableArbitraryPlaneSlicing );
-        recorder.addCommandParameter( OpenLuxendoCommand.STACK_INDEX_PARAMETER, stackIndex );
-        recorder.addCommandParameter( OpenLuxendoChannelsCommand.CHANNELS_PARAMETER, String.join( ",", selectedChannels ) );
+        // TODO: one does not need both! depends on the recording mode! make a distinction!
+        recorder = new MacroRecorder( OpenLuxendoChannelsFileSeriesCommand.COMMAND_FULL_NAME, viewingModality, outputImage );
+        recorder.addCommandParameter( AbstractOpenFileSeriesCommand.DIRECTORY_PARAMETER, directory.getAbsolutePath() );
+        recorder.addCommandParameter( AbstractOpenFileSeriesCommand.ARBITRARY_PLANE_SLICING_PARAMETER, enableArbitraryPlaneSlicing );
+        recorder.addCommandParameter( OpenLuxendoFileSeriesCommand.STACK_INDEX_PARAMETER, stackIndex );
+        recorder.addCommandParameter( OpenLuxendoChannelsFileSeriesCommand.CHANNELS_PARAMETER, String.join( ",", selectedChannels ) );
 
+        // use the recordJythonCall function instead.
         recorder.recordImportStatements( true );
         recorder.setAPIFunction( "openHdf5Series" );
         recorder.addAPIFunctionParameter( recorder.quote( directory.toString() ) );
@@ -94,7 +98,7 @@ public class OpenLuxendoCommand< R extends RealType< R > & NativeType< R > > ext
             TextArea textArea = (TextArea) f.get(recorder); //IllegalAccessException
             String text = textArea.getText();
             int removeNumChars = Recorder.scriptMode() ? 8 : 5;
-            int start = text.indexOf( OpenLuxendoCommand.COMMAND_FULL_NAME ) - removeNumChars;
+            int start = text.indexOf( OpenLuxendoFileSeriesCommand.COMMAND_FULL_NAME ) - removeNumChars;
             int end = text.length() - 1;
             textArea.replaceRange("", start, end );
         }
@@ -104,4 +108,9 @@ public class OpenLuxendoCommand< R extends RealType< R > & NativeType< R > > ext
         }
     }
 
+    @Override
+    public void recordJythonCall()
+    {
+        // TODO: use this instead
+    }
 }

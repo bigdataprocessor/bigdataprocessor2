@@ -1,10 +1,11 @@
 package de.embl.cba.bdp2;
 
-import de.embl.cba.bdp2.open.OpenEMTiffPlanesCommand;
-import de.embl.cba.bdp2.open.fileseries.OpenFileSeriesCommand;
+import de.embl.cba.bdp2.open.OpenEMTiffPlanesFileSeriesCommand;
+import de.embl.cba.bdp2.open.bioformats.OpenWithBdvBioFormatsCommand;
+import de.embl.cba.bdp2.open.fileseries.OpenFileSeriesFileSeriesCommand;
 import de.embl.cba.bdp2.open.fileseries.OpenFileSeriesHelpCommand;
-import de.embl.cba.bdp2.open.leica.OpenLeicaDSLTiffPlanesCommand;
-import de.embl.cba.bdp2.open.luxendo.OpenLuxendoCommand;
+import de.embl.cba.bdp2.open.leica.OpenLeicaDSLTiffPlanesFileSeriesCommand;
+import de.embl.cba.bdp2.open.luxendo.OpenLuxendoFileSeriesCommand;
 import de.embl.cba.bdp2.process.AbstractImageProcessingCommand;
 import de.embl.cba.bdp2.open.samples.DownloadAndOpenSampleDataCommand;
 import de.embl.cba.bdp2.track.ApplyTrackCommand;
@@ -71,12 +72,14 @@ public class BigDataProcessor2Menu extends JMenu
 
         final JMenu openMenu = addMenu( "Open" );
         menus.add( openMenu );
-        addMenuItem( openMenu, OpenFileSeriesCommand.COMMAND_NAME );
+        // TODO: could this be auto-populated using SciJava annotation?
+        addMenuItem( openMenu, OpenFileSeriesFileSeriesCommand.COMMAND_NAME );
         addMenuItem( openMenu, OpenFileSeriesHelpCommand.COMMAND_NAME );
-        addMenuItem( openMenu, OpenEMTiffPlanesCommand.COMMAND_NAME );
+        addMenuItem( openMenu, OpenWithBdvBioFormatsCommand.COMMAND_NAME );
+        addMenuItem( openMenu, OpenEMTiffPlanesFileSeriesCommand.COMMAND_NAME ); // TODO: Remove and use regExp instead?
+        addMenuItem( openMenu, OpenLuxendoFileSeriesCommand.COMMAND_NAME );
+        addMenuItem( openMenu, OpenLeicaDSLTiffPlanesFileSeriesCommand.COMMAND_NAME );
         addMenuItem( openMenu, DownloadAndOpenSampleDataCommand.COMMAND_NAME );
-        addMenuItem( openMenu, OpenLuxendoCommand.COMMAND_NAME );
-        addMenuItem( openMenu, OpenLeicaDSLTiffPlanesCommand.COMMAND_NAME );
 
         final JMenu processMenu = addMenu( "Process" );
         menus.add( processMenu );
@@ -113,16 +116,6 @@ public class BigDataProcessor2Menu extends JMenu
         {
             addMenuItemAndProcessingAction( processMenu, name, pluginProvider.getInstance( name ) );
         }
-
-        // TODO: auto-populate as much as possible
-//        addMenuItem( processMenu, ImageRenameCommand.COMMAND_NAME );
-//        addMenuItem( processMenu, CalibrateCommand.COMMAND_NAME );
-//        addMenuItem( processMenu, CropCommand.COMMAND_NAME );
-//        addMenuItem( processMenu, TransformCommand.COMMAND_NAME );
-//        addMenuItem( processMenu, BinCommand.COMMAND_NAME );
-//        addMenuItem( processMenu, MultiChannelConvertToUnsignedByteTypeCommand.COMMAND_NAME );
-//        addMenuItem( processMenu, AlignChannelsCommand.COMMAND_NAME );
-//        addMenuItem( processMenu, SplitChipCommand.COMMAND_NAME );
     }
 
     public ArrayList< JMenu > getMenus()
