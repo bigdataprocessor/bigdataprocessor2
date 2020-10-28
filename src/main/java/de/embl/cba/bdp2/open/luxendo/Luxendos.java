@@ -41,7 +41,7 @@ public class Luxendos
 		}
 		else
 		{
-			Logger.warning( "Could not read voxel size!");
+			Logger.warn( "Could not read voxel size!");
 			return null;
 		}
 	}

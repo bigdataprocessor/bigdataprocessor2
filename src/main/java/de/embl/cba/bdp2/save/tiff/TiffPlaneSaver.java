@@ -17,7 +17,7 @@ import ome.xml.model.primitives.PositiveInteger;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static de.embl.cba.bdp2.utils.IntervalImageViews.getNonVolatilePlaneCopy;
+import static de.embl.cba.bdp2.utils.RAISlicer.createPlaneCopy;
 import static de.embl.cba.bdp2.save.tiff.TiffUtils.ShortToByteBigEndian;
 
 public class TiffPlaneSaver implements Runnable {
@@ -50,10 +50,10 @@ public class TiffPlaneSaver implements Runnable {
         }
 
         final RandomAccessibleInterval raiXY
-                = getNonVolatilePlaneCopy(
+                = createPlaneCopy(
                         savingSettings.rai,
                         savingSettings.rai,
-                        z, c, t, 1 );
+                        z, c, t );
 
         @SuppressWarnings("unchecked")
         ImagePlus imp = ImageJFunctions.wrap( raiXY, "slice");

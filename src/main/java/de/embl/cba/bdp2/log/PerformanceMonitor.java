@@ -25,11 +25,6 @@ public class PerformanceMonitor
 		{
 			readPerformances.add( mbps );
 		}
-		// TODO: handle this differently, maybe isHeadless()
-		if ( false ) // FileSeriesCachedCellImageCreator.isReadingVolumes )
-		{
-			Logger.debug( "Read " + toMB( numBytes ) + " MB in " + toSeconds( timeMillis ) + " seconds; Speed [MB/s] = " + mbps );
-		}
 
 		BigDataProcessor2UserInterface.setReadPerformanceInformation( mbps, getMedianReadPerformance() );
 	}

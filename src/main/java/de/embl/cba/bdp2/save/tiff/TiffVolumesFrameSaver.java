@@ -3,9 +3,8 @@ package de.embl.cba.bdp2.save.tiff;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.save.ProjectionXYZ;
 import de.embl.cba.bdp2.save.SavingSettings;
-import de.embl.cba.bdp2.utils.IntervalImageViews;
+import de.embl.cba.bdp2.utils.RAISlicer;
 import de.embl.cba.bdp2.utils.Utils;
-import de.embl.cba.bdv.utils.BdvUtils;
 import ij.ImagePlus;
 import ij.ImageStack;
 import loci.common.DebugTools;
@@ -22,7 +21,6 @@ import loci.formats.tiff.IFD;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
-import net.imglib2.view.Views;
 import ome.units.quantity.Length;
 import ome.xml.model.enums.DimensionOrder;
 import ome.xml.model.enums.PixelType;
@@ -77,7 +75,7 @@ public class TiffVolumesFrameSaver< R extends RealType< R > & NativeType< R > > 
             // Note; below call will both
             // (i) load the raw image into RAM
             // (ii) make a copy in RAM with all processing done
-            RandomAccessibleInterval< R > raiXYZ = IntervalImageViews.createNonVolatileVolumeCopy( rai, c, t, settings.numProcessingThreads, ( R )settings.type );
+            RandomAccessibleInterval< R > raiXYZ = RAISlicer.createVolumeCopy( rai, c, t, settings.numProcessingThreads, ( R )settings.type );
 
             if ( settings.saveVolumes )
             {

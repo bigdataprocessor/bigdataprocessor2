@@ -8,10 +8,16 @@ public class Logger
 	public enum Level
 	{
 		Normal,
-		Debug
+		Debug,
+		Benchmark
 	}
 
 	private static Level level = Level.Normal;
+
+	public static Level getLevel()
+	{
+		return level;
+	}
 
 	public static synchronized void setLevel( Level level )
 	{
@@ -49,9 +55,15 @@ public class Logger
 		IJ.log( msg );
 	}
 
-	public static void warning( String msg )
+	public static void benchmark( String msg )
 	{
-		IJ.log( "WARNING: " + msg );
+		if ( level.equals( Level.Benchmark ) )
+			IJ.log( "BENCHMARK: " + msg );
+	}
+
+	public static void warn( String msg )
+	{
+		IJ.log( "WARN: " + msg );
 	}
 
 	public static void debug( String msg )
@@ -79,8 +91,9 @@ public class Logger
 	{
 		final GenericDialog gd = new GenericDialog( "Logging" );
 		gd.addChoice( "Level", new String[]{
-				Level.Debug.toString(), Level.Normal.toString()
-		}, Level.Normal.toString() );
+				Level.Debug.toString(), Level.Normal.toString(), Level.Benchmark.toString()
+		}, Logger.getLevel().toString() );
+		gd.addMessage( "Benchmark mode may significantly slow down the application!" );
 
 		gd.showDialog();
 		if ( gd.wasCanceled() ) return;

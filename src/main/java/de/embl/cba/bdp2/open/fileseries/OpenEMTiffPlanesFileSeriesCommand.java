@@ -5,7 +5,6 @@ import de.embl.cba.bdp2.dialog.Utils;
 import de.embl.cba.bdp2.macro.MacroRecorder;
 import de.embl.cba.bdp2.open.AbstractOpenCommand;
 import de.embl.cba.bdp2.open.AbstractOpenFileSeriesCommand;
-import de.embl.cba.bdp2.open.NamingSchemes;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;

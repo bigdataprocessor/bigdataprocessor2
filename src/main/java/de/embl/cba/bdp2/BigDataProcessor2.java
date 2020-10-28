@@ -76,9 +76,9 @@ public class BigDataProcessor2
         int seriesCount = cellImgCreator.getSeriesCount();
         if ( seriesCount > 1 )
         {
-            Logger.warning( "File contains " + seriesCount + " image series, opening the first one." );
-            Logger.warning( "If you need better support for multi-series files please report here:" );
-            Logger.warning( "https://forum.image.sc/t/bigdataprocessor/34963" );
+            Logger.warn( "File contains " + seriesCount + " image series, opening the first one." );
+            Logger.warn( "If you need better support for multi-series files please report here:" );
+            Logger.warn( "https://forum.image.sc/t/bigdataprocessor/34963" );
         }
         Image< R > image = new Image<>( cellImgCreator );
         return image;

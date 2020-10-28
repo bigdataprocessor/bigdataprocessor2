@@ -64,8 +64,6 @@ public class FileSeriesCellLoader< T extends NativeType< T > > implements CellLo
         cell.min( min );
         cell.max( max );
 
-        Logger.debug( "Reading from " + Arrays.toString( min ) + " to " + Arrays.toString( max ) );
-
         long start = System.currentTimeMillis();
 
         if ( cell.firstElement() instanceof UnsignedByteType )
@@ -84,10 +82,9 @@ public class FileSeriesCellLoader< T extends NativeType< T > > implements CellLo
                 destPos += impData.length;
             }
 
-            PerformanceService.getPerformanceMonitor().addReadPerformance( storageArray.length, System.currentTimeMillis() - start  );
-
-            //PerformanceService.getPerformanceMonitor().addCopyPerformance( storageArray.length, System.currentTimeMillis() - start  );
-
+            long timeMillis = System.currentTimeMillis() - start;
+            Logger.benchmark( "Read z-plane #" + min[ Z ] + " in " + timeMillis + " ms" );
+            PerformanceService.getPerformanceMonitor().addReadPerformance( storageArray.length, timeMillis );
         }
         else if ( cell.firstElement() instanceof UnsignedShortType )
         {
@@ -137,7 +134,9 @@ public class FileSeriesCellLoader< T extends NativeType< T > > implements CellLo
                 }
             }
 
-            PerformanceService.getPerformanceMonitor().addReadPerformance( 2L * (long) storageArray.length, System.currentTimeMillis() - start  );
+            long timeMillis = System.currentTimeMillis() - start;
+            Logger.benchmark( "Read z-plane #" + min[ Z ] + " in " + timeMillis + " ms" );
+            PerformanceService.getPerformanceMonitor().addReadPerformance( 2L * (long) storageArray.length, timeMillis  );
 
         }
         else if (cell.firstElement() instanceof FloatType)
@@ -147,7 +146,9 @@ public class FileSeriesCellLoader< T extends NativeType< T > > implements CellLo
             final float[] storageArray = (float[]) cell.getStorageArray();
             System.arraycopy(impData, 0, storageArray, 0, storageArray.length);
 
-            PerformanceService.getPerformanceMonitor().addReadPerformance( 4L * (long) storageArray.length, System.currentTimeMillis() - start  );
+            long timeMillis = System.currentTimeMillis() - start;
+            Logger.benchmark( "Read z-plane #" + min[ Z ] + " in " + timeMillis + " ms" );
+            PerformanceService.getPerformanceMonitor().addReadPerformance( 4L * (long) storageArray.length, timeMillis  );
         }
     }
 

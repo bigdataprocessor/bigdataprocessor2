@@ -93,7 +93,8 @@ public class FileSeriesCachedCellImgCreator< R extends RealType< R > & NativeTyp
     {
         // try to construct sensible cell dimensions for fast plane wise browsing
         long[] imageDimensionsXYZ = Arrays.stream( imageDimsXYZCT ).limit( 3 ).toArray();
-        int[] cellDims = CacheUtils.planeWiseCellDims( imageDimensionsXYZ, fileInfos.bitDepth, isPlaneWiseCompressed( fileInfos ) );
+//        int[] cellDims = CacheUtils.planeWiseCellDims( imageDimensionsXYZ, fileInfos.bitDepth, isPlaneWiseCompressed( fileInfos ) );
+        int[] cellDims = CacheUtils.planeWiseCellDims( imageDimensionsXYZ, fileInfos.bitDepth, true ); // to simplify benchmarking
         return cellDims;
     }
 

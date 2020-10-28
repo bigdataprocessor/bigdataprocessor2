@@ -2,7 +2,7 @@ package de.embl.cba.bdp2.devel.register;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.utils.IntervalImageViews;
+import de.embl.cba.bdp2.utils.RAISlicer;
 import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.log.progress.ProgressListener;
 import de.embl.cba.bdp2.utils.DimensionOrder;
@@ -122,7 +122,7 @@ public class RegisteredViews
 		for ( int z = 0; z < image.getRai().dimension( DimensionOrder.Z ); z++ )
 		{
 			final RandomAccessibleInterval< R > sliceView =
-					IntervalImageViews.getSliceView( image.getRai(), z, c, t );
+					RAISlicer.getSliceView( image.getRai(), z, c, t );
 
 			hyperslices.add( sliceView );
 		}
@@ -138,7 +138,7 @@ public class RegisteredViews
 		for ( int t = 0; t < image.getRai().dimension( DimensionOrder.T ); t++ )
 		{
 			final RandomAccessibleInterval< R > frame =
-					IntervalImageViews.getFrameView( image.getRai(), t );
+					RAISlicer.getFrameView( image.getRai(), t );
 
 			hyperslices.add( frame );
 		}

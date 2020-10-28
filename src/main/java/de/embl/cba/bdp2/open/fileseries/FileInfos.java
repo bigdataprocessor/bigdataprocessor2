@@ -245,7 +245,7 @@ public class FileInfos
                 }
                 catch (Exception e) {
                     Logger.error("Error parsing: " + file.getAbsolutePath() );
-                    Logger.warning("setInfoFromFile: " + e.toString());
+                    Logger.warn("setInfoFromFile: " + e.toString());
                 }
 
                 if( info.length != nZ ) {// TODO : Handle exceptions properly --ashis

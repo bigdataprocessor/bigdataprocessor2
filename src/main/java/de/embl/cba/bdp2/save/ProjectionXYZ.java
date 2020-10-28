@@ -77,7 +77,7 @@ public class ProjectionXYZ {
         // Get image info and setups
         //ImagePlus img = WindowManager.getCurrentImage();
         if (imp.getImageStackSize() < 2){
-            Logger.warning("The image is not a stack: aborted XYZ projection");
+            Logger.warn("The image is not a stack: aborted XYZ projection");
             return null;
         }
         ImageStack stk = imp.getStack();

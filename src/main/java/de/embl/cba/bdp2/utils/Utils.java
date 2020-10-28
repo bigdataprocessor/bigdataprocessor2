@@ -301,7 +301,7 @@ public class Utils {
 
 		if ( voxelSize == null )
 		{
-			Logger.warning( "Voxel size not set!" );
+			Logger.warn( "Voxel size not set!" );
 			return false;
 		}
 
@@ -309,7 +309,7 @@ public class Utils {
 		{
 			if ( Double.isNaN( voxelSize[ d ] ) || voxelSize[ d ] <= 0.0 )
 			{
-				Logger.warning( "Voxel size along dimension " + d + " is " + voxelSize[ d ] );
+				Logger.warn( "Voxel size along dimension " + d + " is " + voxelSize[ d ] );
 				isOK = false;
 			}
 		}

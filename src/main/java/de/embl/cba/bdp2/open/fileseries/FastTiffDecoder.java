@@ -1089,7 +1089,7 @@ public class FastTiffDecoder {
         if (count > 1 && ( fi.stripOffsets[(int) count - 1] < fi.stripOffsets[0] ))
         {
             fi.offset = fi.stripOffsets[(int) count - 1];
-            Logger.warning("Weird line... " + name);
+            Logger.warn("Weird line... " + name);
         }
 
         //
@@ -1101,7 +1101,7 @@ public class FastTiffDecoder {
         tag = getShort();
         if ( tag != STRIP_BYTE_COUNT )
         {
-            Logger.warning("Fast IFD strip parsing failed. Falling back on full parsing.");
+            Logger.warn("Fast IFD strip parsing failed. Falling back on full parsing.");
             return(null);
         }
         fieldType = getShort();
@@ -1199,7 +1199,7 @@ public class FastTiffDecoder {
                 fi = onlyReadStripsFromIFD( relativeStripInfoLocations, fastParsingWorked );
                 if ( ! fastParsingWorked )
                 {
-                    Logger.warning(name + ", IFD "+listIFDs.size()+
+                    Logger.warn(name + ", IFD "+listIFDs.size()+
                             ": Fast IFD strip parsing failed! " +
                             "Maybe something wrong with this file?");
                     fi = fullyReadIFD( relativeStripInfoLocations );

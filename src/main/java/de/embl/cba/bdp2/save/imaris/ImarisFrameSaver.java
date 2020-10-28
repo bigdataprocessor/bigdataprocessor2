@@ -2,7 +2,7 @@ package de.embl.cba.bdp2.save.imaris;
 
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.save.SavingSettings;
-import de.embl.cba.bdp2.utils.IntervalImageViews;
+import de.embl.cba.bdp2.utils.RAISlicer;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.imaris.H5DataCubeWriter;
@@ -79,7 +79,7 @@ public class ImarisFrameSaver< R extends RealType< R > & NativeType< R >> implem
                 return;
             }
 
-            RandomAccessibleInterval< R > raiXYZ = IntervalImageViews.createNonVolatileVolumeCopy( raiXYZCT, c, t, settings.numProcessingThreads, ( R ) settings.type );
+            RandomAccessibleInterval< R > raiXYZ = RAISlicer.createVolumeCopy( raiXYZCT, c, t, settings.numProcessingThreads, ( R ) settings.type );
 
             ImagePlus imagePlus =
                     Utils.wrap3DRaiToCalibratedImagePlus(

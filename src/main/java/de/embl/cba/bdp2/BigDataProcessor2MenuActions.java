@@ -309,7 +309,7 @@ public class BigDataProcessor2MenuActions implements ActionListener {
                 new TransformDialog<>( viewer );
             });
         }
-        else if( e.getActionCommand().equalsIgnoreCase( BigDataProcessor2Menu.DEBUG_MENU_ITEM ) )
+        else if( e.getActionCommand().equalsIgnoreCase( BigDataProcessor2Menu.LOG ) )
         {
             BigDataProcessor2.threadPool.submit(() ->
             {

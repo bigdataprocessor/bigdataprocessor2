@@ -2,7 +2,7 @@ package develop;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.utils.IntervalImageViews;
+import de.embl.cba.bdp2.utils.RAISlicer;
 import net.imagej.ImageJ;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
@@ -26,7 +26,7 @@ public class DevelopSavingWithoutMemoryLeak
 				regExp,
 				"Data" );
 
-		RandomAccessibleInterval volumeView = Views.dropSingletonDimensions(  IntervalImageViews.getVolumeView( image.getRai(), 0, 10 ) );
+		RandomAccessibleInterval volumeView = Views.dropSingletonDimensions(  RAISlicer.getVolumeView( image.getRai(), 0, 10 ) );
 
 		// TODO: this method always accesses the first image! remove this!
 		// create RandomAccess

@@ -46,7 +46,7 @@ public class BigDataProcessor2Menu extends JMenu
     public static final String HELP = "Help";
     public static final String ISSUE = "Report an issue";
     public static final String CITE = "Cite";
-    public static final String DEBUG_MENU_ITEM = "Debug";
+    public static final String LOG = "Configure Logging...";
 
     private final BigDataProcessor2MenuActions menuActions;
     private final ArrayList< JMenu > menus;
@@ -101,7 +101,7 @@ public class BigDataProcessor2Menu extends JMenu
         final JMenu miscMenu = addMenu( MISC );
         menus.add( miscMenu );
         addMenuItem( miscMenu, IMAGEJ_VIEW_MENU_ITEM );
-        addMenuItem( miscMenu, DEBUG_MENU_ITEM );
+        addMenuItem( miscMenu, LOG );
     }
 
     public void populateProcessMenu( JMenu processMenu )

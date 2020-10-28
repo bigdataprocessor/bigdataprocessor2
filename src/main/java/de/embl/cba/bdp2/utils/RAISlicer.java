@@ -20,7 +20,7 @@ import java.util.List;
 import static de.embl.cba.bdp2.open.CacheUtils.MAX_ARRAY_LENGTH;
 import static de.embl.cba.bdp2.utils.DimensionOrder.*;
 
-public class IntervalImageViews
+public class RAISlicer
 {
 	public static < R extends RealType< R > & NativeType< R > >
 	RandomAccessibleInterval< R > getSliceView(
@@ -118,7 +118,7 @@ public class IntervalImageViews
 	 * @return
 	 */
 	public static < R extends RealType< R > & NativeType< R > >
-	RandomAccessibleInterval< R > createNonVolatileVolumeCopy(
+	RandomAccessibleInterval< R > createVolumeCopy(
 			RandomAccessibleInterval< R > image,
 			long c,
 			long t,
@@ -152,15 +152,13 @@ public class IntervalImageViews
 		return raiXYZ;
 	}
 
-
 	public static < R extends RealType< R > & NativeType< R > >
-	RandomAccessibleInterval< R > getNonVolatilePlaneCopy(
+	RandomAccessibleInterval< R > createPlaneCopy(
 			RandomAccessibleInterval< R > rai,
 			Interval interval,
 			long z,
 			long c,
-			long t,
-			int numThreads )
+			long t )
 	{
 
 		long[] minInterval = new long[]{

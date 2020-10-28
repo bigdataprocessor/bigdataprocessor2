@@ -1,7 +1,7 @@
 package de.embl.cba.bdp2.track;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.utils.IntervalImageViews;
+import de.embl.cba.bdp2.utils.RAISlicer;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
@@ -27,7 +27,7 @@ public class TrackApplier< R extends RealType< R > & NativeType< R > >
 	{
 		final ArrayList< RandomAccessibleInterval< R > > timePoints = new ArrayList<>();
 
-		RandomAccessibleInterval< R > volumeView = IntervalImageViews.getVolumeView( image.getRai(), 0, 0 );
+		RandomAccessibleInterval< R > volumeView = RAISlicer.getVolumeView( image.getRai(), 0, 0 );
 
 		Interval union = getUnion( track, volumeView );
 
@@ -36,7 +36,7 @@ public class TrackApplier< R extends RealType< R > & NativeType< R > >
 			final ArrayList< RandomAccessibleInterval< R > > channels = new ArrayList<>();
 			for ( int c = 0; c < image.getNumChannels(); c++ )
 			{
-				volumeView = IntervalImageViews.getVolumeView( image.getRai(), c, t );
+				volumeView = RAISlicer.getVolumeView( image.getRai(), c, t );
 
 				RandomAccessible< R > extendBorder = Views.extendZero( volumeView );
 				RandomAccessible< R > translate = Views.translate( extendBorder, getTranslation( track, t ) );

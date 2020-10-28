@@ -10,11 +10,13 @@ import bdv.viewer.SourceAndConverter;
 import de.embl.cba.bdp2.boundingbox.BoundingBoxDialog;
 import de.embl.cba.bdp2.dialog.DisplaySettings;
 import de.embl.cba.bdp2.dialog.Utils;
+import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.track.Track;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.service.ImageViewerService;
 import de.embl.cba.bdp2.service.ImageService;
 import de.embl.cba.bdp2.utils.DimensionOrder;
+import de.embl.cba.bdp2.utils.RAISlicer;
 import de.embl.cba.bdp2.volatiles.VolatileCachedCellImgs;
 import de.embl.cba.bdv.utils.BdvUtils;
 import net.imglib2.*;
@@ -36,6 +38,7 @@ import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 public class ImageViewer< R extends RealType< R > & NativeType< R > >
 {
@@ -70,6 +73,26 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
 
         // this.addMenus( new MenuActions() );
         this.installBehaviours( );
+
+        installBenchmarking();
+    }
+
+    private void installBenchmarking()
+    {
+        bdvHandle.getViewerPanel().addTimePointListener( timePointIndex ->
+        {
+            if ( Logger.getLevel().equals( Logger.Level.Benchmark  ) )
+            {
+                long[] dimensionsXYZCT = image.getDimensionsXYZCT();
+                long nZ = dimensionsXYZCT[ DimensionOrder.Z ];
+                Random random = new Random();
+                int randomZ = random.nextInt( ( int ) nZ );
+                long start = System.currentTimeMillis();
+                RAISlicer.createPlaneCopy( image.getRai(), image.getRai(), randomZ, 0, timePointIndex );
+                long durationMillis = System.currentTimeMillis() - start;
+                Logger.benchmark( "Loading and processing of random z-plane #" + randomZ + " [ms]: " + durationMillis );
+            }
+        } );
     }
 
     private void installBehaviours()

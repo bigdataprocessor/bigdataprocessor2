@@ -1283,7 +1283,7 @@ public class TiffAndHdf5Opener extends Opener {
 
                 readLength = 0;
                 if ( se >= fi.stripLengths.length )
-                    Logger.warning( "Strip is out of bounds" );
+                    Logger.warn( "Strip is out of bounds" );
 
                 for ( int s = ss; s <= se; s++ )
                     readLength += fi.stripLengths[ s ];
@@ -1307,14 +1307,14 @@ public class TiffAndHdf5Opener extends Opener {
 
             if ( readLength <= 0 )
             {
-                Logger.warning( "file type: Tiff" );
-                Logger.warning( "hasStrips: " + hasStrips );
-                Logger.warning( "core from [bytes]: " + readStart );
-                Logger.warning( "core to [bytes]: " + ( readStart + readLength - 1 ) );
-                Logger.warning( "ys: " + ys );
-                Logger.warning( "ye: " + ye );
-                Logger.warning( "fileInfo.compression: " + fi.compression );
-                Logger.warning( "fileInfo.height: " + fi.height );
+                Logger.warn( "file type: Tiff" );
+                Logger.warn( "hasStrips: " + hasStrips );
+                Logger.warn( "core from [bytes]: " + readStart );
+                Logger.warn( "core to [bytes]: " + ( readStart + readLength - 1 ) );
+                Logger.warn( "ys: " + ys );
+                Logger.warn( "ye: " + ye );
+                Logger.warn( "fileInfo.compression: " + fi.compression );
+                Logger.warn( "fileInfo.height: " + fi.height );
                 Logger.error( "Error during file reading. See log window for more information" );
                 return ( null );
             }
@@ -1329,19 +1329,19 @@ public class TiffAndHdf5Opener extends Opener {
                     in.readFully( buffer );
                 } else
                 {
-                    Logger.warning( "The requested data exceeds the file length; no data was core." );
-                    Logger.warning( "file type: Tiff" );
-                    Logger.warning( "hasStrips: " + hasStrips );
-                    Logger.warning( "file length [bytes]: " + in.length() );
-                    Logger.warning( "attempt to core until [bytes]: " + ( readStart + readLength - 1 ) );
-                    Logger.warning( "ys: " + ys );
-                    Logger.warning( "ye: " + ye );
-                    Logger.warning( "fileInfo.compression: " + fi.compression );
-                    Logger.warning( "fileInfo.height: " + fi.height );
+                    Logger.warn( "The requested data exceeds the file length; no data was core." );
+                    Logger.warn( "file type: Tiff" );
+                    Logger.warn( "hasStrips: " + hasStrips );
+                    Logger.warn( "file length [bytes]: " + in.length() );
+                    Logger.warn( "attempt to core until [bytes]: " + ( readStart + readLength - 1 ) );
+                    Logger.warn( "ys: " + ys );
+                    Logger.warn( "ye: " + ye );
+                    Logger.warn( "fileInfo.compression: " + fi.compression );
+                    Logger.warn( "fileInfo.height: " + fi.height );
                 }
             } catch ( Exception e )
             {
-                Logger.warning( e.toString() );
+                Logger.warn( e.toString() );
             }
 
             return buffer;
