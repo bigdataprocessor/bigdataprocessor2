@@ -34,6 +34,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 	 * The optimal sizes of the cells depend on the use-case
 	 */
 	private final CachedCellImgCreator< R > cachedCellImgCreator;
+	private long[] rawDataDimensions;
 	private int[] cellDims;
 
 	/**
@@ -64,6 +65,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 
 		setCache( cachedCellImgCreator.getDefaultCellDimsXYZCT(), DiskCachedCellImgOptions.CacheType.BOUNDED, 100 );
 		this.rai = cachedCellImgCreator.createCachedCellImg( cellDims, DiskCachedCellImgOptions.CacheType.BOUNDED, 100 );
+		this.rawDataDimensions = this.getDimensionsXYZCT();
 	}
 
 	/**
@@ -80,6 +82,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		this.voxelSize = image.voxelSize.clone();
 		this.voxelUnit = image.getVoxelUnit();
 		this.cellDims = image.cellDims.clone();
+		this.rawDataDimensions = image.rawDataDimensions.clone();
 	}
 
 	public long[] getDimensionsXYZCT()
@@ -284,6 +287,16 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		if ( rai == null )
 			rai = cachedCellImg;
 		else
-			rai = new CachedCellImgReplacer( rai, cachedCellImg ).get(); // TODO : is this legit ?
+			rai = new CachedCellImgReplacer( rai, cachedCellImg ).get();
+	}
+
+	public void setVolumeCache( DiskCachedCellImgOptions.CacheType cacheType, int cacheSize )
+	{
+		this.cellDims[ DimensionOrder.X ] = (int) rawDataDimensions[ DimensionOrder.X ];
+		this.cellDims[ DimensionOrder.Y ] = (int) rawDataDimensions[ DimensionOrder.Y ];
+		this.cellDims[ DimensionOrder.Z ] = (int) rawDataDimensions[ DimensionOrder.Z ];
+		this.cellDims[ DimensionOrder.C ] = 1;
+		this.cellDims[ DimensionOrder.T ] = 1;
+		setCache( cellDims, cacheType, cacheSize );
 	}
 }

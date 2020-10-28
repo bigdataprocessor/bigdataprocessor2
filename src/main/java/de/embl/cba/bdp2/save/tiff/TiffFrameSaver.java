@@ -75,7 +75,7 @@ public class TiffFrameSaver< R extends RealType< R > & NativeType< R > > impleme
             // Note; below call will both
             // (i) load the raw image into RAM
             // (ii) make a copy in RAM with all processing done
-            RandomAccessibleInterval< R > raiXYZ = RAISlicer.createVolumeCopy( rai, c, t, settings.numProcessingThreads, ( R )settings.type );
+            RandomAccessibleInterval< R > raiXYZ = RAISlicer.createVolumeCopy( rai, c, t, settings.numProcessingThreads, ( R ) settings.type );
 
             if ( settings.saveVolumes )
             {
@@ -198,7 +198,7 @@ public class TiffFrameSaver< R extends RealType< R > & NativeType< R > > impleme
             saveWithBioFormats( imp, t, rowsPerStrip, path, sC, sT );
         }
 
-        Logger.debug( "Saved volume in [ s ]: " + ( System.currentTimeMillis() - start ) / 1000.0);
+        Logger.benchmark( "Saved volume in [ ms ]: " + ( System.currentTimeMillis() - start ) );
     }
 
     private void saveWithBioFormats( ImagePlus imp, int t, int rowsPerStrip, String path, String sC, String sT )

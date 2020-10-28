@@ -66,6 +66,7 @@ public class MacroRecorder
 	public MacroRecorder( String commandName, Image< ? > inputImage )
 	{
 		this.commandName = commandName;
+		this.inputImage = inputImage;
 		this.options = "";
 
 		addCommandParameter( INPUT_IMAGE_PARAMETER, inputImage.getName() );

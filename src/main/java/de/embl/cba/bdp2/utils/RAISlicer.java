@@ -147,7 +147,7 @@ public class RAISlicer
 
 		raiXYZ = copyVolumeRAI( raiXYZ, numThreads, type );
 
-		Logger.benchmark( "Processed volume [ s ]: " + ( System.currentTimeMillis() - start ) / 1000 );
+		Logger.benchmark( "Processed volume, using " + numThreads + " thread(s) in [ ms ]: " + ( System.currentTimeMillis() - start ) );
 
 		return raiXYZ;
 	}
@@ -203,15 +203,13 @@ public class RAISlicer
 	 * @return
 	 */
 	public static < R extends RealType< R > & NativeType< R > >
-	RandomAccessibleInterval< R > copyVolumeRAI( RandomAccessibleInterval< R > volume,
-												 int numThreads, R type )
+	RandomAccessibleInterval< R > copyVolumeRAI( RandomAccessibleInterval< R > volume, int numThreads, R type )
 	{
 		final int dimensionX = ( int ) volume.dimension( 0 );
 		final int dimensionY = ( int ) volume.dimension( 1 );
 		final int dimensionZ = ( int ) volume.dimension( 2 );
 
-		final long numElements =
-				AbstractImg.numElements( Intervals.dimensionsAsLongArray( volume ) );
+		final long numElements = AbstractImg.numElements( Intervals.dimensionsAsLongArray( volume ) );
 
 		RandomAccessibleInterval< R > copy;
 

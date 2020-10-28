@@ -98,7 +98,7 @@ public class ImarisFrameSaver< R extends RealType< R > & NativeType< R >> implem
                         imarisDataSetProperties,
                         c,
                         t );
-                Logger.benchmark( "Saved volume in [ s ]: " + ( System.currentTimeMillis() - start ) / 1000);
+                Logger.benchmark( "Saved volume in [ ms ]: " + ( System.currentTimeMillis() - start ) );
             }
 
             // Save projections

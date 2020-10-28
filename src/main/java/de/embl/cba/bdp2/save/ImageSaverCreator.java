@@ -28,29 +28,28 @@ public class ImageSaverCreator < R extends RealType< R > & NativeType< R > >
 
 		ExecutorService saveExecutorService = Executors.newFixedThreadPool( numIOThreads );
 
+		Image< R > imageForSaving = new Image<>( image ); // create a copy in order not to change the cache of the currently shown image
+
 		if ( ! savingSettings.fileType.equals( SaveFileType.TiffPlanes ) )
 		{
 			// TODO: for cropped images only fully load the cropped region
 			// TODO: for input data distributed across Tiff planes this should be reconsidered
 
 			long cacheSize = image.getDimensionsXYZCT()[ DimensionOrder.C ] * numIOThreads;
-
 			Logger.info( "Configuring volume reader with a cache size of " + cacheSize + " volumes." );
-
-			image.setCache( CacheUtils.volumeWiseCellDims( image.getDimensionsXYZCT() ), DiskCachedCellImgOptions.CacheType.BOUNDED, 100 );
-
-			savingSettings.rai = image.getRai();
+			imageForSaving.setVolumeCache( DiskCachedCellImgOptions.CacheType.BOUNDED, (int) cacheSize );
+			savingSettings.rai = imageForSaving.getRai();
 		}
 		else
 		{
-			savingSettings.rai = image.getRai();
+			savingSettings.rai = imageForSaving.getRai();
 		}
 
 		// TODO: consider giving the whole image to the SavingSettings instead of the rai?
 		savingSettings.type = Util.getTypeFromInterval( savingSettings.rai );
-		savingSettings.channelNames = image.getChannelNames();
-		savingSettings.voxelSize = image.getVoxelSize();
-		savingSettings.voxelUnit = image.getVoxelUnit();
+		savingSettings.channelNames = imageForSaving.getChannelNames();
+		savingSettings.voxelSize = imageForSaving.getVoxelSize();
+		savingSettings.voxelUnit = imageForSaving.getVoxelUnit();
 		ImgSaverFactory factory = new ImgSaverFactory();
 
 		if ( savingSettings.saveVolumes )

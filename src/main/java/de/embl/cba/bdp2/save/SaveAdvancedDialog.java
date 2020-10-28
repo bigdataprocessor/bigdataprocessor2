@@ -18,7 +18,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 
-public class SaveDialog< R extends RealType< R > & NativeType< R > > extends JFrame implements ActionListener
+public class SaveAdvancedDialog< R extends RealType< R > & NativeType< R > > extends JFrame implements ActionListener
 {
     private final ImageViewer viewer;
     private final Image< R > inputImage;
@@ -67,7 +67,7 @@ public class SaveDialog< R extends RealType< R > & NativeType< R > > extends JFr
     private JPanel mainPanel;
     private ArrayList< JPanel > panels;
 
-    public SaveDialog( ImageViewer viewer, SaveFileType saveFileType )
+    public SaveAdvancedDialog( ImageViewer viewer, SaveFileType saveFileType )
     {
         this.viewer = viewer;
         this.inputImage = viewer.getImage();

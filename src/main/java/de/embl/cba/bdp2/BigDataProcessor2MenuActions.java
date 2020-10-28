@@ -22,9 +22,8 @@ import de.embl.cba.bdp2.track.ApplyTrackDialog;
 import de.embl.cba.bdp2.track.TrackCreator;
 import de.embl.cba.bdp2.process.rename.ImageRenameCommand;
 import de.embl.cba.bdp2.process.rename.ImageRenameDialog;
-import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.macro.MacroRecordingDialog;
-import de.embl.cba.bdp2.save.SaveDialog;
+import de.embl.cba.bdp2.save.SaveAdvancedDialog;
 import de.embl.cba.bdp2.scijava.Services;
 import de.embl.cba.bdp2.process.align.channelshift.AlignChannelsCommand;
 import de.embl.cba.bdp2.process.align.splitchip.SplitChipCommand;
@@ -80,7 +79,7 @@ public class BigDataProcessor2MenuActions implements ActionListener {
         if (e.getActionCommand().equalsIgnoreCase( BigDataProcessor2Menu.SAVE_AS_IMARIS_VOLUMES_MENU_ITEM ))
         {
             BigDataProcessor2.threadPool.submit(() -> {
-                SaveDialog saveDialog = new SaveDialog( viewer, SaveFileType.ImarisVolumes );
+                SaveAdvancedDialog saveDialog = new SaveAdvancedDialog( viewer, SaveFileType.ImarisVolumes );
                 saveDialog.setVisible(true);
             });
         }
@@ -116,7 +115,7 @@ public class BigDataProcessor2MenuActions implements ActionListener {
         {
             BigDataProcessor2.threadPool.submit(() -> {
                 if (! isImageSelected( viewer ) ) return;
-                SaveDialog saveDialog = new SaveDialog( viewer, SaveFileType.TiffVolumes );
+                SaveAdvancedDialog saveDialog = new SaveAdvancedDialog( viewer, SaveFileType.TiffVolumes );
                 saveDialog.setVisible(true);
             });
         }
@@ -124,7 +123,7 @@ public class BigDataProcessor2MenuActions implements ActionListener {
         {
             BigDataProcessor2.threadPool.submit(() -> {
                 if (! isImageSelected( viewer ) ) return;
-                SaveDialog saveDialog = new SaveDialog( viewer, SaveFileType.TiffPlanes );
+                SaveAdvancedDialog saveDialog = new SaveAdvancedDialog( viewer, SaveFileType.TiffPlanes );
                 saveDialog.setVisible(true);
             });
         }

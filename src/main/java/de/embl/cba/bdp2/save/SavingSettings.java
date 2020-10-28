@@ -62,7 +62,7 @@ public class SavingSettings < R extends RealType< R > & NativeType< R > > {
 	@NotNull
 	public static String createFilePathStump( Image image, String type, String directory )
 	{
-		return directory + File.separator + type + File.separator + image.getName();
+		return new File( directory, type + File.separator + image.getName() ).toString();
 	}
 
     /**

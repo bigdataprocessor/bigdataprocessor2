@@ -83,7 +83,7 @@ public class FileSeriesCellLoader< T extends NativeType< T > > implements CellLo
             }
 
             long timeMillis = System.currentTimeMillis() - start;
-            Logger.benchmark( "Read z-plane #" + min[ Z ] + " in " + timeMillis + " ms" );
+            Logger.benchmark( "Read planes " + min[ Z ] + "-" + max[ Z ] + " in " + timeMillis + " ms" );
             PerformanceService.getPerformanceMonitor().addReadPerformance( storageArray.length, timeMillis );
         }
         else if ( cell.firstElement() instanceof UnsignedShortType )
@@ -135,7 +135,7 @@ public class FileSeriesCellLoader< T extends NativeType< T > > implements CellLo
             }
 
             long timeMillis = System.currentTimeMillis() - start;
-            Logger.benchmark( "Read z-plane #" + min[ Z ] + " in " + timeMillis + " ms" );
+            Logger.benchmark( "Read planes " + min[ Z ] + "-" + max[ Z ] + " in " + timeMillis + " ms" );
             PerformanceService.getPerformanceMonitor().addReadPerformance( 2L * (long) storageArray.length, timeMillis  );
 
         }
@@ -147,7 +147,7 @@ public class FileSeriesCellLoader< T extends NativeType< T > > implements CellLo
             System.arraycopy(impData, 0, storageArray, 0, storageArray.length);
 
             long timeMillis = System.currentTimeMillis() - start;
-            Logger.benchmark( "Read z-plane #" + min[ Z ] + " in " + timeMillis + " ms" );
+            Logger.benchmark( "Read planes " + min[ Z ] + "-" + max[ Z ] + " in " + timeMillis + " ms" );
             PerformanceService.getPerformanceMonitor().addReadPerformance( 4L * (long) storageArray.length, timeMillis  );
         }
     }
