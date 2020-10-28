@@ -29,7 +29,6 @@ public class MacroRecorder
 
 	public MacroRecorder()
 	{
-
 	}
 
 	public MacroRecorder( Image< ? > outputImage )
@@ -84,7 +83,7 @@ public class MacroRecorder
 
 	public static String asJythonArray( String[] strings )
 	{
-		return "array([" + asCSV( strings ) + "], \"s\")";
+		return "array([" + asCSV( strings ) + "], java.lang.String )";
 	}
 
 	public static String asCSV( double[] doubles )
@@ -99,7 +98,7 @@ public class MacroRecorder
 
 	public static String asCSV( String[] strings )
 	{
-		return Arrays.stream( strings ).collect( Collectors.joining( "," ) );
+		return Arrays.stream( strings ).map( s -> quote( s ) ).collect( Collectors.joining( "," ) );
 	}
 
 	public void addCommandParameter( String name, Object value )
@@ -135,6 +134,7 @@ public class MacroRecorder
 					{
 						recorder.recordString( "# To run this script, please select language: Python\n" );
 						recorder.recordString( "from de.embl.cba.bdp2 import BigDataProcessor2;\n" );
+						recorder.recordString( "import java;\n" );
 						recorder.recordString( "from jarray import array;\n" );
 						recorder.recordString( "from de.embl.cba.bdp2.save import SavingSettings;\n" );
 						recorder.recordString( "from de.embl.cba.bdp2.save import SaveFileType;\n" );

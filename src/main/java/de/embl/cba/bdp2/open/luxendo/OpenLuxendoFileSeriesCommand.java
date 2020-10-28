@@ -33,7 +33,6 @@ public class OpenLuxendoFileSeriesCommand< R extends RealType< R > & NativeType<
     @Parameter( label = "Stack index"  )
     protected int stackIndex = 0;
     public static String STACK_INDEX_PARAMETER = "stackIndex";
-    private MacroRecorder recorder;
     private String regExp;
     private String[] selectedChannels;
 
@@ -73,11 +72,12 @@ public class OpenLuxendoFileSeriesCommand< R extends RealType< R > & NativeType<
         else
         {
             removeOpenLuxendoCommandCallFromRecorder();
-            recorder = new MacroRecorder( OpenLuxendoChannelsFileSeriesCommand.COMMAND_FULL_NAME, viewingModality, outputImage );
+            MacroRecorder recorder = new MacroRecorder( OpenLuxendoChannelsFileSeriesCommand.COMMAND_FULL_NAME, viewingModality, outputImage );
             recorder.addCommandParameter( AbstractOpenFileSeriesCommand.DIRECTORY_PARAMETER, directory.getAbsolutePath() );
             recorder.addCommandParameter( AbstractOpenFileSeriesCommand.ARBITRARY_PLANE_SLICING_PARAMETER, enableArbitraryPlaneSlicing );
             recorder.addCommandParameter( OpenLuxendoFileSeriesCommand.STACK_INDEX_PARAMETER, stackIndex );
             recorder.addCommandParameter( OpenLuxendoChannelsFileSeriesCommand.CHANNELS_PARAMETER, String.join( ",", selectedChannels ) );
+            recorder.record();
         }
     }
 
@@ -105,7 +105,7 @@ public class OpenLuxendoFileSeriesCommand< R extends RealType< R > & NativeType<
     @Override
     public void recordJythonCall()
     {
-        recorder = new MacroRecorder();
+        MacroRecorder recorder = new MacroRecorder( outputImage );
         recorder.recordImportStatements( true );
         recorder.setAPIFunction( "openHdf5Series" );
         recorder.addAPIFunctionParameter( recorder.quote( directory.toString() ) );
