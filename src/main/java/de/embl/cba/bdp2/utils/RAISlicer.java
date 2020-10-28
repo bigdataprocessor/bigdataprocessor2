@@ -147,7 +147,7 @@ public class RAISlicer
 
 		raiXYZ = copyVolumeRAI( raiXYZ, numThreads, type );
 
-		Logger.debug( "Processed volume [ s ]: " + ( System.currentTimeMillis() - start ) / 1000);
+		Logger.benchmark( "Processed volume [ s ]: " + ( System.currentTimeMillis() - start ) / 1000 );
 
 		return raiXYZ;
 	}

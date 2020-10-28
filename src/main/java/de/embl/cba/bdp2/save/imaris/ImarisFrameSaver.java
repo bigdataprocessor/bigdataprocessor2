@@ -93,15 +93,12 @@ public class ImarisFrameSaver< R extends RealType< R > & NativeType< R >> implem
             {
                 start = System.currentTimeMillis();
                 H5DataCubeWriter writer = new H5DataCubeWriter();
-
                 writer.writeImarisCompatibleResolutionPyramid(
                         imagePlus,
                         imarisDataSetProperties,
                         c,
                         t );
-
-                Logger.debug( "Saved volume in [ s ]: "
-                        + ( System.currentTimeMillis() - start ) / 1000);
+                Logger.benchmark( "Saved volume in [ s ]: " + ( System.currentTimeMillis() - start ) / 1000);
             }
 
             // Save projections

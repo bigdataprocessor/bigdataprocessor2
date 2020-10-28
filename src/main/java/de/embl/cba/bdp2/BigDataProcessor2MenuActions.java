@@ -1,5 +1,6 @@
 package de.embl.cba.bdp2;
 
+import de.embl.cba.bdp2.log.LoggingLevelCommand;
 import de.embl.cba.bdp2.open.AbstractOpenFileSeriesCommand;
 import de.embl.cba.bdp2.open.bioformats.OpenBdvBioFormatsCommand;
 import de.embl.cba.bdp2.open.fileseries.OpenEMTiffPlanesFileSeriesCommand;
@@ -236,7 +237,7 @@ public class BigDataProcessor2MenuActions implements ActionListener {
         {
             BigDataProcessor2.threadPool.submit(() ->
             {
-                Logger.showLoggingLevelDialog();
+                Services.getCommandService().run( LoggingLevelCommand.class, true );
             });
         }
         else if( e.getActionCommand().equalsIgnoreCase( ImageRenameCommand.COMMAND_NAME ) )
@@ -309,14 +310,6 @@ public class BigDataProcessor2MenuActions implements ActionListener {
                 new TransformDialog<>( viewer );
             });
         }
-        else if( e.getActionCommand().equalsIgnoreCase( BigDataProcessor2Menu.LOG ) )
-        {
-            BigDataProcessor2.threadPool.submit(() ->
-            {
-                Logger.showLoggingLevelDialog();
-            });
-        }
-
     }
 
     private boolean isImageSelected( ImageViewer viewer )

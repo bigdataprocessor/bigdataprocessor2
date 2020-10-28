@@ -87,6 +87,10 @@ public class Logger
 		// TODO
 	}
 
+	/**
+	 * Use LoggingLevelCommand instead, because this is automatically macro recorded.
+	 */
+	@Deprecated
 	public synchronized static void showLoggingLevelDialog()
 	{
 		final GenericDialog gd = new GenericDialog( "Logging" );

@@ -2,7 +2,7 @@ package de.embl.cba.bdp2.save;
 
 import de.embl.cba.bdp2.save.imaris.ImarisImageSaver;
 import de.embl.cba.bdp2.save.tiff.TiffPlanesSaver;
-import de.embl.cba.bdp2.save.tiff.TiffVolumesImageSaver;
+import de.embl.cba.bdp2.save.tiff.TiffFramesSaver;
 
 import java.util.concurrent.ExecutorService;
 
@@ -16,7 +16,7 @@ public class ImgSaverFactory {
         }
         else if (savingSettings.fileType.equals( SaveFileType.TiffVolumes ))
         {
-            return new TiffVolumesImageSaver( savingSettings, es );
+            return new TiffFramesSaver( savingSettings, es );
         }
 //        else if (savingSettings.fileType.equals( SaveFileType.Hdf5Volumes ))
 //        {

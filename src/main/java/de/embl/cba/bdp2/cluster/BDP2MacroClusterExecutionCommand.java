@@ -1,5 +1,6 @@
-package de.embl.cba.bdp2.macro;
+package de.embl.cba.bdp2.cluster;
 
+import de.embl.cba.bdp2.macro.HeadlessMacroCreator;
 import de.embl.cba.bdp2.scijava.Services;
 import de.embl.cba.cluster.AbstractClusterSubmitterCommand;
 import de.embl.cba.cluster.JobFuture;
@@ -137,5 +138,4 @@ public class BDP2MacroClusterExecutionCommand extends AbstractClusterSubmitterCo
 		Services.setCommandService( ij.command() );
 		ij.command().run( BDP2MacroClusterExecutionCommand.class, true );
 	}
-
 }

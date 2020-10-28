@@ -45,6 +45,8 @@ public class HeadlessMacroCreator
 	{
 		ArrayList< String > headlessCommands = new ArrayList<>();
 
+		headlessCommands.add( "run(\"BDP2 Set Logging Level...\", \"level=Benchmark\");" );
+
 		for ( String command : lines )
 		{
 			if ( command.contains( "BigDataProcessor2") ) continue;

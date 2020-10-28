@@ -35,7 +35,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static de.embl.cba.bdp2.save.tiff.TiffUtils.ShortToByteBigEndian;
 import static de.embl.cba.bdp2.utils.DimensionOrder.*;
 
-public class TiffVolumesFrameSaver< R extends RealType< R > & NativeType< R > > implements Runnable {
+public class TiffFrameSaver< R extends RealType< R > & NativeType< R > > implements Runnable {
     private final int t;
     private final AtomicInteger counter;
     private final SavingSettings settings;
@@ -43,11 +43,11 @@ public class TiffVolumesFrameSaver< R extends RealType< R > & NativeType< R > > 
     private final AtomicBoolean stop;
     private RandomAccessibleInterval rai;
 
-    public TiffVolumesFrameSaver( int t,
-                                  SavingSettings settings,
-                                  AtomicInteger counter,
-                                  final long startTime,
-                                  AtomicBoolean stop) {
+    public TiffFrameSaver( int t,
+                           SavingSettings settings,
+                           AtomicInteger counter,
+                           final long startTime,
+                           AtomicBoolean stop) {
         this.t = t;
         this.settings = settings;
         this.counter = counter;

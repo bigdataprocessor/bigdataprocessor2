@@ -119,5 +119,4 @@ public class SaveAdvancedCommand< R extends RealType< R > & NativeType< R > > im
 
         return savingSettings;
     }
-
 }
