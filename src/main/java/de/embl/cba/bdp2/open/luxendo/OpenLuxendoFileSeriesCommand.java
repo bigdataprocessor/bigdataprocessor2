@@ -35,7 +35,7 @@ public class OpenLuxendoFileSeriesCommand< R extends RealType< R > & NativeType<
     public static String STACK_INDEX_PARAMETER = "stackIndex";
     private MacroRecorder recorder;
     private String regExp;
-    private List< String > selectedChannels;
+    private String[] selectedChannels;
 
     public void run()
     {
@@ -49,7 +49,7 @@ public class OpenLuxendoFileSeriesCommand< R extends RealType< R > & NativeType<
             }
 
             FileInfos fileInfos = new FileInfos( directory.toString(), regExp, regExp, "Data" );
-            final ChannelChooserDialog dialog = new ChannelChooserDialog( Arrays.asList( fileInfos.channelNames ) );
+            final ChannelChooserDialog dialog = new ChannelChooserDialog( fileInfos.channelNames  );
             selectedChannels = dialog.getChannelsViaDialog();
 
             outputImage = BigDataProcessor2.openHdf5Series(
@@ -111,7 +111,7 @@ public class OpenLuxendoFileSeriesCommand< R extends RealType< R > & NativeType<
         recorder.addAPIFunctionParameter( recorder.quote( directory.toString() ) );
         recorder.addAPIFunctionParameter( recorder.quote( regExp ) );
         recorder.addAPIFunctionParameter( recorder.quote( "Data" ) );
-        recorder.addAPIFunctionParameter( selectedChannels.toArray( new String[0] ) );
+        recorder.addAPIFunctionParameter( selectedChannels );
         recorder.record();
     }
 }

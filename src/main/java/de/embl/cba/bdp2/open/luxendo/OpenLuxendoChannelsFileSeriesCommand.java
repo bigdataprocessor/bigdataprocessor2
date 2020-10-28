@@ -37,13 +37,11 @@ public class OpenLuxendoChannelsFileSeriesCommand< R extends RealType< R > & Nat
 
             String regExp = NamingSchemes.LUXENDO_REGEXP.replace( "STACK", "" + stackIndex );
 
-            final List< String > channelList = Arrays.stream( channels.split( "," ) ).map( String::trim ).collect( Collectors.toList() );
-
             outputImage = BigDataProcessor2.openHdf5Series(
                                 directory.toString(),
                                 regExp,
                                "Data",
-                                channelList );
+                                Arrays.stream( channels.split( "," ) ).map( String::trim ).toArray( String[]::new ));
 
             handleOutputImage( true, false );
         });

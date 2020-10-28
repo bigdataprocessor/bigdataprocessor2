@@ -91,7 +91,7 @@ public class FileInfos
             String namingScheme,
             String filter,
             String h5DataSetName,
-            List< String > channelSubset
+            final String[] channelSubset
     )
     {
         fetchFileInfos( directory, namingScheme, filter, h5DataSetName, channelSubset );
@@ -102,7 +102,7 @@ public class FileInfos
             String namingScheme,
             String filter,
             String h5DataSetName,
-            List< String > channelSubset,
+            String[] channelSubset,
             String[][] filesInFolders
     )
     {
@@ -110,7 +110,7 @@ public class FileInfos
         fetchFileInfos( directory, namingScheme, filter, h5DataSetName, channelSubset );
     }
 
-    private void fetchFileInfos( String directory, String namingScheme, String filter, String h5DataSetName, List< String > channelSubset )
+    private void fetchFileInfos( String directory, String namingScheme, String filter, String h5DataSetName, String[] channelSubset )
     {
         DebugTools.setRootLevel( "OFF" ); // Bio-Formats
 

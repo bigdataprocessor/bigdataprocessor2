@@ -7,20 +7,20 @@ import java.util.List;
 
 public class ChannelChooserDialog
 {
-	private final List< String > channels;
+	private final String[] channels;
 
-	public ChannelChooserDialog( List< String > channels )
+	public ChannelChooserDialog( String[] channels )
 	{
 		this.channels = channels;
 	}
 
-	public List< String > getChannelsViaDialog( )
+	public String[] getChannelsViaDialog( )
 	{
 		final GenericDialog gd = new GenericDialog( "Select Channels..." );
-		final int numChannels = channels.size();
+		final int numChannels = channels.length;
 		for ( int c = 0; c < numChannels; c++ )
 		{
-			gd.addCheckbox( channels.get( c ), true );
+			gd.addCheckbox( channels[ c ], true );
 		}
 
 		gd.showDialog();
@@ -31,10 +31,10 @@ public class ChannelChooserDialog
 		{
 			if ( gd.getNextBoolean() )
 			{
-				selected.add( channels.get( c ) );
+				selected.add( channels[ c ] );
 			}
 		}
 
-		return selected;
+		return selected.toArray( new String[ 0 ] );
 	}
 }

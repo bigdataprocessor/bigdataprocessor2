@@ -180,7 +180,7 @@ public class BigDataProcessor2
             String[][] filesInFolders,
             String regExp,
             String hdf5DataSetName,
-            List< String > channelSubset )
+            String[] channelSubset )
     {
         FileInfos fileInfos = new FileInfos( directory, regExp, regExp, hdf5DataSetName, channelSubset, filesInFolders );
         FileSeriesCachedCellImgCreator< R > cachedCellImgCreator = new FileSeriesCachedCellImgCreator( fileInfos );
@@ -193,27 +193,9 @@ public class BigDataProcessor2
             String directory,
             String regExp,
             String hdf5DataSetName,
-            List< String > channelSubset )
-    {
-        FileInfos fileInfos = new FileInfos( directory, regExp, regExp, hdf5DataSetName, channelSubset );
-        FileSeriesCachedCellImgCreator< R > cachedCellImgCreator = new FileSeriesCachedCellImgCreator( fileInfos );
-        Image< R > image = new Image( cachedCellImgCreator );
-        return image;
-    }
-
-    public static < R extends RealType< R > & NativeType< R > >
-    Image< R > openHdf5Series(
-            String directory,
-            String regExp,
-            String hdf5DataSetName,
             String[] channelSubset )
     {
-        return openHdf5Series( directory, regExp, hdf5DataSetName, Arrays.asList( channelSubset ) );
-    }
-
-    public static < R extends RealType< R > & NativeType< R > >
-    Image< R > openFileSeries( FileInfos fileInfos )
-    {
+        FileInfos fileInfos = new FileInfos( directory, regExp, regExp, hdf5DataSetName, channelSubset );
         FileSeriesCachedCellImgCreator< R > cachedCellImgCreator = new FileSeriesCachedCellImgCreator( fileInfos );
         Image< R > image = new Image( cachedCellImgCreator );
         return image;

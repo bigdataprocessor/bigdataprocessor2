@@ -1,7 +1,6 @@
 package de.embl.cba.bdp2.open.fileseries;
 
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.open.ChannelSubsetter;
 import de.embl.cba.bdp2.open.NamingSchemes;
 import de.embl.cba.bdp2.utils.BioFormatsCalibrationReader;
 import de.embl.cba.bdp2.utils.DimensionOrder;
@@ -17,7 +16,7 @@ import java.util.regex.Pattern;
 
 public class FileInfosHelper
 {
-    public static void configureFileInfos5D( FileInfos fileInfos, String namingScheme, List< String > channelSubset, String[][] fileLists )
+    public static void configureFileInfos5D( FileInfos fileInfos, String namingScheme, String[] channelSubset, String[][] fileLists )
     {
         String directory = fileInfos.directory;
 
@@ -125,7 +124,7 @@ public class FileInfosHelper
         }
     }
 
-    private static void initFileInfos5D( FileInfos fileInfos, String namingScheme, String[][] fileLists, List< String > channelSubset )
+    private static void initFileInfos5D( FileInfos fileInfos, String namingScheme, String[][] fileLists, String[] channelSubset )
     {
         HashSet<String> channels = new HashSet();
         HashSet<String> timepoints = new HashSet();
@@ -190,16 +189,17 @@ public class FileInfosHelper
                 sliceGroups);
     }
 
-    private static List< String > subSetChannelsIfNecessary( List< String > channelSubset, List< String > channels )
+    private static List< String > subSetChannelsIfNecessary( String[] channelSubset, List< String > allChannels )
     {
         if ( channelSubset != null )
         {
-            List< String > subset = new ChannelSubsetter( channelSubset ).getChannelSubset( channels );
-            List< String > sortedSubset = sort( subset );
+            List< String > sortedSubset = sort( Arrays.asList( channelSubset ) );
             return sortedSubset;
         }
-
-        return channels;
+        else
+        {
+            return allChannels;
+        }
     }
 
     public static List< String > sort( Collection< String > strings )
