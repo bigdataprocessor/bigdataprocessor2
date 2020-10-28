@@ -2,6 +2,7 @@ package benchmark;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
+import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.save.SaveFileType;
 import de.embl.cba.bdp2.save.SavingSettings;
 import ij.IJ;
@@ -11,7 +12,7 @@ public class BenchmarkPublication
 {
 	public static void main( String[] args )
 	{
-
+		Logger.setLevel( Logger.Level.Benchmark );
 		Image image = BigDataProcessor2.openHdf5Series(
 				"/Users/tischer/Downloads/tmp-luxendo",
 				".*stack_6_(?<C1>channel_.*)/(?<C2>Cam_.*)_(?<T>\\d+).h5",
@@ -30,6 +31,6 @@ public class BenchmarkPublication
 		savingSettings.tStart = 0;
 		savingSettings.tEnd = 1;
 		BigDataProcessor2.saveImageAndWaitUntilDone( image, savingSettings );
-		IJ.run("BDP2 Set Logging Level...", "level=Benchmark");
+
 	}
 }
