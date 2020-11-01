@@ -83,33 +83,37 @@ public class FileSeriesCellLoader< T extends NativeType< T > > implements CellLo
             }
 
             long timeMillis = System.currentTimeMillis() - start;
-            Logger.benchmark( "Read planes " + min[ Z ] + "-" + max[ Z ] + " in " + timeMillis + " ms" );
+            log( min, max, timeMillis );
             PerformanceService.getPerformanceMonitor().addReadPerformance( storageArray.length, timeMillis );
         }
         else if ( cell.firstElement() instanceof UnsignedShortType )
         {
             final short[] storageArray = ( short[] ) cell.getStorageArray();
 
-//            Don't do it, hope for better fix!
-//
-//            if ( min[ DimensionOrder.T ] == 0 )
-//            {
-//                if ( cache == null )
-//                {
-//                    cache = new short[ (int) dimensions[ DimensionOrder.C ] ][];
-//                }
-//
-//                if ( cache[ DimensionOrder.C ] == null )
-//                {
-//                    // hold on to the data of time-point zero to avoid reloading of it
-//                    cache[ DimensionOrder.C ] = storageArray;
-//                }
-//                else
-//                {
-//                    System.arraycopy( cache[ DimensionOrder.C ], 0, storageArray, 0, storageArray.length );
-//                    return;
-//                }
-//            }
+            // TODO: Remove once this is fixed in imglib2
+            if ( min[ DimensionOrder.T ] == 0 && min[ DimensionOrder.Z ] == 0)
+            {
+                if ( cache == null )
+                {
+                    int numChannels = ( int ) dimensions[ DimensionOrder.C ];
+                    cache = new short[ numChannels ][];
+                }
+
+                int channelIndex = ( int ) min[ DimensionOrder.C ];
+
+                if ( cache[ channelIndex ] == null )
+                {
+                    // hold on to the data of time-point zero to avoid reloading of it
+                    cache[ channelIndex ] = storageArray;
+                }
+                else
+                {
+                    System.arraycopy( cache[ channelIndex ], 0, storageArray, 0, storageArray.length );
+                    long timeMillis = System.currentTimeMillis() - start;
+                    log( min, max, timeMillis );
+                    return;
+                }
+            }
 
             if ( fileType.toString().toLowerCase().contains( "hdf5" ) )
             {
@@ -135,7 +139,7 @@ public class FileSeriesCellLoader< T extends NativeType< T > > implements CellLo
             }
 
             long timeMillis = System.currentTimeMillis() - start;
-            Logger.benchmark( "Read planes " + min[ Z ] + "-" + max[ Z ] + " in " + timeMillis + " ms" );
+            log( min, max, timeMillis );
             PerformanceService.getPerformanceMonitor().addReadPerformance( 2L * (long) storageArray.length, timeMillis  );
 
         }
@@ -147,9 +151,14 @@ public class FileSeriesCellLoader< T extends NativeType< T > > implements CellLo
             System.arraycopy(impData, 0, storageArray, 0, storageArray.length);
 
             long timeMillis = System.currentTimeMillis() - start;
-            Logger.benchmark( "Read planes " + min[ Z ] + "-" + max[ Z ] + " in " + timeMillis + " ms" );
+            log( min, max, timeMillis );
             PerformanceService.getPerformanceMonitor().addReadPerformance( 4L * (long) storageArray.length, timeMillis  );
         }
+    }
+
+    private static void log( long[] min, long[] max, long timeMillis )
+    {
+        Logger.benchmark( "Read planes " + min[ Z ] + "-" + max[ Z ] + " from time-point " + min[ DimensionOrder.T ] + " in " + timeMillis + " ms" );
     }
 
     public long[] getDimensions()

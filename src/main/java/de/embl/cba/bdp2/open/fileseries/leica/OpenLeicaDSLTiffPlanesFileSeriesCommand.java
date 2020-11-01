@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.open.leica;
+package de.embl.cba.bdp2.open.fileseries.leica;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.macro.MacroRecorder;
@@ -17,10 +17,9 @@ import javax.swing.*;
 import static de.embl.cba.bdp2.utils.Utils.COMMAND_BDP2_PREFIX;
 
 @Plugin(type = Command.class, menuPath = Utils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractOpenFileSeriesCommand.COMMAND_OPEN_PATH + OpenLeicaDSLTiffPlanesFileSeriesCommand.COMMAND_FULL_NAME )
-@Deprecated
 public class OpenLeicaDSLTiffPlanesFileSeriesCommand< R extends RealType< R > & NativeType< R > > extends AbstractOpenFileSeriesCommand< R >
 {
-    public static final String COMMAND_NAME = "Open Leica DSL Tiff Planes...";
+    public static final String COMMAND_NAME = "Open Leica DSL Tiff Plane File Series...";
     public static final String COMMAND_FULL_NAME = COMMAND_BDP2_PREFIX + COMMAND_NAME;
     private String regExp;
 

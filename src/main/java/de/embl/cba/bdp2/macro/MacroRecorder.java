@@ -124,8 +124,9 @@ public class MacroRecorder
 	{
 		new Thread( () -> {
 			Recorder recorder = Recorder.getInstance();
-			if ( recorder != null )
 
+			if ( recorder != null )
+			{
 				if ( Recorder.scriptMode() ) // Jython
 				{
 					removeIJRunCallFromRecorder();
@@ -153,8 +154,8 @@ public class MacroRecorder
 
 					if ( outputImage != null )
 					{
-						if ( inputImage != null && ! inputImage.getName().equals( outputImage.getName() ) )
-							recorder.recordString( "image.setName( " + quote(outputImage.getName() ) + " );\n" );
+						if ( inputImage != null && !inputImage.getName().equals( outputImage.getName() ) )
+							recorder.recordString( "image.setName( " + quote( outputImage.getName() ) + " );\n" );
 					}
 
 					if ( recordShowImageCall )
@@ -164,10 +165,10 @@ public class MacroRecorder
 				else // macro recording
 				{
 					if ( message != null )
-						Recorder.recordString( message );
-					Recorder.record( "run", commandName, options );
+						recorder.recordString( message );
+					recorder.record( "run", commandName, options );
 				}
-
+			}
 		}).start();
 	}
 

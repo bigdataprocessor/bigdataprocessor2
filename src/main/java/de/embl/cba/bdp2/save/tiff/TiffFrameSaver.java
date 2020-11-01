@@ -215,7 +215,6 @@ public class TiffFrameSaver< R extends RealType< R > & NativeType< R > > impleme
         {
             ImageWriter writer = getImageWriter( imp, pathCT );
 
-            final String compression = writer.getCompression();
             if ( settings.compression.equals( SavingSettings.COMPRESSION_ZLIB ) )
                 writer.setCompression( TiffWriter.COMPRESSION_ZLIB );
             else if ( settings.compression.equals( SavingSettings.COMPRESSION_LZW ) )

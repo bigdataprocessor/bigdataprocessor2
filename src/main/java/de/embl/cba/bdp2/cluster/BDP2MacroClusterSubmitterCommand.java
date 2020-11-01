@@ -19,12 +19,15 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Plugin(type = Command.class, menuPath = "Plugins>EMBL>BDP2 Execute Macro on Cluster" )
-public class BDP2MacroClusterExecutionCommand extends AbstractClusterSubmitterCommand
+@Plugin(type = Command.class, menuPath = "Plugins>EMBL>BDP2 Submit Macro to Cluster" )
+public class BDP2MacroClusterSubmitterCommand extends AbstractClusterSubmitterCommand
 {
 	public static final String T_START = "tstart=";
 	public static final String T_END = "tend=";
 	public static final String NUMPROCESSINGTHREADS = "numprocessingthreads=";
+
+
+	// executable: /g/almf/software/Fiji-versions/Fiji-BDP2.app/ImageJ-linux64
 
 	@Parameter ( label = "Macro files" )
 	File[] macros;
@@ -77,7 +80,7 @@ public class BDP2MacroClusterExecutionCommand extends AbstractClusterSubmitterCo
 				timeSubsetMacro = timeSubsetMacro.replace( T_END + tEndInMacro, T_END + t1 );
 
 				jobSubmitter.addIJMacroExecution( timeSubsetMacro );
-				JobSettings jobSettings = getJobSettings( timeSubsetMacro, t0, t1 );
+				JobSettings jobSettings = getJobSettings( t0, t1 );
 				jobFutures.add( jobSubmitter.submitJob( jobSettings ) );
 				Utils.wait( 500 );
 			}
@@ -120,7 +123,7 @@ public class BDP2MacroClusterExecutionCommand extends AbstractClusterSubmitterCo
 		}
 	}
 
-	private JobSettings getJobSettings( String macro, int t0, int t1 )
+	private JobSettings getJobSettings( int t0, int t1 )
 	{
 		JobSettings jobSettings = new JobSettings();
 		jobSettings.numWorkersPerNode = numWorkers;
@@ -135,7 +138,8 @@ public class BDP2MacroClusterExecutionCommand extends AbstractClusterSubmitterCo
 		final ImageJ ij = new ImageJ();
 		ij.ui().showUI();
 
+		// /g/almf/software/Fiji-versions/Fiji-BDP2.app/ImageJ-linux64
 		Services.setCommandService( ij.command() );
-		ij.command().run( BDP2MacroClusterExecutionCommand.class, true );
+		ij.command().run( BDP2MacroClusterSubmitterCommand.class, true );
 	}
 }

@@ -81,8 +81,8 @@ public class SavingSettings < R extends RealType< R > & NativeType< R > > {
         savingSettings.fileType = SaveFileType.TiffPlanes;
         savingSettings.volumesFilePathStump = "/Users/tischer/Desktop/bdp2-out/image";
         savingSettings.compression = COMPRESSION_NONE;
-        savingSettings.numProcessingThreads = (int) Math.ceil( Math.sqrt( AVAILABLE_PROCESSORS ) + 1 );
-        savingSettings.numIOThreads = savingSettings.numProcessingThreads;
+        savingSettings.numProcessingThreads = AVAILABLE_PROCESSORS; // (int) Math.ceil( Math.sqrt( AVAILABLE_PROCESSORS ) + 1 );
+        savingSettings.numIOThreads = 1; //savingSettings.numProcessingThreads;
 
         return savingSettings;
     }

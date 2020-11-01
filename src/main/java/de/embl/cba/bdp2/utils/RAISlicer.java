@@ -7,6 +7,7 @@ import net.imglib2.img.AbstractImg;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.cell.CellImgFactory;
+import net.imglib2.loops.LoopBuilder;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.RealType;
@@ -229,18 +230,22 @@ public class RAISlicer
 			copy = new CellImgFactory( type, cellSize ).create( volume );
 		}
 
-		// LoopBuilder.setImages( copy, volume ).forEachPixel( Type::set );
-
+//		LoopBuilder.setImages( copy, volume ).forEachPixel( Type::set );
+//
 		final int[] blockSize = {
 				dimensionX,
 				dimensionY,
 				( int ) Math.ceil( dimensionZ / numThreads ) };
 
-		final List< Interval > intervals = Grids.collectAllContainedIntervals(
-				Intervals.dimensionsAsLongArray( volume ), blockSize );
+		final List< Interval > intervals = Grids.collectAllContainedIntervals( Intervals.dimensionsAsLongArray( volume ), blockSize );
 
-		intervals.parallelStream().forEach(
-				interval -> copy( volume, Views.interval( copy, interval ) ) );
+		// DELETEME
+//		ArrayImg arrayImg = new ArrayImgFactory( type ).create( volume );
+		//IntervalView intervalView = Views.zeroMin( Views.interval( arrayImg, arrayImg ) );
+//		intervals.parallelStream().forEach( interval -> copy( arrayImg, Views.interval( copy, interval ) ) );
+
+		// UNCOMMENT
+		intervals.parallelStream().forEach( interval -> copy( volume, Views.interval( copy, interval ) ) );
 
 		return copy;
 	}
@@ -269,17 +274,10 @@ public class RAISlicer
 		Cursor< T > targetCursor = target.localizingCursor();
 		RandomAccess< T > sourceRandomAccess = source.randomAccess();
 
-		// iterate over the input cursor
 		while ( targetCursor.hasNext() )
 		{
-			// move input cursor forward
 			targetCursor.fwd();
-
-			// set the output cursor to the position of the input cursor
-			sourceRandomAccess.setPosition( targetCursor );
-
-			// set the value of this pixel of the output image, every Type supports T.set( T type )
-			targetCursor.get().set( sourceRandomAccess.get() );
+			targetCursor.get().set( sourceRandomAccess.setPositionAndGet( targetCursor ) );
 		}
 	}
 

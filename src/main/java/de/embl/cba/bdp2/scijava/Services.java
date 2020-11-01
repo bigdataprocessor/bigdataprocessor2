@@ -23,7 +23,6 @@ public class Services
 		if ( uiService.isHeadless() )
 		{
 			Logger.info( "Detected headless mode." );
-			Logger.setLevel( Logger.Level.Debug );
 		}
 	}
 

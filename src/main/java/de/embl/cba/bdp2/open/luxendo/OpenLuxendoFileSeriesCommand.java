@@ -27,7 +27,7 @@ import static de.embl.cba.bdp2.utils.Utils.COMMAND_BDP2_PREFIX;
 @Plugin(type = Command.class, menuPath = Utils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractOpenFileSeriesCommand.COMMAND_OPEN_PATH + OpenLuxendoFileSeriesCommand.COMMAND_FULL_NAME )
 public class OpenLuxendoFileSeriesCommand< R extends RealType< R > & NativeType< R > > extends AbstractOpenFileSeriesCommand< R >
 {
-    public static final String COMMAND_NAME = "Open Luxendo Hdf5...";
+    public static final String COMMAND_NAME = "Open Luxendo Hdf5 File Series...";
     public static final String COMMAND_FULL_NAME = COMMAND_BDP2_PREFIX + COMMAND_NAME;
 
     @Parameter( label = "Stack index"  )
