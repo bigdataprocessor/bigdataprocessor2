@@ -10,7 +10,7 @@ The key functionality of BDP2 is to process an [Image](https://github.com/bigdat
 
 Image processing steps are autodiscovered during runtime and can thus also live in other repositories as long as they are on the Java class path during runtime.
 
-In order for an image processing step to be discovered, it must be a SciJava plugin of type [AbstractImageProcessingCommand](https://github.com/bigdataprocessor/bigdataprocessor2/blob/master/src/main/java/de/embl/cba/bdp2/process/AbstractImageProcessingCommand.java#L14).
+In order for an image processing step to be discovered, it must be a SciJava plugin that extends [AbstractImageProcessingCommand](https://github.com/bigdataprocessor/bigdataprocessor2/blob/master/src/main/java/de/embl/cba/bdp2/process/AbstractImageProcessingCommand.java#L14).
 
 Many examples can be found in the [process](https://github.com/bigdataprocessor/bigdataprocessor2/tree/master/src/main/java/de/embl/cba/bdp2/process) package.
 
