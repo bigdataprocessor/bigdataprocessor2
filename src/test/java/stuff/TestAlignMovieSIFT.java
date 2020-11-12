@@ -1,4 +1,4 @@
-package test;
+package stuff;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
@@ -23,8 +23,7 @@ public class TestAlignMovieSIFT< R extends RealType< R > & NativeType< R > >
 
 		final Image< R > image = BigDataProcessor2.openTiffSeries(
 				"/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-data/gustavo-drift",
-				NamingSchemes.LOAD_CHANNELS_FROM_FOLDERS,
-				".*");
+				NamingSchemes.LOAD_CHANNELS_FROM_FOLDERS );
 
 		if ( showImages )
 			BigDataProcessor2.showImage( image, true );

@@ -80,10 +80,7 @@ public class SampleDataDownloader
 			outputDirectory = UnZipper.unzip( download );
 		}
 
-		final Image image = BigDataProcessor2.openTiffSeries(
-				outputDirectory,
-				datasetNameToRegExp.get( datasetName ),
-				".*" );
+		final Image image = BigDataProcessor2.openTiffSeries( outputDirectory, datasetNameToRegExp.get( datasetName ) );
 
 		if ( viewer != null )
 		{

@@ -1,4 +1,4 @@
-package test;
+package stuff;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
@@ -29,8 +29,7 @@ public class TestAlignMoviePhaseCorrelation< R extends RealType< R > & NativeTyp
 		// long movie
 		final Image< R > image = BigDataProcessor2.openTiffSeries(
 				"/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-data/light-sheet-drift-01",
-				NamingSchemes.SINGLE_CHANNEL_TIMELAPSE,
-				".*");
+				NamingSchemes.SINGLE_CHANNEL_TIMELAPSE );
 
 		if ( showImages )
 			BigDataProcessor2.showImage( image, false ).setDisplaySettings( 100, 200, 0 );
@@ -70,8 +69,7 @@ public class TestAlignMoviePhaseCorrelation< R extends RealType< R > & NativeTyp
 
 		final Image< R > image = BigDataProcessor2.openTiffSeries(
 				"/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-data/gustavo-drift",
-				NamingSchemes.LOAD_CHANNELS_FROM_FOLDERS,
-				".*");
+				NamingSchemes.LOAD_CHANNELS_FROM_FOLDERS );
 
 		if ( showImages )
 			BigDataProcessor2.showImage( image, false ).setDisplaySettings( 0, 200,  0 );

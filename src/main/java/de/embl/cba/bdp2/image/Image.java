@@ -193,8 +193,6 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		this.voxelUnit = voxelUnit;
 	}
 
-	// use method above in the future
-	@Deprecated
 	public void setVoxelUnit( String voxelUnit )
 	{
 		this.voxelUnit = BioFormatsMetaDataHelper.getUnitFromString( voxelUnit );

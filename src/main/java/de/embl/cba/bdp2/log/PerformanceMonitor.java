@@ -8,7 +8,7 @@ import java.util.List;
 
 public class PerformanceMonitor
 {
-	public static final int MEGA = 10000000;
+	public static final int MEGA = 1000000;
 	private List< Double > readPerformances;
 	private List< Double > copyPerformances;
 
@@ -20,24 +20,18 @@ public class PerformanceMonitor
 
 	public synchronized void addReadPerformance( long numBytes, long timeMillis )
 	{
-		final double mbps = toMBPS( numBytes, timeMillis );
+		final double speed = toMBitPerSecond( numBytes, timeMillis );
 		synchronized ( readPerformances )
 		{
-			readPerformances.add( mbps );
+			readPerformances.add( speed );
 		}
 
-		BigDataProcessor2UserInterface.setReadPerformanceInformation( mbps, getMedianReadPerformance() );
+		BigDataProcessor2UserInterface.setReadPerformanceInformation( speed, getMedianReadPerformance() );
 	}
 
-	/**
-	 *
-	 * @param bytes
-	 * @param millis
-	 * @return mega bits per second
-	 */
-	private double toMBPS( long bytes, long millis )
+	private double toMBitPerSecond( long bytes, long millis )
 	{
-		return toMB( bytes ) / toSeconds( millis );
+		return toMBit( bytes ) / toSeconds( millis );
 	}
 
 	private double toSeconds( long timeMillis )
@@ -45,7 +39,7 @@ public class PerformanceMonitor
 		return timeMillis / 1000.0;
 	}
 
-	private double toMB( long bytes )
+	private double toMBit( long bytes )
 	{
 		return 1.0 * bytes * 8 / MEGA;
 	}
@@ -63,7 +57,7 @@ public class PerformanceMonitor
 
 	public void addCopyPerformance( int numBytes, long timeMillis )
 	{
-		copyPerformances.add( toMBPS( numBytes, timeMillis ) );
+		copyPerformances.add( toMBitPerSecond( numBytes, timeMillis ) );
 	}
 
 	public double getAverageCopyPerformance()

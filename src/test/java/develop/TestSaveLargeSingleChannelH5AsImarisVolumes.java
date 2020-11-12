@@ -12,7 +12,6 @@ import static junit.framework.TestCase.assertTrue;
 
 public class TestSaveLargeSingleChannelH5AsImarisVolumes
 {
-
     public void test( )
     {
         final BigDataProcessor2 bdp = new BigDataProcessor2();
@@ -26,7 +25,6 @@ public class TestSaveLargeSingleChannelH5AsImarisVolumes
         final Image image = bdp.openHdf5Series(
                 directory,
                 loadingScheme,
-                filterPattern,
                 "Data");
 
         // bdp.showImage( image );

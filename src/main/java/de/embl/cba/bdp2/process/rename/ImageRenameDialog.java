@@ -1,5 +1,6 @@
 package de.embl.cba.bdp2.process.rename;
 
+import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.macro.MacroRecorder;
 import de.embl.cba.bdp2.process.align.splitchip.SplitChipCommand;
@@ -53,16 +54,16 @@ public class ImageRenameDialog< R extends RealType< R > & NativeType< R > >
 
 		if( gd.wasCanceled() ) return;
 
-		outputImage = new Image<>( inputImage );
+		String name = gd.getNextString();
 
-		outputImage.setName( gd.getNextString() );
 		for ( int c = 0; c < channelNames.length; c++ )
 		{
 			channelNames[ c ] = gd.getNextString();
 		}
-		outputImage.setChannelNames( channelNames );
 
-		viewer.replaceImage( outputImage, false, true );
+		BigDataProcessor2.rename( inputImage, name, channelNames );
+
+		viewer.replaceImage( inputImage, false, true );
 
 		recordMacro();
 	}

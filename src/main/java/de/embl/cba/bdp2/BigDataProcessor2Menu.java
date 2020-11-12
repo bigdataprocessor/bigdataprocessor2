@@ -28,8 +28,8 @@ public class BigDataProcessor2Menu extends JMenu
     public static final String MISC = "Misc";
     public static final String RECORD = "Record...";
     public static final String ABOUT = "About";
-    public static final String HELP = "Help";
-    public static final String ISSUE = "Report an issue";
+    public static final String README = "User Guide";
+    public static final String ISSUE = "Report an Issue";
     public static final String CITE = "Cite";
     public static final String LOG = "Logging...";
 
@@ -56,7 +56,7 @@ public class BigDataProcessor2Menu extends JMenu
         final JMenu mainMenu = addMenu( "BDP2" );
         menus.add( mainMenu );
         addMenuItem( mainMenu, ABOUT );
-        addMenuItem( mainMenu, HELP );
+        addMenuItem( mainMenu, README );
         addMenuItem( mainMenu, ISSUE );
         addMenuItem( mainMenu, CITE );
 
@@ -68,13 +68,13 @@ public class BigDataProcessor2Menu extends JMenu
         menus.add( openMenu );
         // TODO: auto-populate using SciJava annotation
         addMenuItem( openMenu, OpenHelpCommand.COMMAND_NAME );
+        addMenuItem( openMenu, OpenBdvBioFormatsCommand.COMMAND_NAME );
         addMenuItem( openMenu, OpenFileSeriesCommand.COMMAND_NAME );
         JMenu openPredefinedFileSeriesMenu = new JMenu( "Open Predefined File Series" );
         openMenu.add( openPredefinedFileSeriesMenu );
         addMenuItem( openPredefinedFileSeriesMenu, OpenEMTiffPlanesFileSeriesCommand.COMMAND_NAME );
         addMenuItem( openPredefinedFileSeriesMenu, OpenLeicaDSLTiffPlanesFileSeriesCommand.COMMAND_NAME );
         addMenuItem( openPredefinedFileSeriesMenu, OpenLuxendoFileSeriesCommand.COMMAND_NAME );
-        addMenuItem( openMenu, OpenBdvBioFormatsCommand.COMMAND_NAME );
         addMenuItem( openMenu, DownloadAndOpenSampleDataCommand.COMMAND_NAME );
 
         final JMenu processMenu = addMenu( "Process" );

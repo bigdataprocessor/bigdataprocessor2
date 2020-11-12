@@ -51,7 +51,6 @@ public class MergeSplitChipWorkflow
             final Image< R > image = BigDataProcessor2.openHdf5Series(
                     directory.toString(),
                     NamingSchemes.SINGLE_CHANNEL_TIMELAPSE,
-                    ".*.h5",
                     "Data");
             image.setVoxelUnit( voxelUnit );
             image.setVoxelSize(
@@ -84,7 +83,6 @@ public class MergeSplitChipWorkflow
             final Image< R > image = BigDataProcessor2.openHdf5Series(
                     directory,
                     NamingSchemes.SINGLE_CHANNEL_TIMELAPSE,
-                    ".*.h5",
                     "Data");
 
             image.setVoxelUnit( voxelUnit );

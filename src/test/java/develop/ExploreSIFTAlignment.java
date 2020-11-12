@@ -142,8 +142,7 @@ public class ExploreSIFTAlignment < R extends RealType< R > & NativeType< R > >
 
 		final Image< R > image = BigDataProcessor2.openTiffSeries(
 				"/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-data/em-2d-sift-align-01",
-				NamingSchemes.TIFF_SLICES,
-				".*.tif" );
+				NamingSchemes.TIFF_SLICES );
 
 		final RandomAccessibleInterval< R > volumeView = RAISlicer.getVolumeView( image.getRai(), 0, 0 );
 

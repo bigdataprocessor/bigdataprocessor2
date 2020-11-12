@@ -16,6 +16,8 @@ public class TestOpenMultiChannel16BitTiffVolumes
     {
         ImageJ imageJ = new ImageJ();
         Services.setContext( imageJ.getContext() );
+        Services.setCommandService( imageJ.command() );
+        BigDataProcessor2UserInterface.showUI();
         new TestOpenMultiChannel16BitTiffVolumes().run();
     }
 
@@ -24,15 +26,10 @@ public class TestOpenMultiChannel16BitTiffVolumes
     {
         final String directory = "/Users/tischer/Documents/bigdataprocessor2/src/test/resources/test/tiff-nc2-nt2-16bit";
 
-        final Image image = BigDataProcessor2.openTiffSeries(
-                directory,
-                MULTI_CHANNEL_VOLUMES + TIF,
-                ".*"
-        );
+        final Image image = BigDataProcessor2.openTiffSeries( directory, MULTI_CHANNEL_VOLUMES + TIF );
 
         image.setVoxelSize( new double[]{1.0, 1.0, 1.0} );
 
-//        BigDataProcessor2UserInterface.showUI();
-//        BigDataProcessor2.showImage( image, true );
+        BigDataProcessor2.showImage( image, true );
     }
 }

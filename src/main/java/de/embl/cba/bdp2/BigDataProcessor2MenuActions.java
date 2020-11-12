@@ -99,11 +99,11 @@ public class BigDataProcessor2MenuActions implements ActionListener {
                 FileAndUrlUtils.openURI( "https://github.com/bigdataprocessor/bigDataProcessor2/blob/master/README.md#cite" );
             });
         }
-        else if ( e.getActionCommand().equalsIgnoreCase( BigDataProcessor2Menu.HELP ) )
+        else if ( e.getActionCommand().equalsIgnoreCase( BigDataProcessor2Menu.README ) )
         {
             BigDataProcessor2.threadPool.submit(() ->
             {
-                FileAndUrlUtils.openURI( "https://github.com/bigdataprocessor/bigDataProcessor2/blob/master/README.md#help" );
+                FileAndUrlUtils.openURI( "https://github.com/bigdataprocessor/bigDataProcessor2/blob/master/README.md#user-guide" );
             });
         }
         else if ( e.getActionCommand().equalsIgnoreCase( BigDataProcessor2Menu.ISSUE ) )

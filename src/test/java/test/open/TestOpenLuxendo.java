@@ -21,7 +21,6 @@ public class TestOpenLuxendo
         final Image image = BigDataProcessor2.openHdf5Series(
                 "/Volumes/cba/exchange/bigdataprocessor/data/mouse_2cam_publication_figure",
                 regExp,
-                regExp,
                 "Data" );
 
         BigDataProcessor2.showImage( image, true );

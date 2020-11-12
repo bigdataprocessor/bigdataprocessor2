@@ -4,8 +4,10 @@ import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.log.progress.ProgressListener;
 import de.embl.cba.bdp2.open.CacheUtils;
+import de.embl.cba.bdp2.service.ImageViewerService;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
+import javafx.scene.image.ImageView;
 import net.imglib2.cache.img.DiskCachedCellImgOptions;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -29,7 +31,6 @@ public class ImageSaverCreator < R extends RealType< R > & NativeType< R > >
 		ExecutorService saveExecutorService = Executors.newFixedThreadPool( numIOThreads );
 
 		Image< R > imageForSaving = new Image<>( image ); // create a copy in order not to change the cache of the currently shown image
-
 		if ( ! savingSettings.fileType.equals( SaveFileType.TiffPlanes ) )
 		{
 			// TODO: for cropped images only fully load the cropped region
@@ -38,18 +39,10 @@ public class ImageSaverCreator < R extends RealType< R > & NativeType< R > >
 			long cacheSize = image.getDimensionsXYZCT()[ DimensionOrder.C ] * numIOThreads;
 			Logger.info( "Configuring volume reader with a cache size of " + cacheSize + " volumes." );
 			imageForSaving.setVolumeCache( DiskCachedCellImgOptions.CacheType.BOUNDED, (int) cacheSize );
-			savingSettings.rai = imageForSaving.getRai();
-		}
-		else
-		{
-			savingSettings.rai = imageForSaving.getRai();
 		}
 
-		// TODO: consider giving the whole image to the SavingSettings instead of the rai?
+		savingSettings.image = imageForSaving;
 		savingSettings.type = Util.getTypeFromInterval( savingSettings.rai );
-		savingSettings.channelNames = imageForSaving.getChannelNames();
-		savingSettings.voxelSize = imageForSaving.getVoxelSize();
-		savingSettings.voxelUnit = imageForSaving.getVoxelUnit();
 		ImgSaverFactory factory = new ImgSaverFactory();
 
 		if ( savingSettings.saveVolumes )
@@ -60,8 +53,6 @@ public class ImageSaverCreator < R extends RealType< R > & NativeType< R > >
 
 		saver = factory.getSaver( savingSettings, saveExecutorService );
 		saver.addProgressListener( progressListener );
-
-		// TODO: reset cellDims to planeWise?
 	}
 
 	public ImageSaver getSaver()

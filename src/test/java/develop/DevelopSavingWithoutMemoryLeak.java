@@ -23,7 +23,6 @@ public class DevelopSavingWithoutMemoryLeak
 		final Image image = BigDataProcessor2.openHdf5Series(
 				"/Volumes/cba/exchange/bigdataprocessor/data/mouse_2cam_publication_figure",
 				regExp,
-				regExp,
 				"Data" );
 
 		RandomAccessibleInterval volumeView = Views.dropSingletonDimensions(  RAISlicer.getVolumeView( image.getRai(), 0, 10 ) );

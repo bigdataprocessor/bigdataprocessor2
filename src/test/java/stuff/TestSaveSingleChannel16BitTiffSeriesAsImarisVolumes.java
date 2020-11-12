@@ -1,4 +1,4 @@
-package test;
+package stuff;
 
 import bdv.img.imaris.Imaris;
 import bdv.util.BdvFunctions;
@@ -32,8 +32,7 @@ public class TestSaveSingleChannel16BitTiffSeriesAsImarisVolumes
 
         final Image image = bdp.openTiffSeries(
                 directory,
-                loadingScheme,
-                filterPattern );
+                loadingScheme );
 
         // bdp.showImage( image );
 

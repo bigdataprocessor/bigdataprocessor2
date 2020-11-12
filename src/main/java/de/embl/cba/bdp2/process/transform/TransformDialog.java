@@ -35,7 +35,7 @@ public class TransformDialog< T extends RealType< T > & NativeType< T > >
 		interpolationMode = genericDialog.getNextChoice();
 		outputImage = BigDataProcessor2.transform( inputImage, TransformCommand.getAffineTransform3D( affineTransform ), Utils.getInterpolator( interpolationMode ) );
 		outputImage.setName( inputImage.getName() + "-transformed" );
-		BigDataProcessor2.showImageInheritingDisplaySettings( outputImage, inputImage );
+		BigDataProcessor2.showImage( outputImage, inputImage );
 		recordMacro();
 	}
 

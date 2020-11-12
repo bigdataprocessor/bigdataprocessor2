@@ -79,7 +79,7 @@ public abstract class BigDataProcessor2UserInterface
 		if ( frame == null ) return; // UI not instantiated
 
 		DecimalFormat df = new DecimalFormat();
-		df.setMaximumFractionDigits(2);
+		df.setMaximumFractionDigits(0);
 
 		readInfo.setText(  wrapAsHtml(SPEED + df.format( mbps ) + " Avg: " + df.format( averageMBPS )));
 		readInfo.validate();

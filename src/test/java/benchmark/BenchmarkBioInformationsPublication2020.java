@@ -8,7 +8,7 @@ import de.embl.cba.bdp2.save.SaveFileType;
 import de.embl.cba.bdp2.save.SavingSettings;
 import net.imagej.ImageJ;
 
-public class BenchmarkPublication
+public class BenchmarkBioInformationsPublication2020
 {
 	public static void main( String[] args )
 	{
@@ -28,19 +28,19 @@ public class BenchmarkPublication
 //
 		image = BigDataProcessor2.bin( image, new long[]{3,3,1,1,1} );
 //
-		BigDataProcessor2.showImage( image );
-//
-//		SavingSettings savingSettings = new SavingSettings();
-//		savingSettings.volumesFilePathStump = root + "/out/volumes";
-//		savingSettings.numIOThreads = 1;
-//		savingSettings.numProcessingThreads = 4;
-//		savingSettings.fileType = SaveFileType.TiffVolumes;
-//		savingSettings.saveProjections = false;
-//		savingSettings.saveVolumes = true;
-//		savingSettings.compression = savingSettings.COMPRESSION_NONE;
-//		savingSettings.tStart = 0;
-//		savingSettings.tEnd = 9;
-//		BigDataProcessor2.saveImageAndWaitUntilDone( image, savingSettings );
+		//BigDataProcessor2.showImage( image );
+
+		SavingSettings savingSettings = new SavingSettings();
+		savingSettings.volumesFilePathStump = root + "/out/volumes";
+		savingSettings.numIOThreads = 1;
+		savingSettings.numProcessingThreads = 4;
+		savingSettings.fileType = SaveFileType.ImarisVolumes;
+		savingSettings.saveProjections = false;
+		savingSettings.saveVolumes = true;
+		savingSettings.compression = savingSettings.COMPRESSION_NONE;
+		savingSettings.tStart = 0;
+		savingSettings.tEnd = 9;
+		BigDataProcessor2.saveImageAndWaitUntilDone( image, savingSettings );
 
 	}
 }

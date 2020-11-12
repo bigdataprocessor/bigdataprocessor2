@@ -40,6 +40,8 @@ import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.dialog.DisplaySettings;
 import de.embl.cba.bdp2.process.transform.TransformCommand;
 import de.embl.cba.bdp2.scijava.Services;
+import de.embl.cba.tables.color.ColorUtils;
+import ij.CompositeImage;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
@@ -47,6 +49,7 @@ import ij.measure.Calibration;
 import ij.plugin.Binner;
 import ij.plugin.Duplicator;
 import ij.process.ImageProcessor;
+import ij.process.LUT;
 import net.imglib2.Cursor;
 import net.imglib2.FinalInterval;
 import net.imglib2.FinalRealInterval;
@@ -70,6 +73,7 @@ import net.imglib2.view.Views;
 import ome.units.UNITS;
 import ome.units.unit.Unit;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -187,7 +191,6 @@ public class Utils {
 		final Image< R > image =
 				BigDataProcessor2.openHdf5Series(
 						directoryOfChannel0.getParent(),
-						regExp,
 						regExp,
 						"Data" );
 
@@ -423,7 +426,7 @@ public class Utils {
         final double cY = 0; //- bdv.getBdvHandle().getViewerPanel().getDisplay().getHeight() / 2.0;
 
         final AffineTransform3D currentViewerTransform = new AffineTransform3D();
-        bdv.getBdvHandle().getViewerPanel().getState().getViewerTransform( currentViewerTransform );
+        bdv.getBdvHandle().getViewerPanel().state().getViewerTransform( currentViewerTransform );
 
         final SimilarityTransformAnimator similarityTransformAnimator =
                 new SimilarityTransformAnimator( currentViewerTransform, newViewerTransform, cX ,cY, 3000 );
@@ -494,23 +497,36 @@ public class Utils {
 //        return nativeType;
 //    }
 
-    public static ImagePlus wrap5DRaiToCalibratedImagePlus(
-            RandomAccessibleInterval raiXYZCT,
-            double[] voxelSpacing,
-            String unit,
-            String name )
+    public static ImagePlus wrapImageToImagePlus(
+			Image< ? > image,
+			List< DisplaySettings > displaySettings )
     {
-        ImagePlus imp = ImageJFunctions.wrap(
-                Views.permute( raiXYZCT, DimensionOrder.Z, DimensionOrder.C ), name);
+        ImagePlus imp = ImageJFunctions.wrap( Views.permute( image.getRai(), DimensionOrder.Z, DimensionOrder.C ), image.getName() );
 
         final Calibration calibration = new Calibration();
-        calibration.setUnit( unit );
-        calibration.pixelWidth = voxelSpacing[ 0 ];
-        calibration.pixelHeight = voxelSpacing[ 1 ];
-        calibration.pixelDepth = voxelSpacing[ 2 ];
+        calibration.setUnit( image.getVoxelUnit().getSymbol() );
+        calibration.pixelWidth = image.getVoxelSize()[ 0 ];
+        calibration.pixelHeight = image.getVoxelSize()[ 1 ];
+        calibration.pixelDepth = image.getVoxelSize()[ 2 ];
         imp.setCalibration( calibration );
 
-        return imp;
+		final CompositeImage compositeImage = new CompositeImage( imp );
+		compositeImage.setDisplayMode( CompositeImage.COMPOSITE );
+		compositeImage.setZ( compositeImage.getNSlices() / 2 );
+
+		final int numChannels = imp.getNChannels();
+
+		// Set channel colors
+		for ( int c = 0; c < numChannels; c++ )
+		{
+			compositeImage.setC( c + 1 );
+			LUT lut = LUT.createLutFromColor( ColorUtils.getColor( displaySettings.get( c ).getColor() ) );
+			compositeImage.setChannelLut( lut );
+			Color channelColor = compositeImage.getChannelColor();
+			compositeImage.setDisplayRange( displaySettings.get( c ).getDisplayRangeMin(), displaySettings.get( c ).getDisplayRangeMax() );
+		}
+
+        return compositeImage;
     }
 
     public static ImagePlus wrap3DRaiToCalibratedImagePlus(

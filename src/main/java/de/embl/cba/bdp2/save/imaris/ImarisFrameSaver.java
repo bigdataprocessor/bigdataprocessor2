@@ -50,26 +50,7 @@ public class ImarisFrameSaver< R extends RealType< R > & NativeType< R >> implem
     @Override
     public void run() {
 
-        // TODO:
-        // - check whether enough RAM is available to execute current thread
-        // - if not, merge GC and wait until there is enough
-        // - estimate 3x more RAM then actually necessary
-        // - if waiting takes to long somehow terminate in a nice way
-
-//        long freeMemoryInBytes = IJ.maxMemory() - IJ.currentMemory();
-//        long numBytesOfImage = image.dimension(FileInfoConstants.X) *
-//                image.dimension(FileInfoConstants.Y) *
-//                image.dimension(FileInfoConstants.Z) *
-//                image.dimension(FileInfoConstants.C) *
-//                image.dimension(FileInfoConstants.T) *
-//                file.bitDepth / 8;
-//
-//        if (numBytesOfImage > 1.5 * freeMemoryInBytes) {
-//            // TODO: do something...
-//        }
-
         long start;
-        final long totalFiles = nFrames * nChannels;
 
         for ( int c = 0; c < nChannels; c++ )
         {

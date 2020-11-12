@@ -1,6 +1,7 @@
 package de.embl.cba.bdp2.save;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
+import de.embl.cba.bdp2.dialog.DisplaySettings;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.log.progress.ProgressListener;
@@ -17,10 +18,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 public class SaveAdvancedDialog< R extends RealType< R > & NativeType< R > > extends JFrame implements ActionListener
 {
-    private final ImageViewer viewer;
+    private final ImageViewer< R > viewer;
     private final Image< R > inputImage;
     private final SaveFileType saveFileType;
 
@@ -260,6 +262,7 @@ public class SaveAdvancedDialog< R extends RealType< R > & NativeType< R > > ext
     private SavingSettings getSavingSettings()
     {
         SavingSettings savingSettings = new SavingSettings();
+        savingSettings.image = inputImage;
         savingSettings.fileType = saveFileType;
         savingSettings.compression = (String) comboCompression.getSelectedItem();
         // compress plane wise
@@ -272,11 +275,10 @@ public class SaveAdvancedDialog< R extends RealType< R > & NativeType< R > > ext
         savingSettings.projectionsFilePathStump = tfDirectory.getText() + File.separator + "projections" + File.separator + imageName;
         savingSettings.numIOThreads = Integer.parseInt( tfNumIOThreads.getText() );
         savingSettings.numProcessingThreads = Integer.parseInt( tfNumProcessingThreads.getText() );
-        savingSettings.voxelSize = viewer.getImage().getVoxelSize();
-        savingSettings.voxelUnit = viewer.getImage().getVoxelUnit();
         savingSettings.channelNamesInSavedImages = (String) comboChannelNames.getSelectedItem();
         savingSettings.tStart = Integer.parseInt( tfTStart.getText() );
         savingSettings.tEnd = Integer.parseInt( tfTEnd.getText() );
+        savingSettings.displaySettings = viewer.getDisplaySettings();
 
         return savingSettings;
     }

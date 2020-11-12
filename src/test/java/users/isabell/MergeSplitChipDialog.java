@@ -19,7 +19,6 @@ public class MergeSplitChipDialog
 
         final Image< R > image = BigDataProcessor2.openHdf5Series(
                 "/Users/tischer/Desktop/stack_0_channel_0",
-                NamingSchemes.SINGLE_CHANNEL_TIMELAPSE,
                 ".*.h5",
                 "Data");
 

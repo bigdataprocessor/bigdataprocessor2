@@ -74,7 +74,6 @@ public class LuxendoBatchConvertAndCropCommand< R extends RealType< R > & Native
                 // Open
                 final Image< R > image = BigDataProcessor2.openHdf5Series(
                         directory.getAbsolutePath(),
-                        NamingSchemes.PATTERN_6,
                         NamingSchemes.PATTERN_LUXENDO,
                         "Data");
 
@@ -105,7 +104,6 @@ public class LuxendoBatchConvertAndCropCommand< R extends RealType< R > & Native
             final Image< R > image = BigDataProcessor2.openHdf5Series(
                     directory,
                     NamingSchemes.PATTERN_6,
-                    NamingSchemes.PATTERN_LUXENDO,
                     "Data");
             image.setVoxelUnit( voxelUnit );
             image.setVoxelSize( new double[]{ voxelSpacingX, voxelSpacingY, voxelSpacingZ } );

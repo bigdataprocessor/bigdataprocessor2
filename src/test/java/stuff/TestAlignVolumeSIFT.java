@@ -1,4 +1,4 @@
-package test;
+package stuff;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
@@ -22,8 +22,7 @@ public class TestAlignVolumeSIFT< R extends RealType< R > & NativeType< R > >
 
 		final Image< R > image = BigDataProcessor2.openTiffSeries(
 				"/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-data/em-2d-sift-align-01",
-				NamingSchemes.TIFF_SLICES,
-				".*.tif" );
+				NamingSchemes.TIFF_SLICES );
 
 		final Image< R > alignedImage =
 				RegisteredViews.siftAlignFirstVolume(

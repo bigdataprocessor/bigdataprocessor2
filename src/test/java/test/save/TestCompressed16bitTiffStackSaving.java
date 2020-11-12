@@ -22,12 +22,7 @@ public class TestCompressed16bitTiffStackSaving
 
         String regExp = LUXENDO_REGEXP.replace( "STACK", "" + 0 );
 
-        final Image image = BigDataProcessor2.openHdf5Series(
-                directory,
-                regExp,
-                ".*",
-                "Data"
-        );
+        final Image image = BigDataProcessor2.openHdf5Series( directory, regExp, "Data" );
 
         image.setVoxelSize( 1.0, 1.0, 1.0 );
 

@@ -12,6 +12,7 @@ import de.embl.cba.imaris.ImarisUtils;
 import de.embl.cba.imaris.ImarisWriter;
 import ij.ImagePlus;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.type.numeric.real.FloatType;
@@ -25,13 +26,13 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class ImarisImageSaver extends AbstractImageSaver
+public class ImarisImageSaver< R extends RealType< R > & NativeType< R > > extends AbstractImageSaver
 {
     private SavingSettings savingSettings;
     private ExecutorService es;
     private AtomicBoolean stop;
 
-    public ImarisImageSaver( SavingSettings savingSettings, ExecutorService es) {
+    public ImarisImageSaver( SavingSettings< R > savingSettings, ExecutorService es) {
         this.savingSettings = savingSettings;
         this.es = es;
         this.stop = new AtomicBoolean(false);
@@ -43,10 +44,13 @@ public class ImarisImageSaver extends AbstractImageSaver
         AtomicInteger counter = new AtomicInteger(0);
         ImarisDataSet imarisDataSet = getImarisDataSet( savingSettings, stop );
         final long startTime = System.currentTimeMillis();
-        long timeFrames = savingSettings.rai.dimension(DimensionOrder.T);
-        NativeType imageType = Util.getTypeFromInterval(savingSettings.rai);
 
-        for (int t = 0; t < timeFrames; t++) {
+        int tStart = Math.max( savingSettings.tStart, 0 );
+        int tEnd = (int) Math.min( savingSettings.tEnd, savingSettings.image.getRai().dimension( DimensionOrder.T ) - 1 );
+
+        NativeType imageType = Util.getTypeFromInterval( savingSettings.image.getRai() );
+
+        for (int t = tStart; t <= tEnd; t++) {
             if (imageType instanceof UnsignedByteType)
             {
                 futures.add(es.submit(
@@ -96,16 +100,12 @@ public class ImarisImageSaver extends AbstractImageSaver
         final String directory = new File( settings.volumesFilePathStump ).getParent();
         final String filename = new File( settings.volumesFilePathStump ).getName();
 
-        ImagePlus image = Utils.wrap5DRaiToCalibratedImagePlus(
-                settings.rai,
-                settings.voxelSize,
-                settings.voxelUnit.getSymbol(),
-                "wrapped");
+        ImagePlus imp = Utils.wrapImageToImagePlus( settings.image, settings.displaySettings );
 
         int[] binning = new int[]{1,1,1};
 
         ImarisDataSet imarisDataSet = new ImarisDataSet(
-                image,
+                imp,
                 binning,
                 directory,
                 filename );

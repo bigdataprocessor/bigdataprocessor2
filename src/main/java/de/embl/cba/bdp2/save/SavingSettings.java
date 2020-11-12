@@ -1,14 +1,17 @@
 package de.embl.cba.bdp2.save;
 
+import de.embl.cba.bdp2.dialog.DisplaySettings;
 import de.embl.cba.bdp2.image.Image;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
 import ome.units.UNITS;
 import ome.units.unit.Unit;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Created by tischi on 22/05/17.
@@ -24,11 +27,6 @@ public class SavingSettings < R extends RealType< R > & NativeType< R > > {
     public static final String CHANNEL_NAMES = "Channel names";
     public static final String CHANNEL_INDEXING = "Channel index (C00, C01, ...)";
 
-    // TODO: remove the image itself from the settings
-    public RandomAccessibleInterval rai;
-    public double[] voxelSize;
-    public Unit voxelUnit;
-
     // TODO: also remove the binning
     public String bin;
 
@@ -41,6 +39,8 @@ public class SavingSettings < R extends RealType< R > & NativeType< R > > {
     public boolean saveProjections;
     public String projectionsFilePathStump;
 
+    public Image< R > image;
+    public List< DisplaySettings > displaySettings;
     public boolean convertTo8Bit;
     public int mapTo0, mapTo255;
     public boolean convertTo16Bit;
@@ -52,14 +52,13 @@ public class SavingSettings < R extends RealType< R > & NativeType< R > > {
     public int rowsPerStrip = -1;
     public int numIOThreads = 1;
     public int numProcessingThreads = 1;
-    public String[] channelNames;
+    //public String[] channelNames;
     public String channelNamesInSavedImages = CHANNEL_INDEXING;
     public int tStart; // inclusive, zero-based
     public int tEnd; // inclusive
-    public Image< R > image;
     public R type;
 
-	@NotNull
+    @NotNull
 	public static String createFilePathStump( Image image, String type, String directory )
 	{
 		return new File( directory, type + File.separator + image.getName() ).toString();
@@ -73,9 +72,6 @@ public class SavingSettings < R extends RealType< R > & NativeType< R > > {
     public static SavingSettings getDefaults()
     {
         SavingSettings savingSettings = new SavingSettings();
-        savingSettings.bin = "1,1,1";
-        savingSettings.voxelSize = new double[]{1,1,1};
-        savingSettings.voxelUnit = UNITS.MICROMETER;
         savingSettings.saveVolumes = true;
         savingSettings.saveProjections = false;
         savingSettings.fileType = SaveFileType.TiffPlanes;

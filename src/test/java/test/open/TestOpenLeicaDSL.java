@@ -19,8 +19,7 @@ public class TestOpenLeicaDSL
 
         final Image image = BigDataProcessor2.openTiffSeries(
                 directory,
-                LEICA_DSL_TIFF_PLANES_REG_EXP,
-                ".*"
+                LEICA_DSL_TIFF_PLANES_REG_EXP
         );
 
         double[] voxelSize = image.getVoxelSize();

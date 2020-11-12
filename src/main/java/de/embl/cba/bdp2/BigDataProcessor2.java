@@ -66,11 +66,8 @@ public class BigDataProcessor2
         return Binner.bin( image, spanXYZCT );
     }
 
-
     public static < R extends RealType< R > & NativeType< R > >
-    Image< R > openBioFormats(
-            String filePath,
-            int seriesIndex )
+    Image< R > openBioFormats( String filePath, int seriesIndex )
     {
         DebugTools.setRootLevel( "OFF" ); // Bio-Formats
         BioFormatsCachedCellImgCreator< R > cellImgCreator = new BioFormatsCachedCellImgCreator<>( filePath, seriesIndex );
@@ -87,43 +84,16 @@ public class BigDataProcessor2
         return image;
     }
 
-    @Deprecated
     public static < R extends RealType< R > & NativeType< R > >
-    Image< R > openTiffSeries(
-            File directory,
-            String namingScheme,
-            String filterPattern )
-    {
-        return openTiffSeries( directory.getAbsolutePath(), namingScheme, filterPattern);
-    }
-
-    public static < R extends RealType< R > & NativeType< R > >
-    Image< R > openTiffSeries(
-            File directory,
-            String regExp )
+    Image< R > openTiffSeries( File directory, String regExp )
     {
         return openTiffSeries( directory.getAbsolutePath(), regExp );
     }
 
     public static < R extends RealType< R > & NativeType< R > >
-    Image< R > openTiffSeries(
-            String directory,
-            String regExp )
+    Image< R > openTiffSeries( String directory, String regExp )
     {
         FileInfos fileInfos = new FileInfos( directory, regExp );
-        FileSeriesCachedCellImgCreator< R > cachedCellImgCreator = new FileSeriesCachedCellImgCreator( fileInfos );
-        Image< R > image = new Image( cachedCellImgCreator );
-        return image;
-    }
-
-    @Deprecated
-    public static < R extends RealType< R > & NativeType< R > >
-    Image< R > openTiffSeries(
-            String directory,
-            String namingScheme,
-            String filterPattern )
-    {
-        FileInfos fileInfos = new FileInfos( directory, namingScheme, filterPattern );
         FileSeriesCachedCellImgCreator< R > cachedCellImgCreator = new FileSeriesCachedCellImgCreator( fileInfos );
         Image< R > image = new Image( cachedCellImgCreator );
         return image;
@@ -150,55 +120,19 @@ public class BigDataProcessor2
         return image;
     }
 
-    @Deprecated
-    public static < R extends RealType< R > & NativeType< R > > Image< R > openHdf5Series(
-            String directory,
-            String loadingScheme,
-            String filterPattern,
-            String hdf5DataSetName )
-    {
-        DebugTools.setRootLevel( "OFF" ); // Bio-Formats
-        FileInfos fileInfos = new FileInfos( directory, loadingScheme, filterPattern, hdf5DataSetName, null );
-        FileSeriesCachedCellImgCreator< R > cachedCellImgCreator = new FileSeriesCachedCellImgCreator( fileInfos );
-        Image< R > image = new Image( cachedCellImgCreator );
-        return image;
-    }
-
-    /**
-     *
-     * @param directory
-     * @param filesInFolders
-     *                  The list of all files (in subfolders). Depending on the circumstances obtaining this file list
-     *                  can take quite long. Thus, if one has obtained it already one can provide it here for performance reasons.
-     * @param regExp
-     * @param hdf5DataSetName
-     * @param channelSubset
-     *                  The channels to be loaded.
-     * @param <R>
-     * @return
-     */
     public static < R extends RealType< R > & NativeType< R > >
-    Image< R > openHdf5Series(
-            String directory,
-            String[][] filesInFolders,
-            String regExp,
-            String hdf5DataSetName,
-            String[] channelSubset )
+    Image< R > openHdf5Series( String directory, String[][] filesInFolders, String regExp, String hdf5DataSetPath, String[] channelSubset )
     {
-        FileInfos fileInfos = new FileInfos( directory, regExp, regExp, hdf5DataSetName, channelSubset, filesInFolders );
+        FileInfos fileInfos = new FileInfos( directory, regExp, regExp, hdf5DataSetPath, channelSubset, filesInFolders );
         FileSeriesCachedCellImgCreator< R > cachedCellImgCreator = new FileSeriesCachedCellImgCreator( fileInfos );
         Image< R > image = new Image( cachedCellImgCreator );
         return image;
     }
 
     public static < R extends RealType< R > & NativeType< R > >
-    Image< R > openHdf5Series(
-            String directory,
-            String regExp,
-            String hdf5DataSetName,
-            String[] channelSubset )
+    Image< R > openHdf5Series( String directory, String regExp, String hdf5DataSetPath, String[] channelSubset )
     {
-        FileInfos fileInfos = new FileInfos( directory, regExp, regExp, hdf5DataSetName, channelSubset );
+        FileInfos fileInfos = new FileInfos( directory, regExp, regExp, hdf5DataSetPath, channelSubset );
         FileSeriesCachedCellImgCreator< R > cachedCellImgCreator = new FileSeriesCachedCellImgCreator( fileInfos );
         Image< R > image = new Image( cachedCellImgCreator );
         return image;
@@ -229,20 +163,10 @@ public class BigDataProcessor2
         return saver;
     }
 
-    /**
-     *
-     *
-     * @param image
-     * @param contrastLimits
-     *                      each list entry consists of a double[] with two entries min and max
-     * @param <R>
-     * @return
-     */
     public static < R extends RealType< R > & NativeType< R > >
     Image< R > convertToUnsignedByteType( Image< R > image, List< double[] > contrastLimits )
     {
         MultiChannelUnsignedByteTypeConverter< R > converter = new MultiChannelUnsignedByteTypeConverter<>( image, contrastLimits );
-
         return converter.getConvertedImage();
     }
 
@@ -284,15 +208,6 @@ public class BigDataProcessor2
         return outputImage;
     }
 
-    /**
-     *
-     *
-     * @param image
-     * @param regions
-     *           for each channle to be create one long array: [ Xmin, Ymin, Xdim, Ydim, C ]
-     * @param <R>
-     * @return
-     */
     public static < R extends RealType< R > & NativeType< R > > Image< R > alignChannelsSpitChip( Image< R > image, List< long[] > regions )
     {
         final SplitChipMerger merger = new SplitChipMerger();
@@ -300,11 +215,10 @@ public class BigDataProcessor2
         return outputImage;
     }
 
-    public static < R extends RealType< R > & NativeType< R > > Image< R > rename( Image< R > image, String name, String[] channelNames )
+    public static < R extends RealType< R > & NativeType< R > > void rename( Image< R > image, String name, String[] channelNames )
     {
         image.setName( name );
         image.setChannelNames( channelNames );
-        return image;
     }
 
     public static < R extends RealType< R > & NativeType< R > > Image< R > transform( Image< R > image, AffineTransform3D transform3D, InterpolatorFactory interpolatorFactory )
@@ -313,15 +227,6 @@ public class BigDataProcessor2
         return transformer.transform();
     }
 
-    /**
-     *
-     * @param image
-     * @param affineTransformValues
-     * @param interpolationMode
-     *              "Nearest" or "Linear"
-     * @param <R>
-     * @return
-     */
     public static < R extends RealType< R > & NativeType< R > > Image< R > transform( Image< R > image, double[] affineTransformValues, String interpolationMode )
     {
         InterpolatorFactory interpolator = Utils.getInterpolator( interpolationMode );
@@ -342,15 +247,11 @@ public class BigDataProcessor2
 		return outputImage;
 	}
 
-	private static void showUI()
-    {
-        BigDataProcessor2UserInterface.showUI();
-    }
-
-    public static < R extends RealType< R > & NativeType< R > > ImageViewer showImageInheritingDisplaySettings( Image< R > image, Image< R > parentImage )
+    public static < R extends RealType< R > & NativeType< R > > ImageViewer showImage( Image< R > image, Image< R > parentImage )
     {
         final ImageViewer viewer = showImage( image, false );
 
+        // fetch display settings of the parentImage and apply them
         final ImageViewer inputImageViewer = ImageViewerService.imageNameToBdvImageViewer.get( parentImage.getName() );
         if ( inputImageViewer != null )
                 viewer.setDisplaySettings( inputImageViewer.getDisplaySettings() );

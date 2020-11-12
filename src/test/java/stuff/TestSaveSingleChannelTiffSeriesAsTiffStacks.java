@@ -1,4 +1,4 @@
-package test;
+package stuff;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.open.NamingSchemes;
@@ -12,7 +12,7 @@ import java.io.File;
 import static de.embl.cba.bdp2.utils.FileUtils.createOrEmptyDirectory;
 import static junit.framework.TestCase.assertTrue;
 
-public class TestSaveSingleChannelTiffSeriesAsLZWTiffStacks
+public class TestSaveSingleChannelTiffSeriesAsTiffStacks
 {
     //@Test
     public void test( )
@@ -27,35 +27,37 @@ public class TestSaveSingleChannelTiffSeriesAsLZWTiffStacks
         final String loadingScheme = NamingSchemes.SINGLE_CHANNEL_TIMELAPSE;
         final String filterPattern = ".*.tif";
 
-        final Image image = bdp.openTiffSeries(
-                directory,
-                loadingScheme,
-                filterPattern );
+        final Image image = bdp.openTiffSeries( directory, loadingScheme);
 
-//        bdp.showImage( image );
-//
+        // bdp.showImage( image );
+
         final SavingSettings savingSettings = SavingSettings.getDefaults();
         savingSettings.fileType = SaveFileType.TiffVolumes;
         savingSettings.numIOThreads = 1;
         savingSettings.numProcessingThreads = 4;
-        savingSettings.saveProjections = false;
-        savingSettings.saveVolumes = true;
-        savingSettings.compression = SavingSettings.COMPRESSION_LZW;
-        savingSettings.rowsPerStrip = 1000; // just whole plane
+        savingSettings.saveProjections = true;
 
-        final String outputDirectory = "/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-output/nc1-nt3-calibrated-8bit-tiff-lzw";
+        String outputDirectory = "/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-output/nc1-nt3-calibrated-8bit-tiff-volumes";
 
         createOrEmptyDirectory( outputDirectory );
 
-        savingSettings.volumesFilePathStump =
-                outputDirectory + "/volume";
+        savingSettings.volumesFilePathStump = outputDirectory + "/volume";
+        savingSettings.saveVolumes = true;
 
-        final File testVolumeFile = new File( savingSettings.volumesFilePathStump + "--C00--T00000.ome.tif" );
-        if ( testVolumeFile.exists() ) testVolumeFile.delete();
+        outputDirectory = "/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-output/nc1-nt3-calibrated-8bit-tiff-projections";
+
+        createOrEmptyDirectory( outputDirectory );
+
+        savingSettings.projectionsFilePathStump = outputDirectory  + "/projection";
+
 
         BigDataProcessor2.saveImageAndWaitUntilDone( image, savingSettings );
 
+        final File testVolumeFile = new File( savingSettings.volumesFilePathStump + "--C00--T00000.tif" );
+        final File testProjectionsFile = new File( savingSettings.projectionsFilePathStump + "--xyz-max-projection--C00--T00002.tif" );
+
         assertTrue( testVolumeFile.exists() );
+        assertTrue( testProjectionsFile.exists() );
     }
 
     public static void main( String[] args )

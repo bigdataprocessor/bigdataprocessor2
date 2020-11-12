@@ -56,7 +56,7 @@ public abstract class AbstractImageProcessingCommand< R extends RealType< R > & 
             if ( autoContrast )
                 return BigDataProcessor2.showImage( outputImage, true );
             else
-                return BigDataProcessor2.showImageInheritingDisplaySettings( outputImage, inputImage );
+                return BigDataProcessor2.showImage( outputImage, inputImage );
 
         }
         else if ( viewingModality.equals( AbstractOpenFileSeriesCommand.SHOW_IN_CURRENT_VIEWER ))
