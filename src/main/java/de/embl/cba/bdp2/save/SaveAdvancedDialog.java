@@ -314,7 +314,7 @@ public class SaveAdvancedDialog< R extends RealType< R > & NativeType< R > > ext
         recorder.addCommandParameter( SaveAdvancedCommand.T_END_PARAMETER, savingSettings.tEnd);
 
         // void saveImageAndWaitUntilDone( Image< R > image, SavingSettings savingSettings )
-        recorder.addAPIFunctionPrequel( "\n# Save image" );
+        recorder.addAPIFunctionPrequel( "# Save..." );
         recorder.addAPIFunctionPrequel( "savingSettings = SavingSettings();" );
         recorder.addAPIFunctionPrequel( createSettingsString( "volumesFilePathStump", SavingSettings.createFilePathStump( inputImage, "volumes", directory ) ) );
         recorder.addAPIFunctionPrequel( createSettingsString( "projectionsFilePathStump", SavingSettings.createFilePathStump( inputImage, "projections", directory ) ) );

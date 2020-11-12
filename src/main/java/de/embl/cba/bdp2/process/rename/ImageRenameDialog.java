@@ -2,6 +2,7 @@ package de.embl.cba.bdp2.process.rename;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.macro.MacroRecorder;
+import de.embl.cba.bdp2.process.align.splitchip.SplitChipCommand;
 import de.embl.cba.bdp2.viewer.ImageViewer;
 import ij.gui.GenericDialog;
 import net.imglib2.type.NativeType;
@@ -29,6 +30,7 @@ public class ImageRenameDialog< R extends RealType< R > & NativeType< R > >
 
 		// Image< R > rename( Image< R > image, String name )
 		recorder.setAPIFunctionName( "rename" );
+		recorder.addAPIFunctionPrequel( "# " +  ImageRenameCommand.COMMAND_NAME );
 		recorder.addAPIFunctionParameter( outputImage.getName() );
 		recorder.addAPIFunctionParameter( outputImage.getChannelNames() );
 		recorder.record();

@@ -80,6 +80,7 @@ public class MultiChannelUnsignedByteTypeConverterDialog< R extends RealType< R 
 		double[] min = contrastLimits.stream().mapToDouble( x -> x[ 0 ] ).toArray();
 		double[] max = contrastLimits.stream().mapToDouble( x -> x[ 1 ] ).toArray();
 		recorder.setAPIFunctionName( "convertToUnsignedByteType" );
+		recorder.addAPIFunctionPrequel( "# " +  MultiChannelUnsignedByteTypeConverterCommand.COMMAND_NAME );
 		recorder.addAPIFunctionParameter( min );
 		recorder.addAPIFunctionParameter( max );
 

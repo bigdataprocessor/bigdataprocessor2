@@ -10,7 +10,7 @@ import de.embl.cba.bdp2.open.fileseries.leica.OpenLeicaDSLTiffPlanesFileSeriesCo
 import de.embl.cba.bdp2.open.fileseries.luxendo.OpenLuxendoFileSeriesCommand;
 import de.embl.cba.bdp2.process.bin.BinCommand;
 import de.embl.cba.bdp2.process.bin.BinDialog;
-import de.embl.cba.bdp2.process.calibrate.CalibrateCommand;
+import de.embl.cba.bdp2.process.calibrate.SetVoxelSizeCommand;
 import de.embl.cba.bdp2.process.calibrate.CalibrationDialog;
 import de.embl.cba.bdp2.process.convert.MultiChannelUnsignedByteTypeConverterCommand;
 import de.embl.cba.bdp2.process.convert.MultiChannelUnsignedByteTypeConverterDialog;
@@ -129,7 +129,7 @@ public class BigDataProcessor2MenuActions implements ActionListener {
                 saveDialog.setVisible(true);
             });
         }
-        else if (e.getActionCommand().equalsIgnoreCase( CalibrateCommand.COMMAND_NAME ))
+        else if (e.getActionCommand().equalsIgnoreCase( SetVoxelSizeCommand.COMMAND_NAME ))
         {
             BigDataProcessor2.threadPool.submit(() -> {
                 if (! isImageSelected( viewer ) ) return;

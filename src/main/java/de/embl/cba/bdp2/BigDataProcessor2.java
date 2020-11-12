@@ -256,7 +256,7 @@ public class BigDataProcessor2
         return convertToUnsignedByteType( image, contrastLimits );
     }
 
-    public static < R extends RealType< R > & NativeType< R > > Image< R > calibrate( Image< R > image, double[] voxelSizes, String voxelUnit )
+    public static < R extends RealType< R > & NativeType< R > > Image< R > setVoxelSize( Image< R > image, double[] voxelSizes, String voxelUnit )
     {
         Image< R > outputImage = new Image<>( image );
         outputImage.setVoxelSize( voxelSizes );
@@ -265,7 +265,7 @@ public class BigDataProcessor2
         return outputImage;
     }
 
-    public static < R extends RealType< R > & NativeType< R > > Image< R > calibrate( Image< R > image, double[] voxelSizes, Unit< Length > voxelUnit  )
+    public static < R extends RealType< R > & NativeType< R > > Image< R > setVoxelSize( Image< R > image, double[] voxelSizes, Unit< Length > voxelUnit  )
     {
         Image< R > outputImage = new Image<>( image );
         outputImage.setVoxelSize( voxelSizes );

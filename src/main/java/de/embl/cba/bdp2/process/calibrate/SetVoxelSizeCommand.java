@@ -11,8 +11,8 @@ import net.imglib2.type.numeric.RealType;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
-@Plugin(type = AbstractImageProcessingCommand.class, name = CalibrateCommand.COMMAND_NAME, menuPath = de.embl.cba.bdp2.dialog.Utils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractImageProcessingCommand.COMMAND_PROCESS_PATH + CalibrateCommand.COMMAND_FULL_NAME )
-public class CalibrateCommand< R extends RealType< R > & NativeType< R > > extends AbstractImageProcessingCommand< R >
+@Plugin(type = AbstractImageProcessingCommand.class, name = SetVoxelSizeCommand.COMMAND_NAME, menuPath = de.embl.cba.bdp2.dialog.Utils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractImageProcessingCommand.COMMAND_PROCESS_PATH + SetVoxelSizeCommand.COMMAND_FULL_NAME )
+public class SetVoxelSizeCommand< R extends RealType< R > & NativeType< R > > extends AbstractImageProcessingCommand< R >
 {
     public static final String COMMAND_NAME = "Set Voxel Size...";
     public static final String COMMAND_FULL_NAME = BigDataProcessor2Menu.COMMAND_BDP2_PREFIX + COMMAND_NAME;
@@ -34,7 +34,7 @@ public class CalibrateCommand< R extends RealType< R > & NativeType< R > > exten
 
     public void run()
     {
-        outputImage = BigDataProcessor2.calibrate( inputImage, new double[]{ voxelSizeX, voxelSizeY, voxelSizeZ }, BioFormatsMetaDataHelper.getUnitFromString( unit ) );
+        outputImage = BigDataProcessor2.setVoxelSize( inputImage, new double[]{ voxelSizeX, voxelSizeY, voxelSizeZ }, BioFormatsMetaDataHelper.getUnitFromString( unit ) );
         log();
 
         handleOutputImage( false, false );

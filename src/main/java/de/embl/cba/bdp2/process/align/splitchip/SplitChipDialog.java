@@ -7,6 +7,7 @@ import bdv.util.BoundedValue;
 import bdv.util.ModifiableInterval;
 import bdv.viewer.ViewerPanel;
 import de.embl.cba.bdp2.BigDataProcessor2;
+import de.embl.cba.bdp2.process.align.channelshift.AlignChannelsCommand;
 import de.embl.cba.bdp2.process.align.channelshift.AlignChannelsDialog;
 import de.embl.cba.bdp2.process.align.channelshift.RegionOptimiser;
 import de.embl.cba.bdp2.dialog.AbstractProcessingDialog;
@@ -98,6 +99,7 @@ public class SplitChipDialog< R extends RealType< R > & NativeType< R > > extend
 
 		// Image< R > alignChannelsSpitChip( Image< R > image, List< long[] > regions )
 		recorder.setAPIFunctionName( "alignChannelsSpitChip" );
+		recorder.addAPIFunctionPrequel( "# " +  SplitChipCommand.COMMAND_NAME );
 		recorder.addAPIFunctionParameter( regions );
 
 		recorder.record();

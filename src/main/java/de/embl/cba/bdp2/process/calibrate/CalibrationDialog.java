@@ -70,9 +70,9 @@ public class CalibrationDialog< R extends RealType< R > & NativeType< R > >
 			return null;
 		}
 
-		outputImage = BigDataProcessor2.calibrate( inputImage, voxelSize, unit );
+		outputImage = BigDataProcessor2.setVoxelSize( inputImage, voxelSize, unit );
 
-		Logger.info( "# " + CalibrateCommand.COMMAND_NAME );
+		Logger.info( "# " + SetVoxelSizeCommand.COMMAND_NAME );
 		Logger.info( "Image voxel unit: " + outputImage.getVoxelUnit() );
 		Logger.info( "Image voxel size: " + Arrays.toString( outputImage.getVoxelSize() ) );
 
@@ -86,16 +86,17 @@ public class CalibrationDialog< R extends RealType< R > & NativeType< R > >
 
 	protected void recordMacro()
 	{
-		final MacroRecorder recorder = new MacroRecorder( CalibrateCommand.COMMAND_FULL_NAME, inputImage, outputImage );
+		final MacroRecorder recorder = new MacroRecorder( SetVoxelSizeCommand.COMMAND_FULL_NAME, inputImage, outputImage );
 
 		final double[] voxelSize = outputImage.getVoxelSize();
 		recorder.addCommandParameter( "unit", outputImage.getVoxelUnit() );
-		recorder.addCommandParameter( CalibrateCommand.VOXEL_SIZE_X_PARAMETER, voxelSize[ 0 ] );
-		recorder.addCommandParameter( CalibrateCommand.VOXEL_SIZE_Y_PARAMETER, voxelSize[ 1 ] );
-		recorder.addCommandParameter( CalibrateCommand.VOXEL_SIZE_Z_PARAMETER, voxelSize[ 2 ] );
+		recorder.addCommandParameter( SetVoxelSizeCommand.VOXEL_SIZE_X_PARAMETER, voxelSize[ 0 ] );
+		recorder.addCommandParameter( SetVoxelSizeCommand.VOXEL_SIZE_Y_PARAMETER, voxelSize[ 1 ] );
+		recorder.addCommandParameter( SetVoxelSizeCommand.VOXEL_SIZE_Z_PARAMETER, voxelSize[ 2 ] );
 
 		// public static void calibrate( Image image, double[] doubles, String voxelUnit )
-		recorder.setAPIFunctionName( "calibrate" );
+		recorder.setAPIFunctionName( "setVoxelSize" );
+		recorder.addAPIFunctionPrequel( "# " + SetVoxelSizeCommand.COMMAND_NAME );
 		recorder.addAPIFunctionParameter( voxelSize );
 		recorder.addAPIFunctionParameter( recorder.quote( outputImage.getVoxelUnit().getSymbol() ) );
 

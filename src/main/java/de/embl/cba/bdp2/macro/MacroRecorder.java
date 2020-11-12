@@ -73,17 +73,20 @@ public class MacroRecorder
 
 	public static String asJythonArray( double[] doubles )
 	{
-		return "array([" + asCSV( doubles ) + "], \"d\")";
+//		return "array([" + asCSV( doubles ) + "], \"d\")";
+		return "[" + asCSV( doubles ) + "]";
 	}
 
 	public static String asJythonArray( long[] longs )
 	{
-		return "array([" + asCSV( longs ) + "], \"l\")";
+		//return "array([" + asCSV( longs ) + "], \"l\")";
+		return "[" + asCSV( longs ) + "]";
 	}
 
 	public static String asJythonArray( String[] strings )
 	{
-		return "array([" + asCSV( strings ) + "], java.lang.String )";
+		//return "array([" + asCSV( strings ) + "], java.lang.String )";
+		return "[" + asCSV( strings ) + "]";
 	}
 
 	public static String asCSV( double[] doubles )
@@ -168,7 +171,8 @@ public class MacroRecorder
 				{
 					if ( message != null )
 						recorder.recordString( message );
-					recorder.record( "run", commandName, options );
+					if ( commandName != null && options != null )
+						recorder.record( "run", commandName, options );
 				}
 			}
 		}).start();

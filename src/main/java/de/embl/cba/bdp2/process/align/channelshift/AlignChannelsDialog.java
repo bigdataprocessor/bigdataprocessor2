@@ -5,6 +5,7 @@ import bdv.util.BoundedValue;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.macro.MacroRecorder;
 import de.embl.cba.bdp2.dialog.AbstractProcessingDialog;
+import de.embl.cba.bdp2.process.convert.MultiChannelUnsignedByteTypeConverterCommand;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewer.ImageViewer;
@@ -42,6 +43,7 @@ public class AlignChannelsDialog< T extends RealType< T > & NativeType< T > > ex
 
 		// Image< R > alignChannels( Image< R > image, List< long[] > shifts )
 		recorder.setAPIFunctionName( "alignChannels" );
+		recorder.addAPIFunctionPrequel( "# " +  AlignChannelsCommand.COMMAND_NAME );
 		recorder.addAPIFunctionParameter( shifts );
 		recorder.record();
 	}
