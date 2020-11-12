@@ -7,13 +7,14 @@ import de.embl.cba.bdp2.open.fileseries.OpenEMTiffPlanesFileSeriesCommand;
 import de.embl.cba.bdp2.open.fileseries.OpenFileSeriesCommand;
 import de.embl.cba.bdp2.open.fileseries.OpenHelpCommand;
 import de.embl.cba.bdp2.open.fileseries.leica.OpenLeicaDSLTiffPlanesFileSeriesCommand;
-import de.embl.cba.bdp2.open.luxendo.OpenLuxendoFileSeriesCommand;
+import de.embl.cba.bdp2.open.fileseries.luxendo.OpenLuxendoFileSeriesCommand;
 import de.embl.cba.bdp2.process.bin.BinCommand;
 import de.embl.cba.bdp2.process.bin.BinDialog;
 import de.embl.cba.bdp2.process.calibrate.CalibrateCommand;
 import de.embl.cba.bdp2.process.calibrate.CalibrationDialog;
 import de.embl.cba.bdp2.process.convert.MultiChannelUnsignedByteTypeConverterCommand;
 import de.embl.cba.bdp2.process.convert.MultiChannelUnsignedByteTypeConverterDialog;
+import de.embl.cba.bdp2.process.crop.CropCommand;
 import de.embl.cba.bdp2.process.crop.CropDialog;
 import de.embl.cba.bdp2.open.samples.DownloadAndOpenSampleDataCommand;
 import de.embl.cba.bdp2.dialog.Utils;
@@ -23,7 +24,7 @@ import de.embl.cba.bdp2.track.ApplyTrackDialog;
 import de.embl.cba.bdp2.track.TrackCreator;
 import de.embl.cba.bdp2.process.rename.ImageRenameCommand;
 import de.embl.cba.bdp2.process.rename.ImageRenameDialog;
-import de.embl.cba.bdp2.macro.MacroRecordingDialog;
+import de.embl.cba.bdp2.macro.RecordingDialog;
 import de.embl.cba.bdp2.save.SaveAdvancedDialog;
 import de.embl.cba.bdp2.scijava.Services;
 import de.embl.cba.bdp2.process.align.channelshift.AlignChannelsCommand;
@@ -135,10 +136,10 @@ public class BigDataProcessor2MenuActions implements ActionListener {
                 new CalibrationDialog< >( viewer ).showDialog();
             });
         }
-        else if (e.getActionCommand().equalsIgnoreCase( BigDataProcessor2Menu.MACRO_RECORDING ))
+        else if (e.getActionCommand().equalsIgnoreCase( BigDataProcessor2Menu.RECORD ))
         {
             BigDataProcessor2.threadPool.submit(() -> {
-                new MacroRecordingDialog();
+                new RecordingDialog();
             });
         }
         else if (e.getActionCommand().equalsIgnoreCase( BigDataProcessor2Menu.CREATE_TRACK ))
@@ -183,7 +184,7 @@ public class BigDataProcessor2MenuActions implements ActionListener {
                 RegisteredViews.createAlignedMovieView( viewer, Registration.PHASE_CORRELATION, 0 );
             });
         }
-        else if(e.getActionCommand().equalsIgnoreCase( BigDataProcessor2Menu.CROP ))
+        else if(e.getActionCommand().equalsIgnoreCase( CropCommand.COMMAND_NAME ))
         {
             BigDataProcessor2.threadPool.submit(() -> {
                 if (! isImageSelected( viewer ) ) return;
@@ -233,7 +234,7 @@ public class BigDataProcessor2MenuActions implements ActionListener {
                 new SplitChipDialog( viewer );
             });
         }
-        else if( e.getActionCommand().equalsIgnoreCase( BigDataProcessor2Menu.CONFIGURE_LOGGING_MENU_ITEM ))
+        else if( e.getActionCommand().equalsIgnoreCase( BigDataProcessor2Menu.LOG ))
         {
             BigDataProcessor2.threadPool.submit(() ->
             {

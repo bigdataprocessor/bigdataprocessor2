@@ -1,8 +1,8 @@
 package de.embl.cba.bdp2.quit;
 
+import de.embl.cba.bdp2.BigDataProcessor2Menu;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.scijava.Services;
-import de.embl.cba.bdp2.utils.Utils;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;
@@ -13,7 +13,7 @@ public class QuitCommand< R extends RealType< R > & NativeType< R > > implements
 {
     public static final String COMMAND_PATH = "Commands>";
     public static final String COMMAND_NAME = "Quit Fiji";
-    public static final String COMMAND_FULL_NAME = Utils.COMMAND_BDP2_PREFIX + COMMAND_NAME;
+    public static final String COMMAND_FULL_NAME = BigDataProcessor2Menu.COMMAND_BDP2_PREFIX + COMMAND_NAME;
 
     public void run()
     {

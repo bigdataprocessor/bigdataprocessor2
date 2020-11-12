@@ -1,9 +1,9 @@
 package de.embl.cba.bdp2.process.rename;
 
+import de.embl.cba.bdp2.BigDataProcessor2Menu;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.process.AbstractImageProcessingCommand;
 import de.embl.cba.bdp2.service.ImageService;
-import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewer.ImageViewer;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -16,7 +16,7 @@ import java.util.Arrays;
 public class ImageRenameCommand< R extends RealType< R > & NativeType< R > > extends AbstractImageProcessingCommand< R >
 {
     public static final String COMMAND_NAME = "Rename...";
-    public static final String COMMAND_FULL_NAME = Utils.COMMAND_BDP2_PREFIX + COMMAND_NAME;
+    public static final String COMMAND_FULL_NAME = BigDataProcessor2Menu.COMMAND_BDP2_PREFIX + COMMAND_NAME;
 
     @Parameter(label = "Channel names (comma separated list)")
     String channelNames = "ch0,ch1,ch2";

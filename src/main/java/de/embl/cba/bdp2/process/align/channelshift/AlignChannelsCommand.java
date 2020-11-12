@@ -1,5 +1,6 @@
 package de.embl.cba.bdp2.process.align.channelshift;
 
+import de.embl.cba.bdp2.BigDataProcessor2Menu;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.process.AbstractImageProcessingCommand;
 import de.embl.cba.bdp2.service.ImageService;
@@ -16,7 +17,7 @@ import java.util.List;
 public class AlignChannelsCommand< R extends RealType< R > & NativeType< R > > extends AbstractImageProcessingCommand< R >
 {
     public static final String COMMAND_NAME = "Align Channels...";
-    public static final String COMMAND_FULL_NAME = Utils.COMMAND_BDP2_PREFIX + COMMAND_NAME;
+    public static final String COMMAND_FULL_NAME = BigDataProcessor2Menu.COMMAND_BDP2_PREFIX + COMMAND_NAME;
 
     @Parameter(label = "Shifts X_C0,Y_C0,Z_C0;X_C1,Y_C1,Z_C1;... [pixels]")
     String shifts = "0,0,0;0,0,0";

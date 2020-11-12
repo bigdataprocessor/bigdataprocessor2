@@ -19,7 +19,6 @@ public class Read2kBy2kImage
 				NamingSchemes.SINGLE_CHANNEL_VOLUMES + TIF,
 				".*" );
 
-		BigDataProcessor2.showUI();
 		BigDataProcessor2.showImage( image );
 	}
 }

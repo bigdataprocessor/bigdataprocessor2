@@ -1,6 +1,6 @@
 package de.embl.cba.bdp2.log;
 
-import de.embl.cba.bdp2.utils.Utils;
+import de.embl.cba.bdp2.BigDataProcessor2Menu;
 import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
@@ -9,7 +9,7 @@ import org.scijava.plugin.Plugin;
 public class LoggingLevelCommand implements Command
 {
     public static final String COMMAND_NAME = "Set Logging Level...";
-    public static final String COMMAND_FULL_NAME = Utils.COMMAND_BDP2_PREFIX + COMMAND_NAME;
+    public static final String COMMAND_FULL_NAME = BigDataProcessor2Menu.COMMAND_BDP2_PREFIX + COMMAND_NAME;
 
     /**
      * 	public enum Level

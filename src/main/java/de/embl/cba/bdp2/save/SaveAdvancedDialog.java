@@ -328,7 +328,7 @@ public class SaveAdvancedDialog< R extends RealType< R > & NativeType< R > > ext
         recorder.addAPIFunctionPrequel( createSettingsString( "tEnd", savingSettings.tEnd ) );
 
         // void saveImageAndWaitUntilDone( Image< R > image, SavingSettings savingSettings )
-        recorder.setAPIFunction( "saveImageAndWaitUntilDone" );
+        recorder.setAPIFunctionName( "saveImageAndWaitUntilDone" );
         recorder.addAPIFunctionParameter( "savingSettings" );
 
         recorder.record();

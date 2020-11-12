@@ -18,7 +18,7 @@ public class MiscMenu extends JMenu
         imageJViewerItem.addActionListener(actionListener);
 
         final JMenuItem configureLogging =
-                new JMenuItem( BigDataProcessor2Menu.CONFIGURE_LOGGING_MENU_ITEM );
+                new JMenuItem( BigDataProcessor2Menu.LOG );
         configureLogging.addActionListener( actionListener );
         add( configureLogging );
     }

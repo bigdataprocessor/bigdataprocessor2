@@ -14,7 +14,7 @@ import java.io.File;
 
 import static de.embl.cba.bdp2.open.samples.SampleDataDownloader.DUAL_COLOR_MOUSE;
 import static de.embl.cba.bdp2.open.samples.SampleDataDownloader.MINIMAL_SYNTHETIC;
-import static de.embl.cba.bdp2.utils.Utils.COMMAND_BDP2_PREFIX;
+import static de.embl.cba.bdp2.BigDataProcessor2Menu.COMMAND_BDP2_PREFIX;
 
 
 /**

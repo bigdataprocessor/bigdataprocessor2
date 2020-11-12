@@ -15,27 +15,13 @@ import org.scijava.plugin.Plugin;
 import javax.swing.*;
 
 import static de.embl.cba.bdp2.open.NamingSchemes.*;
-import static de.embl.cba.bdp2.utils.Utils.COMMAND_BDP2_PREFIX;
+import static de.embl.cba.bdp2.BigDataProcessor2Menu.COMMAND_BDP2_PREFIX;
 
-
-/**
- * TODO: How to add a HELP button for the regular expression without screwing up the macro recording?
- *
- *
- * @param <R>
- */
 @Plugin(type = Command.class, menuPath = Utils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractOpenFileSeriesCommand.COMMAND_OPEN_PATH + OpenFileSeriesCommand.COMMAND_FULL_NAME )
 public class OpenFileSeriesCommand< R extends RealType< R > & NativeType< R > > extends AbstractOpenFileSeriesCommand< R >
 {
-    public static final String COMMAND_NAME = "Open File Series...";
+    public static final String COMMAND_NAME = "Open Custom File Series...";
     public static final String COMMAND_FULL_NAME = COMMAND_BDP2_PREFIX + COMMAND_NAME;
-    public static final String USE_CUSTOM = "Use below custom regular expression";
-
-    //@Parameter(label = "Subset file using regular expression" )
-    //String filterPattern = ".*";
-
-    //@Parameter(label = "Regular expression help", callback = "showRegExpHelp", required = false)
-    //Button regExpHelpButton;
 
     @Parameter(label = "File extension", choices = { TIF, OME_TIF, TIFF, H_5 })
     String fileExtension = ".tif";
@@ -43,7 +29,7 @@ public class OpenFileSeriesCommand< R extends RealType< R > & NativeType< R > > 
     @Parameter(label = "Regular expression (excluding file extension)")
     String regExp = MULTI_CHANNEL_VOLUMES;
 
-    @Parameter(label = "Hdf5 data set name (optional)", required = false)
+    @Parameter(label = "Hdf5 dataset path (for .h5)", required = false)
     String hdf5DataSetName = "Data";
 
     public void run()
@@ -95,7 +81,7 @@ public class OpenFileSeriesCommand< R extends RealType< R > & NativeType< R > > 
     {
         MacroRecorder recorder = new MacroRecorder( outputImage );
         recorder.recordImportStatements( true );
-        recorder.setAPIFunction( apiFunctionName );
+        recorder.setAPIFunctionName( apiFunctionName );
         recorder.addAPIFunctionParameter( recorder.quote( directory.toString() ) );
         recorder.addAPIFunctionParameter( recorder.quote( regExp ) );
         if ( apiFunctionName.equals( "openHdf5Series" ) )

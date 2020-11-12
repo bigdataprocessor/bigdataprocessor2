@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.open.luxendo;
+package de.embl.cba.bdp2.open.fileseries.luxendo;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.dialog.Utils;
@@ -6,6 +6,8 @@ import de.embl.cba.bdp2.macro.MacroRecorder;
 import de.embl.cba.bdp2.open.AbstractOpenFileSeriesCommand;
 import de.embl.cba.bdp2.open.ChannelChooserDialog;
 import de.embl.cba.bdp2.open.fileseries.FileInfos;
+import de.embl.cba.bdp2.open.fileseries.OpenFileSeriesCommand;
+import de.embl.cba.bdp2.process.bin.BinCommand;
 import ij.plugin.frame.Recorder;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -14,15 +16,12 @@ import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
 import javax.swing.*;
-
 import java.awt.*;
 import java.io.File;
 import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.List;
 
 import static de.embl.cba.bdp2.open.NamingSchemes.LUXENDO_REGEXP;
-import static de.embl.cba.bdp2.utils.Utils.COMMAND_BDP2_PREFIX;
+import static de.embl.cba.bdp2.BigDataProcessor2Menu.COMMAND_BDP2_PREFIX;
 
 @Plugin(type = Command.class, menuPath = Utils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractOpenFileSeriesCommand.COMMAND_OPEN_PATH + OpenLuxendoFileSeriesCommand.COMMAND_FULL_NAME )
 public class OpenLuxendoFileSeriesCommand< R extends RealType< R > & NativeType< R > > extends AbstractOpenFileSeriesCommand< R >
@@ -107,7 +106,8 @@ public class OpenLuxendoFileSeriesCommand< R extends RealType< R > & NativeType<
     {
         MacroRecorder recorder = new MacroRecorder( outputImage );
         recorder.recordImportStatements( true );
-        recorder.setAPIFunction( "openHdf5Series" );
+        recorder.setAPIFunctionName( "openHdf5Series" );
+        recorder.addAPIFunctionPrequel( "# " + OpenLuxendoFileSeriesCommand.COMMAND_NAME );
         recorder.addAPIFunctionParameter( recorder.quote( directory.toString() ) );
         recorder.addAPIFunctionParameter( recorder.quote( regExp ) );
         recorder.addAPIFunctionParameter( recorder.quote( "Data" ) );

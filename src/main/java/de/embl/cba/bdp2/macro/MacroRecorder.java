@@ -161,6 +161,8 @@ public class MacroRecorder
 					if ( recordShowImageCall )
 						recorder.recordString( "# BigDataProcessor2.showImage( image, True );\n" );
 
+					recorder.recordString("\n");
+
 				}
 				else // macro recording
 				{
@@ -199,7 +201,7 @@ public class MacroRecorder
 		this.message = message;
 	}
 
-	public void setAPIFunction( String function )
+	public void setAPIFunctionName( String function )
 	{
 		this.apiFunction = function;
 	}
@@ -224,7 +226,7 @@ public class MacroRecorder
 		this.recordImportStatments = recordImportStatements;
 	}
 
-	public void recordShowImageCall( boolean recordShowImageCall )
+	public void recordShowImage( boolean recordShowImageCall )
 	{
 		this.recordShowImageCall = recordShowImageCall;
 	}

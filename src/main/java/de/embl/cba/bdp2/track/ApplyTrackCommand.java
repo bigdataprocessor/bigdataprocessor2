@@ -1,8 +1,8 @@
 package de.embl.cba.bdp2.track;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
+import de.embl.cba.bdp2.BigDataProcessor2Menu;
 import de.embl.cba.bdp2.process.AbstractImageProcessingCommand;
-import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewer.ImageViewer;
 import de.embl.cba.bdv.utils.BdvUtils;
 import net.imglib2.type.NativeType;
@@ -17,7 +17,7 @@ import java.io.File;
 public class ApplyTrackCommand< R extends RealType< R > & NativeType< R > > extends AbstractImageProcessingCommand< R >
 {
     public static final String COMMAND_NAME = "Apply Track...";
-    public static final String COMMAND_FULL_NAME =  Utils.COMMAND_BDP2_PREFIX + COMMAND_NAME;
+    public static final String COMMAND_FULL_NAME =  BigDataProcessor2Menu.COMMAND_BDP2_PREFIX + COMMAND_NAME;
 
 //    @Parameter(label = "Track")
 //    Track track;

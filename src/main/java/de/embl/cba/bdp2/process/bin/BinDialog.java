@@ -37,7 +37,8 @@ public class BinDialog< R extends RealType< R > & NativeType< R > > extends Abst
 		recorder.addCommandParameter( "binWidthZPixels",  span[ 2 ] );
 
 		// Image< R > bin( Image< R > image, long[] spanXYZCT )
-		recorder.setAPIFunction( "bin" );
+		recorder.setAPIFunctionName( "bin" );
+		recorder.addAPIFunctionPrequel( "# " + BinCommand.COMMAND_NAME );
 		recorder.addAPIFunctionParameter( span );
 
 		recorder.record();

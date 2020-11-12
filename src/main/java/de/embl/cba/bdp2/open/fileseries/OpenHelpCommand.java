@@ -10,12 +10,12 @@ import org.scijava.plugin.Plugin;
 
 import javax.swing.*;
 
-import static de.embl.cba.bdp2.utils.Utils.COMMAND_BDP2_PREFIX;
+import static de.embl.cba.bdp2.BigDataProcessor2Menu.COMMAND_BDP2_PREFIX;
 
 @Plugin(type = Command.class, menuPath = Utils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractOpenFileSeriesCommand.COMMAND_OPEN_PATH + OpenHelpCommand.COMMAND_FULL_NAME )
 public class OpenHelpCommand< R extends RealType< R > & NativeType< R > > implements Command
 {
-    public static final String COMMAND_NAME = "Open Help";
+    public static final String COMMAND_NAME = "Help";
     public static final String COMMAND_FULL_NAME = COMMAND_BDP2_PREFIX + COMMAND_NAME;
 
     public void run()

@@ -1,29 +1,35 @@
 package benchmark;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
+import de.embl.cba.bdp2.BigDataProcessor2Command;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.save.SaveFileType;
 import de.embl.cba.bdp2.save.SavingSettings;
+import net.imagej.ImageJ;
 
 public class BenchmarkPublication
 {
 	public static void main( String[] args )
 	{
-		Logger.setLevel( Logger.Level.Normal );
-//		String root = "/Users/tischer/Desktop/bpd2-benchmark";
-		String root = "/Volumes/cba/exchange/bigdataprocessor/data/benchmark";
+		ImageJ imageJ = new ImageJ();
+		imageJ.ui().showUI();
+		imageJ.command().run( BigDataProcessor2Command.class, true );
+		Logger.setLevel( Logger.Level.Benchmark );
 
-		Image image = BigDataProcessor2.openHdf5Series(
-				root + "/in",
-				".*stack_6_(?<C1>channel_.*)/(?<C2>Cam_.*)_(?<T>\\d+).h5",
-				"Data" );
+		String root = "/Users/tischer/Desktop/bpd2-benchmark/h5";
+//		String root = "/Users/tischer/Desktop/bpd2-benchmark/tif";
 
+//		String root = "/Volumes/cba/exchange/bigdataprocessor/data/benchmark";
 
-		//image = BigDataProcessor2.bin( image, new long[]{3,3,1,1,1} );
+		Image image = BigDataProcessor2.openHdf5Series( root + "/in",".*stack_6_(?<C1>channel_.*)/(?<C2>Cam_.*)_(?<T>\\d+).h5","Data" );
 
+//		Image image = BigDataProcessor2.openTiffSeries( root + "/in", "(?<T>.*).tif" );
+//
+		image = BigDataProcessor2.bin( image, new long[]{3,3,1,1,1} );
+//
 		BigDataProcessor2.showImage( image );
-
+//
 //		SavingSettings savingSettings = new SavingSettings();
 //		savingSettings.volumesFilePathStump = root + "/out/volumes";
 //		savingSettings.numIOThreads = 1;

@@ -1,9 +1,9 @@
 package de.embl.cba.bdp2.process.crop;
 
+import de.embl.cba.bdp2.BigDataProcessor2Menu;
 import de.embl.cba.bdp2.process.AbstractImageProcessingCommand;
 import de.embl.cba.bdp2.service.ImageService;
 import de.embl.cba.bdp2.BigDataProcessor2;
-import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewer.ImageViewer;
 import net.imglib2.FinalInterval;
 import net.imglib2.type.NativeType;
@@ -16,7 +16,7 @@ import org.scijava.plugin.Plugin;
 public class CropCommand< R extends RealType< R > & NativeType< R > > extends AbstractImageProcessingCommand< R >
 {
     public static final String COMMAND_NAME = "Crop...";
-    public static final String COMMAND_FULL_NAME = Utils.COMMAND_BDP2_PREFIX + COMMAND_NAME;
+    public static final String COMMAND_FULL_NAME = BigDataProcessor2Menu.COMMAND_BDP2_PREFIX + COMMAND_NAME;
 
     long minX = 0;
 

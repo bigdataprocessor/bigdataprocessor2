@@ -1,6 +1,6 @@
 package run;
 
-import de.embl.cba.bdp2.open.luxendo.OpenLuxendoChannelsFileSeriesCommand;
+import de.embl.cba.bdp2.open.fileseries.luxendo.OpenLuxendoChannelsFileSeriesCommand;
 import ij.plugin.frame.Recorder;
 import net.imagej.ImageJ;
 

@@ -41,7 +41,7 @@ public class AlignChannelsDialog< T extends RealType< T > & NativeType< T > > ex
 		recorder.addCommandParameter( "shifts", Utils.longsToDelimitedString( shifts ) );
 
 		// Image< R > alignChannels( Image< R > image, List< long[] > shifts )
-		recorder.setAPIFunction( "alignChannels" );
+		recorder.setAPIFunctionName( "alignChannels" );
 		recorder.addAPIFunctionParameter( shifts );
 		recorder.record();
 	}

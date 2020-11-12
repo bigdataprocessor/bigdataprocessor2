@@ -5,7 +5,7 @@ import de.embl.cba.bdp2.open.fileseries.OpenEMTiffPlanesFileSeriesCommand;
 import de.embl.cba.bdp2.open.fileseries.OpenFileSeriesCommand;
 import de.embl.cba.bdp2.open.fileseries.OpenHelpCommand;
 import de.embl.cba.bdp2.open.fileseries.leica.OpenLeicaDSLTiffPlanesFileSeriesCommand;
-import de.embl.cba.bdp2.open.luxendo.OpenLuxendoFileSeriesCommand;
+import de.embl.cba.bdp2.open.fileseries.luxendo.OpenLuxendoFileSeriesCommand;
 import de.embl.cba.bdp2.process.AbstractImageProcessingCommand;
 import de.embl.cba.bdp2.open.samples.DownloadAndOpenSampleDataCommand;
 import de.embl.cba.bdp2.track.ApplyTrackCommand;
@@ -22,32 +22,26 @@ import java.util.List;
 
 public class BigDataProcessor2Menu extends JMenu
 {
-    public static final String CONFIGURE_LOGGING_MENU_ITEM = "Configure Logging...";
-    // Development (alpha stage)
-    public static final String IMAGEJ_VIEW_MENU_ITEM = "Show in Hyperstack Viewer";
-    public static final String REGISTER_VOLUME_SIFT_MENU_ITEM = "Correct Lateral Slice Drift in Volume (SIFT)...";
-    public static final String REGISTER_MOVIE_SIFT_MENU_ITEM = "Correct Lateral Frame Drift in Time-lapse (SIFT)...";
-    public static final String REGISTER_MOVIE_PHASE_CORRELATION_MENU_ITEM = "Correct Lateral Frame Drift in Time-lapse (X-Corr)...";
-    // Menu items
-    public static final String SAVE_AS_IMARIS_VOLUMES_MENU_ITEM = "Save as Imaris Volumes...";
-    public static final String SAVE_AS_TIFF_VOLUMES_MENU_ITEM = "Save as Tiff Volumes...";
-    public static final String SAVE_AS_TIFF_PLANES_MENU_ITEM = "Save as Tiff Planes...";
+    public static final String COMMAND_BDP2_PREFIX = "BDP2 ";
 
-    public static final String CROP = "Crop...";
-
-    public static final String CREATE_TRACK = "Create Track...";
-
-    public static final String OBLIQUE_MENU_ITEM = "Shear...";
-    
     // Menus
     public static final String MISC = "Misc";
-    public static final String DEVELOPMENT_MENU_DISPLAY_TEXT = "Development";
-    public static final String MACRO_RECORDING = "Record Macro...";
+    public static final String RECORD = "Record...";
     public static final String ABOUT = "About";
     public static final String HELP = "Help";
     public static final String ISSUE = "Report an issue";
     public static final String CITE = "Cite";
-    public static final String LOG = "Configure Logging...";
+    public static final String LOG = "Logging...";
+
+    // Menu items
+    public static final String IMAGEJ_VIEW_MENU_ITEM = "Show in Hyperstack Viewer";
+    public static final String REGISTER_VOLUME_SIFT_MENU_ITEM = "Correct Lateral Slice Drift in Volume (SIFT)...";
+    public static final String REGISTER_MOVIE_SIFT_MENU_ITEM = "Correct Lateral Frame Drift in Time-lapse (SIFT)...";
+    public static final String REGISTER_MOVIE_PHASE_CORRELATION_MENU_ITEM = "Correct Lateral Frame Drift in Time-lapse (X-Corr)...";
+    public static final String SAVE_AS_IMARIS_VOLUMES_MENU_ITEM = "Save as Imaris Volumes...";
+    public static final String SAVE_AS_TIFF_VOLUMES_MENU_ITEM = "Save as Tiff Volumes...";
+    public static final String SAVE_AS_TIFF_PLANES_MENU_ITEM = "Save as Tiff Planes...";
+    public static final String CREATE_TRACK = "Create Track...";
 
     private final BigDataProcessor2MenuActions menuActions;
     private final ArrayList< JMenu > menus;
@@ -68,16 +62,18 @@ public class BigDataProcessor2Menu extends JMenu
 
         final JMenu recordMenu = addMenu( "Record" );
         menus.add( recordMenu );
-        addMenuItem( recordMenu, MACRO_RECORDING );
+        addMenuItem( recordMenu, RECORD );
 
         final JMenu openMenu = addMenu( "Open" );
         menus.add( openMenu );
-        // TODO: could this be auto-populated using SciJava annotation?
+        // TODO: auto-populate using SciJava annotation
         addMenuItem( openMenu, OpenHelpCommand.COMMAND_NAME );
         addMenuItem( openMenu, OpenFileSeriesCommand.COMMAND_NAME );
-        addMenuItem( openMenu, OpenEMTiffPlanesFileSeriesCommand.COMMAND_NAME );
-        addMenuItem( openMenu, OpenLeicaDSLTiffPlanesFileSeriesCommand.COMMAND_NAME );
-        addMenuItem( openMenu, OpenLuxendoFileSeriesCommand.COMMAND_NAME );
+        JMenu openPredefinedFileSeriesMenu = new JMenu( "Open Predefined File Series" );
+        openMenu.add( openPredefinedFileSeriesMenu );
+        addMenuItem( openPredefinedFileSeriesMenu, OpenEMTiffPlanesFileSeriesCommand.COMMAND_NAME );
+        addMenuItem( openPredefinedFileSeriesMenu, OpenLeicaDSLTiffPlanesFileSeriesCommand.COMMAND_NAME );
+        addMenuItem( openPredefinedFileSeriesMenu, OpenLuxendoFileSeriesCommand.COMMAND_NAME );
         addMenuItem( openMenu, OpenBdvBioFormatsCommand.COMMAND_NAME );
         addMenuItem( openMenu, DownloadAndOpenSampleDataCommand.COMMAND_NAME );
 

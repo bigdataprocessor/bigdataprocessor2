@@ -13,7 +13,7 @@ import org.scijava.plugin.Plugin;
 
 import javax.swing.*;
 
-import static de.embl.cba.bdp2.utils.Utils.COMMAND_BDP2_PREFIX;
+import static de.embl.cba.bdp2.BigDataProcessor2Menu.COMMAND_BDP2_PREFIX;
 
 @Plugin(type = Command.class, menuPath = Utils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractOpenCommand.COMMAND_OPEN_PATH + OpenBdvBioFormatsCommand.COMMAND_FULL_NAME )
 public class OpenBdvBioFormatsCommand< R extends RealType< R > & NativeType< R >> extends AbstractOpenFileCommand< R >
@@ -41,7 +41,7 @@ public class OpenBdvBioFormatsCommand< R extends RealType< R > & NativeType< R >
     {
         MacroRecorder recorder = new MacroRecorder( outputImage );
         recorder.recordImportStatements( true );
-        recorder.setAPIFunction( "openBioFormats" );
+        recorder.setAPIFunctionName( "openBioFormats" );
         recorder.addAPIFunctionParameter( recorder.quote( file.getAbsolutePath() ) );
         recorder.addAPIFunctionParameter( String.valueOf( seriesIndex ) );
         recorder.record();

@@ -12,7 +12,7 @@ import org.scijava.plugin.Plugin;
 
 import javax.swing.*;
 
-import static de.embl.cba.bdp2.utils.Utils.COMMAND_BDP2_PREFIX;
+import static de.embl.cba.bdp2.BigDataProcessor2Menu.COMMAND_BDP2_PREFIX;
 
 @Plugin(type = Command.class, menuPath = Utils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractOpenCommand.COMMAND_OPEN_PATH + OpenEMTiffPlanesFileSeriesCommand.COMMAND_FULL_NAME )
 public class OpenEMTiffPlanesFileSeriesCommand< R extends RealType< R > & NativeType< R > > extends AbstractOpenFileSeriesCommand< R >
@@ -35,7 +35,7 @@ public class OpenEMTiffPlanesFileSeriesCommand< R extends RealType< R > & Native
     {
         MacroRecorder recorder = new MacroRecorder( outputImage );
         recorder.recordImportStatements( true );
-        recorder.setAPIFunction( "openTiffSeries" );
+        recorder.setAPIFunctionName( "openTiffSeries" );
         recorder.addAPIFunctionParameter( recorder.quote( directory.toString() ) );
         recorder.addAPIFunctionParameter( recorder.quote( regExp ) );
         recorder.record();

@@ -35,7 +35,7 @@ import bdv.viewer.animate.SimilarityTransformAnimator;
 import de.embl.cba.bdp2.process.align.splitchip.SplitChipMerger;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.open.luxendo.Luxendos;
+import de.embl.cba.bdp2.open.fileseries.luxendo.Luxendos;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.dialog.DisplaySettings;
 import de.embl.cba.bdp2.process.transform.TransformCommand;
@@ -92,7 +92,6 @@ import static de.embl.cba.bdp2.open.NamingSchemes.MULTI_CHANNEL_VOLUMES_FROM_SUB
 
 public class Utils {
 
-	public static final String COMMAND_BDP2_PREFIX = "BDP2 ";
 	public static final long GIGA = 1000000000L;
 
 	public static boolean verbose = false;

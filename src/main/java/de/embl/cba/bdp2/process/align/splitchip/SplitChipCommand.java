@@ -1,5 +1,6 @@
 package de.embl.cba.bdp2.process.align.splitchip;
 
+import de.embl.cba.bdp2.BigDataProcessor2Menu;
 import de.embl.cba.bdp2.process.AbstractImageProcessingCommand;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewer.ImageViewer;
@@ -14,7 +15,7 @@ import java.util.List;
 public class SplitChipCommand< R extends RealType< R > & NativeType< R > > extends AbstractImageProcessingCommand< R >
 {
     public static final String COMMAND_NAME = "Align Channels Split Chip...";
-    public static final String COMMAND_FULL_NAME = Utils.COMMAND_BDP2_PREFIX + COMMAND_NAME;
+    public static final String COMMAND_FULL_NAME = BigDataProcessor2Menu.COMMAND_BDP2_PREFIX + COMMAND_NAME;
 
     @Parameter(label = "Regions [ minX, minY, sizeX, sizeY, channel; minX, ... ]")
     public String intervalsString = "896, 46, 1000, 1000, 0; 22, 643, 1000, 1000, 0";

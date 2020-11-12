@@ -97,7 +97,7 @@ public class SplitChipDialog< R extends RealType< R > & NativeType< R > > extend
 		recorder.addCommandParameter( "intervalsString", intervalsString );
 
 		// Image< R > alignChannelsSpitChip( Image< R > image, List< long[] > regions )
-		recorder.setAPIFunction( "alignChannelsSpitChip" );
+		recorder.setAPIFunctionName( "alignChannelsSpitChip" );
 		recorder.addAPIFunctionParameter( regions );
 
 		recorder.record();

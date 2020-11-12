@@ -1,10 +1,10 @@
 package de.embl.cba.bdp2.save;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
+import de.embl.cba.bdp2.BigDataProcessor2Menu;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.service.ImageService;
-import de.embl.cba.bdp2.utils.Utils;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;
@@ -26,7 +26,7 @@ public class SaveAdvancedCommand< R extends RealType< R > & NativeType< R > > im
     public static final String COMMAND_SAVE_PATH = "Commands>Save>";
 
     public static final String COMMAND_NAME = "Save As...";
-    public static final String COMMAND_FULL_NAME = Utils.COMMAND_BDP2_PREFIX + COMMAND_NAME;
+    public static final String COMMAND_FULL_NAME = BigDataProcessor2Menu.COMMAND_BDP2_PREFIX + COMMAND_NAME;
 
     @Parameter(label = "Input image name")
     protected Image< R > inputImage = ImageService.imageNameToImage.values().iterator().next();

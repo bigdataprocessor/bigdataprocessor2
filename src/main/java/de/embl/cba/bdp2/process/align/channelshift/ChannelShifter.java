@@ -40,6 +40,7 @@ public class ChannelShifter < R extends RealType< R > & NativeType< R > >
 				DimensionOrder.C,
 				DimensionOrder.T );
 
+		
 		return shiftedView;
 	}
 

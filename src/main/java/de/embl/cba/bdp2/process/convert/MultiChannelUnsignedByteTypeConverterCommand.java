@@ -1,5 +1,6 @@
 package de.embl.cba.bdp2.process.convert;
 
+import de.embl.cba.bdp2.BigDataProcessor2Menu;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.process.AbstractImageProcessingCommand;
 import de.embl.cba.bdp2.utils.Utils;
@@ -17,7 +18,7 @@ import static de.embl.cba.bdp2.dialog.Utils.*;
 public class MultiChannelUnsignedByteTypeConverterCommand< R extends RealType< R > & NativeType< R > > extends AbstractImageProcessingCommand< R >
 {
     public static final String COMMAND_NAME = "Convert to 8-Bit...";
-    public static final String COMMAND_FULL_NAME = Utils.COMMAND_BDP2_PREFIX + COMMAND_NAME;
+    public static final String COMMAND_FULL_NAME = BigDataProcessor2Menu.COMMAND_BDP2_PREFIX + COMMAND_NAME;
 
     @Parameter(label = "Map to 0 [channel0, channel1, ...]")
     String mapTo0 = "0, 0";

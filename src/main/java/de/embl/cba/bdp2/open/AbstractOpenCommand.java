@@ -1,7 +1,6 @@
 package de.embl.cba.bdp2.open;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
-import de.embl.cba.bdp2.dialog.HelpWindow;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.macro.MacroRecorder;
 import de.embl.cba.bdp2.process.calibrate.CalibrationCheckerDialog;
@@ -10,14 +9,10 @@ import de.embl.cba.bdp2.service.ImageService;
 import de.embl.cba.bdp2.viewer.ImageViewer;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
-import org.jetbrains.annotations.Nullable;
 import org.scijava.Context;
 import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.ui.UIService;
-
-import javax.swing.*;
-import java.io.File;
 
 public abstract class AbstractOpenCommand< R extends RealType< R > & NativeType< R > > implements Command, OpenCommand
 {
@@ -71,7 +66,7 @@ public abstract class AbstractOpenCommand< R extends RealType< R > & NativeType<
             showInViewer( autoContrast, keepViewerTransform );
 
             MacroRecorder recorder = new MacroRecorder();
-            recorder.recordShowImageCall( true ); // TODO: this could be made more fine-grained
+            recorder.recordShowImage( true ); // TODO: this could be made more fine-grained
             recorder.record();
         }
     }
