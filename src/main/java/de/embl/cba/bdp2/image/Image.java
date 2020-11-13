@@ -1,11 +1,13 @@
 package de.embl.cba.bdp2.image;
 
 import ch.epfl.biop.bdv.bioformats.BioFormatsMetaDataHelper;
+import de.embl.cba.bdp2.dialog.DisplaySettings;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.open.CachedCellImgCreator;
 import de.embl.cba.bdp2.save.CachedCellImgReplacer;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
+import de.embl.cba.bdp2.viewer.ImageViewer;
 import mpicbg.imglib.multithreading.Stopable;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.cache.img.DiskCachedCellImgOptions;
@@ -19,6 +21,7 @@ import ome.units.unit.Unit;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 // TODO: make an interface and get rid of CachedCellImgCreator?!!
 
@@ -53,6 +56,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 
 	// Note: currently not used, consider moving to a branch
 	private ArrayList< Stopable > stopables = new ArrayList<>(  );
+	private ImageViewer< R > viewer;
 
 	public Image( CachedCellImgCreator< R > cachedCellImgCreator )
 	{
@@ -82,6 +86,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		this.voxelUnit = image.getVoxelUnit();
 		this.cellDims = image.cellDims.clone();
 		this.rawDataDimensions = image.rawDataDimensions.clone();
+		this.viewer = image.viewer;
 	}
 
 	public long[] getDimensionsXYZCT()
@@ -295,5 +300,17 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		this.cellDims[ DimensionOrder.C ] = 1;
 		this.cellDims[ DimensionOrder.T ] = 1;
 		setCache( cellDims, cacheType, cacheSize );
+	}
+
+	// TODO: this could be removed if we used SourceAndConverter instead of the current Image class
+	public void setViewer( ImageViewer< R > viewer )
+	{
+		this.viewer = viewer;
+	}
+
+	// TODO: this could be removed if we used SourceAndConverter instead of the current Image class
+	public List< DisplaySettings > getDisplaySettings()
+	{
+		return viewer.getDisplaySettings();
 	}
 }

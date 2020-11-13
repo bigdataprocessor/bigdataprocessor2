@@ -36,7 +36,7 @@ public class ImarisFrameSaver< R extends RealType< R > & NativeType< R >> implem
             long startTime,
             AtomicBoolean stop)
     {
-        raiXYZCT = settings.rai;
+        raiXYZCT = settings.image.getRai();
         this.nFrames = Math.toIntExact( raiXYZCT.dimension( DimensionOrder.T ) );
         this.nChannels = Math.toIntExact( raiXYZCT.dimension( DimensionOrder.C ) );
         this.settings = settings;
@@ -62,12 +62,7 @@ public class ImarisFrameSaver< R extends RealType< R > & NativeType< R >> implem
 
             RandomAccessibleInterval< R > raiXYZ = RAISlicer.createVolumeCopy( raiXYZCT, c, t, settings.numProcessingThreads, ( R ) settings.type );
 
-            ImagePlus imagePlus =
-                    Utils.wrap3DRaiToCalibratedImagePlus(
-                            raiXYZ,
-                            settings.voxelSize,
-                            settings.voxelUnit.getSymbol(),
-                            "");
+            ImagePlus imp3D = Utils.asImagePlus( raiXYZ, settings.image, c );
 
             // Save volume
             if ( settings.saveVolumes )
@@ -75,7 +70,7 @@ public class ImarisFrameSaver< R extends RealType< R > & NativeType< R >> implem
                 start = System.currentTimeMillis();
                 H5DataCubeWriter writer = new H5DataCubeWriter();
                 writer.writeImarisCompatibleResolutionPyramid(
-                        imagePlus,
+                        imp3D,
                         imarisDataSetProperties,
                         c,
                         t );
@@ -84,14 +79,14 @@ public class ImarisFrameSaver< R extends RealType< R > & NativeType< R >> implem
 
             // Save projections
             if ( settings.saveProjections )
-                saveAsTiffXYZMaxProjection( imagePlus, c, t, settings.projectionsFilePathStump );
+                saveAsTiffXYZMaxProjection( imp3D, c, t, settings.projectionsFilePathStump );
 
             counter.incrementAndGet();
 
 //            if (!stop.get())
 //                ProgressHelpers.logProgress( totalFiles, counter, startTime, "Saved file " );
 
-            imagePlus = null;
+            imp3D = null;
             System.gc();
         }
 

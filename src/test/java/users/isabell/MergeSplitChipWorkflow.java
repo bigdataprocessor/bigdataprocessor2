@@ -15,7 +15,7 @@ import net.imglib2.type.numeric.RealType;
 import java.io.File;
 import java.util.ArrayList;
 
-import static de.embl.cba.bdp2.dialog.Utils.selectDirectories;
+import static de.embl.cba.bdp2.dialog.DialogUtils.selectDirectories;
 
 public class MergeSplitChipWorkflow
 {

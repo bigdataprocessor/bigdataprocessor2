@@ -51,16 +51,16 @@ public class TiffPlaneSaver implements Runnable {
 
         final RandomAccessibleInterval raiXY
                 = createPlaneCopy(
-                        savingSettings.rai,
-                        savingSettings.rai,
+                        savingSettings.image.getRai(),
+                        savingSettings.image.getRai(),
                         z, c, t );
 
         @SuppressWarnings("unchecked")
         ImagePlus imp = ImageJFunctions.wrap( raiXY, "slice");
         imp.setDimensions(1, 1, 1);
 
-        final long nC = savingSettings.rai.dimension( DimensionOrder.C );
-        final long nT = savingSettings.rai.dimension( DimensionOrder.T );
+        final long nC = savingSettings.image.getRai().dimension( DimensionOrder.C );
+        final long nT = savingSettings.image.getRai().dimension( DimensionOrder.T );
 
         if ( ! savingSettings.compression.equals( SavingSettings.COMPRESSION_NONE ) )
         {

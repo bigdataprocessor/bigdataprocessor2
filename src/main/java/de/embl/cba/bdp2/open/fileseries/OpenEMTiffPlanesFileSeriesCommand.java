@@ -1,7 +1,7 @@
 package de.embl.cba.bdp2.open.fileseries;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
-import de.embl.cba.bdp2.dialog.Utils;
+import de.embl.cba.bdp2.dialog.DialogUtils;
 import de.embl.cba.bdp2.macro.MacroRecorder;
 import de.embl.cba.bdp2.open.AbstractOpenCommand;
 import de.embl.cba.bdp2.open.AbstractOpenFileSeriesCommand;
@@ -14,7 +14,7 @@ import javax.swing.*;
 
 import static de.embl.cba.bdp2.BigDataProcessor2Menu.COMMAND_BDP2_PREFIX;
 
-@Plugin(type = Command.class, menuPath = Utils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractOpenCommand.COMMAND_OPEN_PATH + OpenEMTiffPlanesFileSeriesCommand.COMMAND_FULL_NAME )
+@Plugin(type = Command.class, menuPath = DialogUtils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractOpenCommand.COMMAND_OPEN_PATH + OpenEMTiffPlanesFileSeriesCommand.COMMAND_FULL_NAME )
 public class OpenEMTiffPlanesFileSeriesCommand< R extends RealType< R > & NativeType< R > > extends AbstractOpenFileSeriesCommand< R >
 {
     public static final String COMMAND_NAME = "Open EM Tiff Plane File Series...";

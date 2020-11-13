@@ -14,11 +14,9 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.type.numeric.real.FloatType;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.regex.Pattern;
 
 public class FileInfos
@@ -38,7 +36,6 @@ public class FileInfos
     };
     public SerializableFileInfo[][][] ctzFileInfos;
     public long[] dimensions;
-    @NotNull
     private String namingScheme;
     private String filter;
     public int bitDepth;

@@ -3,6 +3,7 @@ package de.embl.cba.bdp2.process.calibrate;
 import ch.epfl.biop.bdv.bioformats.BioFormatsMetaDataHelper;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.BigDataProcessor2Menu;
+import de.embl.cba.bdp2.dialog.DialogUtils;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.process.AbstractImageProcessingCommand;
 import de.embl.cba.bdp2.viewer.ImageViewer;
@@ -11,7 +12,7 @@ import net.imglib2.type.numeric.RealType;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
-@Plugin(type = AbstractImageProcessingCommand.class, name = SetVoxelSizeCommand.COMMAND_NAME, menuPath = de.embl.cba.bdp2.dialog.Utils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractImageProcessingCommand.COMMAND_PROCESS_PATH + SetVoxelSizeCommand.COMMAND_FULL_NAME )
+@Plugin(type = AbstractImageProcessingCommand.class, name = SetVoxelSizeCommand.COMMAND_NAME, menuPath = DialogUtils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractImageProcessingCommand.COMMAND_PROCESS_PATH + SetVoxelSizeCommand.COMMAND_FULL_NAME )
 public class SetVoxelSizeCommand< R extends RealType< R > & NativeType< R > > extends AbstractImageProcessingCommand< R >
 {
     public static final String COMMAND_NAME = "Set Voxel Size...";

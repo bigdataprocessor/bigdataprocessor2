@@ -7,7 +7,6 @@ import bdv.util.BoundedValue;
 import bdv.util.ModifiableInterval;
 import bdv.viewer.ViewerPanel;
 import de.embl.cba.bdp2.BigDataProcessor2;
-import de.embl.cba.bdp2.process.align.channelshift.AlignChannelsCommand;
 import de.embl.cba.bdp2.process.align.channelshift.AlignChannelsDialog;
 import de.embl.cba.bdp2.process.align.channelshift.RegionOptimiser;
 import de.embl.cba.bdp2.dialog.AbstractProcessingDialog;
@@ -25,14 +24,13 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.ui.InteractiveDisplayCanvasComponent;
 import net.imglib2.ui.OverlayRenderer;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.embl.cba.bdp2.dialog.Utils.setOutputViewerPosition;
+import static de.embl.cba.bdp2.dialog.DialogUtils.setOutputViewerPosition;
 import static de.embl.cba.bdp2.process.align.channelshift.RegionOptimiser.adjustModifiableInterval;
 
 
@@ -105,7 +103,6 @@ public class SplitChipDialog< R extends RealType< R > & NativeType< R > > extend
 		recorder.record();
 	}
 
-	@NotNull
 	private String getImageJPrefsKey()
 	{
 		return AlignChannelsDialog.class.getSimpleName() + "." + "Regions";

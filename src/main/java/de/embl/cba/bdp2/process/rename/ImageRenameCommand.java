@@ -1,6 +1,7 @@
 package de.embl.cba.bdp2.process.rename;
 
 import de.embl.cba.bdp2.BigDataProcessor2Menu;
+import de.embl.cba.bdp2.dialog.DialogUtils;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.process.AbstractImageProcessingCommand;
 import de.embl.cba.bdp2.service.ImageService;
@@ -12,7 +13,7 @@ import org.scijava.plugin.Plugin;
 
 import java.util.Arrays;
 
-@Plugin(type = AbstractImageProcessingCommand.class, name = ImageRenameCommand.COMMAND_NAME, menuPath = de.embl.cba.bdp2.dialog.Utils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractImageProcessingCommand.COMMAND_PROCESS_PATH + ImageRenameCommand.COMMAND_FULL_NAME )
+@Plugin(type = AbstractImageProcessingCommand.class, name = ImageRenameCommand.COMMAND_NAME, menuPath = DialogUtils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractImageProcessingCommand.COMMAND_PROCESS_PATH + ImageRenameCommand.COMMAND_FULL_NAME )
 public class ImageRenameCommand< R extends RealType< R > & NativeType< R > > extends AbstractImageProcessingCommand< R >
 {
     public static final String COMMAND_NAME = "Rename...";

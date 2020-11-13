@@ -12,7 +12,7 @@ import org.scijava.plugin.Plugin;
 
 import java.util.ArrayList;
 
-import static de.embl.cba.bdp2.dialog.Utils.*;
+import static de.embl.cba.bdp2.dialog.DialogUtils.*;
 
 @Plugin(type = AbstractImageProcessingCommand.class, name = MultiChannelUnsignedByteTypeConverterCommand.COMMAND_NAME, menuPath = BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractImageProcessingCommand.COMMAND_PROCESS_PATH + MultiChannelUnsignedByteTypeConverterCommand.COMMAND_FULL_NAME )
 public class MultiChannelUnsignedByteTypeConverterCommand< R extends RealType< R > & NativeType< R > > extends AbstractImageProcessingCommand< R >

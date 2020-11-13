@@ -1,6 +1,7 @@
 package de.embl.cba.bdp2.process.crop;
 
 import de.embl.cba.bdp2.BigDataProcessor2Menu;
+import de.embl.cba.bdp2.dialog.DialogUtils;
 import de.embl.cba.bdp2.process.AbstractImageProcessingCommand;
 import de.embl.cba.bdp2.service.ImageService;
 import de.embl.cba.bdp2.BigDataProcessor2;
@@ -12,7 +13,7 @@ import net.imglib2.util.Intervals;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
-@Plugin(type = AbstractImageProcessingCommand.class, name = CropCommand.COMMAND_NAME, menuPath = de.embl.cba.bdp2.dialog.Utils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractImageProcessingCommand.COMMAND_PROCESS_PATH + CropCommand.COMMAND_FULL_NAME )
+@Plugin(type = AbstractImageProcessingCommand.class, name = CropCommand.COMMAND_NAME, menuPath = DialogUtils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractImageProcessingCommand.COMMAND_PROCESS_PATH + CropCommand.COMMAND_FULL_NAME )
 public class CropCommand< R extends RealType< R > & NativeType< R > > extends AbstractImageProcessingCommand< R >
 {
     public static final String COMMAND_NAME = "Crop...";

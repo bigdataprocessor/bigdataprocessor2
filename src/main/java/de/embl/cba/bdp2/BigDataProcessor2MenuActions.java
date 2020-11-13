@@ -17,7 +17,7 @@ import de.embl.cba.bdp2.process.convert.MultiChannelUnsignedByteTypeConverterDia
 import de.embl.cba.bdp2.process.crop.CropCommand;
 import de.embl.cba.bdp2.process.crop.CropDialog;
 import de.embl.cba.bdp2.open.samples.DownloadAndOpenSampleDataCommand;
-import de.embl.cba.bdp2.dialog.Utils;
+import de.embl.cba.bdp2.dialog.DialogUtils;
 import de.embl.cba.bdp2.save.SaveFileType;
 import de.embl.cba.bdp2.track.ApplyTrackCommand;
 import de.embl.cba.bdp2.track.ApplyTrackDialog;
@@ -37,6 +37,7 @@ import de.embl.cba.bdp2.service.ImageViewerService;
 import de.embl.cba.bdp2.process.transform.TransformCommand;
 import de.embl.cba.bdp2.process.transform.TransformDialog;
 import de.embl.cba.bdp2.utils.DimensionOrder;
+import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewer.ImageViewer;
 import de.embl.cba.tables.FileAndUrlUtils;
 import ij.IJ;
@@ -161,7 +162,7 @@ public class BigDataProcessor2MenuActions implements ActionListener {
             BigDataProcessor2.threadPool.submit(() ->
 			{
                 if (! isImageSelected( viewer ) ) return;
-                Integer channel = Utils.getChannel( viewer );
+                Integer channel = DialogUtils.getChannel( viewer );
                 if ( channel == null ) return;
                 RegisteredViews.showSIFTVolumeAlignedBdvView( viewer );
             });
@@ -170,7 +171,7 @@ public class BigDataProcessor2MenuActions implements ActionListener {
         {
             BigDataProcessor2.threadPool.submit(() -> {
                 if (! isImageSelected( viewer ) ) return;
-                Integer channel = Utils.getChannel( viewer );
+                Integer channel = DialogUtils.getChannel( viewer );
                 if ( channel == null ) return;
                 RegisteredViews.createAlignedMovieView( viewer, Registration.SIFT_CORRESPONDENCES, channel );
             });
@@ -179,7 +180,7 @@ public class BigDataProcessor2MenuActions implements ActionListener {
         {
             BigDataProcessor2.threadPool.submit(() -> {
                 if (! isImageSelected( viewer ) ) return;
-                Integer channel = Utils.getChannel( viewer );
+                Integer channel = DialogUtils.getChannel( viewer );
                 if ( channel == null ) return;
                 RegisteredViews.createAlignedMovieView( viewer, Registration.PHASE_CORRELATION, 0 );
             });
@@ -195,11 +196,7 @@ public class BigDataProcessor2MenuActions implements ActionListener {
         {
             BigDataProcessor2.threadPool.submit(() -> {
                 if (! isImageSelected( viewer ) ) return;
-                // TODO:
-                // - make own class
-                // - add calibration
-                RandomAccessibleInterval permuted = Views.permute( viewer.getImage().getRai(), DimensionOrder.Z, DimensionOrder.C );
-                ImageJFunctions.show( permuted, BigDataProcessor2.threadPool );
+                Utils.asImagePlus( viewer.getImage() ).show();
             });
         }
         else if(e.getActionCommand().equalsIgnoreCase( MultiChannelUnsignedByteTypeConverterCommand.COMMAND_NAME ))

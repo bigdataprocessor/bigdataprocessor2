@@ -11,14 +11,12 @@ import de.embl.cba.bdp2.viewer.ImageViewer;
 import ij.IJ;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
-import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 public class SaveAdvancedDialog< R extends RealType< R > & NativeType< R > > extends JFrame implements ActionListener
 {
@@ -278,7 +276,6 @@ public class SaveAdvancedDialog< R extends RealType< R > & NativeType< R > > ext
         savingSettings.channelNamesInSavedImages = (String) comboChannelNames.getSelectedItem();
         savingSettings.tStart = Integer.parseInt( tfTStart.getText() );
         savingSettings.tEnd = Integer.parseInt( tfTEnd.getText() );
-        savingSettings.displaySettings = viewer.getDisplaySettings();
 
         return savingSettings;
     }
@@ -336,7 +333,6 @@ public class SaveAdvancedDialog< R extends RealType< R > & NativeType< R > > ext
         recorder.record();
     }
 
-    @NotNull
     private String createSettingsString( final String parameter, Object value )
     {
         String stringValue;

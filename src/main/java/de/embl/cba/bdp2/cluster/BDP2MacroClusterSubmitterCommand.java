@@ -9,7 +9,6 @@ import de.embl.cba.cluster.JobSubmitter;
 import de.embl.cba.morphometry.Utils;
 import de.embl.cba.util.PathMapper;
 import net.imagej.ImageJ;
-import org.jetbrains.annotations.NotNull;
 import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
@@ -101,7 +100,6 @@ public class BDP2MacroClusterSubmitterCommand extends AbstractClusterSubmitterCo
 		}
 	}
 
-	@NotNull
 	private String setNumThreads( String macro )
 	{
 		int numProcessingThreads = getNumber( macro, ".*" + NUMPROCESSINGTHREADS + "(?<x>\\d+).*" );

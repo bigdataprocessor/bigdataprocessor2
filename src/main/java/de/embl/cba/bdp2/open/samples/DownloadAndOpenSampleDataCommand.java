@@ -1,7 +1,7 @@
 package de.embl.cba.bdp2.open.samples;
 
 import de.embl.cba.bdp2.open.AbstractOpenFileSeriesCommand;
-import de.embl.cba.bdp2.dialog.Utils;
+import de.embl.cba.bdp2.dialog.DialogUtils;
 import de.embl.cba.bdp2.open.ProgressBar;
 import de.embl.cba.bdp2.viewer.ImageViewer;
 import net.imglib2.type.NativeType;
@@ -20,7 +20,7 @@ import static de.embl.cba.bdp2.BigDataProcessor2Menu.COMMAND_BDP2_PREFIX;
 /**
  * @param <R>
  */
-@Plugin(type = Command.class, menuPath = Utils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractOpenFileSeriesCommand.COMMAND_OPEN_PATH + DownloadAndOpenSampleDataCommand.COMMAND_FULL_NAME )
+@Plugin(type = Command.class, menuPath = DialogUtils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractOpenFileSeriesCommand.COMMAND_OPEN_PATH + DownloadAndOpenSampleDataCommand.COMMAND_FULL_NAME )
 public class DownloadAndOpenSampleDataCommand< R extends RealType< R > & NativeType< R > > implements Command
 {
     public static final String COMMAND_NAME = "Download and Open Sample Data...";

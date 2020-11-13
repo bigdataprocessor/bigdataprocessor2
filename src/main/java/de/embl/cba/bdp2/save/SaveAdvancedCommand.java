@@ -2,6 +2,7 @@ package de.embl.cba.bdp2.save;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.BigDataProcessor2Menu;
+import de.embl.cba.bdp2.dialog.DialogUtils;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.service.ImageService;
@@ -20,7 +21,7 @@ import java.io.File;
  *
  * @param <R>
  */
-@Plugin(type = Command.class, menuPath = de.embl.cba.bdp2.dialog.Utils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + SaveAdvancedCommand.COMMAND_SAVE_PATH + SaveAdvancedCommand.COMMAND_FULL_NAME )
+@Plugin(type = Command.class, menuPath = DialogUtils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + SaveAdvancedCommand.COMMAND_SAVE_PATH + SaveAdvancedCommand.COMMAND_FULL_NAME )
 public class SaveAdvancedCommand< R extends RealType< R > & NativeType< R > > implements Command
 {
     public static final String COMMAND_SAVE_PATH = "Commands>Save>";
@@ -96,26 +97,20 @@ public class SaveAdvancedCommand< R extends RealType< R > & NativeType< R > > im
     private SavingSettings getSavingSettings()
     {
         SavingSettings savingSettings = new SavingSettings();
-
+        savingSettings.image = inputImage;
         savingSettings.fileType = SaveFileType.valueOf( fileType );
-
         savingSettings.compression = tiffCompression;
         savingSettings.rowsPerStrip = 10;
-
         savingSettings.saveVolumes = saveVolumes;
         savingSettings.saveProjections = saveProjections;
-
         savingSettings.volumesFilePathStump = SavingSettings.createFilePathStump( inputImage, "volumes", directory.toString() );
         savingSettings.projectionsFilePathStump = SavingSettings.createFilePathStump( inputImage, "projections", directory.toString() );
-
         savingSettings.numIOThreads = numIOThreads;
         savingSettings.numProcessingThreads = numProcessingThreads;
-
-        savingSettings.voxelSize = inputImage.getVoxelSize();
-        savingSettings.voxelUnit = inputImage.getVoxelUnit();
-
         savingSettings.tStart = tStart;
         savingSettings.tEnd = tEnd;
+        // TODO: how to fetch the display settings? They are with the image viewer....
+        // savingSettings.displaySettings =
 
         return savingSettings;
     }

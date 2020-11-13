@@ -19,7 +19,7 @@ import org.scijava.plugin.Plugin;
 import java.io.File;
 import java.util.ArrayList;
 
-import static de.embl.cba.bdp2.dialog.Utils.selectDirectories;
+import static de.embl.cba.bdp2.dialog.DialogUtils.selectDirectories;
 
 @Plugin(type = Command.class, menuPath = "Plugins>BigDataTools>EMBL>Ellenberg>Batch Convert and Crop (Broken?)", initializer = "init")
 public class LuxendoBatchConvertAndCropCommand< R extends RealType< R > & NativeType< R > > implements Command

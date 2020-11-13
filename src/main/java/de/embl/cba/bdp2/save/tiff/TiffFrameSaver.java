@@ -6,7 +6,6 @@ import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.utils.RAISlicer;
 import de.embl.cba.bdp2.utils.Utils;
 import ij.ImagePlus;
-import ij.ImageStack;
 import loci.common.DebugTools;
 import loci.common.services.DependencyException;
 import loci.common.services.ServiceException;
@@ -25,7 +24,6 @@ import ome.units.quantity.Length;
 import ome.xml.model.enums.DimensionOrder;
 import ome.xml.model.enums.PixelType;
 import ome.xml.model.primitives.PositiveInteger;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,7 +51,7 @@ public class TiffFrameSaver< R extends RealType< R > & NativeType< R > > impleme
         this.counter = counter;
         this.startTime = startTime;
         this.stop = stop;
-        rai = settings.rai;
+        this.rai = settings.image.getRai();
     }
 
     @Override
@@ -72,19 +70,15 @@ public class TiffFrameSaver< R extends RealType< R > & NativeType< R > > impleme
                 return;
             }
 
-            // Note; below call will both
+            // Note: below call will both
             // (i) load the raw image into RAM
             // (ii) make a copy in RAM with all processing done
             RandomAccessibleInterval< R > raiXYZ = RAISlicer.createVolumeCopy( rai, c, t, settings.numProcessingThreads, ( R ) settings.type );
 
+            ImagePlus imp = Utils.asImagePlus( raiXYZ, settings.image, c );
+
             if ( settings.saveVolumes )
             {
-                ImagePlus imp = Utils.wrap3DRaiToCalibratedImagePlus(
-                        raiXYZ,
-                        settings.voxelSize,
-                        settings.voxelUnit.getSymbol(),
-                        "" );
-
                 String channelName = getChannelName( c );
 
                 saveAsTiff( imp, t, settings.compression, settings.rowsPerStrip, settings.volumesFilePathStump, channelName );
@@ -92,7 +86,7 @@ public class TiffFrameSaver< R extends RealType< R > & NativeType< R > > impleme
 
             if ( settings.saveProjections )
             {
-                saveProjections( raiXYZ, c );
+                saveProjections( imp, c );
             }
 
             counter.incrementAndGet();
@@ -107,7 +101,7 @@ public class TiffFrameSaver< R extends RealType< R > & NativeType< R > > impleme
         if ( settings.channelNamesInSavedImages.equals( SavingSettings.CHANNEL_INDEXING ) )
             return String.format( "C%1$02d", c );
         else if ( settings.channelNamesInSavedImages.equals( SavingSettings.CHANNEL_NAMES ) )
-            return settings.channelNames[ c  ];
+            return settings.image.getChannelNames()[ c ];
         else
             return String.format( "C%1$02d", c );
     }
@@ -135,11 +129,8 @@ public class TiffFrameSaver< R extends RealType< R > & NativeType< R > > impleme
 //            }
     }
 
-    private void saveProjections(
-            RandomAccessibleInterval rai3D,
-            int c )
+    private void saveProjections( ImagePlus imp3D, int c )
     {
-
         long start = System.currentTimeMillis();
 
 //        if ( settings.isotropicProjectionResampling )
@@ -155,25 +146,9 @@ public class TiffFrameSaver< R extends RealType< R > & NativeType< R > > impleme
 //                voxelSpacing[ d ] /= scalingFactors[ d ];
 //        }
 
-
-        ImagePlus imp3D = Utils.wrap3DRaiToCalibratedImagePlus(
-                rai3D,
-                settings.voxelSize,
-                settings.voxelUnit.getSymbol(),
-                "" );
-
         ProjectionXYZ.saveAsTiffXYZMaxProjection( imp3D, c, t, settings.projectionsFilePathStump );
 
-        Logger.debug( "Computed and saved projections in [ s ]: " + ( System.currentTimeMillis() - start ) / 1000);
-
-    }
-
-    private double[] getVoxelSpacingCopy()
-    {
-        final double[] voxelSpacing = new double[ settings.voxelSize.length ];
-        for ( int d = 0; d < settings.voxelSize.length; d++ )
-            voxelSpacing[ d ] = settings.voxelSize[ d ];
-        return voxelSpacing;
+        Logger.benchmark( "Computed and saved projections [ ms ]: " + ( System.currentTimeMillis() - start ) );
     }
 
     private void saveAsTiff(
@@ -326,34 +301,8 @@ public class TiffFrameSaver< R extends RealType< R > & NativeType< R > > impleme
         fileSaver.saveAsTiffStack( pathCT );
     }
 
-    @NotNull
     private String getFullPath( String path, String sC, String sT, String suffix )
     {
         return path + "--" + sC + "--" + sT + suffix;
     }
-
-    private static void gate(ImagePlus imp, int min, int max) //TODO: May be this can goto a new SaveHelper class
-    {
-        ImageStack stack = imp.getStack();
-
-        for (int i = 1; i < stack.size(); ++i) {
-            if (imp.getBitDepth() == 8) {
-                byte[] pixels = (byte[]) stack.getPixels(i);
-                for (int j = 0; j < pixels.length; j++) {
-                    int v = pixels[j] & 0xff;
-                    pixels[j] = ((v < min) || (v > max)) ? 0 : pixels[j];
-                }
-            }
-            if (imp.getBitDepth() == 16) {
-                short[] pixels = (short[]) stack.getPixels(i);
-                for (int j = 0; j < pixels.length; j++) {
-                    int v = pixels[j] & 0xffff;
-                    pixels[j] = ((v < min) || (v > max)) ? 0 : pixels[j];
-                }
-            }
-
-        }
-
-    }
-
 }

@@ -27,11 +27,10 @@ public class TestCompressed16bitTiffStackSaving
         image.setVoxelSize( 1.0, 1.0, 1.0 );
 
         final SavingSettings settings = SavingSettings.getDefaults();
+        settings.image = image;
         settings.fileType = SaveFileType.TiffVolumes;
         settings.numProcessingThreads = 4;
         settings.numIOThreads = 1;
-        settings.voxelSize = image.getVoxelSize();
-        settings.voxelUnit = image.getVoxelUnit();
         settings.compression = SavingSettings.COMPRESSION_LZW;
         settings.tStart = 0;
         settings.tEnd = image.getNumTimePoints() - 1;

@@ -1,6 +1,6 @@
 package de.embl.cba.bdp2;
 
-import de.embl.cba.bdp2.dialog.Utils;
+import de.embl.cba.bdp2.dialog.DialogUtils;
 import de.embl.cba.bdp2.image.Image;
 
 import javax.swing.*;
@@ -96,7 +96,7 @@ public abstract class BigDataProcessor2UserInterface
 		SwingUtilities.invokeLater( () ->
 		{
 			frame.setVisible( true );
-			Utils.moveWindowToPosition( panel, 50, 200 );
+			DialogUtils.moveWindowToPosition( panel, 50, 200 );
 		} );
 	}
 }

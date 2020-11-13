@@ -2,13 +2,8 @@ package de.embl.cba.bdp2.save;
 
 import de.embl.cba.bdp2.dialog.DisplaySettings;
 import de.embl.cba.bdp2.image.Image;
-import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;
-import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
-import ome.units.UNITS;
-import ome.units.unit.Unit;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.List;
@@ -19,16 +14,11 @@ import java.util.List;
 public class SavingSettings < R extends RealType< R > & NativeType< R > > {
 
     public static final int AVAILABLE_PROCESSORS = Runtime.getRuntime().availableProcessors();
-    public static final String TIFF_PLANES = "Tiff Planes";
-    public static final String TIFF_VOLUMES = "Tiff Volumes";
-    public static final String HDF_5_VOLUMES = "Hdf5 Volumes";
-    public static final String IMARIS_VOLUMES = "Imaris Volumes";
 
     public static final String CHANNEL_NAMES = "Channel names";
     public static final String CHANNEL_INDEXING = "Channel index (C00, C01, ...)";
 
-    // TODO: also remove the binning
-    public String bin;
+    public String bin; // TODO: remove the binning as it is not used anymore
 
     public static final String COMPRESSION_LZW = "LZW";
     public static final String COMPRESSION_ZLIB = "ZLIB";
@@ -40,7 +30,6 @@ public class SavingSettings < R extends RealType< R > & NativeType< R > > {
     public String projectionsFilePathStump;
 
     public Image< R > image;
-    public List< DisplaySettings > displaySettings;
     public boolean convertTo8Bit;
     public int mapTo0, mapTo255;
     public boolean convertTo16Bit;
@@ -58,7 +47,6 @@ public class SavingSettings < R extends RealType< R > & NativeType< R > > {
     public int tEnd; // inclusive
     public R type;
 
-    @NotNull
 	public static String createFilePathStump( Image image, String type, String directory )
 	{
 		return new File( directory, type + File.separator + image.getName() ).toString();

@@ -9,7 +9,7 @@ import net.imglib2.type.numeric.RealType;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
-import static de.embl.cba.bdp2.dialog.Utils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT;
+import static de.embl.cba.bdp2.dialog.DialogUtils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT;
 
 @Plugin(type = AbstractImageProcessingCommand.class, name = BinCommand.COMMAND_NAME,
         menuPath = BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractImageProcessingCommand.COMMAND_PROCESS_PATH + BinCommand.COMMAND_FULL_NAME)

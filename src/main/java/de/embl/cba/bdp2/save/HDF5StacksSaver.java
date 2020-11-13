@@ -19,7 +19,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class HDF5StacksSaver extends AbstractImageSaver
 {
-
     private SavingSettings savingSettings;
     private ExecutorService es;
     private AtomicBoolean stop;
@@ -35,8 +34,8 @@ public class HDF5StacksSaver extends AbstractImageSaver
         List<Future> futures = new ArrayList<>();
         AtomicInteger counter = new AtomicInteger(0);
         final long startTime = System.currentTimeMillis();
-        long timeFrames = savingSettings.rai.dimension(DimensionOrder.T);
-        NativeType imageType = Util.getTypeFromInterval(savingSettings.rai);
+        long timeFrames = savingSettings.image.getRai().dimension(DimensionOrder.T);
+        NativeType imageType = Util.getTypeFromInterval(savingSettings.image.getRai());
         for (int t = 0; t < timeFrames; t++) {
             if (imageType instanceof UnsignedByteType) {
                 futures.add(es.submit(

@@ -42,7 +42,7 @@ public class ImageSaverCreator < R extends RealType< R > & NativeType< R > >
 		}
 
 		savingSettings.image = imageForSaving;
-		savingSettings.type = Util.getTypeFromInterval( savingSettings.rai );
+		savingSettings.type = Util.getTypeFromInterval( savingSettings.image.getRai() );
 		ImgSaverFactory factory = new ImgSaverFactory();
 
 		if ( savingSettings.saveVolumes )

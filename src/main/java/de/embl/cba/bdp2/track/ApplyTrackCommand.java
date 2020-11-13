@@ -2,6 +2,7 @@ package de.embl.cba.bdp2.track;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.BigDataProcessor2Menu;
+import de.embl.cba.bdp2.dialog.DialogUtils;
 import de.embl.cba.bdp2.process.AbstractImageProcessingCommand;
 import de.embl.cba.bdp2.viewer.ImageViewer;
 import de.embl.cba.bdv.utils.BdvUtils;
@@ -13,7 +14,7 @@ import org.scijava.plugin.Plugin;
 
 import java.io.File;
 
-@Plugin(type = Command.class, name = ApplyTrackCommand.COMMAND_NAME, menuPath = de.embl.cba.bdp2.dialog.Utils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractImageProcessingCommand.COMMAND_PROCESS_PATH  + ApplyTrackCommand.COMMAND_FULL_NAME )
+@Plugin(type = Command.class, name = ApplyTrackCommand.COMMAND_NAME, menuPath = DialogUtils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractImageProcessingCommand.COMMAND_PROCESS_PATH  + ApplyTrackCommand.COMMAND_FULL_NAME )
 public class ApplyTrackCommand< R extends RealType< R > & NativeType< R > > extends AbstractImageProcessingCommand< R >
 {
     public static final String COMMAND_NAME = "Apply Track...";

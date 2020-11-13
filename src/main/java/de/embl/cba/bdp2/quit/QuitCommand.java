@@ -1,6 +1,7 @@
 package de.embl.cba.bdp2.quit;
 
 import de.embl.cba.bdp2.BigDataProcessor2Menu;
+import de.embl.cba.bdp2.dialog.DialogUtils;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.scijava.Services;
 import net.imglib2.type.NativeType;
@@ -8,7 +9,7 @@ import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;
 import org.scijava.plugin.Plugin;
 
-@Plugin(type = Command.class, menuPath = de.embl.cba.bdp2.dialog.Utils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + QuitCommand.COMMAND_PATH + QuitCommand.COMMAND_FULL_NAME )
+@Plugin(type = Command.class, menuPath = DialogUtils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + QuitCommand.COMMAND_PATH + QuitCommand.COMMAND_FULL_NAME )
 public class QuitCommand< R extends RealType< R > & NativeType< R > > implements Command
 {
     public static final String COMMAND_PATH = "Commands>";

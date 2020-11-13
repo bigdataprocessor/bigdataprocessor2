@@ -73,7 +73,6 @@ import net.imglib2.view.Views;
 import ome.units.UNITS;
 import ome.units.unit.Unit;
 
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -497,19 +496,39 @@ public class Utils {
 //        return nativeType;
 //    }
 
-    public static ImagePlus wrapImageToImagePlus(
-			Image< ? > image,
-			List< DisplaySettings > displaySettings )
+    public static ImagePlus asImagePlus( Image< ? > image )
     {
         ImagePlus imp = ImageJFunctions.wrap( Views.permute( image.getRai(), DimensionOrder.Z, DimensionOrder.C ), image.getName() );
 
-        final Calibration calibration = new Calibration();
-        calibration.setUnit( image.getVoxelUnit().getSymbol() );
-        calibration.pixelWidth = image.getVoxelSize()[ 0 ];
-        calibration.pixelHeight = image.getVoxelSize()[ 1 ];
-        calibration.pixelDepth = image.getVoxelSize()[ 2 ];
-        imp.setCalibration( calibration );
+        setCalibration( image, imp );
 
+		final CompositeImage compositeImage = asCompositeImage( image, imp );
+
+		return compositeImage;
+    }
+
+	public static ImagePlus asImagePlus( RandomAccessibleInterval raiXYZ, Image< ? > image, int c )
+	{
+		final IntervalView viewXYZCT =
+				Views.addDimension(
+						Views.addDimension( raiXYZ,
+								0, 0 ),
+						0, 0 );
+
+		final IntervalView viewXYCZT = Views.permute( viewXYZCT, DimensionOrder.Z, DimensionOrder.C );
+
+		// Note: this also works if viewXYCZT has a non-zero bounding interval
+		ImagePlus imp = ImageJFunctions.wrap( viewXYCZT, image.getName() );
+
+		setCalibration( image, imp );
+
+		setColor( image, imp, c );
+
+		return imp;
+	}
+
+	private static CompositeImage asCompositeImage( Image< ? > image, ImagePlus imp )
+	{
 		final CompositeImage compositeImage = new CompositeImage( imp );
 		compositeImage.setDisplayMode( CompositeImage.COMPOSITE );
 		compositeImage.setZ( compositeImage.getNSlices() / 2 );
@@ -519,44 +538,37 @@ public class Utils {
 		// Set channel colors
 		for ( int c = 0; c < numChannels; c++ )
 		{
+			DisplaySettings displaySettings = image.getDisplaySettings().get( c );
+			ARGBType color = displaySettings.getColor();
+			LUT lut = LUT.createLutFromColor( ColorUtils.getColor( color ) );
 			compositeImage.setC( c + 1 );
-			LUT lut = LUT.createLutFromColor( ColorUtils.getColor( displaySettings.get( c ).getColor() ) );
 			compositeImage.setChannelLut( lut );
-			Color channelColor = compositeImage.getChannelColor();
-			compositeImage.setDisplayRange( displaySettings.get( c ).getDisplayRangeMin(), displaySettings.get( c ).getDisplayRangeMax() );
+			compositeImage.setDisplayRange( displaySettings.getDisplayRangeMin(), displaySettings.getDisplayRangeMax() );
 		}
+		return compositeImage;
+	}
 
-        return compositeImage;
-    }
+	private static void setColor( Image< ? > image, ImagePlus imp, int c )
+	{
+		DisplaySettings displaySettings = image.getDisplaySettings().get( c );
+		ARGBType color = displaySettings.getColor();
+		LUT lut = LUT.createLutFromColor( ColorUtils.getColor( color ) );
+		imp.setLut( lut );
+		imp.setDisplayRange( displaySettings.getDisplayRangeMin(), displaySettings.getDisplayRangeMax()  );
+	}
 
-    public static ImagePlus wrap3DRaiToCalibratedImagePlus(
-            RandomAccessibleInterval raiXYZ,
-            double[] voxelSpacing,
-            String unit,
-            String name )
-    {
-        final IntervalView viewXYZCT =
-                Views.addDimension(
-                        Views.addDimension( raiXYZ,
-                                0, 0 ),
-                        0, 0 );
+	private static void setCalibration( Image< ? > image, ImagePlus imp )
+	{
+		final Calibration calibration = new Calibration();
+		calibration.setUnit( image.getVoxelUnit().getSymbol() );
+		calibration.pixelWidth = image.getVoxelSize()[ 0 ];
+		calibration.pixelHeight = image.getVoxelSize()[ 1 ];
+		calibration.pixelDepth = image.getVoxelSize()[ 2 ];
+		imp.setCalibration( calibration );
+	}
 
-        final IntervalView viewXYCZT = Views.permute( viewXYZCT, DimensionOrder.Z, DimensionOrder.C );
 
-        // Note: this also works if viewXYCZT has a non-zero bounding interval
-        ImagePlus imp = ImageJFunctions.wrap( viewXYCZT, name);
-
-        final Calibration calibration = new Calibration();
-        calibration.setUnit( unit );
-        calibration.pixelWidth = voxelSpacing[ 0 ];
-        calibration.pixelHeight = voxelSpacing[ 1 ];
-        calibration.pixelDepth = voxelSpacing[ 2 ];
-        imp.setCalibration( calibration );
-
-        return imp;
-    }
-
-    public static String ensureDirectoryEndsWithFileSeparator( String directory ){
+	public static String ensureDirectoryEndsWithFileSeparator( String directory ){
         directory = directory.trim();
 	    char last = directory.charAt(directory.length()-1);
 	    if(last != File.separatorChar){

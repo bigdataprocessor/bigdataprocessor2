@@ -100,7 +100,7 @@ public class ImarisImageSaver< R extends RealType< R > & NativeType< R > > exten
         final String directory = new File( settings.volumesFilePathStump ).getParent();
         final String filename = new File( settings.volumesFilePathStump ).getName();
 
-        ImagePlus imp = Utils.wrapImageToImagePlus( settings.image, settings.displaySettings );
+        ImagePlus imp = Utils.asImagePlus( settings.image );
 
         int[] binning = new int[]{1,1,1};
 
@@ -109,8 +109,6 @@ public class ImarisImageSaver< R extends RealType< R > & NativeType< R > > exten
                 binning,
                 directory,
                 filename );
-
-        imarisDataSet.setLogger( new de.embl.cba.logging.IJLazySwingLogger() );
 
         if (stop.get())  return null;
 
@@ -124,7 +122,6 @@ public class ImarisImageSaver< R extends RealType< R > & NativeType< R > > exten
 
         if (imarisFiles.size() > 1)
             ImarisWriter.writeCombinedHeaderFile(imarisFiles, "meta.ims");
-
 
         Logger.info("Image sizes at different resolutions:");
         Utils.logArrayList(imarisDataSet.getDimensions());

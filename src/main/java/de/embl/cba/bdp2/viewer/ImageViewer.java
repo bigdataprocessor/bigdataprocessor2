@@ -9,7 +9,7 @@ import bdv.viewer.DisplayMode;
 import bdv.viewer.SourceAndConverter;
 import de.embl.cba.bdp2.boundingbox.BoundingBoxDialog;
 import de.embl.cba.bdp2.dialog.DisplaySettings;
-import de.embl.cba.bdp2.dialog.Utils;
+import de.embl.cba.bdp2.dialog.DialogUtils;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.track.Track;
 import de.embl.cba.bdp2.image.Image;
@@ -64,12 +64,13 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
     public ImageViewer( final Image< R > image, final boolean autoContrast, final boolean enableArbitraryPlaneSlicing )
     {
         this.image = image;
+        image.setViewer( this );
         this.enableArbitraryPlaneSlicing = enableArbitraryPlaneSlicing;
         this.channelSources = new ArrayList<>(  );
 
         showImage( image, autoContrast );
 
-        Utils.centerWindowToPosition( bdvHandle.getViewerPanel()  );
+        DialogUtils.centerWindowToPosition( bdvHandle.getViewerPanel()  );
 
         // this.addMenus( new MenuActions() );
         this.installBehaviours( );

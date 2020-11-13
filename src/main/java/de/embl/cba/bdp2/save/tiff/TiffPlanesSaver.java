@@ -15,7 +15,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TiffPlanesSaver extends AbstractImageSaver
 {
-
     private SavingSettings savingSettings;
     private ExecutorService es;
     private AtomicBoolean stop;
@@ -28,9 +27,9 @@ public class TiffPlanesSaver extends AbstractImageSaver
 
     public void startSave() {
         List<Future> futures = new ArrayList<>();
-        final long numChannels = savingSettings.rai.dimension(DimensionOrder.C);
-        final long numFrames = savingSettings.rai.dimension(DimensionOrder.T);
-        final long numPlanes = savingSettings.rai.dimension(DimensionOrder.Z);
+        final long numChannels = savingSettings.image.getRai().dimension(DimensionOrder.C);
+        final long numFrames = savingSettings.image.getRai().dimension(DimensionOrder.T);
+        final long numPlanes = savingSettings.image.getRai().dimension(DimensionOrder.Z);
 
         for (int c = 0; c < numChannels; c++) {
             for (int t = 0; t < numFrames; t++) {

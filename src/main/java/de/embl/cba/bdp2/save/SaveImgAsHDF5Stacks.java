@@ -63,8 +63,8 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
     private AtomicBoolean stop;
 
     public SaveImgAsHDF5Stacks(String dataset, SavingSettings savingSettings, int t, AtomicInteger counter, long startTime, AtomicBoolean stop) {
-        this.nativeType = (T) Util.getTypeFromInterval(savingSettings.rai );
-        Img imgTemp = ImgView.wrap(savingSettings.rai, new CellImgFactory<>(nativeType));
+        this.nativeType = (T) Util.getTypeFromInterval(savingSettings.image.getRai() );
+        Img imgTemp = ImgView.wrap(savingSettings.image.getRai(), new CellImgFactory<>(nativeType));
         this.image = new ImgPlus<>(imgTemp, "", FileInfos.AXES_ORDER);
 
         if (this.image.dimensionIndex(Axes.TIME) >= 0) {
@@ -120,7 +120,7 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
 //            // TODO: do something...
 //        }
         final long totalSlices = nFrames * nChannels;
-        RandomAccessibleInterval image = savingSettings.rai;
+        RandomAccessibleInterval image = savingSettings.image.getRai();
         for (int c = 0; c < this.nChannels; c++) {
             if (stop.get()) {
                 Logger.progress("Stopped save thread: ", "" + this.current_t);

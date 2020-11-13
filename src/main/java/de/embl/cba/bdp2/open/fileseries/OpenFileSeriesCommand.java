@@ -3,7 +3,7 @@ package de.embl.cba.bdp2.open.fileseries;
 import de.embl.cba.bdp2.macro.MacroRecorder;
 import de.embl.cba.bdp2.open.AbstractOpenFileSeriesCommand;
 import de.embl.cba.bdp2.process.calibrate.CalibrationUtils;
-import de.embl.cba.bdp2.dialog.Utils;
+import de.embl.cba.bdp2.dialog.DialogUtils;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import net.imglib2.type.NativeType;
@@ -17,7 +17,7 @@ import javax.swing.*;
 import static de.embl.cba.bdp2.open.NamingSchemes.*;
 import static de.embl.cba.bdp2.BigDataProcessor2Menu.COMMAND_BDP2_PREFIX;
 
-@Plugin(type = Command.class, menuPath = Utils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractOpenFileSeriesCommand.COMMAND_OPEN_PATH + OpenFileSeriesCommand.COMMAND_FULL_NAME )
+@Plugin(type = Command.class, menuPath = DialogUtils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractOpenFileSeriesCommand.COMMAND_OPEN_PATH + OpenFileSeriesCommand.COMMAND_FULL_NAME )
 public class OpenFileSeriesCommand< R extends RealType< R > & NativeType< R > > extends AbstractOpenFileSeriesCommand< R >
 {
     public static final String COMMAND_NAME = "Open Custom File Series...";

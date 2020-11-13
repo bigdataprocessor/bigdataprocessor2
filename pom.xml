@@ -76,15 +76,17 @@
 		<package-name>de.embl.cba.bdp2</package-name>
 		<license.licenseName>bsd_2</license.licenseName>
 		<license.copyrightOwners>EMBL</license.copyrightOwners>
+
 		<scijava.app.directory>/Users/tischer/Desktop/Fiji-bdp2.app</scijava.app.directory>
 		<enforcer.skip>true</enforcer.skip>
 
 		<bioformats.version>6.1.0-m2</bioformats.version>
+<!--		<formats-bsd.version>6.6.0-SNAPSHOT</formats-bsd.version>-->
 		<ome.version>6.0.1</ome.version>
-		<imaris-writer.version>0.2.3-SNAPSHOT</imaris-writer.version>
-		<imagej-utils.version>0.5.4</imagej-utils.version>
+
+		<imaris-writer.version>0.2.4-SNAPSHOT</imaris-writer.version>
+		<imagej-utils.version>0.5.5-SNAPSHOT</imagej-utils.version>
 		<imagej-cluster.version>0.6.3-SNAPSHPOT</imagej-cluster.version>
-		<!--<bigdataviewer-playground.version>0.2.4-SNAPSHOT</bigdataviewer-playground.version>-->
 		<bigdataviewer-bioformats.version>0.2.10</bigdataviewer-bioformats.version>
 
 	</properties>
@@ -130,23 +132,11 @@
 		</dependency>
 		<dependency>
 			<groupId>net.imagej</groupId>
-			<artifactId>imagej</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.imagej</groupId>
-			<artifactId>imagej-common</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.imagej</groupId>
 			<artifactId>ij</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>net.imagej</groupId>
 			<artifactId>imagej-plugins-commands</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.imglib2</groupId>
-			<artifactId>imglib2-cache</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.google.guava</groupId>
@@ -157,12 +147,11 @@
 			<artifactId>formats-api</artifactId>
 			<version>${bioformats.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>ome</groupId>
-			<artifactId>formats-bsd</artifactId>
-<!--			<version>${bioformats.version}</version>-->
-			<version>6.6.0-SNAPSHOT</version>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>ome</groupId>-->
+<!--			<artifactId>formats-bsd</artifactId>-->
+<!--			<version>${formats-bsd.version}</version>-->
+<!--		</dependency>-->
 		<dependency>
 			<groupId>ome</groupId>
 			<artifactId>formats-gpl</artifactId>
@@ -194,18 +183,10 @@
 			<artifactId>imagej-cluster</artifactId>
 			<version>${imagej-cluster.version}</version>
 		</dependency>
-
-		<!--<dependency>
-			<groupId>sc.fiji</groupId>
-			<artifactId>bigdataviewer-playground</artifactId>
-			<version>${bigdataviewer-playground.version}</version>
-		</dependency>-->
-
 		<dependency>
 			<groupId>ch.epfl.biop</groupId>
 			<artifactId>bigdataviewer-bioformats</artifactId>
 			<version>${bigdataviewer-bioformats.version}</version>
 		</dependency>
-
 	</dependencies>
 </project>

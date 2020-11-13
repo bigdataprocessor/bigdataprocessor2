@@ -1,7 +1,7 @@
 package de.embl.cba.bdp2.open.fileseries.luxendo;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
-import de.embl.cba.bdp2.dialog.Utils;
+import de.embl.cba.bdp2.dialog.DialogUtils;
 import de.embl.cba.bdp2.open.NamingSchemes;
 import de.embl.cba.bdp2.open.AbstractOpenFileSeriesCommand;
 import net.imglib2.type.NativeType;
@@ -16,7 +16,7 @@ import java.util.Arrays;
 
 import static de.embl.cba.bdp2.BigDataProcessor2Menu.COMMAND_BDP2_PREFIX;
 
-@Plugin(type = Command.class, menuPath = Utils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractOpenFileSeriesCommand.COMMAND_OPEN_PATH + OpenLuxendoChannelsFileSeriesCommand.COMMAND_FULL_NAME )
+@Plugin(type = Command.class, menuPath = DialogUtils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractOpenFileSeriesCommand.COMMAND_OPEN_PATH + OpenLuxendoChannelsFileSeriesCommand.COMMAND_FULL_NAME )
 public class OpenLuxendoChannelsFileSeriesCommand< R extends RealType< R > & NativeType< R > > extends AbstractOpenFileSeriesCommand< R >
 {
     public static final String COMMAND_NAME = "Open Luxendo Channels...";

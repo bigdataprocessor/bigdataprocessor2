@@ -58,9 +58,9 @@ public class FastHDF5StackWriter<T extends RealType<T> & NativeType<T>> implemen
     private AtomicBoolean stop;
 
     public FastHDF5StackWriter(String dataset, SavingSettings savingSettings, int t, AtomicInteger counter, long startTime, AtomicBoolean stop) {
-        this.nativeType = (T) Util.getTypeFromInterval(savingSettings.rai );
-        long[] dims = new long[savingSettings.rai.numDimensions()];
-        savingSettings.rai.dimensions(dims);
+        this.nativeType = (T) Util.getTypeFromInterval( savingSettings.image.getRai() );
+        long[] dims = new long[savingSettings.image.getRai().numDimensions()];
+        savingSettings.image.getRai().dimensions(dims);
         this.numFrames = Math.toIntExact(dims[DimensionOrder.T]);
         this.numChannels = Math.toIntExact(dims[DimensionOrder.C]);
         this.dimZ = Math.toIntExact(dims[DimensionOrder.Z]);
@@ -78,7 +78,7 @@ public class FastHDF5StackWriter<T extends RealType<T> & NativeType<T>> implemen
     @Override
     public void run() {
         final long totalSlices = numFrames * numChannels;
-        RandomAccessibleInterval image = savingSettings.rai;
+        RandomAccessibleInterval image = savingSettings.image.getRai();
         for (int c = 0; c < this.numChannels; c++) {
             if (stop.get()) {
                 Logger.progress("Stopped save thread: ", "" + this.current_t);

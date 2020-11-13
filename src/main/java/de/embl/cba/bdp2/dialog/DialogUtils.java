@@ -10,7 +10,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class Utils
+public class DialogUtils
 {
 	public static final String BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT = "Plugins>BigDataTools>BigDataProcessor2>";
 
