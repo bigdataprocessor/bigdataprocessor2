@@ -533,28 +533,37 @@ public class Utils {
 		compositeImage.setDisplayMode( CompositeImage.COMPOSITE );
 		compositeImage.setZ( compositeImage.getNSlices() / 2 );
 
-		final int numChannels = imp.getNChannels();
-
-		// Set channel colors
-		for ( int c = 0; c < numChannels; c++ )
+		List< DisplaySettings > displaySettingsList = image.getDisplaySettings();
+		if ( displaySettingsList != null )
 		{
-			DisplaySettings displaySettings = image.getDisplaySettings().get( c );
-			ARGBType color = displaySettings.getColor();
-			LUT lut = LUT.createLutFromColor( ColorUtils.getColor( color ) );
-			compositeImage.setC( c + 1 );
-			compositeImage.setChannelLut( lut );
-			compositeImage.setDisplayRange( displaySettings.getDisplayRangeMin(), displaySettings.getDisplayRangeMax() );
+			final int numChannels = imp.getNChannels();
+			// Set channel colors
+			for ( int c = 0; c < numChannels; c++ )
+			{
+
+				DisplaySettings displaySettings = displaySettingsList.get( c );
+				ARGBType color = displaySettings.getColor();
+				LUT lut = LUT.createLutFromColor( ColorUtils.getColor( color ) );
+				compositeImage.setC( c + 1 );
+				compositeImage.setChannelLut( lut );
+				compositeImage.setDisplayRange( displaySettings.getDisplayRangeMin(), displaySettings.getDisplayRangeMax() );
+			}
 		}
+
 		return compositeImage;
 	}
 
 	private static void setColor( Image< ? > image, ImagePlus imp, int c )
 	{
-		DisplaySettings displaySettings = image.getDisplaySettings().get( c );
-		ARGBType color = displaySettings.getColor();
-		LUT lut = LUT.createLutFromColor( ColorUtils.getColor( color ) );
-		imp.setLut( lut );
-		imp.setDisplayRange( displaySettings.getDisplayRangeMin(), displaySettings.getDisplayRangeMax()  );
+		List< DisplaySettings > displaySettings = image.getDisplaySettings();
+		if ( displaySettings != null )
+		{
+			DisplaySettings channelSettings = displaySettings.get( c );
+			ARGBType color = channelSettings.getColor();
+			LUT lut = LUT.createLutFromColor( ColorUtils.getColor( color ) );
+			imp.setLut( lut );
+			imp.setDisplayRange( channelSettings.getDisplayRangeMin(), channelSettings.getDisplayRangeMax() );
+		}
 	}
 
 	private static void setCalibration( Image< ? > image, ImagePlus imp )
@@ -566,7 +575,6 @@ public class Utils {
 		calibration.pixelDepth = image.getVoxelSize()[ 2 ];
 		imp.setCalibration( calibration );
 	}
-
 
 	public static String ensureDirectoryEndsWithFileSeparator( String directory ){
         directory = directory.trim();
@@ -652,6 +660,7 @@ public class Utils {
        Img imgTemp = ImgView.wrap(rai,new CellImgFactory<>(nativeType));
        return imgTemp;
     }
+
     public static void shutdownThreadPack(ExecutorService executorService,int timeOut){
         if(executorService !=null){
             executorService.shutdown();

@@ -311,6 +311,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 	// TODO: this could be removed if we used SourceAndConverter instead of the current Image class
 	public List< DisplaySettings > getDisplaySettings()
 	{
-		return viewer.getDisplaySettings();
+		if ( viewer != null ) return viewer.getDisplaySettings();
+		else return null;
 	}
 }
