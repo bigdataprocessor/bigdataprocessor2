@@ -1,6 +1,5 @@
 package de.embl.cba.bdp2.open.bioformats;
 
-import ch.epfl.biop.bdv.bioformats.BioFormatsMetaDataHelper;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.dialog.DialogUtils;
 import de.embl.cba.bdp2.log.Logger;
@@ -22,6 +21,7 @@ import javax.swing.*;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.*;
 
 import static de.embl.cba.bdp2.BigDataProcessor2Menu.COMMAND_BDP2_PREFIX;
 
@@ -34,6 +34,9 @@ public class OpenBdvBioFormatsCommand< R extends RealType< R > & NativeType< R >
 
     @Parameter( visibility = ItemVisibility.MESSAGE, persist = false )
     String infoFile;
+
+    @Parameter( label = "File parse time limit (s)", required = false)
+    int parseTimeLimit = 5;
 
     @Parameter( label = "Series index", min = "0", callback = "setSeriesCallBack", persist = false )
     private int seriesIndex = 0;
@@ -68,29 +71,34 @@ public class OpenBdvBioFormatsCommand< R extends RealType< R > & NativeType< R >
 
     Map<Integer, SeriesInfo> seriesInfoMap = new HashMap<>();
 
+    boolean successfulParse = false;
+
     @Override
     public void setFileCallBack()
     {
-        new Thread( () ->
+        successfulParse = false;
+        if ( file != null )
         {
-            if ( file != null )
+            DebugTools.setRootLevel( "OFF" );
+
+            // TODO: below line does not render, probably some UI thread stuff...
+            infoFile = FILE_INFO + "Parsing file, please wait...";
+
+            if ( ! file.exists() )
             {
-                DebugTools.setRootLevel( "OFF" );
+                infoFile = FILE_INFO + " File does not exist!";
+                setSeriesCallBack();
+                return;
+            }
 
-                // TODO: below line does not render, probably some UI thread stuff...
-                infoFile = FILE_INFO + "Parsing file, please wait...";
+            IFormatReader readerIdx = new ImageReader();
+            readerIdx.setFlattenedResolutions( false );
+            final IMetadata omeMetaOmeXml = MetadataTools.createOMEXMLMetadata();
+            readerIdx.setMetadataStore( omeMetaOmeXml );
 
-                if ( ! file.exists() )
-                {
-                    infoFile = FILE_INFO + " File does not exist!";
-                    setSeriesCallBack();
-                    return;
-                }
+            ExecutorService executor = Executors.newSingleThreadExecutor();
 
-                IFormatReader readerIdx = new ImageReader();
-                readerIdx.setFlattenedResolutions( false );
-                final IMetadata omeMetaOmeXml = MetadataTools.createOMEXMLMetadata();
-                readerIdx.setMetadataStore( omeMetaOmeXml );
+            Future<Boolean> future = executor.submit(() -> {
                 try
                 {
                     readerIdx.setId( file.getAbsolutePath() );
@@ -108,26 +116,53 @@ public class OpenBdvBioFormatsCommand< R extends RealType< R > & NativeType< R >
                         si.sizeT = readerIdx.getSizeT();
                         si.sizeC = readerIdx.getSizeC();
                     }
-                    readerIdx.close();
+                    return true;
                 }
                 catch ( Exception e )
                 {
-                    infoFile = FILE_INFO + "File could not be parsed!";
+                    infoFile = FILE_INFO + " File could not be parsed!";
+                    return false;
+                }
+            });
+
+            try {
+                //System.out.println("Started..");
+                //System.out.println(future.get(parseTimeLimit, TimeUnit.SECONDS));
+                //System.out.println("Finished!");
+                successfulParse = future.get(parseTimeLimit, TimeUnit.SECONDS);
+            } catch (TimeoutException e) {
+                future.cancel(true);
+                //System.out.println("Terminated!");
+                successfulParse = false;
+                infoFile = FILE_INFO + " Parse time out.";
+            } catch(Exception e) {
+                successfulParse = false;
+                infoFile = FILE_INFO + " File could not be parsed!";
+            } finally {
+                try {
+                    readerIdx.close();
+                } catch (IOException e) {
+                    //e.printStackTrace();
                 }
             }
-            else
-            {
-                infoFile = FILE_INFO + "Please select a file!"; // Default value on initialization
-            }
-            setSeriesCallBack();
-        }).start();
+            executor.shutdownNow();
+        }
+        else
+        {
+            infoFile = FILE_INFO + " select a file"; // Default value on initialization
+        }
+        setSeriesCallBack();
     }
 
     public void setSeriesCallBack() {
-        if (seriesIndex>=numberOfSeries) {
+        if ((successfulParse)&&(seriesIndex>=numberOfSeries)) {
             infoSeries = "ERROR : This series does not exists";
         } else {
-            infoSeries = "Series "+seriesIndex+": "+seriesInfoMap.get(seriesIndex);
+            if (successfulParse) {
+                infoSeries = "Series " + seriesIndex + ": " + seriesInfoMap.get(seriesIndex);
+            } else {
+                infoSeries = "";
+            }
         }
     }
 
