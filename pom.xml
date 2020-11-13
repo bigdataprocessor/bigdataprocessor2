@@ -87,7 +87,7 @@
 		<imaris-writer.version>0.2.4-SNAPSHOT</imaris-writer.version>
 		<imagej-utils.version>0.5.5-SNAPSHOT</imagej-utils.version>
 		<imagej-cluster.version>0.6.3-SNAPSHPOT</imagej-cluster.version>
-		<bigdataviewer-bioformats.version>0.2.10</bigdataviewer-bioformats.version>
+		<bigdataviewer-bioformats.version>0.2.11-SNAPSHOT</bigdataviewer-bioformats.version>
 
 	</properties>
 

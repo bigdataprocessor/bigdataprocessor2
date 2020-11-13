@@ -8,7 +8,9 @@ import java.io.File;
 
 public abstract class AbstractOpenFileCommand< R extends RealType< R > & NativeType< R > > extends AbstractOpenCommand< R >
 {
-    @Parameter(label = "Image file")
+    @Parameter(label = "Image file", callback = "setFileCallBack")
     protected File file;
     public static String FILE_PARAMETER = "file";
+
+    abstract public void setFileCallBack();
 }
