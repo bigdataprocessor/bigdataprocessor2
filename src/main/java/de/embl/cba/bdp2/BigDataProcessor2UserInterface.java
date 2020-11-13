@@ -10,7 +10,7 @@ import java.util.List;
 
 public abstract class BigDataProcessor2UserInterface
 {
-	public static final String SPEED = "Reading speed [MBit/s]: ";
+	public static final String SPEED = "Read [MByte/s]: ";
 	private static JFrame frame;
 	private static JLabel imageInfo;
 	private static JLabel readInfo;

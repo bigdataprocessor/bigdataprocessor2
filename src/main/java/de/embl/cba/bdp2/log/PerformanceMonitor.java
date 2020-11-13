@@ -20,7 +20,7 @@ public class PerformanceMonitor
 
 	public synchronized void addReadPerformance( long numBytes, long timeMillis )
 	{
-		final double speed = toMBitPerSecond( numBytes, timeMillis );
+		final double speed = toMBytePerSecond( numBytes, timeMillis );
 		synchronized ( readPerformances )
 		{
 			readPerformances.add( speed );
@@ -34,6 +34,11 @@ public class PerformanceMonitor
 		return toMBit( bytes ) / toSeconds( millis );
 	}
 
+	private double toMBytePerSecond( long bytes, long millis )
+	{
+		return toMByte( bytes ) / toSeconds( millis );
+	}
+
 	private double toSeconds( long timeMillis )
 	{
 		return timeMillis / 1000.0;
@@ -42,6 +47,11 @@ public class PerformanceMonitor
 	private double toMBit( long bytes )
 	{
 		return 1.0 * bytes * 8 / MEGA;
+	}
+
+	private double toMByte( long bytes )
+	{
+		return 1.0 * bytes / MEGA;
 	}
 
 	public double getMedianReadPerformance()
