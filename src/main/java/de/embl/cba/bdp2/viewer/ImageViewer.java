@@ -49,7 +49,7 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
     private ArrayList< BdvStackSource< R > > channelSources;
     private BdvHandle bdvHandle;
     private Map< String, Track > tracks;
-    private int numRenderingThreads = Runtime.getRuntime().availableProcessors(); // TODO
+    private int numRenderingThreads = Runtime.getRuntime().availableProcessors();
 
     public ImageViewer( final Image< R > image )
     {
