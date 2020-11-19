@@ -78,15 +78,15 @@
 		<license.copyrightOwners>EMBL</license.copyrightOwners>
 
 		<scijava.app.directory>/Users/tischer/Desktop/Fiji-bdp2.app</scijava.app.directory>
-		<enforcer.skip>true</enforcer.skip>
+		<!--		<enforcer.skip>true</enforcer.skip>-->
 
 		<bioformats.version>6.1.0-m2</bioformats.version>
-<!--		<formats-bsd.version>6.6.0-SNAPSHOT</formats-bsd.version>-->
+		<!--		<formats-bsd.version>6.6.0-SNAPSHOT</formats-bsd.version>-->
 		<ome.version>6.0.1</ome.version>
 
-		<imaris-writer.version>0.2.4-SNAPSHOT</imaris-writer.version>
-		<imagej-utils.version>0.5.5-SNAPSHOT</imagej-utils.version>
-		<imagej-cluster.version>0.6.3-SNAPSHPOT</imagej-cluster.version>
+		<imaris-writer.version>0.2.3</imaris-writer.version>
+		<imagej-utils.version>0.5.5</imagej-utils.version>
+		<imagej-cluster.version>0.6.3</imagej-cluster.version>
 		<bigdataviewer-bioformats.version>0.2.10</bigdataviewer-bioformats.version>
 
 	</properties>
