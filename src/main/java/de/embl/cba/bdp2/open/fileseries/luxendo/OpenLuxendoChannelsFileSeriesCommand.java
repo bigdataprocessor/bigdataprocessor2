@@ -33,7 +33,7 @@ public class OpenLuxendoChannelsFileSeriesCommand< R extends RealType< R > & Nat
     {
         SwingUtilities.invokeLater( () ->  {
 
-            String regExp = NamingSchemes.LUXENDO_REGEXP.replace( "STACK", "" + stackIndex );
+            String regExp = NamingSchemes.LUXENDO.replace( "STACK", "" + stackIndex );
 
             outputImage = BigDataProcessor2.openHdf5Series(
                                 directory.toString(),

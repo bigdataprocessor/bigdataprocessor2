@@ -18,7 +18,7 @@ import java.awt.*;
 import java.io.File;
 import java.lang.reflect.Field;
 
-import static de.embl.cba.bdp2.open.NamingSchemes.LUXENDO_REGEXP;
+import static de.embl.cba.bdp2.open.NamingSchemes.LUXENDO;
 import static de.embl.cba.bdp2.BigDataProcessor2Menu.COMMAND_BDP2_PREFIX;
 
 @Plugin(type = Command.class, menuPath = DialogUtils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractOpenFileSeriesCommand.COMMAND_OPEN_PATH + OpenLuxendoFileSeriesCommand.COMMAND_FULL_NAME )
@@ -36,7 +36,7 @@ public class OpenLuxendoFileSeriesCommand< R extends RealType< R > & NativeType<
     public void run()
     {
         SwingUtilities.invokeLater( () ->  {
-            regExp = LUXENDO_REGEXP.replace( "STACK", "" + stackIndex );
+            regExp = LUXENDO.replace( "STACK", "" + stackIndex );
 
             if ( directory.getName().contains( "stack_" ) )
             {

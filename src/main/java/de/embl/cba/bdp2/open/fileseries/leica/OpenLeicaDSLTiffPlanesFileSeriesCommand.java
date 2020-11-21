@@ -26,7 +26,7 @@ public class OpenLeicaDSLTiffPlanesFileSeriesCommand< R extends RealType< R > & 
     public void run()
     {
         SwingUtilities.invokeLater( () ->  {
-            regExp = NamingSchemes.LEICA_DSL_TIFF_PLANES_REG_EXP;
+            regExp = NamingSchemes.LEICA_DSL_TIFF_PLANES;
 
             outputImage =
                     BigDataProcessor2.openTiffSeries(

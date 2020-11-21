@@ -6,13 +6,13 @@ import de.embl.cba.bdp2.log.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static de.embl.cba.bdp2.open.NamingSchemes.LUXENDO_STACKINDEX_REGEXP;
+import static de.embl.cba.bdp2.open.NamingSchemes.LUXENDO_STACKINDEX;
 
 public class Luxendos
 {
 	public static String extractStackIndex( String subFolderName )
 	{
-		Pattern pattern = Pattern.compile( LUXENDO_STACKINDEX_REGEXP );
+		Pattern pattern = Pattern.compile( LUXENDO_STACKINDEX );
 		Matcher matcher = pattern.matcher( subFolderName );
 		String stackIndex;
 		if ( matcher.matches() )
@@ -21,7 +21,7 @@ public class Luxendos
 		}
 		else
 		{
-			throw new RuntimeException( subFolderName + " does not match pattern " + LUXENDO_STACKINDEX_REGEXP );
+			throw new RuntimeException( subFolderName + " does not match pattern " + LUXENDO_STACKINDEX );
 		}
 		return stackIndex;
 	}

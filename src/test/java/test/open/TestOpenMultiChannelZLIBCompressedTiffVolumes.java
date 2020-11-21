@@ -16,7 +16,7 @@ public class TestOpenMultiChannelZLIBCompressedTiffVolumes
     @Test
     public void run()
     {
-        final String directory = "/Users/tischer/Documents/bigdataprocessor2/src/test/resources/test/tiff-nc2-nt6-zlib";
+        final String directory = "src/test/resources/test/tiff-nc2-nt6-zlib";
 
         final Image image = BigDataProcessor2.openTiffSeries( directory, MULTI_CHANNEL_VOLUMES + OME_TIF );
     }

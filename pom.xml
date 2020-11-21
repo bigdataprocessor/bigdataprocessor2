@@ -80,7 +80,7 @@
 		<scijava.app.directory>/Users/tischer/Desktop/Fiji-bdp2.app</scijava.app.directory>
 		<!--		<enforcer.skip>true</enforcer.skip>-->
 
-		<bioformats.version>6.1.0-m2</bioformats.version>
+		<!--		<bioformats.version>6.1.0-m2</bioformats.version> -->
 		<!--		<formats-bsd.version>6.6.0-SNAPSHOT</formats-bsd.version>-->
 		<ome.version>6.0.1</ome.version>
 
@@ -144,7 +144,7 @@
 		<dependency>
 			<groupId>ome</groupId>
 			<artifactId>formats-api</artifactId>
-			<version>${bioformats.version}</version>
+<!--			<version>${bioformats.version}</version>-->
 		</dependency>
 <!--		<dependency>-->
 <!--			<groupId>ome</groupId>-->
@@ -154,12 +154,12 @@
 		<dependency>
 			<groupId>ome</groupId>
 			<artifactId>formats-gpl</artifactId>
-			<version>${bioformats.version}</version>
+<!--			<version>${bioformats.version}</version>-->
 		</dependency>
 		<dependency>
 			<groupId>org.openmicroscopy</groupId>
 			<artifactId>ome-common</artifactId>
-			<version>${ome.version}</version>
+<!--			<version>${ome.version}</version>-->
 		</dependency>
 <!--		&lt;!&ndash; For tracking &ndash;&gt;-->
 <!--		<dependency>-->

@@ -8,7 +8,7 @@ import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.view.Views;
 
-import static de.embl.cba.bdp2.open.NamingSchemes.LUXENDO_REGEXP;
+import static de.embl.cba.bdp2.open.NamingSchemes.LUXENDO;
 
 public class DevelopSavingWithoutMemoryLeak
 {
@@ -17,7 +17,7 @@ public class DevelopSavingWithoutMemoryLeak
 		final ImageJ imageJ = new ImageJ();
 		imageJ.ui().showUI();
 
-		String regExp = LUXENDO_REGEXP.replace( "STACK", "" + 6 );
+		String regExp = LUXENDO.replace( "STACK", "" + 6 );
 
 		// /Volumes/cba/exchange/bigdataprocessor/data/mouse_2cam_publication_figure/stack_6_channel_2
 		final Image image = BigDataProcessor2.openHdf5Series(
