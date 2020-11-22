@@ -2,7 +2,12 @@ package test.openprocesssave;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
+import de.embl.cba.bdp2.log.Logger;
+import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
+import de.embl.cba.bdp2.save.SaveFileType;
+import de.embl.cba.bdp2.save.SavingSettings;
 import org.jfree.chart.ui.Align;
+import org.junit.Test;
 
 import java.util.ArrayList;
 
@@ -10,9 +15,10 @@ public class TestOpenProcessSave
 {
 	public static void main( String[] args )
 	{
-
+		new TestOpenProcessSave().run();
 	}
 
+	@Test
 	public void run()
 	{
 		Image image = BigDataProcessor2.openTiffSeries( "/Users/tischer/Documents/bigdataprocessor2/src/test/resources/test/tiff-nc2-nt2-16bit", ".*--C(?<C>\\d+)--T(?<T>\\d+).tif" );
@@ -34,5 +40,19 @@ public class TestOpenProcessSave
 
 		image = BigDataProcessor2.crop( image, new long[]{5,24,0,0,0,47,58,82,1,1} );
 		image.setName( "image-binned-8bit-crop" );
+
+		final SavingSettings settings = SavingSettings.getDefaults();
+		settings.volumesFilePathStump = "src/test/resources/test/saved/imaris/" + image.getName();
+		settings.image = image;
+		settings.fileType = SaveFileType.ImarisVolumes;
+		settings.numProcessingThreads = 4;
+		settings.numIOThreads = 1;
+		settings.compression = SavingSettings.COMPRESSION_NONE;
+		settings.tStart = 0;
+		settings.tEnd = image.getNumTimePoints() - 1;
+
+		Logger.setLevel( Logger.Level.Debug );
+		BigDataProcessor2.saveImage( image, settings, new LoggingProgressListener( "Files saved" ) );
+
 	}
 }
