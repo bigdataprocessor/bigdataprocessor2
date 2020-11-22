@@ -1,5 +1,6 @@
 package de.embl.cba.bdp2.save.tiff;
 
+import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.open.fileseries.FileInfos;
 import de.embl.cba.bdp2.save.AbstractImageSaver;
 import de.embl.cba.bdp2.save.SavingSettings;
@@ -31,6 +32,8 @@ public class TiffFramesSaver extends AbstractImageSaver
 
         AtomicInteger counter = new AtomicInteger( 0 );
         final long startTime = System.currentTimeMillis();
+
+        Logger.debug( "# TiffFramesSaver..." );
 
         for (int t = savingSettings.tStart; t <= savingSettings.tEnd; t++)
         {

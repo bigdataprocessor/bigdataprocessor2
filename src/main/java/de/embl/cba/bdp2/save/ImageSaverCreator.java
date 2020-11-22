@@ -3,11 +3,8 @@ package de.embl.cba.bdp2.save;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.log.progress.ProgressListener;
-import de.embl.cba.bdp2.open.CacheUtils;
-import de.embl.cba.bdp2.service.ImageViewerService;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
-import javafx.scene.image.ImageView;
 import net.imglib2.cache.img.DiskCachedCellImgOptions;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -24,7 +21,7 @@ public class ImageSaverCreator < R extends RealType< R > & NativeType< R > >
 
 	public ImageSaverCreator( Image< R > image, SavingSettings savingSettings, ProgressListener progressListener )
 	{
-		int numIOThreads = Math.max( 1, Math.min( savingSettings.numIOThreads, MAX_THREAD_LIMIT ));
+		int numIOThreads = Math.max( 1, Math.min( savingSettings.numIOThreads, MAX_THREAD_LIMIT ) );
 
 		Logger.info( "Saving started; I/O threads: " + numIOThreads );
 
@@ -37,7 +34,6 @@ public class ImageSaverCreator < R extends RealType< R > & NativeType< R > >
 			// TODO: for input data distributed across Tiff planes this should be reconsidered
 
 			long cacheSize = image.getDimensionsXYZCT()[ DimensionOrder.C ] * numIOThreads;
-			Logger.info( "Configuring volume reader with a cache size of " + cacheSize + " volumes." );
 			imageForSaving.setVolumeCache( DiskCachedCellImgOptions.CacheType.BOUNDED, (int) cacheSize );
 		}
 

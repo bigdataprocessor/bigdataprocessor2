@@ -3,7 +3,6 @@ package de.embl.cba.bdp2.process.rename;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.macro.MacroRecorder;
-import de.embl.cba.bdp2.process.align.splitchip.SplitChipCommand;
 import de.embl.cba.bdp2.viewer.ImageViewer;
 import ij.gui.GenericDialog;
 import net.imglib2.type.NativeType;
@@ -15,7 +14,6 @@ public class ImageRenameDialog< R extends RealType< R > & NativeType< R > >
 {
 	private final Image< R > inputImage;
 	private final ImageViewer< R > viewer;
-	private Image< R > outputImage;
 	private String[] channelNames;
 
 	public ImageRenameDialog( final ImageViewer< R > viewer  )
@@ -26,14 +24,14 @@ public class ImageRenameDialog< R extends RealType< R > & NativeType< R > >
 
 	protected void recordMacro()
 	{
-		final MacroRecorder recorder = new MacroRecorder( ImageRenameCommand.COMMAND_FULL_NAME, inputImage, outputImage );
+		final MacroRecorder recorder = new MacroRecorder( ImageRenameCommand.COMMAND_FULL_NAME, inputImage );
 		recorder.addCommandParameter( CHANNEL_NAMES_PARAMETER, String.join( ",", channelNames ) );
 
 		// Image< R > rename( Image< R > image, String name )
 		recorder.setAPIFunctionName( "rename" );
 		recorder.addAPIFunctionPrequel( "# " +  ImageRenameCommand.COMMAND_NAME );
-		recorder.addAPIFunctionParameter( outputImage.getName() );
-		recorder.addAPIFunctionParameter( outputImage.getChannelNames() );
+		recorder.addAPIFunctionParameter( MacroRecorder.quote( inputImage.getName() ) );
+		recorder.addAPIFunctionParameter( inputImage.getChannelNames() );
 		recorder.record();
 	}
 

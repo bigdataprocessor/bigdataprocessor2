@@ -105,8 +105,17 @@ public class BigDataProcessor2
         return Cropper.crop5D( image, intervalXYZCT );
     }
 
-    public static < R extends RealType< R > & NativeType< R > >
-    Image< R > crop( Image< R > image, long[] minMax )
+
+    /**
+     * Crop...
+     *
+     * @param image
+     * @param minMax
+     *      array to create the crop interval: [xMin,yMin,zMin,cMin,tMin,xMax,yMax,zMax,cMax,tMax]
+     * @param <R>
+     * @return
+     */
+    public static < R extends RealType< R > & NativeType< R > > Image< R > crop( Image< R > image, long[] minMax )
     {
         return crop( image, Intervals.createMinMax( minMax ) );
     }

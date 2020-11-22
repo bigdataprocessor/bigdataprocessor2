@@ -144,9 +144,10 @@ public class Utils {
 	{
 		try
 		{
-			Files.createDirectories(
-				Paths.get( new File( filePath ).getParent() ) );
-		} catch ( IOException e )
+			Logger.debug( "Creating directories: " + new File( filePath ).getParent() );
+			Files.createDirectories( Paths.get( new File( filePath ).getParent() ) );
+		}
+		catch ( IOException e )
 		{
             System.err.println( e );
 		}
@@ -157,7 +158,8 @@ public class Utils {
         try
         {
             Thread.sleep( millis );
-        } catch ( InterruptedException e )
+        }
+        catch ( InterruptedException e )
         {
             e.printStackTrace();
         }

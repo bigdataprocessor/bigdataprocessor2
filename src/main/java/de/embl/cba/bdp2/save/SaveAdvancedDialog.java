@@ -88,7 +88,7 @@ public class SaveAdvancedDialog< R extends RealType< R > & NativeType< R > > ext
 
         panels.add(new JPanel());
         panels.get(panelIndex).add( tfDirectory );
-        final JButton volumesPathSelectionButton = new JButton( "Folder" );
+        final JButton volumesPathSelectionButton = new JButton( "Choose Output Folder" );
         volumesPathSelectionButton.addActionListener( e -> tfDirectory.setText( IJ.getDirectory( "Directory" ) ) );
         panels.get(panelIndex).add(volumesPathSelectionButton);
         mainPanel.add( panels.get(panelIndex++));

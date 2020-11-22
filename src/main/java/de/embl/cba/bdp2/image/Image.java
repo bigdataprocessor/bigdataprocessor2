@@ -36,8 +36,8 @@ public class Image< R extends RealType< R > & NativeType< R > >
 	 * The optimal sizes of the cells depend on the use-case
 	 */
 	private final CachedCellImgCreator< R > cachedCellImgCreator;
+	private int[] cachedCellDims;
 	private long[] rawDataDimensions;
-	private int[] cellDims;
 
 	/**
 	 * The rai holds the (processed) image data.
@@ -67,7 +67,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		this.voxelUnit = cachedCellImgCreator.getVoxelUnit();
 
 		setCache( cachedCellImgCreator.getDefaultCellDimsXYZCT(), DiskCachedCellImgOptions.CacheType.BOUNDED, 100 );
-		this.rai = cachedCellImgCreator.createCachedCellImg( cellDims, DiskCachedCellImgOptions.CacheType.BOUNDED, 100 );
+		this.rai = cachedCellImgCreator.createCachedCellImg( cachedCellDims, DiskCachedCellImgOptions.CacheType.BOUNDED, 100 );
 		this.rawDataDimensions = this.getDimensionsXYZCT();
 	}
 
@@ -78,13 +78,13 @@ public class Image< R extends RealType< R > & NativeType< R > >
 	 */
 	public Image( Image< R > image )
 	{
-		this.cachedCellImgCreator = image.cachedCellImgCreator; // want to use same cache, thus by reference
+		this.cachedCellImgCreator = image.cachedCellImgCreator; // use same cache, thus by reference
 		this.rai = image.rai; // practically immutable
 		this.name = image.name; // immutable
 		this.channelNames = image.channelNames.clone();
 		this.voxelSize = image.voxelSize.clone();
 		this.voxelUnit = image.getVoxelUnit();
-		this.cellDims = image.cellDims.clone();
+		this.cachedCellDims = image.cachedCellDims.clone();
 		this.rawDataDimensions = image.rawDataDimensions.clone();
 		this.viewer = image.viewer;
 	}
@@ -249,8 +249,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		}
 		info += "\nSize [GB]: " + getTotalSizeGB();
 		info += "\nData type: " + getDataType();
-		info += "\nSize X,Y,Z [Voxels]: " + Arrays.toString( getDimensionsXYZCT() );
-		info += "\nTime-points: " + getDimensionsXYZCT()[4];
+		info += "\nSize X,Y,Z,C,T [Voxels]: " + Arrays.toString( getDimensionsXYZCT() );
 		if ( getVoxelUnit() == null )
 		{
 			info += "\nVoxel size [???]: " + Arrays.toString( getVoxelSize() );
@@ -263,9 +262,9 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		return info;
 	}
 
-	public int[] getCellDims()
+	public int[] getCachedCellDims()
 	{
-		return cellDims;
+		return cachedCellDims;
 	}
 
 	/**
@@ -283,7 +282,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		Logger.info( "  Cache size: " + cacheSize );
 		Logger.info( "  Cache type: " + cacheType.toString() );
 
-		this.cellDims = cellDims;
+		this.cachedCellDims = cellDims;
 		RandomAccessibleInterval< R > cachedCellImg = cachedCellImgCreator.createCachedCellImg( cellDims, cacheType, cacheSize );
 
 		if ( rai == null )
@@ -292,14 +291,20 @@ public class Image< R extends RealType< R > & NativeType< R > >
 			rai = new CachedCellImgReplacer( rai, cachedCellImg ).get();
 	}
 
+	/**
+	 * Sets the cache dimensions such that one cell is one volume.
+	 *
+	 * @param cacheType
+	 * @param cacheSize
+	 */
 	public void setVolumeCache( DiskCachedCellImgOptions.CacheType cacheType, int cacheSize )
 	{
-		this.cellDims[ DimensionOrder.X ] = (int) rawDataDimensions[ DimensionOrder.X ];
-		this.cellDims[ DimensionOrder.Y ] = (int) rawDataDimensions[ DimensionOrder.Y ];
-		this.cellDims[ DimensionOrder.Z ] = (int) rawDataDimensions[ DimensionOrder.Z ];
-		this.cellDims[ DimensionOrder.C ] = 1;
-		this.cellDims[ DimensionOrder.T ] = 1;
-		setCache( cellDims, cacheType, cacheSize );
+		this.cachedCellDims[ DimensionOrder.X ] = (int) rawDataDimensions[ DimensionOrder.X ];
+		this.cachedCellDims[ DimensionOrder.Y ] = (int) rawDataDimensions[ DimensionOrder.Y ];
+		this.cachedCellDims[ DimensionOrder.Z ] = (int) rawDataDimensions[ DimensionOrder.Z ];
+		this.cachedCellDims[ DimensionOrder.C ] = 1;
+		this.cachedCellDims[ DimensionOrder.T ] = 1;
+		setCache( cachedCellDims, cacheType, cacheSize );
 	}
 
 	// TODO: this could be removed if we used SourceAndConverter instead of the current Image class

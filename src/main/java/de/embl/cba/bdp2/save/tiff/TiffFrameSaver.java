@@ -60,10 +60,14 @@ public class TiffFrameSaver< R extends RealType< R > & NativeType< R > > impleme
         // TODO:
         // checkMemoryRequirements();
 
-        int totalChannels = Math.toIntExact( rai.dimension( C ));
+        Logger.debug( "Saving time point: " + t );
 
-        for (int c = 0; c < totalChannels; c++)
+        int totalChannels = Math.toIntExact( rai.dimension( C ) );
+
+        for ( int c = 0; c < totalChannels; c++ )
         {
+            Logger.debug( "Saving channel: " + c );
+
             if ( stop.get() )
             {
                 Logger.progress( "Stopped save thread: ", "" + t );
@@ -73,12 +77,15 @@ public class TiffFrameSaver< R extends RealType< R > & NativeType< R > > impleme
             // Note: below call will both
             // (i) load the raw image into RAM
             // (ii) make a copy in RAM with all processing done
+            Logger.debug( "Fetching channel: " + c );
             RandomAccessibleInterval< R > raiXYZ = RAISlicer.createVolumeCopy( rai, c, t, settings.numProcessingThreads, ( R ) settings.type );
 
             ImagePlus imp = Utils.asImagePlus( raiXYZ, settings.image, c );
 
             if ( settings.saveVolumes )
             {
+                Logger.debug( "Saving volume c" + c + " t" + t + "..." );
+
                 String channelName = getChannelName( c );
 
                 saveAsTiff( imp, t, settings.compression, settings.rowsPerStrip, settings.volumesFilePathStump, channelName );
@@ -86,6 +93,8 @@ public class TiffFrameSaver< R extends RealType< R > & NativeType< R > > impleme
 
             if ( settings.saveProjections )
             {
+                Logger.debug( "Saving projections c" + c + " t" + t + "..." );
+
                 saveProjections( imp, c );
             }
 

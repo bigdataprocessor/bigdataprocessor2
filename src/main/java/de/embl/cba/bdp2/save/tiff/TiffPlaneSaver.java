@@ -43,6 +43,8 @@ public class TiffPlaneSaver implements Runnable {
     @Override
     public void run() {
 
+        Logger.debug( "# TiffPlaneSaver..." );
+
         if ( stop.get() )
         {
             savingSettings.saveVolumes = true;

@@ -1,6 +1,6 @@
 package de.embl.cba.bdp2.log;
 
-import de.embl.cba.bdp2.BigDataProcessor2UserInterface;
+import de.embl.cba.bdp2.BigDataProcessor2UI;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,7 +26,7 @@ public class PerformanceMonitor
 			readPerformances.add( speed );
 		}
 
-		BigDataProcessor2UserInterface.setReadPerformanceInformation( speed, getMedianReadPerformance() );
+		BigDataProcessor2UI.setReadPerformanceInformation( speed, getMedianReadPerformance() );
 	}
 
 	private double toMBitPerSecond( long bytes, long millis )

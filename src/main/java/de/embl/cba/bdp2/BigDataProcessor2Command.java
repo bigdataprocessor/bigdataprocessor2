@@ -39,7 +39,7 @@ public class BigDataProcessor2Command< R extends RealType< R > & NativeType< R >
 
         SwingUtilities.invokeLater( () -> {
             CropDialog.askForUnitsChoice = true;
-            BigDataProcessor2UserInterface.showUI();
+            BigDataProcessor2UI.showUI();
         } );
     }
 
@@ -47,8 +47,8 @@ public class BigDataProcessor2Command< R extends RealType< R > & NativeType< R >
     {
         final ImageJ ij = new ImageJ();
         ij.ui().showUI();
-        Logger.setLevel( Logger.Level.Benchmark );
-        new Recorder();
+        //Logger.setLevel( Logger.Level.Benchmark );
+        //new Recorder();
         ij.command().run( BigDataProcessor2Command.class, true );
     }
 }

@@ -2,7 +2,6 @@ package test.open;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.BigDataProcessor2UserInterface;
 import de.embl.cba.bdp2.scijava.Services;
 import net.imagej.ImageJ;
 import org.junit.Test;

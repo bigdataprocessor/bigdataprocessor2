@@ -1,6 +1,6 @@
 package de.embl.cba.bdp2.service;
 
-import de.embl.cba.bdp2.BigDataProcessor2UserInterface;
+import de.embl.cba.bdp2.BigDataProcessor2UI;
 import de.embl.cba.bdp2.viewer.ImageViewer;
 
 import java.util.Collections;
@@ -17,9 +17,9 @@ public abstract class ImageViewerService
 	{
 		focusedViewer = viewer;
 		if ( viewer != null )
-			BigDataProcessor2UserInterface.setImageInformation( viewer.getImage() );
+			BigDataProcessor2UI.setImageInformation( viewer.getImage() );
 		else
-			BigDataProcessor2UserInterface.setImageInformation( null );
+			BigDataProcessor2UI.setImageInformation( null );
 	}
 
 	public static synchronized ImageViewer getActiveViewer()

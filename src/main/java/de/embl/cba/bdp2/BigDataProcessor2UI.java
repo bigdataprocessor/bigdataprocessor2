@@ -8,7 +8,7 @@ import java.awt.*;
 import java.text.DecimalFormat;
 import java.util.List;
 
-public abstract class BigDataProcessor2UserInterface
+public abstract class BigDataProcessor2UI
 {
 	public static final String SPEED = "Read [MByte/s]: ";
 	private static JFrame frame;

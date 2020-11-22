@@ -15,7 +15,7 @@ import static de.embl.cba.bdp2.process.AbstractImageProcessingCommand.*;
 
 public class MacroRecorder
 {
-	public static final String COMMA = ", ";
+	private static final String COMMA = ", ";
 	private String commandName;
 	private String options;
 	private String message;

@@ -2,9 +2,8 @@ package test.open;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.BigDataProcessor2UserInterface;
+import de.embl.cba.bdp2.BigDataProcessor2UI;
 import de.embl.cba.bdp2.scijava.Services;
-import de.embl.cba.bdp2.viewer.ImageViewer;
 import net.imagej.ImageJ;
 import org.junit.Test;
 
@@ -18,7 +17,7 @@ public class TestOpenMultiChannel16BitTiffVolumes
         ImageJ imageJ = new ImageJ();
         Services.setContext( imageJ.getContext() );
         Services.setCommandService( imageJ.command() );
-        BigDataProcessor2UserInterface.showUI();
+        BigDataProcessor2UI.showUI();
         new TestOpenMultiChannel16BitTiffVolumes().run();
     }
 

@@ -50,6 +50,8 @@ public class ImarisFrameSaver< R extends RealType< R > & NativeType< R >> implem
     @Override
     public void run() {
 
+        Logger.debug( "# ImarisFrameSaver..." );
+
         long start;
 
         for ( int c = 0; c < nChannels; c++ )

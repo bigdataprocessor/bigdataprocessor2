@@ -64,7 +64,7 @@ public class VolatileCachedCellImgs
 	public static RandomAccessibleInterval< ? > asVolatileCachedCellImg( Image< ? > image )
 	{
 		final Type typeFromInterval = Util.getTypeFromInterval( image.getRai() );
-		final CellGrid grid = new CellGrid( Intervals.dimensionsAsLongArray( image.getRai() ), image.getCellDims() );
+		final CellGrid grid = new CellGrid( Intervals.dimensionsAsLongArray( image.getRai() ), image.getCachedCellDims() );
 
 		RandomAccessibleInterval< ? > cachedCellImg;
 
