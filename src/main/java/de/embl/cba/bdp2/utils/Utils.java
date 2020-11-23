@@ -377,6 +377,11 @@ public class Utils {
 					TransformCommand.LINEAR + ", " +  TransformCommand.NEAREST);
 	}
 
+	public static String getChannelTimepointLog( int c, int t )
+	{
+		return " c" + c + " t" + t;
+	}
+
 	public enum ImageFilterTypes {
         NONE("None"),
         THRESHOLD("Threshold"),

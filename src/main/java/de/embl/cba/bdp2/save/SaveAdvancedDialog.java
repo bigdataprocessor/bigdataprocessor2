@@ -266,11 +266,10 @@ public class SaveAdvancedDialog< R extends RealType< R > & NativeType< R > > ext
         // compress plane wise
         savingSettings.rowsPerStrip = (int) viewer.getImage().getRai().dimension( DimensionOrder.Y );  //Integer.parseInt( tfRowsPerStrip.getText() );
 
-        final String imageName = inputImage.getName();
         savingSettings.saveVolumes = cbSaveVolume.isSelected();
-        savingSettings.volumesFilePathStump = tfDirectory.getText() + File.separator + "volumes" + File.separator + imageName;
+        savingSettings.volumesFilePathStump = SavingSettings.createFilePathStump( inputImage, "volumes", tfDirectory.getText() );
+        savingSettings.projectionsFilePathStump = SavingSettings.createFilePathStump( inputImage, "projections", tfDirectory.getText() );
         savingSettings.saveProjections = cbSaveProjection.isSelected();
-        savingSettings.projectionsFilePathStump = tfDirectory.getText() + File.separator + "projections" + File.separator + imageName;
         savingSettings.numIOThreads = Integer.parseInt( tfNumIOThreads.getText() );
         savingSettings.numProcessingThreads = Integer.parseInt( tfNumProcessingThreads.getText() );
         savingSettings.channelNamesInSavedImages = (String) comboChannelNames.getSelectedItem();

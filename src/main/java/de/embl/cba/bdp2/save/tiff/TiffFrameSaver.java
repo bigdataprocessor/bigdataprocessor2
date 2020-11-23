@@ -60,13 +60,11 @@ public class TiffFrameSaver< R extends RealType< R > & NativeType< R > > impleme
         // TODO:
         // checkMemoryRequirements();
 
-        Logger.debug( "Saving time point: " + t );
-
         int totalChannels = Math.toIntExact( rai.dimension( C ) );
 
         for ( int c = 0; c < totalChannels; c++ )
         {
-            Logger.debug( "Saving channel: " + c );
+            Logger.debug( "Saving" + Utils.getChannelTimepointLog( c, t ) );
 
             if ( stop.get() )
             {
@@ -77,14 +75,14 @@ public class TiffFrameSaver< R extends RealType< R > & NativeType< R > > impleme
             // Note: below call will both
             // (i) load the raw image into RAM
             // (ii) make a copy in RAM with all processing done
-            Logger.debug( "Fetching channel: " + c );
+            Logger.debug( "Fetching" + Utils.getChannelTimepointLog( c, t ) );
             RandomAccessibleInterval< R > raiXYZ = RAISlicer.createVolumeCopy( rai, c, t, settings.numProcessingThreads, ( R ) settings.type );
 
             ImagePlus imp = Utils.asImagePlus( raiXYZ, settings.image, c );
 
             if ( settings.saveVolumes )
             {
-                Logger.debug( "Saving volume c" + c + " t" + t + "..." );
+                Logger.debug( "Saving volume" + Utils.getChannelTimepointLog( c, t ) + " as (partial file name) " + settings.volumesFilePathStump );
 
                 String channelName = getChannelName( c );
 
@@ -93,7 +91,7 @@ public class TiffFrameSaver< R extends RealType< R > & NativeType< R > > impleme
 
             if ( settings.saveProjections )
             {
-                Logger.debug( "Saving projections c" + c + " t" + t + "..." );
+                Logger.debug( "Saving projections" + Utils.getChannelTimepointLog( c, t ) + " as (partial file name) " + settings.projectionsFilePathStump );
 
                 saveProjections( imp, c );
             }
@@ -105,7 +103,7 @@ public class TiffFrameSaver< R extends RealType< R > & NativeType< R > > impleme
 
     }
 
-    public String getChannelName( int c )
+	public String getChannelName( int c )
     {
         if ( settings.channelNamesInSavedImages.equals( SavingSettings.CHANNEL_INDEXING ) )
             return String.format( "C%1$02d", c );
@@ -307,6 +305,7 @@ public class TiffFrameSaver< R extends RealType< R > & NativeType< R > > impleme
         FileTiffSaverFromImageJ fileSaver = new FileTiffSaverFromImageJ( imp );
         String pathCT = getFullPath( path, sC, sT, ".tif" );
 
+        Logger.debug( "Saving " + pathCT );
         fileSaver.saveAsTiffStack( pathCT );
     }
 
