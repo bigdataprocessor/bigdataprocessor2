@@ -14,7 +14,8 @@ public abstract class NamingSchemes
 	public static final String H_5 = ".h5";
 
 	// File series
-	public static final String SINGLE_CHANNEL_VOLUMES = ".*T(" + T + "\\d+)";
+	public static final String SINGLE_CHANNEL_VOLUMES = "(" + T + ".*)";
+	public static final String SINGLE_CHANNEL_VOLUMES_WITH_TIME_INDEX = ".*T(" + T + "\\d+)";
 	public static final String SINGLE_CHANNEL_VOLUMES_2 = ".*--T(" + T + "\\d+)";
 	public static final String MULTI_CHANNEL_VOLUMES_FROM_SUBFOLDERS = "(" + C + ".*)/.*T(" + T + "\\d+)";
 	public static final String MULTI_CHANNEL_VOLUMES = ".*--C(" + C + ".*)--T(" + T + "\\d+)";

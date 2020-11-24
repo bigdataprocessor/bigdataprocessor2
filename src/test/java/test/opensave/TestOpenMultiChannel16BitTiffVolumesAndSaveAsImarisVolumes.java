@@ -32,7 +32,7 @@ public class TestOpenMultiChannel16BitTiffVolumesAndSaveAsImarisVolumes
         image.setVoxelSize( new double[]{1.0, 1.0, 1.0} );
 
         final SavingSettings settings = SavingSettings.getDefaults();
-        settings.volumesFilePathStump = "src/test/resources/test/saved/imaris/" + image.getName();
+        settings.volumesFilePathStump = "src/test/resources/test/output/imaris/" + image.getName();
         settings.image = image;
         settings.fileType = SaveFileType.ImarisVolumes;
         settings.numProcessingThreads = 4;

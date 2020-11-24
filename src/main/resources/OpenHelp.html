@@ -106,6 +106,10 @@ Below examples work both with and without zero-padding, e.g. "T0000", "T0001" wo
 <p>
 <table border="1">
   <tr>
+    <td class="a"><b>(?&lt;T&gt;.*)</b></td>
+    <td>One file contains a one volume, there is only one channel, but several time points. This works for filenames such as "image-0000" and "image-0001".</td>
+  </tr>
+  <tr>
     <td class="a"><b>(?&lt;Z&gt;.*)</b></td>
     <td>One file contains a one z-plane, there is only one channel and one timepoint, as it is typical for EM data. This works for filenames such as "image-0000" and "image-0001".</td>
   </tr>

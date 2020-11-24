@@ -14,7 +14,7 @@ public class TestTiffLoading
 	{
 		final Image< R > image = BigDataProcessor2.openTiffSeries(
 				"/Users/tischer/Documents/gustavo/bdp2-errors/error001",
-				NamingSchemes.SINGLE_CHANNEL_VOLUMES + TIF
+				NamingSchemes.SINGLE_CHANNEL_VOLUMES_WITH_TIME_INDEX + TIF
 		);
 
 		BigDataProcessor2.showImage( image, true );

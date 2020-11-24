@@ -32,7 +32,7 @@ public class TestOpenMultiChannel16BitTiffVolumesAndSaveAsUncompressedTiffVolume
         image.setVoxelSize( new double[]{1.0, 1.0, 1.0} );
 
         final SavingSettings settings = SavingSettings.getDefaults();
-        settings.volumesFilePathStump = "src/test/resources/test/saved/tiff/" + image.getName();
+        settings.volumesFilePathStump = "src/test/resources/test/output/tiff/" + image.getName();
         settings.image = image;
         settings.fileType = SaveFileType.TiffVolumes;
         settings.numProcessingThreads = 4;

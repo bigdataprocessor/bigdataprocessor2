@@ -41,10 +41,10 @@ public abstract class CacheUtils
 
 		if ( numPixels > MAX_ARRAY_LENGTH )
 		{
-			Logger.info( "Adapting cell size in Z to satisfy java array indexing limit.");
+			Logger.info( "Adapting cache cell size in Z to comply with java array indexing limit.");
 			Logger.info( "Desired cell size in Z: " + cellDimZ );
 			cellDimZ = MAX_ARRAY_LENGTH / ( cellDimX * cellDimY ) ;
-			Logger.info( "Adapted cell size in Z: " + cellDimZ );
+			Logger.info( "Adapted cache cell size in Z: " + cellDimZ );
 		}
 
 		return new int[]{ (int) cellDimX, (int) cellDimY, (int) cellDimZ, 1, 1 };

@@ -16,3 +16,5 @@ target/
 # General #
 .DS_Store
 
+# Tests #
+src/test/resources/test/output/

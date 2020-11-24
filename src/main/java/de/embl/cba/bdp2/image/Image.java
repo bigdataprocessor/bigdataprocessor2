@@ -3,6 +3,7 @@ package de.embl.cba.bdp2.image;
 import ch.epfl.biop.bdv.bioformats.BioFormatsMetaDataHelper;
 import de.embl.cba.bdp2.dialog.DisplaySettings;
 import de.embl.cba.bdp2.log.Logger;
+import de.embl.cba.bdp2.open.CacheUtils;
 import de.embl.cba.bdp2.open.CachedCellImgCreator;
 import de.embl.cba.bdp2.save.CachedCellImgReplacer;
 import de.embl.cba.bdp2.utils.DimensionOrder;
@@ -299,11 +300,13 @@ public class Image< R extends RealType< R > & NativeType< R > >
 	 */
 	public void setVolumeCache( DiskCachedCellImgOptions.CacheType cacheType, int cacheSize )
 	{
-		this.cachedCellDims[ DimensionOrder.X ] = (int) rawDataDimensions[ DimensionOrder.X ];
-		this.cachedCellDims[ DimensionOrder.Y ] = (int) rawDataDimensions[ DimensionOrder.Y ];
-		this.cachedCellDims[ DimensionOrder.Z ] = (int) rawDataDimensions[ DimensionOrder.Z ];
-		this.cachedCellDims[ DimensionOrder.C ] = 1;
-		this.cachedCellDims[ DimensionOrder.T ] = 1;
+		cachedCellDims = CacheUtils.volumeWiseCellDims( rawDataDimensions );
+
+		if ( cachedCellDims[ DimensionOrder.Z ] < ( int ) rawDataDimensions[ DimensionOrder.Z ] )
+		{
+			cacheSize = (int) Math.ceil( 1.0D * ( int ) rawDataDimensions[ DimensionOrder.Z ] / cachedCellDims[ DimensionOrder.Z ] );
+			Logger.info("Adapting cache size to " + cacheSize +" volumes." );
+		}
 		setCache( cachedCellDims, cacheType, cacheSize );
 	}
 
