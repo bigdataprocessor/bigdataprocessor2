@@ -97,7 +97,6 @@ public class SaveAdvancedCommand< R extends RealType< R > & NativeType< R > > im
     private SavingSettings getSavingSettings()
     {
         SavingSettings savingSettings = new SavingSettings();
-        savingSettings.image = inputImage;
         savingSettings.fileType = SaveFileType.valueOf( fileType );
         savingSettings.compression = tiffCompression;
         savingSettings.rowsPerStrip = 10;

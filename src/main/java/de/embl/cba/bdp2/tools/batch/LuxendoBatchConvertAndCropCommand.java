@@ -72,7 +72,7 @@ public class LuxendoBatchConvertAndCropCommand< R extends RealType< R > & Native
                 // TODO: Deprecated??
 
                 // Open
-                final Image< R > image = BigDataProcessor2.openHdf5Series(
+                final Image< R > image = BigDataProcessor2.openHDF5Series(
                         directory.getAbsolutePath(),
                         NamingSchemes.PATTERN_LUXENDO,
                         "Data");
@@ -101,7 +101,7 @@ public class LuxendoBatchConvertAndCropCommand< R extends RealType< R > & Native
         {
             // open
             final String directory = directories.get( i ).getAbsolutePath();
-            final Image< R > image = BigDataProcessor2.openHdf5Series(
+            final Image< R > image = BigDataProcessor2.openHDF5Series(
                     directory,
                     NamingSchemes.PATTERN_6,
                     "Data");

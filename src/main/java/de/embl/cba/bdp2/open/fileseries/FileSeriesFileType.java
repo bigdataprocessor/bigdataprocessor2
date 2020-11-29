@@ -2,9 +2,9 @@ package de.embl.cba.bdp2.open.fileseries;
 
 public enum FileSeriesFileType
 {
-	HDF5("Hdf5"),
-	LUXENDO("Luxendo Hdf5"),
-	IMARIS("Partitioned Imaris Hdf5"),
+	HDF5("HDF5"),
+	LUXENDO("Luxendo HDF5"),
+	IMARIS("Partitioned Imaris HDF5"),
 	TIFF_STACKS("Tiff Stacks"),
 	TIFF_PLANES("Tiff Planes");
 

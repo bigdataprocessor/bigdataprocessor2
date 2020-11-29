@@ -89,7 +89,7 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
                 Random random = new Random();
                 int randomZ = random.nextInt( ( int ) nZ );
                 long start = System.currentTimeMillis();
-                RAISlicer.createPlaneCopy( image.getRai(), image.getRai(), randomZ, 0, timePointIndex );
+                RAISlicer.createPlaneCopy( image.getRai(), image.getRai(), image.getType(), randomZ, 0, timePointIndex );
                 long durationMillis = System.currentTimeMillis() - start;
                 Logger.benchmark( "Loading and processing of random z-plane #" + randomZ + " [ms]: " + durationMillis );
             }

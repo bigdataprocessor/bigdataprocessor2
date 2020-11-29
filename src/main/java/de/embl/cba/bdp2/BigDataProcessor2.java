@@ -48,16 +48,6 @@ public class BigDataProcessor2
     public static ExecutorService threadPool = Executors.newFixedThreadPool( Runtime.getRuntime().availableProcessors() * 2  );
     public static int MAX_THREAD_LIMIT = Runtime.getRuntime().availableProcessors() * 2;
 
-    public static< R extends RealType< R > & NativeType< R > >
-    void saveImageAndWaitUntilDone( Image< R > image, SavingSettings savingSettings )
-    {
-        final LoggingProgressListener progressListener = new LoggingProgressListener( "Frames saved" );
-        saveImage( image, savingSettings, progressListener );
-        Logger.log( "Saving: " + savingSettings.volumesFilePathStump );
-        Progress.waitUntilDone( progressListener, 1000 );
-        Logger.log("Saving: Done." );
-    }
-
     public static < R extends RealType< R > & NativeType< R > >
     Image< R > bin( Image< R > image, long[] spanXYZCT )
     {
@@ -121,7 +111,7 @@ public class BigDataProcessor2
     }
 
     public static < R extends RealType< R > & NativeType< R > >
-    Image< R > openHdf5Series( String directory, String regularExpression, String hdf5DataSetName )
+    Image< R > openHDF5Series( String directory, String regularExpression, String hdf5DataSetName )
     {
         FileInfos fileInfos = new FileInfos( directory, regularExpression, regularExpression, hdf5DataSetName, null );
         FileSeriesCachedCellImgCreator< R > cachedCellImgCreator = new FileSeriesCachedCellImgCreator( fileInfos );
@@ -130,7 +120,7 @@ public class BigDataProcessor2
     }
 
     public static < R extends RealType< R > & NativeType< R > >
-    Image< R > openHdf5Series( String directory, String[][] filesInFolders, String regExp, String hdf5DataSetPath, String[] channelSubset )
+    Image< R > openHDF5Series( String directory, String[][] filesInFolders, String regExp, String hdf5DataSetPath, String[] channelSubset )
     {
         FileInfos fileInfos = new FileInfos( directory, regExp, regExp, hdf5DataSetPath, channelSubset, filesInFolders );
         FileSeriesCachedCellImgCreator< R > cachedCellImgCreator = new FileSeriesCachedCellImgCreator( fileInfos );
@@ -139,7 +129,7 @@ public class BigDataProcessor2
     }
 
     public static < R extends RealType< R > & NativeType< R > >
-    Image< R > openHdf5Series( String directory, String regExp, String hdf5DataSetPath, String[] channelSubset )
+    Image< R > openHDF5Series( String directory, String regExp, String hdf5DataSetPath, String[] channelSubset )
     {
         FileInfos fileInfos = new FileInfos( directory, regExp, regExp, hdf5DataSetPath, channelSubset );
         FileSeriesCachedCellImgCreator< R > cachedCellImgCreator = new FileSeriesCachedCellImgCreator( fileInfos );
@@ -163,6 +153,15 @@ public class BigDataProcessor2
     ImageViewer showImage( Image< R > image )
     {
         return new ImageViewer( image, true, ImageViewer.enableArbitraryPlaneSlicing );
+    }
+
+    public static< R extends RealType< R > & NativeType< R > > void saveImageAndWaitUntilDone( Image< R > image, SavingSettings savingSettings )
+    {
+        final LoggingProgressListener progressListener = new LoggingProgressListener( "Frames saved" );
+        saveImage( image, savingSettings, progressListener );
+        Logger.log( "Saving: " + savingSettings.volumesFilePathStump );
+        Progress.waitUntilDone( progressListener, 1000 );
+        Logger.log("Saving: Done." );
     }
 
     public static < R extends RealType< R > & NativeType< R > > ImageSaver saveImage( Image< R > image, SavingSettings savingSettings, ProgressListener progressListener )

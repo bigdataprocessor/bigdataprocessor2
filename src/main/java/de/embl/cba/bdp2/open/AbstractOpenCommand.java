@@ -3,7 +3,7 @@ package de.embl.cba.bdp2.open;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.macro.MacroRecorder;
-import de.embl.cba.bdp2.process.calibrate.CalibrationCheckerDialog;
+import de.embl.cba.bdp2.process.calibrate.CalibrationChecker;
 import de.embl.cba.bdp2.scijava.Services;
 import de.embl.cba.bdp2.service.ImageService;
 import de.embl.cba.bdp2.viewer.ImageViewer;
@@ -62,7 +62,7 @@ public abstract class AbstractOpenCommand< R extends RealType< R > & NativeType<
         }
         else
         {
-            outputImage = new CalibrationCheckerDialog().checkAndCorrectCalibration( outputImage );
+            outputImage = new CalibrationChecker().amendCalibrationViaDialogIfNecessary( outputImage );
             showInViewer( autoContrast, keepViewerTransform );
 
             MacroRecorder recorder = new MacroRecorder();

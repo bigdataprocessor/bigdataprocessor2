@@ -14,7 +14,6 @@ import net.imglib2.view.IntervalView;
 
 public class SaveImgHelper
 {
-
     public static <T extends RealType<T>> RandomAccessibleInterval converter( RandomAccessibleInterval newRai, SavingSettings savingSettings){
         if (savingSettings.convertTo8Bit) {
             if (!(((IntervalView) newRai).firstElement() instanceof UnsignedByteType)){

@@ -190,7 +190,7 @@ public class Utils {
 		String regExp = MULTI_CHANNEL_VOLUMES_FROM_SUBFOLDERS.replace( "STACK", "" + stackIndex );
 
 		final Image< R > image =
-				BigDataProcessor2.openHdf5Series(
+				BigDataProcessor2.openHDF5Series(
 						directoryOfChannel0.getParent(),
 						regExp,
 						"Data" );
@@ -297,27 +297,6 @@ public class Utils {
 		return null;
 	}
 
-
-	public static boolean checkVoxelSize( double[] voxelSize )
-	{
-		boolean isOK = true;
-
-		if ( voxelSize == null )
-		{
-			Logger.warn( "Voxel size not set!" );
-			return false;
-		}
-
-		for ( int d = 0; d < 3; d++ )
-		{
-			if ( Double.isNaN( voxelSize[ d ] ) || voxelSize[ d ] <= 0.0 )
-			{
-				Logger.warn( "Voxel size along dimension " + d + " is " + voxelSize[ d ] );
-				isOK = false;
-			}
-		}
-		return isOK;
-	}
 
 	public static void shutDownIfHeadless()
 	{
@@ -524,11 +503,9 @@ public class Utils {
 
 		final IntervalView viewXYCZT = Views.permute( viewXYZCT, DimensionOrder.Z, DimensionOrder.C );
 
-		// Note: this also works if viewXYCZT has a non-zero bounding interval
+		// TODO: This does getTypeFromInterval calls internally => this will reload the first time point (thus I will need to keep the cache it seems)
 		ImagePlus imp = ImageJFunctions.wrap( viewXYCZT, image.getName() );
-
 		setCalibration( image, imp );
-
 		setColor( image, imp, c );
 
 		return imp;

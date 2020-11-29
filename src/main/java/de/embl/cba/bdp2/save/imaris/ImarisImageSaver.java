@@ -1,5 +1,6 @@
 package de.embl.cba.bdp2.save.imaris;
 
+import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.open.fileseries.FileInfos;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.save.AbstractImageSaver;
@@ -28,11 +29,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class ImarisImageSaver< R extends RealType< R > & NativeType< R > > extends AbstractImageSaver
 {
+    private final Image< R > image;
     private SavingSettings savingSettings;
     private ExecutorService es;
     private AtomicBoolean stop;
 
-    public ImarisImageSaver( SavingSettings< R > savingSettings, ExecutorService es) {
+    public ImarisImageSaver( Image< R > image, SavingSettings savingSettings, ExecutorService es) {
+        this.image = image;
         this.savingSettings = savingSettings;
         this.es = es;
         this.stop = new AtomicBoolean(false);
@@ -46,38 +49,19 @@ public class ImarisImageSaver< R extends RealType< R > & NativeType< R > > exten
         final long startTime = System.currentTimeMillis();
 
         int tStart = Math.max( savingSettings.tStart, 0 );
-        int tEnd = (int) Math.min( savingSettings.tEnd, savingSettings.image.getRai().dimension( DimensionOrder.T ) - 1 );
+        int tEnd = (int) Math.min( savingSettings.tEnd, image.getRai().dimension( DimensionOrder.T ) - 1 );
 
-        NativeType imageType = Util.getTypeFromInterval( savingSettings.image.getRai() );
+        NativeType imageType = image.getType();
 
         for (int t = tStart; t <= tEnd; t++) {
-            if (imageType instanceof UnsignedByteType)
-            {
-                futures.add(es.submit(
-                        new ImarisFrameSaver<UnsignedByteType>(
-                                savingSettings,
-                                imarisDataSet,
-                                t, counter, startTime, stop)
+            futures.add(
+                    es.submit(
+                            new ImarisFrameSaver<R>(
+                                    image,
+                                    savingSettings,
+                                    imarisDataSet,
+                                    t, counter, startTime, stop)
                 ));
-            }
-            else if (imageType instanceof UnsignedShortType)
-            {
-                futures.add(
-                        es.submit(
-                                new ImarisFrameSaver<UnsignedShortType>(
-                                        savingSettings,
-                                        imarisDataSet,
-                                        t, counter, startTime, stop)
-                        ));
-            } else if (imageType instanceof FloatType) {
-                futures.add(
-                        es.submit(
-                                new ImarisFrameSaver<FloatType>(
-                                        savingSettings,
-                                        imarisDataSet,
-                                        t, counter, startTime, stop)
-                        ));
-            }
         }
 
         // Monitor the progress
@@ -100,7 +84,7 @@ public class ImarisImageSaver< R extends RealType< R > & NativeType< R > > exten
         final String directory = new File( settings.volumesFilePathStump ).getParent();
         final String filename = new File( settings.volumesFilePathStump ).getName();
 
-        ImagePlus imp = Utils.asImagePlus( settings.image );
+        ImagePlus imp = Utils.asImagePlus( image );
 
         int[] binning = new int[]{1,1,1};
 

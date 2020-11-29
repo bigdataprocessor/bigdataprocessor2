@@ -1,5 +1,6 @@
 package de.embl.cba.bdp2.save.tiff;
 
+import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.save.ProjectionXYZ;
 import de.embl.cba.bdp2.save.SavingSettings;
@@ -36,22 +37,25 @@ import static de.embl.cba.bdp2.utils.DimensionOrder.*;
 public class TiffFrameSaver< R extends RealType< R > & NativeType< R > > implements Runnable {
     private final int t;
     private final AtomicInteger counter;
+    private final Image image;
     private final SavingSettings settings;
     private final long startTime;
     private final AtomicBoolean stop;
     private RandomAccessibleInterval rai;
 
     public TiffFrameSaver( int t,
+						   Image< R > image,
                            SavingSettings settings,
-                           AtomicInteger counter,
-                           final long startTime,
-                           AtomicBoolean stop) {
+						   AtomicInteger counter,
+						   final long startTime,
+						   AtomicBoolean stop ) {
         this.t = t;
+        this.image = image;
         this.settings = settings;
         this.counter = counter;
         this.startTime = startTime;
         this.stop = stop;
-        this.rai = settings.image.getRai();
+        this.rai = image.getRai();
     }
 
     @Override
@@ -76,9 +80,10 @@ public class TiffFrameSaver< R extends RealType< R > & NativeType< R > > impleme
             // (i) load the raw image into RAM
             // (ii) make a copy in RAM with all processing done
             Logger.debug( "Fetching" + Utils.getChannelTimepointLog( c, t ) );
-            RandomAccessibleInterval< R > raiXYZ = RAISlicer.createVolumeCopy( rai, c, t, settings.numProcessingThreads, ( R ) settings.type );
+            RandomAccessibleInterval< R > raiXYZ = RAISlicer.createVolumeCopy( rai, c, t, settings.numProcessingThreads, ( R ) image.getType() );
 
-            ImagePlus imp = Utils.asImagePlus( raiXYZ, settings.image, c );
+            // TODO: this again does a getType call internally, which can be costly => fix this if possible
+            ImagePlus imp = Utils.asImagePlus( raiXYZ, image, c );
 
             if ( settings.saveVolumes )
             {
@@ -108,7 +113,7 @@ public class TiffFrameSaver< R extends RealType< R > & NativeType< R > > impleme
         if ( settings.channelNamesInSavedImages.equals( SavingSettings.CHANNEL_INDEXING ) )
             return String.format( "C%1$02d", c );
         else if ( settings.channelNamesInSavedImages.equals( SavingSettings.CHANNEL_NAMES ) )
-            return settings.image.getChannelNames()[ c ];
+            return image.getChannelNames()[ c ];
         else
             return String.format( "C%1$02d", c );
     }

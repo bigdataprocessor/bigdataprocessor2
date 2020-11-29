@@ -99,7 +99,7 @@ public class FileInfosHDF5Helper
             hdf5DataSet.append(head.get(0));
         }
         if (!dataSetExists) {
-            Logger.error("The selected Hdf5 data set does not exist; " +
+            Logger.error("The selected HDF5 data set does not exist; " +
                     "please change to one of the following:\n\n" +
                     dataSets);
         }
@@ -112,9 +112,9 @@ public class FileInfosHDF5Helper
 
         List<String> hdf5Header = reader.getGroupMembers("/");
 
-        final GenericDialog gd = new GenericDialog( "Choose Hdf5 Dataset" );
+        final GenericDialog gd = new GenericDialog( "Choose HDF5 Dataset" );
 
-        gd.addChoice( "Hdf5 Dataset",
+        gd.addChoice( "HDF5 Dataset",
                 hdf5Header.toArray(new String[0]),
                 hdf5Header.get( 0 )  );
 

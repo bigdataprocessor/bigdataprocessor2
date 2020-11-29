@@ -48,7 +48,7 @@ public class MergeSplitChipWorkflow
 
         for ( File directory : directories )
         {
-            final Image< R > image = BigDataProcessor2.openHdf5Series(
+            final Image< R > image = BigDataProcessor2.openHDF5Series(
                     directory.toString(),
                     NamingSchemes.SINGLE_CHANNEL_TIMELAPSE,
                     "Data");
@@ -80,7 +80,7 @@ public class MergeSplitChipWorkflow
         {
             // open
             final String directory = directories.get( i ).toString();
-            final Image< R > image = BigDataProcessor2.openHdf5Series(
+            final Image< R > image = BigDataProcessor2.openHDF5Series(
                     directory,
                     NamingSchemes.SINGLE_CHANNEL_TIMELAPSE,
                     "Data");

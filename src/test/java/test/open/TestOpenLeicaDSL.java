@@ -2,6 +2,7 @@ package test.open;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
+import ome.units.unit.Unit;
 
 import static de.embl.cba.bdp2.open.NamingSchemes.*;
 
@@ -25,6 +26,8 @@ public class TestOpenLeicaDSL
         double[] voxelSize = image.getVoxelSize();
         image.setVoxelSize( voxelSize[ 0 ], voxelSize[ 1 ], 0.00001 ); // necessary because voxel size in z is NaN for single plane Tiff
 
-//        BigDataProcessor2.showImage( image, true );
+        Unit voxelUnit = image.getVoxelUnit();
+
+        BigDataProcessor2.showImage( image, true );
     }
 }

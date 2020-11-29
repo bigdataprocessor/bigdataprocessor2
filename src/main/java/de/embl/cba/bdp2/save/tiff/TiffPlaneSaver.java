@@ -1,5 +1,6 @@
 package de.embl.cba.bdp2.save.tiff;
 
+import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.utils.DimensionOrder;
@@ -12,6 +13,8 @@ import loci.formats.out.TiffWriter;
 import loci.formats.services.OMEXMLService;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.img.display.imagej.ImageJFunctions;
+import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.RealType;
 import ome.xml.model.enums.PixelType;
 import ome.xml.model.primitives.PositiveInteger;
 
@@ -20,23 +23,26 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static de.embl.cba.bdp2.utils.RAISlicer.createPlaneCopy;
 import static de.embl.cba.bdp2.save.tiff.TiffUtils.ShortToByteBigEndian;
 
-public class TiffPlaneSaver implements Runnable {
+public class TiffPlaneSaver < R extends RealType< R > & NativeType< R > > implements Runnable {
 
     private final int c;
     private final int t;
     private final int z;
+    private final Image< R > image;
     private final SavingSettings savingSettings;
     private final AtomicBoolean stop;
 
     public TiffPlaneSaver( int c,
                            int t,
                            int z,
-                           SavingSettings savingSettings,
+                           Image< R > image,
+                           SavingSettings settings,
                            AtomicBoolean stop) {
         this.c = c;
         this.z = z;
         this.t = t;
-        this.savingSettings = savingSettings;
+        this.image = image;
+        this.savingSettings = settings;
         this.stop = stop;
     }
 
@@ -53,16 +59,17 @@ public class TiffPlaneSaver implements Runnable {
 
         final RandomAccessibleInterval raiXY
                 = createPlaneCopy(
-                        savingSettings.image.getRai(),
-                        savingSettings.image.getRai(),
+                        image.getRai(),
+                        image.getRai(),
+                        ( R ) image.getType(),
                         z, c, t );
 
         @SuppressWarnings("unchecked")
         ImagePlus imp = ImageJFunctions.wrap( raiXY, "slice");
         imp.setDimensions(1, 1, 1);
 
-        final long nC = savingSettings.image.getRai().dimension( DimensionOrder.C );
-        final long nT = savingSettings.image.getRai().dimension( DimensionOrder.T );
+        final long nC = image.getRai().dimension( DimensionOrder.C );
+        final long nT = image.getRai().dimension( DimensionOrder.T );
 
         if ( ! savingSettings.compression.equals( SavingSettings.COMPRESSION_NONE ) )
         {

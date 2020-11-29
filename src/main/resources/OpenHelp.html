@@ -60,10 +60,10 @@ body
 <p>
 Big image data, due to its size, is often distributed across several files. BigDataProcessor2 provides several ways to open such file series. Most flexible is the "Open File Series..." command, where regular expressions (see below) are used to specify how the different files compose a 5D (x,y,z,c,t) image data set.
 
-Currently we support specific flavours of Tiff and Hdf5 file series.<br>
+Currently we support specific flavours of Tiff and HDF5 file series.<br>
 
 For Tiff we support single (x,y) plane Tiff and multi-plane Tiff files. In multi-plane Tiff files all planes must have the same size as they are loaded as one 3D volume with the Tiff planes corresponding to the z-position. Different channels and time points must be distributed across different files.<br>
-For Hdf5 we support file series where each file contains a single 3D dataset, which must be a 3D array with dimension order z,y,x. This array will be loaded as one 3D volume. Different channels and time points must be distributed across different files.<br>
+For HDF5 we support file series where each file contains a single 3D dataset, which must be a 3D array with dimension order z,y,x. This array will be loaded as one 3D volume. Different channels and time points must be distributed across different files.<br>
 For convenience, we also provide few commands to open commonly occurring file series, such that users do not have to enter the regular expressions:
 
 <h3>Open EM Tiff Plane File Series...</h3>
@@ -74,9 +74,9 @@ Opens one folder with tiff files, each containing only a single plane, using the
 <p>
 Opens one folder with tiff files, each containing only a single plane, using the regular expression ".*--t(?&lt;T&gt;\d+)--Z(?&lt;Z&gt;\d+)--C(?&lt;C>\d+).*", to open files with names such as "Position001_Target--t00--Z00--C00.tif".
 </p>
-<h3>Open Luxendo Hdf5 File Series...</h3>
+<h3>Open Luxendo HDF5 File Series...</h3>
 <p>
-Opens a series of Hdf5 files, each Hdf5 file containing one 3D volume. The channels and timepoints are encoded in the file and/or sub-folder names, yielding regular expressions such as: ".*stack_6_(?&lt;C1&gt;channel_.*)/(?&lt;C2&gt;Cam_.*)_(?&lt;T&gt;\d+).h5".
+Opens a series of HDF5 files, each HDF5 file containing one 3D volume. The channels and timepoints are encoded in the file and/or sub-folder names, yielding regular expressions such as: ".*stack_6_(?&lt;C1&gt;channel_.*)/(?&lt;C2&gt;Cam_.*)_(?&lt;T&gt;\d+).h5".
 </p>
 
 <h3>Regular Expressions</h3>

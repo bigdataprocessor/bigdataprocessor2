@@ -1,8 +1,12 @@
-package de.embl.cba.bdp2.save;
+package de.embl.cba.bdp2.save.hdf5;
 
 import ch.systemsx.cisd.hdf5.hdf5lib.HDF5Constants;
+import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.open.fileseries.FileInfos;
 import de.embl.cba.bdp2.log.Logger;
+import de.embl.cba.bdp2.save.ProjectionXYZ;
+import de.embl.cba.bdp2.save.SaveImgHelper;
+import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import ij.ImagePlus;
@@ -32,8 +36,8 @@ import static ch.systemsx.cisd.hdf5.hdf5lib.HDF5Constants.*;
 import static java.lang.Long.min;
 
 @Deprecated
-public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implements Runnable {
-    private final ImgPlus<T> image;
+public class SaveImageAsHDF5Stacks < R extends RealType< R > & NativeType< R > > implements Runnable {
+    private final ImgPlus< R > imgPlus;
     private static final int RANK = 3;
     private final int nFrames;
     private final int nChannels;
@@ -59,35 +63,37 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
     private SavingSettings savingSettings;
     private AtomicInteger counter;
     private final long startTime;
-    private final T nativeType;
+    private final R nativeType;
+    private final Image< R > image;
     private AtomicBoolean stop;
 
-    public SaveImgAsHDF5Stacks(String dataset, SavingSettings savingSettings, int t, AtomicInteger counter, long startTime, AtomicBoolean stop) {
-        this.nativeType = (T) Util.getTypeFromInterval(savingSettings.image.getRai() );
-        Img imgTemp = ImgView.wrap(savingSettings.image.getRai(), new CellImgFactory<>(nativeType));
-        this.image = new ImgPlus<>(imgTemp, "", FileInfos.AXES_ORDER);
+    public SaveImageAsHDF5Stacks( String dataset, Image< R > image, SavingSettings savingSettings, int t, AtomicInteger counter, long startTime, AtomicBoolean stop) {
+        this.nativeType = ( R ) Util.getTypeFromInterval(image.getRai() );
+        this.image = image;
+        Img imgTemp = ImgView.wrap(image.getRai(), new CellImgFactory<>(nativeType));
+        this.imgPlus = new ImgPlus<>(imgTemp, "", FileInfos.AXES_ORDER);
 
-        if (this.image.dimensionIndex(Axes.TIME) >= 0) {
-            this.nFrames = Math.toIntExact(image.dimension(this.image.dimensionIndex(Axes.TIME)));
+        if (this.imgPlus.dimensionIndex(Axes.TIME) >= 0) {
+            this.nFrames = Math.toIntExact( imgPlus.dimension(this.imgPlus.dimensionIndex(Axes.TIME)));
         } else {
             this.nFrames = 1;
         }
-        if (this.image.dimensionIndex(Axes.CHANNEL) >= 0) {
-            this.nChannels = Math.toIntExact(image.dimension(this.image.dimensionIndex(Axes.CHANNEL)));
+        if (this.imgPlus.dimensionIndex(Axes.CHANNEL) >= 0) {
+            this.nChannels = Math.toIntExact(imgPlus.dimension(this.imgPlus.dimensionIndex(Axes.CHANNEL)));
         } else {
             this.nChannels = 1;
         }
-        if (this.image.dimensionIndex(Axes.Z) >= 0) {
-            this.nZ = Math.toIntExact(image.dimension(this.image.dimensionIndex(Axes.Z)));
+        if (this.imgPlus.dimensionIndex(Axes.Z) >= 0) {
+            this.nZ = Math.toIntExact(imgPlus.dimension(this.imgPlus.dimensionIndex(Axes.Z)));
         } else {
             this.nZ = 1;
         }
-        if (this.image.dimensionIndex(Axes.X) < 0 || this.image.dimensionIndex(Axes.Y) < 0) {
+        if (this.imgPlus.dimensionIndex(Axes.X) < 0 || this.imgPlus.dimensionIndex(Axes.Y) < 0) {
             throw new IllegalArgumentException("image must have X and Y dimensions!");
         }
         this.gate = savingSettings.gate;
-        this.nRows = Math.toIntExact(image.dimension(this.image.dimensionIndex(Axes.Y)));
-        this.nCols = Math.toIntExact(image.dimension(this.image.dimensionIndex(Axes.X)));
+        this.nRows = Math.toIntExact(imgPlus.dimension(this.imgPlus.dimensionIndex(Axes.Y)));
+        this.nCols = Math.toIntExact(imgPlus.dimension(this.imgPlus.dimensionIndex(Axes.X)));
         this.dataset = dataset;
         this.compressionLevel = savingSettings.compressionLevel;
         this.current_t = t;
@@ -120,7 +126,7 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
 //            // TODO: do something...
 //        }
         final long totalSlices = nFrames * nChannels;
-        RandomAccessibleInterval image = savingSettings.image.getRai();
+        RandomAccessibleInterval rai = image.getRai();
         for (int c = 0; c < this.nChannels; c++) {
             if (stop.get()) {
                 Logger.progress("Stopped save thread: ", "" + this.current_t);
@@ -129,21 +135,21 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
             // Load
             //   ImagePlus impChannelTime = getDataCube( c );  May be faster???
             long[] minInterval = new long[]{
-                    image.min( DimensionOrder.X ),
-                    image.min( DimensionOrder.Y ),
-                    image.min( DimensionOrder.Z ),
+                    rai.min( DimensionOrder.X ),
+                    rai.min( DimensionOrder.Y ),
+                    rai.min( DimensionOrder.Z ),
                     c,
                     this.current_t};
             long[] maxInterval = new long[]{
-                    image.max( DimensionOrder.X ),
-                    image.max( DimensionOrder.Y ),
-                    image.max( DimensionOrder.Z ),
+                    rai.max( DimensionOrder.X ),
+                    rai.max( DimensionOrder.Y ),
+                    rai.max( DimensionOrder.Z ),
                     c,
                     this.current_t};
-            RandomAccessibleInterval newRai = Views.interval(image, minInterval, maxInterval);
+            RandomAccessibleInterval newRai = Views.interval(rai, minInterval, maxInterval);
             // Convert
             newRai = SaveImgHelper.converter(newRai, this.savingSettings);
-            Img<T> imgChannelTime;
+            Img< R > imgChannelTime;
             imgChannelTime = ImgView.wrap(newRai, new CellImgFactory(this.nativeType));
 
             // Bin, project and save
@@ -159,8 +165,8 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
                 // Binning
                 // - not for imarisH5 save format as there will be a resolution pyramid anyway
                 //
-                Img<T> imgBinned = imgChannelTime;
-                ImgPlus<T> impBinned = new ImgPlus<>(imgBinned, "", FileInfos.AXES_ORDER);
+                Img< R > imgBinned = imgChannelTime;
+                ImgPlus< R > impBinned = new ImgPlus<>(imgBinned, "", FileInfos.AXES_ORDER);
                 int[] binningA = Utils.delimitedStringToIntegerArray(binning, ",");
                 if (binningA[0] > 1 || binningA[1] > 1 || binningA[2] > 1) {
                     newPath = SaveImgHelper.doBinning(impBinned, binningA, newPath, null);
@@ -191,7 +197,7 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
     }
 
 
-    private void writeHDF5(ImgPlus<T> imgBinned, String filename) {
+    private void writeHDF5( ImgPlus< R > imgBinned, String filename) {
         long[] chunk_dims = {min(nZ, 256),
                 min(nRows, 256),
                 min(nCols, 256)
@@ -205,7 +211,7 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
             H5.H5Pset_chunk(dcplId, RANK, chunk_dims);
             H5.H5Pset_deflate(dcplId, compressionLevel);
 
-            T val = imgBinned.firstElement();
+            R val = imgBinned.firstElement();
             if (val instanceof UnsignedByteType) {
                 Logger.info("Writing uint 8.");
                 writeIndividualChannels(imgBinned, H5T_NATIVE_UINT8);
@@ -239,7 +245,7 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
         }
     }
 
-    private void writeIndividualChannels(ImgPlus<T> imgBinned, int hdf5DataType) {
+    private void writeIndividualChannels( ImgPlus< R > imgBinned, int hdf5DataType) {
 
         long[] channelDims = new long[RANK];
         channelDims[0] = nZ; //z
@@ -262,18 +268,18 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
             throw new RuntimeException(err);
         }
 
-        RandomAccess<T> rai = imgBinned.randomAccess();
+        RandomAccess< R > rai = imgBinned.randomAccess();
         Object[][] pixelSlice;
         H5.H5Dset_extent(datasetId, channelDims);
 
-        if (image.dimensionIndex(Axes.TIME) >= 0)
-            rai.setPosition(this.current_t, image.dimensionIndex(Axes.TIME));
-        if (image.dimensionIndex(Axes.CHANNEL) >= 0)
-            rai.setPosition(this.current_c, image.dimensionIndex(Axes.CHANNEL));
+        if ( imgPlus.dimensionIndex(Axes.TIME) >= 0)
+            rai.setPosition(this.current_t, imgPlus.dimensionIndex(Axes.TIME));
+        if ( imgPlus.dimensionIndex(Axes.CHANNEL) >= 0)
+            rai.setPosition(this.current_c, imgPlus.dimensionIndex(Axes.CHANNEL));
 
         for (int z = 0; z < nZ; z++) {
-            if (image.dimensionIndex(Axes.Z) >= 0) {
-                rai.setPosition(z, image.dimensionIndex(Axes.Z));
+            if ( imgPlus.dimensionIndex(Axes.Z) >= 0) {
+                rai.setPosition(z, imgPlus.dimensionIndex(Axes.Z));
             }
             // Construct 2D array of appropriate data type.
             if (hdf5DataType == H5T_NATIVE_UINT8) {
@@ -327,9 +333,9 @@ public class SaveImgAsHDF5Stacks<T extends RealType<T> & NativeType<T>> implemen
     @SuppressWarnings({"unchecked", "TypeParameterHidesVisibleType"})
     private <E, T> void fillStackSlice(RandomAccess<T> rai, E[][] pixelArray) {
         for (int x = 0; x < nCols; x++) {
-            rai.setPosition(x, image.dimensionIndex(Axes.X));
+            rai.setPosition(x, imgPlus.dimensionIndex(Axes.X));
             for (int y = 0; y < nRows; y++) {
-                rai.setPosition(y, image.dimensionIndex(Axes.Y));
+                rai.setPosition(y, imgPlus.dimensionIndex(Axes.Y));
                 T value = rai.get();
 
                 if (stop.get()) {

@@ -35,7 +35,7 @@ public class OpenLuxendoChannelsFileSeriesCommand< R extends RealType< R > & Nat
 
             String regExp = NamingSchemes.LUXENDO.replace( "STACK", "" + stackIndex );
 
-            outputImage = BigDataProcessor2.openHdf5Series(
+            outputImage = BigDataProcessor2.openHDF5Series(
                                 directory.toString(),
                                 regExp,
                                "Data",

@@ -28,18 +28,15 @@ public class ImageSaverCreator < R extends RealType< R > & NativeType< R > >
 		ExecutorService saveExecutorService = Executors.newFixedThreadPool( numIOThreads );
 
 		Image< R > imageForSaving = new Image<>( image ); // create a copy in order not to change the cache of the currently shown image
+
 		if ( ! savingSettings.fileType.equals( SaveFileType.TiffPlanes ) )
 		{
 			// TODO: for cropped images only fully load the cropped region
 			// TODO: for input data distributed across Tiff planes this should be reconsidered
-
 			long cacheSize = image.getDimensionsXYZCT()[ DimensionOrder.C ] * numIOThreads;
 			imageForSaving.setVolumeCache( DiskCachedCellImgOptions.CacheType.BOUNDED, (int) cacheSize );
 		}
 
-		savingSettings.image = imageForSaving;
-		savingSettings.type = Util.getTypeFromInterval( savingSettings.image.getRai() );
-		ImgSaverFactory factory = new ImgSaverFactory();
 
 		if ( savingSettings.saveVolumes )
 			Utils.createFilePathParentDirectories( savingSettings.volumesFilePathStump );
@@ -47,7 +44,8 @@ public class ImageSaverCreator < R extends RealType< R > & NativeType< R > >
 		if ( savingSettings.saveProjections )
 			Utils.createFilePathParentDirectories( savingSettings.projectionsFilePathStump );
 
-		saver = factory.getSaver( savingSettings, saveExecutorService );
+		ImageSaverFactory factory = new ImageSaverFactory();
+		saver = factory.getSaver( image, savingSettings, saveExecutorService );
 		saver.addProgressListener( progressListener );
 	}
 

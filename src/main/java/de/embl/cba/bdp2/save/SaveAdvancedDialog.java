@@ -1,7 +1,6 @@
 package de.embl.cba.bdp2.save;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
-import de.embl.cba.bdp2.dialog.DisplaySettings;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.log.progress.ProgressListener;
@@ -15,7 +14,6 @@ import net.imglib2.type.numeric.RealType;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.util.ArrayList;
 
 public class SaveAdvancedDialog< R extends RealType< R > & NativeType< R > > extends JFrame implements ActionListener
@@ -132,20 +130,10 @@ public class SaveAdvancedDialog< R extends RealType< R > & NativeType< R > > ext
 
         panelIndex = addTiffCompressionPanel( panelIndex );
 
-        if ( ( saveFileType.equals( SaveFileType.TiffPlanes ) ||
-                saveFileType.equals( SaveFileType.TiffVolumes ) ) )
-        {
-            panels.add( new JPanel() );
-            panels.get( panelIndex ).add( new JLabel( "I/O Threads" ) );
-            panels.get( panelIndex ).add( tfNumIOThreads );
-            mainPanel.add( panels.get( panelIndex++ ) );
-        }
-        else
-        {
-            // either input or output format are hdf5
-            tfNumIOThreads.setText( "1" );
-        }
-
+        panels.add( new JPanel() );
+        panels.get( panelIndex ).add( new JLabel( "I/O Threads" ) );
+        panels.get( panelIndex ).add( tfNumIOThreads );
+        mainPanel.add( panels.get( panelIndex++ ) );
 
         panels.add(new JPanel());
         panels.get(panelIndex).add(new JLabel("Processing Threads"));
@@ -216,7 +204,7 @@ public class SaveAdvancedDialog< R extends RealType< R > & NativeType< R > > ext
 
             if ( e.getActionCommand().equals( SAVE ) )
             {
-                save();
+                save( inputImage );
                 recordMacro();
             }
             else if ( e.getActionCommand().equals( RECORD ) )
@@ -241,7 +229,7 @@ public class SaveAdvancedDialog< R extends RealType< R > & NativeType< R > > ext
         pack();
     }
 
-    public void save()
+    private void save( Image< R > inputImage )
     {
         MESSAGE.setText( null );
         savingSettings = getSavingSettings();
@@ -250,25 +238,24 @@ public class SaveAdvancedDialog< R extends RealType< R > & NativeType< R > > ext
         saveButton.setEnabled( false );
         BigDataProcessor2.threadPool.submit( () -> {
             this.saver = BigDataProcessor2.saveImage(
-                    viewer.getImage(),
+                    inputImage,
                     savingSettings,
                     progressBar() );
             saver.addProgressListener( new LoggingProgressListener( "Frames saved" ) );
         } );
     }
 
-    private SavingSettings getSavingSettings()
+    private SavingSettings getSavingSettings( )
     {
         SavingSettings savingSettings = new SavingSettings();
-        savingSettings.image = inputImage;
         savingSettings.fileType = saveFileType;
         savingSettings.compression = (String) comboCompression.getSelectedItem();
         // compress plane wise
         savingSettings.rowsPerStrip = (int) viewer.getImage().getRai().dimension( DimensionOrder.Y );  //Integer.parseInt( tfRowsPerStrip.getText() );
 
         savingSettings.saveVolumes = cbSaveVolume.isSelected();
-        savingSettings.volumesFilePathStump = SavingSettings.createFilePathStump( inputImage, "volumes", tfDirectory.getText() );
-        savingSettings.projectionsFilePathStump = SavingSettings.createFilePathStump( inputImage, "projections", tfDirectory.getText() );
+        savingSettings.volumesFilePathStump = SavingSettings.createFilePathStump( this.inputImage, "volumes", tfDirectory.getText() );
+        savingSettings.projectionsFilePathStump = SavingSettings.createFilePathStump( this.inputImage, "projections", tfDirectory.getText() );
         savingSettings.saveProjections = cbSaveProjection.isSelected();
         savingSettings.numIOThreads = Integer.parseInt( tfNumIOThreads.getText() );
         savingSettings.numProcessingThreads = Integer.parseInt( tfNumProcessingThreads.getText() );

@@ -5,7 +5,6 @@ import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.macro.MacroRecorder;
-import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewer.ImageViewer;
 import ij.IJ;
 import ij.gui.GenericDialog;
@@ -39,7 +38,7 @@ public class CalibrationDialog< R extends RealType< R > & NativeType< R > >
 	{
 		String[] voxelUnitSymbols = { UNITS.MICROMETRE.getSymbol(), UNITS.NANOMETRE.getSymbol() };
 
-		final double[] voxelSize = inputImage.getVoxelSize();
+		final double[] voxelDimension = inputImage.getVoxelSize();
 		Unit< Length > voxelUnit = inputImage.getVoxelUnit();
 
 		if ( voxelUnit == null )
@@ -50,27 +49,26 @@ public class CalibrationDialog< R extends RealType< R > & NativeType< R > >
 
 		final GenericDialog genericDialog = new GenericDialog( "Calibration" );
 		genericDialog.addChoice( "Unit", voxelUnitSymbols, voxelUnit.getSymbol() );
-		genericDialog.addNumericField( "Voxel size X", voxelSize[ 0 ], 3, 12, "" );
-		genericDialog.addNumericField( "Voxel size Y", voxelSize[ 1 ], 3, 12, "" );
-		genericDialog.addNumericField( "Voxel size Z", voxelSize[ 2 ], 3, 12, "" );
+		genericDialog.addNumericField( "Voxel size X", voxelDimension[ 0 ], 3, 12, "" );
+		genericDialog.addNumericField( "Voxel size Y", voxelDimension[ 1 ], 3, 12, "" );
+		genericDialog.addNumericField( "Voxel size Z", voxelDimension[ 2 ], 3, 12, "" );
 
 		genericDialog.showDialog();
 		if ( genericDialog.wasCanceled() ) return null;
 
-
 		String unitChoice = genericDialog.getNextChoice();
 		Unit< Length > unit = BioFormatsMetaDataHelper.getUnitFromString( unitChoice );
-		voxelSize[ 0 ] = genericDialog.getNextNumber();
-		voxelSize[ 1 ] = genericDialog.getNextNumber();
-		voxelSize[ 2 ] = genericDialog.getNextNumber();
+		voxelDimension[ 0 ] = genericDialog.getNextNumber();
+		voxelDimension[ 1 ] = genericDialog.getNextNumber();
+		voxelDimension[ 2 ] = genericDialog.getNextNumber();
 
-		if ( ! Utils.checkVoxelSize( voxelSize ) )
+		if ( ! CalibrationChecker.checkVoxelDimension( voxelDimension ) || ! CalibrationChecker.checkVoxelUnit( unit ) )
 		{
-			IJ.showMessage( "Incorrect voxel size (see Log window).\nPlease set again." );
+			IJ.showMessage( "Incorrect voxel size or unit (see Log window).\nPlease set again." );
 			return null;
 		}
 
-		outputImage = BigDataProcessor2.setVoxelSize( inputImage, voxelSize, unit );
+		outputImage = BigDataProcessor2.setVoxelSize( inputImage, voxelDimension, unit );
 
 		Logger.info( "# " + SetVoxelSizeCommand.COMMAND_NAME );
 		Logger.info( "Image voxel unit: " + outputImage.getVoxelUnit() );

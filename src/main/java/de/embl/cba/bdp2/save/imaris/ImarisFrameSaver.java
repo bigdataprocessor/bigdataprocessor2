@@ -1,5 +1,6 @@
 package de.embl.cba.bdp2.save.imaris;
 
+import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.utils.RAISlicer;
@@ -26,9 +27,10 @@ public class ImarisFrameSaver< R extends RealType< R > & NativeType< R >> implem
     private final long startTime;
     private ImarisDataSet imarisDataSetProperties;
     private final AtomicBoolean stop;
-    private final RandomAccessibleInterval raiXYZCT;
+    private final Image< R > image;
 
     public ImarisFrameSaver(
+            Image< R > image,
             SavingSettings settings,
             ImarisDataSet imarisDataSet,
             int t,
@@ -36,9 +38,9 @@ public class ImarisFrameSaver< R extends RealType< R > & NativeType< R >> implem
             long startTime,
             AtomicBoolean stop)
     {
-        raiXYZCT = settings.image.getRai();
-        this.nFrames = Math.toIntExact( raiXYZCT.dimension( DimensionOrder.T ) );
-        this.nChannels = Math.toIntExact( raiXYZCT.dimension( DimensionOrder.C ) );
+        this.image = image;
+        this.nFrames = Math.toIntExact( image.getRai().dimension( DimensionOrder.T ) );
+        this.nChannels = Math.toIntExact( image.getRai().dimension( DimensionOrder.C ) );
         this.settings = settings;
         this.t = t;
         this.counter = counter;
@@ -48,23 +50,24 @@ public class ImarisFrameSaver< R extends RealType< R > & NativeType< R >> implem
     }
 
     @Override
-    public void run() {
-
+    public void run()
+    {
         Logger.debug( "# ImarisFrameSaver..." );
 
         long start;
 
         for ( int c = 0; c < nChannels; c++ )
         {
-            if ( stop.get() ) {
+            if ( stop.get() )
+            {
                 settings.saveVolumes = false;
-                Logger.progress("Stopped save thread: ", "" + this.t );
+                Logger.progress( "Stopped save thread: ", "" + this.t );
                 return;
             }
 
-            RandomAccessibleInterval< R > raiXYZ = RAISlicer.createVolumeCopy( raiXYZCT, c, t, settings.numProcessingThreads, ( R ) settings.type );
+            RandomAccessibleInterval< R > raiXYZ = RAISlicer.createVolumeCopy( image.getRai(), c, t, settings.numProcessingThreads, image.getType() );
 
-            ImagePlus imp3D = Utils.asImagePlus( raiXYZ, settings.image, c );
+            ImagePlus imp3D = Utils.asImagePlus( raiXYZ, image, c );
 
             // Save volume
             if ( settings.saveVolumes )
@@ -91,8 +94,5 @@ public class ImarisFrameSaver< R extends RealType< R > & NativeType< R >> implem
             imp3D = null;
             System.gc();
         }
-
-
     }
-
 }

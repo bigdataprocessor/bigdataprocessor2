@@ -7,7 +7,6 @@ import net.imglib2.img.AbstractImg;
 import net.imglib2.img.array.ArrayImg;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.cell.CellImgFactory;
-import net.imglib2.loops.LoopBuilder;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
 import net.imglib2.type.numeric.RealType;
@@ -157,6 +156,7 @@ public class RAISlicer
 	RandomAccessibleInterval< R > createPlaneCopy(
 			RandomAccessibleInterval< R > rai,
 			Interval interval,
+			R type,
 			long z,
 			long c,
 			long t )
@@ -184,8 +184,7 @@ public class RAISlicer
 						Views.dropSingletonDimensions(
 								Views.interval( extended, minInterval, maxInterval ) ) );
 
-
-		final ArrayImg copy = new ArrayImgFactory( getType( plane ) ).create( plane );
+		final ArrayImg copy = new ArrayImgFactory( type ).create( plane );
 
 		copy( plane, copy );
 

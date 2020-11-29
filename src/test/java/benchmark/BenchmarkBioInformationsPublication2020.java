@@ -22,7 +22,7 @@ public class BenchmarkBioInformationsPublication2020
 
 //		String root = "/Volumes/cba/exchange/bigdataprocessor/data/benchmark";
 
-		Image image = BigDataProcessor2.openHdf5Series( root + "/in",".*stack_6_(?<C1>channel_.*)/(?<C2>Cam_.*)_(?<T>\\d+).h5","Data" );
+		Image image = BigDataProcessor2.openHDF5Series( root + "/in",".*stack_6_(?<C1>channel_.*)/(?<C2>Cam_.*)_(?<T>\\d+).h5","Data" );
 
 //		Image image = BigDataProcessor2.openTiffSeries( root + "/in", "(?<T>.*).tif" );
 //

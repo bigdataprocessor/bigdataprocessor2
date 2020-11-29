@@ -58,6 +58,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 	// Note: currently not used, consider moving to a branch
 	private ArrayList< Stopable > stopables = new ArrayList<>(  );
 	private ImageViewer< R > viewer;
+	private R type;
 
 	public Image( CachedCellImgCreator< R > cachedCellImgCreator )
 	{
@@ -70,6 +71,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		setCache( cachedCellImgCreator.getDefaultCellDimsXYZCT(), DiskCachedCellImgOptions.CacheType.BOUNDED, 100 );
 		this.rai = cachedCellImgCreator.createCachedCellImg( cachedCellDims, DiskCachedCellImgOptions.CacheType.BOUNDED, 100 );
 		this.rawDataDimensions = this.getDimensionsXYZCT();
+		type = Util.getTypeFromInterval( rai );
 	}
 
 	/**
@@ -97,7 +99,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		return longs;
 	}
 
-	public String getDataType()
+	public String getTypeAsString()
 	{
 		final R type = Util.getTypeFromInterval( rai );
 		if ( type instanceof UnsignedByteType )
@@ -108,9 +110,13 @@ public class Image< R extends RealType< R > & NativeType< R > >
 			throw new RuntimeException("Could not determine the bit-depth.");
 	}
 
+	public R getType()
+	{
+		return type;
+	}
+
 	public int getBitDepth()
 	{
-		final R type = Util.getTypeFromInterval( rai );
 		if ( type instanceof UnsignedByteType )
 			return 8;
 		else if ( type instanceof UnsignedShortType )
@@ -166,6 +172,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 	public void setRai( RandomAccessibleInterval< R > raiXYZCT )
 	{
 		this.rai = raiXYZCT;
+		type = Util.getTypeFromInterval( rai );
 	}
 
 	public double[] getVoxelSize()
@@ -249,7 +256,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 			info += "\n  Channel name " + c + ": " + channelNames[ c ];
 		}
 		info += "\nSize [GB]: " + getTotalSizeGB();
-		info += "\nData type: " + getDataType();
+		info += "\nData type: " + getTypeAsString();
 		info += "\nSize X,Y,Z,C,T [Voxels]: " + Arrays.toString( getDimensionsXYZCT() );
 		if ( getVoxelUnit() == null )
 		{

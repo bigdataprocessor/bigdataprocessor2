@@ -35,7 +35,7 @@ import java.util.concurrent.Future;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
-public class TiffAndHdf5Opener extends Opener {
+public class TiffAndHDF5Opener extends Opener {
 
     // Compression modes
     public static final int COMPRESSION_UNKNOWN = 0;
@@ -44,7 +44,7 @@ public class TiffAndHdf5Opener extends Opener {
     public static final int LZW_WITH_DIFFERENCING = 3;
 
     // TODO: make it NOT an extension
-    public TiffAndHdf5Opener()
+    public TiffAndHDF5Opener()
     {
 
     }
@@ -89,7 +89,7 @@ public class TiffAndHdf5Opener extends Opener {
         }
         else if( info[ zs ].fileTypeString.equals( FileSeriesFileType.HDF5.toString()  ) )
         {
-            imp = readDataCubeFromHdf5(directory, info, zs, ze, nz, dz, xs, xe, ys, ye);
+            imp = readDataCubeFromHDF5(directory, info, zs, ze, nz, dz, xs, xe, ys, ye);
         }
         else
         {
@@ -100,7 +100,7 @@ public class TiffAndHdf5Opener extends Opener {
 
     }
 
-    public ImagePlus readDataCubeFromHdf5(String directory, SerializableFileInfo[] info,
+    public ImagePlus readDataCubeFromHDF5(String directory, SerializableFileInfo[] info,
                                           int zs, int ze, int nz, int dz,
                                           int xs, int xe, int ys, int ye)
     {
@@ -116,12 +116,12 @@ public class TiffAndHdf5Opener extends Opener {
 
         if ( fi.bytesPerPixel == 1 )
         {
-            imp = read8bitDataCubeFromHdf5( directory, info,
+            imp = read8bitDataCubeFromHDF5( directory, info,
                     zs,  ze,  nz,  dz, xs,  xe,  ys,  ye);
         }
         else
         {
-            imp = read16bitDataCubeFromHdf5( directory, info,
+            imp = read16bitDataCubeFromHDF5( directory, info,
                     zs,  ze,  nz,  dz, xs,  xe,  ys,  ye);
         }
 
@@ -129,7 +129,7 @@ public class TiffAndHdf5Opener extends Opener {
     }
 
 
-    public ImagePlus read16bitDataCubeFromHdf5(String directory, SerializableFileInfo[] info,
+    public ImagePlus read16bitDataCubeFromHDF5(String directory, SerializableFileInfo[] info,
                                                int zs, int ze, int nz, int dz,
                                                int xs, int xe, int ys, int ye)
     {
@@ -145,7 +145,7 @@ public class TiffAndHdf5Opener extends Opener {
         int ny = ye - ys + 1;
 
         if ( Logger.isShowDebug() ) {
-            Logger.info("# readDataCubeFromHdf5");
+            Logger.info("# readDataCubeFromHDF5");
             Logger.info("root directory: " + directory);
             Logger.info("fi.directory: " + fi.directory);
             Logger.info("fi.filename: " + fi.fileName);
@@ -279,7 +279,7 @@ public class TiffAndHdf5Opener extends Opener {
     }
 
 
-    public ImagePlus read8bitDataCubeFromHdf5(String directory, SerializableFileInfo[] info,
+    public ImagePlus read8bitDataCubeFromHDF5(String directory, SerializableFileInfo[] info,
                                               int zs, int ze, int nz, int dz,
                                               int xs, int xe, int ys, int ye)
     {
@@ -295,7 +295,7 @@ public class TiffAndHdf5Opener extends Opener {
         int ny = ye - ys + 1;
 
         if ( Logger.isShowDebug() ) {
-            Logger.info("# readDataCubeFromHdf5");
+            Logger.info("# readDataCubeFromHDF5");
             Logger.info("root directory: " + directory);
             Logger.info("fi.directory: " + fi.directory);
             Logger.info("fi.filename: " + fi.fileName);

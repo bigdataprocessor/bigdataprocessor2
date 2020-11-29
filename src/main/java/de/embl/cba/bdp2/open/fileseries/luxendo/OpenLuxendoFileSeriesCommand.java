@@ -24,7 +24,7 @@ import static de.embl.cba.bdp2.BigDataProcessor2Menu.COMMAND_BDP2_PREFIX;
 @Plugin(type = Command.class, menuPath = DialogUtils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractOpenFileSeriesCommand.COMMAND_OPEN_PATH + OpenLuxendoFileSeriesCommand.COMMAND_FULL_NAME )
 public class OpenLuxendoFileSeriesCommand< R extends RealType< R > & NativeType< R > > extends AbstractOpenFileSeriesCommand< R >
 {
-    public static final String COMMAND_NAME = "Open Luxendo Hdf5 File Series...";
+    public static final String COMMAND_NAME = "Open Luxendo HDF5 File Series...";
     public static final String COMMAND_FULL_NAME = COMMAND_BDP2_PREFIX + COMMAND_NAME;
 
     @Parameter( label = "Stack index"  )
@@ -48,7 +48,7 @@ public class OpenLuxendoFileSeriesCommand< R extends RealType< R > & NativeType<
             final ChannelChooserDialog dialog = new ChannelChooserDialog( fileInfos.channelNames  );
             selectedChannels = dialog.getChannelsViaDialog();
 
-            outputImage = BigDataProcessor2.openHdf5Series(
+            outputImage = BigDataProcessor2.openHDF5Series(
                     directory.toString(),
                     fileInfos.getFilesInFolders(), // pass this on for performance
                     regExp,
@@ -104,7 +104,7 @@ public class OpenLuxendoFileSeriesCommand< R extends RealType< R > & NativeType<
     {
         MacroRecorder recorder = new MacroRecorder( outputImage );
         recorder.recordImportStatements( true );
-        recorder.setAPIFunctionName( "openHdf5Series" );
+        recorder.setAPIFunctionName( "openHDF5Series" );
         recorder.addAPIFunctionPrequel( "# " + OpenLuxendoFileSeriesCommand.COMMAND_NAME );
         recorder.addAPIFunctionParameter( recorder.quote( directory.toString() ) );
         recorder.addAPIFunctionParameter( recorder.quote( regExp ) );

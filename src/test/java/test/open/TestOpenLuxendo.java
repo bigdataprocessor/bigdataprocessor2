@@ -18,7 +18,7 @@ public class TestOpenLuxendo
         String regExp = LUXENDO.replace( "STACK", "" + 6 );
 
         // /Volumes/cba/exchange/bigdataprocessor/data/mouse_2cam_publication_figure/stack_6_channel_2
-        final Image image = BigDataProcessor2.openHdf5Series(
+        final Image image = BigDataProcessor2.openHDF5Series(
                 "/Volumes/cba/exchange/bigdataprocessor/data/mouse_2cam_publication_figure",
                 regExp,
                 "Data" );

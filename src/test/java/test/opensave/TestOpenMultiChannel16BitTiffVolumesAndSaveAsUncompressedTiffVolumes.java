@@ -33,7 +33,6 @@ public class TestOpenMultiChannel16BitTiffVolumesAndSaveAsUncompressedTiffVolume
 
         final SavingSettings settings = SavingSettings.getDefaults();
         settings.volumesFilePathStump = "src/test/resources/test/output/tiff/" + image.getName();
-        settings.image = image;
         settings.fileType = SaveFileType.TiffVolumes;
         settings.numProcessingThreads = 4;
         settings.numIOThreads = 1;

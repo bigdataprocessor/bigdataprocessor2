@@ -118,7 +118,7 @@ public class FileSeriesCellLoader< T extends NativeType< T > > implements CellLo
             if ( fileType.toString().toLowerCase().contains( "hdf5" ) )
             {
                 final SerializableFileInfo fileInfo = getFileInfo( cell );
-                Hdf5DataCubeReader.read16bitDataCubeIntoArray(
+                HDF5DataCubeReader.read16bitDataCubeIntoArray(
                         cell,
                         storageArray,
                         getFilePath( fileInfo ),
@@ -197,7 +197,7 @@ public class FileSeriesCellLoader< T extends NativeType< T > > implements CellLo
         Point3D ps = getSize( min, max );
 
         //TODO: get rid of ImagePlus
-        ImagePlus imagePlus = new TiffAndHdf5Opener().readDataCube(
+        ImagePlus imagePlus = new TiffAndHDF5Opener().readDataCube(
                 directory,
                 infos_c_t,
                 1,

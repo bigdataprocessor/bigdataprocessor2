@@ -33,7 +33,6 @@ public class TestOpenMultiChannel16BitTiffVolumesAndSaveAsImarisVolumes
 
         final SavingSettings settings = SavingSettings.getDefaults();
         settings.volumesFilePathStump = "src/test/resources/test/output/imaris/" + image.getName();
-        settings.image = image;
         settings.fileType = SaveFileType.ImarisVolumes;
         settings.numProcessingThreads = 4;
         settings.numIOThreads = 1;

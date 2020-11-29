@@ -4,7 +4,7 @@ import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.open.fileseries.FileInfos;
 import de.embl.cba.bdp2.open.fileseries.FileSeriesFileType;
 
-import static de.embl.cba.bdp2.open.fileseries.TiffAndHdf5Opener.COMPRESSION_NONE;
+import static de.embl.cba.bdp2.open.fileseries.TiffAndHDF5Opener.COMPRESSION_NONE;
 
 public abstract class CacheUtils
 {

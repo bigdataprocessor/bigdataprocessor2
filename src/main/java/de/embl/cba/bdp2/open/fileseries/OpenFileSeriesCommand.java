@@ -29,7 +29,7 @@ public class OpenFileSeriesCommand< R extends RealType< R > & NativeType< R > > 
     @Parameter(label = "Regular expression (excluding file extension)")
     String regExp = MULTI_CHANNEL_VOLUMES;
 
-    @Parameter(label = "Hdf5 dataset path (for .h5)", required = false)
+    @Parameter(label = "HDF5 dataset path (for .h5)", required = false)
     String hdf5DataSetName = "Data";
 
     public void run()
@@ -40,7 +40,7 @@ public class OpenFileSeriesCommand< R extends RealType< R > & NativeType< R > > 
 
             if ( regExp.endsWith( ".h5" ) )
             {
-                outputImage = BigDataProcessor2.openHdf5Series(
+                outputImage = BigDataProcessor2.openHDF5Series(
                         directory.toString(),
                         regExp,
                         hdf5DataSetName );
@@ -71,7 +71,7 @@ public class OpenFileSeriesCommand< R extends RealType< R > & NativeType< R > > 
     public void recordJythonCall()
     {
         if ( regExp.endsWith( ".h5" ) )
-            recordJythonCall( "openHdf5Series" );
+            recordJythonCall( "openHDF5Series" );
 
         if ( regExp.contains( ".tif" ) )
             recordJythonCall( "openTiffSeries" );
@@ -84,7 +84,7 @@ public class OpenFileSeriesCommand< R extends RealType< R > & NativeType< R > > 
         recorder.setAPIFunctionName( apiFunctionName );
         recorder.addAPIFunctionParameter( recorder.quote( directory.toString() ) );
         recorder.addAPIFunctionParameter( recorder.quote( regExp ) );
-        if ( apiFunctionName.equals( "openHdf5Series" ) )
+        if ( apiFunctionName.equals( "openHDF5Series" ) )
             recorder.addAPIFunctionParameter( recorder.quote( hdf5DataSetName ) );
         recorder.record();
     }

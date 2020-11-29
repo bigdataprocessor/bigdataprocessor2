@@ -1,14 +1,15 @@
-package de.embl.cba.bdp2.save;
+package de.embl.cba.bdp2.save.hdf5;
 
+import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.open.fileseries.FileInfos;
+import de.embl.cba.bdp2.save.AbstractImageSaver;
+import de.embl.cba.bdp2.save.SavingSettings;
+import de.embl.cba.bdp2.save.hdf5.FastHDF5StackWriter;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.log.progress.Progress;
 import de.embl.cba.bdp2.utils.Utils;
 import net.imglib2.type.NativeType;
-import net.imglib2.type.numeric.integer.UnsignedByteType;
-import net.imglib2.type.numeric.integer.UnsignedShortType;
-import net.imglib2.type.numeric.real.FloatType;
-import net.imglib2.util.Util;
+import net.imglib2.type.numeric.RealType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,13 +18,15 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class HDF5StacksSaver extends AbstractImageSaver
+public class HDF5StacksSaver < R extends RealType< R > & NativeType< R > > extends AbstractImageSaver
 {
+    private final Image< R > image;
     private SavingSettings savingSettings;
     private ExecutorService es;
     private AtomicBoolean stop;
 
-    public HDF5StacksSaver( SavingSettings savingSettings, ExecutorService es) {
+    public HDF5StacksSaver( Image< R > image, SavingSettings savingSettings, ExecutorService es) {
+        this.image = image;
         this.savingSettings = savingSettings;
         this.es = es;
         this.stop = new AtomicBoolean(false);
@@ -34,23 +37,15 @@ public class HDF5StacksSaver extends AbstractImageSaver
         List<Future> futures = new ArrayList<>();
         AtomicInteger counter = new AtomicInteger(0);
         final long startTime = System.currentTimeMillis();
-        long timeFrames = savingSettings.image.getRai().dimension(DimensionOrder.T);
-        NativeType imageType = Util.getTypeFromInterval(savingSettings.image.getRai());
+        long timeFrames = image.getRai().dimension(DimensionOrder.T);
         for (int t = 0; t < timeFrames; t++) {
-            if (imageType instanceof UnsignedByteType) {
-                futures.add(es.submit(
-                        new FastHDF5StackWriter<UnsignedByteType>("Data", savingSettings, t, counter, startTime, stop)
-                ));
-            } else if (imageType instanceof UnsignedShortType) {
-                futures.add(es.submit(
-                        new FastHDF5StackWriter<UnsignedShortType>("Data", savingSettings, t, counter, startTime, stop)
-                ));
-            } else if (imageType instanceof FloatType) {
-                futures.add(es.submit(
-                        new FastHDF5StackWriter<FloatType>("Data", savingSettings, t, counter, startTime, stop)
-                ));
-            }
+                futures.add(
+                    es.submit(
+                        new FastHDF5StackWriter<>("Data", image, savingSettings, t, counter, startTime, stop)
+                    )
+                );
         }
+
         // Monitor the progress
         Thread thread = new Thread(() -> Progress.informProgressListeners(futures,
                 FileInfos.PROGRESS_UPDATE_MILLISECONDS, progressListeners ));

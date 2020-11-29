@@ -1,11 +1,14 @@
 package de.embl.cba.bdp2.save.tiff;
 
+import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.open.fileseries.FileInfos;
 import de.embl.cba.bdp2.save.AbstractImageSaver;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.log.progress.Progress;
 import de.embl.cba.bdp2.utils.Utils;
+import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.RealType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,13 +17,15 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class TiffFramesSaver extends AbstractImageSaver
+public class TiffFramesSaver < R extends RealType< R > & NativeType< R > > extends AbstractImageSaver
 {
+    private final Image< R > image;
     private SavingSettings savingSettings;
     private ExecutorService es;
     private AtomicBoolean stop;
 
-    public TiffFramesSaver( SavingSettings savingSettings, ExecutorService es ) {
+    public TiffFramesSaver( Image< R > image, SavingSettings savingSettings, ExecutorService es ) {
+        this.image = image;
         this.savingSettings = savingSettings;
         this.es = es;
         this.stop = new AtomicBoolean(false);
@@ -41,6 +46,7 @@ public class TiffFramesSaver extends AbstractImageSaver
                     es.submit(
                             new TiffFrameSaver(
                                     t,
+                                    image,
                                     savingSettings,
                                     counter,
                                     startTime,
