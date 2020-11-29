@@ -24,13 +24,15 @@ public class TransformDialog< T extends RealType< T > & NativeType< T > >
 		this.inputImage = viewer.getImage();
 	}
 
-	public void showDialog()
+	public void show()
 	{
 		final GenericDialog genericDialog = new GenericDialog( "Transform" );
 		genericDialog.addStringField( TransformCommand.AFFINE_LABEL, affineTransform, 30 );
 		genericDialog.addChoice( "Interpolation", new String[]{ TransformCommand.NEAREST, TransformCommand.LINEAR }, interpolationMode );
+
 		genericDialog.showDialog();
 		if ( genericDialog.wasCanceled() ) return;
+
 		affineTransform = genericDialog.getNextString();
 		interpolationMode = genericDialog.getNextChoice();
 		outputImage = BigDataProcessor2.transform( inputImage, TransformCommand.getAffineTransform3D( affineTransform ), Utils.getInterpolator( interpolationMode ) );

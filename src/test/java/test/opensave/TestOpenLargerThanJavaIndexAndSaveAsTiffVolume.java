@@ -8,7 +8,6 @@ import de.embl.cba.bdp2.save.SaveFileType;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.scijava.Services;
 import net.imagej.ImageJ;
-import org.junit.Test;
 
 import static de.embl.cba.bdp2.open.NamingSchemes.*;
 
@@ -30,7 +29,7 @@ public class TestOpenLargerThanJavaIndexAndSaveAsTiffVolume
 
         final String directory = "src/test/resources/test/tiff-nc1-nt1-java-index-issue";
         final Image image = BigDataProcessor2.openTiffSeries( directory, SINGLE_CHANNEL_VOLUMES + TIF );
-        image.setVoxelSize( new double[]{1.0, 1.0, 1.0} );
+        image.setVoxelDimension( new double[]{1.0, 1.0, 1.0} );
 
         final SavingSettings settings = SavingSettings.getDefaults();
         settings.volumesFilePathStump = "src/test/resources/test/output/tiff/" + image.getName();

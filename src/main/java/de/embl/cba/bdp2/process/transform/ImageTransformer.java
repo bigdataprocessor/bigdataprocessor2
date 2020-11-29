@@ -43,10 +43,11 @@ public class ImageTransformer < R extends RealType< R > & NativeType< R > >
 			timePoints.add( (RandomAccessibleInterval) task.join() );
 		}
 
+		// TODO: Do we want a Views.zeroMin here?
 		final RandomAccessibleInterval< R > transformedXYZCT = Views.zeroMin( Views.stack( timePoints ) );
-
 		final Image< R > transformedImage = new Image( this.image );
 		transformedImage.setRai( transformedXYZCT );
+
 		// TODO: also adapt voxel size
 		return transformedImage;
 	}

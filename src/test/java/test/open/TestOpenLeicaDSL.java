@@ -1,8 +1,10 @@
 package test.open;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
+import de.embl.cba.bdp2.BigDataProcessor2UI;
 import de.embl.cba.bdp2.image.Image;
-import ome.units.unit.Unit;
+import de.embl.cba.bdp2.scijava.Services;
+import net.imagej.ImageJ;
 
 import static de.embl.cba.bdp2.open.NamingSchemes.*;
 
@@ -10,6 +12,10 @@ public class TestOpenLeicaDSL
 {
     public static void main(String[] args)
     {
+        ImageJ imageJ = new ImageJ();
+        Services.setContext( imageJ.getContext() );
+        Services.setCommandService( imageJ.command() );
+        BigDataProcessor2UI.showUI();
         new TestOpenLeicaDSL().run();
     }
 
@@ -23,11 +29,8 @@ public class TestOpenLeicaDSL
                 LEICA_DSL_TIFF_PLANES
         );
 
-        double[] voxelSize = image.getVoxelSize();
-        image.setVoxelSize( voxelSize[ 0 ], voxelSize[ 1 ], 0.00001 ); // necessary because voxel size in z is NaN for single plane Tiff
-
-        Unit voxelUnit = image.getVoxelUnit();
-
+        image.setVoxelDimension( 1, 1, 1 ); // necessary because voxel size in z is NaN for single plane Tiff
+        image.setVoxelUnit( "micrometer" );
         BigDataProcessor2.showImage( image, true );
     }
 }

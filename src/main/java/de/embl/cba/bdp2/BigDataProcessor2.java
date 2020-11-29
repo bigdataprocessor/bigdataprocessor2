@@ -12,6 +12,7 @@ import de.embl.cba.bdp2.process.align.channelshift.ChannelShifter;
 import de.embl.cba.bdp2.process.align.splitchip.SplitChipMerger;
 import de.embl.cba.bdp2.process.bin.BinCommand;
 import de.embl.cba.bdp2.process.bin.Binner;
+import de.embl.cba.bdp2.process.calibrate.CalibrationChecker;
 import de.embl.cba.bdp2.process.convert.MultiChannelUnsignedByteTypeConverter;
 import de.embl.cba.bdp2.process.crop.Cropper;
 import de.embl.cba.bdp2.process.transform.ImageTransformer;
@@ -166,6 +167,12 @@ public class BigDataProcessor2
 
     public static < R extends RealType< R > & NativeType< R > > ImageSaver saveImage( Image< R > image, SavingSettings savingSettings, ProgressListener progressListener )
     {
+        if ( ! CalibrationChecker.checkVoxelUnit( image.getVoxelUnit() ) )
+            throw new RuntimeException( "Voxel unit not set; please set using image.setVoxelUnit( ... )" );
+
+        if ( ! CalibrationChecker.checkVoxelDimension( image.getVoxelDimension() ) )
+            throw new RuntimeException( "Voxel dimension not set; please set using image.setVoxelDimension( ... )" );
+
         final ImageSaver saver = new ImageSaverCreator<>( image, savingSettings, progressListener ).getSaver();
         saver.startSave();
         return saver;
@@ -191,7 +198,7 @@ public class BigDataProcessor2
     public static < R extends RealType< R > & NativeType< R > > Image< R > setVoxelSize( Image< R > image, double[] voxelSizes, String voxelUnit )
     {
         Image< R > outputImage = new Image<>( image );
-        outputImage.setVoxelSize( voxelSizes );
+        outputImage.setVoxelDimension( voxelSizes );
         // TODO: convert this to a Unit< Length >
         outputImage.setVoxelUnit( voxelUnit );
         return outputImage;
@@ -200,7 +207,7 @@ public class BigDataProcessor2
     public static < R extends RealType< R > & NativeType< R > > Image< R > setVoxelSize( Image< R > image, double[] voxelSizes, Unit< Length > voxelUnit  )
     {
         Image< R > outputImage = new Image<>( image );
-        outputImage.setVoxelSize( voxelSizes );
+        outputImage.setVoxelDimension( voxelSizes );
         outputImage.setVoxelUnit( voxelUnit );
         return outputImage;
     }

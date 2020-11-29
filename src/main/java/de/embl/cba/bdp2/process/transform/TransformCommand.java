@@ -56,6 +56,6 @@ public class TransformCommand< R extends RealType< R > & NativeType< R > > exten
     @Override
     public void showDialog( ImageViewer< R > imageViewer )
     {
-
+        new TransformDialog<>( imageViewer ).show();
     }
 }

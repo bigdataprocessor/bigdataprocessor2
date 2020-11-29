@@ -185,7 +185,7 @@ public class TrackCreator extends JFrame
 
 	public void initTrackAndOverlay( ImageViewer viewer, String trackName )
 	{
-		track = new Track( trackName, viewer.getImage().getVoxelSize() );
+		track = new Track( trackName, viewer.getImage().getVoxelDimension() );
 		final TrackOverlay trackOverlay = new TrackOverlay( bdvHandle, track, 20 );
 		BdvFunctions.showOverlay( trackOverlay, "drift-overlay", BdvOptions.options().addTo( bdvHandle ) );
 	}

@@ -300,14 +300,6 @@ public class BigDataProcessor2MenuActions implements ActionListener {
                 Services.getCommandService().run( OpenLuxendoFileSeriesCommand.class, true );
             });
         }
-        else if( e.getActionCommand().equalsIgnoreCase( TransformCommand.COMMAND_NAME ) )
-        {
-            BigDataProcessor2.threadPool.submit(() ->
-            {
-                if (! isImageSelected( viewer ) ) return;
-                new TransformDialog<>( viewer );
-            });
-        }
     }
 
     private boolean isImageSelected( ImageViewer viewer )

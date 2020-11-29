@@ -29,7 +29,7 @@ public class TestOpenMultiChannel16BitTiffVolumesAndSaveAsImarisVolumes
     {
         final String directory = "src/test/resources/test/tiff-nc2-nt2-16bit";
         final Image image = BigDataProcessor2.openTiffSeries( directory, MULTI_CHANNEL_VOLUMES + TIF );
-        image.setVoxelSize( new double[]{1.0, 1.0, 1.0} );
+        image.setVoxelDimension( new double[]{1.0, 1.0, 1.0} );
 
         final SavingSettings settings = SavingSettings.getDefaults();
         settings.volumesFilePathStump = "src/test/resources/test/output/imaris/" + image.getName();

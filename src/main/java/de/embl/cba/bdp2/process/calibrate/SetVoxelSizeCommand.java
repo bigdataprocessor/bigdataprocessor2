@@ -44,7 +44,7 @@ public class SetVoxelSizeCommand< R extends RealType< R > & NativeType< R > > ex
     private void log()
     {
         Logger.log( COMMAND_FULL_NAME );
-        double[] voxelSize = outputImage.getVoxelSize();
+        double[] voxelSize = outputImage.getVoxelDimension();
         for ( int d = 0; d < 3; d++ )
         {
             Logger.log( "Voxel size [" + d + "]: " + voxelSize[ d ] );

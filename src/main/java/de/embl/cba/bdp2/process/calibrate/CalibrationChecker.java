@@ -7,15 +7,11 @@ import net.imglib2.type.numeric.RealType;
 import ome.units.quantity.Length;
 import ome.units.unit.Unit;
 
-public class CalibrationChecker< R extends RealType< R > & NativeType< R > >
+public abstract class CalibrationChecker< R extends RealType< R > & NativeType< R > >
 {
-	public CalibrationChecker()
+	public static < R extends RealType< R > & NativeType< R > > Image< R > amendCalibrationViaDialogIfNecessary( Image< R > inputImage )
 	{
-	}
-
-	public Image< R > amendCalibrationViaDialogIfNecessary( Image< R > inputImage )
-	{
-		if ( ! checkVoxelDimension( inputImage.getVoxelSize() ) || ! checkVoxelUnit( inputImage.getVoxelUnit() ) )
+		if ( ! checkVoxelDimension( inputImage.getVoxelDimension() ) || ! checkVoxelUnit( inputImage.getVoxelUnit() ) )
 		{
 			Image< R > calibratedImage = null;
 			while( calibratedImage == null )

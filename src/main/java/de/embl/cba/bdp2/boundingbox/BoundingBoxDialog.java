@@ -72,7 +72,7 @@ public class BoundingBoxDialog < R extends RealType< R > & NativeType< R > >
     {
         double[] voxelSpacing;
         if ( selectionIsCalibrated )
-            voxelSpacing = image.getVoxelSize();
+            voxelSpacing = image.getVoxelDimension();
         else
             voxelSpacing = new double[]{ 1, 1, 1 };
         return voxelSpacing;
@@ -160,9 +160,9 @@ public class BoundingBoxDialog < R extends RealType< R > & NativeType< R > >
     public TransformedBoxSelectionDialog.Result showBox( )
     {
         final AffineTransform3D boxTransform = new AffineTransform3D();
-        boxTransform.set( image.getVoxelSize()[0], 0,0  );
-        boxTransform.set( image.getVoxelSize()[1], 1,1  );
-        boxTransform.set( image.getVoxelSize()[2], 2,2  );
+        boxTransform.set( image.getVoxelDimension()[0], 0,0  );
+        boxTransform.set( image.getVoxelDimension()[1], 1,1  );
+        boxTransform.set( image.getVoxelDimension()[2], 2,2  );
 
         return BdvFunctions.selectBox(
                 bdv,
@@ -206,8 +206,8 @@ public class BoundingBoxDialog < R extends RealType< R > & NativeType< R > >
 
             if ( ! calibrated )
             {
-                initialCenter[ d ] /= image.getVoxelSize()[ d ];
-                initialSize[ d ] /= image.getVoxelSize()[ d ];
+                initialCenter[ d ] /= image.getVoxelDimension()[ d ];
+                initialSize[ d ] /= image.getVoxelDimension()[ d ];
             }
         }
 
@@ -215,10 +215,10 @@ public class BoundingBoxDialog < R extends RealType< R > & NativeType< R > >
         initialSize[ DimensionOrder.Z ] = image.getRai().dimension( DimensionOrder.Z ) / 10;
 
         if ( calibrated )
-            initialSize[ DimensionOrder.Z ] *= image.getVoxelSize()[ DimensionOrder.Z ];
+            initialSize[ DimensionOrder.Z ] *= image.getVoxelDimension()[ DimensionOrder.Z ];
 
         initialSize[ DimensionOrder.Z ] = (int) Math.max( initialSize[ DimensionOrder.Z ],
-                Math.ceil( image.getVoxelSize()[ DimensionOrder.Z ] ) );
+                Math.ceil( image.getVoxelDimension()[ DimensionOrder.Z ] ) );
 
         double[] minBB = new double[]{
                 initialCenter[ X ] - initialSize[ X ] / 2,
@@ -263,8 +263,8 @@ public class BoundingBoxDialog < R extends RealType< R > & NativeType< R > >
 
             if ( calibrated )
             {
-                min[ d ] *= image.getVoxelSize()[ d ];
-                max[ d ] *= image.getVoxelSize()[ d ];
+                min[ d ] *= image.getVoxelDimension()[ d ];
+                max[ d ] *= image.getVoxelDimension()[ d ];
             }
         }
     }

@@ -5,6 +5,7 @@ import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.log.progress.ProgressListener;
 import de.embl.cba.bdp2.macro.MacroRecorder;
+import de.embl.cba.bdp2.process.calibrate.CalibrationChecker;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.viewer.ImageViewer;
 import ij.IJ;
@@ -229,8 +230,9 @@ public class SaveAdvancedDialog< R extends RealType< R > & NativeType< R > > ext
         pack();
     }
 
-    private void save( Image< R > inputImage )
+    private void save( Image< R > image )
     {
+        Image< R > calibratedImage = CalibrationChecker.amendCalibrationViaDialogIfNecessary( image );
         MESSAGE.setText( null );
         savingSettings = getSavingSettings();
         progressBar.setVisible( true );
@@ -238,7 +240,7 @@ public class SaveAdvancedDialog< R extends RealType< R > & NativeType< R > > ext
         saveButton.setEnabled( false );
         BigDataProcessor2.threadPool.submit( () -> {
             this.saver = BigDataProcessor2.saveImage(
-                    inputImage,
+                    calibratedImage,
                     savingSettings,
                     progressBar() );
             saver.addProgressListener( new LoggingProgressListener( "Frames saved" ) );

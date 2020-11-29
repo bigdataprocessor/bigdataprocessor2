@@ -17,6 +17,7 @@ import ome.units.unit.Unit;
 import java.util.Arrays;
 
 // TODO: Can one make it a child of AbstractProcessingDialog?
+//   Should this have an output image or operate in place?
 public class CalibrationDialog< R extends RealType< R > & NativeType< R > >
 {
 	private final Image< R > inputImage;
@@ -38,7 +39,7 @@ public class CalibrationDialog< R extends RealType< R > & NativeType< R > >
 	{
 		String[] voxelUnitSymbols = { UNITS.MICROMETRE.getSymbol(), UNITS.NANOMETRE.getSymbol() };
 
-		final double[] voxelDimension = inputImage.getVoxelSize();
+		final double[] voxelDimension = inputImage.getVoxelDimension();
 		Unit< Length > voxelUnit = inputImage.getVoxelUnit();
 
 		if ( voxelUnit == null )
@@ -72,7 +73,7 @@ public class CalibrationDialog< R extends RealType< R > & NativeType< R > >
 
 		Logger.info( "# " + SetVoxelSizeCommand.COMMAND_NAME );
 		Logger.info( "Image voxel unit: " + outputImage.getVoxelUnit() );
-		Logger.info( "Image voxel size: " + Arrays.toString( outputImage.getVoxelSize() ) );
+		Logger.info( "Image voxel size: " + Arrays.toString( outputImage.getVoxelDimension() ) );
 
 		if ( viewer != null )
 			viewer.replaceImage( outputImage, false, false );
@@ -86,7 +87,7 @@ public class CalibrationDialog< R extends RealType< R > & NativeType< R > >
 	{
 		final MacroRecorder recorder = new MacroRecorder( SetVoxelSizeCommand.COMMAND_FULL_NAME, inputImage, outputImage );
 
-		final double[] voxelSize = outputImage.getVoxelSize();
+		final double[] voxelSize = outputImage.getVoxelDimension();
 		recorder.addCommandParameter( "unit", outputImage.getVoxelUnit() );
 		recorder.addCommandParameter( SetVoxelSizeCommand.VOXEL_SIZE_X_PARAMETER, voxelSize[ 0 ] );
 		recorder.addCommandParameter( SetVoxelSizeCommand.VOXEL_SIZE_Y_PARAMETER, voxelSize[ 1 ] );

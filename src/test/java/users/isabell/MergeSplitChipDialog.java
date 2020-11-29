@@ -1,7 +1,6 @@
 package users.isabell;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.open.NamingSchemes;
 import de.embl.cba.bdp2.process.align.splitchip.SplitChipDialog;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.viewer.ImageViewer;
@@ -23,7 +22,7 @@ public class MergeSplitChipDialog
                 "Data");
 
         image.setVoxelUnit( "micrometer" );
-        image.setVoxelSize( new double[]{0.13, 0.13, 1.04} );
+        image.setVoxelDimension( new double[]{0.13, 0.13, 1.04} );
 
         final ImageViewer viewer = BigDataProcessor2.showImage( image);
         new SplitChipDialog( viewer );
