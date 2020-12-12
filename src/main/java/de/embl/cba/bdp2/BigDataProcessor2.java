@@ -170,7 +170,7 @@ public class BigDataProcessor2
         if ( ! CalibrationChecker.checkVoxelUnit( image.getVoxelUnit() ) )
             throw new RuntimeException( "Voxel unit not set; please set using image.setVoxelUnit( ... )" );
 
-        if ( ! CalibrationChecker.checkVoxelDimension( image.getVoxelDimension() ) )
+        if ( ! CalibrationChecker.checkVoxelDimension( image.getVoxelDimensions() ) )
             throw new RuntimeException( "Voxel dimension not set; please set using image.setVoxelDimension( ... )" );
 
         final ImageSaver saver = new ImageSaverCreator<>( image, savingSettings, progressListener ).getSaver();
@@ -198,7 +198,7 @@ public class BigDataProcessor2
     public static < R extends RealType< R > & NativeType< R > > Image< R > setVoxelSize( Image< R > image, double[] voxelSizes, String voxelUnit )
     {
         Image< R > outputImage = new Image<>( image );
-        outputImage.setVoxelDimension( voxelSizes );
+        outputImage.setVoxelDimensions( voxelSizes );
         // TODO: convert this to a Unit< Length >
         outputImage.setVoxelUnit( voxelUnit );
         return outputImage;
@@ -207,7 +207,7 @@ public class BigDataProcessor2
     public static < R extends RealType< R > & NativeType< R > > Image< R > setVoxelSize( Image< R > image, double[] voxelSizes, Unit< Length > voxelUnit  )
     {
         Image< R > outputImage = new Image<>( image );
-        outputImage.setVoxelDimension( voxelSizes );
+        outputImage.setVoxelDimensions( voxelSizes );
         outputImage.setVoxelUnit( voxelUnit );
         return outputImage;
     }

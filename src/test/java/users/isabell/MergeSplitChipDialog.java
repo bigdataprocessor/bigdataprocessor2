@@ -22,7 +22,7 @@ public class MergeSplitChipDialog
                 "Data");
 
         image.setVoxelUnit( "micrometer" );
-        image.setVoxelDimension( new double[]{0.13, 0.13, 1.04} );
+        image.setVoxelDimensions( new double[]{0.13, 0.13, 1.04} );
 
         final ImageViewer viewer = BigDataProcessor2.showImage( image);
         new SplitChipDialog( viewer );

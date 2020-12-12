@@ -11,7 +11,6 @@ import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 
-
 /**
  * The AbstractImageProcessingCommand serves to process an input image
  * and generate an output image.
@@ -26,7 +25,7 @@ import org.scijava.plugin.Parameter;
  */
 public abstract class AbstractImageProcessingCommand< R extends RealType< R > & NativeType< R > > implements Command
 {
-    public static final String COMMAND_PROCESS_PATH = "Commands>Process>";
+    public static final String COMMAND_PATH = "Commands>Process>";
 
     @Parameter(label = "Input image")
     protected Image inputImage; // = ImageService.imageNameToImage.values().iterator().next();

@@ -53,7 +53,7 @@ public class MergeSplitChipWorkflow
                     NamingSchemes.SINGLE_CHANNEL_TIMELAPSE,
                     "Data");
             image.setVoxelUnit( voxelUnit );
-            image.setVoxelDimension(
+            image.setVoxelDimensions(
                     voxelSpacingMicrometerX,
                     voxelSpacingMicrometerY,
                     voxelSpacingMicrometerZ );
@@ -86,7 +86,7 @@ public class MergeSplitChipWorkflow
                     "Data");
 
             image.setVoxelUnit( voxelUnit );
-            image.setVoxelDimension(
+            image.setVoxelDimensions(
                     voxelSpacingMicrometerX,
                     voxelSpacingMicrometerY,
                     voxelSpacingMicrometerZ );

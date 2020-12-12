@@ -6,6 +6,7 @@ import de.embl.cba.bdp2.open.bioformats.OpenBdvBioFormatsCommand;
 import de.embl.cba.bdp2.open.fileseries.OpenEMTiffPlanesFileSeriesCommand;
 import de.embl.cba.bdp2.open.fileseries.OpenFileSeriesCommand;
 import de.embl.cba.bdp2.open.fileseries.OpenHelpCommand;
+import de.embl.cba.bdp2.open.fileseries.OpenSingleTiffVolumeCommand;
 import de.embl.cba.bdp2.open.fileseries.leica.OpenLeicaDSLTiffPlanesFileSeriesCommand;
 import de.embl.cba.bdp2.open.fileseries.luxendo.OpenLuxendoFileSeriesCommand;
 import de.embl.cba.bdp2.process.bin.BinCommand;
@@ -34,16 +35,10 @@ import de.embl.cba.bdp2.process.align.channelshift.AlignChannelsDialog;
 import de.embl.cba.bdp2.devel.register.RegisteredViews;
 import de.embl.cba.bdp2.devel.register.Registration;
 import de.embl.cba.bdp2.service.ImageViewerService;
-import de.embl.cba.bdp2.process.transform.TransformCommand;
-import de.embl.cba.bdp2.process.transform.TransformDialog;
-import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewer.ImageViewer;
 import de.embl.cba.tables.FileAndUrlUtils;
 import ij.IJ;
-import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.img.display.imagej.ImageJFunctions;
-import net.imglib2.view.Views;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -274,6 +269,14 @@ public class BigDataProcessor2MenuActions implements ActionListener {
             {
                 OpenEMTiffPlanesFileSeriesCommand.parentViewer = viewer;
                 Services.getCommandService().run( OpenEMTiffPlanesFileSeriesCommand.class, true );
+            });
+        }
+        else if( e.getActionCommand().equalsIgnoreCase( OpenSingleTiffVolumeCommand.COMMAND_NAME ) )
+        {
+            BigDataProcessor2.threadPool.submit(() ->
+            {
+                OpenSingleTiffVolumeCommand.parentViewer = viewer;
+                Services.getCommandService().run( OpenSingleTiffVolumeCommand.class, true );
             });
         }
         else if( e.getActionCommand().equalsIgnoreCase( OpenFileSeriesCommand.COMMAND_NAME ) )

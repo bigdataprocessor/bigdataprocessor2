@@ -310,7 +310,7 @@ public class FileInfosHelper
         }
     }
 
-    public static String[][] getFilesInFolders( String directory, String filterPattern )
+    public static String[][] getFilesInFolders( String directory, String filterPattern, boolean recursive )
     {
         if ( ! new File( directory ).exists() )
         {
@@ -319,14 +319,20 @@ public class FileInfosHelper
         }
 
         String[][] fileLists;
-
         final String filePattern = getFileFilter( filterPattern );
         final String folderPattern = getFolderPattern( filterPattern );
-
-        Logger.info( "Sub-folder name pattern: " + folderPattern );
         Logger.info( "File name pattern: " + filePattern );
 
-        final String[] subFolders = getSubFolders( directory, folderPattern );
+        String[] subFolders;
+        if ( recursive )
+        {
+            subFolders = getSubFolders( directory, folderPattern );
+            Logger.info( "Sub-folder name pattern: " + folderPattern );
+        }
+        else
+        {
+            subFolders = new String[]{ "" };
+        }
 
         if ( subFolders == null )
         {

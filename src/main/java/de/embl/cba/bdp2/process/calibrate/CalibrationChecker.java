@@ -9,20 +9,17 @@ import ome.units.unit.Unit;
 
 public abstract class CalibrationChecker< R extends RealType< R > & NativeType< R > >
 {
-	public static < R extends RealType< R > & NativeType< R > > Image< R > amendCalibrationViaDialogIfNecessary( Image< R > inputImage )
+	public static < R extends RealType< R > & NativeType< R > > void correctCalibrationViaDialogIfNecessary( Image< R > inputImage )
 	{
-		if ( ! checkVoxelDimension( inputImage.getVoxelDimension() ) || ! checkVoxelUnit( inputImage.getVoxelUnit() ) )
+		if ( ! checkVoxelDimension( inputImage.getVoxelDimensions() ) || ! checkVoxelUnit( inputImage.getVoxelUnit() ) )
 		{
 			Image< R > calibratedImage = null;
 			while( calibratedImage == null )
 			{
 				calibratedImage = new CalibrationDialog<>( inputImage ).showDialog();
 			}
-			return calibratedImage;
-		}
-		else
-		{
-			return inputImage;
+			inputImage.setVoxelUnit( calibratedImage.getVoxelUnit() );
+			inputImage.setVoxelDimensions( calibratedImage.getVoxelDimensions() );
 		}
 	}
 

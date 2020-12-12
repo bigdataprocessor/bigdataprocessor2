@@ -196,7 +196,7 @@ public class Utils {
 						"Data" );
 
 		image.setVoxelUnit( voxelUnit );
-		image.setVoxelDimension(
+		image.setVoxelDimensions(
 				voxelSpacingMicrometerX,
 				voxelSpacingMicrometerY,
 				voxelSpacingMicrometerZ );
@@ -554,9 +554,9 @@ public class Utils {
 	{
 		final Calibration calibration = new Calibration();
 		calibration.setUnit( image.getVoxelUnit().getSymbol() );
-		calibration.pixelWidth = image.getVoxelDimension()[ 0 ];
-		calibration.pixelHeight = image.getVoxelDimension()[ 1 ];
-		calibration.pixelDepth = image.getVoxelDimension()[ 2 ];
+		calibration.pixelWidth = image.getVoxelDimensions()[ 0 ];
+		calibration.pixelHeight = image.getVoxelDimensions()[ 1 ];
+		calibration.pixelDepth = image.getVoxelDimensions()[ 2 ];
 		imp.setCalibration( calibration );
 	}
 

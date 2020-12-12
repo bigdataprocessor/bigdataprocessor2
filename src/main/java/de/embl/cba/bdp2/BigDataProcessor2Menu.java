@@ -4,6 +4,7 @@ import de.embl.cba.bdp2.open.bioformats.OpenBdvBioFormatsCommand;
 import de.embl.cba.bdp2.open.fileseries.OpenEMTiffPlanesFileSeriesCommand;
 import de.embl.cba.bdp2.open.fileseries.OpenFileSeriesCommand;
 import de.embl.cba.bdp2.open.fileseries.OpenHelpCommand;
+import de.embl.cba.bdp2.open.fileseries.OpenSingleTiffVolumeCommand;
 import de.embl.cba.bdp2.open.fileseries.leica.OpenLeicaDSLTiffPlanesFileSeriesCommand;
 import de.embl.cba.bdp2.open.fileseries.luxendo.OpenLuxendoFileSeriesCommand;
 import de.embl.cba.bdp2.process.AbstractImageProcessingCommand;
@@ -75,7 +76,7 @@ public class BigDataProcessor2Menu extends JMenu
         addMenuItem( openPredefinedFileSeriesMenu, OpenEMTiffPlanesFileSeriesCommand.COMMAND_NAME );
         addMenuItem( openPredefinedFileSeriesMenu, OpenLeicaDSLTiffPlanesFileSeriesCommand.COMMAND_NAME );
         addMenuItem( openPredefinedFileSeriesMenu, OpenLuxendoFileSeriesCommand.COMMAND_NAME );
-        addMenuItem( openMenu, DownloadAndOpenSampleDataCommand.COMMAND_NAME );
+        addMenuItem( openPredefinedFileSeriesMenu, OpenSingleTiffVolumeCommand.COMMAND_NAME );    addMenuItem( openMenu, DownloadAndOpenSampleDataCommand.COMMAND_NAME );
 
         final JMenu processMenu = addMenu( "Process" );
         menus.add( processMenu );

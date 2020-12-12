@@ -417,7 +417,7 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
 
     private void addToBdv( Image< R > image )
     {
-        final AffineTransform3D scaling = getScalingTransform( image.getVoxelDimension() );
+        final AffineTransform3D scaling = getScalingTransform( image.getVoxelDimensions() );
         RandomAccessibleInterval cachedCellImg = VolatileCachedCellImgs.asVolatileCachedCellImg( image );
         BdvOptions options = getBdvOptions( image, scaling );
 

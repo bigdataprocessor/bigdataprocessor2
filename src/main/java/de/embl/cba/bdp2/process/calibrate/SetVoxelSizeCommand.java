@@ -12,7 +12,7 @@ import net.imglib2.type.numeric.RealType;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
-@Plugin(type = AbstractImageProcessingCommand.class, name = SetVoxelSizeCommand.COMMAND_NAME, menuPath = DialogUtils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractImageProcessingCommand.COMMAND_PROCESS_PATH + SetVoxelSizeCommand.COMMAND_FULL_NAME )
+@Plugin(type = AbstractImageProcessingCommand.class, name = SetVoxelSizeCommand.COMMAND_NAME, menuPath = DialogUtils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractImageProcessingCommand.COMMAND_PATH + SetVoxelSizeCommand.COMMAND_FULL_NAME )
 public class SetVoxelSizeCommand< R extends RealType< R > & NativeType< R > > extends AbstractImageProcessingCommand< R >
 {
     public static final String COMMAND_NAME = "Set Voxel Size...";
@@ -44,7 +44,7 @@ public class SetVoxelSizeCommand< R extends RealType< R > & NativeType< R > > ex
     private void log()
     {
         Logger.log( COMMAND_FULL_NAME );
-        double[] voxelSize = outputImage.getVoxelDimension();
+        double[] voxelSize = outputImage.getVoxelDimensions();
         for ( int d = 0; d < 3; d++ )
         {
             Logger.log( "Voxel size [" + d + "]: " + voxelSize[ d ] );

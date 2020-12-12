@@ -52,7 +52,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 
 	private String name;
 	private String[] channelNames;
-	private double[] voxelDimension;
+	private double[] voxelDimensions;
 	private Unit< Length > voxelUnit;
 
 	// Note: currently not used, consider moving to a branch
@@ -65,7 +65,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		this.cachedCellImgCreator = cachedCellImgCreator;
 		this.name = cachedCellImgCreator.getImageName();
 		this.channelNames = cachedCellImgCreator.getChannelNames();
-		this.voxelDimension = cachedCellImgCreator.getVoxelSize();
+		this.voxelDimensions = cachedCellImgCreator.getVoxelSize();
 		this.voxelUnit = cachedCellImgCreator.getVoxelUnit();
 
 		setCache( cachedCellImgCreator.getDefaultCellDimsXYZCT(), DiskCachedCellImgOptions.CacheType.BOUNDED, 100 );
@@ -85,7 +85,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		this.rai = image.rai; // practically immutable
 		this.name = image.name; // immutable
 		this.channelNames = image.channelNames.clone();
-		this.voxelDimension = image.voxelDimension.clone();
+		this.voxelDimensions = image.voxelDimensions.clone();
 		this.voxelUnit = image.getVoxelUnit();
 		this.cachedCellDims = image.cachedCellDims.clone();
 		this.rawDataDimensions = image.rawDataDimensions.clone();
@@ -175,9 +175,9 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		type = Util.getTypeFromInterval( rai );
 	}
 
-	public double[] getVoxelDimension()
+	public double[] getVoxelDimensions()
 	{
-		return voxelDimension;
+		return voxelDimensions;
 	}
 
 	public void setName( String name )
@@ -189,11 +189,11 @@ public class Image< R extends RealType< R > & NativeType< R > >
 	 * Adapt the voxel size, e.g., in case a processing step like
 	 * binning was applied.
 	 *
-	 * @param voxelDimension
+	 * @param voxelDimensions
 	 */
-	public void setVoxelDimension( double... voxelDimension )
+	public void setVoxelDimensions( double... voxelDimensions )
 	{
-		this.voxelDimension = voxelDimension;
+		this.voxelDimensions = voxelDimensions;
 	}
 
 	public Unit< Length > getVoxelUnit()
@@ -257,15 +257,16 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		}
 		info += "\nSize [GB]: " + getTotalSizeGB();
 		info += "\nData type: " + getTypeAsString();
-		info += "\nSize X,Y,Z,C,T [Voxels]: " + Arrays.toString( getDimensionsXYZCT() );
+		info += "\nSize X,Y,Z,C,T [#]: " + Arrays.toString( getDimensionsXYZCT() );
 		if ( getVoxelUnit() == null )
 		{
-			info += "\nVoxel size [???]: " + Arrays.toString( getVoxelDimension() );
+			info += "\nVoxel size [???]: " + Arrays.toString( getVoxelDimensions() );
 		}
 		else
 		{
-			info += "\nVoxel size [" + getVoxelUnit().getSymbol() + "]: " + Arrays.toString( getVoxelDimension() );
+			info += "\nVoxel size [" + getVoxelUnit().getSymbol() + "]: " + Arrays.toString( getVoxelDimensions() );
 		}
+		info += "\nCache size X,Y,Z,C,T [#]: " + Arrays.toString( getCachedCellDims() );
 
 		return info;
 	}
@@ -291,6 +292,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		Logger.info( "  Cache type: " + cacheType.toString() );
 
 		this.cachedCellDims = cellDims;
+
 		RandomAccessibleInterval< R > cachedCellImg = cachedCellImgCreator.createCachedCellImg( cellDims, cacheType, cacheSize );
 
 		if ( rai == null )

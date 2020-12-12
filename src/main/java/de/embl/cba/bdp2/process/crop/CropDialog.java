@@ -66,7 +66,7 @@ public class CropDialog< R extends RealType< R > & NativeType< R > >
 		{
 			realInterval = viewer.getRealIntervalXYZCTViaDialog();
 			if ( realInterval == null ) return;
-			voxelInterval = toVoxelInterval( realInterval, inputImage.getVoxelDimension() );
+			voxelInterval = toVoxelInterval( realInterval, inputImage.getVoxelDimensions() );
 		}
 		else
 		{

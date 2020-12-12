@@ -29,7 +29,7 @@ public class TestOpenLeicaDSL
                 LEICA_DSL_TIFF_PLANES
         );
 
-        image.setVoxelDimension( 1, 1, 1 ); // necessary because voxel size in z is NaN for single plane Tiff
+        image.setVoxelDimensions( 1, 1, 1 ); // necessary because voxel size in z is NaN for single plane Tiff
         image.setVoxelUnit( "micrometer" );
         BigDataProcessor2.showImage( image, true );
     }

@@ -25,7 +25,7 @@ public class TestOpenMultiChannel8BitTiffVolumes
 
         final Image image = BigDataProcessor2.openTiffSeries( directory, MULTI_CHANNEL_VOLUMES + TIF );
 
-        image.setVoxelDimension( new double[]{1.0, 1.0, 1.0} );
+        image.setVoxelDimensions( new double[]{1.0, 1.0, 1.0} );
 
 //        BigDataProcessor2UserInterface.showUI();
 //        BigDataProcessor2.showImage( image, true );

@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 import static de.embl.cba.bdp2.dialog.DialogUtils.*;
 
-@Plugin(type = AbstractImageProcessingCommand.class, name = MultiChannelUnsignedByteTypeConverterCommand.COMMAND_NAME, menuPath = BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractImageProcessingCommand.COMMAND_PROCESS_PATH + MultiChannelUnsignedByteTypeConverterCommand.COMMAND_FULL_NAME )
+@Plugin(type = AbstractImageProcessingCommand.class, name = MultiChannelUnsignedByteTypeConverterCommand.COMMAND_NAME, menuPath = BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractImageProcessingCommand.COMMAND_PATH + MultiChannelUnsignedByteTypeConverterCommand.COMMAND_FULL_NAME )
 public class MultiChannelUnsignedByteTypeConverterCommand< R extends RealType< R > & NativeType< R > > extends AbstractImageProcessingCommand< R >
 {
     public static final String COMMAND_NAME = "Convert to 8-Bit...";

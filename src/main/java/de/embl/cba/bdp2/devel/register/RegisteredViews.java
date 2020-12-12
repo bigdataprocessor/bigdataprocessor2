@@ -198,7 +198,7 @@ public class RegisteredViews
 				BdvUtils.getViewerGlobalBoundingInterval( imageViewer.getBdvHandle() );
 
 		final double currentSlice = interval.realMax( DimensionOrder.Z )
-				/ imageViewer.getImage().getVoxelDimension()[ DimensionOrder.Z ];
+				/ imageViewer.getImage().getVoxelDimensions()[ DimensionOrder.Z ];
 
 		return currentSlice;
 	}

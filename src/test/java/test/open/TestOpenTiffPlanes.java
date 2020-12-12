@@ -21,8 +21,8 @@ public class TestOpenTiffPlanes
 
         final Image image = BigDataProcessor2.openTiffSeries( directory, ".*_T(" + NamingSchemes.T + "\\d+)__z(" + Z + "\\d+).*_c(" + NamingSchemes.C + "\\d+).*" );
 
-        double[] voxelSize = image.getVoxelDimension();
-        image.setVoxelDimension( voxelSize[ 0 ], voxelSize[ 1 ], 1.0 ); // necessary because voxel size in z is NaN for single plane Tiff
+        double[] voxelSize = image.getVoxelDimensions();
+        image.setVoxelDimensions( voxelSize[ 0 ], voxelSize[ 1 ], 1.0 ); // necessary because voxel size in z is NaN for single plane Tiff
 
         // BigDataProcessor2.showImage( image, true );
     }

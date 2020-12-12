@@ -230,9 +230,9 @@ public class SaveAdvancedDialog< R extends RealType< R > & NativeType< R > > ext
         pack();
     }
 
-    private void save( Image< R > image )
+    private void save( final Image< R > image )
     {
-        Image< R > calibratedImage = CalibrationChecker.amendCalibrationViaDialogIfNecessary( image );
+        CalibrationChecker.correctCalibrationViaDialogIfNecessary( image );
         MESSAGE.setText( null );
         savingSettings = getSavingSettings();
         progressBar.setVisible( true );
@@ -240,7 +240,7 @@ public class SaveAdvancedDialog< R extends RealType< R > & NativeType< R > > ext
         saveButton.setEnabled( false );
         BigDataProcessor2.threadPool.submit( () -> {
             this.saver = BigDataProcessor2.saveImage(
-                    calibratedImage,
+                    image,
                     savingSettings,
                     progressBar() );
             saver.addProgressListener( new LoggingProgressListener( "Frames saved" ) );

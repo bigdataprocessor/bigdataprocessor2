@@ -62,7 +62,7 @@ public abstract class AbstractOpenCommand< R extends RealType< R > & NativeType<
         }
         else
         {
-            outputImage = new CalibrationChecker().amendCalibrationViaDialogIfNecessary( outputImage );
+            CalibrationChecker.correctCalibrationViaDialogIfNecessary( outputImage );
             showInViewer( autoContrast, keepViewerTransform );
 
             MacroRecorder recorder = new MacroRecorder();

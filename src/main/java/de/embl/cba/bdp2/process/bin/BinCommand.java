@@ -12,7 +12,7 @@ import org.scijava.plugin.Plugin;
 import static de.embl.cba.bdp2.dialog.DialogUtils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT;
 
 @Plugin(type = AbstractImageProcessingCommand.class, name = BinCommand.COMMAND_NAME,
-        menuPath = BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractImageProcessingCommand.COMMAND_PROCESS_PATH + BinCommand.COMMAND_FULL_NAME)
+        menuPath = BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractImageProcessingCommand.COMMAND_PATH + BinCommand.COMMAND_FULL_NAME)
 public class BinCommand< R extends RealType< R > & NativeType< R > > extends AbstractImageProcessingCommand< R >
 {
     public static final String COMMAND_NAME = "Bin...";

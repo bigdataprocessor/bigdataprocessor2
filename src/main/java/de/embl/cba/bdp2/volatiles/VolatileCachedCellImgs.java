@@ -1,5 +1,8 @@
 package de.embl.cba.bdp2.volatiles;
 
+import bdv.tools.boundingbox.TransformedRealBoxSelectionDialog;
+import bdv.util.volatiles.VolatileView;
+import de.embl.cba.bdp2.boundingbox.BoundingBoxDialog;
 import de.embl.cba.bdp2.image.Image;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.cache.img.CachedCellImg;
@@ -44,6 +47,7 @@ public class VolatileCachedCellImgs
 	public static RandomAccessibleInterval< UnsignedByteType > asVolatileByteTypeCachedCellImg( RandomAccessibleInterval< UnsignedByteType > rai, CellGrid grid )
 	{
 		final long[] min = Intervals.minAsLongArray( rai );
+
 
 		final RandomAccessibleCacheLoader< UnsignedByteType, ByteArray, VolatileByteArray > loader = RandomAccessibleCacheLoader.get(
 				grid,

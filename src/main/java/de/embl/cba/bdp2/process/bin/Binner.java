@@ -26,7 +26,7 @@ public class Binner
 
 		Image< T > binnedImage = new Image( inputImage );
 		binnedImage.setRai( binnedRai );
-		binnedImage.setVoxelDimension( getBinnedVoxelSize( span, inputImage.getVoxelDimension() ) );
+		binnedImage.setVoxelDimensions( getBinnedVoxelSize( span, inputImage.getVoxelDimensions() ) );
 
 		return binnedImage;
 	}

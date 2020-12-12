@@ -34,6 +34,7 @@ public class FileInfos
 			ImarisUtils.RESOLUTION_LEVEL +"3/Data",
 			"ITKImage/0/VoxelData" // Elastix
     };
+    public static final String NONRECURSIVE = "_NONRECURSIVE";
     public SerializableFileInfo[][][] ctzFileInfos;
     public long[] dimensions;
     private String namingScheme;
@@ -56,6 +57,7 @@ public class FileInfos
     public int numTiffStrips;
     public String[] channelNames;
     private String[][] filesInFolders;
+    private boolean recursive;
 
 
     public FileInfos(
@@ -114,15 +116,26 @@ public class FileInfos
         Logger.info( "Directory: " + directory );
         Logger.info( "Regular expression: " +  namingScheme );
 
-        this.namingScheme = namingScheme;
-        this.filter = filter;
+        if( namingScheme.contains( NONRECURSIVE ) )
+        {
+            recursive = false;
+            this.namingScheme = namingScheme.replace( NONRECURSIVE, "" );
+            this.filter = filter.replace( NONRECURSIVE, "" );
+        }
+        else
+        {
+            recursive = true;
+            this.namingScheme = namingScheme;
+            this.filter = filter;
+        }
+
         this.directory  = Utils.ensureDirectoryEndsWithFileSeparator( directory );
         this.h5DataSetName = h5DataSetName;
 
         adaptDirectorySeparatorToOperatingSystem();
 
         if ( filesInFolders == null )
-            filesInFolders = FileInfosHelper.getFilesInFolders( this.directory, this.filter );
+            filesInFolders = FileInfosHelper.getFilesInFolders( this.directory, this.filter, recursive );
 
         FileInfosHelper.configureFileInfos5D( this, this.namingScheme, channelSubset, filesInFolders );
 
