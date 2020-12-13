@@ -1164,10 +1164,6 @@ public class FastTiffDecoder {
 
     public BDP2FileInfo[] getTiffInfo() throws IOException
     {
-        if( Logger.isShowDebug() ) {
-              Logger.info("# getTiffInfo");
-        }
-
         startTimeTotal = System.currentTimeMillis();
 
         long[] relativeStripInfoLocations = new long[3];
@@ -1205,7 +1201,7 @@ public class FastTiffDecoder {
                     fi = fullyReadIFD( relativeStripInfoLocations );
                 }
             }
-            if( Logger.isShowDebug() ) {
+            if( Logger.getLevel().equals( Logger.Level.Debug ) ) {
                   Logger.info("IFD " + listIFDs.size() + " at " + ifdOffset);
                   Logger.info("fi.nImages: " + fi.nImages);
                   Logger.info("fi.offset: " + fi.offset);

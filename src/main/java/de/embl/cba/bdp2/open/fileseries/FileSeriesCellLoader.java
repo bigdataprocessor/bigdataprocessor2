@@ -88,7 +88,7 @@ public class FileSeriesCellLoader< T extends NativeType< T > > implements CellLo
 
         long timeMillis = System.currentTimeMillis() - start;
         log( min, max, timeMillis );
-        PerformanceService.getPerformanceMonitor().addReadPerformance( cell, timeMillis  );
+        PerformanceService.getPerformanceMonitor().addReadPerformance( cell.getStorageArray(), timeMillis  );
     }
 
     private static void log( long[] min, long[] max, long timeMillis )

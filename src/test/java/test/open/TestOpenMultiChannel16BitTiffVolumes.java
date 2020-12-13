@@ -30,6 +30,6 @@ public class TestOpenMultiChannel16BitTiffVolumes
 
         image.setVoxelDimensions( new double[]{1.0, 1.0, 1.0} );
 
-        //BigDataProcessor2.showImage( image, true );
+        BigDataProcessor2.showImage( image, true );
     }
 }

@@ -10,7 +10,7 @@ import java.util.zip.Inflater;
 public class TiffDecompressor
 {
 	public static final int COMPRESSION_UNKNOWN = 0;
-	public static final int COMPRESSION_NONE = 1;
+	public static final int NONE = 1;
 	public static final int LZW = 2;
 	public static final int LZW_WITH_DIFFERENCING = 3;
 	public static final int ZIP = 6;

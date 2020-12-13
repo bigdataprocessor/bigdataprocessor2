@@ -83,7 +83,7 @@ public class PartialTiffPlaneCellLoader implements Runnable
 			final int stripStart = rowsReader.getStripMin();
 			final int stripEnd = rowsReader.getStripMax();
 
-			if ( ( fi.compression == TiffDecompressor.COMPRESSION_NONE ) || ( fi.compression == 0 ) )
+			if ( ( fi.compression == TiffDecompressor.NONE ) || ( fi.compression == 0 ) )
 			{
 				// do nothing
 			}

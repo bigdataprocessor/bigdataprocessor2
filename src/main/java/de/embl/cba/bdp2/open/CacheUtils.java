@@ -4,7 +4,7 @@ import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.open.fileseries.FileInfos;
 import de.embl.cba.bdp2.open.fileseries.FileSeriesFileType;
 
-import static de.embl.cba.bdp2.open.fileseries.TiffAndHDF5Opener.COMPRESSION_NONE;
+import static de.embl.cba.bdp2.open.fileseries.TiffDecompressor.NONE;
 
 public abstract class CacheUtils
 {
@@ -14,7 +14,7 @@ public abstract class CacheUtils
 	{
 		if ( fileInfos.fileType.equals( FileSeriesFileType.TIFF_PLANES ) || fileInfos.fileType.equals( FileSeriesFileType.TIFF_STACKS ) )
 		{
-			if ( fileInfos.numTiffStrips == 1 && fileInfos.compression != COMPRESSION_NONE )
+			if ( fileInfos.numTiffStrips == 1 && fileInfos.compression != NONE )
 			{
 			   return true;
 			}
