@@ -8,9 +8,9 @@ import ch.systemsx.cisd.hdf5.IHDF5Reader;
 import de.embl.cba.bdp2.log.Logger;
 import net.imglib2.Interval;
 
-public class HDF5DataCubeReader
+public class HDF5CellLoader
 {
-	public static void read16bitDataCubeIntoArray(
+	public static void load(
 			Interval interval,
 			short[] array,
 			String filePath,

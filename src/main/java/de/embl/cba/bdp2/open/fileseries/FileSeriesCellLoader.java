@@ -8,15 +8,10 @@ import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.service.PerformanceService;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import ij.ImagePlus;
-import ij.ImageStack;
-import ij.process.ImageProcessor;
 import de.embl.cba.bdp2.utils.Point3D;
 import net.imglib2.cache.img.CellLoader;
 import net.imglib2.cache.img.SingleCellArrayImg;
 import net.imglib2.type.NativeType;
-import net.imglib2.type.numeric.integer.UnsignedByteType;
-import net.imglib2.type.numeric.integer.UnsignedShortType;
-import net.imglib2.type.numeric.real.FloatType;
 
 import java.io.File;
 import java.util.Arrays;
@@ -84,7 +79,7 @@ public class FileSeriesCellLoader< T extends NativeType< T > > implements CellLo
             // Unchecked assumptions:
             // - data is unsigned short
             // - all z planes are in the same file
-            HDF5DataCubeReader.read16bitDataCubeIntoArray(
+            HDF5CellLoader.load(
                     cell,
                     (short[]) cell.getStorageArray(),
                     getFullPath( directory, fileInfos[ 0 ] ),

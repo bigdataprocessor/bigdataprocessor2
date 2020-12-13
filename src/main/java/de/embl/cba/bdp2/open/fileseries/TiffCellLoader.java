@@ -30,7 +30,6 @@ import java.util.concurrent.Future;
 
 public class TiffCellLoader
 {
-
     // Compression modes
     public static final int COMPRESSION_UNKNOWN = 0;
     public static final int COMPRESSION_NONE = 1;
@@ -46,20 +45,12 @@ public class TiffCellLoader
      */
     public static void load( SingleCellArrayImg cell, String directory, BDP2FileInfo[] fileInfos, ExecutorService executorService)
     {
-        long[] longMin = new long[ cell.numDimensions() ];
-        long[] longMax = new long[ cell.numDimensions() ];
-        cell.min( longMin );
-        cell.max( longMax );
-        int[] min = Arrays.stream( longMin ).mapToInt( l -> Math.toIntExact( l ) ).toArray();
-        int[] max = Arrays.stream( longMax ).mapToInt( l -> Math.toIntExact( l ) ).toArray();
-
         assert cell.min( DimensionOrder.C ) == cell.max( DimensionOrder.C );
         assert cell.min( DimensionOrder.T ) == cell.max( DimensionOrder.T );
 
-        BDP2FileInfo fi = fileInfos[ min[ DimensionOrder.Z ] ];
-
         if ( Logger.getLevel().equals( Logger.Level.Debug ) )
         {
+            BDP2FileInfo fi = fileInfos[ Math.toIntExact( cell.min( DimensionOrder.Z ) ) ];
             Logger.debug( "# TiffCellLoader" );
             Logger.debug( "root directory: " + directory );
             Logger.debug( "fileInfos.length: " + fileInfos.length );
@@ -68,25 +59,35 @@ public class TiffCellLoader
             Logger.debug( "fileInfo.compression: " + fi.compression );
             Logger.debug( "fileInfo.intelByteOrder: " + fi.intelByteOrder );
             Logger.debug( "fileInfo.bytesPerPixel: " + fi.bytesPerPixel );
+            long[] longMin = new long[ cell.numDimensions() ];
+            long[] longMax = new long[ cell.numDimensions() ];
+            cell.min( longMin );
+            cell.max( longMax );
             Logger.debug( "min: " + Arrays.toString( longMin ) );
             Logger.debug( "max: " + Arrays.toString( longMax ) );
         }
 
+        // TODO: BDV is multi-thread already, think about when it makes sense to
+        //   add more multithreading on top, probably when loading the whole volume?
+        //        List<Future> futures = new ArrayList<>();
+        //        for (int z = min[ DimensionOrder.Z ]; z <= max[ DimensionOrder.Z ]; z++ )
+        //        {
+        //            futures.add(
+        //                executorService.submit(
+        //                    new PartialTiffPlaneCellLoader(
+        //                        cell,
+        //                        z,
+        //                        directory,
+        //                        fileInfos[ z ] )
+        //                )
+        //            );
+        //        }
+        //        waitUntilDone( futures );
 
-        List<Future> futures = new ArrayList<>();
-        for (int z = min[ DimensionOrder.Z ]; z <= max[ DimensionOrder.Z ]; z++ )
+        for ( long z = cell.min( DimensionOrder.Z ); z <= cell.max( DimensionOrder.Z ); z++ )
         {
-            futures.add(
-                    executorService.submit(
-                            new PartialTiffPlaneCellLoader(
-                                    cell,
-                                    z,
-                                    directory,
-                                    fileInfos[ z ] )
-                    )
-            );
+            new PartialTiffPlaneCellLoader( cell, (int) z, directory, fileInfos[ (int) z ] ).run();
         }
-        waitUntilDone( futures );
     }
 
     private static void waitUntilDone( List< Future > futures )

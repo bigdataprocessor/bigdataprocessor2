@@ -1,7 +1,6 @@
 package de.embl.cba.bdp2.open.fileseries;
 
 import de.embl.cba.bdp2.log.Logger;
-import ij.IJ;
 import ij.ImageStack;
 import ij.io.BitBuffer;
 import net.imglib2.cache.img.SingleCellArrayImg;
@@ -43,7 +42,6 @@ public class PartialTiffPlaneCellLoader implements Runnable
 
 	// input
 	ImageStack stack;
-	byte[][] buffer;
 	BDP2FileInfo[] info;
 	BDP2FileInfo fi;
 	RandomAccessFile in;
@@ -71,43 +69,24 @@ public class PartialTiffPlaneCellLoader implements Runnable
 
 	public void run()
 	{
-		RandomAccessFile inputStream = null;
-
 		if ( fi == null )
-		{Logger.info("Missing file; providing pixels with zeros.");
-			return; // leave pixels in the stack black
+		{
+			return; // missing file (z-chunk), that's ok, we leave pixels black
 		}
 
-		File file = new File( new File( directory, fi.directory ).getAbsolutePath(), fi.fileName );
-		//File file = new File(directory + fi.fileName);
+		byte[] bytes;
+
 		try
 		{
-			inputStream = new RandomAccessFile( file, "r" );
+			File file = new File( new File( directory, fi.directory ).getAbsolutePath(), fi.fileName );
 
-			if ( inputStream == null )
-			{
-				Logger.error( "Could not open file: " + fi.directory + fi.fileName );
-				throw new IllegalArgumentException( "could not open file" );
-			}
-
-			if (       ( fi.compression != TiffCellLoader.COMPRESSION_UNKNOWN )
-					&& ( fi.compression != TiffCellLoader.COMPRESSION_NONE )
-					&& ( fi.compression != TiffCellLoader.LZW )
-					&& ( fi.compression != ZIP )
-					&& ( fi.compression != PACK_BITS ) )
-			{
-				Logger.error( "Tiff compression not implemented: fi.compression = " + fi.compression );
-				return;
-			}
-
-			//startTime = System.currentTimeMillis();
-			buffer[ ( z - zs ) / dz ] = readRowsFromTiff( fi, inputStream, ys, ye );
-			//readingTime += (System.currentTimeMillis() - startTime);
+			RandomAccessFile inputStream = new RandomAccessFile( file, "r" );
+			bytes = readRowsFromTiffPlane( fi, inputStream, ys, ye );
 			inputStream.close();
 		}
 		catch ( Exception e )
 		{
-			IJ.handleException( e );
+			throw new RuntimeException( e );
 		}
 
 		boolean hasStrips = false;
@@ -119,7 +98,7 @@ public class PartialTiffPlaneCellLoader implements Runnable
 
 		if ( hasStrips )
 		{
-			// check what we have core
+			// check what we have read
 			int rps = fi.rowsPerStrip;
 			int ss = ys / rps; // the int is doing a floor()
 			int se = ye / rps;
@@ -130,171 +109,20 @@ public class PartialTiffPlaneCellLoader implements Runnable
 			}
 			else if ( fi.compression == TiffCellLoader.LZW )
 			{
-				// init to hold all data present in the uncompressed strips
-				byte[] unCompressedBuffer = new byte[ ( se - ss + 1 ) * rps * imByteWidth ];
-
-				int pos = 0;
-				for ( int s = ss; s <= se; s++ )
-				{
-					int stripLength = ( int ) fi.stripLengths[ s ];
-					byte[] strip = new byte[ stripLength ];
-
-					// get strip from core data
-					try
-					{
-						System.arraycopy( buffer[ ( z - zs ) / dz ], pos, strip, 0, stripLength );
-					} catch ( Exception e )
-					{
-						Logger.info( "" + e.toString() );
-						Logger.info( "------- s [#] : " + s );
-						Logger.info( "stripLength [bytes] : " + strip.length );
-						Logger.info( "pos [bytes] : " + pos );
-						Logger.info( "pos + stripLength [bytes] : " + ( pos + stripLength ) );
-						Logger.info( "z-zs : " + ( z - zs ) );
-						Logger.info( "z-zs/dz : " + ( z - zs ) / dz );
-						Logger.info( "buffer[z-zs].length : " + buffer[ z - zs ].length );
-						Logger.info( "imWidth [bytes] : " + imByteWidth );
-						Logger.info( "rows per strip [#] : " + rps );
-						Logger.info( "ny [#] : " + ny );
-						Logger.info( "(s - ss) * imByteWidth * rps [bytes] : " + ( ( s - ss ) * imByteWidth *
-								rps ) );
-						Logger.info( "unCompressedBuffer.length [bytes] : " + unCompressedBuffer.length );
-					}
-
-					//info("strip.length " + strip.length);
-					// uncompress strip
-
-					strip = lzwUncompress( strip, imByteWidth * rps );
-
-					// put uncompressed strip into large array
-					System.arraycopy( strip, 0, unCompressedBuffer, ( s - ss ) * imByteWidth * rps, imByteWidth * rps );
-
-					pos += stripLength;
-				}
-
-				buffer[ ( z - zs ) / dz ] = unCompressedBuffer;
-
+				bytes = decompressLZW( bytes, rps, ss, se );
 			}
 			else if ( fi.compression == PACK_BITS )
 			{
-				// init to hold all data present in the uncompressed strips
-				byte[] unCompressedBuffer = new byte[ ( se - ss + 1 ) * rps * imByteWidth ];
-
-				int pos = 0;
-				for ( int s = ss; s <= se; s++ )
-				{
-					int stripLength = ( int ) fi.stripLengths[ s ];
-					byte[] strip = new byte[ stripLength ];
-
-					// get strip from core data
-					try
-					{
-						System.arraycopy( buffer[ ( z - zs ) / dz ], pos, strip, 0, stripLength );
-					} catch ( Exception e )
-					{
-						Logger.info( "" + e.toString() );
-						Logger.info( "------- s [#] : " + s );
-						Logger.info( "stripLength [bytes] : " + strip.length );
-						Logger.info( "pos [bytes] : " + pos );
-						Logger.info( "pos + stripLength [bytes] : " + ( pos + stripLength ) );
-						Logger.info( "z-zs : " + ( z - zs ) );
-						Logger.info( "z-zs/dz : " + ( z - zs ) / dz );
-						Logger.info( "buffer[z-zs].length : " + buffer[ z - zs ].length );
-						Logger.info( "imWidth [bytes] : " + imByteWidth );
-						Logger.info( "rows per strip [#] : " + rps );
-						Logger.info( "ny [#] : " + ny );
-						Logger.info( "(s - ss) * imByteWidth * rps [bytes] : " + ( ( s - ss ) * imByteWidth *
-								rps ) );
-						Logger.info( "unCompressedBuffer.length [bytes] : " + unCompressedBuffer.length );
-					}
-
-					// TODO: maybe implement a faster version without dynamic byte array allocation?
-					strip = packBitsUncompressFast( strip, imByteWidth * rps );
-
-					// put uncompressed strip into large array
-					System.arraycopy( strip, 0, unCompressedBuffer, ( s - ss ) * imByteWidth * rps, imByteWidth * rps );
-
-					pos += stripLength;
-				}
-
-				buffer[ ( z - zs ) / dz ] = unCompressedBuffer;
+				bytes = decompressPACKBITS( bytes, rps, ss, se );
 			}
 			else if ( fi.compression == ZIP )
 			{
-				// init to hold all data present in the uncompressed strips
-				byte[] unCompressedBuffer = new byte[ ( se - ss + 1 ) * rps * imByteWidth ];
-
-				int pos = 0;
-
-				for ( int s = ss; s <= se; s++ )
-				{
-					// TODO: multithreading here?
-					int compressedStripLength = ( int ) fi.stripLengths[ s ];
-					byte[] strip = new byte[ compressedStripLength ];
-
-					// get strip from core data
-					try
-					{
-						System.arraycopy( buffer[ ( z - zs ) / dz ], pos, strip, 0, compressedStripLength );
-					} catch ( Exception e )
-					{
-						Logger.info( "" + e.toString() );
-						Logger.info( "------- s [#] : " + s );
-						Logger.info( "stripLength [bytes] : " + strip.length );
-						Logger.info( "pos [bytes] : " + pos );
-						Logger.info( "pos + stripLength [bytes] : " + ( pos + compressedStripLength ) );
-						Logger.info( "z-zs : " + ( z - zs ) );
-						Logger.info( "z-zs/dz : " + ( z - zs ) / dz );
-						Logger.info( "buffer[z-zs].length : " + buffer[ z - zs ].length );
-						Logger.info( "imWidth [bytes] : " + imByteWidth );
-						Logger.info( "rows per strip [#] : " + rps );
-						Logger.info( "ny [#] : " + ny );
-						Logger.info( "(s - ss) * imByteWidth * rps [bytes] : " + ( ( s - ss ) * imByteWidth *
-								rps ) );
-						Logger.info( "unCompressedBuffer.length [bytes] : " + unCompressedBuffer.length );
-					}
-
-					/** TIFF Adobe ZIP support contributed by Jason Newton. */
-					ByteArrayOutputStream imageBuffer = new ByteArrayOutputStream();
-					byte[] tmpBuffer = new byte[ 1024 ];
-
-					Inflater decompressor = new Inflater();
-
-					decompressor.setInput( strip );
-					try
-					{
-						while ( !decompressor.finished() )
-						{
-							int rlen = decompressor.inflate( tmpBuffer );
-							imageBuffer.write( tmpBuffer, 0, rlen );
-						}
-					} catch ( DataFormatException e )
-					{
-						Logger.error( e.toString() );
-					}
-					decompressor.end();
-
-					strip = imageBuffer.toByteArray();
-
-					// put uncompressed strip into large array
-					System.arraycopy(
-							strip,
-							0,
-							unCompressedBuffer,
-							( s - ss ) * imByteWidth * rps,
-							imByteWidth * rps );
-
-					pos += compressedStripLength;
-				}
-
-				buffer[ ( z - zs ) / dz ] = unCompressedBuffer;
+				bytes = decompressZIP( bytes, rps, ss, se );
 			}
 			else
 			{
-
 				Logger.error( "Tiff compression not implemented: fi.compression = " + fi.compression );
 				return;
-
 			}
 
 			ys = ys % rps; // we might have to skip a few rows in the beginning because the strips can hold several rows
@@ -309,7 +137,7 @@ public class PartialTiffPlaneCellLoader implements Runnable
 				byte[] tmpBuffer = new byte[ 1024 ];
 				Inflater decompressor = new Inflater();
 
-				decompressor.setInput( buffer[ ( z - zs ) / dz ] );
+				decompressor.setInput( bytes[ ( z - zs ) / dz ] );
 				try
 				{
 					while ( !decompressor.finished() )
@@ -323,13 +151,13 @@ public class PartialTiffPlaneCellLoader implements Runnable
 				}
 				decompressor.end();
 
-				buffer[ ( z - zs ) / dz ] = imageBuffer.toByteArray();
+				bytes[ ( z - zs ) / dz ] = imageBuffer.toByteArray();
 
 				//setShortPixelsCropXY((short[]) stack.getPixels((z - zs)/dz + 1), ys, ny, xs, nx, imByteWidth, buffer[(z - zs)/dz]);
 			}
 			else if ( fi.compression == TiffCellLoader.LZW )
 			{
-				buffer[ ( z - zs ) / dz ] = lzwUncompress( buffer[ ( z - zs ) / dz ], imByteWidth * ny  );
+				bytes[ ( z - zs ) / dz ] = lzwUncompress( bytes[ ( z - zs ) / dz ], imByteWidth * ny  );
 				ys = 0; // buffer contains full y-range
 			}
 			else
@@ -337,35 +165,201 @@ public class PartialTiffPlaneCellLoader implements Runnable
 				ys = 0; // buffer contains full y-range
 			}
 
-			if ( Logger.isShowDebug() )
+			if ( Logger.getLevel().equals( Logger.Level.Debug ) )
 			{
-				Logger.info( "z: " + z );
-				Logger.info( "zs: " + zs );
-				Logger.info( "dz: " + dz );
-				Logger.info( "(z - zs)/dz: " + ( z - zs ) / dz );
-				Logger.info( "buffer.length : " + buffer.length );
-				Logger.info( "buffer[z-zs].length : " + buffer[ z - zs ].length );
-				Logger.info( "imWidth [bytes] : " + imByteWidth );
-				Logger.info( "ny [#] : " + ny );
+				Logger.debug( "z: " + z );
+				Logger.debug( "zs: " + zs );
+				Logger.debug( "dz: " + dz );
+				Logger.debug( "(z - zs)/dz: " + ( z - zs ) / dz );
+				Logger.debug( "buffer.length : " + bytes.length );
+				Logger.debug( "buffer[z-zs].length : " + bytes[ z - zs ].length );
+				Logger.debug( "imWidth [bytes] : " + imByteWidth );
+				Logger.debug( "ny [#] : " + ny );
 			}
 		}
 
 		//
 		// Copy (crop of) xy data from buffer into image stack
 		//
-
 		if ( fi.bytesPerPixel == 1 )
 		{
-			setBytePixelsCropXY( ( byte[] ) stack.getPixels( ( z - zs ) / dz + 1 ), ys, ny, xs, nx, imByteWidth, buffer[ ( z - zs ) / dz ] );
+			setBytePixelsCropXY( ( byte[] ) stack.getPixels( ( z - zs ) / dz + 1 ), ys, ny, xs, nx, imByteWidth, bytes[ ( z - zs ) / dz ] );
 		}
 		else if ( fi.bytesPerPixel == 2 )
 		{
-			setShortPixelsCropXY( ( short[] ) stack.getPixels( ( z - zs ) / dz + 1 ), ys, ny, xs, nx, imByteWidth, buffer[ ( z - zs ) / dz ] );
+			setShortPixelsCropXY( ( short[] ) stack.getPixels( ( z - zs ) / dz + 1 ), ys, ny, xs, nx, imByteWidth, bytes[ ( z - zs ) / dz ] );
 		} else
 		{
 			Logger.error( "Unsupported bit depth." );
 			return;
 		}
+	}
+
+	private byte[] decompressLZW( byte[] bytes, int rps, int ss, int se )
+	{
+		// init to hold all data present in the uncompressed strips
+		byte[] unCompressedBuffer = new byte[ ( se - ss + 1 ) * rps * imByteWidth ];
+
+		int pos = 0;
+		for ( int s = ss; s <= se; s++ )
+		{
+			int stripLength = ( int ) fi.stripLengths[ s ];
+			byte[] strip = new byte[ stripLength ];
+
+			try
+			{
+				System.arraycopy( bytes, pos, strip, 0, stripLength );
+			}
+			catch ( Exception e )
+			{
+				Logger.info( "" + e.toString() );
+				Logger.info( "------- s [#] : " + s );
+				Logger.info( "stripLength [bytes] : " + strip.length );
+				Logger.info( "pos [bytes] : " + pos );
+				Logger.info( "pos + stripLength [bytes] : " + ( pos + stripLength ) );
+				Logger.info( "z-zs : " + ( z - zs ) );
+				Logger.info( "z-zs/dz : " + ( z - zs ) / dz );
+				Logger.info( "buffer[z-zs].length : " + bytes[ z - zs ].length );
+				Logger.info( "imWidth [bytes] : " + imByteWidth );
+				Logger.info( "rows per strip [#] : " + rps );
+				Logger.info( "ny [#] : " + ny );
+				Logger.info( "(s - ss) * imByteWidth * rps [bytes] : " + ( ( s - ss ) * imByteWidth *
+						rps ) );
+				Logger.info( "unCompressedBuffer.length [bytes] : " + unCompressedBuffer.length );
+			}
+
+			//info("strip.length " + strip.length);
+			// uncompress strip
+
+			strip = lzwUncompress( strip, imByteWidth * rps );
+
+			// put uncompressed strip into large array
+			System.arraycopy( strip, 0, unCompressedBuffer, ( s - ss ) * imByteWidth * rps, imByteWidth * rps );
+
+			pos += stripLength;
+		}
+
+		bytes = unCompressedBuffer;
+		return bytes;
+	}
+
+	private byte[] decompressPACKBITS( byte[] bytes, int rps, int ss, int se )
+	{
+		// init to hold all data present in the uncompressed strips
+		byte[] uncompressedBytes = new byte[ ( se - ss + 1 ) * rps * imByteWidth ];
+
+		int pos = 0;
+		for ( int s = ss; s <= se; s++ )
+		{
+			int stripLength = ( int ) fi.stripLengths[ s ];
+			byte[] strip = new byte[ stripLength ];
+
+			// get strip from core data
+			try
+			{
+				System.arraycopy( bytes, pos, strip, 0, stripLength );
+			} catch ( Exception e )
+			{
+				Logger.info( "" + e.toString() );
+				Logger.info( "------- s [#] : " + s );
+				Logger.info( "stripLength [bytes] : " + strip.length );
+				Logger.info( "pos [bytes] : " + pos );
+				Logger.info( "pos + stripLength [bytes] : " + ( pos + stripLength ) );
+				Logger.info( "z-zs : " + ( z - zs ) );
+				Logger.info( "z-zs/dz : " + ( z - zs ) / dz );
+				Logger.info( "buffer.length : " + bytes.length );
+				Logger.info( "imWidth [bytes] : " + imByteWidth );
+				Logger.info( "rows per strip [#] : " + rps );
+				Logger.info( "ny [#] : " + ny );
+				Logger.info( "(s - ss) * imByteWidth * rps [bytes] : " + ( ( s - ss ) * imByteWidth *
+						rps ) );
+				Logger.info( "unCompressedBuffer.length [bytes] : " + uncompressedBytes.length );
+			}
+
+			// TODO: maybe implement a faster version without dynamic byte array allocation?
+			strip = packBitsUncompressFast( strip, imByteWidth * rps );
+
+			// put uncompressed strip into large array
+			System.arraycopy( strip, 0, uncompressedBytes, ( s - ss ) * imByteWidth * rps, imByteWidth * rps );
+
+			pos += stripLength;
+		}
+
+		bytes = uncompressedBytes;
+		return bytes;
+	}
+
+	private byte[] decompressZIP( byte[] bytes, int rps, int ss, int se )
+	{
+		// init to hold all data present in the uncompressed strips
+		byte[] unCompressedBuffer = new byte[ ( se - ss + 1 ) * rps * imByteWidth ];
+
+		int pos = 0;
+
+		for ( int s = ss; s <= se; s++ )
+		{
+			// TODO: multithreading here?
+			int compressedStripLength = ( int ) fi.stripLengths[ s ];
+			byte[] strip = new byte[ compressedStripLength ];
+
+			// get strip from core data
+			try
+			{
+				System.arraycopy( bytes[ ( z - zs ) / dz ], pos, strip, 0, compressedStripLength );
+			}
+			catch ( Exception e )
+			{
+				Logger.info( "" + e.toString() );
+				Logger.info( "------- s [#] : " + s );
+				Logger.info( "stripLength [bytes] : " + strip.length );
+				Logger.info( "pos [bytes] : " + pos );
+				Logger.info( "pos + stripLength [bytes] : " + ( pos + compressedStripLength ) );
+				Logger.info( "z-zs : " + ( z - zs ) );
+				Logger.info( "z-zs/dz : " + ( z - zs ) / dz );
+				Logger.info( "buffer[z-zs].length : " + bytes[ z - zs ].length );
+				Logger.info( "imWidth [bytes] : " + imByteWidth );
+				Logger.info( "rows per strip [#] : " + rps );
+				Logger.info( "ny [#] : " + ny );
+				Logger.info( "(s - ss) * imByteWidth * rps [bytes] : " + ( ( s - ss ) * imByteWidth *
+						rps ) );
+				Logger.info( "unCompressedBuffer.length [bytes] : " + unCompressedBuffer.length );
+			}
+
+			/** TIFF Adobe ZIP support contributed by Jason Newton. */
+			ByteArrayOutputStream imageBuffer = new ByteArrayOutputStream();
+			byte[] tmpBuffer = new byte[ 1024 ];
+
+			Inflater decompressor = new Inflater();
+
+			decompressor.setInput( strip );
+			try
+			{
+				while ( !decompressor.finished() )
+				{
+					int rlen = decompressor.inflate( tmpBuffer );
+					imageBuffer.write( tmpBuffer, 0, rlen );
+				}
+			} catch ( DataFormatException e )
+			{
+				Logger.error( e.toString() );
+			}
+			decompressor.end();
+
+			strip = imageBuffer.toByteArray();
+
+			// put uncompressed strip into large array
+			System.arraycopy(
+					strip,
+					0,
+					unCompressedBuffer,
+					( s - ss ) * imByteWidth * rps,
+					imByteWidth * rps );
+
+			pos += compressedStripLength;
+		}
+
+		bytes = unCompressedBuffer;
+		return bytes;
 	}
 
 	/**
@@ -624,34 +618,41 @@ public class PartialTiffPlaneCellLoader implements Runnable
 
 	public void setShortPixelsCropXY( short[] pixels, int ys, int ny, int xs, int nx, int imByteWidth, byte[] buffer )
 	{
+		final int bytesPerPixel = fi.bytesPerPixel;
+		final boolean intelByteOrder = fi.intelByteOrder;
+		final boolean signed = fi.fileType == GRAY16_SIGNED;
+
+		if ( bytesPerPixel != 2 )
+		{
+			Logger.error( "Unsupported bit depth: " + bytesPerPixel * 8 );
+		}
+
+
 		int ip = 0;
 		int bs, be;
-		if ( fi.bytesPerPixel != 2 )
-		{
-			Logger.error( "Unsupported bit depth: " + fi.bytesPerPixel * 8 );
-		}
 
 		for ( int y = ys; y < ys + ny; y++ )
 		{
-			bs = y * imByteWidth + xs * fi.bytesPerPixel;
-			be = bs + nx * fi.bytesPerPixel;
+			bs = y * imByteWidth + xs * bytesPerPixel;
+			be = bs + nx * bytesPerPixel;
 
-			if ( fi.intelByteOrder )
+			if ( intelByteOrder )
 			{
-				if ( fi.fileType == GRAY16_SIGNED )
-					for ( int j = bs; j < be; j += 2 )
-						pixels[ ip++ ] = ( short ) ( ( ( ( buffer[ j + 1 ] & 0xff ) << 8 ) | ( buffer[ j ] & 0xff ) ) + 32768 );
+				if ( signed )
+					for ( int x = bs; x < be; x += 2 )
+						pixels[ ip++ ] = ( short ) ( ( ( ( buffer[ x + 1 ] & 0xff ) << 8 ) | ( buffer[ x ] & 0xff ) ) + 32768 );
 				else
-					for ( int j = bs; j < be; j += 2 )
-						pixels[ ip++ ] = ( short ) ( ( ( buffer[ j + 1 ] & 0xff ) << 8 ) | ( buffer[ j ] & 0xff ) );
-			} else
+					for ( int x = bs; x < be; x += 2 )
+						pixels[ ip++ ] = ( short ) ( ( ( buffer[ x + 1 ] & 0xff ) << 8 ) | ( buffer[ x ] & 0xff ) );
+			}
+			else
 			{
-				if ( fi.fileType == GRAY16_SIGNED )
-					for ( int j = bs; j < be; j += 2 )
-						pixels[ ip++ ] = ( short ) ( ( ( ( buffer[ j ] & 0xff ) << 8 ) | ( buffer[ j + 1 ] & 0xff ) ) + 32768 );
+				if ( signed )
+					for ( int x = bs; x < be; x += 2 )
+						pixels[ ip++ ] = ( short ) ( ( ( ( buffer[ x ] & 0xff ) << 8 ) | ( buffer[ x + 1 ] & 0xff ) ) + 32768 );
 				else
-					for ( int j = bs; j < be; j += 2 )
-						pixels[ ip++ ] = ( short ) ( ( ( buffer[ j ] & 0xff ) << 8 ) | ( buffer[ j + 1 ] & 0xff ) );
+					for ( int x = bs; x < be; x += 2 )
+						pixels[ ip++ ] = ( short ) ( ( ( buffer[ x ] & 0xff ) << 8 ) | ( buffer[ x + 1 ] & 0xff ) );
 			}
 		}
 	}
@@ -663,11 +664,12 @@ public class PartialTiffPlaneCellLoader implements Runnable
 
 		for ( int y = ys; y < ys + ny; y++ )
 		{
-			bs = y * imByteWidth + xs * fi.bytesPerPixel;
-			be = bs + nx * fi.bytesPerPixel;
-			for ( int j = bs; j < be; j += 1 )
+			bs = y * imByteWidth + xs;
+			be = bs + nx;
+			for ( int x = bs; x < be; ++x )
 			{
-				pixels[ ip++ ] = buffer[ j ];
+				// TODO: Use System.arrayCopy?
+				pixels[ ip++ ] = buffer[ x ];
 			}
 		}
 	}
@@ -682,12 +684,21 @@ public class PartialTiffPlaneCellLoader implements Runnable
 		}
 	}
 
-	private byte[] readRowsFromTiff( BDP2FileInfo fi, RandomAccessFile in, int ys, int ye )
+	/**
+	 * TODO: Is RandomAccessFile really the fastest here?
+	 *
+	 *
+	 * @param fi
+	 * @param in
+	 * @param ys
+	 * @param ye
+	 * @return
+	 */
+	private byte[] readRowsFromTiffPlane( BDP2FileInfo fi, RandomAccessFile in, int ys, int ye )
 	{
 		boolean hasStrips = false;
 		int readLength;
 		long readStart;
-		byte[] buffer;
 
 		if ( fi.stripOffsets != null && fi.stripOffsets.length > 1 )
 			hasStrips = true;
@@ -707,17 +718,17 @@ public class PartialTiffPlaneCellLoader implements Runnable
 			for ( int s = ss; s <= se; s++ )
 				readLength += fi.stripLengths[ s ];
 		}
-		else // none or one strip
+		else // no strips (or all data in one compressed strip)
 		{
 			if ( fi.compression == ZIP || fi.compression == TiffCellLoader.LZW || fi.compression == PACK_BITS )
 			{
-				// core all data
+				// read all data
 				readStart = fi.offset;
 				readLength = ( int ) fi.stripLengths[ 0 ];
 			}
 			else
 			{
-				// core subset
+				// read subset
 				// convert rows to bytes
 				readStart = fi.offset + ys * fi.width * fi.bytesPerPixel;
 				readLength = ( ( ye - ys ) + 1 ) * fi.width * fi.bytesPerPixel; // ye is -1 sometimes why?
@@ -738,7 +749,7 @@ public class PartialTiffPlaneCellLoader implements Runnable
 			return ( null );
 		}
 
-		buffer = new byte[ readLength ];
+		byte[] buffer = new byte[ readLength ];
 
 		try
 		{
@@ -749,17 +760,18 @@ public class PartialTiffPlaneCellLoader implements Runnable
 			}
 			else
 			{
-				Logger.warn( "The requested data exceeds the file length; no data was core." );
+				Logger.warn( "The requested data exceeds the file length; no data was read." );
 				Logger.warn( "file type: Tiff" );
 				Logger.warn( "hasStrips: " + hasStrips );
 				Logger.warn( "file length [bytes]: " + in.length() );
-				Logger.warn( "attempt to core until [bytes]: " + ( readStart + readLength - 1 ) );
+				Logger.warn( "attempt to read until [bytes]: " + ( readStart + readLength - 1 ) );
 				Logger.warn( "ys: " + ys );
 				Logger.warn( "ye: " + ye );
 				Logger.warn( "fileInfo.compression: " + fi.compression );
 				Logger.warn( "fileInfo.height: " + fi.height );
 			}
-		} catch ( Exception e )
+		}
+		catch ( Exception e )
 		{
 			Logger.warn( e.toString() );
 		}
