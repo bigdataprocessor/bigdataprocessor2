@@ -68,7 +68,8 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		this.voxelDimensions = cachedCellImgCreator.getVoxelSize();
 		this.voxelUnit = cachedCellImgCreator.getVoxelUnit();
 
-		setCache( cachedCellImgCreator.getDefaultCellDimsXYZCT(), DiskCachedCellImgOptions.CacheType.BOUNDED, 100 );
+		// cache size is ignored for SOFTREF
+		setCache( cachedCellImgCreator.getDefaultCellDimsXYZCT(), DiskCachedCellImgOptions.CacheType.SOFTREF, 1000 );
 		this.rai = cachedCellImgCreator.createCachedCellImg( cachedCellDims, DiskCachedCellImgOptions.CacheType.BOUNDED, 100 );
 		this.rawDataDimensions = this.getDimensionsXYZCT();
 		type = Util.getTypeFromInterval( rai );
@@ -282,7 +283,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 	 *
 	 * @param cellDims
 	 * @param cacheType
-	 * @param cacheSize
+	 * @param cacheSize ignored for SOFTREF
 	 */
 	public void setCache( int[] cellDims, DiskCachedCellImgOptions.CacheType cacheType, int cacheSize )
 	{

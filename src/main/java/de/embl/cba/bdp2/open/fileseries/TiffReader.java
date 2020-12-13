@@ -35,7 +35,7 @@ import java.util.concurrent.Future;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
-public class TiffAndHDF5Opener extends Opener {
+public class TiffReader {
 
     // Compression modes
     public static final int COMPRESSION_UNKNOWN = 0;
@@ -44,7 +44,7 @@ public class TiffAndHDF5Opener extends Opener {
     public static final int LZW_WITH_DIFFERENCING = 3;
 
     // TODO: make it NOT an extension
-    public TiffAndHDF5Opener()
+    public TiffReader()
     {
 
     }
