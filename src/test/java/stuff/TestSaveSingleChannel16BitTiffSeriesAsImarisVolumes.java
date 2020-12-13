@@ -25,7 +25,7 @@ public class TestSaveSingleChannel16BitTiffSeriesAsImarisVolumes
         final BigDataProcessor2 bdp = new BigDataProcessor2();
 
         final String directory =
-                TestConstants.TEST_FOLDER + "test-data/nc1-nt3-calibrated-16bit-tiff";
+                TestConstants.TEST_FOLDER + "data/nc1-nt3-calibrated-16bit-tiff";
 
         final String loadingScheme = NamingSchemes.SINGLE_CHANNEL_TIMELAPSE;
         final String filterPattern = ".*.tif";

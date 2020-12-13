@@ -131,8 +131,6 @@ public class PartialTiffPlaneCellLoader implements Runnable
 			}
 		}
 
-
-
 		// read the relevant pixels from the byte buffer into the cell array
 		// due to the reading from strips, the buffer may contain
 		// both more rows and columns than the cell array
@@ -143,27 +141,41 @@ public class PartialTiffPlaneCellLoader implements Runnable
 
 		if ( fi.bytesPerPixel == 1 )
 		{
-			setBytePixelsCropXY(
-					( byte[] ) cell.getStorageArray(),
-					cellOffset,
-					byteBufferRowOffset,
-					ny,
-					xs,
-					nx,
-					bytesPerRow,
-					bytes  );
+			try
+			{
+				setBytePixelsCropXY(
+						( byte[] ) cell.getStorageArray(),
+						cellOffset,
+						byteBufferRowOffset,
+						ny,
+						xs,
+						nx,
+						bytesPerRow,
+						bytes );
+			}
+			catch ( Exception e )
+			{
+				e.printStackTrace();
+			}
 		}
 		else if ( fi.bytesPerPixel == 2 )
 		{
-			setShortPixelsCropXY(
-					( short[] ) cell.getStorageArray(),
-					cellOffset,
-					byteBufferRowOffset,
-					ny,
-					xs,
-					nx,
-					bytesPerRow,
-					bytes );
+			try
+			{
+				setShortPixelsCropXY(
+						( short[] ) cell.getStorageArray(),
+						cellOffset,
+						byteBufferRowOffset,
+						ny,
+						xs,
+						nx,
+						bytesPerRow,
+						bytes );
+			}
+			catch ( Exception e )
+			{
+				e.printStackTrace();
+			}
 		}
 		else
 		{
