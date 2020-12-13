@@ -10,7 +10,7 @@ import net.imglib2.type.numeric.RealType;
 
 import static de.embl.cba.bdp2.process.rename.ImageRenameCommand.CHANNEL_NAMES_PARAMETER;
 
-public class ImageRenameDialog< R extends RealType< R > & NativeType< R > >
+public class ImageRenameDialog < R extends RealType< R > & NativeType< R > >
 {
 	private final Image< R > inputImage;
 	private final ImageViewer< R > viewer;

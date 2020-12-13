@@ -19,7 +19,7 @@ import java.util.Arrays;
 
 import static de.embl.cba.bdp2.process.cache.SetCacheDimensionsCommand.COMMAND_NAME;
 
-//@Plugin(type = AbstractImageProcessingCommand.class, name = COMMAND_NAME,  menuPath = DialogUtils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractImageProcessingCommand.COMMAND_PATH + SetCacheDimensionsCommand.COMMAND_FULL_NAME )
+@Plugin(type = AbstractImageProcessingCommand.class, name = COMMAND_NAME,  menuPath = DialogUtils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractImageProcessingCommand.COMMAND_PATH + SetCacheDimensionsCommand.COMMAND_FULL_NAME )
 public class SetCacheDimensionsCommand< R extends RealType< R > & NativeType< R > > extends AbstractImageProcessingCommand< R >
 {
     public static final String COMMAND_NAME = "Set Cache Dimensions...";
@@ -49,8 +49,6 @@ public class SetCacheDimensionsCommand< R extends RealType< R > & NativeType< R 
     @Override
     public void showDialog( ImageViewer< R > imageViewer )
     {
-        // TODO: make an proper dialog with macro recording
-        Image< R > image = imageViewer.getImage();
-        Services.getCommandService().run( SetCacheDimensionsCommand.class, true, AbstractImageProcessingCommand.INPUT_IMAGE_PARAMETER, image, AbstractImageProcessingCommand.OUTPUT_IMAGE_NAME_PARAMETER, image.getName(), AbstractImageProcessingCommand.VIEWING_MODALITY_PARAMETER, AbstractOpenFileSeriesCommand.SHOW_IN_CURRENT_VIEWER );
+        new SetCacheDimensionsDialog<>( imageViewer ).showDialog();
     }
 }

@@ -3,6 +3,7 @@ package test.open;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.BigDataProcessor2UI;
+import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.scijava.Services;
 import net.imagej.ImageJ;
 import org.junit.Test;
@@ -18,6 +19,7 @@ public class TestOpenMultiChannel16BitTiffVolumes
         Services.setContext( imageJ.getContext() );
         Services.setCommandService( imageJ.command() );
         BigDataProcessor2UI.showUI();
+        Logger.setLevel( Logger.Level.Benchmark );
         new TestOpenMultiChannel16BitTiffVolumes().run();
     }
 
