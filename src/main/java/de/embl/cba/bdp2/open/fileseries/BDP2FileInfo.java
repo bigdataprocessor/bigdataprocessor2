@@ -37,7 +37,7 @@ import java.io.Serializable;
 /**
  * Created by tischi on 13/11/16.
  */
-public class SerializableFileInfo implements Cloneable, Serializable {
+public class BDP2FileInfo implements Cloneable, Serializable {
 
     /* File format (TIFF, GIF_OR_JPG, BMP, etc.). Used by the File/Revert run */
     public int fileFormat;
@@ -100,11 +100,11 @@ public class SerializableFileInfo implements Cloneable, Serializable {
 
 
     // TODO: there is a lot of duplicated information that would only be needed once
-    public SerializableFileInfo() {
+    public BDP2FileInfo() {
 
     }
 
-    public SerializableFileInfo( FileInfo info ) {
+    public BDP2FileInfo( FileInfo info ) {
         this.fileFormat = info.fileFormat;
         this.fileName = info.fileName;
         this.directory = info.directory;
@@ -124,7 +124,7 @@ public class SerializableFileInfo implements Cloneable, Serializable {
         this.bytesPerPixel = info.getBytesPerPixel();
     }
 
-    public SerializableFileInfo( SerializableFileInfo info ) {
+    public BDP2FileInfo( BDP2FileInfo info ) {
         this.fileFormat = info.fileFormat;
         this.fileName = info.fileName;
         this.directory = info.directory;

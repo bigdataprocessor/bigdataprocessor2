@@ -22,9 +22,8 @@ import java.util.regex.Pattern;
 public class FileInfos
 {
     public static final int PROGRESS_UPDATE_MILLISECONDS = 100;
-	public static final int TOTAL_AXES = 5;
 
-	// TODO: below must be in synch with DimensionOrder
+    // TODO: below must be in synch with DimensionOrder
 	public static final AxisType[] AXES_ORDER = { Axes.X, Axes.Y, Axes.Z, Axes.CHANNEL, Axes.TIME};
     public static final String[] HDF5_DATASET_NAMES = new String[] {
             "None", "Data", "Data111", "Data222", "Data444", // Luxendo
@@ -35,7 +34,7 @@ public class FileInfos
 			"ITKImage/0/VoxelData" // Elastix
     };
     public static final String NONRECURSIVE = "_NONRECURSIVE";
-    public SerializableFileInfo[][][] ctzFileInfos;
+    public BDP2FileInfo[][][] ctzFileInfos;
     public long[] dimensions;
     private String namingScheme;
     private String filter;
@@ -222,7 +221,7 @@ public class FileInfos
     }
 
 
-    public SerializableFileInfo[] getSerializableFileStackInfo( int channel, int time ) {
+    public BDP2FileInfo[] getSerializableFileStackInfo( int channel, int time ) {
         int z = 0;
         if ( fileType.equals( FileSeriesFileType.TIFF_STACKS ) ) {
             setInfosFromFile(channel, time, z, true);
@@ -241,8 +240,8 @@ public class FileInfos
 
     private void setInfosFromFile( final int c, final int t, final int z, boolean throwError )
     {
-        SerializableFileInfo[] info = null;
-        SerializableFileInfo[] infoCT;
+        BDP2FileInfo[] info = null;
+        BDP2FileInfo[] infoCT;
         FastTiffDecoder ftd;
         File file = new File( directory, ctzFiles[c][t][z] );
         if ( file.exists() )
@@ -267,9 +266,9 @@ public class FileInfos
                 info[0].directory = getDirectory( c, t, 0 );
                 info[0].fileTypeString = fileType.toString();
 
-                infoCT = new SerializableFileInfo[nZ];
+                infoCT = new BDP2FileInfo[nZ];
                 for ( int z2 = 0; z2 < nZ; z2++ ) {
-                    infoCT[z2] = new SerializableFileInfo( info[0] ); // copyVolumeRAI constructor
+                    infoCT[z2] = new BDP2FileInfo( info[0] ); // copyVolumeRAI constructor
                     // adapt information related to where the data is stored in this plane
                     infoCT[z2].offset = info[z2].offset;
                     infoCT[z2].stripLengths = info[z2].stripLengths;
@@ -304,10 +303,10 @@ public class FileInfos
                     Logger.error( "Unsupported bit depth " + dsTypeString );
                 }
 
-                infoCT = new SerializableFileInfo[nZ];
+                infoCT = new BDP2FileInfo[nZ];
                 for ( int z2 = 0; z2 < nZ; z2++)
                 {
-                    infoCT[z2] = new SerializableFileInfo();
+                    infoCT[z2] = new BDP2FileInfo();
                     infoCT[z2].fileName = getName( c, t, z2 );
                     infoCT[z2].directory = getDirectory( c, t, z2 );
                     infoCT[z2].width = nX;

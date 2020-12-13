@@ -18,9 +18,20 @@ public class PerformanceMonitor
 		copyPerformances = Collections.synchronizedList(new ArrayList<>( ));
 	}
 
-	public synchronized void addReadPerformance( long numBytes, long timeMillis )
+	public synchronized void addReadPerformance( Object storageArray, long timeMillis )
 	{
-		final double speed = toMBytePerSecond( numBytes, timeMillis );
+		double speed;
+
+		if ( storageArray instanceof byte[] )
+			speed = toMBytePerSecond( ( ( byte[] ) storageArray ).length, timeMillis );
+		else if ( storageArray instanceof short[] )
+			speed = toMBytePerSecond( 2 * ( ( short[] ) storageArray ).length, timeMillis );
+		else if ( storageArray instanceof float[] )
+			speed = toMBytePerSecond( 4 * ( ( float[] ) storageArray ).length, timeMillis );
+		else
+			throw new RuntimeException( "Unsupported storage array type " + storageArray.getClass() );
+
+
 		synchronized ( readPerformances )
 		{
 			readPerformances.add( speed );

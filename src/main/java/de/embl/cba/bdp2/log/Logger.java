@@ -77,11 +77,6 @@ public class Logger
 		IJ.error( msg );
 	}
 
-	public static boolean isShowDebug()
-	{
-		return false;
-	}
-
 	public static void progress( String message, Object o, long start, int i, int size )
 	{
 		// TODO

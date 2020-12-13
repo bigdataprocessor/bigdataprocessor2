@@ -329,7 +329,7 @@ public class FastTiffDecoder {
         return value;
     }
 
-    void getColorMap(long offset, SerializableFileInfo fi) throws IOException {
+    void getColorMap(long offset, BDP2FileInfo fi) throws IOException {
         byte[] colorTable16 = new byte[768*2];
         long saveLoc = in.getLongFilePointer();
         in.seek(offset);
@@ -371,7 +371,7 @@ public class FastTiffDecoder {
      saves spatial and density calibration data in this string. For
      stacks, it also saves the number of images to avoid having to
      decode an IFD for each image. */
-    public void saveImageDescription(byte[] description, SerializableFileInfo fi) {
+    public void saveImageDescription(byte[] description, BDP2FileInfo fi) {
         String id = new String(description);
         if (!id.startsWith("ImageJ"))
             saveMetadata(getName(IMAGE_DESCRIPTION), id);
@@ -397,7 +397,7 @@ public class FastTiffDecoder {
             tiffMetadata += str;
     }
 
-    void decodeNIHImageHeader(int offset, SerializableFileInfo fi) throws IOException {
+    void decodeNIHImageHeader(int offset, BDP2FileInfo fi) throws IOException {
         long saveLoc = in.getLongFilePointer();
 
         in.seek(offset+12);
@@ -480,7 +480,7 @@ public class FastTiffDecoder {
         in.seek(saveLoc);
     }
 
-    void dumpTag(int tag, int count, int value, SerializableFileInfo fi) {
+    void dumpTag(int tag, int count, int value, BDP2FileInfo fi) {
         long lvalue = ((long)value)&0xffffffffL;
         String name = getName(tag);
         String cs = (count==1)?"":", count=" + count;
@@ -535,7 +535,7 @@ public class FastTiffDecoder {
             return 0.0;
     }
 
-    void getMetaData(int loc, SerializableFileInfo fi) throws IOException {
+    void getMetaData(int loc, BDP2FileInfo fi) throws IOException {
         if (metaDataCounts==null || metaDataCounts.length==0)
             return;
         int maxTypes = 10;
@@ -602,7 +602,7 @@ public class FastTiffDecoder {
         in.seek(saveLoc);
     }
 
-    void getInfoProperty(int first, SerializableFileInfo fi) throws IOException {
+    void getInfoProperty(int first, BDP2FileInfo fi) throws IOException {
         int len = metaDataCounts[first];
         byte[] buffer = new byte[len];
         in.readFully(buffer, len);
@@ -618,7 +618,7 @@ public class FastTiffDecoder {
         fi.info = new String(chars);
     }
 
-    void getSliceLabels(int first, int last, SerializableFileInfo fi) throws IOException {
+    void getSliceLabels(int first, int last, BDP2FileInfo fi) throws IOException {
         fi.sliceLabels = new String[last-first+1];
         int index = 0;
         byte[] buffer = new byte[metaDataCounts[first]];
@@ -644,14 +644,14 @@ public class FastTiffDecoder {
         }
     }
 
-    void getDisplayRanges(int first, SerializableFileInfo fi) throws IOException {
+    void getDisplayRanges(int first, BDP2FileInfo fi) throws IOException {
         int n = metaDataCounts[first]/8;
         fi.displayRanges = new double[n];
         for (int i=0; i<n; i++)
             fi.displayRanges[i] = readDouble();
     }
 
-    void getLuts(int first, int last, SerializableFileInfo fi) throws IOException {
+    void getLuts(int first, int last, BDP2FileInfo fi) throws IOException {
         fi.channelLuts = new byte[last-first+1][];
         int index = 0;
         for (int i=first; i<=last; i++) {
@@ -662,13 +662,13 @@ public class FastTiffDecoder {
         }
     }
 
-    void getRoi(int first, SerializableFileInfo fi) throws IOException {
+    void getRoi(int first, BDP2FileInfo fi) throws IOException {
         int len = metaDataCounts[first];
         fi.roi = new byte[len];
         in.readFully(fi.roi, len);
     }
 
-    void getOverlay(int first, int last, SerializableFileInfo fi) throws IOException {
+    void getOverlay(int first, int last, BDP2FileInfo fi) throws IOException {
         fi.overlay = new byte[last-first+1][];
         int index = 0;
         for (int i=first; i<=last; i++) {
@@ -698,7 +698,7 @@ public class FastTiffDecoder {
         debugMode = true;
     }
 
-    SerializableFileInfo fullyReadIFD( long[] relativeStripInfoLocations ) throws IOException {
+    BDP2FileInfo fullyReadIFD( long[] relativeStripInfoLocations ) throws IOException {
 
         long ifdLoc = in.getFilePointer();
 
@@ -717,7 +717,7 @@ public class FastTiffDecoder {
         if ((ifdCount%50)==0 && ifdCount>0)
             ij.IJ.showStatus("Opening IFDs: "+ifdCount);
 
-        SerializableFileInfo fi = new SerializableFileInfo();
+        BDP2FileInfo fi = new BDP2FileInfo();
         fi.fileType = FileInfo.BITMAP;  //BitsPerSample defaults to 1
 
         for (int i=0; i<nEntries; i++) {
@@ -1023,9 +1023,9 @@ public class FastTiffDecoder {
         return fi;
     }
 
-    SerializableFileInfo onlyReadStripsFromIFD(long[] relativeStripInfoLocations , Boolean fastParsingWorked ) throws IOException {
+    BDP2FileInfo onlyReadStripsFromIFD( long[] relativeStripInfoLocations , Boolean fastParsingWorked ) throws IOException {
 
-        SerializableFileInfo fi = new SerializableFileInfo();
+        BDP2FileInfo fi = new BDP2FileInfo();
         long startLoc = in.getLongFilePointer();
         long stripLoc;
         byte[] buffer;
@@ -1162,7 +1162,7 @@ public class FastTiffDecoder {
         return fi;
     }
 
-    public SerializableFileInfo[] getTiffInfo() throws IOException
+    public BDP2FileInfo[] getTiffInfo() throws IOException
     {
         if( Logger.isShowDebug() ) {
               Logger.info("# getTiffInfo");
@@ -1174,7 +1174,7 @@ public class FastTiffDecoder {
 
         long ifdOffset;
         ArrayList listIFDs = new ArrayList();
-        SerializableFileInfo fi = null;
+        BDP2FileInfo fi = null;
         if (in == null)
             in = new RandomAccessStream(new RandomAccessFile( new File(directory, name), "r"));
 
@@ -1230,7 +1230,7 @@ public class FastTiffDecoder {
                 // set offsets of the following IFDs
                 long size = fi.width*fi.height*fi.bytesPerPixel;
                 for (int n=1; n < fi.nImages; n++) {
-                    SerializableFileInfo fi2 = new SerializableFileInfo();
+                    BDP2FileInfo fi2 = new BDP2FileInfo();
                     fi2.offset = fi.offset + (n-1)*(size+fi.gapBetweenImages);
                     fi2.nImages = 1;
                     listIFDs.add(fi2);
@@ -1245,7 +1245,7 @@ public class FastTiffDecoder {
             in.close();
             return null;
         } else {
-            SerializableFileInfo[] info = (SerializableFileInfo[])listIFDs.toArray(new SerializableFileInfo[listIFDs.size()]);
+            BDP2FileInfo[] info = ( BDP2FileInfo[])listIFDs.toArray(new BDP2FileInfo[listIFDs.size()]);
             if (url!=null) {
                 in.seek(0);
                 //info[0].inputStream = in;
@@ -1278,7 +1278,7 @@ public class FastTiffDecoder {
             return "varies ("+minGap+" to "+maxGap+")";
     }
 
-	public Properties decodeDescriptionString( SerializableFileInfo fi ) {
+	public Properties decodeDescriptionString( BDP2FileInfo fi ) {
 		if (fi.description==null || fi.description.length()<7)
 			return null;
 		if (IJ.debugMode)

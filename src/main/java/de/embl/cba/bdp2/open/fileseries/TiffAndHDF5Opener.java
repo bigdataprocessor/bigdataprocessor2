@@ -57,7 +57,7 @@ public class TiffAndHDF5Opener extends Opener {
     // TODO: Simplify, maybe even use N5?
     public ImagePlus readDataCube(
             String directory,
-            SerializableFileInfo[] info,
+            BDP2FileInfo[] info,
             int dz,
             Point3D po,
             Point3D ps,
@@ -100,7 +100,7 @@ public class TiffAndHDF5Opener extends Opener {
 
     }
 
-    public ImagePlus readDataCubeFromHDF5(String directory, SerializableFileInfo[] info,
+    public ImagePlus readDataCubeFromHDF5(String directory, BDP2FileInfo[] info,
                                           int zs, int ze, int nz, int dz,
                                           int xs, int xe, int ys, int ye)
     {
@@ -110,7 +110,7 @@ public class TiffAndHDF5Opener extends Opener {
             return null;
         }
 
-        SerializableFileInfo fi = info[0];
+        BDP2FileInfo fi = info[0];
 
         ImagePlus imp;
 
@@ -129,7 +129,7 @@ public class TiffAndHDF5Opener extends Opener {
     }
 
 
-    public ImagePlus read16bitDataCubeFromHDF5(String directory, SerializableFileInfo[] info,
+    public ImagePlus read16bitDataCubeFromHDF5(String directory, BDP2FileInfo[] info,
                                                int zs, int ze, int nz, int dz,
                                                int xs, int xe, int ys, int ye)
     {
@@ -139,7 +139,7 @@ public class TiffAndHDF5Opener extends Opener {
 
         allocationTime = System.currentTimeMillis();
 
-        SerializableFileInfo fi = info[0];
+        BDP2FileInfo fi = info[0];
 
         int nx = xe - xs + 1;
         int ny = ye - ys + 1;
@@ -279,7 +279,7 @@ public class TiffAndHDF5Opener extends Opener {
     }
 
 
-    public ImagePlus read8bitDataCubeFromHDF5(String directory, SerializableFileInfo[] info,
+    public ImagePlus read8bitDataCubeFromHDF5(String directory, BDP2FileInfo[] info,
                                               int zs, int ze, int nz, int dz,
                                               int xs, int xe, int ys, int ye)
     {
@@ -289,7 +289,7 @@ public class TiffAndHDF5Opener extends Opener {
 
         allocationTime = System.currentTimeMillis();
 
-        SerializableFileInfo fi = info[0];
+        BDP2FileInfo fi = info[0];
 
         int nx = xe - xs + 1;
         int ny = ye - ys + 1;
@@ -427,7 +427,7 @@ public class TiffAndHDF5Opener extends Opener {
     }
 
 
-    public ImagePlus readDataCubeFromTiff(String directory, SerializableFileInfo[] info,
+    public ImagePlus readDataCubeFromTiff(String directory, BDP2FileInfo[] info,
                                           ExecutorService es,
                                           int zs, int ze, int nz, int dz,
                                           int xs, int xe, int ys, int ye)
@@ -440,7 +440,7 @@ public class TiffAndHDF5Opener extends Opener {
         File file;
 
         if (info == null) return null;
-        SerializableFileInfo fi = info[zs];
+        BDP2FileInfo fi = info[zs];
 
         int nx = xe - xs + 1;
         int ny = ye - ys + 1;
@@ -604,14 +604,14 @@ public class TiffAndHDF5Opener extends Opener {
         // input
         ImageStack stack;
         byte[][] buffer;
-        SerializableFileInfo[] info;
-        SerializableFileInfo fi;
+        BDP2FileInfo[] info;
+        BDP2FileInfo fi;
         RandomAccessFile in;
         private String directory;
         int z, zs, ze, dz, ys, ye, ny, xs, xe, nx, imByteWidth;
 
         readCroppedPlaneFromTiffIntoImageStack( String directory,
-                                                SerializableFileInfo[] info,
+                                                BDP2FileInfo[] info,
                                                 ImageStack stack,
                                                 byte[][] buffer,
                                                 int z, int zs, int ze, int dz,
@@ -1254,7 +1254,7 @@ public class TiffAndHDF5Opener extends Opener {
             }
         }
 
-        private byte[] readRowsFromTiff( SerializableFileInfo fi, RandomAccessFile in, int ys, int ye )
+        private byte[] readRowsFromTiff( BDP2FileInfo fi, RandomAccessFile in, int ys, int ye )
         {
             boolean hasStrips = false;
             int readLength;

@@ -33,7 +33,7 @@ public class FileInfosHelper
 
         initFileInfos5D( fileInfos, namingScheme, fileLists, channelSubset );
 
-        fileInfos.ctzFileInfos = new SerializableFileInfo[fileInfos.nC][fileInfos.nT][fileInfos.nZ];
+        fileInfos.ctzFileInfos = new BDP2FileInfo[fileInfos.nC][fileInfos.nT][fileInfos.nZ];
         fileInfos.dimensions = new long[ 5 ];
         fileInfos.dimensions[ DimensionOrder.X ] = fileInfos.nX;
         fileInfos.dimensions[ DimensionOrder.Y ] = fileInfos.nY;
@@ -49,7 +49,7 @@ public class FileInfosHelper
             String directory,
             String fileName)
     {
-        SerializableFileInfo[] info;
+        BDP2FileInfo[] info;
 
         FastTiffDecoder ftd = new FastTiffDecoder( directory, fileName );
         try

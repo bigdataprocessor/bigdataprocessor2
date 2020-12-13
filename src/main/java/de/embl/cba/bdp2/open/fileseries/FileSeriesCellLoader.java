@@ -30,7 +30,7 @@ public class FileSeriesCellLoader< T extends NativeType< T > > implements CellLo
     private String directory;
     private long[] dimensions;
     private int[] cellDims;
-    private LoadingCache< List< Integer >, SerializableFileInfo[] > serializableFileInfoCache;
+    private LoadingCache< int[], BDP2FileInfo[] > serializableFileInfoCache;
     private final FileSeriesFileType fileType;
     private short[][] cache;
 
@@ -41,14 +41,14 @@ public class FileSeriesCellLoader< T extends NativeType< T > > implements CellLo
         this.directory = fileInfos.directory;
         this.fileType = fileInfos.fileType;
 
-        // Google Guava cache
-        CacheLoader< List<Integer>, SerializableFileInfo[] > loader =
-                new CacheLoader<List<Integer>, SerializableFileInfo[]>(){
+        CacheLoader< int[], BDP2FileInfo[] > loader =
+                new CacheLoader< int[], BDP2FileInfo[]>(){
                     @Override
-                    public SerializableFileInfo[] load( List<Integer> c_t ){
-                        return fileInfos.getSerializableFileStackInfo( c_t.get(0), c_t.get(1) );
+                    public BDP2FileInfo[] load( int[] ct ){
+                        return fileInfos.getSerializableFileStackInfo( ct[ 0 ], ct[ 1 ] );
                     }
         };
+
         serializableFileInfoCache = CacheBuilder.newBuilder().maximumSize( 50 ).build( loader );
     }
 
@@ -59,106 +59,46 @@ public class FileSeriesCellLoader< T extends NativeType< T > > implements CellLo
     @Override
     public void load( final SingleCellArrayImg< T, ? > cell )
     {
-        long[] min = new long[ FileInfos.TOTAL_AXES ];
-        long[] max = new long[ FileInfos.TOTAL_AXES ];
+        long start = System.currentTimeMillis();
+
+        long[] min = new long[ cell.numDimensions() ];
+        long[] max = new long[ cell.numDimensions()];
         cell.min( min );
         cell.max( max );
 
-        long start = System.currentTimeMillis();
+        assert cell.numDimensions() == DimensionOrder.N;
+        assert min[ DimensionOrder.C ] == max[ DimensionOrder.C ];
+        assert min[ DimensionOrder.T ] == max[ DimensionOrder.T ];
 
-        if ( cell.firstElement() instanceof UnsignedByteType )
+        int[] ct = new int[ 2 ];
+        ct[ 0 ] = Math.toIntExact( max[ DimensionOrder.C ] );
+        ct[ 1 ] = Math.toIntExact( max[ DimensionOrder.C ] );
+        BDP2FileInfo[] fileInfos = getVolumeFileInfos( ct );
+
+        if ( fileType.toString().toLowerCase().contains( "tif" ) )
         {
-            // TODO: Do not use ImagePlus
-            final byte[] storageArray = (byte[]) cell.getStorageArray();
-            int destPos = 0;
-            ImagePlus imagePlus = getDataCube( min, max );
-
-            final ImageStack stack = imagePlus.getStack();
-            for ( int i = 0; i < stack.size(); i++ )
-            {
-                final ImageProcessor processor = stack.getProcessor( i + 1 );
-                final byte[] impData = (byte[]) processor.getPixels();
-                System.arraycopy( impData, 0, storageArray, destPos, impData.length );
-                destPos += impData.length;
-            }
-
-            long timeMillis = System.currentTimeMillis() - start;
-            log( min, max, timeMillis );
-            PerformanceService.getPerformanceMonitor().addReadPerformance( storageArray.length, timeMillis );
+            TiffCellLoader.load( cell, directory, fileInfos, BigDataProcessor2.threadPool );
         }
-        else if ( cell.firstElement() instanceof UnsignedShortType )
+        else if ( fileType.toString().toLowerCase().contains( "hdf5" ) )
         {
-            final short[] storageArray = ( short[] ) cell.getStorageArray();
-
-            // TODO: Remove once this is fixed in imglib2
-            if ( min[ DimensionOrder.T ] == 0 && min[ DimensionOrder.Z ] == 0)
-            {
-                if ( cache == null )
-                {
-                    int numChannels = ( int ) dimensions[ DimensionOrder.C ];
-                    cache = new short[ numChannels ][];
-                }
-
-                int channelIndex = ( int ) min[ DimensionOrder.C ];
-
-                if ( cache[ channelIndex ] == null )
-                {
-                    // hold on to the data of time-point zero to avoid reloading of it
-                    cache[ channelIndex ] = storageArray;
-                }
-                else
-                {
-                    System.arraycopy( cache[ channelIndex ], 0, storageArray, 0, storageArray.length );
-                    long timeMillis = System.currentTimeMillis() - start;
-                    log( min, max, timeMillis );
-                    return;
-                }
-            }
-
-            if ( fileType.toString().toLowerCase().contains( "hdf5" ) )
-            {
-                final SerializableFileInfo fileInfo = getFileInfo( cell );
-                HDF5DataCubeReader.read16bitDataCubeIntoArray(
-                        cell,
-                        storageArray,
-                        getFilePath( fileInfo ),
-                        fileInfo.h5DataSet );
-            }
-            else
-            {
-                int destPos = 0;
-                ImagePlus imagePlus = getDataCube( min, max );
-                final ImageStack stack = imagePlus.getStack();
-                for ( int i = 0; i < stack.size(); i++ )
-                {
-                    final ImageProcessor processor = stack.getProcessor( i + 1 );
-                    final short[] impData = (short[]) processor.getPixels();
-                    System.arraycopy( impData, 0, storageArray, destPos, impData.length );
-                    destPos += impData.length;
-                }
-            }
-
-            long timeMillis = System.currentTimeMillis() - start;
-            log( min, max, timeMillis );
-            PerformanceService.getPerformanceMonitor().addReadPerformance( 2L * (long) storageArray.length, timeMillis  );
-
+            // Unchecked assumptions:
+            // - data is unsigned short
+            // - all z planes are in the same file
+            HDF5DataCubeReader.read16bitDataCubeIntoArray(
+                    cell,
+                    (short[]) cell.getStorageArray(),
+                    getFullPath( directory, fileInfos[ 0 ] ),
+                    fileInfos[ 0 ].h5DataSet );
         }
-        else if (cell.firstElement() instanceof FloatType)
-        {
-            ImagePlus imagePlus = getDataCube( min, max );
-            final float[] impData = (float[]) imagePlus.getProcessor().getPixels();
-            final float[] storageArray = (float[]) cell.getStorageArray();
-            System.arraycopy(impData, 0, storageArray, 0, storageArray.length);
 
-            long timeMillis = System.currentTimeMillis() - start;
-            log( min, max, timeMillis );
-            PerformanceService.getPerformanceMonitor().addReadPerformance( 4L * (long) storageArray.length, timeMillis  );
-        }
+        long timeMillis = System.currentTimeMillis() - start;
+        log( min, max, timeMillis );
+        PerformanceService.getPerformanceMonitor().addReadPerformance( cell, timeMillis  );
     }
 
     private static void log( long[] min, long[] max, long timeMillis )
     {
-        Logger.benchmark( "Read planes " + min[ Z ] + "-" + max[ Z ] + " from time-point " + min[ DimensionOrder.T ] + " in " + timeMillis + " ms" );
+        Logger.benchmark( "Read " + Arrays.toString( min ) + " - " + Arrays.toString( max ) + " in " + timeMillis + " ms" );
     }
 
     public long[] getDimensions()
@@ -171,15 +111,15 @@ public class FileSeriesCellLoader< T extends NativeType< T > > implements CellLo
         return cellDims;
     }
 
-    private SerializableFileInfo getFileInfo( SingleCellArrayImg cell )
+    private BDP2FileInfo getFileInfo( int[] cell )
     {
         int c = Math.toIntExact( cell.max( DimensionOrder.C ) );
         int t = Math.toIntExact( cell.max( DimensionOrder.T ) );
         int z = Math.toIntExact( cell.max( Z ));
 
         List<Integer> c_t = Arrays.asList(c,t);
-        SerializableFileInfo[] infos_c_t = getFileInfoStack(c_t);
-        SerializableFileInfo fileInfo = infos_c_t[ z ];
+        BDP2FileInfo[] infos_c_t = getVolumeFileInfos(c_t);
+        BDP2FileInfo fileInfo = infos_c_t[ z ];
         return fileInfo;
     }
 
@@ -188,7 +128,7 @@ public class FileSeriesCellLoader< T extends NativeType< T > > implements CellLo
         int channel = Math.toIntExact( max[ DimensionOrder.C ]);
         int time = Math.toIntExact( max[ DimensionOrder.T ]);
         List<Integer> c_t = Arrays.asList(channel,time);
-        SerializableFileInfo[] infos_c_t = getFileInfoStack(c_t);
+        BDP2FileInfo[] infos_c_t = getVolumeFileInfos(c_t);
 
 //        po = getOffset( min[ DimensionOrder.X ], min[ DimensionOrder.Y ], z );
 //        ps = getSize( min, max );
@@ -231,17 +171,16 @@ public class FileSeriesCellLoader< T extends NativeType< T > > implements CellLo
         return ps;
     }
 
-    private SerializableFileInfo[] getFileInfoStack(List<Integer> c_t) {
-        SerializableFileInfo[] infos_c_t = null;
+    private BDP2FileInfo[] getVolumeFileInfos( int[] ct ) {
         try {
-             infos_c_t = serializableFileInfoCache.get(c_t);
-        } catch (ExecutionException e) {
+             return serializableFileInfoCache.get( ct );
+        } catch ( ExecutionException e ) {
             e.printStackTrace();
+            throw new RuntimeException( e );
         }
-        return infos_c_t;
     }
 
-    private String getFilePath( SerializableFileInfo fileInfo )
+    private static String getFullPath( String directory, BDP2FileInfo fileInfo )
     {
         return directory + File.separator + fileInfo.directory + File.separator + fileInfo.fileName;
     }

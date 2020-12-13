@@ -7,4 +7,5 @@ public abstract class DimensionOrder
 	public static final int Z = 2;
 	public static final int C = 3;
 	public static final int T = 4;
+	public static final int N = 5;
 }
