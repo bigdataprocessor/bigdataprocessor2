@@ -5,6 +5,7 @@ import de.embl.cba.bdp2.open.NamingSchemes;
 import de.embl.cba.bdp2.utils.BioFormatsCalibrationReader;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import org.apache.commons.lang.ArrayUtils;
+import weka.Run;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -16,7 +17,7 @@ import java.util.regex.Pattern;
 
 public class FileInfosHelper
 {
-    public static void configureFileInfos5D( FileInfos fileInfos, String namingScheme, String[] channelSubset, String[][] fileLists )
+    public static void setFileInfos5D( FileInfos fileInfos, String namingScheme, String[] channelSubset, String[][] fileLists )
     {
         String directory = fileInfos.directory;
 
@@ -41,7 +42,8 @@ public class FileInfosHelper
         fileInfos.dimensions[ DimensionOrder.C ] = fileInfos.nC;
         fileInfos.dimensions[ DimensionOrder.T ] = fileInfos.nT;
 
-        if ( fileInfos.voxelUnit == null || fileInfos.voxelUnit.equals( "" ) ) fileInfos.voxelUnit = "pixel";
+        if ( fileInfos.voxelUnit == null || fileInfos.voxelUnit.equals( "" ) )
+            fileInfos.voxelUnit = "pixel";
     }
 
     public static void setImageMetadataFromTiff(
@@ -55,10 +57,10 @@ public class FileInfosHelper
         try
         {
             info = ftd.getTiffInfo();
-        } catch ( IOException e )
+        }
+        catch ( IOException e )
         {
-            e.printStackTrace();
-            return;
+            throw new RuntimeException( e );
         }
 
         if ( info[0].nImages > 1 )

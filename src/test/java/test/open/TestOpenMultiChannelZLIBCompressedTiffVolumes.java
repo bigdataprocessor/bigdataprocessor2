@@ -20,6 +20,8 @@ public class TestOpenMultiChannelZLIBCompressedTiffVolumes
 
         final Image image = BigDataProcessor2.openTiffSeries( directory, MULTI_CHANNEL_VOLUMES + OME_TIF );
 
+        image.setVoxelDimensions( 1, 1, 1 );
+
         BigDataProcessor2.showImage( image );
     }
 }

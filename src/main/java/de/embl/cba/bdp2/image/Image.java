@@ -289,8 +289,9 @@ public class Image< R extends RealType< R > & NativeType< R > >
 	{
 		Logger.info( "Setting cache of image: " + getName() );
 		Logger.info( "  Cache cell dimensions: " + Arrays.toString( cellDims ) );
-		Logger.info( "  Cache size: " + cacheSize );
 		Logger.info( "  Cache type: " + cacheType.toString() );
+		if ( cacheType.equals( DiskCachedCellImgOptions.CacheType.BOUNDED ) )
+			Logger.info( "  Cache size: " + cacheSize );
 
 		this.cachedCellDims = cellDims;
 

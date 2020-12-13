@@ -11,6 +11,7 @@ import de.embl.cba.bdp2.boundingbox.BoundingBoxDialog;
 import de.embl.cba.bdp2.dialog.DisplaySettings;
 import de.embl.cba.bdp2.dialog.DialogUtils;
 import de.embl.cba.bdp2.log.Logger;
+import de.embl.cba.bdp2.process.calibrate.CalibrationChecker;
 import de.embl.cba.bdp2.track.Track;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.service.ImageViewerService;
@@ -63,6 +64,11 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
 
     public ImageViewer( final Image< R > image, final boolean autoContrast, final boolean enableArbitraryPlaneSlicing )
     {
+        if ( !CalibrationChecker.checkImage( image ) )
+        {
+            throw new RuntimeException( "The voxel dimensions or voxel unit of image " + image.getName() + " were not set properly and the image could thus not be visualised." );
+        }
+
         this.image = image;
         image.setViewer( this );
         this.enableArbitraryPlaneSlicing = enableArbitraryPlaneSlicing;

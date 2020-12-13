@@ -136,7 +136,7 @@ public class FileInfos
         if ( filesInFolders == null )
             filesInFolders = FileInfosHelper.getFilesInFolders( this.directory, this.filter, recursive );
 
-        FileInfosHelper.configureFileInfos5D( this, this.namingScheme, channelSubset, filesInFolders );
+        FileInfosHelper.setFileInfos5D( this, this.namingScheme, channelSubset, filesInFolders );
 
         Logger.info( this.toString() );
     }
