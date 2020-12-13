@@ -34,7 +34,7 @@ public class FileInfos
 			"ITKImage/0/VoxelData" // Elastix
     };
     public static final String NONRECURSIVE = "_NONRECURSIVE";
-    public BDP2FileInfo[][][] ctzFileInfos;
+	public BDP2FileInfo[][][] ctzFileInfos;
     public long[] dimensions;
     private String namingScheme;
     private String filter;

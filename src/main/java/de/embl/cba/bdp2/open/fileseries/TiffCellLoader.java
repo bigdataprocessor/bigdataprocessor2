@@ -30,41 +30,19 @@ import java.util.concurrent.Future;
 
 public class TiffCellLoader
 {
-    // Compression modes
-    public static final int COMPRESSION_UNKNOWN = 0;
-    public static final int COMPRESSION_NONE = 1;
-    public static final int LZW = 2;
-    public static final int LZW_WITH_DIFFERENCING = 3;
-
-    /**
-     *
-     * @param cell
-     * @param directory
-     * @param fileInfos
-     * @param executorService
-     */
     public static void load( SingleCellArrayImg cell, String directory, BDP2FileInfo[] fileInfos, ExecutorService executorService)
     {
         assert cell.min( DimensionOrder.C ) == cell.max( DimensionOrder.C );
         assert cell.min( DimensionOrder.T ) == cell.max( DimensionOrder.T );
 
-        if ( Logger.getLevel().equals( Logger.Level.Debug ) )
+        log( cell, directory, fileInfos );
+
+        final long min = cell.min( DimensionOrder.Z );
+        final long max = cell.max( DimensionOrder.Z );
+
+        for ( long z = min; z <= max; z++ )
         {
-            BDP2FileInfo fi = fileInfos[ Math.toIntExact( cell.min( DimensionOrder.Z ) ) ];
-            Logger.debug( "# TiffCellLoader" );
-            Logger.debug( "root directory: " + directory );
-            Logger.debug( "fileInfos.length: " + fileInfos.length );
-            Logger.debug( "fileInfo.directory: " + fi.directory );
-            Logger.debug( "fileInfo.filename: " + fi.fileName );
-            Logger.debug( "fileInfo.compression: " + fi.compression );
-            Logger.debug( "fileInfo.intelByteOrder: " + fi.intelByteOrder );
-            Logger.debug( "fileInfo.bytesPerPixel: " + fi.bytesPerPixel );
-            long[] longMin = new long[ cell.numDimensions() ];
-            long[] longMax = new long[ cell.numDimensions() ];
-            cell.min( longMin );
-            cell.max( longMax );
-            Logger.debug( "min: " + Arrays.toString( longMin ) );
-            Logger.debug( "max: " + Arrays.toString( longMax ) );
+            new PartialTiffPlaneCellLoader( cell, (int) z, directory, fileInfos[ (int) z ] ).run();
         }
 
         // TODO: BDV is multi-thread already, think about when it makes sense to
@@ -84,9 +62,28 @@ public class TiffCellLoader
         //        }
         //        waitUntilDone( futures );
 
-        for ( long z = cell.min( DimensionOrder.Z ); z <= cell.max( DimensionOrder.Z ); z++ )
+
+    }
+
+    private static void log( SingleCellArrayImg cell, String directory, BDP2FileInfo[] fileInfos )
+    {
+        if ( Logger.getLevel().equals( Logger.Level.Debug ) )
         {
-            new PartialTiffPlaneCellLoader( cell, (int) z, directory, fileInfos[ (int) z ] ).run();
+            BDP2FileInfo fi = fileInfos[ Math.toIntExact( cell.min( DimensionOrder.Z ) ) ];
+            Logger.debug( "# TiffCellLoader" );
+            Logger.debug( "root directory: " + directory );
+            Logger.debug( "fileInfos.length: " + fileInfos.length );
+            Logger.debug( "fileInfo.directory: " + fi.directory );
+            Logger.debug( "fileInfo.filename: " + fi.fileName );
+            Logger.debug( "fileInfo.compression: " + fi.compression );
+            Logger.debug( "fileInfo.intelByteOrder: " + fi.intelByteOrder );
+            Logger.debug( "fileInfo.bytesPerPixel: " + fi.bytesPerPixel );
+            long[] longMin = new long[ cell.numDimensions() ];
+            long[] longMax = new long[ cell.numDimensions() ];
+            cell.min( longMin );
+            cell.max( longMax );
+            Logger.debug( "min: " + Arrays.toString( longMin ) );
+            Logger.debug( "max: " + Arrays.toString( longMax ) );
         }
     }
 
