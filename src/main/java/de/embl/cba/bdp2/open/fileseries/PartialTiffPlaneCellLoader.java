@@ -89,19 +89,13 @@ public class PartialTiffPlaneCellLoader implements Runnable
 			throw new RuntimeException( e );
 		}
 
-		boolean hasStrips = false;
 
-		if ( ( fi.stripOffsets != null && fi.stripOffsets.length > 1 ) )
+		if ( ( fi.stripOffsets != null && fi.stripOffsets.length > 1 ) ) // has strips
 		{
-			hasStrips = true;
-		}
-
-		if ( hasStrips )
-		{
-			// check what we have read
-			int rps = fi.rowsPerStrip;
-			int ss = ys / rps; // the int is doing a floor()
-			int se = ye / rps;
+			// determine which strips we have to read to fetch all requested rows
+			final int rps = fi.rowsPerStrip;
+			final int stripStart = ys / rps; // the int is doing a floor()
+			final int stripEnd = ye / rps;
 
 			if ( ( fi.compression == TiffCellLoader.COMPRESSION_NONE ) || ( fi.compression == 0 ) )
 			{
@@ -109,20 +103,19 @@ public class PartialTiffPlaneCellLoader implements Runnable
 			}
 			else if ( fi.compression == TiffCellLoader.LZW )
 			{
-				bytes = decompressLZW( bytes, rps, ss, se );
+				bytes = lzwUncompress( bytes, rps, stripStart, stripEnd );
 			}
 			else if ( fi.compression == PACK_BITS )
 			{
-				bytes = decompressPACKBITS( bytes, rps, ss, se );
+				bytes = packbitUncompress( bytes, rps, stripStart, stripEnd );
 			}
 			else if ( fi.compression == ZIP )
 			{
-				bytes = decompressZIP( bytes, rps, ss, se );
+				bytes = zipUncompress( bytes, rps, stripStart, stripEnd );
 			}
 			else
 			{
-				Logger.error( "Tiff compression not implemented: fi.compression = " + fi.compression );
-				return;
+				throw new RuntimeException( "Tiff compression not implemented: " + fi.compression );
 			}
 
 			ys = ys % rps; // we might have to skip a few rows in the beginning because the strips can hold several rows
@@ -132,32 +125,11 @@ public class PartialTiffPlaneCellLoader implements Runnable
 		{
 			if ( fi.compression == ZIP )
 			{
-				/** TIFF Adobe ZIP support contributed by Jason Newton. */
-				ByteArrayOutputStream imageBuffer = new ByteArrayOutputStream();
-				byte[] tmpBuffer = new byte[ 1024 ];
-				Inflater decompressor = new Inflater();
-
-				decompressor.setInput( bytes[ ( z - zs ) / dz ] );
-				try
-				{
-					while ( !decompressor.finished() )
-					{
-						int rlen = decompressor.inflate( tmpBuffer );
-						imageBuffer.write( tmpBuffer, 0, rlen );
-					}
-				} catch ( DataFormatException e )
-				{
-					Logger.error( e.toString() );
-				}
-				decompressor.end();
-
-				bytes[ ( z - zs ) / dz ] = imageBuffer.toByteArray();
-
-				//setShortPixelsCropXY((short[]) stack.getPixels((z - zs)/dz + 1), ys, ny, xs, nx, imByteWidth, buffer[(z - zs)/dz]);
+				bytes = zipUncompress( bytes );
 			}
 			else if ( fi.compression == TiffCellLoader.LZW )
 			{
-				bytes[ ( z - zs ) / dz ] = lzwUncompress( bytes[ ( z - zs ) / dz ], imByteWidth * ny  );
+				bytes = lzwUncompress( bytes, imByteWidth * ny  );
 				ys = 0; // buffer contains full y-range
 			}
 			else
@@ -172,7 +144,7 @@ public class PartialTiffPlaneCellLoader implements Runnable
 				Logger.debug( "dz: " + dz );
 				Logger.debug( "(z - zs)/dz: " + ( z - zs ) / dz );
 				Logger.debug( "buffer.length : " + bytes.length );
-				Logger.debug( "buffer[z-zs].length : " + bytes[ z - zs ].length );
+				Logger.debug( "buffer[z-zs].length : " + bytes.length );
 				Logger.debug( "imWidth [bytes] : " + imByteWidth );
 				Logger.debug( "ny [#] : " + ny );
 			}
@@ -183,11 +155,11 @@ public class PartialTiffPlaneCellLoader implements Runnable
 		//
 		if ( fi.bytesPerPixel == 1 )
 		{
-			setBytePixelsCropXY( ( byte[] ) stack.getPixels( ( z - zs ) / dz + 1 ), ys, ny, xs, nx, imByteWidth, bytes[ ( z - zs ) / dz ] );
+			setBytePixelsCropXY( ( byte[] ) stack.getPixels( ( z - zs ) / dz + 1 ), ys, ny, xs, nx, imByteWidth, bytes);
 		}
 		else if ( fi.bytesPerPixel == 2 )
 		{
-			setShortPixelsCropXY( ( short[] ) stack.getPixels( ( z - zs ) / dz + 1 ), ys, ny, xs, nx, imByteWidth, bytes[ ( z - zs ) / dz ] );
+			setShortPixelsCropXY( ( short[] ) stack.getPixels( ( z - zs ) / dz + 1 ), ys, ny, xs, nx, imByteWidth, bytes );
 		} else
 		{
 			Logger.error( "Unsupported bit depth." );
@@ -195,7 +167,32 @@ public class PartialTiffPlaneCellLoader implements Runnable
 		}
 	}
 
-	private byte[] decompressLZW( byte[] bytes, int rps, int ss, int se )
+	private byte[] zipUncompress( byte[] bytes )
+	{
+		/** TIFF Adobe ZIP support contributed by Jason Newton. */
+		ByteArrayOutputStream imageBuffer = new ByteArrayOutputStream();
+		byte[] tmpBuffer = new byte[ 1024 ];
+		Inflater decompressor = new Inflater();
+
+		decompressor.setInput( bytes );
+		try
+		{
+			while ( !decompressor.finished() )
+			{
+				int rlen = decompressor.inflate( tmpBuffer );
+				imageBuffer.write( tmpBuffer, 0, rlen );
+			}
+		} catch ( DataFormatException e )
+		{
+			Logger.error( e.toString() );
+		}
+		decompressor.end();
+
+		bytes = imageBuffer.toByteArray();
+		return bytes;
+	}
+
+	private byte[] lzwUncompress( byte[] bytes, int rps, int ss, int se )
 	{
 		// init to hold all data present in the uncompressed strips
 		byte[] unCompressedBuffer = new byte[ ( se - ss + 1 ) * rps * imByteWidth ];
@@ -243,7 +240,7 @@ public class PartialTiffPlaneCellLoader implements Runnable
 		return bytes;
 	}
 
-	private byte[] decompressPACKBITS( byte[] bytes, int rps, int ss, int se )
+	private byte[] packbitUncompress( byte[] bytes, int rps, int ss, int se )
 	{
 		// init to hold all data present in the uncompressed strips
 		byte[] uncompressedBytes = new byte[ ( se - ss + 1 ) * rps * imByteWidth ];
@@ -289,7 +286,7 @@ public class PartialTiffPlaneCellLoader implements Runnable
 		return bytes;
 	}
 
-	private byte[] decompressZIP( byte[] bytes, int rps, int ss, int se )
+	private byte[] zipUncompress( byte[] bytes, int rps, int ss, int se )
 	{
 		// init to hold all data present in the uncompressed strips
 		byte[] unCompressedBuffer = new byte[ ( se - ss + 1 ) * rps * imByteWidth ];
@@ -302,7 +299,6 @@ public class PartialTiffPlaneCellLoader implements Runnable
 			int compressedStripLength = ( int ) fi.stripLengths[ s ];
 			byte[] strip = new byte[ compressedStripLength ];
 
-			// get strip from core data
 			try
 			{
 				System.arraycopy( bytes[ ( z - zs ) / dz ], pos, strip, 0, compressedStripLength );
@@ -316,7 +312,7 @@ public class PartialTiffPlaneCellLoader implements Runnable
 				Logger.info( "pos + stripLength [bytes] : " + ( pos + compressedStripLength ) );
 				Logger.info( "z-zs : " + ( z - zs ) );
 				Logger.info( "z-zs/dz : " + ( z - zs ) / dz );
-				Logger.info( "buffer[z-zs].length : " + bytes[ z - zs ].length );
+				Logger.info( "buffer[z-zs].length : " + bytes.length );
 				Logger.info( "imWidth [bytes] : " + imByteWidth );
 				Logger.info( "rows per strip [#] : " + rps );
 				Logger.info( "ny [#] : " + ny );
@@ -326,26 +322,7 @@ public class PartialTiffPlaneCellLoader implements Runnable
 			}
 
 			/** TIFF Adobe ZIP support contributed by Jason Newton. */
-			ByteArrayOutputStream imageBuffer = new ByteArrayOutputStream();
-			byte[] tmpBuffer = new byte[ 1024 ];
-
-			Inflater decompressor = new Inflater();
-
-			decompressor.setInput( strip );
-			try
-			{
-				while ( !decompressor.finished() )
-				{
-					int rlen = decompressor.inflate( tmpBuffer );
-					imageBuffer.write( tmpBuffer, 0, rlen );
-				}
-			} catch ( DataFormatException e )
-			{
-				Logger.error( e.toString() );
-			}
-			decompressor.end();
-
-			strip = imageBuffer.toByteArray();
+			strip = zipUncompress( strip );
 
 			// put uncompressed strip into large array
 			System.arraycopy(
@@ -359,6 +336,7 @@ public class PartialTiffPlaneCellLoader implements Runnable
 		}
 
 		bytes = unCompressedBuffer;
+
 		return bytes;
 	}
 
