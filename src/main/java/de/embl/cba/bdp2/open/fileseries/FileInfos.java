@@ -221,7 +221,7 @@ public class FileInfos
     }
 
 
-    public BDP2FileInfo[] getSerializableFileStackInfo( int channel, int time ) {
+    public BDP2FileInfo[] getVolumeFileInfos( int channel, int time ) {
         int z = 0;
         if ( fileType.equals( FileSeriesFileType.TIFF_STACKS ) ) {
             setInfosFromFile(channel, time, z, true);

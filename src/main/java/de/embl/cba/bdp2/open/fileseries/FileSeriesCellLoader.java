@@ -7,25 +7,20 @@ import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.service.PerformanceService;
 import de.embl.cba.bdp2.utils.DimensionOrder;
-import ij.ImagePlus;
-import de.embl.cba.bdp2.utils.Point3D;
 import net.imglib2.cache.img.CellLoader;
 import net.imglib2.cache.img.SingleCellArrayImg;
 import net.imglib2.type.NativeType;
 
 import java.io.File;
 import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
-
-import static de.embl.cba.bdp2.utils.DimensionOrder.Z;
 
 public class FileSeriesCellLoader< T extends NativeType< T > > implements CellLoader< T > {
 
     private String directory;
     private long[] dimensions;
     private int[] cellDims;
-    private LoadingCache< int[], BDP2FileInfo[] > serializableFileInfoCache;
+    private LoadingCache< String, BDP2FileInfo[] > serializableFileInfoCache;
     private final FileSeriesFileType fileType;
     private short[][] cache;
 
@@ -36,11 +31,12 @@ public class FileSeriesCellLoader< T extends NativeType< T > > implements CellLo
         this.directory = fileInfos.directory;
         this.fileType = fileInfos.fileType;
 
-        CacheLoader< int[], BDP2FileInfo[] > loader =
-                new CacheLoader< int[], BDP2FileInfo[]>(){
+        CacheLoader< String, BDP2FileInfo[] > loader =
+                new CacheLoader< String, BDP2FileInfo[]>(){
                     @Override
-                    public BDP2FileInfo[] load( int[] ct ){
-                        return fileInfos.getSerializableFileStackInfo( ct[ 0 ], ct[ 1 ] );
+                    public BDP2FileInfo[] load( String c_t ){
+                        final String[] split = c_t.split( "_" );
+                        return fileInfos.getVolumeFileInfos( Integer.parseInt( split[ 0 ] ), Integer.parseInt( split[ 1 ] ) );
                     }
         };
 
@@ -108,7 +104,7 @@ public class FileSeriesCellLoader< T extends NativeType< T > > implements CellLo
 
     private BDP2FileInfo[] getVolumeFileInfos( int[] ct ) {
         try {
-             return serializableFileInfoCache.get( ct );
+             return serializableFileInfoCache.get( "" + ct[0] + "_" + ct[1] );
         } catch ( ExecutionException e ) {
             e.printStackTrace();
             throw new RuntimeException( e );
