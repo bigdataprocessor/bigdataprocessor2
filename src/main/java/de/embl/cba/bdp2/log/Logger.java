@@ -58,12 +58,12 @@ public class Logger
 	public static void benchmark( String msg )
 	{
 		if ( level.equals( Level.Benchmark ) )
-			IJ.log( "BENCHMARK: " + msg );
+			IJ.log( "[BENCHMARK] " + msg );
 	}
 
 	public static void warn( String msg )
 	{
-		IJ.log( "WARN: " + msg );
+		IJ.log( "[WARN] " + msg );
 	}
 
 	public static void debug( String msg )

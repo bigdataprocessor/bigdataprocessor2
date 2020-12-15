@@ -12,6 +12,7 @@ import de.embl.cba.bdp2.viewer.ImageViewer;
 import mpicbg.imglib.multithreading.Stopable;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.cache.img.DiskCachedCellImgOptions;
+import net.imglib2.img.array.ArrayImg;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;

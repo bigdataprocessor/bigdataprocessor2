@@ -305,8 +305,8 @@ public class FastTiffDecoder {
             if ( fieldType == SHORT  )
             {
                 value = getShort(); // 2
-                int skip = getShort(); // 2
-                if (isBigTiff) skip = getInt(); // 4
+                getShort(); // skip 2
+                if (isBigTiff) getInt(); // skip 4
             }
             else if ( fieldType == LONG )
             {
@@ -318,15 +318,15 @@ public class FastTiffDecoder {
             }
             else
             {
-                int a = 1;
+                throw new RuntimeException( "Unkown field type in FastTiffDecoder" );
             }
         }
         else  // if count > 1 do not return the actual value but just a pointer to the values
         {
-            value = isBigTiff ? getLong() : getInt() & 0xffffffffL;
+            value = isBigTiff ? getLong() : getInt();
         }
 
-        return value;
+        return value & 0xffffffffL;
     }
 
     void getColorMap(long offset, BDP2FileInfo fi) throws IOException {
@@ -1091,7 +1091,6 @@ public class FastTiffDecoder {
             fi.offset = fi.stripOffsets[(int) count - 1];
             Logger.warn("Weird line... " + name);
         }
-
         //
         // stripLengths
         //

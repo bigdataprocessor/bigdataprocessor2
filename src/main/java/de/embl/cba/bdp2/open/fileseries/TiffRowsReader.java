@@ -60,8 +60,13 @@ public class TiffRowsReader
 			{
 				// read subset
 				// convert rows to bytes
-				readStart = fi.offset + requestedRowMin * fi.width * fi.bytesPerPixel;
-				readLength = ( ( requestedRowMax - requestedRowMin ) + 1 ) * fi.width * fi.bytesPerPixel; // requestedRowMax is -1 sometimes why?
+				readStart = fi.offset + (long) requestedRowMin * (long) fi.width * (long) fi.bytesPerPixel;
+				if ( readStart < 0 )
+				{
+					int a = 1;
+				}
+				// requestedRowMax is -1 sometimes why?
+				readLength = ( ( requestedRowMax - requestedRowMin ) + 1 ) * fi.width * fi.bytesPerPixel;
 			}
 		}
 
