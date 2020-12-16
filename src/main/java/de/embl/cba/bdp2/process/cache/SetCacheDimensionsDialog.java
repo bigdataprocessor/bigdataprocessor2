@@ -44,12 +44,14 @@ public class SetCacheDimensionsDialog < R extends RealType< R > & NativeType< R 
 
 		int[] cachedCellDims = inputImage.getCachedCellDims();
 
+		gd.addNumericField( "Cache Size X", cachedCellDims[ DimensionOrder.X ] );
 		gd.addNumericField( "Cache Size Y", cachedCellDims[ DimensionOrder.Y ] );
 
 		gd.showDialog();
 
 		if( gd.wasCanceled() ) return;
 
+		cachedCellDims[ DimensionOrder.X ] = (int) gd.getNextNumber();
 		cachedCellDims[ DimensionOrder.Y ] = (int) gd.getNextNumber();
 
 		inputImage.setCache( cachedCellDims, DiskCachedCellImgOptions.CacheType.SOFTREF, 10000 );

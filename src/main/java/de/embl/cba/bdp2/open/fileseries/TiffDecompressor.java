@@ -24,7 +24,6 @@ public class TiffDecompressor
 	 *
 	 * TODO: this could be faster, because we know how many bytes it will be in the end
 	 *
-	 *
 	 * @param bytes
 	 * @return
 	 */
@@ -182,38 +181,63 @@ public class TiffDecompressor
 		return out;
 	}
 
-	/**
-	 * Based on the Bio-Formats PackbitsCodec written by Melissa Linkert.
-	 */
-	public byte[] packBitsUncompress( byte[] input, int expected )
+	public static byte[] decompressStrips( byte[] bytes, int rps, int ss, int se, int bytesPerRow, long[] stripLengths, int compression )
 	{
-		if ( expected == 0 ) expected = Integer.MAX_VALUE;
-		ByteVector output = new ByteVector( 1024 );
-		int index = 0;
-		while ( output.size() < expected && index < input.length )
+		// init to hold all data present in the uncompressed strips
+		byte[] unCompressedBuffer = new byte[ ( se - ss + 1 ) * rps * bytesPerRow ];
+
+		int pos = 0;
+		for ( int s = ss; s <= se; s++ )
 		{
-			byte n = input[ index++ ];
-			if ( n >= 0 )
-			{ // 0 <= n <= 127
-				byte[] b = new byte[ n + 1 ];
-				for ( int i = 0; i < n + 1; i++ )
-					b[ i ] = input[ index++ ];
-				output.add( b );
-				b = null;
-			} else if ( n != -128 )
-			{ // -127 <= n <= -1
-				int len = -n + 1;
-				byte inp = input[ index++ ];
-				for ( int i = 0; i < len; i++ ) output.add( inp );
+			int stripLength = ( int ) stripLengths[ s ];
+			byte[] strip = new byte[ stripLength ];
+
+			try
+			{
+				System.arraycopy( bytes, pos, strip, 0, stripLength );
 			}
+			catch ( Exception e )
+			{
+				Logger.info( "" + e.toString() );
+				Logger.info( "------- s [#] : " + s );
+				Logger.info( "stripLength [bytes] : " + strip.length );
+				Logger.info( "pos [bytes] : " + pos );
+				Logger.info( "pos + stripLength [bytes] : " + ( pos + stripLength ) );
+				Logger.info( "buffer[.length : " + bytes.length );
+				Logger.info( "imWidth [bytes] : " + bytesPerRow );
+				Logger.info( "rows per strip [#] : " + rps );
+				Logger.info( "(s - ss) * imByteWidth * rps [bytes] : " + ( ( s - ss ) * bytesPerRow *
+						rps ) );
+				Logger.info( "unCompressedBuffer.length [bytes] : " + unCompressedBuffer.length );
+			}
+
+			switch ( compression )
+			{
+				case LZW:
+					strip = decompressLZW( strip, bytesPerRow * rps );
+					break;
+				case PACK_BITS:
+					strip = decompressPACKBITS( strip, bytesPerRow * rps );
+					break;
+				case ZIP:
+					strip = decompressZIP( strip ); // TODO: may be optimised
+					break;
+			}
+
+			// put uncompressed strip into large array
+			System.arraycopy( strip, 0, unCompressedBuffer, ( s - ss ) * bytesPerRow * rps, bytesPerRow * rps );
+
+			pos += stripLength;
 		}
-		return output.toByteArray();
+
+		bytes = unCompressedBuffer;
+		return bytes;
 	}
 
 	/**
 	 * Based on the Bio-Formats PackbitsCodec written by Melissa Linkert.
 	 */
-	public static byte[] packBitsUncompressFast( byte[] input, int expected )
+	public static byte[] decompressPACKBITS( byte[] input, int expected )
 	{
 		if ( expected == 0 ) expected = Integer.MAX_VALUE;
 		int inputIndex = 0;

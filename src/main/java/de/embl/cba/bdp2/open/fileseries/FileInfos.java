@@ -220,7 +220,6 @@ public class FileInfos
     return  type;
     }
 
-
     public BDP2FileInfo[] getVolumeFileInfos( int channel, int time ) {
         int z = 0;
         if ( fileType.equals( FileSeriesFileType.TIFF_STACKS ) ) {

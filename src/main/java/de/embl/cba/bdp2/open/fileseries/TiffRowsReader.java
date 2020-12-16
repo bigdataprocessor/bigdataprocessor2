@@ -11,6 +11,7 @@ public class TiffRowsReader
 	private boolean hasStrips = false;
 	private int rowMin;
 	private int rowMax;
+	private static final boolean test = false;
 
 	/**
 	 * TODO: Is RandomAccessFile really the fastest here?
@@ -22,6 +23,8 @@ public class TiffRowsReader
 		long readStart;
 		this.rowMin = requestedRowMin;
 		this.rowMax = requestedRowMax;
+
+		final int bytesPerRow = fi.width * fi.bytesPerPixel;
 
 		if ( fi.stripOffsets != null && fi.stripOffsets.length > 1 )
 		{
@@ -60,13 +63,8 @@ public class TiffRowsReader
 			{
 				// read subset
 				// convert rows to bytes
-				readStart = fi.offset + (long) requestedRowMin * (long) fi.width * (long) fi.bytesPerPixel;
-				if ( readStart < 0 )
-				{
-					int a = 1;
-				}
-				// requestedRowMax is -1 sometimes why?
-				readLength = ( ( requestedRowMax - requestedRowMin ) + 1 ) * fi.width * fi.bytesPerPixel;
+				readStart = fi.offset + (long) requestedRowMin * bytesPerRow;
+				readLength = ( ( requestedRowMax - requestedRowMin ) + 1 ) * bytesPerRow;
 			}
 		}
 
@@ -90,8 +88,21 @@ public class TiffRowsReader
 		{
 			if ( readStart + readLength - 1 <= in.length() )
 			{
-				in.seek( readStart ); // TODO: is this really slow??
+				in.seek( readStart );
 				in.readFully( buffer );
+
+				if ( test )
+					for ( int i = requestedRowMin; i < requestedRowMax; i++ )
+					{
+						in.seek( readStart );
+						in.read();
+						in.seek( readStart + i * bytesPerRow );
+					}
+				else
+				{
+					in.seek( readStart );
+					in.readFully( buffer );
+				}
 			}
 			else
 			{

@@ -50,7 +50,7 @@ public class FileSeriesCellLoader< T extends NativeType< T > > implements CellLo
     @Override
     public void load( final SingleCellArrayImg< T, ? > cell )
     {
-        long start = System.currentTimeMillis();
+        long start = System.nanoTime();
 
         long[] min = new long[ cell.numDimensions() ];
         long[] max = new long[ cell.numDimensions()];
@@ -82,14 +82,14 @@ public class FileSeriesCellLoader< T extends NativeType< T > > implements CellLo
                     fileInfos[ 0 ].h5DataSet );
         }
 
-        long timeMillis = System.currentTimeMillis() - start;
-        log( min, max, timeMillis );
-        PerformanceService.getPerformanceMonitor().addReadPerformance( cell.getStorageArray(), timeMillis  );
+        long timeNano = System.nanoTime() - start;
+        log( min, max, timeNano );
+        PerformanceService.getPerformanceMonitor().addReadPerformance( cell.getStorageArray(), timeNano / 1000000.0  );
     }
 
-    private static void log( long[] min, long[] max, long timeMillis )
+    private static void log( long[] min, long[] max, long nanos )
     {
-        Logger.benchmark( "Read " + Arrays.toString( min ) + " - " + Arrays.toString( max ) + " in " + timeMillis + " ms" );
+        Logger.benchmark( "Read " + Arrays.toString( min ) + " - " + Arrays.toString( max ) + " in " + ( nanos / 1000000.0 ) + " ms" );
     }
 
     public long[] getDimensions()

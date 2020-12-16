@@ -11,17 +11,10 @@
 
 package de.embl.cba.bdp2.open.fileseries;
 
-import ch.systemsx.cisd.base.mdarray.MDByteArray;
-import ch.systemsx.cisd.hdf5.HDF5DataSetInformation;
-import ch.systemsx.cisd.hdf5.HDF5Factory;
-import ch.systemsx.cisd.hdf5.IHDF5Reader;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.utils.DimensionOrder;
-import ij.ImagePlus;
-import ij.ImageStack;
 import net.imglib2.cache.img.SingleCellArrayImg;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -42,7 +35,7 @@ public class TiffCellLoader
 
         for ( long z = min; z <= max; z++ )
         {
-            new PartialTiffPlaneCellLoader( cell, (int) z, directory, fileInfos[ (int) z ] ).run();
+            new TiffPlaneCellLoader( cell, (int) z, directory, fileInfos[ (int) z ] ).run();
         }
 
         // TODO: BDV is multi-thread already, think about when it makes sense to

@@ -16,8 +16,6 @@ public class HDF5CellLoader
 			String filePath,
 			String h5DataSet )
 	{
-		long readingTime = System.currentTimeMillis();
-
 //		if ( ! checkDataCubeSize( nz, nx, ny ) ) return null;
 
 		IHDF5Reader reader = HDF5Factory.openForReading( filePath );
@@ -69,8 +67,6 @@ public class HDF5CellLoader
 			Logger.error("Data type " + dsTypeString + " is currently not supported.");
 			return;
 		}
-
-		readingTime = System.currentTimeMillis() - readingTime;
 	}
 
 	public static boolean checkDataCubeSize( int nz, long nx, int ny )

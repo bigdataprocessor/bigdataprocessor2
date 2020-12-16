@@ -18,7 +18,7 @@ public class PerformanceMonitor
 		copyPerformances = Collections.synchronizedList(new ArrayList<>( ));
 	}
 
-	public synchronized void addReadPerformance( Object storageArray, long timeMillis )
+	public synchronized void addReadPerformance( Object storageArray, double timeMillis )
 	{
 		double speed;
 
@@ -40,17 +40,17 @@ public class PerformanceMonitor
 		BigDataProcessor2UI.setReadPerformanceInformation( speed, getMedianReadPerformance() );
 	}
 
-	private double toMBitPerSecond( long bytes, long millis )
+	private double toMBitPerSecond( long bytes, double millis )
 	{
 		return toMBit( bytes ) / toSeconds( millis );
 	}
 
-	private double toMBytePerSecond( long bytes, long millis )
+	private double toMBytePerSecond( long bytes, double millis )
 	{
 		return toMByte( bytes ) / toSeconds( millis );
 	}
 
-	private double toSeconds( long timeMillis )
+	private double toSeconds( double timeMillis )
 	{
 		return timeMillis / 1000.0;
 	}
