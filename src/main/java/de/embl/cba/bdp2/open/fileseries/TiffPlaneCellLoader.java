@@ -75,7 +75,7 @@ public class TiffPlaneCellLoader implements Runnable
 
 		// this may differ from ny, because of the presence of (compressed) strips
 		int minRowRead = rowsReader.getMinRow();
-		int rowsRead = rowsReader.getNumRows() - minRowRead;
+		int numRowsRead = rowsReader.getNumRows();
 
 		if ( rowsReader.hasStrips() )
 		{
@@ -92,7 +92,7 @@ public class TiffPlaneCellLoader implements Runnable
 			}
 			else if ( fi.compression == TiffDecompressor.LZW )
 			{
-				bytes = TiffDecompressor.decompressLZW( bytes, bytesPerRow * rowsRead );
+				bytes = TiffDecompressor.decompressLZW( bytes, bytesPerRow * numRowsRead );
 			}
 
 			if ( Logger.getLevel().equals( Logger.Level.Debug ) )
@@ -100,7 +100,7 @@ public class TiffPlaneCellLoader implements Runnable
 				Logger.debug( "z: " + z );
 				Logger.debug( "buffer.length : " + bytes.length );
 				Logger.debug( "imWidth [bytes] : " + bytesPerRow );
-				Logger.debug( "rows read [#] : " + rowsRead );
+				Logger.debug( "rows read [#] : " + numRowsRead );
 			}
 		}
 
@@ -111,8 +111,9 @@ public class TiffPlaneCellLoader implements Runnable
 
 		final int cellOffset = ( int ) ( ( z - cell.min( DimensionOrder.Z ) ) * cell.dimension( 0 ) * cell.dimension( 1 ));
 
-		final int rowOffsetInByteBuffer = minRowRequested - minRowRead;
-
+		final int rowOffsetInBuffer = minRowRequested - minRowRead;
+		final int colOffsetInBuffer = minColRequested - rowsReader.getMinCol();
+		final int colSurplusInBuffer = rowsReader.getNumCols() - numColsRequested;
 
 		if ( fi.bytesPerPixel == 1 )
 		{
@@ -121,10 +122,11 @@ public class TiffPlaneCellLoader implements Runnable
 				setBytePixelsCropXY(
 						( byte[] ) cell.getStorageArray(),
 						cellOffset,
-						rowOffsetInByteBuffer,
+						rowOffsetInBuffer,
 						numRowsRequested,
-						minColRequested,
+						colOffsetInBuffer,
 						numColsRequested,
+						colSurplusInBuffer,
 						bytesPerRow,
 						bytes );
 			}
@@ -140,10 +142,11 @@ public class TiffPlaneCellLoader implements Runnable
 				setShortPixelsCropXY(
 						( short[] ) cell.getStorageArray(),
 						cellOffset,
-						rowOffsetInByteBuffer,
+						rowOffsetInBuffer,
 						numRowsRequested,
-						minColRequested,
+						colOffsetInBuffer,
 						numColsRequested,
+						colSurplusInBuffer,
 						bytesPerRow,
 						bytes );
 			}
@@ -159,59 +162,51 @@ public class TiffPlaneCellLoader implements Runnable
 		}
 	}
 
-	private void setShortPixelsCropXY( short[] cellArray, int cellOffset, int ys, int ny, int xs, int nx, int imByteWidth, byte[] buffer )
+	private void setShortPixelsCropXY( short[] cellArray, int cellPos, int rowOffset, int numRows, int colOffset, int numCols, int colSurplus, int imByteWidth, byte[] buffer )
 	{
 		final int bytesPerPixel = fi.bytesPerPixel;
 		final boolean intelByteOrder = fi.intelByteOrder;
 		final boolean signed = fi.fileType == GRAY16_SIGNED;
 
-		if ( bytesPerPixel != 2 )
+		int b = rowOffset * imByteWidth + colOffset * bytesPerPixel;
+
+		for ( int row = 0; row < numRows; row++ )
 		{
-			Logger.error( "Unsupported bit depth: " + bytesPerPixel * 8 );
-		}
-
-		int i = cellOffset;
-		int bs, be;
-
-		for ( int y = ys; y < ys + ny; y++ )
-		{
-			bs = y * imByteWidth + xs * bytesPerPixel;
-			be = bs + nx * bytesPerPixel;
-
 			if ( intelByteOrder )
 			{
 				if ( signed )
-					for ( int x = bs; x < be; x += 2 )
-						cellArray[ i++ ] = ( short ) ( ( ( ( buffer[ x + 1 ] & 0xff ) << 8 ) | ( buffer[ x ] & 0xff ) ) + 32768 );
+					for ( int col = 0; col < numCols; ++col, b += 2 )
+						cellArray[ cellPos++ ] = ( short ) ( ( ( ( buffer[ b + 1 ] & 0xff ) << 8 ) | ( buffer[ b ] & 0xff ) ) + 32768 );
 				else
-					for ( int x = bs; x < be; x += 2 )
-						cellArray[ i++ ] = ( short ) ( ( ( buffer[ x + 1 ] & 0xff ) << 8 ) | ( buffer[ x ] & 0xff ) );
+					for ( int col = 0; col < numCols; ++col, b += 2 )
+						cellArray[ cellPos++ ] = ( short ) ( ( ( buffer[ b + 1 ] & 0xff ) << 8 ) | ( buffer[ b ] & 0xff ) );
 			}
 			else
 			{
 				if ( signed )
-					for ( int x = bs; x < be; x += 2 )
-						cellArray[ i++ ] = ( short ) ( ( ( ( buffer[ x ] & 0xff ) << 8 ) | ( buffer[ x + 1 ] & 0xff ) ) + 32768 );
+					for ( int col = 0; col < numCols; ++col, b += 2 )
+						cellArray[ cellPos++ ] = ( short ) ( ( ( ( buffer[ b ] & 0xff ) << 8 ) | ( buffer[ b + 1 ] & 0xff ) ) + 32768 );
 				else
-					for ( int x = bs; x < be; x += 2 )
-						cellArray[ i++ ] = ( short ) ( ( ( buffer[ x ] & 0xff ) << 8 ) | ( buffer[ x + 1 ] & 0xff ) );
+					for ( int col = 0; col < numCols; ++col, b += 2 )
+						cellArray[ cellPos++ ] = ( short ) ( ( ( buffer[ b ] & 0xff ) << 8 ) | ( buffer[ b + 1 ] & 0xff ) );
 			}
+
+			b += ( colSurplus + colOffset ) * bytesPerPixel;
 		}
 	}
 
-	private static void setBytePixelsCropXY( byte[] cellArray, int cellArrayPixelPosition, int ys, int ny, int xs, int nx, int imByteWidth, byte[] buffer )
+	private static void setBytePixelsCropXY( byte[] cellArray, int cellPos, final int rowOffset, final int numRows, final int colOffset, final int numCols, final int colSurplus, final int imByteWidth, byte[] buffer )
 	{
-		int bs, be;
+		int b = rowOffset * imByteWidth + colOffset;
 
-		for ( int y = ys; y < ys + ny; y++ )
+		for ( int row = 0; row < numRows; row++ )
 		{
-			bs = y * imByteWidth + xs;
-			be = bs + nx;
-			for ( int x = bs; x < be; ++x )
+			for ( int col = 0; col < numCols; ++col )
 			{
 				// TODO: Use System.arrayCopy?
-				cellArray[ cellArrayPixelPosition++ ] = buffer[ x ];
+				cellArray[ cellPos++ ] = buffer[ b++ ];
 			}
+			b += colSurplus + colOffset;
 		}
 	}
 

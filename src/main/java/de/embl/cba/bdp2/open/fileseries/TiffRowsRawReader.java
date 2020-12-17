@@ -84,22 +84,20 @@ public class TiffRowsRawReader
 
 		try
 		{
-			if ( numBytesToRead <= 0 ||  readStart + numBytesToRead - 1 <= in.length() )
+			if ( numBytesToRead <= 0 ||  readStart + numBytesToRead > in.length() )
 			{
-				Logger.warn( "The requested data exceeds the file length; no data was read." );
-				Logger.warn( "file type: Tiff" );
 				Logger.warn( "hasStrips: " + hasStrips );
 				Logger.warn( "file length [bytes]: " + in.length() );
 				Logger.warn( "attempt to read until [bytes]: " + ( readStart + numBytesToRead - 1 ) );
-				Logger.warn( "ys: " + minRowRequested );
-				Logger.warn( "requestedRowMax: " + numRowsRequested );
+				Logger.warn( "minRowRequested: " + minRowRequested );
+				Logger.warn( "numRowsRequested: " + numRowsRequested );
 				Logger.warn( "fileInfo.compression: " + fi.compression );
 				Logger.warn( "fileInfo.height: " + fi.height );
 				Logger.error( "Error during file reading. See log window for more information" );
 				throw new RuntimeException( "Error during reading of Tiff plane." );
 			}
 
-			if ( minCol != 0 && numCols < fi.width )
+			if ( minCol > 0 || numCols < fi.width ) // read column subset
 			{
 				long posInFile = readStart;
 				int posInBuffer = 0;
@@ -153,5 +151,20 @@ public class TiffRowsRawReader
 	public int getNumRows()
 	{
 		return numRows;
+	}
+
+	public int getMinCol()
+	{
+		return minCol;
+	}
+
+	public int getNumCols()
+	{
+		return numCols;
+	}
+
+	public int getMaxRow()
+	{
+		return maxRow;
 	}
 }
