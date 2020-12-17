@@ -55,18 +55,17 @@ public class TiffPlaneCellLoader implements Runnable
 		byte[] bytes;
 
 		int minRowRequested = (int) cell.min( DimensionOrder.Y );
-		int yMaxRequested = (int) cell.max( DimensionOrder.Y );
+		int numRowsRequested = (int) cell.dimension( DimensionOrder.Y );
 		int minColRequested = (int) cell.min( DimensionOrder.X );
-		int colsRequested = (int) cell.dimension( DimensionOrder.X );
-		int rowsRequested = (int) cell.dimension( DimensionOrder.Y );
+		int numColsRequested = (int) cell.dimension( DimensionOrder.X );
 
-		TiffRowsReader rowsReader = new TiffRowsReader();
+		TiffRowsRawReader rowsReader = new TiffRowsRawReader();
 
 		try
 		{
 			File file = new File( new File( directory, fi.directory ).getAbsolutePath(), fi.fileName );
 			RandomAccessFile inputStream = new RandomAccessFile( file, "r" );
-			bytes = rowsReader.read( fi, inputStream, minRowRequested, yMaxRequested );
+			bytes = rowsReader.read( fi, inputStream, minRowRequested, numRowsRequested, minColRequested, numColsRequested );
 			inputStream.close();
 		}
 		catch ( Exception e )
@@ -75,26 +74,14 @@ public class TiffPlaneCellLoader implements Runnable
 		}
 
 		// this may differ from ny, because of the presence of (compressed) strips
-		int minRowRead = rowsReader.getRowMin();
-		int rowsRead = rowsReader.getRowMax() - minRowRead;
+		int minRowRead = rowsReader.getMinRow();
+		int rowsRead = rowsReader.getNumRows() - minRowRead;
 
 		if ( rowsReader.hasStrips() )
 		{
-			final int rps = fi.rowsPerStrip;
-			final int stripStart = rowsReader.getStripMin();
-			final int stripEnd = rowsReader.getStripMax();
-
-			if ( ( fi.compression == TiffDecompressor.NONE ) || ( fi.compression == 0 ) )
+			if ( rowsReader.isCompressed() )
 			{
-				// do nothing
-			}
-			else if ( fi.compression == TiffDecompressor.LZW || fi.compression == TiffDecompressor.PACK_BITS || fi.compression == TiffDecompressor.ZIP )
-			{
-				bytes = TiffDecompressor.decompressStrips( bytes, rps, stripStart, stripEnd, bytesPerRow, fi.stripLengths, fi.compression );
-			}
-			else
-			{
-				throw new RuntimeException( "Tiff compression not implemented: " + fi.compression );
+				bytes = TiffDecompressor.decompressStrips( bytes, fi.rowsPerStrip, rowsReader.getStripMin(), rowsReader.getStripMax(), bytesPerRow, fi.stripLengths, fi.compression );
 			}
 		}
 		else // no strips
@@ -106,10 +93,6 @@ public class TiffPlaneCellLoader implements Runnable
 			else if ( fi.compression == TiffDecompressor.LZW )
 			{
 				bytes = TiffDecompressor.decompressLZW( bytes, bytesPerRow * rowsRead );
-			}
-			else
-			{
-				// do nothing
 			}
 
 			if ( Logger.getLevel().equals( Logger.Level.Debug ) )
@@ -128,7 +111,8 @@ public class TiffPlaneCellLoader implements Runnable
 
 		final int cellOffset = ( int ) ( ( z - cell.min( DimensionOrder.Z ) ) * cell.dimension( 0 ) * cell.dimension( 1 ));
 
-		final int rowOffset = minRowRequested - minRowRead;
+		final int rowOffsetInByteBuffer = minRowRequested - minRowRead;
+
 
 		if ( fi.bytesPerPixel == 1 )
 		{
@@ -137,10 +121,10 @@ public class TiffPlaneCellLoader implements Runnable
 				setBytePixelsCropXY(
 						( byte[] ) cell.getStorageArray(),
 						cellOffset,
-						rowOffset,
-						rowsRequested,
+						rowOffsetInByteBuffer,
+						numRowsRequested,
 						minColRequested,
-						colsRequested,
+						numColsRequested,
 						bytesPerRow,
 						bytes );
 			}
@@ -156,10 +140,10 @@ public class TiffPlaneCellLoader implements Runnable
 				setShortPixelsCropXY(
 						( short[] ) cell.getStorageArray(),
 						cellOffset,
-						rowOffset,
-						rowsRequested,
+						rowOffsetInByteBuffer,
+						numRowsRequested,
 						minColRequested,
-						colsRequested,
+						numColsRequested,
 						bytesPerRow,
 						bytes );
 			}
