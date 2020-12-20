@@ -4,6 +4,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import de.embl.cba.bdp2.BigDataProcessor2;
+import de.embl.cba.bdp2.log.CellLoaderLogger;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.service.PerformanceService;
 import de.embl.cba.bdp2.utils.DimensionOrder;
@@ -45,12 +46,15 @@ public class FileSeriesCellLoader< T extends NativeType< T > > implements CellLo
 
     /**
      *
+     * TODO: Not sure whether this should be synchronized or not; maybe safer it it is
+     *
      * @param cell must be XYZCT
      */
     @Override
-    public void load( final SingleCellArrayImg< T, ? > cell )
+    public synchronized void load( final SingleCellArrayImg< T, ? > cell )
     {
-        long start = System.nanoTime();
+        CellLoaderLogger< T > logger = new CellLoaderLogger<>( cell );
+        logger.start();
 
         long[] min = new long[ cell.numDimensions() ];
         long[] max = new long[ cell.numDimensions()];
@@ -63,7 +67,7 @@ public class FileSeriesCellLoader< T extends NativeType< T > > implements CellLo
 
         int[] ct = new int[ 2 ];
         ct[ 0 ] = Math.toIntExact( max[ DimensionOrder.C ] );
-        ct[ 1 ] = Math.toIntExact( max[ DimensionOrder.C ] );
+        ct[ 1 ] = Math.toIntExact( max[ DimensionOrder.T ] );
         BDP2FileInfo[] fileInfos = getVolumeFileInfos( ct );
 
         if ( fileType.toString().toLowerCase().contains( "tif" ) )
@@ -82,9 +86,12 @@ public class FileSeriesCellLoader< T extends NativeType< T > > implements CellLo
                     fileInfos[ 0 ].h5DataSet );
         }
 
-        long timeNano = System.nanoTime() - start;
-        log( min, max, timeNano );
-        PerformanceService.getPerformanceMonitor().addReadPerformance( cell.getStorageArray(), timeNano / 1000000.0  );
+        logger.stop();
+        if ( Logger.getLevel().equals( Logger.Level.Benchmark ) )
+        {
+            Logger.benchmark( logger.getBenchmarkLog() );
+        }
+        PerformanceService.getPerformanceMonitor().addReadPerformance( cell.getStorageArray(), logger.getDurationNanos() / Math.pow( 10, 6 )  );
     }
 
     private static void log( long[] min, long[] max, long nanos )
