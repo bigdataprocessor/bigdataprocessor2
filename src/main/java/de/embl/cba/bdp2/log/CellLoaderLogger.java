@@ -7,10 +7,8 @@ import java.util.Arrays;
 
 public class CellLoaderLogger< T extends NativeType< T > >
 {
-	public static final double MEGA = 1000000D;
-
 	private final SingleCellArrayImg< T, ? > cell;
-	private long startTimeNanos;
+	private long startNanos;
 	private long durationNanos;
 
 	public CellLoaderLogger( SingleCellArrayImg< T, ? > cell )
@@ -20,12 +18,12 @@ public class CellLoaderLogger< T extends NativeType< T > >
 
 	public void start()
 	{
-		this.startTimeNanos = System.nanoTime();
+		startNanos = System.nanoTime();
 	}
 
 	public void stop()
 	{
-		durationNanos = System.nanoTime() - startTimeNanos;
+		durationNanos = System.nanoTime() - startNanos;
 	}
 
 	public long getDurationNanos()
