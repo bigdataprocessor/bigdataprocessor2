@@ -77,6 +77,15 @@ public class FileInfos
     public FileInfos(
             String directory,
             String namingScheme,
+            final String[] channelSubset)
+    {
+        this( directory, namingScheme, namingScheme, null, channelSubset );
+    }
+
+    @Deprecated
+    public FileInfos(
+            String directory,
+            String namingScheme,
             String filterPattern,
             String h5DataSetName )
     {

@@ -91,6 +91,15 @@ public class BigDataProcessor2
     }
 
     public static < R extends RealType< R > & NativeType< R > >
+    Image< R > openTiffSeries( String directory, String regularExpression, String[] channelSubset )
+    {
+        FileInfos fileInfos = new FileInfos( directory, regularExpression, regularExpression, null, channelSubset );
+        FileSeriesCachedCellImgCreator< R > cachedCellImgCreator = new FileSeriesCachedCellImgCreator( fileInfos );
+        Image< R > image = new Image( cachedCellImgCreator );
+        return image;
+    }
+
+    public static < R extends RealType< R > & NativeType< R > >
     Image< R > crop( Image< R > image, Interval intervalXYZCT )
     {
         return Cropper.crop5D( image, intervalXYZCT );
