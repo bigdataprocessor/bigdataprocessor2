@@ -25,7 +25,7 @@ public class TestSaveSingleChannel8BitTiffSeriesAsImarisVolumes
 
         final String loadingScheme = NamingSchemes.SINGLE_CHANNEL_TIMELAPSE;
 
-        final Image image = bdp.openTiffSeries(
+        final Image image = bdp.openTIFFSeries(
                 directory,
                 loadingScheme );
 

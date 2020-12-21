@@ -25,7 +25,7 @@ public class TestOpenMultiChannelZLIBCompressedTiffVolumes
     {
         final String directory = "src/test/resources/test/tiff-nc2-nt6-zlib";
 
-        final Image image = BigDataProcessor2.openTiffSeries( directory, MULTI_CHANNEL_VOLUMES + OME_TIF );
+        final Image image = BigDataProcessor2.openTIFFSeries( directory, MULTI_CHANNEL_VOLUMES + OME_TIF );
 
         image.setVoxelDimensions( 1, 1, 1 );
         BigDataProcessor2.showImage( image );

@@ -29,7 +29,7 @@ public class OpenLeicaDSLTiffPlanesFileSeriesCommand< R extends RealType< R > & 
             regExp = NamingSchemes.LEICA_DSL_TIFF_PLANES;
 
             outputImage =
-                    BigDataProcessor2.openTiffSeries(
+                    BigDataProcessor2.openTIFFSeries(
                             directory.toString(),
                             regExp );
 

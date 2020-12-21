@@ -47,7 +47,7 @@ public class OpenFileSeriesCommand< R extends RealType< R > & NativeType< R > > 
             }
             else if ( regExp.contains( ".tif" ) ) // covers .tif, .tiff, .ome.tif
             {
-                outputImage = BigDataProcessor2.openTiffSeries(
+                outputImage = BigDataProcessor2.openTIFFSeries(
                         directory.toString(),
                         regExp );
             }

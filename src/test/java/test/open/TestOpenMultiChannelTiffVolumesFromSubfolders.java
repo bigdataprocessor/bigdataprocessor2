@@ -19,6 +19,6 @@ public class TestOpenMultiChannelTiffVolumesFromSubfolders
     {
         final String directory = "src/test/resources/test/tiff-nc2-nt6-subfolders";
 
-        final Image image = BigDataProcessor2.openTiffSeries( directory, MULTI_CHANNEL_VOLUMES_FROM_SUBFOLDERS + TIF );
+        final Image image = BigDataProcessor2.openTIFFSeries( directory, MULTI_CHANNEL_VOLUMES_FROM_SUBFOLDERS + TIF );
     }
 }

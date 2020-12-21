@@ -3,7 +3,6 @@ import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.dialog.DialogUtils;
 import de.embl.cba.bdp2.macro.MacroRecorder;
 import de.embl.cba.bdp2.open.AbstractOpenCommand;
-import de.embl.cba.bdp2.open.AbstractOpenFileSeriesCommand;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;
@@ -34,7 +33,7 @@ public class OpenSingleTiffVolumeCommand< R extends RealType< R > & NativeType< 
             directory = file.getParent();
             regExp = "(?<T>"+file.getName()+")";
             regExp += FileInfos.NONRECURSIVE;
-            outputImage = BigDataProcessor2.openTiffSeries( directory, regExp );
+            outputImage = BigDataProcessor2.openTIFFSeries( directory, regExp );
             recordJythonCall();
             handleOutputImage( true, false );
         });

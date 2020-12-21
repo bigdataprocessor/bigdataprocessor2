@@ -76,13 +76,13 @@ public class BigDataProcessor2
     }
 
     public static < R extends RealType< R > & NativeType< R > >
-    Image< R > openTiffSeries( File directory, String regExp )
+    Image< R > openTIFFSeries( File directory, String regExp )
     {
-        return openTiffSeries( directory.getAbsolutePath(), regExp );
+        return openTIFFSeries( directory.getAbsolutePath(), regExp );
     }
 
     public static < R extends RealType< R > & NativeType< R > >
-    Image< R > openTiffSeries( String directory, String regExp )
+    Image< R > openTIFFSeries( String directory, String regExp )
     {
         FileInfos fileInfos = new FileInfos( directory, regExp );
         FileSeriesCachedCellImgCreator< R > cachedCellImgCreator = new FileSeriesCachedCellImgCreator( fileInfos );
@@ -91,9 +91,18 @@ public class BigDataProcessor2
     }
 
     public static < R extends RealType< R > & NativeType< R > >
-    Image< R > openTiffSeries( String directory, String regularExpression, String[] channelSubset )
+    Image< R > openTIFFSeries( String directory, String regularExpression, String[] channelSubset )
     {
         FileInfos fileInfos = new FileInfos( directory, regularExpression, channelSubset );
+        FileSeriesCachedCellImgCreator< R > cachedCellImgCreator = new FileSeriesCachedCellImgCreator( fileInfos );
+        Image< R > image = new Image( cachedCellImgCreator );
+        return image;
+    }
+
+    public static < R extends RealType< R > & NativeType< R > >
+    Image< R > openTIFFSeries( String directory, String[][] filesInFolders, String regularExpression, String[] channelSubset )
+    {
+        FileInfos fileInfos = new FileInfos( directory, regularExpression, null, channelSubset, filesInFolders );
         FileSeriesCachedCellImgCreator< R > cachedCellImgCreator = new FileSeriesCachedCellImgCreator( fileInfos );
         Image< R > image = new Image( cachedCellImgCreator );
         return image;

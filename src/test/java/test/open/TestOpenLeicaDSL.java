@@ -24,7 +24,7 @@ public class TestOpenLeicaDSL
     {
         final String directory = "src/test/resources/test/leica-dsl-tiff-planes";
 
-        final Image image = BigDataProcessor2.openTiffSeries(
+        final Image image = BigDataProcessor2.openTIFFSeries(
                 directory,
                 LEICA_DSL_TIFF_PLANES
         );

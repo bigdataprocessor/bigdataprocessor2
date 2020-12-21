@@ -23,7 +23,7 @@ public class TestOpenMultiChannel8BitTiffVolumes
     {
         final String directory = "src/test/resources/test/tiff-nc2-nt6";
 
-        final Image image = BigDataProcessor2.openTiffSeries( directory, MULTI_CHANNEL_VOLUMES + TIF );
+        final Image image = BigDataProcessor2.openTIFFSeries( directory, MULTI_CHANNEL_VOLUMES + TIF );
 
         image.setVoxelDimensions( new double[]{1.0, 1.0, 1.0} );
 

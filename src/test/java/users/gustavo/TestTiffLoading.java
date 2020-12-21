@@ -12,7 +12,7 @@ public class TestTiffLoading
 {
 	public static  < R extends RealType< R > & NativeType< R > > void main( String[] args )
 	{
-		final Image< R > image = BigDataProcessor2.openTiffSeries(
+		final Image< R > image = BigDataProcessor2.openTIFFSeries(
 				"/Users/tischer/Documents/gustavo/bdp2-errors/error001",
 				NamingSchemes.SINGLE_CHANNEL_VOLUMES_WITH_TIME_INDEX + TIF
 		);

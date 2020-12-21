@@ -6,7 +6,6 @@ import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.save.SaveFileType;
 import de.embl.cba.bdp2.save.SavingSettings;
-import org.jfree.chart.ui.Align;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -21,7 +20,7 @@ public class TestOpenProcessSave
 	@Test
 	public void run()
 	{
-		Image image = BigDataProcessor2.openTiffSeries( "/Users/tischer/Documents/bigdataprocessor2/src/test/resources/test/tiff-nc2-nt2-16bit", ".*--C(?<C>\\d+)--T(?<T>\\d+).tif" );
+		Image image = BigDataProcessor2.openTIFFSeries( "/Users/tischer/Documents/bigdataprocessor2/src/test/resources/test/tiff-nc2-nt2-16bit", ".*--C(?<C>\\d+)--T(?<T>\\d+).tif" );
 
 		image = BigDataProcessor2.setVoxelSize( image, new double[]{2.0,2.0,2.0}, "µm" );
 

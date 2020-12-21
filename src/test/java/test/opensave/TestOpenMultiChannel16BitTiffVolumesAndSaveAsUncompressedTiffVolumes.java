@@ -28,7 +28,7 @@ public class TestOpenMultiChannel16BitTiffVolumesAndSaveAsUncompressedTiffVolume
     public void run()
     {
         final String directory = "src/test/resources/test/tiff-nc2-nt2-16bit";
-        final Image image = BigDataProcessor2.openTiffSeries( directory, MULTI_CHANNEL_VOLUMES + TIF );
+        final Image image = BigDataProcessor2.openTIFFSeries( directory, MULTI_CHANNEL_VOLUMES + TIF );
         image.setVoxelDimensions( new double[]{1.0, 1.0, 1.0} );
 
         final SavingSettings settings = SavingSettings.getDefaults();

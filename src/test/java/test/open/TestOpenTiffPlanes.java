@@ -19,7 +19,7 @@ public class TestOpenTiffPlanes
     {
         final String directory = "src/test/resources/test/tiff-planes";
 
-        final Image image = BigDataProcessor2.openTiffSeries( directory, ".*_T(" + NamingSchemes.T + "\\d+)__z(" + Z + "\\d+).*_c(" + NamingSchemes.C + "\\d+).*" );
+        final Image image = BigDataProcessor2.openTIFFSeries( directory, ".*_T(" + NamingSchemes.T + "\\d+)__z(" + Z + "\\d+).*_c(" + NamingSchemes.C + "\\d+).*" );
 
         double[] voxelSize = image.getVoxelDimensions();
         image.setVoxelDimensions( voxelSize[ 0 ], voxelSize[ 1 ], 1.0 ); // necessary because voxel size in z is NaN for single plane Tiff

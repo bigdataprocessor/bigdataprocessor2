@@ -28,7 +28,7 @@ public class TestOpenLargerThanJavaIndexAndSaveAsTiffVolume
         Logger.setLevel( Logger.Level.Debug );
 
         final String directory = "src/test/resources/test/tiff-nc1-nt1-java-index-issue";
-        final Image image = BigDataProcessor2.openTiffSeries( directory, SINGLE_CHANNEL_VOLUMES + TIF );
+        final Image image = BigDataProcessor2.openTIFFSeries( directory, SINGLE_CHANNEL_VOLUMES + TIF );
         image.setVoxelDimensions( new double[]{1.0, 1.0, 1.0} );
 
         final SavingSettings settings = SavingSettings.getDefaults();

@@ -140,7 +140,7 @@ public class ExploreSIFTAlignment < R extends RealType< R > & NativeType< R > >
 	{
 		new ImageJ().ui().showUI();
 
-		final Image< R > image = BigDataProcessor2.openTiffSeries(
+		final Image< R > image = BigDataProcessor2.openTIFFSeries(
 				"/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-data/em-2d-sift-align-01",
 				NamingSchemes.TIFF_SLICES );
 

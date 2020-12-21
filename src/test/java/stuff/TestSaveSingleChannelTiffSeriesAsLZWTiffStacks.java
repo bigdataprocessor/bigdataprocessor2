@@ -27,7 +27,7 @@ public class TestSaveSingleChannelTiffSeriesAsLZWTiffStacks
         final String loadingScheme = NamingSchemes.SINGLE_CHANNEL_TIMELAPSE;
         final String filterPattern = ".*.tif";
 
-        final Image image = bdp.openTiffSeries( directory,  loadingScheme );
+        final Image image = bdp.openTIFFSeries( directory,  loadingScheme );
 
 //        bdp.showImage( image );
 //

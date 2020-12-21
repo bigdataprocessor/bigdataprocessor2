@@ -24,7 +24,7 @@ public class OpenEMTiffPlanesFileSeriesCommand< R extends RealType< R > & Native
     public void run()
     {
         SwingUtilities.invokeLater( () ->  {
-            outputImage = BigDataProcessor2.openTiffSeries( directory.toString(), regExp );
+            outputImage = BigDataProcessor2.openTIFFSeries( directory.toString(), regExp );
             recordJythonCall();
             handleOutputImage( true, false );
         });
