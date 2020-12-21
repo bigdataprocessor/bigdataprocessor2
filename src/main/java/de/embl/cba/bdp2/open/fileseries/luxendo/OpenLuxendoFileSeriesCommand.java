@@ -21,13 +21,13 @@ public class OpenLuxendoFileSeriesCommand< R extends RealType< R > & NativeType<
     public static final String COMMAND_NAME = "Open Luxendo HDF5 File Series...";
     public static final String COMMAND_FULL_NAME = COMMAND_BDP2_PREFIX + COMMAND_NAME;
 
-    private static final String regExp = LUXENDO;
+    private static final String channelTimeRegExp = LUXENDO;
     private static final String positionRegExp = LUXENDO_STACKINDEX;
 
     public void run()
     {
         SwingUtilities.invokeLater( () ->  {
-            PositionAndChannelsOpenerWizard openerWizard = new PositionAndChannelsOpenerWizard( directory, positionRegExp, regExp );
+            PositionAndChannelsOpenerWizard openerWizard = new PositionAndChannelsOpenerWizard( directory, positionRegExp, channelTimeRegExp );
             openerWizard.run();
         });
 

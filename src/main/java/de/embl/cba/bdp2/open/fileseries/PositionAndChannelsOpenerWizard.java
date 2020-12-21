@@ -13,13 +13,13 @@ public class PositionAndChannelsOpenerWizard
 {
 	private File directory;
 	private final String positionRegExp;
-	private final String regExp;
+	private final String channelTimeRegExp;
 
-	public PositionAndChannelsOpenerWizard( File directory, String positionRegExp, String regExp )
+	public PositionAndChannelsOpenerWizard( File directory, String positionRegExp, String channelTimeRegExp )
 	{
 		this.directory = directory;
 		this.positionRegExp = positionRegExp;
-		this.regExp = regExp;
+		this.channelTimeRegExp = channelTimeRegExp;
 	}
 
 	public void run()
@@ -40,14 +40,14 @@ public class PositionAndChannelsOpenerWizard
 			}
 			else
 			{
-				// show position choice
+				// TODO: show position choice
 				position = "";
 			}
 		}
 
 		// Fetch available channels and let user choose which ones to open
 		//
-		FileInfos fileInfos = new FileInfos( directory.toString(), regExp );
+		FileInfos fileInfos = new FileInfos( directory.toString(), channelTimeRegExp );
 		final ChannelChooserDialog dialog = new ChannelChooserDialog( fileInfos.channelNames  );
 		String[] selectedChannels = dialog.getChannelsViaDialog();
 
