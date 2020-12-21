@@ -58,94 +58,78 @@ public class FileInfos
     private String[][] filesInFolders;
     private boolean recursive;
 
-
     public FileInfos(
             String directory,
             String regExp )
     {
-        this( directory, regExp, regExp, null, null );
+        this( directory, regExp, null, null, null );
     }
 
     public FileInfos(
             String directory,
-            String namingScheme,
-            String filterPattern )
-    {
-        this( directory, namingScheme, filterPattern, null, null );
-    }
-
-    public FileInfos(
-            String directory,
-            String namingScheme,
-            final String[] channelSubset)
-    {
-        this( directory, namingScheme, namingScheme, null, channelSubset );
-    }
-
-    @Deprecated
-    public FileInfos(
-            String directory,
-            String namingScheme,
-            String filterPattern,
+            String regExp,
             String h5DataSetName )
     {
-        this( directory, namingScheme, filterPattern, h5DataSetName, null);
+        this( directory, regExp, h5DataSetName, null, null );
     }
 
-    // TODO: often (always the namingScheme and the filter are the same now??)
     public FileInfos(
             String directory,
-            String namingScheme,
-            String filter,
-            String h5DataSetName,
-            final String[] channelSubset
-    )
+            String regExp,
+            String h5DataSetPath,
+            String[] channelSubset )
     {
-        fetchFileInfos( directory, namingScheme, filter, h5DataSetName, channelSubset );
+        this( directory, regExp, h5DataSetPath, channelSubset, null );
+    }
+
+    public FileInfos(
+            String directory,
+            String regExp,
+            String[] channelSubset )
+    {
+        this( directory, regExp, null, channelSubset, null );
     }
 
     public FileInfos(
             String directory,
             String namingScheme,
-            String filter,
-            String h5DataSetName,
+            String h5DataSetPath,
             String[] channelSubset,
             String[][] filesInFolders
     )
     {
         this.filesInFolders = filesInFolders;
-        fetchFileInfos( directory, namingScheme, filter, h5DataSetName, channelSubset );
+        fetchFileInfos( directory, namingScheme, h5DataSetPath, channelSubset );
     }
 
-    private void fetchFileInfos( String directory, String namingScheme, String filter, String h5DataSetName, String[] channelSubset )
+    private void fetchFileInfos( String directory, String regExp, String h5DataSetName, String[] channelSubset )
     {
-        DebugTools.setRootLevel( "OFF" ); // Bio-Formats
+        this.namingScheme = regExp;
+        this.directory  = Utils.ensureDirectoryEndsWithFileSeparator( directory );
+        this.h5DataSetName = h5DataSetName;
 
-        Logger.info( "Directory: " + directory );
-        Logger.info( "Regular expression: " +  namingScheme );
+        DebugTools.setRootLevel( "OFF" ); // Bio-Formats
 
         if( namingScheme.contains( NONRECURSIVE ) )
         {
             recursive = false;
-            this.namingScheme = namingScheme.replace( NONRECURSIVE, "" );
-            this.filter = filter.replace( NONRECURSIVE, "" );
+            namingScheme = namingScheme.replace( NONRECURSIVE, "" );
         }
         else
         {
             recursive = true;
-            this.namingScheme = namingScheme;
-            this.filter = filter;
+            namingScheme = namingScheme;
         }
 
-        this.directory  = Utils.ensureDirectoryEndsWithFileSeparator( directory );
-        this.h5DataSetName = h5DataSetName;
+        namingScheme = adaptDirectorySeparatorToOperatingSystem( namingScheme );
 
-        adaptDirectorySeparatorToOperatingSystem();
+        Logger.info( "Directory: " + directory );
+        Logger.info( "Regular expression: " +  namingScheme );
 
         if ( filesInFolders == null )
             filesInFolders = FileInfosHelper.getFilesInFolders( this.directory, this.filter, recursive );
 
-        FileInfosHelper.setFileInfos5D( this, this.namingScheme, channelSubset, filesInFolders );
+        FileInfosHelper.setFileInfos5D( this, namingScheme, channelSubset, filesInFolders );
 
         Logger.info( this.toString() );
     }
@@ -155,9 +139,9 @@ public class FileInfos
         return filesInFolders;
     }
 
-    private void adaptDirectorySeparatorToOperatingSystem( )
+    private String adaptDirectorySeparatorToOperatingSystem( String namingScheme )
     {
-        namingScheme = namingScheme.replace( "/", Pattern.quote( File.separator ) );
+        return namingScheme.replace( "/", Pattern.quote( File.separator ) );
     }
 
     @Override

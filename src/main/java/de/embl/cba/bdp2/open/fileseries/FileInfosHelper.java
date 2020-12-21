@@ -5,7 +5,6 @@ import de.embl.cba.bdp2.open.NamingSchemes;
 import de.embl.cba.bdp2.utils.BioFormatsCalibrationReader;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import org.apache.commons.lang.ArrayUtils;
-import weka.Run;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -539,5 +538,38 @@ public class FileInfosHelper
         Arrays.sort( list );
 
         return (list);
+    }
+
+    public static String captureRegExp( String subFolderName, String regExp )
+    {
+        Pattern pattern = Pattern.compile( regExp );
+        Matcher matcher = pattern.matcher( subFolderName );
+
+        if ( matcher.matches() )
+        {
+            return matcher.group( 1 );
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    public static ArrayList< String > captureMatchesInSubFolders( File directory, String regExp )
+    {
+        assert directory.isDirectory();
+
+        ArrayList< String > captures = new ArrayList<>();
+        String[] list = directory.list();
+        for ( String item : list )
+        {
+            File file = new File( directory, item );
+            if ( file.isDirectory() )
+            {
+                String stackIndex = captureRegExp( file.getName(), regExp );
+                if ( stackIndex != null ) captures.add( stackIndex );
+            }
+        }
+        return captures;
     }
 }

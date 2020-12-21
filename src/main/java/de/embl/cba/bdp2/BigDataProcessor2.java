@@ -93,7 +93,7 @@ public class BigDataProcessor2
     public static < R extends RealType< R > & NativeType< R > >
     Image< R > openTiffSeries( String directory, String regularExpression, String[] channelSubset )
     {
-        FileInfos fileInfos = new FileInfos( directory, regularExpression, regularExpression, null, channelSubset );
+        FileInfos fileInfos = new FileInfos( directory, regularExpression, channelSubset );
         FileSeriesCachedCellImgCreator< R > cachedCellImgCreator = new FileSeriesCachedCellImgCreator( fileInfos );
         Image< R > image = new Image( cachedCellImgCreator );
         return image;
@@ -123,7 +123,7 @@ public class BigDataProcessor2
     public static < R extends RealType< R > & NativeType< R > >
     Image< R > openHDF5Series( String directory, String regularExpression, String hdf5DataSetName )
     {
-        FileInfos fileInfos = new FileInfos( directory, regularExpression, regularExpression, hdf5DataSetName, null );
+        FileInfos fileInfos = new FileInfos( directory, regularExpression, hdf5DataSetName );
         FileSeriesCachedCellImgCreator< R > cachedCellImgCreator = new FileSeriesCachedCellImgCreator( fileInfos );
         Image< R > image = new Image( cachedCellImgCreator );
         return image;
@@ -132,7 +132,7 @@ public class BigDataProcessor2
     public static < R extends RealType< R > & NativeType< R > >
     Image< R > openHDF5Series( String directory, String[][] filesInFolders, String regExp, String hdf5DataSetPath, String[] channelSubset )
     {
-        FileInfos fileInfos = new FileInfos( directory, regExp, regExp, hdf5DataSetPath, channelSubset, filesInFolders );
+        FileInfos fileInfos = new FileInfos( directory, regExp, hdf5DataSetPath, channelSubset, filesInFolders );
         FileSeriesCachedCellImgCreator< R > cachedCellImgCreator = new FileSeriesCachedCellImgCreator( fileInfos );
         Image< R > image = new Image( cachedCellImgCreator );
         return image;
@@ -141,7 +141,7 @@ public class BigDataProcessor2
     public static < R extends RealType< R > & NativeType< R > >
     Image< R > openHDF5Series( String directory, String regExp, String hdf5DataSetPath, String[] channelSubset )
     {
-        FileInfos fileInfos = new FileInfos( directory, regExp, regExp, hdf5DataSetPath, channelSubset );
+        FileInfos fileInfos = new FileInfos( directory, regExp, hdf5DataSetPath, channelSubset );
         FileSeriesCachedCellImgCreator< R > cachedCellImgCreator = new FileSeriesCachedCellImgCreator( fileInfos );
         Image< R > image = new Image( cachedCellImgCreator );
         return image;

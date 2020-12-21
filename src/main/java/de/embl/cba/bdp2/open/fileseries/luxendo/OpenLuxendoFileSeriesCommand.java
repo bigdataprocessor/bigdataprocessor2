@@ -6,20 +6,23 @@ import de.embl.cba.bdp2.macro.MacroRecorder;
 import de.embl.cba.bdp2.open.AbstractOpenFileSeriesCommand;
 import de.embl.cba.bdp2.open.ChannelChooserDialog;
 import de.embl.cba.bdp2.open.fileseries.FileInfos;
+import de.embl.cba.bdp2.open.fileseries.FileInfosHelper;
+import ij.IJ;
 import ij.plugin.frame.Recorder;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;
-import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 
 import static de.embl.cba.bdp2.open.NamingSchemes.LUXENDO;
 import static de.embl.cba.bdp2.BigDataProcessor2Menu.COMMAND_BDP2_PREFIX;
+import static de.embl.cba.bdp2.open.NamingSchemes.LUXENDO_STACKINDEX;
 
 @Plugin(type = Command.class, menuPath = DialogUtils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractOpenFileSeriesCommand.COMMAND_OPEN_PATH + OpenLuxendoFileSeriesCommand.COMMAND_FULL_NAME )
 public class OpenLuxendoFileSeriesCommand< R extends RealType< R > & NativeType< R > > extends AbstractOpenFileSeriesCommand< R >
@@ -27,27 +30,41 @@ public class OpenLuxendoFileSeriesCommand< R extends RealType< R > & NativeType<
     public static final String COMMAND_NAME = "Open Luxendo HDF5 File Series...";
     public static final String COMMAND_FULL_NAME = COMMAND_BDP2_PREFIX + COMMAND_NAME;
 
-    @Parameter( label = "Stack index"  )
-    protected int stackIndex = 0;
-    public static String STACK_INDEX_PARAMETER = "stackIndex";
     private String regExp;
     private String[] selectedChannels;
 
     public void run()
     {
         SwingUtilities.invokeLater( () ->  {
-            regExp = LUXENDO.replace( "STACK", "" + stackIndex );
 
             if ( directory.getName().contains( "stack_" ) )
             {
-                // In case the user mistakenly clicked one level too deep
+                // go one level up such that all stacks are contained
                 directory = new File( directory.getParent() );
             }
 
-            FileInfos fileInfos = new FileInfos( directory.toString(), regExp, regExp, "Data" );
+            // TODO: put the whole thing into a method
+            ArrayList< String > captures = FileInfosHelper.captureMatchesInSubFolders( directory, LUXENDO_STACKINDEX );
+
+            if ( captures.isEmpty() )
+            {
+                IJ.showMessage("...");
+            }
+            else
+            {
+                // show a dialog with a choice
+            }
+
+            regExp = LUXENDO.replace( "STACK", "" + stackIndex );
+
+            // Fetch available channels and let user choose which ones to open
+            //
+            FileInfos fileInfos = new FileInfos( directory.toString(), regExp,  "Data" );
             final ChannelChooserDialog dialog = new ChannelChooserDialog( fileInfos.channelNames  );
             selectedChannels = dialog.getChannelsViaDialog();
 
+            // Open the image
+            //
             outputImage = BigDataProcessor2.openHDF5Series(
                     directory.toString(),
                     fileInfos.getFilesInFolders(), // pass this on for performance
@@ -62,13 +79,20 @@ public class OpenLuxendoFileSeriesCommand< R extends RealType< R > & NativeType<
 
     public void recordMacro()
     {
+        // Record a macro call, however not of this command, which lets the user
+        // choose which files to open via wizard style dialogs, but to another command
+        // which takes those choices as input, such that the recorded code can run headless.
+
         if ( MacroRecorder.isScriptMode() )
         {
             recordJythonCall();
         }
         else
         {
+            // Since one currently cannot tell SciJava Commands that one does not want to
+            // record them we need to remove the already recorded one.
             removeOpenLuxendoCommandCallFromRecorder();
+
             MacroRecorder recorder = new MacroRecorder( OpenLuxendoChannelsFileSeriesCommand.COMMAND_FULL_NAME, viewingModality, outputImage );
             recorder.addCommandParameter( AbstractOpenFileSeriesCommand.DIRECTORY_PARAMETER, directory.getAbsolutePath() );
             recorder.addCommandParameter( AbstractOpenFileSeriesCommand.ARBITRARY_PLANE_SLICING_PARAMETER, enableArbitraryPlaneSlicing );
@@ -95,7 +119,7 @@ public class OpenLuxendoFileSeriesCommand< R extends RealType< R > & NativeType<
         }
         catch ( Exception e )
         {
-            //e.printStackTrace();
+            e.printStackTrace();
         }
     }
 

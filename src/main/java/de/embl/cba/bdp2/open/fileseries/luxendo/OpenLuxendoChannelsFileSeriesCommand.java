@@ -24,6 +24,7 @@ public class OpenLuxendoChannelsFileSeriesCommand< R extends RealType< R > & Nat
 
     @Parameter(label = "Stack index"  )
     protected int stackIndex = 0;
+    public static String STACK_INDEX_PARAMETER = "stackIndex";
 
     @Parameter(label = "Channels")
     protected String channels = "channel_0_Cam_Short,channel_0_Cam_Right";

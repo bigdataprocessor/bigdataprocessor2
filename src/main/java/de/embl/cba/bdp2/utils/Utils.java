@@ -32,10 +32,10 @@ package de.embl.cba.bdp2.utils;
 
 import bdv.util.Bdv;
 import bdv.viewer.animate.SimilarityTransformAnimator;
+import de.embl.cba.bdp2.open.fileseries.FileInfosHelper;
 import de.embl.cba.bdp2.process.align.splitchip.SplitChipMerger;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.open.fileseries.luxendo.Luxendos;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.dialog.DisplaySettings;
 import de.embl.cba.bdp2.process.transform.TransformCommand;
@@ -87,6 +87,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
+import static de.embl.cba.bdp2.open.NamingSchemes.LUXENDO_STACKINDEX;
 import static de.embl.cba.bdp2.open.NamingSchemes.MULTI_CHANNEL_VOLUMES_FROM_SUBFOLDERS;
 
 /**
@@ -186,7 +187,7 @@ public class Utils {
 			List< long[] > intervalsXYC,
 			File directoryOfChannel0 )
 	{
-		String stackIndex = Luxendos.extractStackIndex( directoryOfChannel0.getName() );
+		String stackIndex = FileInfosHelper.captureRegExp( directoryOfChannel0.getName(), LUXENDO_STACKINDEX );
 		String regExp = MULTI_CHANNEL_VOLUMES_FROM_SUBFOLDERS.replace( "STACK", "" + stackIndex );
 
 		final Image< R > image =

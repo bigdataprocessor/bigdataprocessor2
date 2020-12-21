@@ -2,29 +2,14 @@ package de.embl.cba.bdp2.open.fileseries.luxendo;
 
 import ch.systemsx.cisd.hdf5.IHDF5Reader;
 import de.embl.cba.bdp2.log.Logger;
+import de.embl.cba.bdp2.open.fileseries.FileInfosHelper;
 
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static de.embl.cba.bdp2.open.NamingSchemes.LUXENDO_STACKINDEX;
-
 public class Luxendos
 {
-	public static String extractStackIndex( String subFolderName )
-	{
-		Pattern pattern = Pattern.compile( LUXENDO_STACKINDEX );
-		Matcher matcher = pattern.matcher( subFolderName );
-		String stackIndex;
-		if ( matcher.matches() )
-		{
-			stackIndex = matcher.group( "StackIndex" );
-		}
-		else
-		{
-			throw new RuntimeException( subFolderName + " does not match pattern " + LUXENDO_STACKINDEX );
-		}
-		return stackIndex;
-	}
 
 	public static double[] getVoxelSizeMicrometer( IHDF5Reader reader, String h5DataSetName )
 	{
