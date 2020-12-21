@@ -1,8 +1,7 @@
 package de.embl.cba.bdp2.open.fileseries;
 
 import de.embl.cba.bdp2.open.ChannelChooserDialog;
-import de.embl.cba.bdp2.open.fileseries.luxendo.OpenLuxendoFileSeriesCommand;
-import de.embl.cba.bdp2.open.fileseries.luxendo.OpenPositionAndChannelSubsetFileSeriesCommand;
+import de.embl.cba.bdp2.open.fileseries.luxendo.OpenPositionAndChannelsFileSeriesCommand;
 import ij.IJ;
 
 import java.io.File;
@@ -55,7 +54,7 @@ public class PositionAndChannelsOpenerWizard
 		// Open the image and record a macro
 		//
 		String channels = Arrays.stream( selectedChannels ).collect( Collectors.joining( "," ) );
-		OpenPositionAndChannelSubsetFileSeriesCommand< ? > openCommand = new OpenPositionAndChannelSubsetFileSeriesCommand( directory, fileInfos.getFilesInFolders(), channels, position, positionRegExp );
+		OpenPositionAndChannelsFileSeriesCommand< ? > openCommand = new OpenPositionAndChannelsFileSeriesCommand( directory, fileInfos.getFilesInFolders(), channels, position, positionRegExp );
 		openCommand.run();
 		openCommand.recordMacro();
 

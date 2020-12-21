@@ -18,13 +18,11 @@ import java.util.Arrays;
 
 import static de.embl.cba.bdp2.BigDataProcessor2Menu.COMMAND_BDP2_PREFIX;
 
-@Plugin(type = Command.class, menuPath = DialogUtils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractOpenFileSeriesCommand.COMMAND_OPEN_PATH + OpenPositionAndChannelSubsetFileSeriesCommand.COMMAND_FULL_NAME )
-public class OpenPositionAndChannelSubsetFileSeriesCommand< R extends RealType< R > & NativeType< R > > extends AbstractOpenFileSeriesCommand< R >
+@Plugin(type = Command.class, menuPath = DialogUtils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractOpenFileSeriesCommand.COMMAND_OPEN_PATH + OpenPositionAndChannelsFileSeriesCommand.COMMAND_FULL_NAME )
+public class OpenPositionAndChannelsFileSeriesCommand< R extends RealType< R > & NativeType< R > > extends AbstractOpenFileSeriesCommand< R >
 {
     public static final String COMMAND_NAME = "Open Position And Channel Subset...";
     public static final String COMMAND_FULL_NAME = COMMAND_BDP2_PREFIX + COMMAND_NAME;
-
-    private String[][] filesInFolders;
 
     @Parameter(label = "Regular Expression (including POSITION)"  )
     protected String positionRegExp = "";
@@ -40,8 +38,9 @@ public class OpenPositionAndChannelSubsetFileSeriesCommand< R extends RealType< 
 
     private String regExp;
     private String[] channels;
+    private String[][] filesInFolders;
 
-    public OpenPositionAndChannelSubsetFileSeriesCommand( File directory, String[][] filesInFolders, String channelSubset, String position, String positionRegExp  )
+    public OpenPositionAndChannelsFileSeriesCommand( File directory, String[][] filesInFolders, String channelSubset, String position, String positionRegExp  )
     {
         this.channelSubset = channelSubset;
         this.position = position;
@@ -58,24 +57,25 @@ public class OpenPositionAndChannelSubsetFileSeriesCommand< R extends RealType< 
         SwingUtilities.invokeLater( () ->  {
 
             regExp = positionRegExp.replace( NamingSchemes.P, position );
+
             channels = Arrays.stream( channelSubset.split( "," ) ).map( String::trim ).toArray( String[]::new );
 
             if ( regExp.contains( NamingSchemes.HDF5 ) )
             {
                 outputImage = BigDataProcessor2.openHDF5Series(
                                 directory.toString(),
-                                filesInFolders,
-                        regExp,
+                                filesInFolders, // is ok to be null, e.g., if called via macro
+                                regExp,
                                "Data",
-                        channels );
+                                channels );
             }
             else if ( regExp.contains( NamingSchemes.TIF ) )
             {
                 outputImage = BigDataProcessor2.openTIFFSeries(
-                        directory.toString(),
-                        filesInFolders,
-                        regExp,
-                        channels );
+                                directory.toString(),
+                                filesInFolders, // is ok to be null, e.g., if called via macro
+                                regExp,
+                                channels );
             }
 
             handleOutputImage( true, false );
