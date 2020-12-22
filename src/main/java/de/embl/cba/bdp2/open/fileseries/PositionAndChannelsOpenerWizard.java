@@ -54,7 +54,7 @@ public class PositionAndChannelsOpenerWizard
 		// Open the image and record a macro
 		//
 		String channels = Arrays.stream( selectedChannels ).collect( Collectors.joining( "," ) );
-		OpenPositionAndChannelsFileSeriesCommand< ? > openCommand = new OpenPositionAndChannelsFileSeriesCommand( directory, fileInfos.getFilesInFolders(), channels, position, positionRegExp );
+		OpenPositionAndChannelsFileSeriesCommand< ? > openCommand = new OpenPositionAndChannelsFileSeriesCommand( directory, fileInfos.getRelativeFilePaths(), channels, position, positionRegExp );
 		openCommand.run();
 		openCommand.recordMacro();
 

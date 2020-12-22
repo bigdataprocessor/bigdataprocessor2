@@ -100,9 +100,9 @@ public class BigDataProcessor2
     }
 
     public static < R extends RealType< R > & NativeType< R > >
-    Image< R > openTIFFSeries( String directory, String[][] filesInFolders, String regularExpression, String[] channelSubset )
+    Image< R > openTIFFSeries( String directory, String[][] fileLists, String regularExpression, String[] channelSubset )
     {
-        FileInfos fileInfos = new FileInfos( directory, regularExpression, null, channelSubset, filesInFolders );
+        FileInfos fileInfos = new FileInfos( directory, regularExpression, null, channelSubset, fileLists );
         FileSeriesCachedCellImgCreator< R > cachedCellImgCreator = new FileSeriesCachedCellImgCreator( fileInfos );
         Image< R > image = new Image( cachedCellImgCreator );
         return image;
@@ -139,9 +139,9 @@ public class BigDataProcessor2
     }
 
     public static < R extends RealType< R > & NativeType< R > >
-    Image< R > openHDF5Series( String directory, String[][] filesInFolders, String regExp, String hdf5DataSetPath, String[] channelSubset )
+    Image< R > openHDF5Series( String directory, String[][] fileListss, String regExp, String hdf5DataSetPath, String[] channelSubset )
     {
-        FileInfos fileInfos = new FileInfos( directory, regExp, hdf5DataSetPath, channelSubset, filesInFolders );
+        FileInfos fileInfos = new FileInfos( directory, regExp, hdf5DataSetPath, channelSubset, fileListss );
         FileSeriesCachedCellImgCreator< R > cachedCellImgCreator = new FileSeriesCachedCellImgCreator( fileInfos );
         Image< R > image = new Image( cachedCellImgCreator );
         return image;

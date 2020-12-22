@@ -1,5 +1,6 @@
 package de.embl.cba.bdp2;
 
+import bdv.viewer.SourceAndConverter;
 import de.embl.cba.bdp2.log.LoggingLevelCommand;
 import de.embl.cba.bdp2.open.AbstractOpenFileSeriesCommand;
 import de.embl.cba.bdp2.open.bioformats.OpenBdvBioFormatsCommand;

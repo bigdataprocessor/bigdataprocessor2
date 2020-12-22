@@ -37,7 +37,6 @@ public class FileInfos
 	public BDP2FileInfo[][][] ctzFileInfos;
     public long[] dimensions;
     private String namingScheme;
-    private String filter;
     public int bitDepth;
     public int nC;
     public int nT;
@@ -55,7 +54,7 @@ public class FileInfos
     public int compression;
     public int numTiffStrips;
     public String[] channelNames;
-    private String[][] filesInFolders;
+    public String[] relativeFilePaths;
     private boolean recursive;
 
     public FileInfos(
@@ -95,17 +94,17 @@ public class FileInfos
             String namingScheme,
             String h5DataSetPath,
             String[] channelSubset,
-            String[][] filesInFolders
+            String[] relativeFilePaths
     )
     {
-        this.filesInFolders = filesInFolders;
+        this.relativeFilePaths = relativeFilePaths;
         fetchFileInfos( directory, namingScheme, h5DataSetPath, channelSubset );
     }
 
-    private void fetchFileInfos( String directory, String regExp, String h5DataSetName, String[] channelSubset )
+    private void fetchFileInfos( String aDirectory, String regExp, String h5DataSetName, String[] channelSubset )
     {
         this.namingScheme = regExp;
-        this.directory  = Utils.ensureDirectoryEndsWithFileSeparator( directory );
+        this.directory  = Utils.ensureDirectoryEndsWithFileSeparator( aDirectory );
         this.h5DataSetName = h5DataSetName;
 
         DebugTools.setRootLevel( "OFF" ); // Bio-Formats
@@ -126,17 +125,12 @@ public class FileInfos
         Logger.info( "Directory: " + directory );
         Logger.info( "Regular expression: " +  namingScheme );
 
-        if ( filesInFolders == null )
-            filesInFolders = FileInfosHelper.getFilesInFolders( this.directory, this.filter, recursive );
+        if ( relativeFilePaths == null )
+            relativeFilePaths = FileInfosHelper.fetchFiles( directory, namingScheme, recursive );
 
-        FileInfosHelper.setFileInfos5D( this, namingScheme, channelSubset, filesInFolders );
+        FileInfosHelper.setFileInfos5D( this, namingScheme, channelSubset );
 
         Logger.info( this.toString() );
-    }
-
-    public String[][] getFilesInFolders()
-    {
-        return filesInFolders;
     }
 
     private String adaptDirectorySeparatorToOperatingSystem( String namingScheme )
@@ -194,7 +188,6 @@ public class FileInfos
         return dimensions;
     }
 
-
     public NativeType getType() {
         NativeType type;
         try {
@@ -214,20 +207,33 @@ public class FileInfos
     }
 
     public BDP2FileInfo[] getVolumeFileInfos( int channel, int time ) {
+
         int z = 0;
-        if ( fileType.equals( FileSeriesFileType.TIFF_STACKS ) ) {
+
+        if ( isVolumes() )
+        {
             setInfosFromFile(channel, time, z, true);
         }
-        else if ( fileType.equals( FileSeriesFileType.HDF5 ) ) {
-            setInfosFromFile(channel, time, z, true);
-        }
-        else if ( fileType.equals( FileSeriesFileType.TIFF_PLANES ) ) {
+        else if ( isPlanes() )
+        {
             int nZ = ctzFiles[channel][time].length;
-            for (; z < nZ; ++z) {
+            for (; z < nZ; ++z)
+            {
                 setInfosFromFile(channel, time, z, true);
             }
         }
+
         return ctzFileInfos[channel][time];
+    }
+
+    private boolean isPlanes()
+    {
+        return fileType.equals( FileSeriesFileType.TIFF_PLANES );
+    }
+
+    private boolean isVolumes()
+    {
+        return fileType.equals( FileSeriesFileType.TIFF_STACKS ) || fileType.equals( FileSeriesFileType.LUXENDO );
     }
 
     private void setInfosFromFile( final int c, final int t, final int z, boolean throwError )
@@ -270,7 +276,7 @@ public class FileInfos
 
                 ctzFileInfos[c][t] = infoCT;
             }
-            else if ( fileType.equals( FileSeriesFileType.HDF5 ) )
+            else if ( fileType.equals( FileSeriesFileType.LUXENDO ) )
             {
                 //
                 // construct a FileInfoSer
@@ -309,7 +315,7 @@ public class FileInfos
                 }
                 ctzFileInfos[c][t] = infoCT;
             }
-            else if ( fileType.equals( FileSeriesFileType.TIFF_PLANES))
+            else if ( fileType.equals( FileSeriesFileType.TIFF_PLANES) )
             {
                 ftd = new FastTiffDecoder(directory, ctzFiles[c][t][z]);
                 try{

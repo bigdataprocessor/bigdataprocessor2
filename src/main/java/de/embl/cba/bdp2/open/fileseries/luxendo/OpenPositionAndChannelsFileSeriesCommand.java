@@ -38,15 +38,15 @@ public class OpenPositionAndChannelsFileSeriesCommand< R extends RealType< R > &
 
     private String regExp;
     private String[] channels;
-    private String[][] filesInFolders;
+    private String[][] fileListss;
 
-    public OpenPositionAndChannelsFileSeriesCommand( File directory, String[][] filesInFolders, String channelSubset, String position, String positionRegExp  )
+    public OpenPositionAndChannelsFileSeriesCommand( File directory, String[][] fileListss, String channelSubset, String position, String positionRegExp  )
     {
         this.channelSubset = channelSubset;
         this.position = position;
         this.positionRegExp = positionRegExp;
         this.directory = directory;
-        this.filesInFolders = filesInFolders;
+        this.fileListss = fileListss;
     }
 
     public void run()
@@ -64,7 +64,7 @@ public class OpenPositionAndChannelsFileSeriesCommand< R extends RealType< R > &
             {
                 outputImage = BigDataProcessor2.openHDF5Series(
                                 directory.toString(),
-                                filesInFolders, // is ok to be null, e.g., if called via macro
+                                fileListss, // is ok to be null, e.g., if called via macro
                                 regExp,
                                "Data",
                                 channels );
@@ -73,7 +73,7 @@ public class OpenPositionAndChannelsFileSeriesCommand< R extends RealType< R > &
             {
                 outputImage = BigDataProcessor2.openTIFFSeries(
                                 directory.toString(),
-                                filesInFolders, // is ok to be null, e.g., if called via macro
+                                fileListss, // is ok to be null, e.g., if called via macro
                                 regExp,
                                 channels );
             }

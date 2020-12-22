@@ -2,7 +2,6 @@ package de.embl.cba.bdp2.open.fileseries;
 
 public enum FileSeriesFileType
 {
-	HDF5("HDF5"),
 	LUXENDO("Luxendo HDF5"),
 	IMARIS("Partitioned Imaris HDF5"),
 	TIFF_STACKS("Tiff Stacks"),
@@ -10,9 +9,10 @@ public enum FileSeriesFileType
 
 	private final String text;
 	private FileSeriesFileType( String s)
-{
-text = s;
-}
+	{
+		text = s;
+	}
+
 	@Override
 	public String toString() {
 return text;
