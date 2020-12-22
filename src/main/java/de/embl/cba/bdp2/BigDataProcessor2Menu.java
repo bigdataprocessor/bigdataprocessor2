@@ -9,6 +9,7 @@ import de.embl.cba.bdp2.open.fileseries.leica.OpenLeicaDSLTiffPlanesFileSeriesCo
 import de.embl.cba.bdp2.open.fileseries.luxendo.OpenLuxendoFileSeriesCommand;
 import de.embl.cba.bdp2.process.AbstractImageProcessingCommand;
 import de.embl.cba.bdp2.open.samples.DownloadAndOpenSampleDataCommand;
+import de.embl.cba.bdp2.process.cache.SetCacheDimensionsCommand;
 import de.embl.cba.bdp2.track.ApplyTrackCommand;
 import de.embl.cba.bdp2.scijava.Services;
 import de.embl.cba.bdp2.service.ImageViewerService;
@@ -25,14 +26,13 @@ public class BigDataProcessor2Menu extends JMenu
 {
     public static final String COMMAND_BDP2_PREFIX = "BDP2 ";
 
-    // Menus
-    public static final String MISC = "Misc";
+    // Menu items
     public static final String RECORD = "Record...";
     public static final String ABOUT = "About";
     public static final String README = "User Guide";
     public static final String ISSUE = "Report an Issue";
     public static final String CITE = "Cite";
-    public static final String LOG = "Logging...";
+    public static final String LOG = "Configure Logging...";
 
     // Menu items
     public static final String IMAGEJ_VIEW_MENU_ITEM = "Show in Hyperstack Viewer";
@@ -62,12 +62,15 @@ public class BigDataProcessor2Menu extends JMenu
         addMenuItem( mainMenu, CITE );
 
         final JMenu recordMenu = addMenu( "Record" );
-        menus.add( recordMenu );
-        addMenuItem( recordMenu, RECORD );
-
         final JMenu openMenu = addMenu( "Open" );
-        menus.add( openMenu );
+        final JMenu processMenu = addMenu( "Process" );
+        final JMenu saveMenu = addMenu( "Save" );
+        final JMenu miscMenu = addMenu( "Misc" );
+
+        menus.add( recordMenu );addMenuItem( recordMenu, RECORD );
+
         // TODO: auto-populate using SciJava annotation
+        menus.add( openMenu );
         addMenuItem( openMenu, OpenHelpCommand.COMMAND_NAME );
         addMenuItem( openMenu, OpenBdvBioFormatsCommand.COMMAND_NAME );
         addMenuItem( openMenu, OpenFileSeriesCommand.COMMAND_NAME );
@@ -78,31 +81,25 @@ public class BigDataProcessor2Menu extends JMenu
         addMenuItem( openPredefinedFileSeriesMenu, OpenLuxendoFileSeriesCommand.COMMAND_NAME );
         addMenuItem( openPredefinedFileSeriesMenu, OpenSingleTiffVolumeCommand.COMMAND_NAME );    addMenuItem( openMenu, DownloadAndOpenSampleDataCommand.COMMAND_NAME );
 
-        final JMenu processMenu = addMenu( "Process" );
         menus.add( processMenu );
-
-        populateProcessMenu( processMenu );
+        populateProcessMenu( processMenu, miscMenu );
 
         final JMenu correctDriftMenu = new JMenu( "Correct Drift" );
         processMenu.add( correctDriftMenu );
         addMenuItem( correctDriftMenu, CREATE_TRACK );
         addMenuItem( correctDriftMenu, ApplyTrackCommand.COMMAND_NAME );
 
-//        addMenuItem( OBLIQUE_MENU_ITEM );
-
-        final JMenu saveMenu = addMenu( "Save" );
         menus.add( saveMenu );
         addMenuItem( saveMenu, SAVE_AS_IMARIS_VOLUMES_MENU_ITEM );
         addMenuItem( saveMenu, SAVE_AS_TIFF_VOLUMES_MENU_ITEM );
         addMenuItem( saveMenu, SAVE_AS_TIFF_PLANES_MENU_ITEM );
 
-        final JMenu miscMenu = addMenu( MISC );
         menus.add( miscMenu );
         addMenuItem( miscMenu, IMAGEJ_VIEW_MENU_ITEM );
         addMenuItem( miscMenu, LOG );
     }
 
-    public void populateProcessMenu( JMenu processMenu )
+    private void populateProcessMenu( JMenu processMenu, JMenu miscMenu )
     {
         PluginProvider< AbstractImageProcessingCommand > pluginProvider = new PluginProvider<>( AbstractImageProcessingCommand.class );
         pluginProvider.setContext( Services.getContext() );
@@ -111,7 +108,14 @@ public class BigDataProcessor2Menu extends JMenu
 
         for ( String name : names )
         {
-            addMenuItemAndProcessingAction( processMenu, name, pluginProvider.getInstance( name ) );
+            if ( name.equals( SetCacheDimensionsCommand.COMMAND_NAME ) )
+            {
+                addMenuItemAndProcessingAction( miscMenu, name, pluginProvider.getInstance( name ) );
+            }
+            else
+            {
+                addMenuItemAndProcessingAction( processMenu, name, pluginProvider.getInstance( name ) );
+            }
         }
     }
 
