@@ -13,11 +13,15 @@ public class Services
 
 	public static void setCommandService( CommandService commandService )
 	{
+		if ( commandService == null ) return;
+
 		Services.commandService = commandService;
 	}
 
 	public static void setUiService( UIService uiService )
 	{
+		if ( uiService == null ) return;
+
 		System.out.println( "Setting SciJava uiService.");
 		Services.uiService = uiService;
 		if ( uiService.isHeadless() )
@@ -28,6 +32,8 @@ public class Services
 
 	public static void setContext( Context context )
 	{
+		if ( context == null ) return;
+
 		System.out.println( "Setting SciJava context.");
 		Services.context = context;
 	}

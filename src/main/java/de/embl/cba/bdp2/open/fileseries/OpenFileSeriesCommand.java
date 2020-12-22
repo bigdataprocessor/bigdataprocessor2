@@ -23,7 +23,7 @@ public class OpenFileSeriesCommand< R extends RealType< R > & NativeType< R > > 
     public static final String COMMAND_NAME = "Open Custom File Series...";
     public static final String COMMAND_FULL_NAME = COMMAND_BDP2_PREFIX + COMMAND_NAME;
 
-    @Parameter(label = "File extension", choices = { TIF, OME_TIF, TIFF, H_5 })
+    @Parameter(label = "File extension", choices = { TIF, OME_TIF, TIFF, HDF5 })
     String fileExtension = ".tif";
 
     @Parameter(label = "Regular expression (excluding file extension)")

@@ -375,8 +375,6 @@ public class FileInfosHelper
     {
         if ( filterPattern != null )
         {
-            //final String separator = Pattern.quote( File.separator );
-            //final String[] split = filterPattern.split( separator + "(?!d\\))" );
             final String[] split = filterPattern.split( "/" );
             if ( split.length > 1 )
                 return split[ 1 ];
@@ -390,33 +388,33 @@ public class FileInfosHelper
     }
 
     // TODO: Do I need the filterPattern?
-    private static String[] sortAndFilterFileList( String[] rawlist, String filterPattern )
+    private static String[] sortAndFilterFileList( String[] inputs, String regExp )
     {
         int count = 0;
 
-        Pattern patternFilter = Pattern.compile( filterPattern );
+        Pattern pattern = Pattern.compile( regExp );
 
-        for (int i = 0; i < rawlist.length; i++)
+        for (int i = 0; i < inputs.length; i++)
         {
-            String name = rawlist[i];
-            if ( ! patternFilter.matcher( name ).matches() )
-                rawlist[i] = null;
+            String name = inputs[i];
+            if ( ! pattern.matcher( name ).matches() )
+                inputs[i] = null;
             else if ( name.endsWith(".tif") || name.endsWith(".h5") )
                 count++;
             else
-                rawlist[i] = null;
+                inputs[i] = null;
         }
 
         if (count == 0) return null;
-        String[] list = rawlist;
-        if (count < rawlist.length)
+        String[] list = inputs;
+        if (count < inputs.length)
         {
             list = new String[count];
             int index = 0;
-            for (int i = 0; i < rawlist.length; i++)
+            for (int i = 0; i < inputs.length; i++)
             {
-                if (rawlist[i] != null)
-                    list[index++] = rawlist[i];
+                if (inputs[i] != null)
+                    list[index++] = inputs[i];
             }
         }
         int listLength = list.length;
@@ -522,11 +520,11 @@ public class FileInfosHelper
         }
     }
 
-    public static ArrayList< String > captureMatchesInSubFolders( File directory, String regExp )
+    public static Set< String > captureMatchesInSubFolders( File directory, String regExp )
     {
         assert directory.isDirectory();
 
-        ArrayList< String > captures = new ArrayList<>();
+        Set< String > captures = new HashSet<>();
         String[] list = directory.list();
         for ( String item : list )
         {

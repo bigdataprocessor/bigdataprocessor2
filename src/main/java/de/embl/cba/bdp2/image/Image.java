@@ -5,6 +5,7 @@ import de.embl.cba.bdp2.dialog.DisplaySettings;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.open.CacheUtils;
 import de.embl.cba.bdp2.open.CachedCellImgCreator;
+import de.embl.cba.bdp2.process.cache.SetCacheDimensionsCommand;
 import de.embl.cba.bdp2.save.CachedCellImgReplacer;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
@@ -288,12 +289,6 @@ public class Image< R extends RealType< R > & NativeType< R > >
 	 */
 	public void setCache( int[] cellDims, DiskCachedCellImgOptions.CacheType cacheType, int cacheSize )
 	{
-		Logger.info( "Setting cache of image: " + getName() );
-		Logger.info( "  Cache cell dimensions: " + Arrays.toString( cellDims ) );
-		Logger.info( "  Cache type: " + cacheType.toString() );
-		if ( cacheType.equals( DiskCachedCellImgOptions.CacheType.BOUNDED ) )
-			Logger.info( "  Cache size: " + cacheSize );
-
 		this.cachedCellDims = cellDims;
 
 		RandomAccessibleInterval< R > cachedCellImg = cachedCellImgCreator.createCachedCellImg( cellDims, cacheType, cacheSize );

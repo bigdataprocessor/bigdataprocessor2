@@ -27,7 +27,6 @@ public abstract class CalibrationChecker< R extends RealType< R > & NativeType< 
 	{
 		if ( voxelSize == null )
 		{
-			Logger.warn( "Voxel size not set!" );
 			return false;
 		}
 
@@ -35,7 +34,6 @@ public abstract class CalibrationChecker< R extends RealType< R > & NativeType< 
 		{
 			if ( Double.isNaN( voxelSize[ d ] ) || voxelSize[ d ] <= 0.0 )
 			{
-				Logger.warn( "Voxel size along dimension " + d + " is " + voxelSize[ d ] );
 				return false;
 			}
 		}
@@ -53,11 +51,11 @@ public abstract class CalibrationChecker< R extends RealType< R > & NativeType< 
 
 		return true;
 	}
+
 	public static boolean checkVoxelUnit( Unit< Length > voxelUnit )
 	{
 		if ( voxelUnit == null )
 		{
-			Logger.warn( "Voxel unit not set!" );
 			return false;
 		}
 

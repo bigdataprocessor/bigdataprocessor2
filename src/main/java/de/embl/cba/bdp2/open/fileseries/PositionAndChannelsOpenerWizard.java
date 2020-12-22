@@ -1,25 +1,27 @@
 package de.embl.cba.bdp2.open.fileseries;
 
 import de.embl.cba.bdp2.open.ChannelChooserDialog;
-import de.embl.cba.bdp2.open.fileseries.luxendo.OpenPositionAndChannelsFileSeriesCommand;
+import de.embl.cba.bdp2.open.NamingSchemes;
+import de.embl.cba.bdp2.open.fileseries.luxendo.OpenChannelsFileSeriesCommand;
 import ij.IJ;
+import ij.gui.GenericDialog;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class PositionAndChannelsOpenerWizard
 {
 	private File directory;
 	private final String positionRegExp;
-	private final String channelTimeRegExp;
+	private final String positionChannelTimeRegExp;
 
-	public PositionAndChannelsOpenerWizard( File directory, String positionRegExp, String channelTimeRegExp )
+	public PositionAndChannelsOpenerWizard( File directory, String positionRegExp, String positionChannelTimeRegExp )
 	{
 		this.directory = directory;
 		this.positionRegExp = positionRegExp;
-		this.channelTimeRegExp = channelTimeRegExp;
+		this.positionChannelTimeRegExp = positionChannelTimeRegExp;
 	}
 
 	public void run()
@@ -32,18 +34,23 @@ public class PositionAndChannelsOpenerWizard
 		}
 		else
 		{
-			ArrayList< String > positions = FileInfosHelper.captureMatchesInSubFolders( directory, positionRegExp );
-			if ( positions.isEmpty() )
+			Set< String > datasets = FileInfosHelper.captureMatchesInSubFolders( directory, positionRegExp );
+			if ( datasets.isEmpty() )
 			{
 				IJ.showMessage("Could not find any folders matching " + positionRegExp );
 				return;
 			}
 			else
 			{
-				// TODO: show position choice
-				position = "";
+				GenericDialog gd = new GenericDialog( "Dataset Chooser" );
+				gd.addChoice( "Open Dataset", datasets.toArray( new String[]{} ), null );
+				gd.showDialog();
+				if ( gd.wasCanceled() ) return;
+				position = gd.getNextChoice();
 			}
 		}
+
+		String channelTimeRegExp = positionChannelTimeRegExp.replace( NamingSchemes.P, position );
 
 		// Fetch available channels and let user choose which ones to open
 		//
@@ -54,7 +61,7 @@ public class PositionAndChannelsOpenerWizard
 		// Open the image and record a macro
 		//
 		String channels = Arrays.stream( selectedChannels ).collect( Collectors.joining( "," ) );
-		OpenPositionAndChannelsFileSeriesCommand< ? > openCommand = new OpenPositionAndChannelsFileSeriesCommand( directory, fileInfos.getRelativeFilePaths(), channels, position, positionRegExp );
+		OpenChannelsFileSeriesCommand< ? > openCommand = new OpenChannelsFileSeriesCommand( directory, fileInfos.relativeFilePaths, channels, channelTimeRegExp );
 		openCommand.run();
 		openCommand.recordMacro();
 

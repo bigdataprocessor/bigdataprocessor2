@@ -3,6 +3,7 @@ package de.embl.cba.bdp2.process.cache;
 import de.embl.cba.bdp2.BigDataProcessor2Menu;
 import de.embl.cba.bdp2.dialog.DialogUtils;
 import de.embl.cba.bdp2.image.Image;
+import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.open.AbstractOpenFileSeriesCommand;
 import de.embl.cba.bdp2.process.AbstractImageProcessingCommand;
 import de.embl.cba.bdp2.scijava.Services;
@@ -26,8 +27,11 @@ public class SetCacheDimensionsCommand< R extends RealType< R > & NativeType< R 
     public static final String COMMAND_FULL_NAME = BigDataProcessor2Menu.COMMAND_BDP2_PREFIX + COMMAND_NAME;
 
     @Parameter(label = "Cache dimensions x,y,z,c,t")
-    String chacheDimensions = "100,100,1,1,1"; // TODO: prefill with current
+    String chacheDimensions = "100,100,1,1,1"; // TODO: pre-fill with current
     public static String CACHE_DIMENSIONS = "chacheDimensions";
+
+    // TODO: Make a choice
+    private DiskCachedCellImgOptions.CacheType cacheType = DiskCachedCellImgOptions.CacheType.SOFTREF;
 
     @Override
     public void run()
@@ -42,8 +46,13 @@ public class SetCacheDimensionsCommand< R extends RealType< R > & NativeType< R 
         final int[] cacheDims = Arrays.stream( chacheDimensions.split( "," ) ).mapToInt( i -> Integer.parseInt( i ) ).toArray();
 
         outputImage = new Image<>( inputImage );
-        outputImage.setCache( cacheDims, DiskCachedCellImgOptions.CacheType.BOUNDED, 100  );
+        outputImage.setCache( cacheDims, DiskCachedCellImgOptions.CacheType.SOFTREF, 0  );
         outputImage.setName( outputImageName );
+
+        Logger.info( "\n# " + SetCacheDimensionsCommand.COMMAND_NAME );
+        Logger.info( "Image: " + inputImage.getName() );
+        Logger.info( "Cell dimensions: " + Arrays.toString( cacheDims ) );
+        Logger.info( "Type: " + cacheType.toString() );
     }
 
     @Override

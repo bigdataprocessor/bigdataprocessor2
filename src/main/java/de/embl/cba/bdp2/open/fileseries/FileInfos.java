@@ -120,14 +120,13 @@ public class FileInfos
             namingScheme = namingScheme;
         }
 
-        namingScheme = adaptDirectorySeparatorToOperatingSystem( namingScheme );
-
         Logger.info( "Directory: " + directory );
         Logger.info( "Regular expression: " +  namingScheme );
 
         if ( relativeFilePaths == null )
             relativeFilePaths = FileInfosHelper.fetchFiles( directory, namingScheme, recursive );
 
+        namingScheme = adaptDirectorySeparatorToOperatingSystem( namingScheme );
         FileInfosHelper.setFileInfos5D( this, namingScheme, channelSubset );
 
         Logger.info( this.toString() );
