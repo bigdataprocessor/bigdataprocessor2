@@ -1,7 +1,7 @@
 package de.embl.cba.bdp2.open.fileseries;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.dialog.DialogUtils;
-import de.embl.cba.bdp2.macro.MacroRecorder;
+import de.embl.cba.bdp2.record.ScriptRecorder;
 import de.embl.cba.bdp2.open.AbstractOpenCommand;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -42,7 +42,7 @@ public class OpenSingleTiffVolumeCommand< R extends RealType< R > & NativeType< 
     @Override
     public void recordAPICall()
     {
-        MacroRecorder recorder = new MacroRecorder( outputImage );
+        ScriptRecorder recorder = new ScriptRecorder( outputImage );
         recorder.recordImportStatements( true );
         recorder.setAPIFunctionName( "openTiffSeries" );
         recorder.addAPIFunctionParameter( recorder.quote( directory) );

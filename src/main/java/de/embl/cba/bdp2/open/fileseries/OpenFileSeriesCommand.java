@@ -1,6 +1,6 @@
 package de.embl.cba.bdp2.open.fileseries;
 
-import de.embl.cba.bdp2.macro.MacroRecorder;
+import de.embl.cba.bdp2.record.ScriptRecorder;
 import de.embl.cba.bdp2.open.AbstractOpenFileSeriesCommand;
 import de.embl.cba.bdp2.process.calibrate.CalibrationUtils;
 import de.embl.cba.bdp2.dialog.DialogUtils;
@@ -79,7 +79,7 @@ public class OpenFileSeriesCommand< R extends RealType< R > & NativeType< R > > 
 
     private void recordJythonCall( String apiFunctionName )
     {
-        MacroRecorder recorder = new MacroRecorder( outputImage );
+        ScriptRecorder recorder = new ScriptRecorder( outputImage );
         recorder.recordImportStatements( true );
         recorder.setAPIFunctionName( apiFunctionName );
         recorder.addAPIFunctionParameter( recorder.quote( directory.toString() ) );

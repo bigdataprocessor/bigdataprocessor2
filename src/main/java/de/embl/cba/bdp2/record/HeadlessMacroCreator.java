@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.macro;
+package de.embl.cba.bdp2.record;
 
 import de.embl.cba.bdp2.open.AbstractOpenFileSeriesCommand;
 import de.embl.cba.bdp2.quit.QuitCommand;

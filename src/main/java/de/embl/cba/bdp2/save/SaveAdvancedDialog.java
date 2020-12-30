@@ -4,7 +4,7 @@ import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.log.progress.ProgressListener;
-import de.embl.cba.bdp2.macro.MacroRecorder;
+import de.embl.cba.bdp2.record.ScriptRecorder;
 import de.embl.cba.bdp2.process.calibrate.CalibrationChecker;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.viewer.ImageViewer;
@@ -287,7 +287,7 @@ public class SaveAdvancedDialog< R extends RealType< R > & NativeType< R > > ext
 
     private void recordMacro()
     {
-        final MacroRecorder recorder = new MacroRecorder( SaveAdvancedCommand.COMMAND_FULL_NAME, inputImage );
+        final ScriptRecorder recorder = new ScriptRecorder( SaveAdvancedCommand.COMMAND_FULL_NAME, inputImage );
 
         String directory = tfDirectory.getText();
         recorder.addCommandParameter( SaveAdvancedCommand.DIRECTORY_PARAMETER, directory );
@@ -326,7 +326,7 @@ public class SaveAdvancedDialog< R extends RealType< R > & NativeType< R > > ext
         String stringValue;
 
         if ( value instanceof String )
-            stringValue = MacroRecorder.quote( ( String ) value );
+            stringValue = ScriptRecorder.quote( ( String ) value );
         else if ( value instanceof Boolean )
             stringValue = (boolean) value ? "True" : "False";
         else if ( value instanceof SaveFileType )

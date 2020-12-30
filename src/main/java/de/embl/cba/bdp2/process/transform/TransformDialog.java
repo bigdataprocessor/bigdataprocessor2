@@ -3,7 +3,7 @@ package de.embl.cba.bdp2.process.transform;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.open.AbstractOpenFileSeriesCommand;
-import de.embl.cba.bdp2.macro.MacroRecorder;
+import de.embl.cba.bdp2.record.ScriptRecorder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewer.ImageViewer;
 import ij.gui.GenericDialog;
@@ -43,7 +43,7 @@ public class TransformDialog< T extends RealType< T > & NativeType< T > >
 
 	private void recordMacro()
 	{
-		final MacroRecorder recorder = new MacroRecorder( TransformCommand.COMMAND_FULL_NAME, inputImage, outputImage, AbstractOpenFileSeriesCommand.SHOW_IN_NEW_VIEWER );
+		final ScriptRecorder recorder = new ScriptRecorder( TransformCommand.COMMAND_FULL_NAME, inputImage, outputImage, AbstractOpenFileSeriesCommand.SHOW_IN_NEW_VIEWER );
 		recorder.addCommandParameter( TransformCommand.AFFINE_STRING_PARAMETER, affineTransform );
 		recorder.addCommandParameter( TransformCommand.INTERPOLATION_PARAMETER, interpolationMode );
 

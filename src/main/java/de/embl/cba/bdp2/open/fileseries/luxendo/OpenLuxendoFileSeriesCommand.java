@@ -1,10 +1,8 @@
 package de.embl.cba.bdp2.open.fileseries.luxendo;
 
 import de.embl.cba.bdp2.dialog.DialogUtils;
-import de.embl.cba.bdp2.macro.MacroRecorderHelper;
 import de.embl.cba.bdp2.open.AbstractOpenFileSeriesCommand;
 import de.embl.cba.bdp2.open.fileseries.PositionAndChannelsOpenerWizard;
-import de.embl.cba.bdp2.scijava.Services;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;

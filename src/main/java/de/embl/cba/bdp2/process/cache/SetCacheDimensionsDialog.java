@@ -1,17 +1,12 @@
 package de.embl.cba.bdp2.process.cache;
 
-import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.macro.MacroRecorder;
-import de.embl.cba.bdp2.process.rename.ImageRenameCommand;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.viewer.ImageViewer;
 import ij.gui.GenericDialog;
 import net.imglib2.cache.img.DiskCachedCellImgOptions;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
-
-import static de.embl.cba.bdp2.process.rename.ImageRenameCommand.CHANNEL_NAMES_PARAMETER;
 
 public class SetCacheDimensionsDialog < R extends RealType< R > & NativeType< R > >
 {

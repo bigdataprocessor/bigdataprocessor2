@@ -5,7 +5,7 @@ import bdv.util.BoundedValueDouble;
 import de.embl.cba.bdp2.dialog.AbstractProcessingDialog;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.macro.MacroRecorder;
+import de.embl.cba.bdp2.record.ScriptRecorder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewer.ImageViewer;
 import ij.IJ;
@@ -71,7 +71,7 @@ public class MultiChannelUnsignedByteTypeConverterDialog< R extends RealType< R 
 	@Override
 	protected void recordMacro()
 	{
-		final MacroRecorder recorder = new MacroRecorder( MultiChannelUnsignedByteTypeConverterCommand.COMMAND_FULL_NAME, inputImage, outputImage);
+		final ScriptRecorder recorder = new ScriptRecorder( MultiChannelUnsignedByteTypeConverterCommand.COMMAND_FULL_NAME, inputImage, outputImage);
 
 		recorder.addCommandParameter( "mapTo0", contrastLimits.stream().map( x -> "" + x[ 0 ] ).collect( Collectors.joining( ",") ) );
 		recorder.addCommandParameter( "mapTo255", contrastLimits.stream().map( x -> "" + x[ 1 ] ).collect( Collectors.joining( ",") ));

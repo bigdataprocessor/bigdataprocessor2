@@ -1,6 +1,5 @@
 package de.embl.cba.bdp2;
 
-import bdv.viewer.SourceAndConverter;
 import de.embl.cba.bdp2.log.LoggingLevelCommand;
 import de.embl.cba.bdp2.open.AbstractOpenFileSeriesCommand;
 import de.embl.cba.bdp2.open.bioformats.OpenBdvBioFormatsCommand;
@@ -26,7 +25,7 @@ import de.embl.cba.bdp2.track.ApplyTrackDialog;
 import de.embl.cba.bdp2.track.TrackCreator;
 import de.embl.cba.bdp2.process.rename.ImageRenameCommand;
 import de.embl.cba.bdp2.process.rename.ImageRenameDialog;
-import de.embl.cba.bdp2.macro.RecordingDialog;
+import de.embl.cba.bdp2.record.LanguageDialog;
 import de.embl.cba.bdp2.save.SaveAdvancedDialog;
 import de.embl.cba.bdp2.scijava.Services;
 import de.embl.cba.bdp2.process.align.channelshift.AlignChannelsCommand;
@@ -136,7 +135,7 @@ public class BigDataProcessor2MenuActions implements ActionListener {
         else if (e.getActionCommand().equalsIgnoreCase( BigDataProcessor2Menu.RECORD ))
         {
             BigDataProcessor2.threadPool.submit(() -> {
-                new RecordingDialog();
+                new LanguageDialog();
             });
         }
         else if (e.getActionCommand().equalsIgnoreCase( BigDataProcessor2Menu.CREATE_TRACK ))

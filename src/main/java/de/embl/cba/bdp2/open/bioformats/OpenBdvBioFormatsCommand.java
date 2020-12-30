@@ -3,7 +3,7 @@ package de.embl.cba.bdp2.open.bioformats;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.dialog.DialogUtils;
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.macro.MacroRecorder;
+import de.embl.cba.bdp2.record.ScriptRecorder;
 import de.embl.cba.bdp2.open.AbstractOpenCommand;
 import de.embl.cba.bdp2.open.AbstractOpenFileCommand;
 import net.imglib2.type.NativeType;
@@ -48,7 +48,7 @@ public class OpenBdvBioFormatsCommand< R extends RealType< R > & NativeType< R >
 
     public void recordAPICall()
     {
-        MacroRecorder recorder = new MacroRecorder( outputImage );
+        ScriptRecorder recorder = new ScriptRecorder( outputImage );
         recorder.recordImportStatements( true );
         recorder.setAPIFunctionName( "openBioFormats" );
         recorder.addAPIFunctionParameter( recorder.quote( file.getAbsolutePath() ) );

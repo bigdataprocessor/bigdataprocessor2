@@ -12,7 +12,7 @@ import de.embl.cba.bdp2.process.align.channelshift.RegionOptimiser;
 import de.embl.cba.bdp2.dialog.AbstractProcessingDialog;
 import de.embl.cba.bdp2.dialog.DisplaySettings;
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.macro.MacroRecorder;
+import de.embl.cba.bdp2.record.ScriptRecorder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewer.ImageViewer;
 import ij.Prefs;
@@ -89,7 +89,7 @@ public class SplitChipDialog< R extends RealType< R > & NativeType< R > > extend
 	@Override
 	protected void recordMacro()
 	{
-		final MacroRecorder recorder = new MacroRecorder( SplitChipCommand.COMMAND_FULL_NAME, inputImage, outputImage );
+		final ScriptRecorder recorder = new ScriptRecorder( SplitChipCommand.COMMAND_FULL_NAME, inputImage, outputImage );
 		ArrayList< long[] > regions = intervals3dAsLongsList();
 		String intervalsString = Utils.longsToDelimitedString( regions );
 		Prefs.set( getImageJPrefsKey(), intervalsString );

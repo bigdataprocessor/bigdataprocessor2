@@ -1,6 +1,6 @@
 package de.embl.cba.bdp2.cluster;
 
-import de.embl.cba.bdp2.macro.HeadlessMacroCreator;
+import de.embl.cba.bdp2.record.HeadlessMacroCreator;
 import de.embl.cba.bdp2.scijava.Services;
 import de.embl.cba.cluster.AbstractClusterSubmitterCommand;
 import de.embl.cba.cluster.JobFuture;

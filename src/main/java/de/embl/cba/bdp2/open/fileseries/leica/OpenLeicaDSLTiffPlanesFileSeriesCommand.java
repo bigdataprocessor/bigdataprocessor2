@@ -1,7 +1,7 @@
 package de.embl.cba.bdp2.open.fileseries.leica;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
-import de.embl.cba.bdp2.macro.MacroRecorder;
+import de.embl.cba.bdp2.record.ScriptRecorder;
 import de.embl.cba.bdp2.open.AbstractOpenFileSeriesCommand;
 import de.embl.cba.bdp2.process.calibrate.CalibrationUtils;
 import de.embl.cba.bdp2.dialog.DialogUtils;
@@ -51,7 +51,7 @@ public class OpenLeicaDSLTiffPlanesFileSeriesCommand< R extends RealType< R > & 
     @Override
     public void recordAPICall()
     {
-        MacroRecorder recorder = new MacroRecorder( outputImage );
+        ScriptRecorder recorder = new ScriptRecorder( outputImage );
         recorder.recordImportStatements( true );
         recorder.setAPIFunctionName( "openTiffSeries" );
         recorder.addAPIFunctionParameter( recorder.quote( directory.toString() ) );

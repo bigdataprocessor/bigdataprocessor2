@@ -2,7 +2,7 @@ package de.embl.cba.bdp2.open.fileseries.luxendo;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.dialog.DialogUtils;
-import de.embl.cba.bdp2.macro.MacroRecorder;
+import de.embl.cba.bdp2.record.ScriptRecorder;
 import de.embl.cba.bdp2.open.NamingSchemes;
 import de.embl.cba.bdp2.open.AbstractOpenFileSeriesCommand;
 import net.imglib2.type.NativeType;
@@ -87,13 +87,13 @@ public class OpenChannelsFileSeriesCommand< R extends RealType< R > & NativeType
 
     private void recordMacro()
     {
-        if ( MacroRecorder.isScriptMode() )
+        if ( ScriptRecorder.isScriptMode() )
         {
             recordAPICall();
         }
         else
         {
-            MacroRecorder recorder = new MacroRecorder( this.COMMAND_FULL_NAME, viewingModality, outputImage );
+            ScriptRecorder recorder = new ScriptRecorder( this.COMMAND_FULL_NAME, viewingModality, outputImage );
             recorder.addCommandParameter( AbstractOpenFileSeriesCommand.DIRECTORY_PARAMETER, directory.getAbsolutePath() );
             recorder.addCommandParameter( AbstractOpenFileSeriesCommand.ARBITRARY_PLANE_SLICING_PARAMETER, enableArbitraryPlaneSlicing );
             recorder.addCommandParameter( this.REGEXP_PARAMETER, regExp );
@@ -105,8 +105,9 @@ public class OpenChannelsFileSeriesCommand< R extends RealType< R > & NativeType
     @Override
     public void recordAPICall()
     {
-        MacroRecorder recorder = new MacroRecorder( outputImage );
+        ScriptRecorder recorder = new ScriptRecorder( outputImage );
         recorder.recordImportStatements( true );
+        recorder.recordShowImage( true );
 
         if ( regExp.contains( NamingSchemes.HDF5 ) )
         {

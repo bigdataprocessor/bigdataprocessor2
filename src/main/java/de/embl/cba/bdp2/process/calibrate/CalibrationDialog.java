@@ -4,7 +4,7 @@ import ch.epfl.biop.bdv.bioformats.BioFormatsMetaDataHelper;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.macro.MacroRecorder;
+import de.embl.cba.bdp2.record.ScriptRecorder;
 import de.embl.cba.bdp2.viewer.ImageViewer;
 import ij.IJ;
 import ij.gui.GenericDialog;
@@ -85,7 +85,7 @@ public class CalibrationDialog< R extends RealType< R > & NativeType< R > >
 
 	protected void recordMacro()
 	{
-		final MacroRecorder recorder = new MacroRecorder( SetVoxelSizeCommand.COMMAND_FULL_NAME, inputImage, outputImage );
+		final ScriptRecorder recorder = new ScriptRecorder( SetVoxelSizeCommand.COMMAND_FULL_NAME, inputImage, outputImage );
 
 		final double[] voxelSize = outputImage.getVoxelDimensions();
 		recorder.addCommandParameter( "unit", outputImage.getVoxelUnit() );

@@ -1,16 +1,15 @@
-package de.embl.cba.bdp2.macro;
+package de.embl.cba.bdp2.record;
 
 import ij.gui.GenericDialog;
 import ij.plugin.frame.Recorder;
 
-public class RecordingDialog
+public class LanguageDialog
 {
-
 	public static final String MACRO = "Macro";
 	public static final String PYTHON = "Python"; // == Jython
 	public static final String JAVA_SCRIPT = "JavaScript";
 
-	public RecordingDialog()
+	public LanguageDialog()
 	{
 		final GenericDialog genericDialog = new GenericDialog( "Recording" );
 		genericDialog.addCheckbox( "Enable recording", true );

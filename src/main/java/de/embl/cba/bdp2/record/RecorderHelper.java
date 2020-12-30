@@ -1,11 +1,11 @@
-package de.embl.cba.bdp2.macro;
+package de.embl.cba.bdp2.record;
 
 import ij.plugin.frame.Recorder;
 
 import java.awt.*;
 import java.lang.reflect.Field;
 
-public class MacroRecorderHelper
+public class RecorderHelper
 {
 	public static void removeCommandFromRecorder( String commandFullName )
 	{
@@ -28,7 +28,7 @@ public class MacroRecorderHelper
 		}
 	}
 
-	private MacroRecorderHelper()
+	private RecorderHelper()
 	{
 	}
 }

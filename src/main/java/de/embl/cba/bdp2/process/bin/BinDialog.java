@@ -3,7 +3,7 @@ package de.embl.cba.bdp2.process.bin;
 import bdv.tools.brightness.SliderPanel;
 import bdv.util.BoundedValue;
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.macro.MacroRecorder;
+import de.embl.cba.bdp2.record.ScriptRecorder;
 import de.embl.cba.bdp2.dialog.AbstractProcessingDialog;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewer.ImageViewer;
@@ -30,7 +30,7 @@ public class BinDialog< R extends RealType< R > & NativeType< R > > extends Abst
 	@Override
 	protected void recordMacro()
 	{
-		final MacroRecorder recorder = new MacroRecorder( BinCommand.COMMAND_FULL_NAME, inputImage, outputImage );
+		final ScriptRecorder recorder = new ScriptRecorder( BinCommand.COMMAND_FULL_NAME, inputImage, outputImage );
 
 		recorder.addCommandParameter( "binWidthXPixels",  span[ 0 ] );
 		recorder.addCommandParameter( "binWidthYPixels",  span[ 1 ] );

@@ -2,7 +2,7 @@ package de.embl.cba.bdp2.track;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.macro.MacroRecorder;
+import de.embl.cba.bdp2.record.ScriptRecorder;
 import de.embl.cba.bdp2.viewer.ImageViewer;
 import de.embl.cba.bdv.utils.BdvUtils;
 import fiji.util.gui.GenericDialogPlus;
@@ -45,7 +45,7 @@ public class ApplyTrackDialog< R extends RealType< R > & NativeType< R > >
 
 	protected void recordMacro()
 	{
-		final MacroRecorder recorder = new MacroRecorder( ApplyTrackCommand.COMMAND_FULL_NAME, inputImage, outputImage );
+		final ScriptRecorder recorder = new ScriptRecorder( ApplyTrackCommand.COMMAND_FULL_NAME, inputImage, outputImage );
 
 		recorder.addCommandParameter( ApplyTrackCommand.TRACK_FILE_PARAMETER, trackFile );
 		recorder.addCommandParameter( ApplyTrackCommand.CENTER_IMAGE_PARAMETER, centerImage);

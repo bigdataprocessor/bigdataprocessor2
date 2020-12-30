@@ -2,7 +2,6 @@ package de.embl.cba.bdp2.open;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.macro.MacroRecorder;
 import de.embl.cba.bdp2.process.calibrate.CalibrationChecker;
 import de.embl.cba.bdp2.scijava.Services;
 import de.embl.cba.bdp2.service.ImageService;
@@ -64,10 +63,6 @@ public abstract class AbstractOpenCommand< R extends RealType< R > & NativeType<
         {
             CalibrationChecker.correctCalibrationViaDialogIfNecessary( outputImage );
             showInViewer( autoContrast, keepViewerTransform );
-
-            MacroRecorder recorder = new MacroRecorder();
-            recorder.recordShowImage( true ); // TODO: this could be made more fine-grained
-            recorder.record();
         }
     }
 

@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.macro;
+package de.embl.cba.bdp2.record;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.open.AbstractOpenFileSeriesCommand;
@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 import static de.embl.cba.bdp2.process.AbstractImageProcessingCommand.*;
 
-public class MacroRecorder
+public class ScriptRecorder
 {
 	private static final String COMMA = ", ";
 	private String commandName;
@@ -27,16 +27,16 @@ public class MacroRecorder
 	private boolean recordShowImageCall = false;
 	private List< String > apiFunctionPrequels = new ArrayList<>(  );
 
-	public MacroRecorder()
+	public ScriptRecorder()
 	{
 	}
 
-	public MacroRecorder( Image< ? > outputImage )
+	public ScriptRecorder( Image< ? > outputImage )
 	{
 		this.outputImage = outputImage;
 	}
 
-	public MacroRecorder( String commandName, String outputImageHandling, Image< ? > outputImage )
+	public ScriptRecorder( String commandName, String outputImageHandling, Image< ? > outputImage )
 	{
 		this.commandName = commandName;
 		this.outputImage = outputImage;
@@ -45,12 +45,12 @@ public class MacroRecorder
 		addCommandParameter( VIEWING_MODALITY_PARAMETER, outputImageHandling );
 	}
 
-	public MacroRecorder( String commandName, Image< ? > inputImage, Image< ? > outputImage )
+	public ScriptRecorder( String commandName, Image< ? > inputImage, Image< ? > outputImage )
 	{
 		this( commandName, inputImage, outputImage, AbstractOpenFileSeriesCommand.SHOW_IN_CURRENT_VIEWER );
 	}
 
-	public MacroRecorder( String commandName, Image< ? > inputImage, Image< ? > outputImage, String outputImageHandling )
+	public ScriptRecorder( String commandName, Image< ? > inputImage, Image< ? > outputImage, String outputImageHandling )
 	{
 		this.commandName = commandName;
 		this.options = "";
@@ -62,7 +62,7 @@ public class MacroRecorder
 		addCommandParameter( VIEWING_MODALITY_PARAMETER, outputImageHandling );
 	}
 
-	public MacroRecorder( String commandName, Image< ? > inputImage )
+	public ScriptRecorder( String commandName, Image< ? > inputImage )
 	{
 		this.commandName = commandName;
 		this.inputImage = inputImage;
@@ -145,7 +145,6 @@ public class MacroRecorder
 							//recorder.recordString( "from jarray import array;\n" );
 							recorder.recordString( "from de.embl.cba.bdp2.save import SavingSettings;\n" );
 							recorder.recordString( "from de.embl.cba.bdp2.save import SaveFileType;\n" );
-							recorder.recordString( "\n" );
 						}
 						else if ( LanguageManager.getLanguage() == LanguageManager.JAVA_SCRIPT )
 						{
@@ -154,6 +153,8 @@ public class MacroRecorder
 							recorder.recordString( "importClass(Packages.de.embl.cba.bdp2.save.SavingSettings);\n" );
 							recorder.recordString( "importClass(Packages.de.embl.cba.bdp2.save.SaveFileType);\n" );
 						}
+
+						recorder.recordString( "\n" );
 					}
 
 					if ( apiFunction != null )
@@ -217,6 +218,9 @@ public class MacroRecorder
 		if ( inputImage != null ) apiCall += "image" + COMMA;
 		apiCall += parameters.stream().collect( Collectors.joining( COMMA ) );
 		apiCall += " );\n";
+
+		if ( LanguageManager.getLanguage().equals( LanguageManager.JAVA_SCRIPT ) )
+			apiCall = apiCall.replace( "\\", "\\\\" );
 
 		return apiCall;
 	}
