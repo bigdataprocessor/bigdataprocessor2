@@ -1,4 +1,4 @@
-# Overview
+[![DOI](https://zenodo.org/badge/161612516.svg)](https://zenodo.org/badge/latestdoi/161612516)
 
 <img src="./docs/images/BDP2-icon.png" width="300">
 
