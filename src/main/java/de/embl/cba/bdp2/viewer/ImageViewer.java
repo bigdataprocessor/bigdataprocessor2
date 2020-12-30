@@ -43,7 +43,7 @@ import java.util.Random;
 
 public class ImageViewer< R extends RealType< R > & NativeType< R > >
 {
-    public static final String VIEWER_TITLE_STUMP = "Image: ";
+    public static final String VIEWER_TITLE_STUMP = "";
     public static boolean enableArbitraryPlaneSlicing = false;
 
     private Image< R > image;

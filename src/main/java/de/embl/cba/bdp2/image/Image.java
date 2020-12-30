@@ -260,7 +260,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		}
 		info += "\nSize [GB]: " + getTotalSizeGB();
 		info += "\nData type: " + getTypeAsString();
-		info += "\nSize X,Y,Z,C,T [#]: " + Arrays.toString( getDimensionsXYZCT() );
+		info += "\nSize X,Y,Z,C,T [Voxels]: " + Arrays.toString( getDimensionsXYZCT() );
 		if ( getVoxelUnit() == null )
 		{
 			info += "\nVoxel size [???]: " + Arrays.toString( getVoxelDimensions() );
@@ -269,7 +269,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		{
 			info += "\nVoxel size [" + getVoxelUnit().getSymbol() + "]: " + Arrays.toString( getVoxelDimensions() );
 		}
-		info += "\nCache size X,Y,Z,C,T [#]: " + Arrays.toString( getCachedCellDims() );
+		info += "\nCache size X,Y,Z,C,T [Voxels]: " + Arrays.toString( getCachedCellDims() );
 
 		return info;
 	}
