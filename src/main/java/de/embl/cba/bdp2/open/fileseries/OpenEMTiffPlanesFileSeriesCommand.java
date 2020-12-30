@@ -25,13 +25,13 @@ public class OpenEMTiffPlanesFileSeriesCommand< R extends RealType< R > & Native
     {
         SwingUtilities.invokeLater( () ->  {
             outputImage = BigDataProcessor2.openTIFFSeries( directory.toString(), regExp );
-            recordJythonCall();
+            recordAPICall();
             handleOutputImage( true, false );
         });
     }
 
     @Override
-    public void recordJythonCall()
+    public void recordAPICall()
     {
         MacroRecorder recorder = new MacroRecorder( outputImage );
         recorder.recordImportStatements( true );

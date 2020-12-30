@@ -34,13 +34,13 @@ public class OpenSingleTiffVolumeCommand< R extends RealType< R > & NativeType< 
             regExp = "(?<T>"+file.getName()+")";
             regExp += FileInfos.NONRECURSIVE;
             outputImage = BigDataProcessor2.openTIFFSeries( directory, regExp );
-            recordJythonCall();
+            recordAPICall();
             handleOutputImage( true, false );
         });
     }
 
     @Override
-    public void recordJythonCall()
+    public void recordAPICall()
     {
         MacroRecorder recorder = new MacroRecorder( outputImage );
         recorder.recordImportStatements( true );

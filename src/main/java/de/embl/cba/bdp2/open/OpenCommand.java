@@ -5,5 +5,5 @@ import net.imglib2.type.numeric.RealType;
 
 public interface OpenCommand< R extends RealType< R > & NativeType< R > >
 {
-    void recordJythonCall();
+    void recordAPICall();
 }

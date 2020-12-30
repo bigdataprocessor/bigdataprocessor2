@@ -49,7 +49,7 @@ public class OpenLeicaDSLTiffPlanesFileSeriesCommand< R extends RealType< R > & 
     }
 
     @Override
-    public void recordJythonCall()
+    public void recordAPICall()
     {
         MacroRecorder recorder = new MacroRecorder( outputImage );
         recorder.recordImportStatements( true );

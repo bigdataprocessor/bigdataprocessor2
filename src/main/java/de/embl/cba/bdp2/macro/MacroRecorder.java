@@ -125,24 +125,35 @@ public class MacroRecorder
 
 	public void record()
 	{
-		new Thread( () -> {
+		new Thread( () ->
+		{
 			Recorder recorder = Recorder.getInstance();
 
 			if ( recorder != null )
 			{
-				if ( Recorder.scriptMode() ) // Jython
+				if ( Recorder.scriptMode() )
 				{
 					removeIJRunCallFromRecorder();
 
 					if ( recordImportStatments )
 					{
-						recorder.recordString( "# To run this script, please select language: Python\n" );
-						recorder.recordString( "from de.embl.cba.bdp2 import BigDataProcessor2;\n" );
-						recorder.recordString( "import java;\n" );
-						recorder.recordString( "from jarray import array;\n" );
-						recorder.recordString( "from de.embl.cba.bdp2.save import SavingSettings;\n" );
-						recorder.recordString( "from de.embl.cba.bdp2.save import SaveFileType;\n" );
-						recorder.recordString( "\n" );
+						if ( LanguageManager.getLanguage() == LanguageManager.PYTHON )
+						{
+							recorder.recordString( asComment( "To run this script, please select language: Python" ) );
+							recorder.recordString( "import java;\n" );
+							recorder.recordString( "from de.embl.cba.bdp2 import BigDataProcessor2;\n" );
+							//recorder.recordString( "from jarray import array;\n" );
+							recorder.recordString( "from de.embl.cba.bdp2.save import SavingSettings;\n" );
+							recorder.recordString( "from de.embl.cba.bdp2.save import SaveFileType;\n" );
+							recorder.recordString( "\n" );
+						}
+						else if ( LanguageManager.getLanguage() == LanguageManager.JAVA_SCRIPT )
+						{
+							recorder.recordString( asComment( "To run this script, please select language: JavaScript" ) );
+							recorder.recordString( "importClass(Packages.de.embl.cba.bdp2.BigDataProcessor2);\n" );
+							recorder.recordString( "importClass(Packages.de.embl.cba.bdp2.save.SavingSettings);\n" );
+							recorder.recordString( "importClass(Packages.de.embl.cba.bdp2.save.SaveFileType);\n" );
+						}
 					}
 
 					if ( apiFunction != null )
@@ -162,7 +173,9 @@ public class MacroRecorder
 					}
 
 					if ( recordShowImageCall )
-						recorder.recordString( "# BigDataProcessor2.showImage( image, True );\n" );
+					{
+						recorder.recordString( asComment( "BigDataProcessor2.showImage( image, " + getTrue() + " );" ) );
+					}
 
 					recorder.recordString("\n");
 
@@ -178,11 +191,24 @@ public class MacroRecorder
 		}).start();
 	}
 
+	private String getTrue()
+	{
+		switch ( LanguageManager.getLanguage() )
+		{
+			case LanguageManager.PYTHON:
+				return "True";
+			case LanguageManager.JAVA_SCRIPT:
+				return "true";
+			default:
+				return "true";
+		}
+	}
+
 	private String createAPICall()
 	{
 		if ( apiFunction == null )
 		{
-			return "// ERROR: no API call for:  " + commandName + "\n";
+			return asComment( "ERROR: no API call for:  " + commandName );
 		}
 
 		String apiCall = "";
@@ -193,6 +219,16 @@ public class MacroRecorder
 		apiCall += " );\n";
 
 		return apiCall;
+	}
+
+	private String asComment( String comment )
+	{
+		if ( LanguageManager.getLanguage().equals( LanguageManager.PYTHON ) )
+			return "# " + comment + "\n";
+		else if ( LanguageManager.getLanguage().equals( LanguageManager.JAVA_SCRIPT ) )
+			return "// " + comment + "\n";
+		else
+			return "";
 	}
 
 	public static String quote( String name )
@@ -238,6 +274,11 @@ public class MacroRecorder
 	public void addAPIFunctionParameter( String[] strings )
 	{
 		parameters.add( asJythonArray( strings ) );
+	}
+
+	public void addAPIFunctionPrequelComment( String comment )
+	{
+		apiFunctionPrequels.add( asComment( comment ) );
 	}
 
 	public void addAPIFunctionPrequel( String apiFunctionPrequel )

@@ -335,9 +335,15 @@ public class FileInfosHelper
             String[] subFolderFilePaths = fetchFiles( folder, filePattern );
 
             if ( subFolderFilePaths == null )
-                throw new UnsupportedOperationException( "No files found in folder: " + folder + " that match " + pattern );
+            {
+                String msg = "No files found in folder: " + folder + " that match " + filePattern;
+                Logger.error( msg );
+                throw new RuntimeException( msg );
+            }
             else
-                Logger.info( "Found " + subFolderFilePaths.length + " files in folder: " + folder);
+            {
+                Logger.info( "Found " + subFolderFilePaths.length + " files in folder: " + folder );
+            }
 
             // prepend subfolder
             final int j = i;
@@ -399,10 +405,8 @@ public class FileInfosHelper
             String name = inputs[i];
             if ( ! pattern.matcher( name ).matches() )
                 inputs[i] = null;
-            else if ( name.endsWith(".tif") || name.endsWith(".h5") )
-                count++;
             else
-                inputs[i] = null;
+                count++;
         }
 
         if (count == 0) return null;

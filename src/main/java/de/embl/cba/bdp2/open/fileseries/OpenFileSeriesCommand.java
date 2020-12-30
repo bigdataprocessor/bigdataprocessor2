@@ -52,7 +52,7 @@ public class OpenFileSeriesCommand< R extends RealType< R > & NativeType< R > > 
                         regExp );
             }
 
-            recordJythonCall();
+            recordAPICall();
             fixVoxelSpacing( outputImage );
             handleOutputImage( autoContrast, false );
         });
@@ -68,7 +68,7 @@ public class OpenFileSeriesCommand< R extends RealType< R > & NativeType< R > > 
     }
 
     @Override
-    public void recordJythonCall()
+    public void recordAPICall()
     {
         if ( regExp.endsWith( ".h5" ) )
             recordJythonCall( "openHDF5Series" );

@@ -9,7 +9,6 @@ import de.embl.cba.bdp2.open.AbstractOpenFileCommand;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;
-import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
 import javax.swing.*;
@@ -43,11 +42,11 @@ public class OpenBdvBioFormatsCommand< R extends RealType< R > & NativeType< R >
 
             outputImage = BigDataProcessor2.openBioFormats( filePath, seriesIndex );
             handleOutputImage( true, false );
-            recordJythonCall();
+            recordAPICall();
         });
     }
 
-    public void recordJythonCall()
+    public void recordAPICall()
     {
         MacroRecorder recorder = new MacroRecorder( outputImage );
         recorder.recordImportStatements( true );

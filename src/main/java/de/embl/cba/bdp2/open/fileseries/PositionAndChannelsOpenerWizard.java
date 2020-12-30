@@ -63,8 +63,5 @@ public class PositionAndChannelsOpenerWizard
 		String channels = Arrays.stream( selectedChannels ).collect( Collectors.joining( "," ) );
 		OpenChannelsFileSeriesCommand< ? > openCommand = new OpenChannelsFileSeriesCommand( directory, fileInfos.relativeFilePaths, channels, channelTimeRegExp );
 		openCommand.run();
-		openCommand.recordMacro();
-
-
 	}
 }

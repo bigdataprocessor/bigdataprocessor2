@@ -31,13 +31,10 @@ public class OpenLuxendoFileSeriesCommand< R extends RealType< R > & NativeType<
             PositionAndChannelsOpenerWizard openerWizard = new PositionAndChannelsOpenerWizard( directory, positionRegExp, channelTimeRegExp );
             openerWizard.run();
         });
-
-        // This command does not run headless
-        MacroRecorderHelper.removeCommandFromRecorder( this.COMMAND_FULL_NAME );
     }
 
     @Override
-    public void recordJythonCall()
+    public void recordAPICall()
     {
         // This command does not run headless
     }

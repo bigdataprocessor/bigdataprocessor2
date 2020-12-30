@@ -32,7 +32,7 @@ public class SetCacheDimensionsDialog < R extends RealType< R > & NativeType< R 
 //
 //		// Image< R > rename( Image< R > image, String name )
 //		recorder.setAPIFunctionName( "rename" );
-//		recorder.addAPIFunctionPrequel( "# " +  ImageRenameCommand.COMMAND_NAME );
+//		recorder.addAPIFunctionPrequelComment(  ImageRenameCommand.COMMAND_NAME );
 //		recorder.addAPIFunctionParameter( MacroRecorder.quote( inputImage.getName() ) );
 //		recorder.addAPIFunctionParameter( inputImage.getChannelNames() );
 //		recorder.record();

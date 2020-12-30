@@ -138,7 +138,7 @@ public class CropDialog< R extends RealType< R > & NativeType< R > >
 
 		// Image< R > crop( Image< R > image, long[] minMax )
 		recorder.setAPIFunctionName( "crop" );
-		recorder.addAPIFunctionPrequel( "# " + CropCommand.COMMAND_NAME );
+		recorder.addAPIFunctionPrequelComment( CropCommand.COMMAND_NAME );
 		recorder.addAPIFunctionParameter( ArrayUtils.addAll( intervalXYZCT.minAsLongArray(), intervalXYZCT.maxAsLongArray() ) );
 		recorder.record();
 	}

@@ -80,14 +80,16 @@ public class OpenChannelsFileSeriesCommand< R extends RealType< R > & NativeType
             }
 
             handleOutputImage( true, false );
+
+            recordMacro();
         });
     }
 
-    public void recordMacro()
+    private void recordMacro()
     {
         if ( MacroRecorder.isScriptMode() )
         {
-            recordJythonCall();
+            recordAPICall();
         }
         else
         {
@@ -101,7 +103,7 @@ public class OpenChannelsFileSeriesCommand< R extends RealType< R > & NativeType
     }
 
     @Override
-    public void recordJythonCall()
+    public void recordAPICall()
     {
         MacroRecorder recorder = new MacroRecorder( outputImage );
         recorder.recordImportStatements( true );
@@ -109,7 +111,7 @@ public class OpenChannelsFileSeriesCommand< R extends RealType< R > & NativeType
         if ( regExp.contains( NamingSchemes.HDF5 ) )
         {
             recorder.setAPIFunctionName( "openHDF5Series" );
-            recorder.addAPIFunctionPrequel( "# " + this.COMMAND_NAME );
+            recorder.addAPIFunctionPrequelComment( this.COMMAND_NAME );
             recorder.addAPIFunctionParameter( recorder.quote( directory.toString() ) );
             recorder.addAPIFunctionParameter( recorder.quote( regExp ) );
             recorder.addAPIFunctionParameter( recorder.quote( "Data" ) );
@@ -118,7 +120,7 @@ public class OpenChannelsFileSeriesCommand< R extends RealType< R > & NativeType
         else if ( regExp.contains( NamingSchemes.TIF ) )
         {
             recorder.setAPIFunctionName( "openTIFFSeries" );
-            recorder.addAPIFunctionPrequel( "# " + this.COMMAND_NAME );
+            recorder.addAPIFunctionPrequelComment( this.COMMAND_NAME );
             recorder.addAPIFunctionParameter( recorder.quote( directory.toString() ) );
             recorder.addAPIFunctionParameter( recorder.quote( regExp ) );
             recorder.addAPIFunctionParameter( channels );

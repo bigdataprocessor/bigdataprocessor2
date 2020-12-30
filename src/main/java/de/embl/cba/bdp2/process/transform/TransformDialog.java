@@ -48,7 +48,7 @@ public class TransformDialog< T extends RealType< T > & NativeType< T > >
 		recorder.addCommandParameter( TransformCommand.INTERPOLATION_PARAMETER, interpolationMode );
 
 		recorder.setAPIFunctionName( "transform" );
-		recorder.addAPIFunctionPrequel( "# " + TransformCommand.COMMAND_NAME );
+		recorder.addAPIFunctionPrequelComment( TransformCommand.COMMAND_NAME );
 		recorder.addAPIFunctionParameter( TransformCommand.getAffineTransform3D( affineTransform ).getRowPackedCopy() );
 		recorder.addAPIFunctionParameter( interpolationMode );
 

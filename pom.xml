@@ -8,7 +8,7 @@
 	</parent>
 	<groupId>de.embl.cba</groupId>
 	<artifactId>bigDataProcessor2</artifactId>
-	<version>0.5.6</version>
+	<version>0.5.7-SNAPSHOT</version>
 	<url>https://github.com/embl-cba/bigDataProcessor2</url>
 	<name>BigDataProcessor2</name>
 	<description>Fiji plugin for inspection and processing of big image data</description>
@@ -137,6 +137,7 @@
 		<dependency>
 			<groupId>net.imagej</groupId>
 			<artifactId>ij</artifactId>
+            <version>1.53g</version> <!-- contains python language-->
 		</dependency>
 		<dependency>
 			<groupId>net.imagej</groupId>
