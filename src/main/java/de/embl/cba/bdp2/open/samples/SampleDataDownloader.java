@@ -19,9 +19,9 @@ import static de.embl.cba.bdp2.open.NamingSchemes.TIF;
 
 public class SampleDataDownloader
 {
-	public static final String MINIMAL_SYNTHETIC = "Minimal synthetic dual color Tiff volumes (1.6 MB)";
-	public static final String DUAL_COLOR_MOUSE = "Dual color light-sheet mouse Tiff volume (64.8 MB)";
-	public static final String NON_ORTHO = "Non-orthogonal acquisition Tiff volume (2.6 MB)";
+	public static final String MINIMAL_SYNTHETIC = "Minimal synthetic dual color TIFF volumes (1.6 MB)";
+	public static final String DUAL_COLOR_MOUSE = "Dual color light-sheet mouse TIFF volume (64.8 MB)";
+	public static final String NON_ORTHO = "Non-orthogonal acquisition TIFF volume (2.6 MB)";
 
 	private Map< String, String > datasetNameToURL =  new HashMap<>();
 	private Map< String, String > datasetNameToRegExp =  new HashMap<>();

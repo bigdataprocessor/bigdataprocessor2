@@ -33,7 +33,7 @@ public class TestOpenLargerThanJavaIndexAndSaveAsTiffVolume
 
         final SavingSettings settings = SavingSettings.getDefaults();
         settings.volumesFilePathStump = "src/test/resources/test/output/tiff/" + image.getName();
-        settings.fileType = SaveFileType.TiffVolumes;
+        settings.fileType = SaveFileType.TIFFVolumes;
         settings.numProcessingThreads = 4;
         settings.numIOThreads = 1;
         settings.compression = SavingSettings.COMPRESSION_NONE;

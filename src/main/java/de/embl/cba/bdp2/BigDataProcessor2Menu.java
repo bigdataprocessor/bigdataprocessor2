@@ -1,15 +1,15 @@
 package de.embl.cba.bdp2;
 
 import de.embl.cba.bdp2.open.bioformats.OpenBdvBioFormatsCommand;
-import de.embl.cba.bdp2.open.fileseries.OpenEMTiffPlanesFileSeriesCommand;
+import de.embl.cba.bdp2.open.fileseries.OpenEMTIFFPlanesFileSeriesCommand;
 import de.embl.cba.bdp2.open.fileseries.OpenFileSeriesCommand;
 import de.embl.cba.bdp2.open.fileseries.OpenHelpCommand;
-import de.embl.cba.bdp2.open.fileseries.OpenSingleTiffVolumeCommand;
-import de.embl.cba.bdp2.open.fileseries.leica.OpenLeicaDSLTiffPlanesFileSeriesCommand;
+import de.embl.cba.bdp2.open.fileseries.OpenSingleTIFFVolumeCommand;
+import de.embl.cba.bdp2.open.fileseries.leica.OpenLeicaDSLTIFFPlanesFileSeriesCommand;
 import de.embl.cba.bdp2.open.fileseries.luxendo.OpenLuxendoFileSeriesCommand;
 import de.embl.cba.bdp2.process.AbstractImageProcessingCommand;
 import de.embl.cba.bdp2.open.samples.DownloadAndOpenSampleDataCommand;
-import de.embl.cba.bdp2.process.cache.SetCacheDimensionsCommand;
+import de.embl.cba.bdp2.process.cache.ConfigureLazyLoadingCommand;
 import de.embl.cba.bdp2.track.ApplyTrackCommand;
 import de.embl.cba.bdp2.scijava.Services;
 import de.embl.cba.bdp2.service.ImageViewerService;
@@ -40,8 +40,8 @@ public class BigDataProcessor2Menu extends JMenu
     public static final String REGISTER_MOVIE_SIFT_MENU_ITEM = "Correct Lateral Frame Drift in Time-lapse (SIFT)...";
     public static final String REGISTER_MOVIE_PHASE_CORRELATION_MENU_ITEM = "Correct Lateral Frame Drift in Time-lapse (X-Corr)...";
     public static final String SAVE_AS_IMARIS_VOLUMES_MENU_ITEM = "Save as Imaris Volumes...";
-    public static final String SAVE_AS_TIFF_VOLUMES_MENU_ITEM = "Save as Tiff Volumes...";
-    public static final String SAVE_AS_TIFF_PLANES_MENU_ITEM = "Save as Tiff Planes...";
+    public static final String SAVE_AS_TIFF_VOLUMES_MENU_ITEM = "Save as TIFF Volumes...";
+    public static final String SAVE_AS_TIFF_PLANES_MENU_ITEM = "Save as TIFF Planes...";
     public static final String CREATE_TRACK = "Create Track...";
 
     private final BigDataProcessor2MenuActions menuActions;
@@ -67,7 +67,8 @@ public class BigDataProcessor2Menu extends JMenu
         final JMenu saveMenu = addMenu( "Save" );
         final JMenu miscMenu = addMenu( "Misc" );
 
-        menus.add( recordMenu );addMenuItem( recordMenu, RECORD );
+        menus.add( recordMenu );
+        addMenuItem( recordMenu, RECORD );
 
         // TODO: auto-populate using SciJava annotation
         menus.add( openMenu );
@@ -76,10 +77,10 @@ public class BigDataProcessor2Menu extends JMenu
         addMenuItem( openMenu, OpenFileSeriesCommand.COMMAND_NAME );
         JMenu openPredefinedFileSeriesMenu = new JMenu( "Open Predefined File Series" );
         openMenu.add( openPredefinedFileSeriesMenu );
-        addMenuItem( openPredefinedFileSeriesMenu, OpenEMTiffPlanesFileSeriesCommand.COMMAND_NAME );
-        addMenuItem( openPredefinedFileSeriesMenu, OpenLeicaDSLTiffPlanesFileSeriesCommand.COMMAND_NAME );
+        addMenuItem( openPredefinedFileSeriesMenu, OpenEMTIFFPlanesFileSeriesCommand.COMMAND_NAME );
+        addMenuItem( openPredefinedFileSeriesMenu, OpenLeicaDSLTIFFPlanesFileSeriesCommand.COMMAND_NAME );
         addMenuItem( openPredefinedFileSeriesMenu, OpenLuxendoFileSeriesCommand.COMMAND_NAME );
-        addMenuItem( openPredefinedFileSeriesMenu, OpenSingleTiffVolumeCommand.COMMAND_NAME );    addMenuItem( openMenu, DownloadAndOpenSampleDataCommand.COMMAND_NAME );
+        addMenuItem( openPredefinedFileSeriesMenu, OpenSingleTIFFVolumeCommand.COMMAND_NAME );    addMenuItem( openMenu, DownloadAndOpenSampleDataCommand.COMMAND_NAME );
 
         menus.add( processMenu );
         populateProcessMenu( processMenu, miscMenu );
@@ -108,7 +109,7 @@ public class BigDataProcessor2Menu extends JMenu
 
         for ( String name : names )
         {
-            if ( name.equals( SetCacheDimensionsCommand.COMMAND_NAME ) )
+            if ( name.equals( ConfigureLazyLoadingCommand.COMMAND_NAME ) )
             {
                 addMenuItemAndProcessingAction( miscMenu, name, pluginProvider.getInstance( name ) );
             }

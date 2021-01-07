@@ -36,7 +36,7 @@ public class LuxendoBatchConvertAndCropCommand< R extends RealType< R > & Native
     @Parameter(label = "Voxel Size Z")
     public double voxelSpacingZ = 1.00;
 
-    @Parameter(label = "Tiff Output Compression", choices = { SavingSettings.COMPRESSION_NONE,
+    @Parameter(label = "TIFF Output Compression", choices = { SavingSettings.COMPRESSION_NONE,
             SavingSettings.COMPRESSION_ZLIB,
             SavingSettings.COMPRESSION_LZW } )
     public String compression = SavingSettings.COMPRESSION_NONE;
@@ -57,7 +57,7 @@ public class LuxendoBatchConvertAndCropCommand< R extends RealType< R > & Native
     public void process( ArrayList< File > directories )
     {
         final SavingSettings savingSettings = SavingSettings.getDefaults();
-        savingSettings.fileType = SaveFileType.TiffVolumes;
+        savingSettings.fileType = SaveFileType.TIFFVolumes;
         savingSettings.numIOThreads = Runtime.getRuntime().availableProcessors();
 
         /*

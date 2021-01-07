@@ -7,7 +7,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
-public class TiffDecompressor
+public class TIFFDecompressor
 {
 	public static final int COMPRESSION_UNKNOWN = 0;
 	public static final int NONE = 1;

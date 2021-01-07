@@ -2,8 +2,8 @@ package de.embl.cba.bdp2.save;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.save.imaris.ImarisImageSaver;
-import de.embl.cba.bdp2.save.tiff.TiffPlanesSaver;
-import de.embl.cba.bdp2.save.tiff.TiffFramesSaver;
+import de.embl.cba.bdp2.save.tiff.TIFFPlanesSaver;
+import de.embl.cba.bdp2.save.tiff.TIFFFramesSaver;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
@@ -13,13 +13,13 @@ public class ImageSaverFactory < R extends RealType< R > & NativeType< R > >
 {
     public ImageSaver getSaver( Image< R > image, SavingSettings settings, ExecutorService es)
     {
-        if ( settings.fileType.equals( SaveFileType.TiffPlanes ))
+        if ( settings.fileType.equals( SaveFileType.TIFFPlanes ))
         {
-            return new TiffPlanesSaver( image, settings, es);
+            return new TIFFPlanesSaver( image, settings, es);
         }
-        else if ( settings.fileType.equals( SaveFileType.TiffVolumes ))
+        else if ( settings.fileType.equals( SaveFileType.TIFFVolumes ))
         {
-            return new TiffFramesSaver( image, settings, es );
+            return new TIFFFramesSaver( image, settings, es );
         }
 //        else if (savingSettings.fileType.equals( SaveFileType.HDF5Volumes ))
 //        {

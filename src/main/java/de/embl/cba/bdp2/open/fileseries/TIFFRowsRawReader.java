@@ -4,7 +4,7 @@ import de.embl.cba.bdp2.log.Logger;
 
 import java.io.RandomAccessFile;
 
-public class TiffRowsRawReader
+public class TIFFRowsRawReader
 {
 	private int stripMin;
 	private int stripMax;
@@ -33,7 +33,7 @@ public class TiffRowsRawReader
 
 		final int bytesPerRow = fi.width * fi.bytesPerPixel;
 		hasStrips = fi.stripOffsets != null && fi.stripOffsets.length > 1;
-		isCompressed = ( fi.compression == TiffDecompressor.ZIP || fi.compression == TiffDecompressor.LZW || fi.compression == TiffDecompressor.PACK_BITS );
+		isCompressed = ( fi.compression == TIFFDecompressor.ZIP || fi.compression == TIFFDecompressor.LZW || fi.compression == TIFFDecompressor.PACK_BITS );
 
 		if ( hasStrips )
 		{
@@ -94,7 +94,7 @@ public class TiffRowsRawReader
 				Logger.warn( "fileInfo.compression: " + fi.compression );
 				Logger.warn( "fileInfo.height: " + fi.height );
 				Logger.error( "Error during file reading. See log window for more information" );
-				throw new RuntimeException( "Error during reading of Tiff plane." );
+				throw new RuntimeException( "Error during reading of TIFF plane." );
 			}
 
 			if ( minCol > 0 || numCols < fi.width ) // read column subset

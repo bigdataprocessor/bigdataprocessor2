@@ -72,7 +72,7 @@ public class FileSeriesCellLoader< T extends NativeType< T > > implements CellLo
 
         if ( fileType.toString().toLowerCase().contains( "tif" ) )
         {
-            TiffCellLoader.load( cell, directory, fileInfos, BigDataProcessor2.threadPool );
+            TIFFCellLoader.load( cell, directory, fileInfos, BigDataProcessor2.threadPool );
         }
         else if ( fileType.toString().toLowerCase().contains( "hdf5" ) )
         {

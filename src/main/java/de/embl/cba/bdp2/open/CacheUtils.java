@@ -4,7 +4,7 @@ import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.open.fileseries.FileInfos;
 import de.embl.cba.bdp2.open.fileseries.FileSeriesFileType;
 
-import static de.embl.cba.bdp2.open.fileseries.TiffDecompressor.NONE;
+import static de.embl.cba.bdp2.open.fileseries.TIFFDecompressor.NONE;
 
 public abstract class CacheUtils
 {
@@ -14,7 +14,7 @@ public abstract class CacheUtils
 	{
 		if ( fileInfos.fileType.equals( FileSeriesFileType.TIFF_PLANES ) || fileInfos.fileType.equals( FileSeriesFileType.TIFF_STACKS ) )
 		{
-			if ( fileInfos.numTiffStrips == 1 && fileInfos.compression != NONE )
+			if ( fileInfos.numTIFFStrips == 1 && fileInfos.compression != NONE )
 			{
 			   return true;
 			}
@@ -72,7 +72,7 @@ public abstract class CacheUtils
 			// try to be smart and not load the whole plane for faster updates
 
 			// load whole rows
-			// TODO: is this always good? For Tiff images probably for sure
+			// TODO: is this always good? For TIFF images probably for sure
 			cellDimsXYZCT[ 0 ] = (int) imageDimsXYZ[ 0 ];
 
 			// TODO: check more whether this makes sense

@@ -1,6 +1,7 @@
 package de.embl.cba.bdp2.record;
 
 import de.embl.cba.bdp2.image.Image;
+import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.open.AbstractOpenFileSeriesCommand;
 import ij.plugin.frame.Recorder;
 
@@ -153,6 +154,13 @@ public class ScriptRecorder
 							recorder.recordString( "importClass(Packages.de.embl.cba.bdp2.save.SavingSettings);\n" );
 							recorder.recordString( "importClass(Packages.de.embl.cba.bdp2.save.SaveFileType);\n" );
 						}
+						else
+						{
+							Logger.error( "Scripting language not supported: " + LanguageManager.getLanguage() + 									"\nPlease set the recording language in [ BigDataProcessor > Record > Record... ]" +
+									"\nAnd repeat the processing step that you just did in order for it to be recorded."
+							);
+							return;
+						}
 
 						recorder.recordString( "\n" );
 					}
@@ -175,7 +183,7 @@ public class ScriptRecorder
 
 					if ( recordShowImageCall )
 					{
-						recorder.recordString( asComment( "BigDataProcessor2.showImage( image, " + getTrue() + " );" ) );
+						recorder.recordString( asComment( "BigDataProcessor2.showImage( image, " + booleanToString( true ) + " );" ) );
 					}
 
 					recorder.recordString("\n");
@@ -192,16 +200,16 @@ public class ScriptRecorder
 		}).start();
 	}
 
-	private String getTrue()
+	public static String booleanToString( boolean bool )
 	{
 		switch ( LanguageManager.getLanguage() )
 		{
 			case LanguageManager.PYTHON:
-				return "True";
+				return bool ? "True" : "False";
 			case LanguageManager.JAVA_SCRIPT:
-				return "true";
+				return bool ? "true" : "false";
 			default:
-				return "true";
+				return bool ? "true" : "false";
 		}
 	}
 
@@ -320,7 +328,7 @@ public class ScriptRecorder
 		}
 		catch ( Exception e )
 		{
-			//e.printStackTrace();
+			e.printStackTrace();
 		}
 	}
 }

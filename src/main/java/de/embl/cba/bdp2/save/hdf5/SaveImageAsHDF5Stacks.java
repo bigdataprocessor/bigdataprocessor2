@@ -184,7 +184,7 @@ public class SaveImageAsHDF5Stacks < R extends RealType< R > & NativeType< R > >
                 if (savingSettings.saveProjections )
                 {
                     ImagePlus imagePlusImage = ImageJFunctions.wrap(newRai, "", null);
-                    ProjectionXYZ.saveAsTiffXYZMaxProjection(imagePlusImage, c, this.current_t, newPath);
+                    ProjectionXYZ.saveAsTIFFXYZMaxProjection(imagePlusImage, c, this.current_t, newPath);
                 }
 
                 counter.incrementAndGet();

@@ -31,10 +31,10 @@ import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static de.embl.cba.bdp2.save.tiff.TiffUtils.ShortToByteBigEndian;
+import static de.embl.cba.bdp2.save.tiff.TIFFUtils.ShortToByteBigEndian;
 import static de.embl.cba.bdp2.utils.DimensionOrder.*;
 
-public class TiffFrameSaver< R extends RealType< R > & NativeType< R > > implements Runnable {
+public class TIFFFrameSaver< R extends RealType< R > & NativeType< R > > implements Runnable {
     private final int t;
     private final AtomicInteger counter;
     private final Image image;
@@ -43,7 +43,7 @@ public class TiffFrameSaver< R extends RealType< R > & NativeType< R > > impleme
     private final AtomicBoolean stop;
     private RandomAccessibleInterval rai;
 
-    public TiffFrameSaver( int t,
+    public TIFFFrameSaver( int t,
 						   Image< R > image,
                            SavingSettings settings,
 						   AtomicInteger counter,
@@ -91,7 +91,7 @@ public class TiffFrameSaver< R extends RealType< R > & NativeType< R > > impleme
 
                 String channelName = getChannelName( c );
 
-                saveAsTiff( imp, t, settings.compression, settings.rowsPerStrip, settings.volumesFilePathStump, channelName );
+                saveAsTIFF( imp, t, settings.compression, settings.rowsPerStrip, settings.volumesFilePathStump, channelName );
             }
 
             if ( settings.saveProjections )
@@ -158,12 +158,12 @@ public class TiffFrameSaver< R extends RealType< R > & NativeType< R > > impleme
 //                voxelSpacing[ d ] /= scalingFactors[ d ];
 //        }
 
-        ProjectionXYZ.saveAsTiffXYZMaxProjection( imp3D, c, t, settings.projectionsFilePathStump );
+        ProjectionXYZ.saveAsTIFFXYZMaxProjection( imp3D, c, t, settings.projectionsFilePathStump );
 
         Logger.benchmark( "Computed and saved projections [ ms ]: " + ( System.currentTimeMillis() - start ) );
     }
 
-    private void saveAsTiff(
+    private void saveAsTIFF(
             ImagePlus imp,
             int t,
             String compression,
@@ -303,15 +303,15 @@ public class TiffFrameSaver< R extends RealType< R > & NativeType< R > > impleme
             return;
         }
 
-        // The FileTiffSaverFromImageJ has a minimal modification
+        // The FileTIFFSaverFromImageJ has a minimal modification
         // compared to the FileSaver, which that makes it much faster
-        // for virtual stacks; see commented line in the saveAsTiffStack()
+        // for virtual stacks; see commented line in the saveAsTIFFStack()
         // function
-        FileTiffSaverFromImageJ fileSaver = new FileTiffSaverFromImageJ( imp );
+        FileTIFFSaverFromImageJ fileSaver = new FileTIFFSaverFromImageJ( imp );
         String pathCT = getFullPath( path, sC, sT, ".tif" );
 
         Logger.debug( "Saving " + pathCT );
-        fileSaver.saveAsTiffStack( pathCT );
+        fileSaver.saveAsTIFFStack( pathCT );
     }
 
     private String getFullPath( String path, String sC, String sT, String suffix )

@@ -4,12 +4,9 @@ import de.embl.cba.bdp2.BigDataProcessor2Menu;
 import de.embl.cba.bdp2.dialog.DialogUtils;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.open.AbstractOpenFileSeriesCommand;
 import de.embl.cba.bdp2.process.AbstractImageProcessingCommand;
-import de.embl.cba.bdp2.scijava.Services;
 import de.embl.cba.bdp2.service.ImageService;
 import de.embl.cba.bdp2.viewer.ImageViewer;
-import ij.VirtualStack;
 import net.imglib2.cache.img.DiskCachedCellImgOptions;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -18,12 +15,12 @@ import org.scijava.plugin.Plugin;
 
 import java.util.Arrays;
 
-import static de.embl.cba.bdp2.process.cache.SetCacheDimensionsCommand.COMMAND_NAME;
+import static de.embl.cba.bdp2.process.cache.ConfigureLazyLoadingCommand.COMMAND_NAME;
 
-@Plugin(type = AbstractImageProcessingCommand.class, name = COMMAND_NAME,  menuPath = DialogUtils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractImageProcessingCommand.COMMAND_PATH + SetCacheDimensionsCommand.COMMAND_FULL_NAME )
-public class SetCacheDimensionsCommand< R extends RealType< R > & NativeType< R > > extends AbstractImageProcessingCommand< R >
+@Plugin(type = AbstractImageProcessingCommand.class, name = COMMAND_NAME,  menuPath = DialogUtils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractImageProcessingCommand.COMMAND_PATH + ConfigureLazyLoadingCommand.COMMAND_FULL_NAME )
+public class ConfigureLazyLoadingCommand< R extends RealType< R > & NativeType< R > > extends AbstractImageProcessingCommand< R >
 {
-    public static final String COMMAND_NAME = "Set Cache Dimensions...";
+    public static final String COMMAND_NAME = "Configure Lazy Loading...";
     public static final String COMMAND_FULL_NAME = BigDataProcessor2Menu.COMMAND_BDP2_PREFIX + COMMAND_NAME;
 
     @Parameter(label = "Cache dimensions x,y,z,c,t")
@@ -49,7 +46,7 @@ public class SetCacheDimensionsCommand< R extends RealType< R > & NativeType< R 
         outputImage.setCache( cacheDims, DiskCachedCellImgOptions.CacheType.SOFTREF, 0  );
         outputImage.setName( outputImageName );
 
-        Logger.info( "\n# " + SetCacheDimensionsCommand.COMMAND_NAME );
+        Logger.info( "\n# " + ConfigureLazyLoadingCommand.COMMAND_NAME );
         Logger.info( "Image: " + inputImage.getName() );
         Logger.info( "Cell dimensions: " + Arrays.toString( cacheDims ) );
         Logger.info( "Type: " + cacheType.toString() );
@@ -58,6 +55,6 @@ public class SetCacheDimensionsCommand< R extends RealType< R > & NativeType< R 
     @Override
     public void showDialog( ImageViewer< R > imageViewer )
     {
-        new SetCacheDimensionsDialog<>( imageViewer ).showDialog();
+        new ConfigureLazyLoadingDialog<>( imageViewer ).showDialog();
     }
 }

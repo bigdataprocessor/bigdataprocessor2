@@ -44,7 +44,7 @@ public class LuxendoBatchMergeSplitChipCommand< R extends RealType< R > & Native
     @Parameter(label = "Channel Regions [ minX, minY, sizeX, sizeY, channel; ... ]")
     public String intervalsString = "896, 46, 1000, 1000, 0; 22, 643, 1000, 1000, 0";
 
-    @Parameter(label = "Tiff Output Compression", choices =
+    @Parameter(label = "TIFF Output Compression", choices =
             { SavingSettings.COMPRESSION_NONE,
             SavingSettings.COMPRESSION_ZLIB,
             SavingSettings.COMPRESSION_LZW } )
@@ -64,7 +64,7 @@ public class LuxendoBatchMergeSplitChipCommand< R extends RealType< R > & Native
     public void process( ArrayList< File > directories )
     {
         final SavingSettings savingSettings = SavingSettings.getDefaults();
-        savingSettings.fileType = SaveFileType.TiffVolumes;
+        savingSettings.fileType = SaveFileType.TIFFVolumes;
         savingSettings.numIOThreads = 1; // input is hdf5 => single threaded
         savingSettings.numProcessingThreads = Runtime.getRuntime().availableProcessors();
 

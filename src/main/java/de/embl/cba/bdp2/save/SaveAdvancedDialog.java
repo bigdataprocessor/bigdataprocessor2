@@ -99,7 +99,7 @@ public class SaveAdvancedDialog< R extends RealType< R > & NativeType< R > > ext
         panels.get(panelIndex).add(cbSaveProjection);
         mainPanel.add( panels.get(panelIndex++));
 
-        if ( saveFileType.equals( SaveFileType.TiffVolumes ) )
+        if ( saveFileType.equals( SaveFileType.TIFFVolumes ) )
         {
             panelIndex = addChannelNamingSchemeChoice( panelIndex );
         }
@@ -129,7 +129,7 @@ public class SaveAdvancedDialog< R extends RealType< R > & NativeType< R > > ext
 //        panels.get(j).add(projectionsPathSelectionButton);
 //        mainPanels.get(k).add(panels.get(j++));
 
-        panelIndex = addTiffCompressionPanel( panelIndex );
+        panelIndex = addTIFFCompressionPanel( panelIndex );
 
         panels.add( new JPanel() );
         panels.get( panelIndex ).add( new JLabel( "I/O Threads" ) );
@@ -183,13 +183,13 @@ public class SaveAdvancedDialog< R extends RealType< R > & NativeType< R > > ext
         return panelIndex;
     }
 
-    public int addTiffCompressionPanel( int panelIndex )
+    public int addTIFFCompressionPanel( int panelIndex )
     {
-        if ( saveFileType.equals( SaveFileType.TiffVolumes ) ||
-             saveFileType.equals( SaveFileType.TiffPlanes ) )
+        if ( saveFileType.equals( SaveFileType.TIFFVolumes ) ||
+             saveFileType.equals( SaveFileType.TIFFPlanes ) )
         {
             panels.add( new JPanel() );
-            panels.get( panelIndex ).add( new JLabel( "Tiff Compression" ) );
+            panels.get( panelIndex ).add( new JLabel( "TIFF Compression" ) );
             panels.get( panelIndex ).add( comboCompression );
             //panels.get(j).add(new JLabel("Rows per Strip [ny]"));
             //panels.get(j).add(tfRowsPerStrip);
@@ -301,8 +301,8 @@ public class SaveAdvancedDialog< R extends RealType< R > & NativeType< R > > ext
         recorder.addCommandParameter( SaveAdvancedCommand.T_END_PARAMETER, savingSettings.tEnd);
 
         // void saveImageAndWaitUntilDone( Image< R > image, SavingSettings savingSettings )
-        recorder.addAPIFunctionPrequel( "# Save..." );
-        recorder.addAPIFunctionPrequel( "savingSettings = SavingSettings();" );
+        recorder.addAPIFunctionPrequelComment( "Save..." );
+        recorder.addAPIFunctionPrequel( "savingSettings = SavingSettings.getDefaults();" );
         recorder.addAPIFunctionPrequel( createSettingsString( "volumesFilePathStump", SavingSettings.createFilePathStump( inputImage, "volumes", directory ) ) );
         recorder.addAPIFunctionPrequel( createSettingsString( "projectionsFilePathStump", SavingSettings.createFilePathStump( inputImage, "projections", directory ) ) );
         recorder.addAPIFunctionPrequel( createSettingsString( "numIOThreads", savingSettings.numIOThreads ) );
@@ -328,7 +328,7 @@ public class SaveAdvancedDialog< R extends RealType< R > & NativeType< R > > ext
         if ( value instanceof String )
             stringValue = ScriptRecorder.quote( ( String ) value );
         else if ( value instanceof Boolean )
-            stringValue = (boolean) value ? "True" : "False";
+            stringValue = ScriptRecorder.booleanToString( ( boolean) value );
         else if ( value instanceof SaveFileType )
             stringValue = "SaveFileType." + value;
         else

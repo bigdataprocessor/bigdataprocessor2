@@ -3,11 +3,11 @@ package de.embl.cba.bdp2;
 import de.embl.cba.bdp2.log.LoggingLevelCommand;
 import de.embl.cba.bdp2.open.AbstractOpenFileSeriesCommand;
 import de.embl.cba.bdp2.open.bioformats.OpenBdvBioFormatsCommand;
-import de.embl.cba.bdp2.open.fileseries.OpenEMTiffPlanesFileSeriesCommand;
+import de.embl.cba.bdp2.open.fileseries.OpenEMTIFFPlanesFileSeriesCommand;
 import de.embl.cba.bdp2.open.fileseries.OpenFileSeriesCommand;
 import de.embl.cba.bdp2.open.fileseries.OpenHelpCommand;
-import de.embl.cba.bdp2.open.fileseries.OpenSingleTiffVolumeCommand;
-import de.embl.cba.bdp2.open.fileseries.leica.OpenLeicaDSLTiffPlanesFileSeriesCommand;
+import de.embl.cba.bdp2.open.fileseries.OpenSingleTIFFVolumeCommand;
+import de.embl.cba.bdp2.open.fileseries.leica.OpenLeicaDSLTIFFPlanesFileSeriesCommand;
 import de.embl.cba.bdp2.open.fileseries.luxendo.OpenLuxendoFileSeriesCommand;
 import de.embl.cba.bdp2.process.bin.BinCommand;
 import de.embl.cba.bdp2.process.bin.BinDialog;
@@ -113,7 +113,7 @@ public class BigDataProcessor2MenuActions implements ActionListener {
         {
             BigDataProcessor2.threadPool.submit(() -> {
                 if (! isImageSelected( viewer ) ) return;
-                SaveAdvancedDialog saveDialog = new SaveAdvancedDialog( viewer, SaveFileType.TiffVolumes );
+                SaveAdvancedDialog saveDialog = new SaveAdvancedDialog( viewer, SaveFileType.TIFFVolumes );
                 saveDialog.setVisible(true);
             });
         }
@@ -121,7 +121,7 @@ public class BigDataProcessor2MenuActions implements ActionListener {
         {
             BigDataProcessor2.threadPool.submit(() -> {
                 if (! isImageSelected( viewer ) ) return;
-                SaveAdvancedDialog saveDialog = new SaveAdvancedDialog( viewer, SaveFileType.TiffPlanes );
+                SaveAdvancedDialog saveDialog = new SaveAdvancedDialog( viewer, SaveFileType.TIFFPlanes );
                 saveDialog.setVisible(true);
             });
         }
@@ -263,20 +263,20 @@ public class BigDataProcessor2MenuActions implements ActionListener {
                 Services.getCommandService().run( DownloadAndOpenSampleDataCommand.class, true );
             });
         }
-        else if( e.getActionCommand().equalsIgnoreCase( OpenEMTiffPlanesFileSeriesCommand.COMMAND_NAME ) )
+        else if( e.getActionCommand().equalsIgnoreCase( OpenEMTIFFPlanesFileSeriesCommand.COMMAND_NAME ) )
         {
             BigDataProcessor2.threadPool.submit(() ->
             {
-                OpenEMTiffPlanesFileSeriesCommand.parentViewer = viewer;
-                Services.getCommandService().run( OpenEMTiffPlanesFileSeriesCommand.class, true );
+                OpenEMTIFFPlanesFileSeriesCommand.parentViewer = viewer;
+                Services.getCommandService().run( OpenEMTIFFPlanesFileSeriesCommand.class, true );
             });
         }
-        else if( e.getActionCommand().equalsIgnoreCase( OpenSingleTiffVolumeCommand.COMMAND_NAME ) )
+        else if( e.getActionCommand().equalsIgnoreCase( OpenSingleTIFFVolumeCommand.COMMAND_NAME ) )
         {
             BigDataProcessor2.threadPool.submit(() ->
             {
-                OpenSingleTiffVolumeCommand.parentViewer = viewer;
-                Services.getCommandService().run( OpenSingleTiffVolumeCommand.class, true );
+                OpenSingleTIFFVolumeCommand.parentViewer = viewer;
+                Services.getCommandService().run( OpenSingleTIFFVolumeCommand.class, true );
             });
         }
         else if( e.getActionCommand().equalsIgnoreCase( OpenFileSeriesCommand.COMMAND_NAME ) )
@@ -287,12 +287,12 @@ public class BigDataProcessor2MenuActions implements ActionListener {
                 Services.getCommandService().run( OpenFileSeriesCommand.class, true );
             });
         }
-        else if( e.getActionCommand().equalsIgnoreCase( OpenLeicaDSLTiffPlanesFileSeriesCommand.COMMAND_NAME ) )
+        else if( e.getActionCommand().equalsIgnoreCase( OpenLeicaDSLTIFFPlanesFileSeriesCommand.COMMAND_NAME ) )
         {
             BigDataProcessor2.threadPool.submit(() ->
             {
                 AbstractOpenFileSeriesCommand.parentViewer = viewer;
-                Services.getCommandService().run( OpenLeicaDSLTiffPlanesFileSeriesCommand.class, true );
+                Services.getCommandService().run( OpenLeicaDSLTIFFPlanesFileSeriesCommand.class, true );
             });
         }
         else if( e.getActionCommand().equalsIgnoreCase( OpenLuxendoFileSeriesCommand.COMMAND_NAME ) )

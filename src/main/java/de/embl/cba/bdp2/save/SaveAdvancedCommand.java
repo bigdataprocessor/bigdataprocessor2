@@ -59,14 +59,14 @@ public class SaveAdvancedCommand< R extends RealType< R > & NativeType< R > > im
      */
     @Parameter(label = "File type", choices =
             {
-                    "TiffPlanes",
-                    "TiffVolumes",
+                    "TIFFPlanes",
+                    "TIFFVolumes",
                     "ImarisVolumes"
             })
     String fileType;
     public static String SAVE_FILE_TYPE_PARAMETER = "fileType";
 
-    @Parameter(label = "Tiff compression", choices =
+    @Parameter(label = "TIFF compression", choices =
             {
                     SavingSettings.COMPRESSION_NONE,
                     SavingSettings.COMPRESSION_ZLIB,

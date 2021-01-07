@@ -87,13 +87,13 @@ In the BigDataViewer window, go to the menu bar and use the menu items in [ BigD
 Screenshot of the Open menu
 
 **Open > Open Custom…**
-Open datasets consisting of a collection of Tiff or HDF5 volumes. The assignment of each file (volume) to a channel and time point can be specified by a regular expression.  
+Open datasets consisting of a collection of TIFF or HDF5 volumes. The assignment of each file (volume) to a channel and time point can be specified by a regular expression.  
 
 **Open > Open Custom Help...**
 Shows and explains a number of regular expressions that can be used in the [ Open > Open Custom… ] menu item. 
 
-***Open > Open EM Tiff Planes...***
-Opens a single folder with Tiff single plane files. Each file will be assigned to one z-plane in a dataset with one color and one time point. 
+***Open > Open EM TIFF Planes...***
+Opens a single folder with TIFF single plane files. Each file will be assigned to one z-plane in a dataset with one color and one time point. 
 Motivation: This is a typical format for volume EM data to be stored in.
 
 ***Open > Download and Open Sample Data...***
@@ -103,9 +103,9 @@ Download and open sample data stored in the BioStudies archive (https://www.ebi.
 Open datasets acquired with Luxendo light sheet microscopes. 
 Motivation: Luxendo uses an open-source hdf5 based file format. We added convenience functionality for opening those files without the need to enter a complex regular expression. 
 
-***Open > Open Leica DSL Tiff Planes...***
+***Open > Open Leica DSL TIFF Planes...***
 Open datasets acquired with Leica DSL microscopes, choosing “Auto-Save, Data type: Tif, Compression: Uncompressed” as an option (Leica’s proprietary file format is called .lif, which we do not currently support).
-Motivation: While the Tiff file format is open source, Leica’s naming scheme would require entering a complex regular expression and we thus implemented this convenience opening functionality. 
+Motivation: While the TIFF file format is open source, Leica’s naming scheme would require entering a complex regular expression and we thus implemented this convenience opening functionality. 
 
 
 
@@ -168,14 +168,14 @@ Motivation: Useful when data is warped due to an acquisition process that render
 Save data set as an hdf5 based pyramidal Imaris file (http://open.bitplane.com/ims), with each channel and time point saved as an individual .h5 file and one .ims header file that can be used to view the data both in Fiji’s BigDataViewer and in the commercial Imaris software.
 Motivation: The low data overhead of a pyramidal scheme (in 3D for binning 2 x 2 x 2 at each pyramidal level  ~14%) is a marginal cost for a substantially improved user experience when viewing the data. We, therefore, provide saving data in an open file format that offers this functionality based on hdf5, which means that it can be handled with all common programming languages.
 
-***Save > Save as Tiff Volumes...***
-Save the dataset as a series of Tiff stacks with each channel and time point saved as an individual .tif file.
-Motivation: Tiff stacks are still the most used and compatible file format that can be easily opened by all software for downstream analysis. 
+***Save > Save as TIFF Volumes...***
+Save the dataset as a series of TIFF stacks with each channel and time point saved as an individual .tif file.
+Motivation: TIFF stacks are still the most used and compatible file format that can be easily opened by all software for downstream analysis. 
 
 
-***Save > Save as Tiff Planes...***
-Save the dataset as a series of Tiff planes, where each z-slice, channel and time point are saved as an individual .tif file.
-Motivation: Saving a volume as a series of Tiff planes is popular e.g. in the EM community.
+***Save > Save as TIFF Planes...***
+Save the dataset as a series of TIFF planes, where each z-slice, channel and time point are saved as an individual .tif file.
+Motivation: Saving a volume as a series of TIFF planes is popular e.g. in the EM community.
 
 ## Misc
 <img width="300" alt="image" src="./docs/images/BDP2-Misc.png">

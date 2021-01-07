@@ -38,7 +38,7 @@ public class TestAlignVolumeSIFT< R extends RealType< R > & NativeType< R > >
 		}
 
 //		final SavingSettings savingSettings = SavingSettings.getDefaults();
-//		savingSettings.fileType = SavingSettings.FileType.TIFF_PLANES;
+//		savingSettings.fileType = SavingSettings.FileType.Tiff_PLANES;
 //		savingSettings.numIOThreads = 4;
 //		savingSettings.numProcessingThreads = 4;
 //		final String dir = "/Users/tischer/Documents/fiji-plugin-bigDataProcessor2/src/test/resources/test-data/sift-aligned-em";

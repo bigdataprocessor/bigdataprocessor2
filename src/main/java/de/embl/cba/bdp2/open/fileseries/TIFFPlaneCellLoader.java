@@ -7,7 +7,7 @@ import net.imglib2.cache.img.SingleCellArrayImg;
 import java.io.File;
 import java.io.RandomAccessFile;
 
-public class TiffPlaneCellLoader implements Runnable
+public class TIFFPlaneCellLoader implements Runnable
 {
 	private final SingleCellArrayImg cell;
 	private Thread t;
@@ -34,7 +34,7 @@ public class TiffPlaneCellLoader implements Runnable
 	private final int z;
 	private final int bytesPerRow;
 
-	public TiffPlaneCellLoader( SingleCellArrayImg cell, int z, String directory, BDP2FileInfo fi )
+	public TIFFPlaneCellLoader( SingleCellArrayImg cell, int z, String directory, BDP2FileInfo fi )
 	{
 		this.cell = cell;
 		this.z = z;
@@ -59,7 +59,7 @@ public class TiffPlaneCellLoader implements Runnable
 		int minColRequested = (int) cell.min( DimensionOrder.X );
 		int numColsRequested = (int) cell.dimension( DimensionOrder.X );
 
-		TiffRowsRawReader rowsReader = new TiffRowsRawReader();
+		TIFFRowsRawReader rowsReader = new TIFFRowsRawReader();
 
 		try
 		{
@@ -81,18 +81,18 @@ public class TiffPlaneCellLoader implements Runnable
 		{
 			if ( rowsReader.isCompressed() )
 			{
-				bytes = TiffDecompressor.decompressStrips( bytes, fi.rowsPerStrip, rowsReader.getStripMin(), rowsReader.getStripMax(), bytesPerRow, fi.stripLengths, fi.compression );
+				bytes = TIFFDecompressor.decompressStrips( bytes, fi.rowsPerStrip, rowsReader.getStripMin(), rowsReader.getStripMax(), bytesPerRow, fi.stripLengths, fi.compression );
 			}
 		}
 		else // no strips
 		{
-			if ( fi.compression == TiffDecompressor.ZIP )
+			if ( fi.compression == TIFFDecompressor.ZIP )
 			{
-				bytes = TiffDecompressor.decompressZIP( bytes );
+				bytes = TIFFDecompressor.decompressZIP( bytes );
 			}
-			else if ( fi.compression == TiffDecompressor.LZW )
+			else if ( fi.compression == TIFFDecompressor.LZW )
 			{
-				bytes = TiffDecompressor.decompressLZW( bytes, bytesPerRow * numRowsRead );
+				bytes = TIFFDecompressor.decompressLZW( bytes, bytesPerRow * numRowsRead );
 			}
 
 			if ( Logger.getLevel().equals( Logger.Level.Debug ) )

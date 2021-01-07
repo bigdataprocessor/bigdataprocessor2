@@ -17,14 +17,14 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class TiffFramesSaver < R extends RealType< R > & NativeType< R > > extends AbstractImageSaver
+public class TIFFFramesSaver < R extends RealType< R > & NativeType< R > > extends AbstractImageSaver
 {
     private final Image< R > image;
     private SavingSettings savingSettings;
     private ExecutorService es;
     private AtomicBoolean stop;
 
-    public TiffFramesSaver( Image< R > image, SavingSettings savingSettings, ExecutorService es ) {
+    public TIFFFramesSaver( Image< R > image, SavingSettings savingSettings, ExecutorService es ) {
         this.image = image;
         this.savingSettings = savingSettings;
         this.es = es;
@@ -38,13 +38,13 @@ public class TiffFramesSaver < R extends RealType< R > & NativeType< R > > exten
         AtomicInteger counter = new AtomicInteger( 0 );
         final long startTime = System.currentTimeMillis();
 
-        Logger.debug( "# TiffFramesSaver..." );
+        Logger.debug( "# TIFFFramesSaver..." );
 
         for (int t = savingSettings.tStart; t <= savingSettings.tEnd; t++)
         {
             futures.add(
                     es.submit(
-                            new TiffFrameSaver(
+                            new TIFFFrameSaver(
                                     t,
                                     image,
                                     savingSettings,

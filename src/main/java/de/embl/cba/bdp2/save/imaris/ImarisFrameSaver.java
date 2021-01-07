@@ -16,7 +16,7 @@ import net.imglib2.type.numeric.RealType;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static de.embl.cba.bdp2.save.ProjectionXYZ.saveAsTiffXYZMaxProjection;
+import static de.embl.cba.bdp2.save.ProjectionXYZ.saveAsTIFFXYZMaxProjection;
 
 public class ImarisFrameSaver< R extends RealType< R > & NativeType< R >> implements Runnable {
     private int t;
@@ -84,7 +84,7 @@ public class ImarisFrameSaver< R extends RealType< R > & NativeType< R >> implem
 
             // Save projections
             if ( settings.saveProjections )
-                saveAsTiffXYZMaxProjection( imp3D, c, t, settings.projectionsFilePathStump );
+                saveAsTIFFXYZMaxProjection( imp3D, c, t, settings.projectionsFilePathStump );
 
             counter.incrementAndGet();
 

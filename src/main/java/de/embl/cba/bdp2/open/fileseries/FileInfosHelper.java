@@ -32,17 +32,17 @@ public class FileInfosHelper
             fileInfos.voxelUnit = "pixel";
     }
 
-    public static void setImageMetadataFromTiff(
+    public static void setImageMetadataFromTIFF(
             FileInfos fileInfos,
             String directory,
             String fileName)
     {
         BDP2FileInfo[] info;
 
-        FastTiffDecoder ftd = new FastTiffDecoder( directory, fileName );
+        FastTIFFDecoder ftd = new FastTIFFDecoder( directory, fileName );
         try
         {
-            info = ftd.getTiffInfo();
+            info = ftd.getTIFFInfo();
         }
         catch ( IOException e )
         {
@@ -63,7 +63,7 @@ public class FileInfosHelper
         fileInfos.nY = info[0].height;
         fileInfos.bitDepth = info[0].bytesPerPixel * 8;
         fileInfos.compression =  info[0].compression;
-        fileInfos.numTiffStrips = info[0].stripLengths.length;
+        fileInfos.numTIFFStrips = info[0].stripLengths.length;
 
         fileInfos.voxelSize = new double[]{
                 info[0].pixelWidth,
@@ -83,7 +83,7 @@ public class FileInfosHelper
         if ( firstRelativeFilePath.contains(".tif") )
         {
             int nZ = fileInfos.nZ;
-            setImageMetadataFromTiff( fileInfos, fileInfos.directory, firstRelativeFilePath );
+            setImageMetadataFromTIFF( fileInfos, fileInfos.directory, firstRelativeFilePath );
 
             if ( regExp.contains( NamingSchemes.Z ) )
             {

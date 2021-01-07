@@ -24,7 +24,7 @@ public class BenchmarkBioInformationsPublication2020
 
 		Image image = BigDataProcessor2.openHDF5Series( root + "/in",".*stack_6_(?<C1>channel_.*)/(?<C2>Cam_.*)_(?<T>\\d+).h5","Data" );
 
-//		Image image = BigDataProcessor2.openTiffSeries( root + "/in", "(?<T>.*).tif" );
+//		Image image = BigDataProcessor2.openTIFFSeries( root + "/in", "(?<T>.*).tif" );
 //
 		//image = BigDataProcessor2.bin( image, new long[]{3,3,1,1,1} );
 //
@@ -34,7 +34,7 @@ public class BenchmarkBioInformationsPublication2020
 //		savingSettings.volumesFilePathStump = root + "/out/volumes";
 //		savingSettings.numIOThreads = 1;
 //		savingSettings.numProcessingThreads = 4;
-//		savingSettings.fileType = SaveFileType.TiffVolumes;
+//		savingSettings.fileType = SaveFileType.TIFFVolumes;
 //		savingSettings.saveProjections = false;
 //		savingSettings.saveVolumes = true;
 //		savingSettings.compression = savingSettings.COMPRESSION_NONE;

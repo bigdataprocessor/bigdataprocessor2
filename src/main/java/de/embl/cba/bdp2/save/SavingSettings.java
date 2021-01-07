@@ -62,7 +62,7 @@ public class SavingSettings  {
         SavingSettings savingSettings = new SavingSettings();
         savingSettings.saveVolumes = true;
         savingSettings.saveProjections = false;
-        savingSettings.fileType = SaveFileType.TiffPlanes;
+        savingSettings.fileType = SaveFileType.TIFFPlanes;
         savingSettings.volumesFilePathStump = "/Users/tischer/Desktop/bdp2-out/image";
         savingSettings.compression = COMPRESSION_NONE;
         savingSettings.numProcessingThreads = AVAILABLE_PROCESSORS; // (int) Math.ceil( Math.sqrt( AVAILABLE_PROCESSORS ) + 1 );

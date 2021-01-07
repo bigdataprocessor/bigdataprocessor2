@@ -57,6 +57,7 @@ public class LanguageManager
 			Field field = aClass.getDeclaredField("mode");
 			field.setAccessible( true );
 			final Recorder recorder = Recorder.getInstance();
+			if ( recorder == null ) return null;
 			Choice choice = (Choice) field.get(recorder);
 			return choice.getSelectedItem();
 		}

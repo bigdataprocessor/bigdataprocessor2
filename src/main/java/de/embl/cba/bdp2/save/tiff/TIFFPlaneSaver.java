@@ -21,9 +21,9 @@ import ome.xml.model.primitives.PositiveInteger;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static de.embl.cba.bdp2.utils.RAISlicer.createPlaneCopy;
-import static de.embl.cba.bdp2.save.tiff.TiffUtils.ShortToByteBigEndian;
+import static de.embl.cba.bdp2.save.tiff.TIFFUtils.ShortToByteBigEndian;
 
-public class TiffPlaneSaver < R extends RealType< R > & NativeType< R > > implements Runnable {
+public class TIFFPlaneSaver < R extends RealType< R > & NativeType< R > > implements Runnable {
 
     private final int c;
     private final int t;
@@ -32,7 +32,7 @@ public class TiffPlaneSaver < R extends RealType< R > & NativeType< R > > implem
     private final SavingSettings savingSettings;
     private final AtomicBoolean stop;
 
-    public TiffPlaneSaver( int c,
+    public TIFFPlaneSaver( int c,
                            int t,
                            int z,
                            Image< R > image,
@@ -49,7 +49,7 @@ public class TiffPlaneSaver < R extends RealType< R > & NativeType< R > > implem
     @Override
     public void run() {
 
-        Logger.debug( "# TiffPlaneSaver..." );
+        Logger.debug( "# TIFFPlaneSaver..." );
 
         if ( stop.get() )
         {
@@ -80,7 +80,6 @@ public class TiffPlaneSaver < R extends RealType< R > & NativeType< R > > implem
             FileSaver fileSaver = new FileSaver( imp );
             fileSaver.saveAsTiff( getPath( false, nC, nT ) );
         }
-
     }
 
     private void saveCompressed( ImagePlus imp, long nC, long nT, String compression )

@@ -47,7 +47,7 @@ import java.util.Properties;
  code was contributed by Curtis Rueden.
  */
 
-public class FastTiffDecoder {
+public class FastTIFFDecoder {
     private boolean readingStrips;
     // tags
     public static final int NEW_SUBFILE_TYPE = 254;
@@ -114,7 +114,7 @@ public class FastTiffDecoder {
     private String tiffMetadata;
     private int photoInterp;
 
-    private boolean isBigTiff = false;
+    private boolean isBigTIFF = false;
 
     private int check = 0;
 
@@ -125,7 +125,7 @@ public class FastTiffDecoder {
     long totalTime = 0;
 
 
-    public FastTiffDecoder( String directory, String name )
+    public FastTIFFDecoder( String directory, String name )
     {
         this.directory = directory;
         this.name = name;
@@ -140,7 +140,7 @@ public class FastTiffDecoder {
     // input bytearrray
     // getMethods for getting the info
 
-    /*public FastTiffDecoder(InputStream in, String name) {
+    /*public FastTIFFDecoder(InputStream in, String name) {
         directory = "";
         this.name = name;
         url = "";
@@ -174,7 +174,7 @@ public class FastTiffDecoder {
     }
 
     final void convertToLong(long[] longs, byte[] bytes) {
-        // this is the weird Tiff Long with only 4 bytes
+        // this is the weird TIFF Long with only 4 bytes
         if (littleEndian) {
             for (int i = 0, j = 0; i < bytes.length; i += 4, j++) {
                 longs[j] = (((bytes[i+3]&0xFFL) << 24) + ((bytes[i+2]&0xFFL) << 16) + ((bytes[i+1]&0xFFL) << 8) + ((bytes[i]&0xFFL) << 0));
@@ -259,7 +259,7 @@ public class FastTiffDecoder {
         // Open 8-byte Image File Header at start of file.
         // Returns the offset in bytes to the first IFD or -1
         // if this is not a valid tiff file.
-        // BigTiff: http://www.awaresystems.be/imaging/tiff/bigtiff.html
+        // BigTIFF: http://www.awaresystems.be/imaging/tiff/bigtiff.html
 
         int byteOrder = in.readShort();
         if (byteOrder==0x4949) // "II"
@@ -270,21 +270,21 @@ public class FastTiffDecoder {
             in.close();
             return -1;
         }
-        int magicNumber = getShort(); // 42 or Tiff; 43 for BigTiff
+        int magicNumber = getShort(); // 42 or TIFF; 43 for BigTIFF
         if (magicNumber == 42 )
         {
-            isBigTiff = false;
+            isBigTIFF = false;
         }
         else if (magicNumber == 43 )
         {
-            isBigTiff = true;
+            isBigTIFF = true;
         }
         else
         {
-            IJ.showMessage("Unsupported Tiff Format; magic number = "+magicNumber);
+            IJ.showMessage("Unsupported TIFF Format; magic number = "+magicNumber);
         }
         long offset = 0L;
-        if (isBigTiff)
+        if (isBigTIFF)
         {
             int shouldBe8 = getShort();
             int shouldBe0 = getShort();
@@ -306,11 +306,11 @@ public class FastTiffDecoder {
             {
                 value = getShort(); // 2
                 getShort(); // skip 2
-                if (isBigTiff) getInt(); // skip 4
+                if (isBigTIFF) getInt(); // skip 4
             }
             else if ( fieldType == LONG )
             {
-                value = isBigTiff ? getLong() : getInt(); // 8 : 4
+                value = isBigTIFF ? getLong() : getInt(); // 8 : 4
             }
             else if ( fieldType == RATIONALE )
             {
@@ -318,12 +318,12 @@ public class FastTiffDecoder {
             }
             else
             {
-                throw new RuntimeException( "Unkown field type in FastTiffDecoder" );
+                throw new RuntimeException( "Unkown field type in FastTIFFDecoder" );
             }
         }
         else  // if count > 1 do not return the actual value but just a pointer to the values
         {
-            value = isBigTiff ? getLong() : getInt();
+            value = isBigTIFF ? getLong() : getInt();
         }
 
         return value & 0xffffffffL;
@@ -705,7 +705,7 @@ public class FastTiffDecoder {
         // Get Image File Directory data
         int tag, fieldType;
         long value, count, nEntries;
-        nEntries = isBigTiff ? getLong() : getShort();
+        nEntries = isBigTIFF ? getLong() : getShort();
 
         if (nEntries<1 || nEntries>1000)
         {
@@ -734,7 +734,7 @@ public class FastTiffDecoder {
             }
 
             fieldType = getShort();
-            count = isBigTiff ? getLong() : getInt();
+            count = isBigTIFF ? getLong() : getInt();
             value = getValue( fieldType, count ) & 0xffffffffL;
 
             if (debugMode && ifdCount<10) dumpTag(tag, (int)count, (int)value, fi);
@@ -750,7 +750,7 @@ public class FastTiffDecoder {
                     break;
                 case STRIP_OFFSETS:
                     startTimeStrips = System.nanoTime();
-                    int byteCount = isBigTiff ? 8 : 4;
+                    int byteCount = isBigTIFF ? 8 : 4;
                     // either is the address of the stripOffset array (count > 1)
                     // or the location of the image data (count == 1)
                     if ( count==1 )
@@ -765,7 +765,7 @@ public class FastTiffDecoder {
                         in.readFully(buffer);
                         //for (int channel=0; channel<count; channel++)
                         //    fi.stripOffsets[channel] = getInt();
-                        if ( isBigTiff )
+                        if ( isBigTIFF )
                         {
                             convertToLong8(fi.stripOffsets, buffer);
                         }
@@ -1043,7 +1043,7 @@ public class FastTiffDecoder {
         }
 
         fieldType = getShort();
-        count = isBigTiff ? getLong() : getInt();
+        count = isBigTIFF ? getLong() : getInt();
         value = getValue(fieldType, count);
 
         //
@@ -1104,7 +1104,7 @@ public class FastTiffDecoder {
             return(null);
         }
         fieldType = getShort();
-        count = isBigTiff ? getLong() : getInt();
+        count = isBigTIFF ? getLong() : getInt();
         value = getValue(fieldType, count); // & 0xffffffffL;
 
         if(count==1)
@@ -1161,7 +1161,7 @@ public class FastTiffDecoder {
         return fi;
     }
 
-    public BDP2FileInfo[] getTiffInfo() throws IOException
+    public BDP2FileInfo[] getTIFFInfo() throws IOException
     {
         startTimeTotal = System.currentTimeMillis();
 
@@ -1212,7 +1212,7 @@ public class FastTiffDecoder {
                 // add the IFD to the fileInfoSer list
                 listIFDs.add(fi);
                 // and determine where the next IFD is stored
-                ifdOffset = isBigTiff ? getLong() : getUnsignedIntAsLong();
+                ifdOffset = isBigTIFF ? getLong() : getUnsignedIntAsLong();
             }
             else
             {

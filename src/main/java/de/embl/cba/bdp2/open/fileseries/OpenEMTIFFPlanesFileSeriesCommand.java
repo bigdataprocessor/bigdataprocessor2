@@ -14,10 +14,10 @@ import javax.swing.*;
 
 import static de.embl.cba.bdp2.BigDataProcessor2Menu.COMMAND_BDP2_PREFIX;
 
-@Plugin(type = Command.class, menuPath = DialogUtils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractOpenCommand.COMMAND_OPEN_PATH + OpenEMTiffPlanesFileSeriesCommand.COMMAND_FULL_NAME )
-public class OpenEMTiffPlanesFileSeriesCommand< R extends RealType< R > & NativeType< R > > extends AbstractOpenFileSeriesCommand< R >
+@Plugin(type = Command.class, menuPath = DialogUtils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractOpenCommand.COMMAND_OPEN_PATH + OpenEMTIFFPlanesFileSeriesCommand.COMMAND_FULL_NAME )
+public class OpenEMTIFFPlanesFileSeriesCommand< R extends RealType< R > & NativeType< R > > extends AbstractOpenFileSeriesCommand< R >
 {
-    public static final String COMMAND_NAME = "Open EM Tiff Plane File Series...";
+    public static final String COMMAND_NAME = "Open EM TIFF Plane File Series...";
     public static final String COMMAND_FULL_NAME = COMMAND_BDP2_PREFIX + COMMAND_NAME;
     private String regExp = "(?<Z>.*)";
 
@@ -35,7 +35,7 @@ public class OpenEMTiffPlanesFileSeriesCommand< R extends RealType< R > & Native
     {
         ScriptRecorder recorder = new ScriptRecorder( outputImage );
         recorder.recordImportStatements( true );
-        recorder.setAPIFunctionName( "openTiffSeries" );
+        recorder.setAPIFunctionName( "openTIFFSeries" );
         recorder.addAPIFunctionParameter( recorder.quote( directory.toString() ) );
         recorder.addAPIFunctionParameter( recorder.quote( regExp ) );
         recorder.record();

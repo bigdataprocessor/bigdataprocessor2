@@ -33,7 +33,7 @@ public abstract class NamingSchemes
 	@Deprecated
 	public static final String LOAD_CHANNELS_FROM_FOLDERS = "Channels from Subfolders";
 	@Deprecated
-	public static final String TIFF_SLICES = "Tiff Slices";
+	public static final String TIFF_SLICES = "TIFF Slices";
 	@Deprecated
 	public static final String SINGLE_CHANNEL_TIMELAPSE = "Single Channel Movie";
 

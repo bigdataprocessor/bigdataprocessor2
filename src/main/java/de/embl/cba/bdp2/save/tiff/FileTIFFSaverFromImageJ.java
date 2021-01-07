@@ -24,7 +24,7 @@ import static ij.io.FileSaver.getOverlay;
  * FileSaver from ImageJ with only one slight modification (see NOTE below).
  *
  */
-public class FileTiffSaverFromImageJ
+public class FileTIFFSaverFromImageJ
 {
 	public static final int DEFAULT_JPEG_QUALITY = 85;
 	private static int jpegQuality;
@@ -40,13 +40,13 @@ public class FileTiffSaverFromImageJ
 	private boolean saveName;
 
 	/** Constructs a FileSaver from an ImagePlus. */
-	public FileTiffSaverFromImageJ( ImagePlus imp) {
+	public FileTIFFSaverFromImageJ( ImagePlus imp) {
 		this.imp = imp;
 		fi = imp.getFileInfo();
 	}
 
-	/** Resaves the image. Calls saveAsTiff() if this is a new image, not a TIFF,
-	 or if the image was loaded using a URL. Returns false if saveAsTiff() is
+	/** Resaves the image. Calls saveAsTIFF() if this is a new image, not a TIFF,
+	 or if the image was loaded using a URL. Returns false if saveAsTIFF() is
 	 called and the user selects cancel in the file save dialog box. */
 	public boolean save() {
 		FileInfo ofi = null;
@@ -58,7 +58,7 @@ public class FileTiffSaverFromImageJ
 			String path = directory+name;
 			File f = new File(path);
 			if (f==null || !f.exists())
-				return saveAsTiff();
+				return saveAsTIFF();
 			if (!IJ.isMacro()) {
 				GenericDialog gd = new GenericDialog("Save as TIFF");
 				gd.addMessage("\""+ofi.fileName+"\" already exists.\nDo you want to replace it?");
@@ -72,9 +72,9 @@ public class FileTiffSaverFromImageJ
 				IJ.saveAs(imp, "tif", path);
 				return true;
 			} else
-				return saveAsTiff(path);
+				return saveAsTIFF(path);
 		} else
-			return saveAsTiff();
+			return saveAsTIFF();
 	}
 
 	String getPath(String type, String extension) {
@@ -91,22 +91,22 @@ public class FileTiffSaverFromImageJ
 
 	/** Saves the image or stack in TIFF format using a save file
 	 dialog. Returns false if the user selects cancel. Equivalent to
-	 IJ.saveAsTiff(imp,""), which is more convenient. */
-	public boolean saveAsTiff() {
+	 IJ.saveAsTIFF(imp,""), which is more convenient. */
+	public boolean saveAsTIFF() {
 		String path = getPath("TIFF", ".tif");
 		if (path==null)
 			return false;
 		if (fi.nImages>1)
-			return saveAsTiffStack(path);
+			return saveAsTIFFStack(path);
 		else
-			return saveAsTiff(path);
+			return saveAsTIFF(path);
 	}
 
 	/** Saves the image in TIFF format using the specified path. Equivalent to
-	 IJ.saveAsTiff(imp,path), which is more convenient. */
-	public boolean saveAsTiff(String path) {
+	 IJ.saveAsTIFF(imp,path), which is more convenient. */
+	public boolean saveAsTIFF(String path) {
 		if (fi.nImages>1)
-			return saveAsTiffStack(path);
+			return saveAsTIFFStack(path);
 		if (imp.getProperty("FHT")!=null && path.contains("FFT of "))
 			setupFFTSave();
 		fi.info = imp.getInfoProperty();
@@ -130,7 +130,7 @@ public class FileTiffSaverFromImageJ
 			file.write(out);
 			out.close();
 		} catch (IOException e) {
-			showErrorMessage("saveAsTiff", path, e);
+			showErrorMessage("saveAsTIFF", path, e);
 			return false;
 		} finally {
 			if (out!=null)
@@ -181,8 +181,8 @@ public class FileTiffSaverFromImageJ
 	}
 
 	/** Saves the stack as a multi-image TIFF using the specified path.
-	 Equivalent to IJ.saveAsTiff(imp,path), which is more convenient. */
-	public boolean saveAsTiffStack(String path) {
+	 Equivalent to IJ.saveAsTIFF(imp,path), which is more convenient. */
+	public boolean saveAsTIFFStack(String path) {
 		if (fi.nImages==1) {
 			error("This is not a stack");
 			return false;
@@ -223,7 +223,7 @@ public class FileTiffSaverFromImageJ
 			file.write(out);
 			out.close();
 		} catch (IOException e) {
-			showErrorMessage("saveAsTiffStack", path, e);
+			showErrorMessage("saveAsTIFFStack", path, e);
 			return false;
 		} finally {
 			if (out!=null)

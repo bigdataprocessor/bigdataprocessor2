@@ -47,7 +47,7 @@ public class ProjectionXYZ {
         setDoscale(true);
     }
 
-    public static void saveAsTiffXYZMaxProjection( ImagePlus imp, int c, int t, String path ) {
+    public static void saveAsTIFFXYZMaxProjection( ImagePlus imp, int c, int t, String path ) {
 
         ProjectionXYZ projectionXYZ = new ProjectionXYZ( imp );
         projectionXYZ.setDoscale( true );

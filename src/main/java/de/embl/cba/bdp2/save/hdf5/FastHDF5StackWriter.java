@@ -134,7 +134,7 @@ public class FastHDF5StackWriter < R extends RealType< R > & NativeType< R >> im
                 // Save projections
                 if (savingSettings.saveProjections ) {
                     ImagePlus imagePlusImage = ImageJFunctions.wrap(newRai, "");
-                    ProjectionXYZ.saveAsTiffXYZMaxProjection(imagePlusImage, c, this.current_t, newPath);
+                    ProjectionXYZ.saveAsTIFFXYZMaxProjection(imagePlusImage, c, this.current_t, newPath);
                 }
                 counter.incrementAndGet();
             }

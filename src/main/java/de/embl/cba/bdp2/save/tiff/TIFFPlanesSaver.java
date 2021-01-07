@@ -14,14 +14,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class TiffPlanesSaver extends AbstractImageSaver
+public class TIFFPlanesSaver extends AbstractImageSaver
 {
     private final Image image;
     private SavingSettings settings;
     private ExecutorService es;
     private AtomicBoolean stop;
 
-    public TiffPlanesSaver( Image image, SavingSettings settings, ExecutorService es ) {
+    public TIFFPlanesSaver( Image image, SavingSettings settings, ExecutorService es ) {
         this.image = image;
         this.settings = settings;
         this.es = es;
@@ -38,7 +38,7 @@ public class TiffPlanesSaver extends AbstractImageSaver
             for (int t = 0; t < numFrames; t++) {
                 for (int z = 0; z < numPlanes; z++) {
                     futures.add( es.submit(
-                            new TiffPlaneSaver( c, t, z, image, settings, stop )
+                            new TIFFPlaneSaver( c, t, z, image, settings, stop )
                     ));
                 }
             }

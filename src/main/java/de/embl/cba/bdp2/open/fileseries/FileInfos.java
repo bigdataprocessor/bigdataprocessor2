@@ -52,7 +52,7 @@ public class FileInfos
     public double max_pixel_val;
     public double min_pixel_val;
     public int compression;
-    public int numTiffStrips;
+    public int numTIFFStrips;
     public String[] channelNames;
     public String[] relativeFilePaths;
     private boolean recursive;
@@ -147,8 +147,8 @@ public class FileInfos
 
         if ( fileType.toString().toLowerCase().contains( "tif" ) )
         {
-            info += "Tiff Compression: " + getCompressionString() + "\n";
-            info += "Tiff Strips: " + numTiffStrips + "\n";
+            info += "TIFF Compression: " + getCompressionString() + "\n";
+            info += "TIFF Strips: " + numTIFFStrips + "\n";
         }
         info += "nX: " + nX + "\n";
         info += "nY: " + nY + "\n";
@@ -239,15 +239,15 @@ public class FileInfos
     {
         BDP2FileInfo[] info = null;
         BDP2FileInfo[] infoCT;
-        FastTiffDecoder ftd;
+        FastTIFFDecoder ftd;
         File file = new File( directory, ctzFiles[c][t][z] );
         if ( file.exists() )
         {
             if ( fileType.equals( FileSeriesFileType.TIFF_STACKS ) )
             {
-                ftd = new FastTiffDecoder( directory, ctzFiles[c][t][0] );
+                ftd = new FastTIFFDecoder( directory, ctzFiles[c][t][0] );
                 try {
-                    info = ftd.getTiffInfo();
+                    info = ftd.getTIFFInfo();
                 }
                 catch (Exception e) {
                     Logger.error("Error parsing: " + file.getAbsolutePath() );
@@ -316,9 +316,9 @@ public class FileInfos
             }
             else if ( fileType.equals( FileSeriesFileType.TIFF_PLANES) )
             {
-                ftd = new FastTiffDecoder(directory, ctzFiles[c][t][z]);
+                ftd = new FastTIFFDecoder(directory, ctzFiles[c][t][z]);
                 try{
-                    ctzFileInfos[c][t][z] = ftd.getTiffInfo()[0];
+                    ctzFileInfos[c][t][z] = ftd.getTIFFInfo()[0];
                 }
                 catch ( IOException e ){// TODO : Handle exceptions properly --ashis
                     System.out.print( e.toString() );

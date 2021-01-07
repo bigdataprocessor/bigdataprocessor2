@@ -21,7 +21,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
-public class TiffCellLoader
+public class TIFFCellLoader
 {
     public static void load( SingleCellArrayImg cell, String directory, BDP2FileInfo[] fileInfos, ExecutorService executorService)
     {
@@ -35,7 +35,7 @@ public class TiffCellLoader
 
         for ( long z = min; z <= max; z++ )
         {
-            new TiffPlaneCellLoader( cell, (int) z, directory, fileInfos[ (int) z ] ).run();
+            new TIFFPlaneCellLoader( cell, (int) z, directory, fileInfos[ (int) z ] ).run();
         }
 
         // TODO: BDV is multi-thread already, think about when it makes sense to
@@ -45,7 +45,7 @@ public class TiffCellLoader
         //        {
         //            futures.add(
         //                executorService.submit(
-        //                    new PartialTiffPlaneCellLoader(
+        //                    new PartialTIFFPlaneCellLoader(
         //                        cell,
         //                        z,
         //                        directory,
@@ -63,7 +63,7 @@ public class TiffCellLoader
         if ( Logger.getLevel().equals( Logger.Level.Debug ) )
         {
             BDP2FileInfo fi = fileInfos[ Math.toIntExact( cell.min( DimensionOrder.Z ) ) ];
-            Logger.debug( "# TiffCellLoader" );
+            Logger.debug( "# TIFFCellLoader" );
             Logger.debug( "root directory: " + directory );
             Logger.debug( "fileInfos.length: " + fileInfos.length );
             Logger.debug( "fileInfo.directory: " + fi.directory );
@@ -98,7 +98,7 @@ public class TiffCellLoader
     }
 
 
-    private TiffCellLoader()
+    private TIFFCellLoader()
     {
 
     }

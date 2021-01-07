@@ -15,13 +15,13 @@ import java.io.File;
 
 import static de.embl.cba.bdp2.BigDataProcessor2Menu.COMMAND_BDP2_PREFIX;
 
-@Plugin(type = Command.class, menuPath = DialogUtils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractOpenCommand.COMMAND_OPEN_PATH + OpenSingleTiffVolumeCommand.COMMAND_FULL_NAME )
-public class OpenSingleTiffVolumeCommand< R extends RealType< R > & NativeType< R > > extends AbstractOpenCommand< R >
+@Plugin(type = Command.class, menuPath = DialogUtils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractOpenCommand.COMMAND_OPEN_PATH + OpenSingleTIFFVolumeCommand.COMMAND_FULL_NAME )
+public class OpenSingleTIFFVolumeCommand< R extends RealType< R > & NativeType< R > > extends AbstractOpenCommand< R >
 {
-    public static final String COMMAND_NAME = "Open Single Tiff Volume...";
+    public static final String COMMAND_NAME = "Open Single TIFF Volume...";
     public static final String COMMAND_FULL_NAME = COMMAND_BDP2_PREFIX + COMMAND_NAME;
 
-    @Parameter( label = "Tiff file")
+    @Parameter( label = "TIFF file")
     File file;
 
     private String directory;
@@ -44,7 +44,7 @@ public class OpenSingleTiffVolumeCommand< R extends RealType< R > & NativeType< 
     {
         ScriptRecorder recorder = new ScriptRecorder( outputImage );
         recorder.recordImportStatements( true );
-        recorder.setAPIFunctionName( "openTiffSeries" );
+        recorder.setAPIFunctionName( "openTIFFSeries" );
         recorder.addAPIFunctionParameter( recorder.quote( directory) );
         recorder.addAPIFunctionParameter( recorder.quote( regExp ) );
         recorder.record();

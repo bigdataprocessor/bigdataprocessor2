@@ -26,7 +26,7 @@ public class BdvToVoxelGridImageCommand< T extends RealType< T > & NativeType< T
 	public File outputPath;
 
 	// TODO: replace by enum, once possible
-	@Parameter( label = "Output file format", choices = { "Tiff", "Bdv" } )
+	@Parameter( label = "Output file format", choices = { "TIFF", "Bdv" } )
 	public String outputFileFormat;
 
 	// TODO: replace by enum, once possible

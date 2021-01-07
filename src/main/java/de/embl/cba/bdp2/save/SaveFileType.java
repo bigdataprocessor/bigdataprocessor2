@@ -2,7 +2,7 @@ package de.embl.cba.bdp2.save;
 
 public enum SaveFileType
 {
-	TiffPlanes,
-	TiffVolumes,
+	TIFFPlanes,
+	TIFFVolumes,
 	ImarisVolumes
 }

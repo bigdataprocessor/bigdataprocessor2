@@ -42,7 +42,7 @@ public class DevelopSavingWithoutMemoryLeak
 //		BigDataProcessor2.showImage( image );
 //
 //		final SavingSettings savingSettings = SavingSettings.getDefaults();
-//		savingSettings.saveFileType = SavingSettings.SaveFileType.TIFF_VOLUMES;
+//		savingSettings.saveFileType = SavingSettings.SaveFileType.Tiff_VOLUMES;
 //		savingSettings.numIOThreads = 1;
 //		savingSettings.saveProjections = false;
 //		savingSettings.saveVolumes = true;

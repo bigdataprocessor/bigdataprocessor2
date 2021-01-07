@@ -8,13 +8,13 @@ import net.imglib2.cache.img.DiskCachedCellImgOptions;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
-public class SetCacheDimensionsDialog < R extends RealType< R > & NativeType< R > >
+public class ConfigureLazyLoadingDialog< R extends RealType< R > & NativeType< R > >
 {
 	private final Image< R > inputImage;
 	private final ImageViewer< R > viewer;
 	private String[] channelNames;
 
-	public SetCacheDimensionsDialog( final ImageViewer< R > viewer  )
+	public ConfigureLazyLoadingDialog( final ImageViewer< R > viewer  )
 	{
 		this.viewer = viewer;
 		this.inputImage = viewer.getImage();
@@ -41,6 +41,7 @@ public class SetCacheDimensionsDialog < R extends RealType< R > & NativeType< R 
 
 		gd.addNumericField( "Cache Size X", cachedCellDims[ DimensionOrder.X ] );
 		gd.addNumericField( "Cache Size Y", cachedCellDims[ DimensionOrder.Y ] );
+		gd.addNumericField( "Cache Size Z", cachedCellDims[ DimensionOrder.Z ] );
 
 		gd.showDialog();
 
@@ -48,8 +49,10 @@ public class SetCacheDimensionsDialog < R extends RealType< R > & NativeType< R 
 
 		cachedCellDims[ DimensionOrder.X ] = (int) gd.getNextNumber();
 		cachedCellDims[ DimensionOrder.Y ] = (int) gd.getNextNumber();
+		cachedCellDims[ DimensionOrder.Z ] = (int) gd.getNextNumber();
 
-		inputImage.setCache( cachedCellDims, DiskCachedCellImgOptions.CacheType.SOFTREF, 10000 );
+		// cache size is ignored for SOFTREF
+		inputImage.setCache( cachedCellDims, DiskCachedCellImgOptions.CacheType.SOFTREF, 0 );
 
 		viewer.replaceImage( inputImage, false, true );
 

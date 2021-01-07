@@ -74,7 +74,7 @@ public class OpenFileSeriesCommand< R extends RealType< R > & NativeType< R > > 
             recordJythonCall( "openHDF5Series" );
 
         if ( regExp.contains( ".tif" ) )
-            recordJythonCall( "openTiffSeries" );
+            recordJythonCall( "openTIFFSeries" );
     }
 
     private void recordJythonCall( String apiFunctionName )

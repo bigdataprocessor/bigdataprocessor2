@@ -1,6 +1,6 @@
 package de.embl.cba.bdp2.save.tiff;
 
-public class TiffUtils
+public class TIFFUtils
 {
 	public static byte[] ShortToByteBigEndian( short[] input ) {
 		int short_index, byte_index;

@@ -33,7 +33,7 @@ public class MergeSplitChipWorkflow
         double voxelSpacingMicrometerZ = 1.04;
 
         final SavingSettings savingSettings = SavingSettings.getDefaults();
-        savingSettings.fileType = SaveFileType.TiffVolumes;
+        savingSettings.fileType = SaveFileType.TIFFVolumes;
         savingSettings.numIOThreads = Runtime.getRuntime().availableProcessors();
 
         final SplitChipMerger merger = new SplitChipMerger();

@@ -35,7 +35,7 @@ import java.util.concurrent.Future;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
-public class TiffAndHDF5Opener extends Opener {
+public class TIFFAndHDF5Opener extends Opener {
 
     // Compression modes
     public static final int COMPRESSION_UNKNOWN = 0;
@@ -44,7 +44,7 @@ public class TiffAndHDF5Opener extends Opener {
     public static final int LZW_WITH_DIFFERENCING = 3;
 
     // TODO: make it NOT an extension
-    public TiffAndHDF5Opener()
+    public TIFFAndHDF5Opener()
     {
 
     }
@@ -81,11 +81,11 @@ public class TiffAndHDF5Opener extends Opener {
 
         if( info[ zs ].fileTypeString.equals( FileSeriesFileType.TIFF_STACKS.toString() ) )
         {
-            imp = readDataCubeFromTiff(directory, info, executorService, zs, ze, nz, dz, xs, xe, ys, ye);
+            imp = readDataCubeFromTIFF(directory, info, executorService, zs, ze, nz, dz, xs, xe, ys, ye);
         }
         else if( info[ zs ].fileTypeString.equals( FileSeriesFileType.TIFF_PLANES.toString()  ) )
         {
-            imp = readDataCubeFromTiff(directory, info, executorService, zs, ze, nz, dz, xs, xe, ys, ye);
+            imp = readDataCubeFromTIFF(directory, info, executorService, zs, ze, nz, dz, xs, xe, ys, ye);
         }
         else if( info[ zs ].fileTypeString.equals( FileSeriesFileType.HDF5.toString()  ) )
         {
@@ -427,7 +427,7 @@ public class TiffAndHDF5Opener extends Opener {
     }
 
 
-    public ImagePlus readDataCubeFromTiff(String directory, BDP2FileInfo[] info,
+    public ImagePlus readDataCubeFromTIFF(String directory, BDP2FileInfo[] info,
                                           ExecutorService es,
                                           int zs, int ze, int nz, int dz,
                                           int xs, int xe, int ys, int ye)
@@ -446,7 +446,7 @@ public class TiffAndHDF5Opener extends Opener {
         int ny = ye - ys + 1;
 
         if( Logger.isShowDebug() ) {
-              Logger.info("# readDataCubeFromTiff");
+              Logger.info("# readDataCubeFromTIFF");
               Logger.info("root directory: " + directory);
               Logger.info("info.length: " + info.length);
               Logger.info("fi.directory: " + fi.directory);
@@ -486,7 +486,7 @@ public class TiffAndHDF5Opener extends Opener {
                         //
                         futures.add(
                                 es.submit(
-                                        new readCroppedPlaneFromTiffIntoImageStack(directory, info, stack, buffer,
+                                        new readCroppedPlaneFromTIFFIntoImageStack(directory, info, stack, buffer,
                                                 z, zs, ze, dz, ys, ye, ny, xs, xe, nx, imByteWidth)
                                 )
                         );
@@ -511,7 +511,7 @@ public class TiffAndHDF5Opener extends Opener {
                             return null;
                         }
 
-                        new readCroppedPlaneFromTiffIntoImageStack(directory, info, stack, buffer,
+                        new readCroppedPlaneFromTIFFIntoImageStack(directory, info, stack, buffer,
                                                 z, zs, ze, dz, ys, ye, ny, xs, xe, nx, imByteWidth).run();
 
                     }
@@ -522,7 +522,7 @@ public class TiffAndHDF5Opener extends Opener {
             else // don't invoke a thread for just reading a single plane
             {
                 int z = zs;
-                new readCroppedPlaneFromTiffIntoImageStack(directory, info, stack, buffer,
+                new readCroppedPlaneFromTIFFIntoImageStack(directory, info, stack, buffer,
                         z, zs, ze, dz, ys, ye, ny, xs, xe, nx, imByteWidth).run();
             }
 
@@ -573,7 +573,7 @@ public class TiffAndHDF5Opener extends Opener {
 
 
     /** Decompresses and sorts data into an ImageStack **/
-    public class readCroppedPlaneFromTiffIntoImageStack implements Runnable
+    public class readCroppedPlaneFromTIFFIntoImageStack implements Runnable
     {
         private Thread t;
         private String threadName;
@@ -610,7 +610,7 @@ public class TiffAndHDF5Opener extends Opener {
         private String directory;
         int z, zs, ze, dz, ys, ye, ny, xs, xe, nx, imByteWidth;
 
-        readCroppedPlaneFromTiffIntoImageStack( String directory,
+        readCroppedPlaneFromTIFFIntoImageStack( String directory,
                                                 BDP2FileInfo[] info,
                                                 ImageStack stack,
                                                 byte[][] buffer,
@@ -635,7 +635,7 @@ public class TiffAndHDF5Opener extends Opener {
             this.xe = xe;
             this.nx = nx;
             this.imByteWidth = imByteWidth;
-            //info("Creating readCroppedPlaneFromTiffIntoImageStack of slice: " +  threadName );
+            //info("Creating readCroppedPlaneFromTIFFIntoImageStack of slice: " +  threadName );
         }
 
         public void run()
@@ -668,12 +668,12 @@ public class TiffAndHDF5Opener extends Opener {
                         && ( fi.compression != ZIP )
                         && ( fi.compression != PACK_BITS ) )
                 {
-                    Logger.error( "Tiff compression not implemented: fi.compression = " + fi.compression );
+                    Logger.error( "TIFF compression not implemented: fi.compression = " + fi.compression );
                     return;
                 }
 
                 //startTime = System.currentTimeMillis();
-                buffer[ ( z - zs ) / dz ] = readRowsFromTiff( fi, inputStream, ys, ye );
+                buffer[ ( z - zs ) / dz ] = readRowsFromTIFF( fi, inputStream, ys, ye );
                 //readingTime += (System.currentTimeMillis() - startTime);
                 inputStream.close();
             }
@@ -864,7 +864,7 @@ public class TiffAndHDF5Opener extends Opener {
                 else
                 {
 
-                    Logger.error( "Tiff compression not implemented: fi.compression = " + fi.compression );
+                    Logger.error( "TIFF compression not implemented: fi.compression = " + fi.compression );
                     return;
 
                 }
@@ -1254,7 +1254,7 @@ public class TiffAndHDF5Opener extends Opener {
             }
         }
 
-        private byte[] readRowsFromTiff( BDP2FileInfo fi, RandomAccessFile in, int ys, int ye )
+        private byte[] readRowsFromTIFF( BDP2FileInfo fi, RandomAccessFile in, int ys, int ye )
         {
             boolean hasStrips = false;
             int readLength;
@@ -1298,7 +1298,7 @@ public class TiffAndHDF5Opener extends Opener {
 
             if ( readLength <= 0 )
             {
-                Logger.warn( "file type: Tiff" );
+                Logger.warn( "file type: TIFF" );
                 Logger.warn( "hasStrips: " + hasStrips );
                 Logger.warn( "core from [bytes]: " + readStart );
                 Logger.warn( "core to [bytes]: " + ( readStart + readLength - 1 ) );
@@ -1322,7 +1322,7 @@ public class TiffAndHDF5Opener extends Opener {
                 else
                 {
                     Logger.warn( "The requested data exceeds the file length; no data was core." );
-                    Logger.warn( "file type: Tiff" );
+                    Logger.warn( "file type: TIFF" );
                     Logger.warn( "hasStrips: " + hasStrips );
                     Logger.warn( "file length [bytes]: " + in.length() );
                     Logger.warn( "attempt to core until [bytes]: " + ( readStart + readLength - 1 ) );

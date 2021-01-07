@@ -32,7 +32,7 @@ public class TestSaveSingleChannelTiffSeriesAsLZWTiffStacks
 //        bdp.showImage( image );
 //
         final SavingSettings savingSettings = SavingSettings.getDefaults();
-        savingSettings.fileType = SaveFileType.TiffVolumes;
+        savingSettings.fileType = SaveFileType.TIFFVolumes;
         savingSettings.numIOThreads = 1;
         savingSettings.numProcessingThreads = 4;
         savingSettings.saveProjections = false;
