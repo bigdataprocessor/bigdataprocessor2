@@ -72,19 +72,19 @@ public class ScriptRecorder
 		addCommandParameter( INPUT_IMAGE_PARAMETER, inputImage.getName() );
 	}
 
-	public static String asJythonArray( double[] doubles )
+	public static String asScriptArray( double[] doubles )
 	{
 //		return "array([" + asCSV( doubles ) + "], \"d\")";
 		return "[" + asCSV( doubles ) + "]";
 	}
 
-	public static String asJythonArray( long[] longs )
+	public static String asScriptArray( long[] longs )
 	{
 		//return "array([" + asCSV( longs ) + "], \"l\")";
 		return "[" + asCSV( longs ) + "]";
 	}
 
-	public static String asJythonArray( String[] strings )
+	public static String asScriptArray( String[] strings )
 	{
 		//return "array([" + asCSV( strings ) + "], java.lang.String )";
 		return "[" + asCSV( strings ) + "]";
@@ -235,9 +235,13 @@ public class ScriptRecorder
 
 	private String asComment( String comment )
 	{
-		if ( LanguageManager.getLanguage().equals( LanguageManager.PYTHON ) )
+		final String language = LanguageManager.getLanguage();
+
+		if ( language == null ) return "";
+
+		if ( language.equals( LanguageManager.PYTHON ) )
 			return "# " + comment + "\n";
-		else if ( LanguageManager.getLanguage().equals( LanguageManager.JAVA_SCRIPT ) )
+		else if ( language.equals( LanguageManager.JAVA_SCRIPT ) )
 			return "// " + comment + "\n";
 		else
 			return "";
@@ -265,12 +269,12 @@ public class ScriptRecorder
 
 	public void addAPIFunctionParameter( double[] parameter )
 	{
-		parameters.add( asJythonArray( parameter ) );
+		parameters.add( asScriptArray( parameter ) );
 	}
 
 	public void addAPIFunctionParameter( long[] parameter )
 	{
-		parameters.add( asJythonArray( parameter ) );
+		parameters.add( asScriptArray( parameter ) );
 	}
 
 	public void recordImportStatements( boolean recordImportStatements )
@@ -285,7 +289,7 @@ public class ScriptRecorder
 
 	public void addAPIFunctionParameter( String[] strings )
 	{
-		parameters.add( asJythonArray( strings ) );
+		parameters.add( asScriptArray( strings ) );
 	}
 
 	public void addAPIFunctionPrequelComment( String comment )
@@ -303,7 +307,7 @@ public class ScriptRecorder
 		List< String > listItems = new ArrayList<>( );
 		for ( long[] longs : longsList )
 		{
-			listItems.add( asJythonArray( longs ) );
+			listItems.add( asScriptArray( longs ) );
 		}
 
 		String parameter = "ArrayList( [ ";

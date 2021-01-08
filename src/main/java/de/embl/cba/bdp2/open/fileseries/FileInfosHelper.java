@@ -98,15 +98,24 @@ public class FileInfosHelper
             final File omeCompanion = new File( fileInfos.directory, "ome-tiff.companion.ome" );
             if ( omeCompanion.exists() )
             {
-                final BioFormatsCalibrationReader calibrationReader = new BioFormatsCalibrationReader( omeCompanion );
-                fileInfos.voxelSize = calibrationReader.getVoxelSize();
-                fileInfos.voxelUnit = calibrationReader.getUnit();
+                final BioFormatsCalibrationReader calibrationReader = new BioFormatsCalibrationReader();
+                if ( calibrationReader.readCalibration( omeCompanion ) )
+                {
+                    fileInfos.voxelSize = calibrationReader.getVoxelSize();
+                    fileInfos.voxelUnit = calibrationReader.getUnit();
+                }
+                else
+                {
+                    Logger.error( "Error reading image calibration from: " + omeCompanion + "\n" +
+                            "See Console window for more information.\n" +
+                            "The voxel sizes of the image may be incorrect!" );
+                }
             }
         }
         else if ( NamingSchemes.isLuxendoNamingScheme( regExp ) )
         {
             fileInfos.fileType = FileSeriesFileType.LUXENDO;
-            FileInfosHDF5Helper.setImageDataInfoFromH5( fileInfos, fileInfos.directory, firstRelativeFilePath );
+            HDF5Helper.setImageDataInfoFromH5( fileInfos, fileInfos.directory, firstRelativeFilePath );
         }
         else
         {
@@ -294,9 +303,7 @@ public class FileInfosHelper
             }
             else
             {
-                throw new UnsupportedOperationException( "Could not match file: " + fileName
-                        + "\nNaming scheme: " + regExp
-                        + "\nPattern: " + pattern.toString() );
+                throw new UnsupportedOperationException( "Could not match file: " + fileName + "\nNaming scheme: " + regExp );
             }
         }
     }
@@ -324,7 +331,7 @@ public class FileInfosHelper
             relativeSubFolders = new String[]{ "" };
         }
 
-        Logger.info( "Found sub-folders " + Arrays.toString( relativeSubFolders ) );
+        Logger.info( "Sub-folders: " + Arrays.toString( relativeSubFolders ) );
 
         String[] files = new String[]{};
         for (int i = 0; i < relativeSubFolders.length; i++)
@@ -346,8 +353,8 @@ public class FileInfosHelper
             }
 
             // prepend subfolder
-            final int j = i;
-            subFolderFilePaths = Arrays.stream( subFolderFilePaths ).map( x -> relativeSubFolders[ j ] + File.separator + x ).toArray( String[]::new );
+            final String relativeSubFolder = relativeSubFolders[ i ];
+            subFolderFilePaths = Arrays.stream( subFolderFilePaths ).map( x -> relativeSubFolder + x ).toArray( String[]::new );
             files = (String[]) ArrayUtils.addAll( files, subFolderFilePaths );
         }
 
@@ -504,9 +511,15 @@ public class FileInfosHelper
         if ( list == null || list.length == 0 )
             return new String[]{""};
 
+
+        for ( int i = 0; i < list.length; i++ )
+        {
+            list[ i ] = ensureDirectoryEndsWithFileSeparator( list[ i ] );
+        }
+
         Arrays.sort( list );
 
-        return (list);
+        return list;
     }
 
     public static String captureRegExp( String subFolderName, String regExp )
@@ -540,5 +553,17 @@ public class FileInfosHelper
             }
         }
         return captures;
+    }
+
+    public static String ensureDirectoryEndsWithFileSeparator( String directory )
+    {
+        directory = directory.trim();
+        char last = directory.charAt(directory.length()-1);
+        if( last != File.separatorChar )
+        {
+            directory= directory + File.separator;
+        }
+
+        return directory;
     }
 }

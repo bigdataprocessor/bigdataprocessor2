@@ -2,13 +2,8 @@ package de.embl.cba.bdp2;
 
 import de.embl.cba.bdp2.log.LoggingLevelCommand;
 import de.embl.cba.bdp2.open.AbstractOpenFileSeriesCommand;
-import de.embl.cba.bdp2.open.bioformats.OpenBdvBioFormatsCommand;
-import de.embl.cba.bdp2.open.fileseries.OpenEMTIFFPlanesFileSeriesCommand;
-import de.embl.cba.bdp2.open.fileseries.OpenFileSeriesCommand;
-import de.embl.cba.bdp2.open.fileseries.OpenHelpCommand;
-import de.embl.cba.bdp2.open.fileseries.OpenSingleTIFFVolumeCommand;
-import de.embl.cba.bdp2.open.fileseries.leica.OpenLeicaDSLTIFFPlanesFileSeriesCommand;
-import de.embl.cba.bdp2.open.fileseries.luxendo.OpenLuxendoFileSeriesCommand;
+import de.embl.cba.bdp2.open.bioformats.OpenBDVBioFormatsCommand;
+import de.embl.cba.bdp2.open.fileseries.*;
 import de.embl.cba.bdp2.process.bin.BinCommand;
 import de.embl.cba.bdp2.process.bin.BinDialog;
 import de.embl.cba.bdp2.process.calibrate.SetVoxelSizeCommand;
@@ -248,11 +243,11 @@ public class BigDataProcessor2MenuActions implements ActionListener {
                 Services.getCommandService().run( OpenHelpCommand.class, true );
             });
         }
-        else if( e.getActionCommand().equalsIgnoreCase( OpenBdvBioFormatsCommand.COMMAND_NAME ) )
+        else if( e.getActionCommand().equalsIgnoreCase( OpenBDVBioFormatsCommand.COMMAND_NAME ) )
         {
             BigDataProcessor2.threadPool.submit(() ->
             {
-                Services.getCommandService().run( OpenBdvBioFormatsCommand.class, true );
+                Services.getCommandService().run( OpenBDVBioFormatsCommand.class, true );
             });
         }
         else if( e.getActionCommand().equalsIgnoreCase( DownloadAndOpenSampleDataCommand.COMMAND_NAME ) )
@@ -287,20 +282,28 @@ public class BigDataProcessor2MenuActions implements ActionListener {
                 Services.getCommandService().run( OpenFileSeriesCommand.class, true );
             });
         }
-        else if( e.getActionCommand().equalsIgnoreCase( OpenLeicaDSLTIFFPlanesFileSeriesCommand.COMMAND_NAME ) )
+        else if( e.getActionCommand().equalsIgnoreCase( OpenLeicaDSLTIFFPlaneSeriesCommand.COMMAND_NAME ) )
         {
             BigDataProcessor2.threadPool.submit(() ->
             {
                 AbstractOpenFileSeriesCommand.parentViewer = viewer;
-                Services.getCommandService().run( OpenLeicaDSLTIFFPlanesFileSeriesCommand.class, true );
+                Services.getCommandService().run( OpenLeicaDSLTIFFPlaneSeriesCommand.class, true );
             });
         }
-        else if( e.getActionCommand().equalsIgnoreCase( OpenLuxendoFileSeriesCommand.COMMAND_NAME ) )
+        else if( e.getActionCommand().equalsIgnoreCase( OpenLuxendoHDF5SeriesCommand.COMMAND_NAME ) )
         {
             BigDataProcessor2.threadPool.submit(() ->
             {
                 AbstractOpenFileSeriesCommand.parentViewer = viewer;
-                Services.getCommandService().run( OpenLuxendoFileSeriesCommand.class, true );
+                Services.getCommandService().run( OpenLuxendoHDF5SeriesCommand.class, true );
+            });
+        }
+        else if( e.getActionCommand().equalsIgnoreCase( OpenViventisTIFFSeriesCommand.COMMAND_NAME ) )
+        {
+            BigDataProcessor2.threadPool.submit(() ->
+            {
+                AbstractOpenFileSeriesCommand.parentViewer = viewer;
+                Services.getCommandService().run( OpenViventisTIFFSeriesCommand.class, true );
             });
         }
     }

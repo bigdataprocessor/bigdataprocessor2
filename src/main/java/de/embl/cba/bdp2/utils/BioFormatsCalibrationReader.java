@@ -11,17 +11,14 @@ import java.io.File;
 
 public class BioFormatsCalibrationReader
 {
-	private final File file;
 	private String unit;
 	private double[] voxelSize;
 
-	public BioFormatsCalibrationReader( File file )
+	public BioFormatsCalibrationReader()
 	{
-		this.file = file;
-		readCalibration( file );
 	}
 
-	private  void readCalibration( File file )
+	public boolean readCalibration( File file )
 	{
 		DebugTools.setRootLevel("OFF");
 
@@ -45,10 +42,12 @@ public class BioFormatsCalibrationReader
 			voxelSize[ 0 ] = meta.getPixelsPhysicalSizeX( 0 ).value().doubleValue();
 			voxelSize[ 1 ] = meta.getPixelsPhysicalSizeY( 0 ).value().doubleValue();
 			voxelSize[ 2 ] = meta.getPixelsPhysicalSizeZ( 0 ).value().doubleValue();
+			return true;
 		}
 		catch ( Exception e )
 		{
 			e.printStackTrace();
+			return false;
 		}
 	}
 

@@ -1,6 +1,7 @@
 package de.embl.cba.bdp2.open.fileseries;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.dialog.DialogUtils;
+import de.embl.cba.bdp2.open.NamingSchemes;
 import de.embl.cba.bdp2.record.ScriptRecorder;
 import de.embl.cba.bdp2.open.AbstractOpenCommand;
 import net.imglib2.type.NativeType;
@@ -32,7 +33,7 @@ public class OpenSingleTIFFVolumeCommand< R extends RealType< R > & NativeType< 
         SwingUtilities.invokeLater( () ->  {
             directory = file.getParent();
             regExp = "(?<T>"+file.getName()+")";
-            regExp += FileInfos.NONRECURSIVE;
+            regExp += NamingSchemes.NONRECURSIVE;
             outputImage = BigDataProcessor2.openTIFFSeries( directory, regExp );
             recordAPICall();
             handleOutputImage( true, false );

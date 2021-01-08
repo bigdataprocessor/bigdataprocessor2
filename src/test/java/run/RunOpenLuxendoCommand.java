@@ -1,6 +1,6 @@
 package run;
 
-import de.embl.cba.bdp2.open.fileseries.luxendo.OpenLuxendoFileSeriesCommand;
+import de.embl.cba.bdp2.open.fileseries.OpenLuxendoHDF5SeriesCommand;
 import ij.plugin.frame.Recorder;
 import net.imagej.ImageJ;
 
@@ -13,6 +13,6 @@ public class RunOpenLuxendoCommand
 
 		new Recorder();
 
-		ij.command().run( OpenLuxendoFileSeriesCommand.class, true );
+		ij.command().run( OpenLuxendoHDF5SeriesCommand.class, true );
 	}
 }

@@ -2,7 +2,6 @@ package de.embl.cba.bdp2.open.fileseries;
 
 import de.embl.cba.bdp2.open.ChannelChooserDialog;
 import de.embl.cba.bdp2.open.NamingSchemes;
-import de.embl.cba.bdp2.open.fileseries.luxendo.OpenChannelsFileSeriesCommand;
 import ij.IJ;
 import ij.gui.GenericDialog;
 

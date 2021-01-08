@@ -5,14 +5,13 @@ import ch.systemsx.cisd.hdf5.HDF5DataTypeInformation;
 import ch.systemsx.cisd.hdf5.HDF5Factory;
 import ch.systemsx.cisd.hdf5.IHDF5Reader;
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.open.fileseries.luxendo.Luxendos;
 import ij.gui.GenericDialog;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class FileInfosHDF5Helper
+public class HDF5Helper
 {
     public static final String HDF5_PARSING_ERROR = "Error during hdf5 metadata extraction from ";
 
@@ -64,7 +63,7 @@ public class FileInfosHDF5Helper
         }
         fileInfos.bitDepth = assignHDF5TypeToImagePlusBitdepth(dsInfo);
 
-        fileInfos.voxelSize = Luxendos.getVoxelSizeMicrometer( reader, fileInfos.h5DataSetName );
+        fileInfos.voxelSize = getVoxelSizeMicrometerFromLuxendoHDF5( reader, fileInfos.h5DataSetName );
         fileInfos.voxelUnit = "micrometer";
     }
 
@@ -145,5 +144,25 @@ public class FileInfosHDF5Helper
                 typeText += dsInfo.toString();
         }
         return typeText;
+    }
+
+    public static double[] getVoxelSizeMicrometerFromLuxendoHDF5( IHDF5Reader reader, String h5DataSetName )
+    {
+        if ( reader.hasAttribute( "/" + h5DataSetName, "element_size_um" ) )
+        {
+            final double[] voxelSizeZYX = reader.float64().getArrayAttr( "/" + h5DataSetName, "element_size_um");
+            double[] voxelSizeXYZ = new double[ 3 ];
+
+            // reorder the dimensions
+            for ( int d = 0; d < 3; d++ )
+                voxelSizeXYZ[ d ] = voxelSizeZYX[ 2 - d];
+
+            return voxelSizeXYZ;
+        }
+        else
+        {
+            Logger.warn( "Could not read voxel size!");
+            return null;
+        }
     }
 }

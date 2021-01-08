@@ -561,16 +561,7 @@ public class Utils {
 		imp.setCalibration( calibration );
 	}
 
-	public static String ensureDirectoryEndsWithFileSeparator( String directory ){
-        directory = directory.trim();
-	    char last = directory.charAt(directory.length()-1);
-	    if(last != File.separatorChar){
-            directory= directory + File.separator;
-        }
-        return directory;
-	}
-
-    public static < T extends RealType< T > & NativeType< T >> void applyIntensityGate (Img< T > rai, int[] gate) {
+	public static < T extends RealType< T > & NativeType< T >> void applyIntensityGate (Img< T > rai, int[] gate) {
         int min = gate[0];
         int max = gate[1];
         if(!(min == -1 && max == -1)) {

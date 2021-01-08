@@ -1200,13 +1200,16 @@ public class FastTIFFDecoder {
                     fi = fullyReadIFD( relativeStripInfoLocations );
                 }
             }
-            if( Logger.getLevel().equals( Logger.Level.Debug ) ) {
+
+            if( Logger.getLevel().equals( Logger.Level.Debug ) )
+            {
                   Logger.info("IFD " + listIFDs.size() + " at " + ifdOffset);
                   Logger.info("fi.nImages: " + fi.nImages);
                   Logger.info("fi.offset: " + fi.offset);
                   Logger.info("fi.stripLengths.length: " + fi.stripLengths.length);
                   Logger.info("fi.stripOffsets.length: " + fi.stripOffsets.length);
             }
+
             if (fi != null)
             {
                 // add the IFD to the fileInfoSer list

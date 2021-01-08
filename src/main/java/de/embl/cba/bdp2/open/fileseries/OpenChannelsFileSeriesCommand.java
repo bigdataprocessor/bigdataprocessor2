@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.open.fileseries.luxendo;
+package de.embl.cba.bdp2.open.fileseries;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.dialog.DialogUtils;

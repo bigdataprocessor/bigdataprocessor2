@@ -4,7 +4,7 @@ import ch.systemsx.cisd.hdf5.HDF5DataSetInformation;
 import ch.systemsx.cisd.hdf5.HDF5Factory;
 import ch.systemsx.cisd.hdf5.IHDF5Reader;
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.utils.Utils;
+import de.embl.cba.bdp2.open.NamingSchemes;
 import de.embl.cba.imaris.ImarisUtils;
 import ij.io.FileInfo;
 import loci.common.DebugTools;
@@ -33,8 +33,7 @@ public class FileInfos
 			ImarisUtils.RESOLUTION_LEVEL +"3/Data",
 			"ITKImage/0/VoxelData" // Elastix
     };
-    public static final String NONRECURSIVE = "_NONRECURSIVE";
-	public BDP2FileInfo[][][] ctzFileInfos;
+    public BDP2FileInfo[][][] ctzFileInfos;
     public long[] dimensions;
     private String namingScheme;
     public int bitDepth;
@@ -104,15 +103,15 @@ public class FileInfos
     private void fetchFileInfos( String aDirectory, String regExp, String h5DataSetName, String[] channelSubset )
     {
         this.namingScheme = regExp;
-        this.directory  = Utils.ensureDirectoryEndsWithFileSeparator( aDirectory );
+        this.directory  = FileInfosHelper.ensureDirectoryEndsWithFileSeparator( aDirectory );
         this.h5DataSetName = h5DataSetName;
 
         DebugTools.setRootLevel( "OFF" ); // Bio-Formats
 
-        if( namingScheme.contains( NONRECURSIVE ) )
+        if( namingScheme.contains( NamingSchemes.NONRECURSIVE ) )
         {
             recursive = false;
-            namingScheme = namingScheme.replace( NONRECURSIVE, "" );
+            namingScheme = namingScheme.replace( NamingSchemes.NONRECURSIVE, "" );
         }
         else
         {
@@ -288,7 +287,7 @@ public class FileInfos
                 IHDF5Reader reader = HDF5Factory.openForReading( file.getAbsolutePath() );
                 HDF5DataSetInformation dsInfo = reader.getDataSetInformation( h5DataSetName );
                 //String dsTypeString = OpenerExtension.hdf5InfoToString(dsInfo);
-                String dsTypeString = FileInfosHDF5Helper.dsInfoToTypeString(dsInfo); //TODO: Check if OpenerExtension.hdf5InfoToString can be made public and called.
+                String dsTypeString = HDF5Helper.dsInfoToTypeString(dsInfo); //TODO: Check if OpenerExtension.hdf5InfoToString can be made public and called.
 
                 if (dsTypeString.equals("int16") || dsTypeString.equals("uint16")){
                     bytesPerPixel = 2;

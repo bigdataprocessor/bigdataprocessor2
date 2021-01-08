@@ -47,7 +47,7 @@ public class BigDataProcessor2Command< R extends RealType< R > & NativeType< R >
     {
         final ImageJ ij = new ImageJ();
         ij.ui().showUI();
-        Logger.setLevel( Logger.Level.Debug );
+        Logger.setLevel( Logger.Level.Normal );
         //new Recorder();
         ij.command().run( BigDataProcessor2Command.class, true );
     }

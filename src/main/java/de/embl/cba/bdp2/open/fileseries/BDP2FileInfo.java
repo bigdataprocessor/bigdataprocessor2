@@ -35,7 +35,7 @@ import ij.io.FileInfo;
 import java.io.Serializable;
 
 /**
- * Created by tischi on 13/11/16.
+ * TODO: Clean this up as it still contains a lot of things from BDP1
  */
 public class BDP2FileInfo implements Cloneable, Serializable {
 

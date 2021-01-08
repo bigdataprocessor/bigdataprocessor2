@@ -1,12 +1,7 @@
 package de.embl.cba.bdp2;
 
-import de.embl.cba.bdp2.open.bioformats.OpenBdvBioFormatsCommand;
-import de.embl.cba.bdp2.open.fileseries.OpenEMTIFFPlanesFileSeriesCommand;
-import de.embl.cba.bdp2.open.fileseries.OpenFileSeriesCommand;
-import de.embl.cba.bdp2.open.fileseries.OpenHelpCommand;
-import de.embl.cba.bdp2.open.fileseries.OpenSingleTIFFVolumeCommand;
-import de.embl.cba.bdp2.open.fileseries.leica.OpenLeicaDSLTIFFPlanesFileSeriesCommand;
-import de.embl.cba.bdp2.open.fileseries.luxendo.OpenLuxendoFileSeriesCommand;
+import de.embl.cba.bdp2.open.bioformats.OpenBDVBioFormatsCommand;
+import de.embl.cba.bdp2.open.fileseries.*;
 import de.embl.cba.bdp2.process.AbstractImageProcessingCommand;
 import de.embl.cba.bdp2.open.samples.DownloadAndOpenSampleDataCommand;
 import de.embl.cba.bdp2.process.cache.ConfigureLazyLoadingCommand;
@@ -73,14 +68,16 @@ public class BigDataProcessor2Menu extends JMenu
         // TODO: auto-populate using SciJava annotation
         menus.add( openMenu );
         addMenuItem( openMenu, OpenHelpCommand.COMMAND_NAME );
-        addMenuItem( openMenu, OpenBdvBioFormatsCommand.COMMAND_NAME );
+        addMenuItem( openMenu, OpenBDVBioFormatsCommand.COMMAND_NAME );
         addMenuItem( openMenu, OpenFileSeriesCommand.COMMAND_NAME );
         JMenu openPredefinedFileSeriesMenu = new JMenu( "Open Predefined File Series" );
         openMenu.add( openPredefinedFileSeriesMenu );
+        addMenuItem( openPredefinedFileSeriesMenu, OpenSingleTIFFVolumeCommand.COMMAND_NAME );
         addMenuItem( openPredefinedFileSeriesMenu, OpenEMTIFFPlanesFileSeriesCommand.COMMAND_NAME );
-        addMenuItem( openPredefinedFileSeriesMenu, OpenLeicaDSLTIFFPlanesFileSeriesCommand.COMMAND_NAME );
-        addMenuItem( openPredefinedFileSeriesMenu, OpenLuxendoFileSeriesCommand.COMMAND_NAME );
-        addMenuItem( openPredefinedFileSeriesMenu, OpenSingleTIFFVolumeCommand.COMMAND_NAME );    addMenuItem( openMenu, DownloadAndOpenSampleDataCommand.COMMAND_NAME );
+        addMenuItem( openPredefinedFileSeriesMenu, OpenLeicaDSLTIFFPlaneSeriesCommand.COMMAND_NAME );
+        addMenuItem( openPredefinedFileSeriesMenu, OpenLuxendoHDF5SeriesCommand.COMMAND_NAME );
+        addMenuItem( openPredefinedFileSeriesMenu, OpenViventisTIFFSeriesCommand.COMMAND_NAME );
+        addMenuItem( openMenu, DownloadAndOpenSampleDataCommand.COMMAND_NAME );
 
         menus.add( processMenu );
         populateProcessMenu( processMenu, miscMenu );

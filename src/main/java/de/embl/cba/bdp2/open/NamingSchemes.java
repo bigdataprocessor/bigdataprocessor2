@@ -25,6 +25,9 @@ public abstract class NamingSchemes
 	public static final String LUXENDO_STACKINDEX = ".*stack_("+ P +"\\d+)_channel_.*";
 	public static final String CHANNEL_ID_DELIMITER = "_";
 	public static final String LEICA_DSL_TIFF_PLANES = ".*" + "--t(" + T + "\\d+)" + "--Z(" + Z + "\\d+)" + "--C(" + C + "\\d+).*";
+	public static final String VIVENTIS = "t(?<T>\\d+)_(?<C>.+)" + TIF;
+
+	public static final String NONRECURSIVE = "_NONRECURSIVE";
 
 	@Deprecated
 	public static final String PATTERN_6= "Cam_<c>_<t>" + HDF5;
@@ -36,6 +39,7 @@ public abstract class NamingSchemes
 	public static final String TIFF_SLICES = "TIFF Slices";
 	@Deprecated
 	public static final String SINGLE_CHANNEL_TIMELAPSE = "Single Channel Movie";
+
 
 
 	public static boolean isLuxendoNamingScheme( String namingScheme )
