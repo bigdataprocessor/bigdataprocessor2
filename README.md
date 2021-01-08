@@ -77,18 +77,6 @@ Note: This is equivalent to [ Plugins > Macros > Record... ] in the ImageJ menu,
 
 <img width="600" alt="image" src="./docs/images/BDP2-Macro2.jpg">
 
-Example of recorded macro. 
-
-Enable/ disable macro recording. The user can choose to turn macro recording on and off and also select from three recording languages, namely the IJ1 Macro language, Jython (Juneau et al. 2010) and JavaScript (https://en.wikipedia.org/wiki/JavaScript).
-Motivation: Macro recording is one of ImageJ’s greatest features as it allows users without programming experience to record reusable scripts. It can be used for automation but also for sharing, documentation and publishing.  In our experience, next to the IJ1 Macro language, Jython is the second most popular scripting language for ImageJ, most likely due to the overall popularity of python (https://insights.stackoverflow.com/survey/2019#most-popular-technologies). We also support JavaScript due to its increasing popularity and importance in web based applications. ImageJ supports many more scripting languages, however, we decided to limit our support to a few in order to guide the user in their choice.
-
-Example Recorded IJ1 Macro Script
-<span style="font-family:courier; font-size:4em;">
-run("BDP2 Open Luxendo Channels...", "viewingmodality=[Show in new viewer] directory=[/Users/tischer/Desktop/bpd2-benchmark/h5/in] enablearbitraryplaneslicing=false stackindex=6 channels=[channel_2_Cam_Long] ");
-run("BDP2 Crop...", "inputimage=[in] outputimagename=[in-crop] viewingmodality=[Show in new viewer] minx=307 miny=576 minz=44 minc=0 mint=0 maxx=1730 maxy=1644 maxz=54 maxc=0 maxt=9 ");
-run("BDP2 Bin...", "inputimage=[in-crop] outputimagename=[in-crop-binned] viewingmodality=[Show in current viewer] binwidthxpixels=3 binwidthypixels=3 binwidthzpixels=1 ");
-run("BDP2 Save As...", "inputimage=[in-crop-binned] directory=[/Users/tischer/Desktop/bpd2-benchmark/h5/out/] numiothreads=1 numprocessingthreads=4 filetype=[TIFFVolumes] saveprojections=true savevolumes=true tiffcompression=[None] tstart=0 tend=9 ");
-</span>
 
 
 
