@@ -30,10 +30,14 @@ public class OpenChannelsFileSeriesCommand< R extends RealType< R > & NativeType
 
     @Parameter(label = "Channels")
     protected String channelSubset = "channel_0_Cam_Short,channel_0_Cam_Right";
-    protected static String CHANNELS_PARAMETER = "channels";
+    protected static String CHANNELS_PARAMETER = "channelSubset";
 
     private String[] channels;
     private String[] files;
+
+    public OpenChannelsFileSeriesCommand( )
+    {
+    }
 
     /**
      * In principle, it would be nice to directly add the channel subsetting to

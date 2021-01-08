@@ -111,12 +111,13 @@ public class ScriptRecorder
 
 		if ( value instanceof String )
 		{
-			options += name + "=[" + value + "] ";
+			options += name + "=[" + fixBackslashes( (String) value ) + "] ";
 		}
 		else
 		{
 			options += name + "=" + value + " ";
 		}
+
 	}
 
 	public static boolean isScriptMode()
@@ -134,7 +135,7 @@ public class ScriptRecorder
 			{
 				if ( Recorder.scriptMode() )
 				{
-					removeIJRunCallFromRecorder();
+					removeMacroCallFromRecorder();
 
 					if ( recordImportStatments )
 					{
@@ -227,9 +228,16 @@ public class ScriptRecorder
 		apiCall += parameters.stream().collect( Collectors.joining( COMMA ) );
 		apiCall += " );\n";
 
-		if ( LanguageManager.getLanguage().equals( LanguageManager.JAVA_SCRIPT ) )
-			apiCall = apiCall.replace( "\\", "\\\\" );
+		apiCall = fixBackslashes( apiCall );
 
+		return apiCall;
+	}
+
+	private String fixBackslashes( String apiCall )
+	{
+		final String language = LanguageManager.getLanguage();
+		if ( language.equals( LanguageManager.JAVA_SCRIPT ) || language.equals( LanguageManager.MACRO ) )
+			apiCall = apiCall.replace( "\\", "\\\\" );
 		return apiCall;
 	}
 
@@ -316,19 +324,33 @@ public class ScriptRecorder
 		parameters.add( parameter );
 	}
 
-	private void removeIJRunCallFromRecorder()
+	public static void removeMacroCallFromRecorder()
 	{
 		try
 		{
 			Recorder recorder = Recorder.getInstance();
 			if ( recorder == null ) return;
-			Field f = recorder.getClass().getDeclaredField("textArea"); //NoSuchFieldException
-			f.setAccessible(true);
-			TextArea textArea = (TextArea) f.get(recorder); //IllegalAccessException
-			String text = textArea.getText();
-			int start = text.indexOf( "IJ.run" );
-			int end = text.length() - 1;
-			textArea.replaceRange("", start, end );
+
+			final String language = LanguageManager.getLanguage();
+			if ( language != null  )
+			{
+				Field f = recorder.getClass().getDeclaredField( "textArea" ); //NoSuchFieldException
+				f.setAccessible( true );
+				TextArea textArea = ( TextArea ) f.get( recorder ); //IllegalAccessException
+				String text = textArea.getText();
+				if ( language.equals( LanguageManager.MACRO ))
+				{
+					int start = text.indexOf( "run(" );
+					int end = text.length() - 1;
+					textArea.replaceRange( "", start, end );
+				}
+				else
+				{
+					int start = text.indexOf( "IJ.run(" );
+					int end = text.length() - 1;
+					textArea.replaceRange( "", start, end );
+				}
+			}
 		}
 		catch ( Exception e )
 		{

@@ -2,6 +2,7 @@ package de.embl.cba.bdp2.open.fileseries;
 
 import de.embl.cba.bdp2.dialog.DialogUtils;
 import de.embl.cba.bdp2.open.AbstractOpenFileSeriesCommand;
+import de.embl.cba.bdp2.record.ScriptRecorder;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;
@@ -27,6 +28,7 @@ public class OpenLuxendoHDF5SeriesCommand< R extends RealType< R > & NativeType<
         SwingUtilities.invokeLater( () ->  {
             PositionAndChannelsOpenerWizard openerWizard = new PositionAndChannelsOpenerWizard( directory, positionRegExp, channelTimeRegExp );
             openerWizard.run();
+            ScriptRecorder.removeMacroCallFromRecorder(); // This command should not be recorded
         });
     }
 

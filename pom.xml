@@ -8,7 +8,7 @@
 	</parent>
 	<groupId>de.embl.cba</groupId>
 	<artifactId>bigDataProcessor2</artifactId>
-	<version>0.5.7</version>
+	<version>0.5.8-SNAPSHOT</version>
 	<url>https://github.com/embl-cba/bigDataProcessor2</url>
 	<name>BigDataProcessor2</name>
 	<description>Fiji plugin for inspection and processing of big image data</description>
@@ -93,8 +93,7 @@
 		<license.licenseName>bsd_2</license.licenseName>
 		<license.copyrightOwners>EMBL</license.copyrightOwners>
 
-		<scijava.app.directory>/Users/tischer/Desktop/Fiji-bdp2.app</scijava.app.directory>
-		<!--		<enforcer.skip>true</enforcer.skip>-->
+		<scijava.app.directory>/Users/tischer/Desktop/FIJI/Fiji-bdp2.app</scijava.app.directory>
 
 		<imaris-writer.version>0.2.3</imaris-writer.version>
 		<imagej-utils.version>0.5.5</imagej-utils.version>

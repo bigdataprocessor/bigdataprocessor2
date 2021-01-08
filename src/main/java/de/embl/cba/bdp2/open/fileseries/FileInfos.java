@@ -210,14 +210,14 @@ public class FileInfos
 
         if ( isVolumes() )
         {
-            setInfosFromFile(channel, time, z, true);
+            setInfosFromFile(channel, time, z );
         }
         else if ( isPlanes() )
         {
             int nZ = ctzFiles[channel][time].length;
             for (; z < nZ; ++z)
             {
-                setInfosFromFile(channel, time, z, true);
+                setInfosFromFile(channel, time, z );
             }
         }
 
@@ -234,7 +234,7 @@ public class FileInfos
         return fileType.equals( FileSeriesFileType.TIFF_STACKS ) || fileType.equals( FileSeriesFileType.LUXENDO );
     }
 
-    private void setInfosFromFile( final int c, final int t, final int z, boolean throwError )
+    private void setInfosFromFile( final int c, final int t, final int z )
     {
         BDP2FileInfo[] info = null;
         BDP2FileInfo[] infoCT;
