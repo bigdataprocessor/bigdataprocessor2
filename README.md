@@ -83,82 +83,12 @@ Enable/ disable macro recording. The user can choose to turn macro recording on 
 Motivation: Macro recording is one of ImageJ’s greatest features as it allows users without programming experience to record reusable scripts. It can be used for automation but also for sharing, documentation and publishing.  In our experience, next to the IJ1 Macro language, Jython is the second most popular scripting language for ImageJ, most likely due to the overall popularity of python (https://insights.stackoverflow.com/survey/2019#most-popular-technologies). We also support JavaScript due to its increasing popularity and importance in web based applications. ImageJ supports many more scripting languages, however, we decided to limit our support to a few in order to guide the user in their choice.
 
 Example Recorded IJ1 Macro Script
-
+<span style="font-family:courier; font-size:4em;">
 run("BDP2 Open Luxendo Channels...", "viewingmodality=[Show in new viewer] directory=[/Users/tischer/Desktop/bpd2-benchmark/h5/in] enablearbitraryplaneslicing=false stackindex=6 channels=[channel_2_Cam_Long] ");
 run("BDP2 Crop...", "inputimage=[in] outputimagename=[in-crop] viewingmodality=[Show in new viewer] minx=307 miny=576 minz=44 minc=0 mint=0 maxx=1730 maxy=1644 maxz=54 maxc=0 maxt=9 ");
 run("BDP2 Bin...", "inputimage=[in-crop] outputimagename=[in-crop-binned] viewingmodality=[Show in current viewer] binwidthxpixels=3 binwidthypixels=3 binwidthzpixels=1 ");
 run("BDP2 Save As...", "inputimage=[in-crop-binned] directory=[/Users/tischer/Desktop/bpd2-benchmark/h5/out/] numiothreads=1 numprocessingthreads=4 filetype=[TIFFVolumes] saveprojections=true savevolumes=true tiffcompression=[None] tstart=0 tend=9 ");
-
-
-Example Recorded Jython Script
-
-# To run this script, please select language: Python
-from de.embl.cba.bdp2 import BigDataProcessor2;
-import java;
-from jarray import array;
-from de.embl.cba.bdp2.save import SavingSettings;
-from de.embl.cba.bdp2.save import SaveFileType;
-
-# Open Luxendo HDF5 File Series...
-image = BigDataProcessor2.openHDF5Series( "/Users/tischer/Desktop/bpd2-benchmark/h5/in", ".*stack_6_(?<C1>channel_.*)/(?<C2>Cam_.*)_(?<T>\d+).h5", "Data", ["channel_2_Cam_Long"] );
-
-# BigDataProcessor2.showImage( image, True );
-
-# Crop...
-image = BigDataProcessor2.crop( image, [307,576,44,0,0,1730,1644,54,0,9] );
-image.setName( "in-crop" );
-
-# Bin...
-image = BigDataProcessor2.bin( image, [3,3,1,1,1] );
-image.setName( "in-crop-binned" );
-
-# Save image
-savingSettings = SavingSettings.getDefaults();
-savingSettings.volumesFilePathStump = "/Users/tischer/Desktop/bpd2-benchmark/h5/out/volumes/in-crop-binned";
-savingSettings.projectionsFilePathStump = "/Users/tischer/Desktop/bpd2-benchmark/h5/out/projections/in-crop-binned";
-savingSettings.numIOThreads = 1;
-savingSettings.numProcessingThreads = 4;
-savingSettings.fileType = SaveFileType.TIFFVolumes;
-savingSettings.saveProjections = True;
-savingSettings.saveVolumes = True;
-savingSettings.compression = "None";
-savingSettings.tStart = 0;
-savingSettings.tEnd = 9;
-BigDataProcessor2.saveImageAndWaitUntilDone( image, savingSettings );
-
-Example Recorded JavaScript Script
-
-// To run this script, please select language: JavaScript
-importClass(Packages.de.embl.cba.bdp2.BigDataProcessor2);
-importClass(Packages.de.embl.cba.bdp2.save.SavingSettings);
-importClass(Packages.de.embl.cba.bdp2.save.SaveFileType);
-
-// Open Position And Channel Subset...
-image = BigDataProcessor2.openHDF5Series( "/Volumes/Tischi/big-image-data/luxendo-publication-figure/mouse_2_Cam", ".*stack_6_(?<C1>channel_.*)/(?<C2>Cam_.*)_(?<T>\\d+).h5", "Data", ["channel_2_Cam_Long","channel_2_Cam_Short"] );
-// BigDataProcessor2.showImage( image, true );
-
-// Crop...
-image = BigDataProcessor2.crop( image, [502,454,14,0,0,1802,1685,87,1,143] );
-image.setName( "mouse_2_Cam-crop" );
-
-// Bin...
-image = BigDataProcessor2.bin( image, [3,3,1,1,1] );
-image.setName( "mouse_2_Cam-crop-binned" );
-
-// Save...
-savingSettings = SavingSettings.getDefaults();
-savingSettings.volumesFilePathStump = "/Volumes/Tischi/tmp/volumes/mouse_2_Cam-crop-binned";
-savingSettings.projectionsFilePathStump = "/Volumes/Tischi/tmp/projections/mouse_2_Cam-crop-binned";
-savingSettings.numIOThreads = 1;
-savingSettings.numProcessingThreads = 4;
-savingSettings.fileType = SaveFileType.TIFFVolumes;
-savingSettings.saveProjections = true;
-savingSettings.saveVolumes = true;
-savingSettings.compression = "None";
-savingSettings.tStart = 0;
-savingSettings.tEnd = 1;
-BigDataProcessor2.saveImageAndWaitUntilDone( image, savingSettings );
-
+</span>
 
 
 
