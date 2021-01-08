@@ -17,9 +17,6 @@ public class LanguageManager
 	public static final String PYTHON = "Python";
 	public static final String JAVA = "Java";
 
-	// copied from Recorder
-	private final static String[] modes = new String[]{ MACRO, JAVA_SCRIPT, BEAN_SHELL, PYTHON, JAVA };;
-
 	private LanguageManager()
 	{
 	}
@@ -30,12 +27,24 @@ public class LanguageManager
 		{
 			Prefs.set( "recorder.mode", language );
 
-			Class  aClass = Recorder.class;
-			Field field = aClass.getDeclaredField("mode");
-			field.setAccessible( true );
 			final Recorder recorder = Recorder.getInstance();
-			Choice choice = (Choice) field.get(recorder);
-			int languageIndex = Arrays.asList( modes ).indexOf(language);
+			if ( recorder == null ) return;
+
+			Class recorderClass = Recorder.class;
+			Field modeField = recorderClass.getDeclaredField("mode");
+			modeField.setAccessible( true );
+			Choice choice = (Choice) modeField.get(recorder);
+
+			Field recorderModesField = recorderClass.getDeclaredField("modes");
+			recorderModesField.setAccessible( true );
+			String[] recorderModes = (String[]) recorderModesField.get(recorder);
+
+			int languageIndex = Arrays.asList( recorderModes ).indexOf( language);
+			if ( languageIndex == -1 )
+			{
+				throwError( language );
+				return;
+			}
 			choice.select( languageIndex );
 
 			Method setFileName = Recorder.class.getDeclaredMethod("setFileName" );
@@ -44,9 +53,14 @@ public class LanguageManager
 		}
 		catch ( Exception e )
 		{
-			Logger.error( "Failed to set recording language: " + language + "\n" +
-					"Please [ Fiji > Help > Update ImageJ...] select a version >1.53g and try again!");
+			throwError( language );
 		}
+	}
+
+	private static void throwError( String language )
+	{
+		Logger.error( "Failed to set recording language: " + language + "\n" +
+				"Please [ Fiji > Help > Update ImageJ... ] select a version >1.53g and try again.");
 	}
 
 	public static String getLanguage()

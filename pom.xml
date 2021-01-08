@@ -137,7 +137,6 @@
 		<dependency>
 			<groupId>net.imagej</groupId>
 			<artifactId>ij</artifactId>
-            <version>1.53g</version> <!-- contains python language-->
 		</dependency>
 		<dependency>
 			<groupId>net.imagej</groupId>
