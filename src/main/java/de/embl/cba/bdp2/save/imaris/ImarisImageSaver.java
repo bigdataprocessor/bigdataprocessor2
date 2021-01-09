@@ -45,6 +45,7 @@ public class ImarisImageSaver< R extends RealType< R > & NativeType< R > > exten
     public void startSave() {
         List<Future> futures = new ArrayList<>();
         AtomicInteger counter = new AtomicInteger(0);
+        Logger.info( "Configuring Imaris dataset..." );
         ImarisDataSet imarisDataSet = getImarisDataSet( savingSettings, stop );
         final long startTime = System.currentTimeMillis();
 

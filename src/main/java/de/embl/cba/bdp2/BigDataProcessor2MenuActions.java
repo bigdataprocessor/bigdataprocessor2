@@ -124,7 +124,7 @@ public class BigDataProcessor2MenuActions implements ActionListener {
         {
             BigDataProcessor2.threadPool.submit(() -> {
                 if (! isImageSelected( viewer ) ) return;
-                new CalibrationDialog< >( viewer ).showDialog();
+                new SetVoxelSizeCommand().showDialog( viewer );
             });
         }
         else if (e.getActionCommand().equalsIgnoreCase( BigDataProcessor2Menu.RECORD ))
@@ -144,13 +144,12 @@ public class BigDataProcessor2MenuActions implements ActionListener {
         {
             BigDataProcessor2.threadPool.submit(() -> {
                 if (! isImageSelected( viewer ) ) return;
-                new ApplyTrackDialog( viewer );
+                new ApplyTrackCommand().showDialog( viewer );
             });
         }
         else if (e.getActionCommand().equalsIgnoreCase( BigDataProcessor2Menu.REGISTER_VOLUME_SIFT_MENU_ITEM ))
         {
-            BigDataProcessor2.threadPool.submit(() ->
-			{
+            BigDataProcessor2.threadPool.submit(() -> {
                 if (! isImageSelected( viewer ) ) return;
                 Integer channel = DialogUtils.getChannel( viewer );
                 if ( channel == null ) return;

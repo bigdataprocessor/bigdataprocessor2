@@ -37,6 +37,7 @@ public class ApplyTrackDialog< R extends RealType< R > & NativeType< R > >
 		outputImage = BigDataProcessor2.applyTrack( trackFile, inputImage, centerImage );
 
 		final ImageViewer viewer = BigDataProcessor2.showImage( outputImage );
+
 		if ( centerImage )
 			BdvUtils.moveToPosition( viewer.getBdvHandle(), new double[]{ 0, 0, 0 }, 0 , 0);
 

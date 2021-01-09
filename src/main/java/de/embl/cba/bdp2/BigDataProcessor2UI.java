@@ -10,7 +10,7 @@ import java.util.List;
 
 public abstract class BigDataProcessor2UI
 {
-	public static final String SPEED = "Read [MByte/s]: ";
+	public static final String SPEED = "Data transfer rate [MByte/s]: ";
 	private static JFrame frame;
 	private static JLabel imageInfo;
 	private static JLabel readInfo;
@@ -74,14 +74,14 @@ public abstract class BigDataProcessor2UI
 		frame.repaint();
 	}
 
-	public static void setReadPerformanceInformation( double mbps, double averageMBPS )
+	public static void setReadPerformanceInformation( double mbps, double medianMPBS )
 	{
 		if ( frame == null ) return; // UI not instantiated
 
 		DecimalFormat df = new DecimalFormat();
 		df.setMaximumFractionDigits(2);
 
-		readInfo.setText(  wrapAsHtml(SPEED + df.format( mbps ) + " Avg: " + df.format( averageMBPS )));
+		readInfo.setText(  wrapAsHtml(SPEED + df.format( mbps ) + " (Median: " + df.format( medianMPBS ) + ")") );
 		readInfo.validate();
 		refreshFrame();
 	}

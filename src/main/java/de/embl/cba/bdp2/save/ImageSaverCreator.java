@@ -23,6 +23,7 @@ public class ImageSaverCreator < R extends RealType< R > & NativeType< R > >
 	{
 		int numIOThreads = Math.max( 1, Math.min( savingSettings.numIOThreads, MAX_THREAD_LIMIT ) );
 
+		Logger.info( "\n# Save" );
 		Logger.info( "Saving started; I/O threads: " + numIOThreads );
 
 		ExecutorService saveExecutorService = Executors.newFixedThreadPool( numIOThreads );
@@ -37,7 +38,6 @@ public class ImageSaverCreator < R extends RealType< R > & NativeType< R > >
 			imageForSaving.setVolumeCache( DiskCachedCellImgOptions.CacheType.BOUNDED, (int) cacheSize );
 		}
 
-
 		if ( savingSettings.saveVolumes )
 			Utils.createFilePathParentDirectories( savingSettings.volumesFilePathStump );
 
@@ -45,7 +45,7 @@ public class ImageSaverCreator < R extends RealType< R > & NativeType< R > >
 			Utils.createFilePathParentDirectories( savingSettings.projectionsFilePathStump );
 
 		ImageSaverFactory factory = new ImageSaverFactory();
-		saver = factory.getSaver( image, savingSettings, saveExecutorService );
+		saver = factory.getSaver( imageForSaving, savingSettings, saveExecutorService );
 		saver.addProgressListener( progressListener );
 	}
 

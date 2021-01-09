@@ -72,7 +72,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		setCache( cachedCellImgCreator.getDefaultCellDimsXYZCT(), DiskCachedCellImgOptions.CacheType.SOFTREF, 1000 );
 		this.rai = cachedCellImgCreator.createCachedCellImg( cachedCellDims, DiskCachedCellImgOptions.CacheType.BOUNDED, 100 );
 		this.rawDataDimensions = this.getDimensionsXYZCT();
-		type = Util.getTypeFromInterval( rai );
+		this.type = Util.getTypeFromInterval( rai );
 	}
 
 	/**
@@ -91,6 +91,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		this.cachedCellDims = image.cachedCellDims.clone();
 		this.rawDataDimensions = image.rawDataDimensions.clone();
 		this.viewer = image.viewer;
+		this.type = image.type;
 	}
 
 	public long[] getDimensionsXYZCT()
@@ -312,6 +313,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 			cacheSize = (int) Math.ceil( 1.0D * ( int ) rawDataDimensions[ DimensionOrder.Z ] / cachedCellDims[ DimensionOrder.Z ] );
 			Logger.info("Adapting cache size to " + cacheSize +" volumes." );
 		}
+
 		setCache( cachedCellDims, cacheType, cacheSize );
 	}
 

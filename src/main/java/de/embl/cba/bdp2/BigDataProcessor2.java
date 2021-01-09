@@ -271,8 +271,9 @@ public class BigDataProcessor2
 
     public static < R extends RealType< R > & NativeType< R > > Image< R > applyTrack( File file, Image< R > image, Boolean centerImage )
 	{
-		final Track track = Tracks.fromJsonFile( file );
+		final Track track = Tracks.fromJson( file );
 		final TrackApplier< R > trackApplier = new TrackApplier<>( image );
+
 		Image outputImage = trackApplier.applyTrack( track );
 		if ( ! centerImage )
 			outputImage.setRai( Views.zeroMin( outputImage.getRai() ) );

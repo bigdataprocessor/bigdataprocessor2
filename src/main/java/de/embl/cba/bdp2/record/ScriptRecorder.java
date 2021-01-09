@@ -203,7 +203,11 @@ public class ScriptRecorder
 
 	public static String booleanToString( boolean bool )
 	{
-		switch ( LanguageManager.getLanguage() )
+		final String language = LanguageManager.getLanguage();
+
+		if ( language == null ) return bool ? "true" : "false";
+
+		switch ( language )
 		{
 			case LanguageManager.PYTHON:
 				return bool ? "True" : "False";
@@ -236,7 +240,7 @@ public class ScriptRecorder
 	private String fixBackslashes( String apiCall )
 	{
 		final String language = LanguageManager.getLanguage();
-		if ( language.equals( LanguageManager.JAVA_SCRIPT ) || language.equals( LanguageManager.MACRO ) )
+		if ( language != null && ( language.equals( LanguageManager.JAVA_SCRIPT ) || language.equals( LanguageManager.MACRO ) ) )
 			apiCall = apiCall.replace( "\\", "\\\\" );
 		return apiCall;
 	}

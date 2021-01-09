@@ -3,7 +3,6 @@ package de.embl.cba.bdp2.track;
 import bdv.util.BdvFunctions;
 import bdv.util.BdvHandle;
 import bdv.util.BdvOptions;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.embl.cba.bdp2.viewer.ImageViewer;
 import de.embl.cba.bdv.utils.BdvUtils;
 import de.embl.cba.tables.SwingUtils;
@@ -16,8 +15,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileWriter;
+import java.io.*;
 
 public class TrackCreator extends JFrame
 {
@@ -241,24 +239,8 @@ public class TrackCreator extends JFrame
 			{
 				File file = jFileChooser.getSelectedFile();
 				recentTrackSavingDirectory = new File( file.getParent() );
-				if ( ! file.getName().endsWith( ".json" ) )
-				{
-					file = new File( file.getAbsolutePath() + ".json" );
-				}
 
-				track.setName( file.getName().replace( ".json", "" ) );
-				final ObjectMapper objectMapper = new ObjectMapper();
-				try
-				{
-					final String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString( track );
-					final FileWriter fileWriter = new FileWriter( file );
-					fileWriter.write( json );
-					fileWriter.close();
-				}
-				catch ( Exception ex )
-				{
-					ex.printStackTrace();
-				}
+				Tracks.toJson( file, track );
 
 				TrackManager.getTracks().put( track.getName(), track );
 			}
