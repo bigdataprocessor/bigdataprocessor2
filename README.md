@@ -77,7 +77,8 @@ Note: This is equivalent to [ Plugins > Macros > Record... ] in the ImageJ menu,
 
 <img width="600" alt="image" src="./docs/images/BDP2-Macro2.jpg">
 
-Example of recorded macro. 
+
+
 
 ## Open dataset
 
