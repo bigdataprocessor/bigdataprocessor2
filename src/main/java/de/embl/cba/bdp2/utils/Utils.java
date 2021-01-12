@@ -72,6 +72,7 @@ import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
 import ome.units.UNITS;
 import ome.units.unit.Unit;
+import org.ojalgo.matrix.transformation.Rotation;
 
 import java.io.File;
 import java.io.IOException;
@@ -493,6 +494,30 @@ public class Utils {
 
 		return compositeImage;
     }
+
+	public static ImagePlus asImagePlus( Image< ? > image, int tStart, int tEnd )
+	{
+		long[] min = new long[ 5 ];
+		long[] max = new long[ 5 ];
+
+		image.getRai().min( min );
+		image.getRai().max( max );
+
+		min[ DimensionOrder.T ] = tStart;
+		max[ DimensionOrder.T ] = tEnd;
+
+		final FinalInterval interval = new FinalInterval( min, max );
+
+		final Image< ? > crop = BigDataProcessor2.crop( image, interval );
+
+		ImagePlus imp = ImageJFunctions.wrap( Views.permute( crop.getRai(), DimensionOrder.Z, DimensionOrder.C ), image.getName() );
+
+		setCalibration( image, imp );
+
+		final CompositeImage compositeImage = asCompositeImage( image, imp );
+
+		return compositeImage;
+	}
 
 	public static ImagePlus asImagePlus( RandomAccessibleInterval raiXYZ, Image< ? > image, int c )
 	{

@@ -5,9 +5,11 @@ import de.embl.cba.bdp2.utils.RAISlicer;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.outofbounds.OutOfBoundsConstantValueFactory;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.util.Intervals;
+import net.imglib2.view.ExtendedRandomAccessibleInterval;
 import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
 
@@ -29,7 +31,11 @@ public class TrackApplier< R extends RealType< R > & NativeType< R > >
 
 		RandomAccessibleInterval< R > volumeView = RAISlicer.getVolumeView( image.getRai(), 0, 0 );
 
-		Interval union = getUnion( track, volumeView );
+		Interval union = createUnion( track, volumeView );
+
+		final R zero = image.getType().createVariable();
+		zero.setZero();
+		final OutOfBoundsConstantValueFactory< R, RandomAccessibleInterval< R > > zeroValueFactory = new OutOfBoundsConstantValueFactory<>( zero );
 
 		for (int t = track.tMin(); t < track.tMax(); ++t)
 		{
@@ -38,7 +44,7 @@ public class TrackApplier< R extends RealType< R > & NativeType< R > >
 			{
 				volumeView = RAISlicer.getVolumeView( image.getRai(), c, t );
 
-				RandomAccessible< R > extendBorder = Views.extendZero( volumeView );
+				RandomAccessible< R > extendBorder = new ExtendedRandomAccessibleInterval<>( volumeView, zeroValueFactory );
 				RandomAccessible< R > translate = Views.translate( extendBorder, getTranslation( track, t ) );
 				final IntervalView< R > intervalView = Views.interval( translate, union );
 
@@ -56,7 +62,7 @@ public class TrackApplier< R extends RealType< R > & NativeType< R > >
 		return trackViewImage;
 	}
 
-	private static < R extends RealType< R > & NativeType< R > > Interval getUnion( Track track, RandomAccessibleInterval< R > volume )
+	private static < R extends RealType< R > & NativeType< R > > Interval createUnion( Track track, RandomAccessibleInterval< R > volume )
 	{
 		Interval union = null;
 		for (int t = track.tMin(); t < track.tMax(); ++t)

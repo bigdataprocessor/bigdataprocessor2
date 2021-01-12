@@ -14,10 +14,6 @@ import de.embl.cba.imaris.ImarisWriter;
 import ij.ImagePlus;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
-import net.imglib2.type.numeric.integer.UnsignedByteType;
-import net.imglib2.type.numeric.integer.UnsignedShortType;
-import net.imglib2.type.numeric.real.FloatType;
-import net.imglib2.util.Util;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -46,7 +42,7 @@ public class ImarisImageSaver< R extends RealType< R > & NativeType< R > > exten
         List<Future> futures = new ArrayList<>();
         AtomicInteger counter = new AtomicInteger(0);
         Logger.info( "Configuring Imaris dataset..." );
-        ImarisDataSet imarisDataSet = getImarisDataSet( savingSettings, stop );
+        ImarisDataSet imarisDataSet = createImarisDataSet( savingSettings, stop, image );
         final long startTime = System.currentTimeMillis();
 
         int tStart = Math.max( savingSettings.tStart, 0 );
@@ -80,12 +76,12 @@ public class ImarisImageSaver< R extends RealType< R > & NativeType< R > > exten
         Utils.shutdownThreadPack( es, TIME_OUT_SECONDS );
     }
 
-    private ImarisDataSet getImarisDataSet( SavingSettings settings, AtomicBoolean stop ) {
+    private static ImarisDataSet createImarisDataSet( SavingSettings settings, AtomicBoolean stop, Image< ? > image ) {
 
         final String directory = new File( settings.volumesFilePathStump ).getParent();
         final String filename = new File( settings.volumesFilePathStump ).getName();
 
-        ImagePlus imp = Utils.asImagePlus( image );
+        ImagePlus imp = Utils.asImagePlus( image, settings.tStart, settings.tEnd );
 
         int[] binning = new int[]{1,1,1};
 
