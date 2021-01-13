@@ -4,6 +4,7 @@ import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.progress.ProgressListener;
 import de.embl.cba.bdp2.open.NamingSchemes;
+import de.embl.cba.bdp2.process.calibrate.CalibrationChecker;
 import de.embl.cba.bdp2.viewer.ImageViewer;
 
 import java.io.BufferedInputStream;
@@ -81,6 +82,12 @@ public class SampleDataDownloader
 		}
 
 		final Image image = BigDataProcessor2.openTIFFSeries( outputDirectory, datasetNameToRegExp.get( datasetName ) );
+
+		if ( ! CalibrationChecker.checkImage( image ) )
+		{
+			image.setVoxelDimensions( new double[]{1,1,1} );
+			image.setVoxelUnit( "pixel" );
+		}
 
 		if ( viewer != null )
 		{

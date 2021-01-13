@@ -12,9 +12,8 @@ import org.scijava.plugin.Plugin;
 
 import java.io.File;
 
-import static de.embl.cba.bdp2.open.samples.SampleDataDownloader.DUAL_COLOR_MOUSE;
-import static de.embl.cba.bdp2.open.samples.SampleDataDownloader.MINIMAL_SYNTHETIC;
 import static de.embl.cba.bdp2.BigDataProcessor2Menu.COMMAND_BDP2_PREFIX;
+import static de.embl.cba.bdp2.open.samples.SampleDataDownloader.*;
 
 
 /**
@@ -27,7 +26,7 @@ public class DownloadAndOpenSampleDataCommand< R extends RealType< R > & NativeT
     public static final String COMMAND_FULL_NAME = COMMAND_BDP2_PREFIX + COMMAND_NAME;
     public static ImageViewer parentImageViewer;
 
-    @Parameter (label="Sample data", choices={ MINIMAL_SYNTHETIC, DUAL_COLOR_MOUSE  })
+    @Parameter (label="Sample data", choices={ MINIMAL_SYNTHETIC, DUAL_COLOR_MOUSE, NON_ORTHO  })
     String sampleDataName = MINIMAL_SYNTHETIC;
 
     @Parameter (label="Save to directory", style = "directory")
