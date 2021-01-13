@@ -11,7 +11,7 @@ The BDP2 is the new version of [BigDataProcessor1](https://github.com/bigdatapro
 Main features:
 - [lazy-loading](https://en.wikipedia.org/wiki/Lazy_loading) of TB sized image data
 - [lazy-processing](https://en.wikipedia.org/wiki/Lazy_evaluation) of TB sized image data
-- [ImageJ scripting](https://imagej.nih.gov/ij/developer/macro/macros.html) recording for documentation and automation
+- [ImageJ macro](https://imagej.nih.gov/ij/developer/macro/macros.html) scripting support
 
 **Schematic representation of a lazy-processing workflow in BDP2:** Dashed arrows represent lazy-computation, where only the currently viewed image plane is processed. A complete data browsing, data selection and data processing workflow can be configured in a few minutes even for TB-sized image data. Only the final saving to disk requires processing of the whole data set and will take a correspondingly long time (up to hours).
 
