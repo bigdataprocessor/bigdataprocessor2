@@ -113,7 +113,7 @@ Load a 3D track from a file (created with [ Process > Correct Drift > Create Tra
 
 ***Process > Bin…***
 
-<img src="./docs/images/Process_Bin.png" width="800">
+<img src="./docs/images/Process_Bin.png" width="1000">
 
 Performs arbitrary binning along x y and z coordinates.
 Motivation: For camera-based microscopy systems the effective pixel size often cannot be freely chosen during acquisition. Thus, the user may be forced to over-sample, leading to large data volumes with noise since the information is spread across many pixels and therefore resulting in (vastly) increased image processing times. Thus, binning the data post-acquisition is can be very useful as it both reduces data size and noise, often without compromising scientific accuracy.
