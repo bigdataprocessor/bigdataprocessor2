@@ -2,15 +2,16 @@
 
 <img src="./docs/images/BDP2-icon.png" width="300">
 
-BigDataProcessor2 (BDP2) is a [Fiji](http://fiji.sc/) plugin for interactive processing of TB-sized image data. BDP2 uses [BigDataViewer](https://imagej.net/BigDataViewer) for rendering and the [ImgLib2](https://imagej.net/ImgLib2) library for image processing. 
+BigDataProcessor2 (BDP2) is a [Fiji](http://fiji.sc/) plugin for interactive processing of TB-sized image data.
+
+BDP2 uses [BigDataViewer](https://imagej.net/BigDataViewer) for rendering and the [ImgLib2](https://imagej.net/ImgLib2) library for image processing. 
 
 The BDP2 is the new version of [BigDataProcessor1](https://github.com/bigdataprocessor/bigdataprocessor1). 
 
 Main features:
 - [lazy-loading](https://en.wikipedia.org/wiki/Lazy_loading) of TB sized image data
-- [lazy-computation](https://en.wikipedia.org/wiki/Lazy_evaluation) of TB sized image data
-- [ImageJ macro](https://imagej.nih.gov/ij/developer/macro/macros.html) recording for automation
-
+- [lazy-processing](https://en.wikipedia.org/wiki/Lazy_evaluation) of TB sized image data
+- [ImageJ scripting](https://imagej.nih.gov/ij/developer/macro/macros.html) recording for documentation and automation
 
 **Schematic representation of a lazy-processing workflow in BDP2:** Dashed arrows represent lazy-computation, where only the currently viewed image plane is processed. A complete data browsing, data selection and data processing workflow can be configured in a few minutes even for TB-sized image data. Only the final saving to disk requires processing of the whole data set and will take a correspondingly long time (up to hours).
 
