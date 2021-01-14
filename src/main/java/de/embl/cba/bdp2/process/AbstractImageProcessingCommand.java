@@ -2,10 +2,10 @@ package de.embl.cba.bdp2.process;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.open.AbstractOpenFileSeriesCommand;
 import de.embl.cba.bdp2.service.ImageViewerService;
 import de.embl.cba.bdp2.service.ImageService;
 import de.embl.cba.bdp2.viewer.ImageViewer;
+import de.embl.cba.bdp2.viewer.ViewingModalities;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;
@@ -36,9 +36,9 @@ public abstract class AbstractImageProcessingCommand< R extends RealType< R > & 
     public static final String OUTPUT_IMAGE_NAME_PARAMETER = "outputImageName";
 
     @Parameter(label = "Output image handling", choices = {
-            AbstractOpenFileSeriesCommand.SHOW_IN_CURRENT_VIEWER,
-            AbstractOpenFileSeriesCommand.SHOW_IN_NEW_VIEWER,
-            AbstractOpenFileSeriesCommand.DO_NOT_SHOW })
+            ViewingModalities.SHOW_IN_CURRENT_VIEWER,
+            ViewingModalities.SHOW_IN_NEW_VIEWER,
+            ViewingModalities.DO_NOT_SHOW })
 
     protected String viewingModality;
     public static final String VIEWING_MODALITY_PARAMETER = "viewingModality";
@@ -50,7 +50,7 @@ public abstract class AbstractImageProcessingCommand< R extends RealType< R > & 
         outputImage.setName( outputImageName );
         ImageService.imageNameToImage.put( outputImageName, outputImage );
 
-        if ( viewingModality.equals( AbstractOpenFileSeriesCommand.SHOW_IN_NEW_VIEWER ) )
+        if ( viewingModality.equals( ViewingModalities.SHOW_IN_NEW_VIEWER ) )
         {
             if ( autoContrast )
                 return BigDataProcessor2.showImage( outputImage, true );
@@ -58,13 +58,13 @@ public abstract class AbstractImageProcessingCommand< R extends RealType< R > & 
                 return BigDataProcessor2.showImage( outputImage, inputImage );
 
         }
-        else if ( viewingModality.equals( AbstractOpenFileSeriesCommand.SHOW_IN_CURRENT_VIEWER ))
+        else if ( viewingModality.equals( ViewingModalities.SHOW_IN_CURRENT_VIEWER ))
         {
             final ImageViewer viewer = ImageViewerService.imageNameToBdvImageViewer.get( inputImage.getName() );
             viewer.replaceImage( outputImage, autoContrast, keepViewerTransform );
             return viewer;
         }
-        else if ( viewingModality.equals( AbstractOpenFileSeriesCommand.DO_NOT_SHOW ))
+        else if ( viewingModality.equals( ViewingModalities.DO_NOT_SHOW ))
         {
             // do nothing
             return null;

@@ -4,10 +4,10 @@ import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.dialog.DisplaySettings;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.open.AbstractOpenFileSeriesCommand;
 import de.embl.cba.bdp2.record.ScriptRecorder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewer.ImageViewer;
+import de.embl.cba.bdp2.viewer.ViewingModalities;
 import ij.gui.GenericDialog;
 import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
@@ -123,7 +123,7 @@ public class CropDialog< R extends RealType< R > & NativeType< R > >
 
 	private void recordMacro( Image< R > inputImage, Image< R > outputImage, Interval intervalXYZCT )
 	{
-		final ScriptRecorder recorder = new ScriptRecorder( CropCommand.COMMAND_FULL_NAME, inputImage, outputImage, AbstractOpenFileSeriesCommand.SHOW_IN_NEW_VIEWER );
+		final ScriptRecorder recorder = new ScriptRecorder( CropCommand.COMMAND_FULL_NAME, inputImage, outputImage );
 		
 		recorder.addCommandParameter( "minX", intervalXYZCT.min(0 ) );
 		recorder.addCommandParameter( "minY", intervalXYZCT.min(1 ) );

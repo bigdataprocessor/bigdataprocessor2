@@ -7,6 +7,7 @@ import de.embl.cba.bdp2.record.ScriptRecorder;
 import de.embl.cba.bdp2.dialog.AbstractProcessingDialog;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewer.ImageViewer;
+import de.embl.cba.bdp2.viewer.ViewingModalities;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
@@ -81,7 +82,7 @@ public class BinDialog< R extends RealType< R > & NativeType< R > > extends Abst
 				previousSpan = span;
 
 				outputImage = Binner.bin( inputImage, span );
-				outputImage.setName( inputImage.getName() + "-binned" );
+				outputImage.setName( inputImage.getName() + "-bin" );
 				viewer.replaceImage( outputImage, false, true );
 
 				for ( SliderPanel sliderPanel : sliderPanels )

@@ -2,7 +2,7 @@ package de.embl.cba.bdp2.record;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.open.AbstractOpenFileSeriesCommand;
+import de.embl.cba.bdp2.viewer.ViewingModalities;
 import ij.plugin.frame.Recorder;
 
 import java.awt.*;
@@ -48,7 +48,7 @@ public class ScriptRecorder
 
 	public ScriptRecorder( String commandName, Image< ? > inputImage, Image< ? > outputImage )
 	{
-		this( commandName, inputImage, outputImage, AbstractOpenFileSeriesCommand.SHOW_IN_CURRENT_VIEWER );
+		this( commandName, inputImage, outputImage, ViewingModalities.SHOW_IN_NEW_VIEWER );
 	}
 
 	public ScriptRecorder( String commandName, Image< ? > inputImage, Image< ? > outputImage, String outputImageHandling )

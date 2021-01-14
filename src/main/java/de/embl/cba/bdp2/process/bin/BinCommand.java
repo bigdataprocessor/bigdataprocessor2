@@ -31,7 +31,7 @@ public class BinCommand< R extends RealType< R > & NativeType< R > > extends Abs
     public void run()
     {
         process();
-        handleOutputImage( true, true );
+        handleOutputImage( false, true );
     }
 
     private void process()

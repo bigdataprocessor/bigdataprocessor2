@@ -152,6 +152,13 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
         this.bdvHandle.getViewerPanel().requestRepaint();
     }
 
+    /**
+     * TODO: This fails in Macro mode during setDisplaySettings
+     *
+     * @param image
+     * @param autoContrast
+     * @param keepViewerTransform
+     */
     public void replaceImage( Image image, boolean autoContrast, boolean keepViewerTransform )
     {
         final AffineTransform3D viewerTransform = getViewerTransform();
@@ -207,8 +214,7 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
 
         int nChannels = bdvHandle.getSetupAssignments().getConverterSetups().size();
         for (int channel = 0; channel < nChannels; ++channel) {
-            ConverterSetup converterSetup =
-                    bdvHandle.getSetupAssignments().getConverterSetups().get(0);
+            ConverterSetup converterSetup = bdvHandle.getSetupAssignments().getConverterSetups().get(0);
             bdvHandle.getSetupAssignments().removeSetup(converterSetup);
             //channel is always 0 (zero) because converterSetup object gets removed from bdvSS.
             //Hence current channel is always at position 0 of the bdvSS.

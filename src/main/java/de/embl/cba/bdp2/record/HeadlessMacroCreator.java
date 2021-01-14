@@ -1,7 +1,7 @@
 package de.embl.cba.bdp2.record;
 
-import de.embl.cba.bdp2.open.AbstractOpenFileSeriesCommand;
 import de.embl.cba.bdp2.quit.QuitCommand;
+import de.embl.cba.bdp2.viewer.ViewingModalities;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -52,8 +52,8 @@ public class HeadlessMacroCreator
 			if ( command.contains( "BigDataProcessor2") ) continue;
 			if ( command.equals( "" ) ) continue;
 
-			command = command.replace( AbstractOpenFileSeriesCommand.SHOW_IN_NEW_VIEWER, AbstractOpenFileSeriesCommand.DO_NOT_SHOW );
-			command = command.replace( AbstractOpenFileSeriesCommand.SHOW_IN_CURRENT_VIEWER, AbstractOpenFileSeriesCommand.DO_NOT_SHOW );
+			command = command.replace( ViewingModalities.SHOW_IN_NEW_VIEWER, ViewingModalities.DO_NOT_SHOW );
+			command = command.replace( ViewingModalities.SHOW_IN_CURRENT_VIEWER, ViewingModalities.DO_NOT_SHOW );
 			headlessCommands.add( command );
 		}
 
