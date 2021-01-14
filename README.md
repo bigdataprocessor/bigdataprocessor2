@@ -110,27 +110,8 @@ Motivation: Conveniently accessible example data is useful to explore and teach 
 ## Process
 ### Process Menu
 
-**Process > Align Channels Split Chip…**
-Specify two crop regions in one channel and convert those regions into two channels, i.e. the number of channels of the resulting image is increased by one. Motivation: For the sake of acquisition speed, some fluorescence microscope systems acquire the signal of several fluorescence channels simultaneously on the same camera chip. Thus, we provide the functionality to convert such data into a conventional multi-channel data set by aligning the channels from a “split chip”. 
-
-**Process > Align Channels…**
-Shift one channel in relation to the other to compensate pixel offsets e.g. due to chromatic shifts. Motivation: Chromatic shifts either due to optics being corrected only for a given wavelength range, or parallel acquisition of two channels on two cameras can lead to offsets between the two channels/ images. We, therefore, provide the functionality to correct for such channel shifts in x,y and z. 
-
-**Process > Bin…**
-Performs arbitrary binning along x y and z coordinates. Motivation: For camera-based microscopy systems the effective pixel size often cannot be freely chosen during acquisition. Thus, the user may be forced to oversample, leading to large data volumes and potentially significantly increased image processing times. Thus, binning the data post-acquisition can be very useful as it both reduces data size (and noise), often without compromising scientific accuracy.
-
-**Process > Convert to 8-bit…**
-Convert the data set from 16 to 8-bit depth. Motivation: Cameras typically produce image data at 12, 14, or 16 bit-depths. For many image analysis tasks, 8-bit depth is sufficient allowing the user to reduce data size by a factor of 2. However, converting 16-bit to 8-bit data is not trivial as it entails deciding on a specific mapping from the higher to the lower bit-depth, which will lose information. Choosing a mapping of 65535 to 255 and 0 to 0 can lead to a low dynamic range in the 8-bit range especially when the input contains only a subset of the full 16-bit range. Also mapping max(image) to 255 and min(image) to 0 can be sub-optimal if there are spurious pixels with very high values, again leading to a low dynamic range for the relevant grey values in the 8-bit converted data. We thus provide the possibility to interactively specify a mapping while browsing the data set to inspect the result of the applied conversion.
-
-**Process > Crop…**
-Interactively specify a 4D (x,y,z,t) region of the data to be displayed in a new viewer window. The same 4D crop will be applied to all channels. The spatial extent of the region can be either specified in voxel units or in physical units (e.g. micrometer).
-Motivation: Imaging processes in living samples require setting up imaging parameters before knowing exactly when and where the process of interest takes place. Therefore the imaging field of view (x,y,z) and temporal extent (t) are usually set generously to accommodate sample drift, motion, or growth. Using the crop function one can reduce the dataset to the necessary spatial and temporal dimensions.
-
 **Process > Rename…**
 Rename the data set and channels.
-
-**Process > Transform...**
-Renders an affine view of the data. Motivation: Useful when data is warped due to an acquisition process that renders x-y-z non-orthogonal. Examples are when a stage movement is not orthogonal to the field of view. Also useful in single objective light sheet microscopy. 
 
 **Process > Set Voxel Size…**
 Changes the voxel size. Motivation: The voxel size may not always be read correctly from the data set, thus it is useful to have the option to set it manually. 
