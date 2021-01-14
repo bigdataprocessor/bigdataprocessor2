@@ -79,27 +79,33 @@ We currently support opening of
 2. Everything that can be opened with Bio-Formats
 
 ### Open Menu
+**Open > Help**
+Provides detailed information about below menu items for loading big image data. In particular, it provides a list of regular expressions that can be used to open custom image file series.
 
-**Open > Open Custom…**
-Open datasets consisting of a collection of TIFF or HDF5 volumes. The assignment of each file (volume) to a channel and time point can be specified by a regular expression.  
+**Open > Open Bio-Formats…**
+Uses the Bio-Formats library (Linkert et al. 2010) to read from 140+ image file formats. It tries to do so lazily and can thus also work for TB sized data, but performance may depend on the image data type. If you want to read from multi file series TIFF or HDF5 data with high performance we recommend using [ Open Custom File Series… ] (see below).
 
-**Open > Open Custom Help...**
-Shows and explains a number of regular expressions that can be used in the [ Open > Open Custom… ] menu item. 
+**Open > Open Custom File Series…**
+Open datasets consisting of a collection of TIFF or HDF5 volumes. The assignment of each file (volume) to a channel and time point can be specified by a regular expression. Please see [ Open > Help ] for more detailed information. Motivation: TIFF and HDF5 are common file formats for big image data. For example, Viventis Microscopy (https://www.viventis-microscopy.com) and Luxendo (https://luxendo.eu) save their light sheet data in multi file TIFF and HDF5 series, respectively. With this menu item we support efficient lazy loading from data saved in such file formats. As determining the correct regular expression can be somewhat cumbersome, we provide convenience menu items for prevalent cases (see below [ Open > Open Predefined File Series ]).
 
-***Open > Open EM TIFF Planes...***
-Opens a single folder with TIFF single plane files. Each file will be assigned to one z-plane in a dataset with one color and one time point. 
-Motivation: This is a typical format for volume EM data to be stored in.
+**Open > Open Predefined File Series > Open EM TIFF Plane File Series...**
+Opens a single folder with TIFF single plane files. Each file will be assigned to one z-plane in a dataset with one color and one time point. Motivation: This is a typical format for volume EM data to be stored in and we wanted to relieve users from the burden to type in the regular expression for this.
 
-***Open > Download and Open Sample Data...***
-Download and open sample data stored in the BioStudies archive (https://www.ebi.ac.uk/biostudies/studies/S-BSST417?query=bigdataprocessor2). Motivation: Conveniently accessible example data is useful to explore/ teach BigDataProcessor2 without the need to prepare suited input data. 
+**Open > Open Predefined File Series > Open Leica DSL TIFF File Series...**
+Opens datasets acquired with Leica DSL microscopes, choosing “Auto-Save, Data type: Tif, Compression: Uncompressed” as an option within the Leica acquisition software. Motivation: Leica’s naming scheme would require entering a complex regular expression and we thus implemented this convenience opening functionality. 
 
-***Open > Open Luxendo HDF5...***
-Open datasets acquired with Luxendo light sheet microscopes. 
-Motivation: Luxendo uses an open-source hdf5 based file format. We added convenience functionality for opening those files without the need to enter a complex regular expression. 
+**Open > Open Predefined File Series > Open Luxendo HDF5 File Series...**
+Open datasets acquired with Luxendo (https://luxendo.eu) light sheet microscopes. Motivation: Luxendo uses an HDF5 based file format. We added convenience functionality for opening those files without the need to enter complex regular expressions. 
 
-***Open > Open Leica DSL TIFF Planes...***
-Open datasets acquired with Leica DSL microscopes, choosing “Auto-Save, Data type: Tif, Compression: Uncompressed” as an option (Leica’s proprietary file format is called .lif, which we do not currently support).
-Motivation: While the TIFF file format is open source, Leica’s naming scheme would require entering a complex regular expression and we thus implemented this convenience opening functionality. 
+**Open > Open Predefined File Series > Open Viventis TIFF File Series...**
+Open datasets acquired with Viventis Microscopy (https://www.viventis-microscopy.com) light sheet microscopes. Motivation: Viventis uses a TIFF based file format. We added convenience functionality for opening those files without the need to enter regular expressions. 
+
+**Open > Download and Open Sample Data...**
+Download and open sample data stored in the BioStudies archive (Sarkans et al. 2017). 
+Access data directly in the archive via this link: https://www.ebi.ac.uk/biostudies/studies/S-BSST417?query=bigdataprocessor2
+Motivation: Conveniently accessible example data is useful to explore and teach BigDataProcessor2 functionality without the need to prepare suitable input data. 
+
+
 
 ## Process
 
