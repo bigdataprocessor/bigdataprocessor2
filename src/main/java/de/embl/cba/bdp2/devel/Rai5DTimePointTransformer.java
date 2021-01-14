@@ -41,7 +41,7 @@ public class Rai5DTimePointTransformer< R extends RealType< R > & NativeType< R 
 		List< RandomAccessibleInterval< R > > channels = new ArrayList<>();
 		for ( int channel = 0; channel < numChannels; ++channel)
 		{
-			RandomAccessibleInterval< R > volume = Views.hyperSlice(timeSlice, DimensionOrder.C, channel);
+			RandomAccessibleInterval< R > volume = Views.hyperSlice( timeSlice, DimensionOrder.C, channel);
 			RealRandomAccessible< R > rra = Views.interpolate( Views.extendZero( volume ), this.interpolatorFactory);
 			AffineRandomAccessible ara = RealViews.affine( rra, affine );
 			FinalRealInterval bounds = affine.estimateBounds( volume );

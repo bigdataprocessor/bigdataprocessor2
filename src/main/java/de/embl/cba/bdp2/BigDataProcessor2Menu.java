@@ -5,7 +5,7 @@ import de.embl.cba.bdp2.open.fileseries.*;
 import de.embl.cba.bdp2.process.AbstractImageProcessingCommand;
 import de.embl.cba.bdp2.open.samples.DownloadAndOpenSampleDataCommand;
 import de.embl.cba.bdp2.process.cache.ConfigureLazyLoadingCommand;
-import de.embl.cba.bdp2.track.ApplyTrackCommand;
+import de.embl.cba.bdp2.drift.ApplyTrackCommand;
 import de.embl.cba.bdp2.scijava.Services;
 import de.embl.cba.bdp2.service.ImageViewerService;
 import de.embl.cba.bdp2.utils.PluginProvider;

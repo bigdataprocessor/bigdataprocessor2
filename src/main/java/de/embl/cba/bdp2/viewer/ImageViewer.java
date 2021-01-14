@@ -12,7 +12,7 @@ import de.embl.cba.bdp2.dialog.DisplaySettings;
 import de.embl.cba.bdp2.dialog.DialogUtils;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.process.calibrate.CalibrationChecker;
-import de.embl.cba.bdp2.track.Track;
+import de.embl.cba.bdp2.drift.Track;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.service.ImageViewerService;
 import de.embl.cba.bdp2.service.ImageService;
