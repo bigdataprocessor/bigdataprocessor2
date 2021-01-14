@@ -192,7 +192,6 @@ Save the dataset as a series of TIFF planes, where each z-slice, channel and tim
 Motivation: Saving a volume as a series of TIFF planes is popular e.g. in the EM community.
 
 ## Misc
-<img width="300" alt="image" src="./docs/images/BDP2-Misc.png">
 
 ### Misc Menu
 
