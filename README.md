@@ -120,10 +120,10 @@ Changes the voxel size. Motivation: The voxel size may not always be read correc
 Correct sample motion by interactively creating a 3D track, which will be applied such that the image is stationary relative to the track positions.
 Motivation: For time lapse data there is a risk that a sample moves during acquisition. To accommodate for either sample or microscope drift it is common to choose a field of view to encompass expected drift at the expense of larger data footprint. This can be compensated by cropping the data. However, applying a static volumetric crop over the whole time lapse is suboptimal. Therefore an ideal crop would be on drift corrected data (see Supplementary Movie 2). Additional applications can be, e.g., tracking motile cells in tissues. 
 
-
 **Process > Correct Drift > Create Track…**
 Create a 3D track by manually placing anchor points in a subset of time points (track positions in the other time-points will be automatically added by linear interpolation). When done, save the track as a Json file to disk, to be used in [ Process > Correct Drift > Apply Track…].
-    
+
+<img src="./docs/images/Process_Track.png" width="1000">
 
 ***Process > Bin…***
 
