@@ -108,6 +108,7 @@ Motivation: Conveniently accessible example data is useful to explore and teach 
 
 
 ## Process
+### Process Menu
 
 **Process > Align Channels Split Chip…**
 Specify two crop regions in one channel and convert those regions into two channels, i.e. the number of channels of the resulting image is increased by one. Motivation: For the sake of acquisition speed, some fluorescence microscope systems acquire the signal of several fluorescence channels simultaneously on the same camera chip. Thus, we provide the functionality to convert such data into a conventional multi-channel data set by aligning the channels from a “split chip”. 
@@ -194,7 +195,7 @@ We currently support saving to
 1. TIFF stack or plane files series
 2. HDF5 chunked multi-resolution file series 
 
-### Save Menu
+### Save Menu 
 
 ***Save > Save as Imaris Volumes…***
 Save data set as an hdf5 based pyramidal Imaris file (http://open.bitplane.com/ims), with each channel and time point saved as an individual .h5 file and one .ims header file that can be used to view the data both in Fiji’s BigDataViewer and in the commercial Imaris software.
@@ -212,9 +213,17 @@ Motivation: Saving a volume as a series of TIFF planes is popular e.g. in the EM
 ## Misc
 <img width="300" alt="image" src="./docs/images/BDP2-Misc.png">
 
-***Misc > Show in Hyperstack Viewer***
-Opens the current image virtually in the “classic” ImageJ hyperstack viewer.
-Motivation: As BigDataViewer is a relatively recent addition to the ImageJ ecosystem  most users are still more comfortable with the ImageJ hyperstack viewer. In addition, with the data being displayed in the hyperstack viewer, one has access to many useful inspection tools such as intensity histograms and intensity line profiles.
+### Misc Menu
+
+**Misc > Configure Lazy Loading...**
+Configure the x, y, and z dimensions of the lazy loading chunks. Motivation: BDP2 lazy loads small chunks from the big image data set, enabling interactive processing of TB sized image data on a standard computer with only a few GB of random access memory. Here, the size of these chunks can be configured. Normally the default values are good and we do not recommend changing them. This menu item has mainly been implemented to facilitate teaching about how different lazy loading schemes affect the performance for different file formats. If the data is loaded via Bio-Formats this setting is currently ignored.
+
+**Misc > Show in Hyperstack Viewer**
+Opens the current image virtually in the “classic” ImageJ hyperstack viewer. Motivation: BigDataViewer is a relatively recent addition to the ImageJ ecosystem  and many users are more comfortable using the ImageJ hyperstack viewer. In addition, with the data being displayed in the hyperstack viewer, one has access to many useful ImageJ inspection tools such as intensity histograms and intensity line profiles.
+
+**Misc > Configure Logging...**
+Presents different logging levels, currently: Normal, Debug, and Benchmark. Motivation: For debugging and benchmarking it is very useful to see additional information, which would however distract in daily routine use. Please be careful using the Benchmark mode, because additional code is executed that may slow down the application.
+
 
 # Additional information
 
@@ -232,6 +241,6 @@ Motivation: As BigDataViewer is a relatively recent addition to the ImageJ ecosy
 
 ## Hardware recommendations ##
 It is recommended that the image data is accessed via a local area network (LAN) cable. For example, accessing the data over a slow (few MB/s) internet connection (e.g., in a home office scenario) can result in update rates of the currently viewed image plane of less than once per second, which is not ideal for interactive browsing of the data. For a good user experience tens of MB/s data transfer rate or above is recommended for typical data sets with image planes that are about 2k x 2k pixels in size.
-RAM is in general not limiting even for processing of the full data set, because the application tries to only keep the volumes (channels) for one time point in RAM, which typically does not exceed the RAM of a modern laptop (e.g., 16 GB). However, BDP2 offers the option to employ multiple I/O threads (if either the input or output format is HDF5 based we do not recommend using multiple I/O threads as the HDF5 library that we currently use is not capable of multithreading). If multiple I/O threads are chosen, BDP2 processes multiple time points in parallel and the RAM requirements increase linearly as the corresponding data needs to be kept in RAM simultaneously. In practice, finding the optimal number of I/O threads to speed up the processing is hardware and data set dependent and should be tested for each setup. 
+RAM is in general not limiting even for processing of the full data set, because the application tries to only keep the volumes (channels) for one time point in RAM, which typically does not exceed the RAM of a modern laptop (e.g., 16 GB). However, BDP2 offers the option to employ multiple I/O threads (if either the input or output format is HDF5 based). We currently do not recommend using multiple I/O threads as the HDF5 library that we currently use is not capable of multithreading. If multiple I/O threads are chosen, BDP2 processes multiple time points in parallel and the RAM requirements increase linearly as the corresponding data needs to be kept in RAM simultaneously. In practice, finding the optimal number of I/O threads to speed up the processing is hardware and data set dependent and should be tested for each setup. 
 Regarding the CPU, the processing time will be faster with increasing CPU cores as the processing (e.g. binning) is multi-threaded. In practice, adding more cores may at some point be of limited use, as the overall processing time may become limited by I/O operations.
 Overall, in our experience, the ideal scenario is to use the BDP2 UI to record the processing as a script (currently IJ Macro or Jython) and then execute this script on a computer cluster, parallelising over the time-points to be processed. In order to enable this, we have added a [ Record only ] button to the saving menu. We already have successfully tested this on a Slurm (Yoo et al. 2003) computer cluster and are happy to consult interested users.
