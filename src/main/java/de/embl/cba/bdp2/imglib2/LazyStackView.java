@@ -402,6 +402,12 @@ public class LazyStackView< T > extends AbstractInterval implements RandomAccess
 			}
 		}
 
+		/**
+		 * New function for lazy slice access
+		 *
+		 * @param slice
+		 * @return
+		 */
 		private RandomAccess< T > getSliceAccess( int slice )
 		{
 			if ( sliceAccesses[ slice ] == null )
