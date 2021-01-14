@@ -23,7 +23,7 @@ public class CropDialog< R extends RealType< R > & NativeType< R > >
 {
 	public static final String SHOW_IN_VOXEL_UNITS = "Use voxel units";
 	public static final String SHOW_IN_CALIBRATED_UNITS = "Use calibrated units";
-	private String unitsChoice = SHOW_IN_CALIBRATED_UNITS;
+	private static String unitsChoice = SHOW_IN_CALIBRATED_UNITS;
 
 	public static boolean askForUnitsChoice = true;
 	private final ImageViewer< R > viewer;

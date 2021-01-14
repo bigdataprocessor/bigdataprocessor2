@@ -19,6 +19,7 @@ public class CropCommand< R extends RealType< R > & NativeType< R > > extends Ab
     public static final String COMMAND_NAME = "Crop...";
     public static final String COMMAND_FULL_NAME = BigDataProcessor2Menu.COMMAND_BDP2_PREFIX + COMMAND_NAME;
 
+    @Parameter(label = "Min X [pixel]", min = "0")
     long minX = 0;
 
     @Parameter(label = "Min Y [pixel]", min = "0")
