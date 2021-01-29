@@ -60,7 +60,7 @@ public class TrackApplier< R extends RealType< R > & NativeType< R > >
 
 		final Image< R > trackViewImage = new Image<>( image );
 		trackViewImage.setRai( trackView );
-		trackViewImage.setName( track.getName() );
+		trackViewImage.setName( image.getName() + "-track" );
 		return trackViewImage;
 	}
 

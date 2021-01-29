@@ -1,5 +1,6 @@
 package de.embl.cba.bdp2.save;
 
+import de.embl.cba.bdp2.imglib2.LazyStackView;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.lazyalgorithm.converter.NeighborhoodAverageConverter;
 import de.embl.cba.neighborhood.RectangleShape2;
@@ -155,6 +156,20 @@ public class CachedCellImgReplacer< T extends Type< T > & NativeType< T >, S ext
 				replacedSlices.add( replace( slice ) );
 
 			final StackView stackView = new StackView( replacedSlices );
+
+			return stackView;
+		}
+		else if ( ra instanceof LazyStackView )
+		{
+			final LazyStackView< T > view = ( LazyStackView< T > ) ra;
+
+			final List< RandomAccessibleInterval< T > > slices = view.getSourceSlices();
+
+			final List< RandomAccessible< T > > replacedSlices = new ArrayList<>();
+			for ( RandomAccessibleInterval< T > slice : slices )
+				replacedSlices.add( replace( slice ) );
+
+			final LazyStackView stackView = new LazyStackView( replacedSlices );
 
 			return stackView;
 		}
