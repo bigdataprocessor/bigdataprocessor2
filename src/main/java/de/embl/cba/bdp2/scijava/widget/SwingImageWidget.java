@@ -33,7 +33,7 @@ public class SwingImageWidget extends SwingInputWidget< Image > implements
 
     @Override
     public void set(final WidgetModel model) {
-        super.set(model);
+        super.set( model );
 
         comboBox = new JComboBox<>();
 
@@ -43,7 +43,11 @@ public class SwingImageWidget extends SwingInputWidget< Image > implements
             comboBox.addItem( image );
         }
 
-        comboBox.addItemListener((e)-> model.setValue(getValue()));
+        // initialise selection
+        model.setValue( getValue() );
+
+        // update selection if needed
+        comboBox.addItemListener( (e) -> model.setValue(getValue()) );
 
         getComponent().add( comboBox );
     }

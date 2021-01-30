@@ -40,12 +40,12 @@ public class ImageRenameDialog < R extends RealType< R > & NativeType< R > >
 		final GenericDialog gd = new GenericDialog( "Rename Image" );
 
 		final int length = inputImage.getName().length();
-		gd.addStringField( "Image name", inputImage.getName(), 2 * length );
+		gd.addStringField( "Image", inputImage.getName(), 2 * length );
 
 		channelNames = inputImage.getChannelNames();
 		for ( int c = 0; c < channelNames.length; c++ )
 		{
-			gd.addStringField( "Channel " + c + " name", channelNames[ c ], 2 * length  );
+			gd.addStringField( "Channel " + c, channelNames[ c ], 2 * length  );
 		}
 
 		gd.showDialog();

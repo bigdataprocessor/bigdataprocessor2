@@ -27,6 +27,10 @@ public abstract class AbstractImageProcessingCommand< R extends RealType< R > & 
 {
     public static final String COMMAND_PATH = "Commands>Process>";
 
+    /**
+     * This parameter is preprocessed by the
+     * SwingImageWidget class
+     */
     @Parameter(label = "Input image")
     protected Image inputImage; // = ImageService.imageNameToImage.values().iterator().next();
     public static final String INPUT_IMAGE_PARAMETER = "inputImage";
@@ -39,8 +43,7 @@ public abstract class AbstractImageProcessingCommand< R extends RealType< R > & 
             ViewingModalities.SHOW_IN_CURRENT_VIEWER,
             ViewingModalities.SHOW_IN_NEW_VIEWER,
             ViewingModalities.DO_NOT_SHOW })
-
-    protected String viewingModality;
+    protected String viewingModality = ViewingModalities.SHOW_IN_NEW_VIEWER;
     public static final String VIEWING_MODALITY_PARAMETER = "viewingModality";
 
     protected Image< R > outputImage;
