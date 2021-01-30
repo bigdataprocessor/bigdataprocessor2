@@ -4,8 +4,6 @@ import de.embl.cba.bdp2.BigDataProcessor2Menu;
 import de.embl.cba.bdp2.dialog.DialogUtils;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.process.AbstractImageProcessingCommand;
-import de.embl.cba.bdp2.process.bin.BinCommand;
-import de.embl.cba.bdp2.record.ScriptRecorder;
 import de.embl.cba.bdp2.scijava.Services;
 import de.embl.cba.bdp2.viewer.ImageViewer;
 import net.imglib2.RandomAccessibleInterval;
@@ -22,12 +20,11 @@ public class AddValueCommand< R extends RealType< R > & NativeType< R > > extend
     public static final String COMMAND_NAME = "Add Value...";
     public static final String COMMAND_FULL_NAME = BigDataProcessor2Menu.COMMAND_BDP2_PREFIX + COMMAND_NAME;
 
-    // Note: one may add a callback here to
+    // ...one may add a callback here to
     // give a live preview of the processed image
     @Parameter(label = "Value")
     public double value;
 
-    // method that is executed upon pressing OK
     public void run()
     {
         outputImage = process( inputImage, value );
@@ -59,7 +56,8 @@ public class AddValueCommand< R extends RealType< R > & NativeType< R > > extend
     }
 
     /**
-     * This is the method that will be called from the BDP2 menu.
+     * This is the method that will be called from the BDP2 menu
+     * and thus is must be implemented.
      *
      * @param viewer
      *                 The active BigDataViewer window.
@@ -71,7 +69,7 @@ public class AddValueCommand< R extends RealType< R > & NativeType< R > > extend
         // Show the UI of this Command
         Services.getCommandService().run( AddValueCommand.class, true );
 
-        // For simplicity, the viewer input parameter is not used in this example.
+        // For simplicity, the "viewer" input parameter is not used in this example.
         // It may be used to build a more sophisticated and interactive UI that automatically operates on and updates the active image. See, e.g. de.embl.cba.bdp2.process.bin.BinCommand
     }
 }
