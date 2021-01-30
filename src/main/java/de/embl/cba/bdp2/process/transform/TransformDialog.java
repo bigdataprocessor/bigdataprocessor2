@@ -5,7 +5,6 @@ import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.record.ScriptRecorder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewer.ImageViewer;
-import de.embl.cba.bdp2.viewer.ViewingModalities;
 import ij.gui.GenericDialog;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -47,7 +46,7 @@ public class TransformDialog< T extends RealType< T > & NativeType< T > >
 		recorder.addCommandParameter( TransformCommand.AFFINE_STRING_PARAMETER, affineTransform );
 		recorder.addCommandParameter( TransformCommand.INTERPOLATION_PARAMETER, interpolationMode );
 
-		recorder.setAPIFunctionName( "transform" );
+		recorder.setBDP2FunctionName( "transform" );
 		recorder.addAPIFunctionPrequelComment( TransformCommand.COMMAND_NAME );
 		recorder.addAPIFunctionParameter( TransformCommand.getAffineTransform3D( affineTransform ).getRowPackedCopy() );
 		recorder.addAPIFunctionParameter( interpolationMode );

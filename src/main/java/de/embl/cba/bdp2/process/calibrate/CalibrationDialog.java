@@ -94,7 +94,7 @@ public class CalibrationDialog< R extends RealType< R > & NativeType< R > >
 		recorder.addCommandParameter( SetVoxelSizeCommand.VOXEL_SIZE_Z_PARAMETER, voxelSize[ 2 ] );
 
 		// public static void calibrate( Image image, double[] doubles, String voxelUnit )
-		recorder.setAPIFunctionName( "setVoxelSize" );
+		recorder.setBDP2FunctionName( "setVoxelSize" );
 		recorder.addAPIFunctionPrequelComment( SetVoxelSizeCommand.COMMAND_NAME );
 		recorder.addAPIFunctionParameter( voxelSize );
 		recorder.addAPIFunctionParameter( recorder.quote( outputImage.getVoxelUnit().getSymbol() ) );

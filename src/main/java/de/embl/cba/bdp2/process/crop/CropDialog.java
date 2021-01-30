@@ -7,7 +7,6 @@ import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.record.ScriptRecorder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewer.ImageViewer;
-import de.embl.cba.bdp2.viewer.ViewingModalities;
 import ij.gui.GenericDialog;
 import net.imglib2.FinalInterval;
 import net.imglib2.Interval;
@@ -137,7 +136,7 @@ public class CropDialog< R extends RealType< R > & NativeType< R > >
 		recorder.addCommandParameter( "maxT", intervalXYZCT.max(4 ) );
 
 		// Image< R > crop( Image< R > image, long[] minMax )
-		recorder.setAPIFunctionName( "crop" );
+		recorder.setBDP2FunctionName( "crop" );
 		recorder.addAPIFunctionPrequelComment( CropCommand.COMMAND_NAME );
 		recorder.addAPIFunctionParameter( ArrayUtils.addAll( intervalXYZCT.minAsLongArray(), intervalXYZCT.maxAsLongArray() ) );
 		recorder.record();

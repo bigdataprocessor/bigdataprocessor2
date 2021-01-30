@@ -7,7 +7,6 @@ import de.embl.cba.bdp2.record.ScriptRecorder;
 import de.embl.cba.bdp2.dialog.AbstractProcessingDialog;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewer.ImageViewer;
-import de.embl.cba.bdp2.viewer.ViewingModalities;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
@@ -38,7 +37,7 @@ public class BinDialog< R extends RealType< R > & NativeType< R > > extends Abst
 		recorder.addCommandParameter( "binWidthZPixels",  span[ 2 ] );
 
 		// Image< R > bin( Image< R > image, long[] spanXYZCT )
-		recorder.setAPIFunctionName( "bin" );
+		recorder.setBDP2FunctionName( "bin" );
 		recorder.addAPIFunctionPrequelComment( BinCommand.COMMAND_NAME );
 		recorder.addAPIFunctionParameter( span );
 

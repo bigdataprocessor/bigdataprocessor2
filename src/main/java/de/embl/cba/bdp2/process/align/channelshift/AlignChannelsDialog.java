@@ -8,7 +8,6 @@ import de.embl.cba.bdp2.dialog.AbstractProcessingDialog;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewer.ImageViewer;
-import de.embl.cba.bdp2.viewer.ViewingModalities;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -42,7 +41,7 @@ public class AlignChannelsDialog< T extends RealType< T > & NativeType< T > > ex
 		recorder.addCommandParameter( "shifts", Utils.longsToDelimitedString( shifts ) );
 
 		// Image< R > alignChannels( Image< R > image, List< long[] > shifts )
-		recorder.setAPIFunctionName( "alignChannels" );
+		recorder.setBDP2FunctionName( "alignChannels" );
 		recorder.addAPIFunctionPrequelComment( AlignChannelsCommand.COMMAND_NAME );
 		recorder.addAPIFunctionParameter( shifts );
 		recorder.record();

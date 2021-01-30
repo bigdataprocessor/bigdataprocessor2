@@ -45,7 +45,7 @@ public class OpenSingleTIFFVolumeCommand< R extends RealType< R > & NativeType< 
     {
         ScriptRecorder recorder = new ScriptRecorder( outputImage );
         recorder.recordImportStatements( true );
-        recorder.setAPIFunctionName( "openTIFFSeries" );
+        recorder.setBDP2FunctionName( "openTIFFSeries" );
         recorder.addAPIFunctionParameter( recorder.quote( directory) );
         recorder.addAPIFunctionParameter( recorder.quote( regExp ) );
         recorder.record();

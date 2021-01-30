@@ -53,7 +53,7 @@ public class OpenLeicaDSLTIFFPlaneSeriesCommand< R extends RealType< R > & Nativ
     {
         ScriptRecorder recorder = new ScriptRecorder( outputImage );
         recorder.recordImportStatements( true );
-        recorder.setAPIFunctionName( "openTIFFSeries" );
+        recorder.setBDP2FunctionName( "openTIFFSeries" );
         recorder.addAPIFunctionParameter( recorder.quote( directory.toString() ) );
         recorder.addAPIFunctionParameter( recorder.quote( regExp ) );
         recorder.record();

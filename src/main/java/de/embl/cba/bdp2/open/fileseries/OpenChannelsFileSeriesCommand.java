@@ -115,7 +115,7 @@ public class OpenChannelsFileSeriesCommand< R extends RealType< R > & NativeType
 
         if ( regExp.contains( NamingSchemes.HDF5 ) )
         {
-            recorder.setAPIFunctionName( "openHDF5Series" );
+            recorder.setBDP2FunctionName( "openHDF5Series" );
             recorder.addAPIFunctionPrequelComment( this.COMMAND_NAME );
             recorder.addAPIFunctionParameter( recorder.quote( directory.toString() ) );
             recorder.addAPIFunctionParameter( recorder.quote( regExp ) );
@@ -124,7 +124,7 @@ public class OpenChannelsFileSeriesCommand< R extends RealType< R > & NativeType
         }
         else if ( regExp.contains( NamingSchemes.TIF ) )
         {
-            recorder.setAPIFunctionName( "openTIFFSeries" );
+            recorder.setBDP2FunctionName( "openTIFFSeries" );
             recorder.addAPIFunctionPrequelComment( this.COMMAND_NAME );
             recorder.addAPIFunctionParameter( recorder.quote( directory.toString() ) );
             recorder.addAPIFunctionParameter( recorder.quote( regExp ) );

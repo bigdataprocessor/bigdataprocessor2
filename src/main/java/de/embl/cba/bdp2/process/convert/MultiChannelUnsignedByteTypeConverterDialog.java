@@ -79,7 +79,7 @@ public class MultiChannelUnsignedByteTypeConverterDialog< R extends RealType< R 
 		// Image< R > convertToUnsignedByteType( Image< R > image, double[] min, double[] max )
 		double[] min = contrastLimits.stream().mapToDouble( x -> x[ 0 ] ).toArray();
 		double[] max = contrastLimits.stream().mapToDouble( x -> x[ 1 ] ).toArray();
-		recorder.setAPIFunctionName( "convertToUnsignedByteType" );
+		recorder.setBDP2FunctionName( "convertToUnsignedByteType" );
 		recorder.addAPIFunctionPrequelComment(  MultiChannelUnsignedByteTypeConverterCommand.COMMAND_NAME );
 		recorder.addAPIFunctionParameter( min );
 		recorder.addAPIFunctionParameter( max );

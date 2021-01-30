@@ -50,7 +50,7 @@ public class OpenBDVBioFormatsCommand< R extends RealType< R > & NativeType< R >
     {
         ScriptRecorder recorder = new ScriptRecorder( outputImage );
         recorder.recordImportStatements( true );
-        recorder.setAPIFunctionName( "openBioFormats" );
+        recorder.setBDP2FunctionName( "openBioFormats" );
         recorder.addAPIFunctionParameter( recorder.quote( file.getAbsolutePath() ) );
         recorder.addAPIFunctionParameter( String.valueOf( seriesIndex ) );
         recorder.record();

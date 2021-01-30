@@ -142,7 +142,10 @@ public class ScriptRecorder
 						if ( LanguageManager.getLanguage() == LanguageManager.PYTHON )
 						{
 							recorder.recordString( asComment( "To run this script, please select language: Python" ) );
+							recorder.recordString( "import ij.IJ;\n" );
+
 							recorder.recordString( "import java;\n" );
+
 							recorder.recordString( "from de.embl.cba.bdp2 import BigDataProcessor2;\n" );
 							//recorder.recordString( "from jarray import array;\n" );
 							recorder.recordString( "from de.embl.cba.bdp2.save import SavingSettings;\n" );
@@ -151,6 +154,7 @@ public class ScriptRecorder
 						else if ( LanguageManager.getLanguage() == LanguageManager.JAVA_SCRIPT )
 						{
 							recorder.recordString( asComment( "To run this script, please select language: JavaScript" ) );
+							recorder.recordString( "importClass(Packages.ij.IJ);\n" );
 							recorder.recordString( "importClass(Packages.de.embl.cba.bdp2.BigDataProcessor2);\n" );
 							recorder.recordString( "importClass(Packages.de.embl.cba.bdp2.save.SavingSettings);\n" );
 							recorder.recordString( "importClass(Packages.de.embl.cba.bdp2.save.SaveFileType);\n" );
@@ -227,7 +231,7 @@ public class ScriptRecorder
 
 		String apiCall = "";
 		if ( outputImage != null ) apiCall += "image = ";
-		apiCall += "BigDataProcessor2." + apiFunction + "( ";
+		apiCall += apiFunction + "( ";
 		if ( inputImage != null ) apiCall += "image" + COMMA;
 		apiCall += parameters.stream().collect( Collectors.joining( COMMA ) );
 		apiCall += " );\n";
@@ -269,6 +273,11 @@ public class ScriptRecorder
 		this.message = message;
 	}
 
+	public void setBDP2FunctionName( String function )
+	{
+		this.apiFunction = "BigDataProcessor2." + function;
+	}
+
 	public void setAPIFunctionName( String function )
 	{
 		this.apiFunction = function;
@@ -277,6 +286,11 @@ public class ScriptRecorder
 	public void addAPIFunctionParameter( String parameter )
 	{
 		parameters.add( parameter );
+	}
+
+	public void addAPIFunctionParameter( Object parameter )
+	{
+		parameters.add( String.valueOf( parameter ) );
 	}
 
 	public void addAPIFunctionParameter( double[] parameter )

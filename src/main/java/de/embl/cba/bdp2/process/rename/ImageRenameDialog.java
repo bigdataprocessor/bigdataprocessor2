@@ -28,7 +28,7 @@ public class ImageRenameDialog < R extends RealType< R > & NativeType< R > >
 		recorder.addCommandParameter( CHANNEL_NAMES_PARAMETER, String.join( ",", channelNames ) );
 
 		// Image< R > rename( Image< R > image, String name )
-		recorder.setAPIFunctionName( "rename" );
+		recorder.setBDP2FunctionName( "rename" );
 		recorder.addAPIFunctionPrequelComment(  ImageRenameCommand.COMMAND_NAME );
 		recorder.addAPIFunctionParameter( ScriptRecorder.quote( inputImage.getName() ) );
 		recorder.addAPIFunctionParameter( inputImage.getChannelNames() );
