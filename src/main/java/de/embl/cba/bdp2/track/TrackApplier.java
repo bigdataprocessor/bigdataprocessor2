@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.drift;
+package de.embl.cba.bdp2.track;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.imglib2.LazyStackView;

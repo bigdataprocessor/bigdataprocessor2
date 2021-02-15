@@ -1,4 +1,4 @@
-package de.embl.cba.bdp2.drift;
+package de.embl.cba.bdp2.track;
 
 public class TrackPosition
 {

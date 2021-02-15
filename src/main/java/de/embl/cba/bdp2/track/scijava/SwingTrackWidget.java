@@ -1,7 +1,7 @@
-package de.embl.cba.bdp2.drift.scijava;
+package de.embl.cba.bdp2.track.scijava;
 
-import de.embl.cba.bdp2.drift.Track;
-import de.embl.cba.bdp2.drift.TrackManager;
+import de.embl.cba.bdp2.track.Track;
+import de.embl.cba.bdp2.track.TrackManager;
 import org.scijava.Priority;
 import org.scijava.object.ObjectService;
 import org.scijava.plugin.Parameter;

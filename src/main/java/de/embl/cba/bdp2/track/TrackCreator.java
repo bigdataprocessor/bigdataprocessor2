@@ -1,8 +1,9 @@
-package de.embl.cba.bdp2.drift;
+package de.embl.cba.bdp2.track;
 
 import bdv.util.BdvFunctions;
 import bdv.util.BdvHandle;
 import bdv.util.BdvOptions;
+import bdv.util.BdvOverlaySource;
 import de.embl.cba.bdp2.viewer.ImageViewer;
 import de.embl.cba.bdv.utils.BdvUtils;
 import de.embl.cba.tables.SwingUtils;
@@ -15,6 +16,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.*;
 
 public class TrackCreator extends JFrame
@@ -26,6 +29,7 @@ public class TrackCreator extends JFrame
 	private JTextField dt;
 	private Behaviours behaviours;
 	private static File recentTrackSavingDirectory = null;
+	private BdvOverlaySource< TrackOverlay > bdvTrackOverlay;
 
 	public TrackCreator( ImageViewer viewer, String trackName )
 	{
@@ -185,7 +189,7 @@ public class TrackCreator extends JFrame
 	{
 		track = new Track( trackName, viewer.getImage().getVoxelDimensions() );
 		final TrackOverlay trackOverlay = new TrackOverlay( bdvHandle, track, 20 );
-		BdvFunctions.showOverlay( trackOverlay, "drift-overlay", BdvOptions.options().addTo( bdvHandle ) );
+		bdvTrackOverlay = BdvFunctions.showOverlay( trackOverlay, "drift-overlay", BdvOptions.options().addTo( bdvHandle ) );
 	}
 
 	private void addInterpolationCheckBoxPanel()
@@ -257,9 +261,19 @@ public class TrackCreator extends JFrame
 		this.setLocation( MouseInfo.getPointerInfo().getLocation().x - 50, MouseInfo.getPointerInfo().getLocation().y - 50 );
 		this.pack();
 		this.setVisible( true );
+		addWindowListener(new WindowAdapter()
+		{
+			@Override
+			public void windowClosing( WindowEvent e)
+			{
+				if ( bdvTrackOverlay != null )
+					bdvTrackOverlay.removeFromBdv();
+			}
+		});
 	}
 
-	public void installBehaviours()
+
+	private void installBehaviours()
 	{
 		behaviours = new Behaviours( new InputTriggerConfig() );
 		behaviours.install( bdvHandle.getTriggerbindings(), "behaviours" );
