@@ -4,5 +4,6 @@ public enum SaveFileType
 {
 	TIFFPlanes,
 	TIFFVolumes,
-	ImarisVolumes
+	ImarisVolumes,
+	BigDataViewerXMLHDF5
 }

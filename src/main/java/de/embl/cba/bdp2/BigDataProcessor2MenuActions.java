@@ -118,6 +118,14 @@ public class BigDataProcessor2MenuActions implements ActionListener {
                 saveDialog.setVisible(true);
             });
         }
+        else if (e.getActionCommand().equalsIgnoreCase( BigDataProcessor2Menu.SAVE_AS_BDV_XML_HDF5_MENU_ITEM ))
+        {
+            BigDataProcessor2.threadPool.submit(() -> {
+                if (! isImageSelected( viewer ) ) return;
+                SaveAdvancedDialog saveDialog = new SaveAdvancedDialog( viewer, SaveFileType.BigDataViewerXMLHDF5 );
+                saveDialog.setVisible(true);
+            });
+        }
         else if (e.getActionCommand().equalsIgnoreCase( SetVoxelSizeCommand.COMMAND_NAME ))
         {
             BigDataProcessor2.threadPool.submit(() -> {

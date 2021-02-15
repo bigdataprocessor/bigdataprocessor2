@@ -1,0 +1,4 @@
+run("BDP2 Open Luxendo Channels...", "viewingmodality=[Show in new viewer] directory=[/Users/tischer/Desktop/bpd2-benchmark/h5/in] enablearbitraryplaneslicing=false stackindex=6 channels=[channel_2_Cam_Long] ");
+run("BDP2 Crop...", "inputimage=[in] outputimagename=[in-crop] viewingmodality=[Show in new viewer] minx=307 miny=576 minz=44 minc=0 mint=0 maxx=1730 maxy=1644 maxz=54 maxc=0 maxt=9 ");
+run("BDP2 Bin...", "inputimage=[in-crop] outputimagename=[in-crop-binned] viewingmodality=[Show in current viewer] binwidthxpixels=3 binwidthypixels=3 binwidthzpixels=1 ");
+run("BDP2 Save As...", "inputimage=[in-crop-binned] directory=[/Users/tischer/Desktop/bpd2-benchmark/h5/out/] numiothreads=1 numprocessingthreads=4 filetype=[TIFFVolumes] saveprojections=true savevolumes=true tiffcompression=[None] tstart=0 tend=9 ");

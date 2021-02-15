@@ -44,8 +44,7 @@ public class ImageSaverCreator < R extends RealType< R > & NativeType< R > >
 		if ( savingSettings.saveProjections )
 			Utils.createFilePathParentDirectories( savingSettings.projectionsFilePathStump );
 
-		ImageSaverFactory factory = new ImageSaverFactory();
-		saver = factory.getSaver( imageForSaving, savingSettings, saveExecutorService );
+		saver = new ImageSaverFactory().getSaver( imageForSaving, savingSettings, saveExecutorService );
 		saver.addProgressListener( progressListener );
 	}
 

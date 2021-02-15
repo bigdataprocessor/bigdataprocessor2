@@ -1,6 +1,7 @@
 package de.embl.cba.bdp2.save;
 
 import de.embl.cba.bdp2.image.Image;
+import de.embl.cba.bdp2.save.bdvhdf5.BigDataViewerXMLHDF5Saver;
 import de.embl.cba.bdp2.save.imaris.ImarisImageSaver;
 import de.embl.cba.bdp2.save.tiff.TIFFPlanesSaver;
 import de.embl.cba.bdp2.save.tiff.TIFFFramesSaver;
@@ -13,25 +14,18 @@ public class ImageSaverFactory < R extends RealType< R > & NativeType< R > >
 {
     public ImageSaver getSaver( Image< R > image, SavingSettings settings, ExecutorService es)
     {
-        if ( settings.fileType.equals( SaveFileType.TIFFPlanes ))
+        switch ( settings.fileType )
         {
-            return new TIFFPlanesSaver( image, settings, es);
-        }
-        else if ( settings.fileType.equals( SaveFileType.TIFFVolumes ))
-        {
-            return new TIFFFramesSaver( image, settings, es );
-        }
-//        else if (savingSettings.fileType.equals( SaveFileType.HDF5Volumes ))
-//        {
-//            return new HDF5StacksSaver(savingSettings, es);
-//        }
-        else if (settings.fileType.equals( SaveFileType.ImarisVolumes ))
-        {
-            return new ImarisImageSaver( image, settings, es);
-        }
-        else
-        {
-            return null;
+            case TIFFPlanes:
+                return new TIFFPlanesSaver( image, settings, es);
+            case TIFFVolumes:
+                return new TIFFFramesSaver( image, settings, es );
+            case ImarisVolumes:
+                return new ImarisImageSaver( image, settings, es);
+            case BigDataViewerXMLHDF5:
+                return new BigDataViewerXMLHDF5Saver<>( image, settings );
+            default:
+                throw new UnsupportedOperationException( settings.fileType.toString() );
         }
     }
 }

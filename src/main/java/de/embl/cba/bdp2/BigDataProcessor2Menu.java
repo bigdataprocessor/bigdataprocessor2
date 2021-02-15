@@ -37,6 +37,8 @@ public class BigDataProcessor2Menu extends JMenu
     public static final String SAVE_AS_IMARIS_VOLUMES_MENU_ITEM = "Save as Imaris Volumes...";
     public static final String SAVE_AS_TIFF_VOLUMES_MENU_ITEM = "Save as TIFF Volumes...";
     public static final String SAVE_AS_TIFF_PLANES_MENU_ITEM = "Save as TIFF Planes...";
+    public static final String SAVE_AS_BDV_XML_HDF5_MENU_ITEM = "Save as BigDataViewer XML/HDF5...";
+
     public static final String CREATE_TRACK = "Create Track...";
 
     private final BigDataProcessor2MenuActions menuActions;
@@ -91,6 +93,8 @@ public class BigDataProcessor2Menu extends JMenu
         addMenuItem( saveMenu, SAVE_AS_IMARIS_VOLUMES_MENU_ITEM );
         addMenuItem( saveMenu, SAVE_AS_TIFF_VOLUMES_MENU_ITEM );
         addMenuItem( saveMenu, SAVE_AS_TIFF_PLANES_MENU_ITEM );
+        addMenuItem( saveMenu, SAVE_AS_BDV_XML_HDF5_MENU_ITEM );
+
 
         menus.add( miscMenu );
         addMenuItem( miscMenu, IMAGEJ_VIEW_MENU_ITEM );

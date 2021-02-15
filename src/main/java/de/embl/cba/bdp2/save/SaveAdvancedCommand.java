@@ -61,7 +61,8 @@ public class SaveAdvancedCommand< R extends RealType< R > & NativeType< R > > im
             {
                     "TIFFPlanes",
                     "TIFFVolumes",
-                    "ImarisVolumes"
+                    "ImarisVolumes",
+                    "BigDataViewerXMLHDF5"
             })
     String fileType;
     public static String SAVE_FILE_TYPE_PARAMETER = "fileType";
