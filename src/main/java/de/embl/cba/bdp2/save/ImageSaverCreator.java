@@ -21,30 +21,23 @@ public class ImageSaverCreator < R extends RealType< R > & NativeType< R > >
 
 	public ImageSaverCreator( Image< R > image, SavingSettings savingSettings, ProgressListener progressListener )
 	{
-		int numIOThreads = Math.max( 1, Math.min( savingSettings.numIOThreads, MAX_THREAD_LIMIT ) );
+		ExecutorService executorService = Executors.newFixedThreadPool( savingSettings.numIOThreads );
 
-		Logger.info( "\n# Save" );
-		Logger.info( "Saving started; I/O threads: " + numIOThreads );
+		// create a copy in order not to change the cache
+		// of the currently shown image
+		Image< R > imageForSaving = new Image<>( image );
 
-		ExecutorService saveExecutorService = Executors.newFixedThreadPool( numIOThreads );
-
-		Image< R > imageForSaving = new Image<>( image ); // create a copy in order not to change the cache of the currently shown image
-
+		// change cache to load the whole volume
+		// as this is faster
 		if ( ! savingSettings.fileType.equals( SaveFileType.TIFFPlanes ) )
 		{
 			// TODO: for cropped images only fully load the cropped region
 			// TODO: for input data distributed across TIFF planes this should be reconsidered
-			long cacheSize = image.getDimensionsXYZCT()[ DimensionOrder.C ] * numIOThreads;
+			long cacheSize = image.getDimensionsXYZCT()[ DimensionOrder.C ] * savingSettings.numIOThreads;
 			imageForSaving.setVolumeCache( DiskCachedCellImgOptions.CacheType.BOUNDED, (int) cacheSize );
 		}
 
-		if ( savingSettings.saveVolumes )
-			Utils.createFilePathParentDirectories( savingSettings.volumesFilePathStump );
-
-		if ( savingSettings.saveProjections )
-			Utils.createFilePathParentDirectories( savingSettings.projectionsFilePathStump );
-
-		saver = new ImageSaverFactory().getSaver( imageForSaving, savingSettings, saveExecutorService );
+		saver = new ImageSaverFactory().getSaver( imageForSaving, savingSettings, executorService );
 		saver.addProgressListener( progressListener );
 	}
 

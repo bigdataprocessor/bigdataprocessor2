@@ -16,6 +16,7 @@ public class TestOpenMultiChannel16BitTiffVolumes
     public static void main(String[] args)
     {
         ImageJ imageJ = new ImageJ();
+        imageJ.ui().showUI();
         Services.setContext( imageJ.getContext() );
         Services.setCommandService( imageJ.command() );
         BigDataProcessor2UI.showUI();

@@ -14,6 +14,7 @@ import de.embl.cba.bdp2.process.bin.BinCommand;
 import de.embl.cba.bdp2.process.bin.Binner;
 import de.embl.cba.bdp2.process.calibrate.CalibrationChecker;
 import de.embl.cba.bdp2.process.convert.MultiChannelUnsignedByteTypeConverter;
+import de.embl.cba.bdp2.process.crop.CropCommand;
 import de.embl.cba.bdp2.process.crop.Cropper;
 import de.embl.cba.bdp2.process.transform.ImageTransformer;
 import de.embl.cba.bdp2.save.ImageSaver;
@@ -115,6 +116,8 @@ public class BigDataProcessor2
     public static < R extends RealType< R > & NativeType< R > >
     Image< R > crop( Image< R > image, Interval intervalXYZCT )
     {
+        Logger.info( "# " + CropCommand.COMMAND_NAME );
+        Logger.info( "Crop: " + intervalXYZCT );
         return Cropper.crop5D( image, intervalXYZCT );
     }
 
@@ -130,6 +133,8 @@ public class BigDataProcessor2
      */
     public static < R extends RealType< R > & NativeType< R > > Image< R > crop( Image< R > image, long[] minMax )
     {
+        Logger.info( "# " + CropCommand.COMMAND_NAME );
+        Logger.info( "Crop: " + Arrays.toString( minMax ) );
         return crop( image, Intervals.createMinMax( minMax ) );
     }
 
@@ -192,6 +197,12 @@ public class BigDataProcessor2
 
     public static < R extends RealType< R > & NativeType< R > > ImageSaver saveImage( Image< R > image, SavingSettings savingSettings, ProgressListener progressListener )
     {
+        Logger.info( "\n# Save" );
+        Logger.info( "I/O threads: " + savingSettings.numIOThreads );
+        Logger.info( "Processing threads: " + savingSettings.numProcessingThreads );
+        Logger.info( "File type: " + savingSettings.fileType );
+
+
         if ( ! CalibrationChecker.checkVoxelUnit( image.getVoxelUnit() ) )
             throw new RuntimeException( "Voxel unit not set; please set using image.setVoxelUnit( ... )" );
 
@@ -199,6 +210,7 @@ public class BigDataProcessor2
             throw new RuntimeException( "Voxel dimension not set; please set using image.setVoxelDimension( ... )" );
 
         final ImageSaver saver = new ImageSaverCreator<>( image, savingSettings, progressListener ).getSaver();
+        saver.createOutputDirectories( savingSettings );
         saver.startSave();
         return saver;
     }

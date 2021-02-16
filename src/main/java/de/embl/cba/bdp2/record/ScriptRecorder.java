@@ -372,7 +372,7 @@ public class ScriptRecorder
 		}
 		catch ( Exception e )
 		{
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 }

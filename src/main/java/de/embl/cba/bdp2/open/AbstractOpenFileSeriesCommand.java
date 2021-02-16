@@ -9,7 +9,7 @@ import java.io.File;
 
 public abstract class AbstractOpenFileSeriesCommand< R extends RealType< R > & NativeType< R > > extends AbstractOpenCommand< R >
 {
-    @Parameter(label = "Image data directory", style = "directory" )
+    @Parameter( label = "Image data directory", style = "directory" )
     protected File directory;
     public static String DIRECTORY_PARAMETER = "directory";
 }

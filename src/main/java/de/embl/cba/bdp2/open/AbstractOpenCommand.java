@@ -31,12 +31,7 @@ public abstract class AbstractOpenCommand< R extends RealType< R > & NativeType<
             ViewingModalities.SHOW_IN_CURRENT_VIEWER,
             ViewingModalities.SHOW_IN_NEW_VIEWER,
             ViewingModalities.DO_NOT_SHOW })
-
     protected String viewingModality = ViewingModalities.SHOW_IN_NEW_VIEWER; // Note: this must be the same variable name as in AbstractProcessingCommand
-    public static final String[] VIEWING_CHOICES = new String[]{
-            ViewingModalities.SHOW_IN_CURRENT_VIEWER,
-            ViewingModalities.SHOW_IN_NEW_VIEWER,
-            ViewingModalities.DO_NOT_SHOW };
 
     @Parameter(label = "Enable arbitrary plane slicing", required = false)
     protected boolean enableArbitraryPlaneSlicing = false;
