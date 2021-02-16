@@ -72,6 +72,7 @@ public class BigDataProcessor2
             Logger.warn( "https://forum.image.sc/t/bigdataprocessor/34963" );
         }
         Image< R > image = new Image<>( cellImgCreator );
+        image.supportsMultiThreadedReading( false ); // TODO: ??
         return image;
     }
 
@@ -87,6 +88,7 @@ public class BigDataProcessor2
         FileInfos fileInfos = new FileInfos( directory, regExp );
         FileSeriesCachedCellImgCreator< R > cachedCellImgCreator = new FileSeriesCachedCellImgCreator( fileInfos );
         Image< R > image = new Image( cachedCellImgCreator );
+        image.supportsMultiThreadedReading( true );
         return image;
     }
 
@@ -96,6 +98,7 @@ public class BigDataProcessor2
         FileInfos fileInfos = new FileInfos( directory, regularExpression, channelSubset );
         FileSeriesCachedCellImgCreator< R > cachedCellImgCreator = new FileSeriesCachedCellImgCreator( fileInfos );
         Image< R > image = new Image( cachedCellImgCreator );
+        image.supportsMultiThreadedReading( true );
         return image;
     }
 
@@ -105,6 +108,7 @@ public class BigDataProcessor2
         FileInfos fileInfos = new FileInfos( directory, regularExpression, null, channelSubset, relativeFilePaths );
         FileSeriesCachedCellImgCreator< R > cachedCellImgCreator = new FileSeriesCachedCellImgCreator( fileInfos );
         Image< R > image = new Image( cachedCellImgCreator );
+        image.supportsMultiThreadedReading( true );
         return image;
     }
 
@@ -135,6 +139,7 @@ public class BigDataProcessor2
         FileInfos fileInfos = new FileInfos( directory, regularExpression, hdf5DataSetName );
         FileSeriesCachedCellImgCreator< R > cachedCellImgCreator = new FileSeriesCachedCellImgCreator( fileInfos );
         Image< R > image = new Image( cachedCellImgCreator );
+        image.supportsMultiThreadedReading( false );
         return image;
     }
 
@@ -144,6 +149,7 @@ public class BigDataProcessor2
         FileInfos fileInfos = new FileInfos( directory, regExp, hdf5DataSetPath, channelSubset, relativeFilePaths );
         FileSeriesCachedCellImgCreator< R > cachedCellImgCreator = new FileSeriesCachedCellImgCreator( fileInfos );
         Image< R > image = new Image( cachedCellImgCreator );
+        image.supportsMultiThreadedReading( false );
         return image;
     }
 
@@ -153,6 +159,7 @@ public class BigDataProcessor2
         FileInfos fileInfos = new FileInfos( directory, regExp, hdf5DataSetPath, channelSubset );
         FileSeriesCachedCellImgCreator< R > cachedCellImgCreator = new FileSeriesCachedCellImgCreator( fileInfos );
         Image< R > image = new Image( cachedCellImgCreator );
+        image.supportsMultiThreadedReading( false );
         return image;
     }
 

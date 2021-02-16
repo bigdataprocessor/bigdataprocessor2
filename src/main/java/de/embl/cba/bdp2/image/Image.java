@@ -59,6 +59,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 	private ArrayList< Stopable > stopables = new ArrayList<>(  );
 	private ImageViewer< R > viewer;
 	private R type;
+	private boolean supportsMultiThreadedReading = false;
 
 	public Image( CachedCellImgCreator< R > cachedCellImgCreator )
 	{
@@ -73,6 +74,16 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		this.rai = cachedCellImgCreator.createCachedCellImg( cachedCellDims, DiskCachedCellImgOptions.CacheType.BOUNDED, 100 );
 		this.rawDataDimensions = this.getDimensionsXYZCT();
 		this.type = Util.getTypeFromInterval( rai );
+	}
+
+	public boolean supportsMultiThreadedReading()
+	{
+		return supportsMultiThreadedReading;
+	}
+
+	public void supportsMultiThreadedReading( boolean supportsMultiThreadedReading )
+	{
+		this.supportsMultiThreadedReading = supportsMultiThreadedReading;
 	}
 
 	/**

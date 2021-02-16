@@ -135,21 +135,24 @@ public class SaveAdvancedDialog< R extends RealType< R > & NativeType< R > > ext
 
         panelIndex = addTIFFCompressionPanel( panelIndex );
 
-        if ( ! saveFileType.equals( SaveFileType.BigDataViewerXMLHDF5 ) )
+        if ( inputImage.supportsMultiThreadedReading() &&  SaveFileType.supportsMultiThreadedWriting( saveFileType ) )
         {
             panels.add( new JPanel() );
             panels.get( panelIndex ).add( new JLabel( "I/O Threads" ) );
             panels.get( panelIndex ).add( tfNumIOThreads );
             mainPanel.add( panels.get( panelIndex++ ) );
-
-            panels.add( new JPanel() );
-            panels.get( panelIndex ).add( new JLabel( "Processing Threads" ) );
-            panels.get( panelIndex ).add( tfNumProcessingThreads );
-            mainPanel.add( panels.get( panelIndex++ ) );
+        }
+        else
+        {
+            tfNumIOThreads.setText( "1" );
         }
 
-        panels.add(new JPanel());
+        panels.add( new JPanel() );
+        panels.get( panelIndex ).add( new JLabel( "Processing Threads" ) );
+        panels.get( panelIndex ).add( tfNumProcessingThreads );
+        mainPanel.add( panels.get( panelIndex++ ) );
 
+        panels.add(new JPanel());
         saveButton.setActionCommand(SAVE);
         saveButton.addActionListener(this);
         panels.get(panelIndex).add( saveButton );

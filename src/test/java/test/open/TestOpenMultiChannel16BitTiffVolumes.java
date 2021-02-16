@@ -19,7 +19,6 @@ public class TestOpenMultiChannel16BitTiffVolumes
         Services.setContext( imageJ.getContext() );
         Services.setCommandService( imageJ.command() );
         BigDataProcessor2UI.showUI();
-        Logger.setLevel( Logger.Level.Benchmark );
         new TestOpenMultiChannel16BitTiffVolumes().run();
     }
 

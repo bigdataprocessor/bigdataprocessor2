@@ -40,7 +40,6 @@ public class TestOpenMultiChannel16BitTiffVolumesAndSaveAsImarisVolumes
         settings.tStart = 0;
         settings.tEnd = image.getNumTimePoints() - 1;
 
-        Logger.setLevel( Logger.Level.Debug );
         BigDataProcessor2.saveImage( image, settings, new LoggingProgressListener( "Files saved" ) );
     }
 }

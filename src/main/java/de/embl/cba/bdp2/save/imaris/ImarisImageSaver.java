@@ -48,8 +48,6 @@ public class ImarisImageSaver< R extends RealType< R > & NativeType< R > > exten
         int tStart = Math.max( savingSettings.tStart, 0 );
         int tEnd = (int) Math.min( savingSettings.tEnd, image.getRai().dimension( DimensionOrder.T ) - 1 );
 
-        NativeType imageType = image.getType();
-
         for (int t = tStart; t <= tEnd; t++) {
             futures.add(
                     es.submit(
