@@ -1,11 +1,9 @@
 package test.open;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
-import de.embl.cba.bdp2.BigDataProcessor2UI;
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.scijava.Services;
-import net.imagej.ImageJ;
 import org.junit.Test;
+import test.Utils;
 
 import static de.embl.cba.bdp2.open.NamingSchemes.*;
 
@@ -13,10 +11,8 @@ public class TestOpenMultiChannelZLIBCompressedTiffVolumes
 {
     public static void main(String[] args)
     {
-        ImageJ imageJ = new ImageJ();
-        Services.setContext( imageJ.getContext() );
-        Services.setCommandService( imageJ.command() );
-        BigDataProcessor2UI.showUI();
+        Utils.prepareInteractiveMode();
+
         new TestOpenMultiChannelZLIBCompressedTiffVolumes().run();
     }
 

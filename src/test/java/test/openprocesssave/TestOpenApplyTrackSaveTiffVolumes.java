@@ -1,15 +1,11 @@
 package test.openprocesssave;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
-import de.embl.cba.bdp2.BigDataProcessor2UI;
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
-import de.embl.cba.bdp2.save.SaveFileType;
 import de.embl.cba.bdp2.save.SavingSettings;
-import de.embl.cba.bdp2.scijava.Services;
-import net.imagej.ImageJ;
 import org.junit.Test;
+import test.Utils;
 
 import java.io.File;
 
@@ -23,10 +19,9 @@ public class TestOpenApplyTrackSaveTiffVolumes
 
     public static void main(String[] args)
     {
-        ImageJ imageJ = new ImageJ();
-        Services.setContext( imageJ.getContext() );
+        Utils.prepareInteractiveMode();
+
         new TestOpenApplyTrackSaveTiffVolumes().run();
-        BigDataProcessor2UI.showUI();
         BigDataProcessor2.showImage( image, true );
         BigDataProcessor2.showImage( trackedImage, true );
     }

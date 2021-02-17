@@ -2,23 +2,21 @@ package test.openprocesssave;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.save.SaveFileType;
 import de.embl.cba.bdp2.save.SavingSettings;
-import org.junit.Test;
-import org.renjin.gnur.api.R;
-
-import java.util.ArrayList;
+import test.Utils;
 
 public class TestOpenProcessSaveLuxendoBigData
 {
 	public static void main( String[] args )
 	{
+		Utils.prepareInteractiveMode();
+
 		new TestOpenProcessSaveLuxendoBigData().run();
 	}
 
-	@Test
+	//@Test
 	public void run()
 	{
 		Image image = BigDataProcessor2.openHDF5Series( "/Volumes/Tischi/big-image-data/luxendo-publication-figure/mouse_2_Cam", ".*stack_6_(?<C1>channel_.*)/(?<C2>Cam_.*)_(?<T>\\d+).h5", "Data", new String[]{"channel_2_Cam_Long","channel_2_Cam_Short"} );

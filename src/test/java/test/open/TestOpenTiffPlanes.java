@@ -4,6 +4,7 @@ import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.open.NamingSchemes;
 import org.junit.Test;
+import test.Utils;
 
 import static de.embl.cba.bdp2.open.NamingSchemes.Z;
 
@@ -11,6 +12,8 @@ public class TestOpenTiffPlanes
 {
     public static void main(String[] args)
     {
+        Utils.prepareInteractiveMode();
+
         new TestOpenTiffPlanes().run();
     }
 

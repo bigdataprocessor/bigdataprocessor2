@@ -2,6 +2,7 @@ package test.open;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
+import test.Utils;
 
 import static de.embl.cba.bdp2.open.NamingSchemes.LUXENDO;
 
@@ -9,6 +10,8 @@ public class TestOpenLuxendo
 {
     public static void main(String[] args)
     {
+        Utils.prepareInteractiveMode();
+
         new TestOpenLuxendo().run();
     }
 

@@ -5,16 +5,18 @@ import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.save.SaveFileType;
 import de.embl.cba.bdp2.save.SavingSettings;
-import org.junit.Test;
+import test.Utils;
 
 public class TestOpenProcessSaveViventisBigData
 {
 	public static void main( String[] args )
 	{
+		Utils.prepareInteractiveMode();
+
 		new TestOpenProcessSaveViventisBigData().run();
 	}
 
-	@Test
+	//@Test
 	public void run()
 	{
 		Image image = BigDataProcessor2.openTIFFSeries( "/Volumes/Tischi/big-image-data/viventis/Position 2_Settings 1", "t(?<T>\\d+)_(?<C>.+).tif_NONRECURSIVE" );

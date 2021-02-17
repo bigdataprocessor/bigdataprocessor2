@@ -18,7 +18,7 @@ import de.embl.cba.bdp2.process.crop.CropCommand;
 import de.embl.cba.bdp2.process.crop.Cropper;
 import de.embl.cba.bdp2.process.transform.ImageTransformer;
 import de.embl.cba.bdp2.save.ImageSaver;
-import de.embl.cba.bdp2.save.ImageSaverCreator;
+import de.embl.cba.bdp2.save.ImageSaverFactory;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.service.ImageViewerService;
 import de.embl.cba.bdp2.track.Track;
@@ -193,15 +193,15 @@ public class BigDataProcessor2
         Logger.log("Saving: Done." );
     }
 
-    public static < R extends RealType< R > & NativeType< R > > ImageSaver saveImage( Image< R > image, SavingSettings savingSettings, ProgressListener progressListener )
+    public static < R extends RealType< R > & NativeType< R > > ImageSaver saveImage( Image< R > image, SavingSettings settings, ProgressListener progressListener )
     {
         Logger.info( "\n# Save" );
-        Logger.info( "I/O threads: " + savingSettings.numIOThreads );
-        Logger.info( "Processing threads: " + savingSettings.numProcessingThreads );
-        Logger.info( "File type: " + savingSettings.fileType );
-        Logger.info( "Save volumes to: " + savingSettings.volumesFilePathStump );
-        if ( savingSettings.saveProjections )
-        Logger.info( "Save projections to: " + savingSettings.projectionsFilePathStump );
+        Logger.info( "I/O threads: " + settings.numIOThreads );
+        Logger.info( "Processing threads: " + settings.numProcessingThreads );
+        Logger.info( "File type: " + settings.fileType );
+        Logger.info( "Save volumes to: " + settings.volumesFilePathStump );
+        if ( settings.saveProjections )
+        Logger.info( "Save projections to: " + settings.projectionsFilePathStump );
 
 
         if ( ! CalibrationChecker.checkVoxelUnit( image.getVoxelUnit() ) )
@@ -210,9 +210,11 @@ public class BigDataProcessor2
         if ( ! CalibrationChecker.checkVoxelDimension( image.getVoxelDimensions() ) )
             throw new RuntimeException( "Voxel dimension not set; please set using image.setVoxelDimension( ... )" );
 
-        final ImageSaver saver = new ImageSaverCreator<>( image, savingSettings, progressListener ).getSaver();
-        saver.createOutputDirectories( savingSettings );
+        final ImageSaver saver = new ImageSaverFactory().getSaver( image, settings );
+        saver.addProgressListener( progressListener );
+        saver.createOutputDirectories( settings );
         saver.startSave();
+
         return saver;
     }
 

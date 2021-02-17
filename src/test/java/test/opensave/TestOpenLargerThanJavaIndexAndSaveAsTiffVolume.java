@@ -6,8 +6,7 @@ import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.save.SaveFileType;
 import de.embl.cba.bdp2.save.SavingSettings;
-import de.embl.cba.bdp2.scijava.Services;
-import net.imagej.ImageJ;
+import test.Utils;
 
 import static de.embl.cba.bdp2.open.NamingSchemes.*;
 
@@ -15,10 +14,8 @@ public class TestOpenLargerThanJavaIndexAndSaveAsTiffVolume
 {
     public static void main(String[] args)
     {
-        ImageJ imageJ = new ImageJ();
-        Services.setContext( imageJ.getContext() );
-        Services.setCommandService( imageJ.command() );
-        //BigDataProcessor2UserInterface.showUI();
+        Utils.prepareInteractiveMode();
+
         new TestOpenLargerThanJavaIndexAndSaveAsTiffVolume().run();
     }
 
