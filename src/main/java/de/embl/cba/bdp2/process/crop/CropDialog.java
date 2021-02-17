@@ -77,7 +77,6 @@ public class CropDialog< R extends RealType< R > & NativeType< R > >
 		Image< R > outputImage = BigDataProcessor2.crop( inputImage, voxelInterval );
 
 		SwingUtilities.invokeLater( () -> {
-			log( calibratedUnits, voxelInterval, realInterval, outputImage );
 			recordMacro( inputImage, outputImage, voxelInterval );
 		} );
 
@@ -85,15 +84,6 @@ public class CropDialog< R extends RealType< R > & NativeType< R > >
 		final ImageViewer< R > newViewer = BigDataProcessor2.showImage( outputImage, false );
 		final List< DisplaySettings > displaySettings = viewer.getDisplaySettings();
 		newViewer.setDisplaySettings( displaySettings );
-	}
-
-	public void log( boolean calibratedUnits, Interval voxelInterval, RealInterval realInterval, Image< R > outputImage )
-	{
-		Logger.info( "\n# Crop" );
-		if ( calibratedUnits )
-			Logger.info( "Crop interval [calibrated]: " + realInterval.toString() );
-		Logger.info( "Crop interval [voxels]: " + voxelInterval.toString() );
-		Logger.info( "Crop view size [GB]: " + Utils.getSizeGB( outputImage.getRai() ) );
 	}
 
 	public static Interval toVoxelInterval(

@@ -30,6 +30,7 @@ public class OpenViventisTIFFSeriesCommand< R extends RealType< R > & NativeType
             outputImage = BigDataProcessor2.openTIFFSeries( directory.toString(), regExp );
             fixVoxelSpacing( outputImage );
             handleOutputImage( true, false );
+            recordAPICall();
         });
     }
 
@@ -46,6 +47,7 @@ public class OpenViventisTIFFSeriesCommand< R extends RealType< R > & NativeType
     {
         ScriptRecorder recorder = new ScriptRecorder( outputImage );
         recorder.recordImportStatements( true );
+        recorder.addAPIFunctionPrequelComment( COMMAND_NAME );
         recorder.setBDP2FunctionName( "openTIFFSeries" );
         recorder.addAPIFunctionParameter( recorder.quote( directory.toString() ) );
         recorder.addAPIFunctionParameter( recorder.quote( regExp ) );

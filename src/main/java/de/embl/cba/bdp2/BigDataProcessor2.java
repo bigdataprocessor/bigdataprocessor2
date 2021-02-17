@@ -133,8 +133,6 @@ public class BigDataProcessor2
      */
     public static < R extends RealType< R > & NativeType< R > > Image< R > crop( Image< R > image, long[] minMax )
     {
-        Logger.info( "# " + CropCommand.COMMAND_NAME );
-        Logger.info( "Crop: " + Arrays.toString( minMax ) );
         return crop( image, Intervals.createMinMax( minMax ) );
     }
 
@@ -201,6 +199,9 @@ public class BigDataProcessor2
         Logger.info( "I/O threads: " + savingSettings.numIOThreads );
         Logger.info( "Processing threads: " + savingSettings.numProcessingThreads );
         Logger.info( "File type: " + savingSettings.fileType );
+        Logger.info( "Save volumes to: " + savingSettings.volumesFilePathStump );
+        if ( savingSettings.saveProjections )
+        Logger.info( "Save projections to: " + savingSettings.projectionsFilePathStump );
 
 
         if ( ! CalibrationChecker.checkVoxelUnit( image.getVoxelUnit() ) )
