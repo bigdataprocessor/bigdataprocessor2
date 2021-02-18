@@ -146,7 +146,7 @@ public class Utils {
 	{
 		try
 		{
-			Logger.debug( "Creating directories: " + new File( filePath ).getParent() );
+			Logger.info( "Creating directory: " + new File( filePath ).getParent() );
 			Files.createDirectories( Paths.get( new File( filePath ).getParent() ) );
 		}
 		catch ( IOException e )

@@ -234,7 +234,7 @@ public class RAISlicer
 		final int[] blockSize = {
 				dimensionX,
 				dimensionY,
-				( int ) Math.ceil( dimensionZ / numThreads ) };
+				( int ) Math.ceil( 1.0D * dimensionZ / numThreads ) };
 
 		final List< Interval > intervals = Grids.collectAllContainedIntervals( Intervals.dimensionsAsLongArray( volume ), blockSize );
 

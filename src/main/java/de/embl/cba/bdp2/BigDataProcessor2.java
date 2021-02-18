@@ -203,7 +203,6 @@ public class BigDataProcessor2
         if ( settings.saveProjections )
         Logger.info( "Save projections to: " + settings.projectionsFilePathStump );
 
-
         if ( ! CalibrationChecker.checkVoxelUnit( image.getVoxelUnit() ) )
             throw new RuntimeException( "Voxel unit not set; please set using image.setVoxelUnit( ... )" );
 
