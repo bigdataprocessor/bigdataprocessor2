@@ -229,21 +229,20 @@ public class RAISlicer
 			copy = new CellImgFactory( type, cellSize ).create( volume );
 		}
 
-//		LoopBuilder.setImages( copy, volume ).forEachPixel( Type::set );
-//
+		final int blockSizeZ = ( int ) Math.ceil( 1.0D * dimensionZ / numThreads );
+
+		if ( blockSizeZ <= 0 )
+		{
+			throw new UnsupportedOperationException( "The block size in z must be > 0 but is " + blockSizeZ + "; dimensionZ = " + dimensionZ );
+		}
+
 		final int[] blockSize = {
 				dimensionX,
 				dimensionY,
-				( int ) Math.ceil( 1.0D * dimensionZ / numThreads ) };
+				blockSizeZ };
 
 		final List< Interval > intervals = Grids.collectAllContainedIntervals( Intervals.dimensionsAsLongArray( volume ), blockSize );
 
-		// DELETEME
-//		ArrayImg arrayImg = new ArrayImgFactory( type ).create( volume );
-		//IntervalView intervalView = Views.zeroMin( Views.interval( arrayImg, arrayImg ) );
-//		intervals.parallelStream().forEach( interval -> copy( arrayImg, Views.interval( copy, interval ) ) );
-
-		// UNCOMMENT
 		intervals.parallelStream().forEach( interval -> copy( volume, Views.interval( copy, interval ) ) );
 
 		return copy;
