@@ -28,7 +28,7 @@ Main features:
 
 ## Cite
 
-Please cite
+If you find this tool useful, please cite:
 
 Christian Tischer, Ashis Ravindran, Sabine Reither, Nicolas Chiaruttini, Rainer Pepperkok, Nils Norlin, BigDataProcessor2: A free and open-source Fiji plugin for inspection and processing of TB sized image data, Bioinformatics, 2021; https://doi.org/10.1093/bioinformatics/btab106
 
