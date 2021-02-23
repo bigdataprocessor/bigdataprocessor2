@@ -29,6 +29,7 @@ Main features:
 ## Cite
 
 Please cite
+
 Christian Tischer, Ashis Ravindran, Sabine Reither, Nicolas Chiaruttini, Rainer Pepperkok, Nils Norlin, BigDataProcessor2: A free and open-source Fiji plugin for inspection and processing of TB sized image data, Bioinformatics, 2021; https://doi.org/10.1093/bioinformatics/btab106
 
 (or our bioRxiv preprint: https://www.biorxiv.org/content/10.1101/2020.09.23.244095v1 )
