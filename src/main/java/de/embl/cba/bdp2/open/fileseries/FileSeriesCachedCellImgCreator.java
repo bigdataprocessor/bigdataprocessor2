@@ -17,7 +17,6 @@ import ome.units.unit.Unit;
 import java.io.File;
 import java.util.Arrays;
 
-import static de.embl.cba.bdp2.open.CacheUtils.isPlaneWiseCompressed;
 import static net.imglib2.cache.img.ReadOnlyCachedCellImgOptions.options;
 
 public class FileSeriesCachedCellImgCreator< R extends RealType< R > & NativeType< R > > implements CachedCellImgCreator< R >

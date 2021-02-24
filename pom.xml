@@ -4,11 +4,11 @@
 	<parent>
 		<groupId>org.scijava</groupId>
 		<artifactId>pom-scijava</artifactId>
-		<version>29.2.1</version>
+		<version>30.0.0</version>
 	</parent>
 	<groupId>de.embl.cba</groupId>
 	<artifactId>bigDataProcessor2</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 	<url>https://github.com/embl-cba/bigDataProcessor2</url>
 	<name>BigDataProcessor2</name>
 	<description>Fiji plugin for inspection and processing of big image data</description>
@@ -96,9 +96,9 @@
 		<scijava.app.directory>/Users/tischer/Desktop/Fiji/Fiji-bdp2.app</scijava.app.directory>
 
 		<imaris-writer.version>0.2.3</imaris-writer.version>
-		<imagej-utils.version>0.5.9</imagej-utils.version>
+		<imagej-utils.version>0.5.10</imagej-utils.version>
 		<imagej-cluster.version>0.6.5</imagej-cluster.version>
-		<bigdataviewer-bioformats.version>0.2.10</bigdataviewer-bioformats.version>
+		<bigdataviewer-bioformats.version>0.2.15</bigdataviewer-bioformats.version>
 	</properties>
 
 	<repositories>
