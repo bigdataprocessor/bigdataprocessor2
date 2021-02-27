@@ -95,10 +95,19 @@
 
 		<scijava.app.directory>/Users/tischer/Desktop/Fiji/Fiji-bdp2.app</scijava.app.directory>
 
-		<imaris-writer.version>0.2.3</imaris-writer.version>
-		<imagej-utils.version>0.5.10</imagej-utils.version>
-		<imagej-cluster.version>0.6.5</imagej-cluster.version>
+		<!-- Java 8	Update Site	-->
+		<imglib2.version>5.11.1</imglib2.version>
+		<imglib2-cache.version>1.0.0-beta-16</imglib2-cache.version>
+		<bigdataviewer-core.version>10.2.0</bigdataviewer-core.version>
+		<bigdataviewer-vistools.version>1.0.0-beta-28</bigdataviewer-vistools.version>
+<!--		<bigdataviewer_fiji.version>LATEST</bigdataviewer_fiji.version>-->
+
 		<bigdataviewer-bioformats.version>0.2.15</bigdataviewer-bioformats.version>
+
+		<imaris-writer.version>0.2.3</imaris-writer.version>
+		<imagej-utils.version>0.6.0-SNAPSHOT</imagej-utils.version>
+		<imagej-cluster.version>0.6.5</imagej-cluster.version>
+
 	</properties>
 
 	<repositories>
@@ -109,25 +118,33 @@
 	</repositories>
 	<dependencies>
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
+			<groupId>net.imglib2</groupId>
+			<artifactId>imglib2</artifactId>
+			<version>${imglib2.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>net.imglib2</groupId>
-			<artifactId>imglib2</artifactId>
+			<artifactId>imglib2-cache</artifactId>
+			<version>${imglib2-cache.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>sc.fiji</groupId>
-			<artifactId>bigdataviewer_fiji</artifactId>
+			<groupId>ch.epfl.biop</groupId>
+			<artifactId>bigdataviewer-bioformats</artifactId>
+			<version>${bigdataviewer-bioformats.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>sc.fiji</groupId>
 			<artifactId>bigdataviewer-core</artifactId>
+			<version>${bigdataviewer-core.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>sc.fiji</groupId>
 			<artifactId>bigdataviewer-vistools</artifactId>
+			<version>${bigdataviewer-vistools.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>sc.fiji</groupId>
+			<artifactId>bigdataviewer_fiji</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>net.imagej</groupId>
@@ -179,9 +196,9 @@
 			<version>${imagej-cluster.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>ch.epfl.biop</groupId>
-			<artifactId>bigdataviewer-bioformats</artifactId>
-			<version>${bigdataviewer-bioformats.version}</version>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>

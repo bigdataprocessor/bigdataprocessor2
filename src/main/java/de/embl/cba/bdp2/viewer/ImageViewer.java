@@ -1,5 +1,6 @@
 package de.embl.cba.bdp2.viewer;
 
+import bdv.TransformEventHandler3D;
 import bdv.tools.brightness.ConverterSetup;
 import bdv.tools.brightness.MinMaxGroup;
 import bdv.tools.brightness.SetupAssignments;
@@ -29,7 +30,7 @@ import net.imglib2.util.Intervals;
 import net.imglib2.util.Util;
 import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
-import org.scijava.ui.behaviour.ClickBehaviour;
+import org.scijava.ui.behaviour.*;
 import org.scijava.ui.behaviour.io.InputTriggerConfig;
 import org.scijava.ui.behaviour.util.Behaviours;
 
@@ -451,6 +452,18 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
             options = options.addTo( bdvHandle );
             this.channelSources.add( stackSource );
         }
+
+        if ( ! enableArbitraryPlaneSlicing )
+        {
+            final BehaviourMap behaviourMap = new BehaviourMap();
+            //final Behaviour behaviour = new Behaviour() {};
+            behaviourMap.put( TransformEventHandler3D.DRAG_ROTATE, null );
+            behaviourMap.put( TransformEventHandler3D.DRAG_ROTATE_FAST, null );
+            behaviourMap.put( TransformEventHandler3D.DRAG_ROTATE_SLOW, null );
+            bdvHandle.getTriggerbindings().addBehaviourMap( "BLOCKMAP", behaviourMap );
+        }
+
+
     }
 
     private BdvOptions getBdvOptions( Image< R > image, AffineTransform3D scaling )
@@ -461,10 +474,6 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
                 .numRenderingThreads( numRenderingThreads )
                 .frameTitle( VIEWER_TITLE_STUMP + image.getName() );
 
-        if ( ! enableArbitraryPlaneSlicing )
-        {
-            options = options.transformEventHandlerFactory( new BehaviourTransformEventHandler3DWithoutRotation.BehaviourTransformEventHandler3DFactory() );
-        }
         return options;
     }
 

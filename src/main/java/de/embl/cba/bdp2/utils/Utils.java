@@ -404,7 +404,6 @@ public class Utils {
         }
     }
 
-
     public static void centerBdvViewToPosition( double[] position, double scale, Bdv bdv )
     {
         final AffineTransform3D newViewerTransform = getNewViewerTransform( position, scale, bdv, null );
@@ -419,8 +418,6 @@ public class Utils {
                 new SimilarityTransformAnimator( currentViewerTransform, newViewerTransform, cX ,cY, 3000 );
 
         bdv.getBdvHandle().getViewerPanel().setTransformAnimator( similarityTransformAnimator );
-
-        bdv.getBdvHandle().getViewerPanel().transformChanged( currentViewerTransform );
     }
 
     private static AffineTransform3D getNewViewerTransform( double[] position, double scale, Bdv bdv, AffineTransform3D currentViewerTransform )

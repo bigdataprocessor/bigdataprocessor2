@@ -5,6 +5,8 @@ import bdv.tools.boundingbox.TransformedBoxOverlay;
 import bdv.tools.brightness.SliderPanel;
 import bdv.util.BoundedValue;
 import bdv.util.ModifiableInterval;
+import bdv.viewer.InteractiveDisplayCanvas;
+import bdv.viewer.OverlayRenderer;
 import bdv.viewer.ViewerPanel;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.process.align.channelshift.AlignChannelsDialog;
@@ -23,7 +25,7 @@ import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.ui.InteractiveDisplayCanvasComponent;
-import net.imglib2.ui.OverlayRenderer;
+import org.scijava.listeners.Listeners;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -299,8 +301,7 @@ public class SplitChipDialog< R extends RealType< R > & NativeType< R > > extend
 
 				} );
 
-		transformedBoxOverlay.boxDisplayMode().set(
-				TransformedBoxOverlay.BoxDisplayMode.SECTION );
+		transformedBoxOverlay.boxDisplayMode().set( TransformedBoxOverlay.BoxDisplayMode.SECTION );
 
 		final ViewerPanel viewerPanel = viewer.getBdvHandle().getViewerPanel();
 		viewerPanel.getDisplay().addOverlayRenderer( transformedBoxOverlay );
@@ -311,10 +312,11 @@ public class SplitChipDialog< R extends RealType< R > & NativeType< R > > extend
 
 	private void removeOverlays()
 	{
-		final InteractiveDisplayCanvasComponent< AffineTransform3D > display = viewer.getBdvHandle().getViewerPanel().getDisplay();
+		final Listeners< OverlayRenderer > overlays = viewer.getBdvHandle().getViewerPanel().getDisplay().overlays();
+
 		for ( OverlayRenderer overlayRenderer : overlayRenderers )
 		{
-			display.removeOverlayRenderer( overlayRenderer );
+			overlays.remove( overlayRenderer );
 		}
 	}
 
