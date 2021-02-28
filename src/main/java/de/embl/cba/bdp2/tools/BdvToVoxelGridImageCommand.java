@@ -10,12 +10,9 @@ import org.scijava.widget.FileWidget;
 
 import java.io.File;
 
-@Plugin(type = Command.class,
-		menuPath = "Plugins>BigDataTools>Convert XML/HDF5 to Single Resolution Image")
-public class BdvToVoxelGridImageCommand< T extends RealType< T > & NativeType< T > >
-		implements Command
+@Plugin(type = Command.class, menuPath = "Plugins>BigDataTools>Convert XML/HDF5 to Single Resolution Image")
+public class BdvToVoxelGridImageCommand< T extends RealType< T > & NativeType< T > > implements Command
 {
-
 	@Parameter( label = "XML/HDF5 source image", style = FileWidget.OPEN_STYLE )
 	public File bdvSourceImage;
 

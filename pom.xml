@@ -8,7 +8,7 @@
 	</parent>
 	<groupId>de.embl.cba</groupId>
 	<artifactId>bigDataProcessor2</artifactId>
-	<version>1.0.1</version>
+	<version>1.0.2</version>
 	<url>https://github.com/embl-cba/bigDataProcessor2</url>
 	<name>BigDataProcessor2</name>
 	<description>Fiji plugin for inspection and processing of big image data</description>
@@ -100,12 +100,13 @@
 		<imglib2-cache.version>1.0.0-beta-16</imglib2-cache.version>
 		<bigdataviewer-core.version>10.2.0</bigdataviewer-core.version>
 		<bigdataviewer-vistools.version>1.0.0-beta-28</bigdataviewer-vistools.version>
-<!--		<bigdataviewer_fiji.version>LATEST</bigdataviewer_fiji.version>-->
 
+		<!-- BIOP -->
 		<bigdataviewer-bioformats.version>0.2.15</bigdataviewer-bioformats.version>
 
+		<!-- EMBL CBA -->
 		<imaris-writer.version>0.2.3</imaris-writer.version>
-		<imagej-utils.version>0.6.0-SNAPSHOT</imagej-utils.version>
+		<imagej-utils.version>0.6.0</imagej-utils.version>
 		<imagej-cluster.version>0.6.5</imagej-cluster.version>
 
 	</properties>

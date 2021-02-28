@@ -6,6 +6,7 @@ import bdv.tools.brightness.MinMaxGroup;
 import bdv.tools.brightness.SetupAssignments;
 import bdv.util.*;
 import bdv.util.volatiles.VolatileViews;
+import bdv.viewer.ConverterSetups;
 import bdv.viewer.DisplayMode;
 import bdv.viewer.SourceAndConverter;
 import de.embl.cba.bdp2.boundingbox.BoundingBoxDialog;
@@ -170,7 +171,7 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
         showImage( image, autoContrast );
 
         if ( keepViewerTransform )
-            bdvHandle.getViewerPanel().setCurrentViewerTransform( viewerTransform );
+            bdvHandle.getViewerPanel().state().setViewerTransform( viewerTransform );
 
         if ( ! autoContrast )
             setDisplaySettings( displaySettings );
@@ -183,7 +184,7 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
 
         final ImageViewer< R > imageViewer = new ImageViewer<>( image );
 
-        imageViewer.getBdvHandle().getViewerPanel().setCurrentViewerTransform( viewerTransform );
+        imageViewer.getBdvHandle().getViewerPanel().state().setViewerTransform( viewerTransform );
         imageViewer.setDisplaySettings( displaySettings );
 
         return imageViewer;
@@ -204,19 +205,20 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
         }
     }
 
-    private void removeAllSourcesFromBdv() {
-        int nSources = bdvHandle.getViewerPanel().getState().getSources().size();
-        for (int source = 0; source < nSources; ++source) {
-            SourceAndConverter scnv = bdvHandle.getViewerPanel().getState().getSources().get(0);
-            bdvHandle.getViewerPanel().removeSource(scnv.getSpimSource());
-            //source is always 0 (zero) because SourceAndConverter object gets removed from bdvSS.
-            //Hence source is always at position 0 of the bdvSS.
+    private void removeAllSourcesFromBdv()
+    {
+        final List< SourceAndConverter< ? > > sources = bdvHandle.getViewerPanel().state().getSources();
+        for ( SourceAndConverter< ? > source : sources )
+        {
+            bdvHandle.getViewerPanel().state().removeSource( source );
         }
 
-        int nChannels = bdvHandle.getSetupAssignments().getConverterSetups().size();
+        final List< ConverterSetup > converterSetups = bdvHandle.getConverterSetups().getConverterSetups( sources );
+
+        int nChannels = sources.size();
         for (int channel = 0; channel < nChannels; ++channel) {
             ConverterSetup converterSetup = bdvHandle.getSetupAssignments().getConverterSetups().get(0);
-            bdvHandle.getSetupAssignments().removeSetup(converterSetup);
+            bdvHandle.getSetupAssignments().removeSetup( converterSetup );
             //channel is always 0 (zero) because converterSetup object gets removed from bdvSS.
             //Hence current channel is always at position 0 of the bdvSS.
         }
@@ -229,33 +231,20 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
 
     public void setDisplaySettings( double min, double max, ARGBType color, int channel )
     {
-        final boolean groupingEnabled = bdvHandle.getViewerPanel().getVisibilityAndGrouping().isGroupingEnabled();
-        final DisplayMode displayMode = bdvHandle.getViewerPanel().getVisibilityAndGrouping().getDisplayMode();
-
-        final SetupAssignments setupAssignments = bdvHandle.getSetupAssignments();
-
-        final List< ConverterSetup > converterSetups = setupAssignments.getConverterSetups();
-        final ConverterSetup converterSetup = converterSetups.get( channel );
-        final MinMaxGroup minMaxGroup = setupAssignments.getMinMaxGroup( converterSetup );
-
-        setupAssignments.removeSetupFromGroup( converterSetup,  setupAssignments.getMinMaxGroup( converterSetup ) );
-
+        final ConverterSetup converterSetup = channelSources.get( channel ).getConverterSetups().get( 0 );
         converterSetup.setDisplayRange( min, max );
 
         if ( color != null )
             converterSetup.setColor( color );
-
-        minMaxGroup.getMinBoundedValue().setCurrentValue( min );
-        minMaxGroup.getMaxBoundedValue().setCurrentValue( max );
     }
 
     public List< DisplaySettings > getDisplaySettings()
     {
-        final List< ConverterSetup > converterSetups = bdvHandle.getSetupAssignments().getConverterSetups();
-
         final ArrayList< DisplaySettings > displaySettings = new ArrayList<>();
-        for ( ConverterSetup converterSetup : converterSetups )
+
+        for ( BdvStackSource< R > channelSource : channelSources )
         {
+            final ConverterSetup converterSetup = channelSource.getConverterSetups().get( 0 );
             if ( converterSetup instanceof PlaceHolderConverterSetup ) continue;
 
             displaySettings.add(
@@ -273,7 +262,6 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
      * center slice of the first time point for the RandomAccessibleInterval
      * as a DisplaySettings object of the requested channel.
      */
-    
     public DisplaySettings getAutoContrastDisplaySettings( int channel )
     {
         double min, max;
@@ -291,9 +279,6 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
                     raiXYZ,
                     DimensionOrder.Z,
                     sliceIndex );
-
-            final long nx = raiXY.dimension( 0 );
-            final long ny = raiXY.dimension( 1 );
 
             // take only a central part to speed it up a bit
             final FinalInterval crop = Intervals.expand( raiXY, 0, DimensionOrder.Y );
@@ -348,30 +333,12 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
     public AffineTransform3D getViewerTransform()
     {
         final AffineTransform3D transform3D = new AffineTransform3D();
-        bdvHandle.getViewerPanel().getState().getViewerTransform( transform3D );
+        bdvHandle.getViewerPanel().state().getViewerTransform( transform3D );
         return transform3D; //  transform3D.copy();
     }
 
-    public void setViewerTransform( AffineTransform3D viewerTransform )
-    {
-        bdvHandle.getViewerPanel()
-                .setCurrentViewerTransform( viewerTransform );
-    }
-
     public int getCurrentTimePoint() {
-        return this.bdvHandle.getViewerPanel().getState().getCurrentTimepoint();
-    }
-
-    
-    public void shiftImageToCenter(double[] centerCoordinates) {
-        AffineTransform3D sourceTransform = new AffineTransform3D();
-        int width = this.bdvHandle.getViewerPanel().getWidth();
-        int height = this.bdvHandle.getViewerPanel().getHeight();
-        centerCoordinates[0] = (width / 2.0 + centerCoordinates[0]);
-        centerCoordinates[1] = (height / 2.0 - centerCoordinates[1]);
-        centerCoordinates[2] = -centerCoordinates[2];
-        sourceTransform.translate(centerCoordinates);
-        repaint(sourceTransform);
+        return this.bdvHandle.getViewerPanel().state().getCurrentTimepoint();
     }
 
     public BdvHandle getBdvHandle()
@@ -387,8 +354,6 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
         ImageService.imageNameToImage.put( image.getName(), image );
 
         addToBdv( image );
-
-        //bdvHandle.getViewerPanel().setInterpolation( Interpolation.NLINEAR );
 
         setAutoColors();
 
@@ -443,7 +408,7 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
         {
             final IntervalView channelView = Views.hyperSlice( cachedCellImg, DimensionOrder.C, channelIndex );
 
-            final BdvStackSource stackSource = BdvFunctions.show(
+            final BdvStackSource< R > stackSource = BdvFunctions.show(
                     VolatileViews.wrapAsVolatile( channelView ),
                     channelNames[ channelIndex ],
                     options );
@@ -456,14 +421,12 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
         if ( ! enableArbitraryPlaneSlicing )
         {
             final BehaviourMap behaviourMap = new BehaviourMap();
-            //final Behaviour behaviour = new Behaviour() {};
-            behaviourMap.put( TransformEventHandler3D.DRAG_ROTATE, null );
-            behaviourMap.put( TransformEventHandler3D.DRAG_ROTATE_FAST, null );
-            behaviourMap.put( TransformEventHandler3D.DRAG_ROTATE_SLOW, null );
+            final Behaviour behaviour = new Behaviour() {};
+            behaviourMap.put( TransformEventHandler3D.DRAG_ROTATE, behaviour );
+            behaviourMap.put( TransformEventHandler3D.DRAG_ROTATE_FAST, behaviour );
+            behaviourMap.put( TransformEventHandler3D.DRAG_ROTATE_SLOW, behaviour );
             bdvHandle.getTriggerbindings().addBehaviourMap( "BLOCKMAP", behaviourMap );
         }
-
-
     }
 
     private BdvOptions getBdvOptions( Image< R > image, AffineTransform3D scaling )

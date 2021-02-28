@@ -16,7 +16,7 @@ public class TrackDisplayBehaviour
 
 		behaviours.behaviour( ( ClickBehaviour ) ( x, y ) -> {
 			(new Thread( () -> {
-				moveToTrackPosition( bdv, track, bdv.getViewerPanel().getState().getCurrentTimepoint() + 1 );
+				moveToTrackPosition( bdv, track, bdv.getViewerPanel().state().getCurrentTimepoint() + 1 );
 			} )).start();
 
 		}, "Move forward along drift" + track.getName(), "ctrl M"  ) ;
@@ -24,7 +24,7 @@ public class TrackDisplayBehaviour
 
 		behaviours.behaviour( ( ClickBehaviour ) ( x, y ) -> {
 			(new Thread( () -> {
-				moveToTrackPosition( bdv, track, bdv.getViewerPanel().getState().getCurrentTimepoint() - 1 );
+				moveToTrackPosition( bdv, track, bdv.getViewerPanel().state().getCurrentTimepoint() - 1 );
 			} )).start();
 
 		}, "Move backward along drift" + track.getName(), "ctrl N"  ) ;

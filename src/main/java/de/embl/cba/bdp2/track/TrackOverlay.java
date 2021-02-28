@@ -31,11 +31,7 @@ public class TrackOverlay extends BdvOverlay
 	@Override
 	protected void draw( final Graphics2D g )
 	{
-		final int numTimepoints = bdvHandle.getViewerPanel().getState().getNumTimepoints();
-		final int currentTimepoint = bdvHandle.getViewerPanel().getState().getCurrentTimepoint();
-
-		final ArrayList< Integer > timePoints = new ArrayList<>( track.getTimePoints() );
-
+		final int numTimepoints = bdvHandle.getViewerPanel().state().getNumTimepoints();
 		for ( int t = 0; t < numTimepoints ; t++ )
 		{
 			drawShape( g, t );
@@ -71,7 +67,7 @@ public class TrackOverlay extends BdvOverlay
 
 	private Shape getShape( int t )
 	{
-		if ( t == bdvHandle.getViewerPanel().getState().getCurrentTimepoint() )
+		if ( t == bdvHandle.getViewerPanel().state().getCurrentTimepoint() )
 			return Shape.Filled;
 		else
 			return Shape.Empty;

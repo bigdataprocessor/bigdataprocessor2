@@ -424,7 +424,7 @@ public class Utils {
     {
         final AffineTransform3D newViewerTransform = new AffineTransform3D();
 
-//		bdv.getBdvHandle().getViewerPanel().getState().getViewerTransform( viewerTransform );
+//		bdv.getBdvHandle().getViewerPanel().state().getViewerTransform( viewerTransform );
         int[] bdvWindowDimensions = new int[ 3 ];
         bdvWindowDimensions[ 0 ] = bdv.getBdvHandle().getViewerPanel().getWidth();
         bdvWindowDimensions[ 1 ] = bdv.getBdvHandle().getViewerPanel().getHeight();

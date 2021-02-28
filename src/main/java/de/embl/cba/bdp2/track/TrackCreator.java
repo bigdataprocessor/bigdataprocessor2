@@ -87,15 +87,15 @@ public class TrackCreator extends JFrame
 
 	private void moveFwd()
 	{
-		final int currentTimepoint = bdvHandle.getViewerPanel().getState().getCurrentTimepoint();
+		final int currentTimepoint = bdvHandle.getViewerPanel().state().getCurrentTimepoint();
 		final int t = currentTimepoint + Integer.parseInt( dt.getText() );
-		if ( t < bdvHandle.getViewerPanel().getState().getNumTimepoints() )
+		if ( t < bdvHandle.getViewerPanel().state().getNumTimepoints() )
 			moveToTrackPosition( t );
 	}
 
 	private void moveBwd()
 	{
-		final int currentTimepoint = bdvHandle.getViewerPanel().getState().getCurrentTimepoint();
+		final int currentTimepoint = bdvHandle.getViewerPanel().state().getCurrentTimepoint();
 		final int t = currentTimepoint - Integer.parseInt( dt.getText() );
 		if ( t >= 0 )
 			moveToTrackPosition( t );
@@ -282,7 +282,7 @@ public class TrackCreator extends JFrame
 		{
 			(new Thread( () -> {
 				final RealPoint point = BdvUtils.getGlobalMouseCoordinates( bdvHandle );
-				final int timepoint = bdvHandle.getViewerPanel().getState().getCurrentTimepoint();
+				final int timepoint = bdvHandle.getViewerPanel().state().getCurrentTimepoint();
 				track.setPosition( timepoint, point, TrackPosition.PositionType.Anchor );
 				if ( automaticLinearInterpolation )
 				{
