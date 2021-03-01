@@ -99,7 +99,7 @@ public class FileSeriesCachedCellImgCreator< R extends RealType< R > & NativeTyp
         return cellDims;
     }
 
-    public CachedCellImg< R, ? > createCachedCellImg( int[] cellDimsXYZCT, DiskCachedCellImgOptions.CacheType cacheType, long cacheSize )
+    public CachedCellImg< R, ? > createCachedCellImg( int[] cellDimsXYZCT, CacheOptions.CacheType cacheType, long cacheSize )
     {
         final FileSeriesCellLoader loader = new FileSeriesCellLoader<>( fileInfos, cellDimsXYZCT );
 

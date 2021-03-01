@@ -28,7 +28,7 @@ public class ImageSaverFactory < R extends RealType< R > & NativeType< R > >
             // TODO: for cropped images only fully load the cropped region
             // TODO: for input data distributed across TIFF planes this should be reconsidered
             long cacheSize = image.getDimensionsXYZCT()[ DimensionOrder.C ] * settings.numIOThreads;
-            imageForSaving.setVolumeCache( DiskCachedCellImgOptions.CacheType.BOUNDED, (int) cacheSize );
+            imageForSaving.setVolumeCache( CacheOptions.CacheType.BOUNDED, (int) cacheSize );
         }
 
         // Prepare multi-threaded I/O

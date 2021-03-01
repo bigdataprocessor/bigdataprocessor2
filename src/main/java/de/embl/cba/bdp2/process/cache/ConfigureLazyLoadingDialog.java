@@ -52,7 +52,7 @@ public class ConfigureLazyLoadingDialog< R extends RealType< R > & NativeType< R
 		cachedCellDims[ DimensionOrder.Z ] = (int) gd.getNextNumber();
 
 		// cache size is ignored for SOFTREF
-		inputImage.setCache( cachedCellDims, DiskCachedCellImgOptions.CacheType.SOFTREF, 0 );
+		inputImage.setCache( cachedCellDims, CacheOptions.CacheType.SOFTREF, 0 );
 
 		viewer.replaceImage( inputImage, false, true );
 

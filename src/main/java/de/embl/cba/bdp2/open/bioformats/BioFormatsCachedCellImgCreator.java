@@ -147,7 +147,7 @@ public class BioFormatsCachedCellImgCreator < R extends RealType< R > & NativeTy
 	}
 
 	@Override
-	public RandomAccessibleInterval< R > createCachedCellImg( int[] cellDimsXYZCT, DiskCachedCellImgOptions.CacheType cacheType, long cacheSize )
+	public RandomAccessibleInterval< R > createCachedCellImg( int[] cellDimsXYZCT, CacheOptions.CacheType cacheType, long cacheSize )
 	{
 		// TODO: in fact here the raiXYCZT should be built with a cache according to the function arguments
 		return raiXYCZT;

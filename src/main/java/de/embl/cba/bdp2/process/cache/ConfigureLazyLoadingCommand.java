@@ -8,6 +8,7 @@ import de.embl.cba.bdp2.process.AbstractImageProcessingCommand;
 import de.embl.cba.bdp2.service.ImageService;
 import de.embl.cba.bdp2.viewer.ImageViewer;
 import net.imglib2.cache.img.DiskCachedCellImgOptions;
+import net.imglib2.cache.img.optional.CacheOptions;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.plugin.Parameter;
@@ -28,7 +29,7 @@ public class ConfigureLazyLoadingCommand< R extends RealType< R > & NativeType< 
     public static String CACHE_DIMENSIONS = "chacheDimensions";
 
     // TODO: Make a choice
-    private DiskCachedCellImgOptions.CacheType cacheType = DiskCachedCellImgOptions.CacheType.SOFTREF;
+    private CacheOptions.CacheType cacheType = CacheOptions.CacheType.SOFTREF;
 
     @Override
     public void run()
@@ -43,7 +44,7 @@ public class ConfigureLazyLoadingCommand< R extends RealType< R > & NativeType< 
         final int[] cacheDims = Arrays.stream( chacheDimensions.split( "," ) ).mapToInt( i -> Integer.parseInt( i ) ).toArray();
 
         outputImage = new Image<>( inputImage );
-        outputImage.setCache( cacheDims, DiskCachedCellImgOptions.CacheType.SOFTREF, 0  );
+        outputImage.setCache( cacheDims, CacheOptions.CacheType.SOFTREF, 0  );
         outputImage.setName( outputImageName );
 
         Logger.info( "\n# " + ConfigureLazyLoadingCommand.COMMAND_NAME );

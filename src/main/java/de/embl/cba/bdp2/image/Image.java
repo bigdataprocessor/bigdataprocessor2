@@ -12,6 +12,7 @@ import de.embl.cba.bdp2.viewer.ImageViewer;
 import mpicbg.imglib.multithreading.Stopable;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.cache.img.DiskCachedCellImgOptions;
+import net.imglib2.cache.img.optional.CacheOptions;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
@@ -70,8 +71,8 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		this.voxelUnit = cachedCellImgCreator.getVoxelUnit();
 
 		// cache size is ignored for SOFTREF
-		setCache( cachedCellImgCreator.getDefaultCellDimsXYZCT(), DiskCachedCellImgOptions.CacheType.SOFTREF, 1000 );
-		this.rai = cachedCellImgCreator.createCachedCellImg( cachedCellDims, DiskCachedCellImgOptions.CacheType.BOUNDED, 100 );
+		setCache( cachedCellImgCreator.getDefaultCellDimsXYZCT(), CacheOptions.CacheType.SOFTREF, 1000 );
+		this.rai = cachedCellImgCreator.createCachedCellImg( cachedCellDims, CacheOptions.CacheType.BOUNDED, 100 );
 		this.rawDataDimensions = this.getDimensionsXYZCT();
 		this.type = Util.getTypeFromInterval( rai );
 	}
@@ -297,7 +298,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 	 * @param cacheType
 	 * @param cacheSize ignored for SOFTREF
 	 */
-	public void setCache( int[] cellDims, DiskCachedCellImgOptions.CacheType cacheType, int cacheSize )
+	public void setCache( int[] cellDims, CacheOptions.CacheType cacheType, int cacheSize )
 	{
 		this.cachedCellDims = cellDims;
 
@@ -315,7 +316,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 	 * @param cacheType
 	 * @param cacheSize
 	 */
-	public void setVolumeCache( DiskCachedCellImgOptions.CacheType cacheType, int cacheSize )
+	public void setVolumeCache( CacheOptions.CacheType cacheType, int cacheSize )
 	{
 		cachedCellDims = CacheUtils.volumeWiseCellDims( rawDataDimensions );
 
