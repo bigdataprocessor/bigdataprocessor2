@@ -38,10 +38,7 @@ import org.scijava.ui.behaviour.util.Behaviours;
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public class ImageViewer< R extends RealType< R > & NativeType< R > >
 {
@@ -207,20 +204,12 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
 
     private void removeAllSourcesFromBdv()
     {
-        final List< SourceAndConverter< ? > > sources = bdvHandle.getViewerPanel().state().getSources();
+        // Get a thread safe copy of the sources
+        final List< SourceAndConverter< ? > > sources = new ArrayList<>( bdvHandle.getViewerPanel().state().getSources() );
+
         for ( SourceAndConverter< ? > source : sources )
         {
             bdvHandle.getViewerPanel().state().removeSource( source );
-        }
-
-        final List< ConverterSetup > converterSetups = bdvHandle.getConverterSetups().getConverterSetups( sources );
-
-        int nChannels = sources.size();
-        for (int channel = 0; channel < nChannels; ++channel) {
-            ConverterSetup converterSetup = bdvHandle.getSetupAssignments().getConverterSetups().get(0);
-            bdvHandle.getSetupAssignments().removeSetup( converterSetup );
-            //channel is always 0 (zero) because converterSetup object gets removed from bdvSS.
-            //Hence current channel is always at position 0 of the bdvSS.
         }
     }
 

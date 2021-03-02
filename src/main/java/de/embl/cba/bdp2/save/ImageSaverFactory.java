@@ -7,6 +7,7 @@ import de.embl.cba.bdp2.save.tiff.TIFFPlanesSaver;
 import de.embl.cba.bdp2.save.tiff.TIFFFramesSaver;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import net.imglib2.cache.img.DiskCachedCellImgOptions;
+import net.imglib2.cache.img.optional.CacheOptions;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 

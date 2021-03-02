@@ -7,7 +7,6 @@ import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.process.AbstractImageProcessingCommand;
 import de.embl.cba.bdp2.service.ImageService;
 import de.embl.cba.bdp2.viewer.ImageViewer;
-import net.imglib2.cache.img.DiskCachedCellImgOptions;
 import net.imglib2.cache.img.optional.CacheOptions;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
