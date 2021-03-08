@@ -20,7 +20,7 @@ public class TestOpenBioFormatsAndSaveAsBDVHDF5
         new TestOpenBioFormatsAndSaveAsBDVHDF5().run();
     }
 
-    //@Test
+    //@Test // data only local
     public void run()
     {
         final Image image = BigDataProcessor2.openBioFormats( "/Users/tischer/Downloads/StackExampleMarch2021/Brain39_cell1_DC-crop.xml", 0 );
