@@ -6,19 +6,18 @@ import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.save.SaveFileType;
 import de.embl.cba.bdp2.save.SavingSettings;
 import org.junit.Test;
-import org.ojalgo.matrix.transformation.Rotation;
 import test.Utils;
 
 import static de.embl.cba.bdp2.open.NamingSchemes.MULTI_CHANNEL_VOLUMES;
 import static de.embl.cba.bdp2.open.NamingSchemes.TIF;
 
-public class TestOpenMultiChannel16BitTiffVolumesAndSaveAsImarisVolumes
+public class TestOpenMultiChannel16BitTIFFVolumesAndSaveAsImarisVolumes
 {
     public static void main(String[] args)
     {
         Utils.prepareInteractiveMode();
 
-        new TestOpenMultiChannel16BitTiffVolumesAndSaveAsImarisVolumes().run();
+        new TestOpenMultiChannel16BitTIFFVolumesAndSaveAsImarisVolumes().run();
     }
 
     @Test

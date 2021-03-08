@@ -93,10 +93,11 @@ public class SaveAdvancedDialog< R extends RealType< R > & NativeType< R > > ext
         mainPanel.add( panels.get(panelIndex++));
 
         cbSaveVolume.setSelected(true);
-        cbSaveProjection.setSelected(true);
 
         if ( ! saveFileType.equals( SaveFileType.BigDataViewerXMLHDF5 ) )
         {
+            cbSaveProjection.setSelected(true);
+
             panels.add( new JPanel() );
             panels.get( panelIndex ).add( cbSaveVolume );
             panels.get( panelIndex ).add( cbSaveProjection );

@@ -11,13 +11,13 @@ import test.Utils;
 import static de.embl.cba.bdp2.open.NamingSchemes.MULTI_CHANNEL_VOLUMES;
 import static de.embl.cba.bdp2.open.NamingSchemes.TIF;
 
-public class TestOpenMultiChannel16BitTiffVolumesAndSaveAsUncompressedTiffVolumes
+public class TestOpenMultiChannel16BitTIFFVolumesAndSaveAsBDVHDF5
 {
     public static void main(String[] args)
     {
         Utils.prepareInteractiveMode();
 
-        new TestOpenMultiChannel16BitTiffVolumesAndSaveAsUncompressedTiffVolumes().run();
+        new TestOpenMultiChannel16BitTIFFVolumesAndSaveAsBDVHDF5().run();
     }
 
     @Test
@@ -28,8 +28,8 @@ public class TestOpenMultiChannel16BitTiffVolumesAndSaveAsUncompressedTiffVolume
         image.setVoxelDimensions( new double[]{1.0, 1.0, 1.0} );
 
         final SavingSettings settings = SavingSettings.getDefaults();
-        settings.volumesFilePathStump = "src/test/resources/test/output/tiff/" + image.getName();
-        settings.fileType = SaveFileType.TIFFVolumes;
+        settings.volumesFilePathStump = "src/test/resources/test/output/bdv/" + image.getName();
+        settings.fileType = SaveFileType.BigDataViewerXMLHDF5;
         settings.numProcessingThreads = 4;
         settings.numIOThreads = 1;
         settings.compression = SavingSettings.COMPRESSION_NONE;

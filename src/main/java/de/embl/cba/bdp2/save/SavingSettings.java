@@ -22,7 +22,7 @@ public class SavingSettings  {
 
     public boolean saveVolumes;
     public String volumesFilePathStump;
-    public boolean saveProjections;
+    public boolean saveProjections = false;
     public String projectionsFilePathStump;
     public SaveFileType fileType;
     public String compression;

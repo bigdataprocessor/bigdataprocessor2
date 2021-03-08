@@ -5,6 +5,7 @@ import de.embl.cba.bdp2.dialog.DisplaySettings;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.open.CacheUtils;
 import de.embl.cba.bdp2.open.CachedCellImgCreator;
+import de.embl.cba.bdp2.open.bioformats.BioFormatsCachedCellImgCreator;
 import de.embl.cba.bdp2.save.CachedCellImgReplacer;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
@@ -300,6 +301,12 @@ public class Image< R extends RealType< R > & NativeType< R > >
 	 */
 	public void setCache( int[] cellDims, CacheOptions.CacheType cacheType, int cacheSize )
 	{
+//		if ( cachedCellImgCreator instanceof BioFormatsCachedCellImgCreator )
+//		{
+//			Logger.info( "Adapting cache size currently not supported when loading with Bio-Formats." );
+//			return; // changing the cache does currently not work
+//		}
+
 		this.cachedCellDims = cellDims;
 
 		RandomAccessibleInterval< R > cachedCellImg = cachedCellImgCreator.createCachedCellImg( cellDims, cacheType, cacheSize );
@@ -318,6 +325,12 @@ public class Image< R extends RealType< R > & NativeType< R > >
 	 */
 	public void setVolumeCache( CacheOptions.CacheType cacheType, int cacheSize )
 	{
+		if ( cachedCellImgCreator instanceof BioFormatsCachedCellImgCreator )
+		{
+			Logger.info( "Adapting cache size currently not supported when loading with Bio-Formats." );
+			return; // changing the cache does currently not work
+		}
+
 		cachedCellDims = CacheUtils.volumeWiseCellDims( rawDataDimensions );
 
 		if ( cachedCellDims[ DimensionOrder.Z ] < ( int ) rawDataDimensions[ DimensionOrder.Z ] )
