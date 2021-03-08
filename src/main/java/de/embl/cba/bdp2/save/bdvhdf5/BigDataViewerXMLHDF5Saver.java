@@ -81,7 +81,7 @@ public class BigDataViewerXMLHDF5Saver< R extends RealType< R > & NativeType< R 
 		{
 			for ( ProgressListener progressListener : progressListeners )
 			{
-				progressListener.progress( (long) completionRatio * 1000, 1000 );
+				progressListener.progress( (long) ( completionRatio * 100.0), 100 );
 			}
 		}
 	}

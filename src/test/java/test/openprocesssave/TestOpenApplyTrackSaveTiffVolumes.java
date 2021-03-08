@@ -43,6 +43,6 @@ public class TestOpenApplyTrackSaveTiffVolumes
         settings.volumesFilePathStump = "src/test/resources/test/output/tracked-tiff/" + trackedImage.getName();
         settings.tStart = 0;
         settings.tEnd = trackedImage.getNumTimePoints() - 1;
-        BigDataProcessor2.saveImage( trackedImage, settings, new LoggingProgressListener( "Files saved" ) );
+        BigDataProcessor2.saveImage( trackedImage, settings, new LoggingProgressListener( "Progress" ) );
     }
 }

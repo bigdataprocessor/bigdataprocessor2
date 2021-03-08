@@ -48,6 +48,6 @@ public class DevelopSavingWithoutMemoryLeak
 //		savingSettings.saveVolumes = true;
 //		savingSettings.volumesFilePathStump = "/Volumes/cba/exchange/bigdataprocessor/data/tmp/volumes-";
 //
-//		BigDataProcessor2.saveImage( image, savingSettings, new LoggingProgressListener( "Files saved" ) );
+//		BigDataProcessor2.saveImage( image, savingSettings, new LoggingProgressListener( "Progress" ) );
 	}
 }

@@ -38,6 +38,6 @@ public class TestOpenProcessSaveViventisBigData
 		savingSettings.compression = "None";
 		savingSettings.tStart = 0;
 		savingSettings.tEnd = 1;
-		BigDataProcessor2.saveImage( image, savingSettings, new LoggingProgressListener( "Files saved" ) );
+		BigDataProcessor2.saveImage( image, savingSettings, new LoggingProgressListener( "Progress" ) );
 	}
 }

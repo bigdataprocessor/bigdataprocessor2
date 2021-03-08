@@ -42,7 +42,7 @@ public class TestOpenProcessSaveLuxendoBigData
 		savingSettings.compression = "None";
 		savingSettings.tStart = 0;
 		savingSettings.tEnd = 143;
-		BigDataProcessor2.saveImage( image, savingSettings, new LoggingProgressListener( "Files saved" ) );
+		BigDataProcessor2.saveImage( image, savingSettings, new LoggingProgressListener( "Progress" ) );
 
 	}
 }

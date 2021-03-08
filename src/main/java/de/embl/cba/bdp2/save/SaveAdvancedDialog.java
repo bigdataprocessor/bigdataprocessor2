@@ -253,7 +253,7 @@ public class SaveAdvancedDialog< R extends RealType< R > & NativeType< R > > ext
                     image,
                     savingSettings,
                     progressBar() );
-            saver.addProgressListener( new LoggingProgressListener( "Frames saved" ) );
+            saver.addProgressListener( new LoggingProgressListener( "Progress" ) );
         } );
     }
 

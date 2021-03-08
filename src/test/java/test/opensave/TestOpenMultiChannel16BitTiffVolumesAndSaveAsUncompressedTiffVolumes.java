@@ -36,6 +36,6 @@ public class TestOpenMultiChannel16BitTiffVolumesAndSaveAsUncompressedTiffVolume
         settings.tStart = 0;
         settings.tEnd = image.getNumTimePoints() - 1;
 
-        BigDataProcessor2.saveImage( image, settings, new LoggingProgressListener( "Files saved" ) );
+        BigDataProcessor2.saveImage( image, settings, new LoggingProgressListener( "Progress" ) );
     }
 }

@@ -186,7 +186,7 @@ public class BigDataProcessor2
 
     public static< R extends RealType< R > & NativeType< R > > void saveImageAndWaitUntilDone( Image< R > image, SavingSettings savingSettings )
     {
-        final LoggingProgressListener progressListener = new LoggingProgressListener( "Frames saved" );
+        final LoggingProgressListener progressListener = new LoggingProgressListener( "Progress" );
         saveImage( image, savingSettings, progressListener );
         Logger.log( "Saving: " + savingSettings.volumesFilePathStump );
         Progress.waitUntilDone( progressListener, 1000 );
