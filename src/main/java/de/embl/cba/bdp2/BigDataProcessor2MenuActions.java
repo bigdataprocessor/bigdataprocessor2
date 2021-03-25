@@ -300,7 +300,7 @@ public class BigDataProcessor2MenuActions implements ActionListener {
             BigDataProcessor2.threadPool.submit(() ->
             {
                 AbstractOpenFileSeriesCommand.parentViewer = viewer;
-                IJ.run("BDP2 Open Viventis TIFF Series...", "viewingmodality=[Show in new viewer] enablearbitraryplaneslicing=false directory=[/Volumes/Tischi/big-image-data/viventis/Position 2_Settings 1]"); Services.getCommandService().run( OpenLuxendoHDF5SeriesCommand.class, true );
+                Services.getCommandService().run( OpenLuxendoHDF5SeriesCommand.class, true );
             });
         }
         else if( e.getActionCommand().equalsIgnoreCase( OpenViventisTIFFSeriesCommand.COMMAND_NAME ) )

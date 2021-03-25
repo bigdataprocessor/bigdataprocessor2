@@ -20,8 +20,8 @@ public abstract class NamingSchemes
 	public static final String SINGLE_CHANNEL_VOLUMES_2 = ".*--T(" + T + "\\d+)";
 	public static final String MULTI_CHANNEL_VOLUMES_FROM_SUBFOLDERS = "(" + C + ".*)/.*T(" + T + "\\d+)";
 	public static final String MULTI_CHANNEL_VOLUMES = ".*--C(" + C + ".*)--T(" + T + "\\d+)";
-	public static final String LUXENDO = ".*stack_"+ P +"_(?<C1>channel_.*)/(?<C2>Cam_.*)_(" + T + "\\d+)" + HDF5;
-	public static final String LUXENDO_ID = "(?<C2>Cam_.*)_(" + T + "\\d+)" + HDF5;
+	public static final String LUXENDO = ".*stack_"+ P +"_(?<C1>channel_.*)/(?<C2>Cam_.*)_(" + T + "\\d+)(?:.lux)" + HDF5;
+	public static final String LUXENDO_ID = "(?<C2>Cam_.*)_(" + T + "\\d+)(?:.lux)" + HDF5;
 	public static final String LUXENDO_STACKINDEX = ".*stack_("+ P +"\\d+)_channel_.*";
 	public static final String CHANNEL_ID_DELIMITER = "_";
 	public static final String LEICA_DSL_TIFF_PLANES = ".*" + "--t(" + T + "\\d+)" + "--Z(" + Z + "\\d+)" + "--C(" + C + "\\d+).*";

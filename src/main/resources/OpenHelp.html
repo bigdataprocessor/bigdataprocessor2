@@ -157,6 +157,10 @@ Below examples work both with and without zero-padding, e.g. "T0000", "T0001" wo
     <td class="a"><b>.*--t(?&lt;T&gt;\d+)--Z(?&lt;Z&gt;\d+)--C(?&lt;C>\d+).*</b></td>
     <td>Works for Leica DSL. One file contains a a single plane, such as e.g., "Position001_Target--t00--Z00--C00.tif".</td>
   </tr>
+  <tr>
+    <td class="a"><b>.*stack_0_(?&lt;C1&gt;channel_.*)/(?&lt;C2&gt;Cam_.*)_(?&lt;T&gt;\d+)(?:.lux)</b></td>
+    <td>Works for Luxendo. One file contains a single volume.</td>
+  </tr>
 </table>
 </p>
 
