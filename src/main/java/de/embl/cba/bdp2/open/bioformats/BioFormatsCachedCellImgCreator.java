@@ -21,6 +21,7 @@ import org.apache.commons.io.FilenameUtils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 public class BioFormatsCachedCellImgCreator < R extends RealType< R > & NativeType< R > > implements CachedCellImgCreator< R >
@@ -57,9 +58,17 @@ public class BioFormatsCachedCellImgCreator < R extends RealType< R > & NativeTy
 
 		seriesCount = opener.getNewReader().getSeriesCount();
 
-		List<Source> sources = opener
-				.getConcreteSources(series+".*") // code for all channels of the series indexed 'series'
-				.stream().map(src -> (Source) src).collect(Collectors.toList());
+		List< Source > sources;
+		try
+		{
+			sources = opener
+					.getConcreteSources( series + ".*" ) // code for all channels of the series indexed 'series'
+					.stream().map( src -> ( Source ) src ).collect( Collectors.toList() );
+		}
+		catch ( Exception e )
+		{
+			throw new RuntimeException( "Series index too large, please choose a smaller one!\n" + e );
+		}
 
 		List<BioFormatsBdvSource> sourcesBF = sources.stream().map(src ->
 				BioFormatsBdvSource.class.cast( src )

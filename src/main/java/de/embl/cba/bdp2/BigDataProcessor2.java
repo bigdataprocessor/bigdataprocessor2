@@ -68,16 +68,16 @@ public class BigDataProcessor2
 
         if ( seriesIndex > seriesCount - 1 )
         {
-            throw new RuntimeException( "Cannot open series index " + seriesIndex + " because file only contains " + seriesCount + " image series" );
+            throw new RuntimeException( "Cannot open series index " + seriesIndex + " (zero-based) because the file only contains " + seriesCount + " image series" );
         }
 
         if ( seriesCount > 1 )
         {
             Logger.info( "File contains " + seriesCount + " image series" );
-            Logger.info( "Please select series 0 - " + (seriesCount - 1) );
-            Logger.info( "Now, opening series " + seriesIndex );
-
+            Logger.info( "Now, opening series index " + seriesIndex );
+            Logger.info( "To open another series please select an index from 0 - " + (seriesCount - 1) );
         }
+
         Image< R > image = new Image<>( cellImgCreator );
         image.supportsMultiThreadedReading( false ); // TODO: ??
         return image;
