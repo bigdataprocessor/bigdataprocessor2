@@ -64,13 +64,19 @@ public class BigDataProcessor2
         DebugTools.setRootLevel( "OFF" ); // Bio-Formats
         BioFormatsCachedCellImgCreator< R > cellImgCreator = new BioFormatsCachedCellImgCreator<>( filePath, seriesIndex );
 
-        // TODO: support selecting from multi-series files
         int seriesCount = cellImgCreator.getSeriesCount();
+
+        if ( seriesIndex > seriesCount - 1 )
+        {
+            throw new RuntimeException( "Cannot open series index " + seriesIndex + " because file only contains " + seriesCount + " image series" );
+        }
+
         if ( seriesCount > 1 )
         {
-            Logger.warn( "File contains " + seriesCount + " image series, opening the first one." );
-            Logger.warn( "If you need better support for multi-series files please report here:" );
-            Logger.warn( "https://forum.image.sc/t/bigdataprocessor/34963" );
+            Logger.info( "File contains " + seriesCount + " image series" );
+            Logger.info( "Please select series 0 - " + (seriesCount - 1) );
+            Logger.info( "Now, opening series " + seriesIndex );
+
         }
         Image< R > image = new Image<>( cellImgCreator );
         image.supportsMultiThreadedReading( false ); // TODO: ??
