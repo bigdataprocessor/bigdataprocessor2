@@ -18,7 +18,7 @@ Main features:
 [<img align="middle" width="700" alt="image" src="./docs/images/BDP2-SIFigure_1.jpg">](/docs/images/BDP2-SIFigure_1.jpg?raw=true)
 
 
-**[Movie real-time recording](https://www.youtube.com/embed/OixZ0ILbkvc "BigDataProcessor2 Workflow") of a typical BDP2 workflow:** The movie shows a screen recording of a basic processing workflow of an 250 GB HDF5 based image data set acquired by light-sheet microscopy. The following steps are demonstrated: `Open Luxendo HDF5 -> Brightness & Color adjustment -> Set Voxel Size -> Align Channels -> Crop -> Bin -> Save`. The 2 color early mouse embryo data were provided by Manuel Eguren, Ellenberg group EMBL Heidelberg.
+**[Movie real-time recording](https://www.youtube.com/embed/OixZ0ILbkvc "BigDataProcessor2 Workflow") of a typical BDP2 workflow:** The movie shows a screen recording of a basic processing workflow of an 250 GB image data set acquired by light-sheet microscopy and saved in an HDF5 based file format. The following steps are demonstrated: `Open -> Brightness & Color Adjustment -> Set Voxel Size -> Align Channels -> Crop -> Bin -> Save`. The 2 color early mouse embryo data were kindly provided by Manuel Eguren, Ellenberg group, EMBL Heidelberg.
 
 [![BigDataProcessor2 Workflow1](https://img.youtube.com/vi/OixZ0ILbkvc/0.jpg)](https://www.youtube.com/embed/OixZ0ILbkvc "BigDataProcessor2 Workflow")
 
@@ -28,11 +28,11 @@ Main features:
 
 ## Cite
 
-If you find this tool useful, please cite:
+If you use this tool, please cite:
 
 Christian Tischer, Ashis Ravindran, Sabine Reither, Nicolas Chiaruttini, Rainer Pepperkok, Nils Norlin, BigDataProcessor2: A free and open-source Fiji plugin for inspection and processing of TB sized image data, Bioinformatics, 2021; https://doi.org/10.1093/bioinformatics/btab106
 
-(or our bioRxiv preprint: https://www.biorxiv.org/content/10.1101/2020.09.23.244095v1 )
+(or our bioRxiv preprint: https://www.biorxiv.org/content/10.1101/2020.09.23.244095v1)
 
 ## Install
 
