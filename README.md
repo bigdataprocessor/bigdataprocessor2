@@ -170,8 +170,28 @@ Motivation: For the sake of acquisition speed, some fluorescence microscope syst
 
 <img src="./docs/images/Process_Transform.png" width="1000">
 
-Renders an affine view of the data. 
-Motivation: Useful when data is warped due to an acquisition process that renders x-y-z non-orthogonal. Examples are when a stage movement is not orthogonal to the field of view. Also useful in single objective light sheet microscopy.  
+Renders an affine view of the data. The transformation must be given as a comma separated list of 12 values defining an affine transformation, in a so-called row-packed format: `m11,m12,m13,t1,m21,m22,m23,t2,m31,m32,m33,t3`, where the matrix `M` specifies scaling, rotation and shear and the vector `t` specifies the translation. Given a 3D input coordinate `x`, the transformed coordinate `x'` is computed as follows:
+
+```
+
+x' = M x + t
+    
+    x1
+x = x2  
+    x3
+
+    m11 m12 m13
+M = m21 m22 m23    
+    m31 m32 m33  
+    
+    t1
+t = t2
+    t3
+```
+
+
+
+Motivation: This is useful when data is warped due to an acquisition process that renders x-y-z non-orthogonal. Examples are when a stage movement is not orthogonal to the field of view. Also useful in single objective light sheet microscopy.  
  
 
 ## Save
