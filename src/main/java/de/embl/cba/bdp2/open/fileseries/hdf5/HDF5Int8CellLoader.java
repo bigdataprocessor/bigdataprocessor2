@@ -11,7 +11,6 @@ import net.imglib2.Interval;
 
 public class HDF5Int8CellLoader
 {
-
 	private static long[] longDimensions;
 	private static int[] intDimensions;
 	private static long[] longMins;
