@@ -1,10 +1,11 @@
-package de.embl.cba.bdp2.open.fileseries;
+package de.embl.cba.bdp2.open.fileseries.hdf5;
 
 import ch.systemsx.cisd.hdf5.HDF5DataSetInformation;
 import ch.systemsx.cisd.hdf5.HDF5DataTypeInformation;
 import ch.systemsx.cisd.hdf5.HDF5Factory;
 import ch.systemsx.cisd.hdf5.IHDF5Reader;
 import de.embl.cba.bdp2.log.Logger;
+import de.embl.cba.bdp2.open.fileseries.FileInfos;
 import ij.gui.GenericDialog;
 
 import java.util.Arrays;
@@ -15,7 +16,7 @@ public class HDF5Helper
 {
     public static final String HDF5_PARSING_ERROR = "Error during hdf5 metadata extraction from ";
 
-    public static void setImageDataInfoFromH5(
+    public static void setMetadataFromHDF5(
             FileInfos fileInfos,
             String directory,
             String fileName)
@@ -24,47 +25,54 @@ public class HDF5Helper
         IHDF5Reader reader = HDF5Factory.openForReading( filePath );
 
         StringBuilder hdf5DataSetSB = new StringBuilder();
-        if (fileInfos.h5DataSetName != null && !fileInfos.h5DataSetName.isEmpty()
-                && !fileInfos.h5DataSetName.trim().isEmpty())
+        if ( fileInfos.h5DataSetName != null && !fileInfos.h5DataSetName.isEmpty()
+                && !fileInfos.h5DataSetName.trim().isEmpty() )
         {
             // TODO: improve this, try different names recursively
             hdf5DataSetSB = new StringBuilder( fileInfos.h5DataSetName );
-            if ( ! hdf5DataSetExists(reader, hdf5DataSetSB ) )
+            if ( !hdf5DataSetExists( reader, hdf5DataSetSB ) )
             {
-                if ( fileInfos.h5DataSetName.equals( "Data" ) )
-                {
-                    fileInfos.h5DataSetName = "Data111";
-                }
-
-                if ( ! hdf5DataSetExists(reader, hdf5DataSetSB ) )
-                {
-                    if ( !setHDF5DatasetViaUI( reader, hdf5DataSetSB ) )
-                        throw new RuntimeException( HDF5_PARSING_ERROR + filePath );
-                }
+                if ( !setHDF5DatasetViaUI( reader, hdf5DataSetSB ) )
+                    throw new RuntimeException( HDF5_PARSING_ERROR + filePath );
             }
-        }
-        else
+        } else
         {
-            if( ! setHDF5DatasetViaUI(reader,hdf5DataSetSB) )
+            if ( !setHDF5DatasetViaUI( reader, hdf5DataSetSB ) )
                 throw new RuntimeException( HDF5_PARSING_ERROR + filePath );
         }
 
         fileInfos.h5DataSetName = hdf5DataSetSB.toString();
-        HDF5DataSetInformation dsInfo = reader.object().getDataSetInformation("/" + fileInfos.h5DataSetName);
+        HDF5DataSetInformation dsInfo = reader.object().getDataSetInformation( "/" + fileInfos.h5DataSetName );
 
-        if (dsInfo.getDimensions().length == 3) {
-            fileInfos.nZ = (int) dsInfo.getDimensions()[0];
-            fileInfos.nY = (int) dsInfo.getDimensions()[1];
-            fileInfos.nX = (int) dsInfo.getDimensions()[2];
-        } else if (dsInfo.getDimensions().length == 2) {
-            fileInfos.nZ = 1;
-            fileInfos.nY = (int) dsInfo.getDimensions()[0];
-            fileInfos.nX = (int) dsInfo.getDimensions()[1];
+        if ( dsInfo.getDimensions().length == 3 )
+        {
+            fileInfos.nZ = ( int ) dsInfo.getDimensions()[ 0 ];
+            fileInfos.nY = ( int ) dsInfo.getDimensions()[ 1 ];
+            fileInfos.nX = ( int ) dsInfo.getDimensions()[ 2 ];
         }
+        else if ( dsInfo.getDimensions().length == 2 )
+        {
+            fileInfos.nZ = 1;
+            fileInfos.nY = ( int ) dsInfo.getDimensions()[ 0 ];
+            fileInfos.nX = ( int ) dsInfo.getDimensions()[ 1 ];
+        }
+        else if ( dsInfo.getDimensions().length == 4 )
+        {
+            fileInfos.nZ = ( int ) dsInfo.getDimensions()[ 0 ];
+            fileInfos.nY = ( int ) dsInfo.getDimensions()[ 1 ];
+            fileInfos.nX = ( int ) dsInfo.getDimensions()[ 2 ];
+            // we ignore the 4th dimension which could be an ilastik channel
+            Logger.warn( "Found 4 dimensions in HDF5 dataset." );
+            Logger.warn( "Ignoring the 4th dimension, because only 3D volumes are supported." );
+        }
+
         fileInfos.bitDepth = assignHDF5TypeToImagePlusBitdepth(dsInfo);
 
-        fileInfos.voxelSize = getVoxelSizeMicrometerFromLuxendoHDF5( reader, fileInfos.h5DataSetName );
-        fileInfos.voxelUnit = "micrometer";
+       if ( ! setVoxelSizeFromLuxendoHDF5( reader, fileInfos ) );
+       {
+           fileInfos.voxelSize = new double[]{1,1,1};
+           fileInfos.voxelUnit = "pixels";
+       }
     }
 
     private static int assignHDF5TypeToImagePlusBitdepth(HDF5DataSetInformation dsInfo) {
@@ -94,13 +102,10 @@ public class HDF5Helper
             hdf5Header.replaceAll(String::toUpperCase);
             dataSetExists = Arrays.stream( FileInfos.HDF5_DATASET_NAMES ).parallel().anyMatch( x -> hdf5Header.contains(x.toUpperCase()));
             List<String> head = Arrays.stream( FileInfos.HDF5_DATASET_NAMES ).parallel().filter( x -> hdf5Header.contains(x.toUpperCase())).collect(Collectors.toList());
+            if ( head.size() == 0 )
+                head = hdf5Header;
             hdf5DataSet.delete(0, hdf5DataSet.length());
             hdf5DataSet.append(head.get(0));
-        }
-        if (!dataSetExists) {
-            Logger.error("The selected HDF5 data set does not exist; " +
-                    "please change to one of the following:\n\n" +
-                    dataSets);
         }
 
         return dataSetExists;
@@ -146,23 +151,63 @@ public class HDF5Helper
         return typeText;
     }
 
-    public static double[] getVoxelSizeMicrometerFromLuxendoHDF5( IHDF5Reader reader, String h5DataSetName )
+    public static boolean setVoxelSizeFromLuxendoHDF5( IHDF5Reader reader, FileInfos fileInfos )
     {
-        if ( reader.hasAttribute( "/" + h5DataSetName, "element_size_um" ) )
+        if ( reader.hasAttribute( "/" + fileInfos.h5DataSetName, "element_size_um" ) )
         {
-            final double[] voxelSizeZYX = reader.float64().getArrayAttr( "/" + h5DataSetName, "element_size_um");
+            final double[] voxelSizeZYX = reader.float64().getArrayAttr( "/" + fileInfos.h5DataSetName, "element_size_um");
             double[] voxelSizeXYZ = new double[ 3 ];
 
             // reorder the dimensions
             for ( int d = 0; d < 3; d++ )
                 voxelSizeXYZ[ d ] = voxelSizeZYX[ 2 - d];
 
-            return voxelSizeXYZ;
+            fileInfos.voxelUnit = "micrometer";
+            fileInfos.voxelSize = voxelSizeXYZ;
+
+            return true;
         }
         else
         {
-            Logger.warn( "Could not read voxel size!");
-            return null;
+            return false;
         }
+    }
+
+    public static String hdf5InfoToString(HDF5DataSetInformation dsInfo)
+    {
+        //
+        // Code copied from Ronneberger
+        //
+        HDF5DataTypeInformation dsType = dsInfo.getTypeInformation();
+        String typeText = "";
+
+        if (dsType.isSigned() == false) {
+            typeText += "u";
+        }
+
+        switch( dsType.getDataClass())
+        {
+            case INTEGER:
+                typeText += "int" + 8*dsType.getElementSize();
+                break;
+            case FLOAT:
+                typeText += "float" + 8*dsType.getElementSize();
+                break;
+            default:
+                typeText += dsInfo.toString();
+        }
+        return typeText;
+    }
+
+    public static boolean checkDataCubeSize( int nz, long nx, int ny )
+    {
+        long maxSize = (1L << 31) - 1;
+        long nPixels = nx * ny * nz;
+        if (nPixels > maxSize) {
+            Logger.error("H5 Loader: nPixels > 2^31 => Currently not supported.");
+            return false;
+        }
+
+        return true;
     }
 }

@@ -1,14 +1,13 @@
-package de.embl.cba.bdp2.open.fileseries;
+package de.embl.cba.bdp2.open.fileseries.hdf5;
 
 import ch.systemsx.cisd.base.mdarray.MDShortArray;
 import ch.systemsx.cisd.hdf5.HDF5DataSetInformation;
-import ch.systemsx.cisd.hdf5.HDF5DataTypeInformation;
 import ch.systemsx.cisd.hdf5.HDF5Factory;
 import ch.systemsx.cisd.hdf5.IHDF5Reader;
 import de.embl.cba.bdp2.log.Logger;
 import net.imglib2.Interval;
 
-public class HDF5CellLoader
+public class HDF5Int16CellLoader
 {
 	public static void load(
 			Interval interval,
@@ -16,11 +15,9 @@ public class HDF5CellLoader
 			String filePath,
 			String h5DataSet )
 	{
-//		if ( ! checkDataCubeSize( nz, nx, ny ) ) return null;
-
 		IHDF5Reader reader = HDF5Factory.openForReading( filePath );
 		HDF5DataSetInformation dsInfo = reader.getDataSetInformation( h5DataSet );
-		String dsTypeString = hdf5InfoToString(dsInfo);
+		String dsTypeString = HDF5Helper.hdf5InfoToString(dsInfo);
 
 		final long[] longDimensions = {
 				interval.dimension( 2 ),
@@ -68,44 +65,4 @@ public class HDF5CellLoader
 			return;
 		}
 	}
-
-	public static boolean checkDataCubeSize( int nz, long nx, int ny )
-	{
-		long maxSize = (1L << 31) - 1;
-		long nPixels = nx * ny * nz;
-		if (nPixels > maxSize) {
-			Logger.error("H5 Loader: nPixels > 2^31 => Currently not supported.");
-			return false;
-		}
-
-		return true;
-	}
-
-
-	static String hdf5InfoToString(HDF5DataSetInformation dsInfo)
-	{
-		//
-		// Code copied from Ronneberger
-		//
-		HDF5DataTypeInformation dsType = dsInfo.getTypeInformation();
-		String typeText = "";
-
-		if (dsType.isSigned() == false) {
-			typeText += "u";
-		}
-
-		switch( dsType.getDataClass())
-		{
-			case INTEGER:
-				typeText += "int" + 8*dsType.getElementSize();
-				break;
-			case FLOAT:
-				typeText += "float" + 8*dsType.getElementSize();
-				break;
-			default:
-				typeText += dsInfo.toString();
-		}
-		return typeText;
-	}
-
 }

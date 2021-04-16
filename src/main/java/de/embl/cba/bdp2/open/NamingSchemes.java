@@ -41,9 +41,18 @@ public abstract class NamingSchemes
 	public static final String SINGLE_CHANNEL_TIMELAPSE = "Single Channel Movie";
 
 
-
 	public static boolean isLuxendoNamingScheme( String namingScheme )
 	{
 		return namingScheme.contains( LUXENDO_ID );
+	}
+
+	public static boolean isTIFF( String fileName )
+	{
+		return fileName.contains( TIF );
+	}
+
+	public static boolean isHDF5( String fileName )
+	{
+		return fileName.endsWith( HDF5 );
 	}
 }

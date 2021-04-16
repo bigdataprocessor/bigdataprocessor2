@@ -2,6 +2,7 @@ package de.embl.cba.bdp2.open.fileseries;
 
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.open.NamingSchemes;
+import de.embl.cba.bdp2.open.fileseries.hdf5.HDF5Helper;
 import de.embl.cba.bdp2.utils.BioFormatsCalibrationReader;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import org.apache.commons.lang.ArrayUtils;
@@ -76,50 +77,60 @@ public class FileInfosHelper
             fileInfos.voxelUnit = fileInfos.voxelUnit.trim();
     }
 
-    private static void fetchAndSetImageMetadata( FileInfos fileInfos, String regExp )
+    private static void fetchMetadata( FileInfos fileInfos, String regExp )
     {
         String firstRelativeFilePath = fileInfos.relativeFilePaths[ 0 ];
 
-        if ( firstRelativeFilePath.contains(".tif") )
+        if ( NamingSchemes.isTIFF( firstRelativeFilePath ) )
         {
-            int nZ = fileInfos.nZ;
-            setImageMetadataFromTIFF( fileInfos, fileInfos.directory, firstRelativeFilePath );
-
-            if ( regExp.contains( NamingSchemes.Z ) )
-            {
-                fileInfos.fileType = FileSeriesFileType.TIFF_PLANES;
-                fileInfos.nZ = nZ; // correct back for single plane files
-            }
-            else // volumes
-            {
-                fileInfos.fileType = FileSeriesFileType.TIFF_STACKS;
-            }
-
-            final File omeCompanion = new File( fileInfos.directory, "ome-tiff.companion.ome" );
-            if ( omeCompanion.exists() )
-            {
-                final BioFormatsCalibrationReader calibrationReader = new BioFormatsCalibrationReader();
-                if ( calibrationReader.readCalibration( omeCompanion ) )
-                {
-                    fileInfos.voxelSize = calibrationReader.getVoxelSize();
-                    fileInfos.voxelUnit = calibrationReader.getUnit();
-                }
-                else
-                {
-                    Logger.error( "Error reading image calibration from: " + omeCompanion + "\n" +
-                            "See Console window for more information.\n" +
-                            "The voxel sizes of the image may be incorrect!" );
-                }
-            }
+            fetchTIFFMetadata( fileInfos, regExp, firstRelativeFilePath );
         }
         else if ( NamingSchemes.isLuxendoNamingScheme( regExp ) )
         {
             fileInfos.fileType = FileSeriesFileType.LUXENDO;
-            HDF5Helper.setImageDataInfoFromH5( fileInfos, fileInfos.directory, firstRelativeFilePath );
+            HDF5Helper.setMetadataFromHDF5( fileInfos, fileInfos.directory, firstRelativeFilePath );
+        }
+        else if ( NamingSchemes.isHDF5( firstRelativeFilePath ) )
+        {
+            fileInfos.fileType = FileSeriesFileType.HDF5_VOLUMES;
+            HDF5Helper.setMetadataFromHDF5( fileInfos, fileInfos.directory, firstRelativeFilePath );
         }
         else
         {
             Logger.error("Unsupported file type: " + firstRelativeFilePath );
+        }
+    }
+
+    private static void fetchTIFFMetadata( FileInfos fileInfos, String regExp, String firstRelativeFilePath )
+    {
+        int nZ = fileInfos.nZ;
+        setImageMetadataFromTIFF( fileInfos, fileInfos.directory, firstRelativeFilePath );
+
+        if ( regExp.contains( NamingSchemes.Z ) )
+        {
+            fileInfos.fileType = FileSeriesFileType.TIFF_PLANES;
+            fileInfos.nZ = nZ; // correct back for single plane files
+        }
+        else // volumes
+        {
+            fileInfos.fileType = FileSeriesFileType.TIFF_STACKS;
+        }
+
+        final File omeCompanion = new File( fileInfos.directory, "ome-tiff.companion.ome" );
+        if ( omeCompanion.exists() )
+        {
+            final BioFormatsCalibrationReader calibrationReader = new BioFormatsCalibrationReader();
+            if ( calibrationReader.readCalibration( omeCompanion ) )
+            {
+                fileInfos.voxelSize = calibrationReader.getVoxelSize();
+                fileInfos.voxelUnit = calibrationReader.getUnit();
+            }
+            else
+            {
+                Logger.error( "Error reading image calibration from: " + omeCompanion + "\n" +
+                        "See Console window for more information.\n" +
+                        "The voxel sizes of the image may be incorrect!" );
+            }
         }
     }
 
@@ -177,7 +188,7 @@ public class FileInfosHelper
         List< String > sortedSlices = sort( slices );
         fileInfos.nZ = sortedSlices.size();
 
-        fetchAndSetImageMetadata( fileInfos, namingScheme );
+        fetchMetadata( fileInfos, namingScheme );
 
         populateFileInfos5D(
                 fileInfos,

@@ -6,6 +6,8 @@ import com.google.common.cache.LoadingCache;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.log.CellLoaderLogger;
 import de.embl.cba.bdp2.log.Logger;
+import de.embl.cba.bdp2.open.fileseries.hdf5.HDF5Int16CellLoader;
+import de.embl.cba.bdp2.open.fileseries.hdf5.HDF5Int8CellLoader;
 import de.embl.cba.bdp2.service.PerformanceService;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import net.imglib2.cache.img.CellLoader;
@@ -18,6 +20,7 @@ import java.util.concurrent.ExecutionException;
 
 public class FileSeriesCellLoader< T extends NativeType< T > > implements CellLoader< T > {
 
+    private final int bitDepth;
     private String directory;
     private long[] dimensions;
     private int[] cellDims;
@@ -27,10 +30,11 @@ public class FileSeriesCellLoader< T extends NativeType< T > > implements CellLo
 
     public FileSeriesCellLoader( FileInfos fileInfos, int[] cellDimsXYZCT )
     {
-        this.cellDims = cellDimsXYZCT;
-        this.dimensions = fileInfos.getDimensions();
-        this.directory = fileInfos.directory;
-        this.fileType = fileInfos.fileType;
+        cellDims = cellDimsXYZCT;
+        dimensions = fileInfos.getDimensions();
+        directory = fileInfos.directory;
+        fileType = fileInfos.fileType;
+        bitDepth = fileInfos.bitDepth;
 
         CacheLoader< String, BDP2FileInfo[] > loader =
                 new CacheLoader< String, BDP2FileInfo[]>(){
@@ -79,11 +83,27 @@ public class FileSeriesCellLoader< T extends NativeType< T > > implements CellLo
             // Unchecked assumptions:
             // - data is unsigned short
             // - all z planes are in the same file
-            HDF5CellLoader.load(
-                    cell,
-                    (short[]) cell.getStorageArray(),
-                    getFullPath( directory, fileInfos[ 0 ] ),
-                    fileInfos[ 0 ].h5DataSet );
+
+            if ( bitDepth == 8 )
+            {
+                HDF5Int8CellLoader.load(
+                        cell,
+                        ( byte[] ) cell.getStorageArray(),
+                        getFullPath( directory, fileInfos[ 0 ] ),
+                        fileInfos[ 0 ].h5DataSet );
+            }
+            else if ( bitDepth == 16 )
+            {
+                HDF5Int16CellLoader.load(
+                        cell,
+                        ( short[] ) cell.getStorageArray(),
+                        getFullPath( directory, fileInfos[ 0 ] ),
+                        fileInfos[ 0 ].h5DataSet );
+            }
+            else
+            {
+                throw new UnsupportedOperationException( "Bit depth " + bitDepth + " currently not supported for HDF5." );
+            }
         }
 
         logger.stop();

@@ -5,6 +5,7 @@ import ch.systemsx.cisd.hdf5.HDF5Factory;
 import ch.systemsx.cisd.hdf5.IHDF5Reader;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.open.NamingSchemes;
+import de.embl.cba.bdp2.open.fileseries.hdf5.HDF5Helper;
 import de.embl.cba.imaris.ImarisUtils;
 import ij.io.FileInfo;
 import loci.common.DebugTools;
@@ -31,7 +32,7 @@ public class FileInfos
 			ImarisUtils.RESOLUTION_LEVEL +"1/Data",
 			ImarisUtils.RESOLUTION_LEVEL +"2/Data",
 			ImarisUtils.RESOLUTION_LEVEL +"3/Data",
-			"ITKImage/0/VoxelData" // Elastix
+			"ITKImage/0/VoxelData"
     };
     public BDP2FileInfo[][][] ctzFileInfos;
     public long[] dimensions;
@@ -204,13 +205,13 @@ public class FileInfos
     return  type;
     }
 
-    public BDP2FileInfo[] getVolumeFileInfos( int channel, int time ) {
-
+    public BDP2FileInfo[] getVolumeFileInfos( int channel, int time )
+    {
         int z = 0;
 
         if ( isVolumes() )
         {
-            setInfosFromFile(channel, time, z );
+            setInfosFromFile( channel, time, z );
         }
         else if ( isPlanes() )
         {
@@ -237,94 +238,21 @@ public class FileInfos
     private void setInfosFromFile( final int c, final int t, final int z )
     {
         BDP2FileInfo[] info = null;
-        BDP2FileInfo[] infoCT;
-        FastTIFFDecoder ftd;
+
         File file = new File( directory, ctzFiles[c][t][z] );
         if ( file.exists() )
         {
             if ( fileType.equals( FileSeriesFileType.TIFF_STACKS ) )
             {
-                ftd = new FastTIFFDecoder( directory, ctzFiles[c][t][0] );
-                try {
-                    info = ftd.getTIFFInfo();
-                }
-                catch (Exception e) {
-                    Logger.error("Error parsing: " + file.getAbsolutePath() );
-                    Logger.warn("setInfoFromFile: " + e.toString());
-                }
-
-                if( info.length != nZ ) {// TODO : Handle exceptions properly --ashis
-                    Logger.error("Inconsistent number of z-planes in: " + file.getAbsolutePath());
-                }
-
-                // add missing information to first IFD
-                info[0].fileName = getName( c, t, 0 );
-                info[0].directory = getDirectory( c, t, 0 );
-                info[0].fileTypeString = fileType.toString();
-
-                infoCT = new BDP2FileInfo[nZ];
-                for ( int z2 = 0; z2 < nZ; z2++ ) {
-                    infoCT[z2] = new BDP2FileInfo( info[0] ); // copyVolumeRAI constructor
-                    // adapt information related to where the data is stored in this plane
-                    infoCT[z2].offset = info[z2].offset;
-                    infoCT[z2].stripLengths = info[z2].stripLengths;
-                    infoCT[z2].stripOffsets = info[z2].stripOffsets;
-                    //infoCT[z].rowsPerStrip = info[z].rowsPerStrip; // only core for first IFD!
-                }
-
-                ctzFileInfos[c][t] = infoCT;
+                loadMetadataFromTIFFStack( c, t, info, file );
             }
-            else if ( fileType.equals( FileSeriesFileType.LUXENDO ) )
+            else if ( fileType.equals( FileSeriesFileType.LUXENDO ) || fileType.equals( FileSeriesFileType.HDF5_VOLUMES ) )
             {
-                //
-                // construct a FileInfoSer
-                // todo: this could be much leaner
-                // e.g. the nX, nY and bit depth
-                //
-
-                int bytesPerPixel = 0;
-
-                IHDF5Reader reader = HDF5Factory.openForReading( file.getAbsolutePath() );
-                HDF5DataSetInformation dsInfo = reader.getDataSetInformation( h5DataSetName );
-                //String dsTypeString = OpenerExtension.hdf5InfoToString(dsInfo);
-                String dsTypeString = HDF5Helper.dsInfoToTypeString(dsInfo); //TODO: Check if OpenerExtension.hdf5InfoToString can be made public and called.
-
-                if (dsTypeString.equals("int16") || dsTypeString.equals("uint16")){
-                    bytesPerPixel = 2;
-                }
-                else if (dsTypeString.equals("int8") || dsTypeString.equals("uint8")){
-                    bytesPerPixel = 1;
-                }
-                else{
-                    Logger.error( "Unsupported bit depth " + dsTypeString );
-                }
-
-                infoCT = new BDP2FileInfo[nZ];
-                for ( int z2 = 0; z2 < nZ; z2++)
-                {
-                    infoCT[z2] = new BDP2FileInfo();
-                    infoCT[z2].fileName = getName( c, t, z2 );
-                    infoCT[z2].directory = getDirectory( c, t, z2 );
-                    infoCT[z2].width = nX;
-                    infoCT[z2].height = nY;
-                    infoCT[z2].bytesPerPixel = bytesPerPixel;
-                    infoCT[z2].h5DataSet = h5DataSetName;
-                    infoCT[z2].fileTypeString = fileType.toString();
-                }
-                ctzFileInfos[c][t] = infoCT;
+                loadMetadataFromHDF5Stack( c, t, file );
             }
             else if ( fileType.equals( FileSeriesFileType.TIFF_PLANES) )
             {
-                ftd = new FastTIFFDecoder(directory, ctzFiles[c][t][z]);
-                try{
-                    ctzFileInfos[c][t][z] = ftd.getTIFFInfo()[0];
-                }
-                catch ( IOException e ){// TODO : Handle exceptions properly --ashis
-                    System.out.print( e.toString() );
-                }
-                ctzFileInfos[c][t][z].fileName = getName( c, t, z );
-                ctzFileInfos[c][t][z].directory = getDirectory( c, t, z );
-                ctzFileInfos[c][t][z].fileTypeString = fileType.toString();
+                loadMetadataFromTIFFPlane( c, t, z );
             }
         }
         else
@@ -336,6 +264,91 @@ public class FileInfos
             throw new UnsupportedOperationException( "File does not exist " + file.getAbsolutePath() );
         }
 
+    }
+
+    private void loadMetadataFromTIFFPlane( int c, int t, int z )
+    {
+        FastTIFFDecoder ftd;
+        ftd = new FastTIFFDecoder(directory, ctzFiles[ c ][ t ][ z ]);
+        try{
+            ctzFileInfos[ c ][ t ][ z ] = ftd.getTIFFInfo()[0];
+        }
+        catch ( IOException e ){// TODO : Handle exceptions properly --ashis
+            System.out.print( e.toString() );
+        }
+        ctzFileInfos[ c ][ t ][ z ].fileName = getName( c, t, z );
+        ctzFileInfos[ c ][ t ][ z ].directory = getDirectory( c, t, z );
+        ctzFileInfos[ c ][ t ][ z ].fileTypeString = fileType.toString();
+    }
+
+    private void loadMetadataFromHDF5Stack( int c, int t, File file )
+    {
+        BDP2FileInfo[] infoCT;
+        int bytesPerPixel = 0;
+
+        IHDF5Reader reader = HDF5Factory.openForReading( file.getAbsolutePath() );
+        HDF5DataSetInformation dsInfo = reader.getDataSetInformation( h5DataSetName );
+        //String dsTypeString = OpenerExtension.hdf5InfoToString(dsInfo);
+        String dsTypeString = HDF5Helper.dsInfoToTypeString(dsInfo); //TODO: Check if OpenerExtension.hdf5InfoToString can be made public and called.
+
+        if (dsTypeString.equals("int16") || dsTypeString.equals("uint16")){
+            bytesPerPixel = 2;
+        }
+        else if (dsTypeString.equals("int8") || dsTypeString.equals("uint8")){
+            bytesPerPixel = 1;
+        }
+        else{
+            Logger.error( "Unsupported bit depth " + dsTypeString );
+        }
+
+        infoCT = new BDP2FileInfo[nZ];
+        for ( int z2 = 0; z2 < nZ; z2++)
+        {
+            infoCT[z2] = new BDP2FileInfo();
+            infoCT[z2].fileName = getName( c, t, z2 );
+            infoCT[z2].directory = getDirectory( c, t, z2 );
+            infoCT[z2].width = nX;
+            infoCT[z2].height = nY;
+            infoCT[z2].bytesPerPixel = bytesPerPixel;
+            infoCT[z2].h5DataSet = h5DataSetName;
+            infoCT[z2].fileTypeString = fileType.toString();
+        }
+        ctzFileInfos[ c ][ t ] = infoCT;
+    }
+
+    private void loadMetadataFromTIFFStack( int c, int t, BDP2FileInfo[] info, File file )
+    {
+        FastTIFFDecoder ftd;
+        BDP2FileInfo[] infoCT;
+        ftd = new FastTIFFDecoder( directory, ctzFiles[ c ][ t ][0] );
+        try {
+            info = ftd.getTIFFInfo();
+        }
+        catch (Exception e) {
+            Logger.error("Error parsing: " + file.getAbsolutePath() );
+            Logger.warn("setInfoFromFile: " + e.toString());
+        }
+
+        if( info.length != nZ ) {// TODO : Handle exceptions properly --ashis
+            Logger.error("Inconsistent number of z-planes in: " + file.getAbsolutePath());
+        }
+
+        // add missing information to first IFD
+        info[0].fileName = getName( c, t, 0 );
+        info[0].directory = getDirectory( c, t, 0 );
+        info[0].fileTypeString = fileType.toString();
+
+        infoCT = new BDP2FileInfo[nZ];
+        for ( int z2 = 0; z2 < nZ; z2++ ) {
+            infoCT[z2] = new BDP2FileInfo( info[0] ); // copyVolumeRAI constructor
+            // adapt information related to where the data is stored in this plane
+            infoCT[z2].offset = info[z2].offset;
+            infoCT[z2].stripLengths = info[z2].stripLengths;
+            infoCT[z2].stripOffsets = info[z2].stripOffsets;
+            //infoCT[z].rowsPerStrip = info[z].rowsPerStrip; // only core for first IFD!
+        }
+
+        ctzFileInfos[ c ][ t ] = infoCT;
     }
 
     private String getName( int c, int t, int z )
