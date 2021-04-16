@@ -71,7 +71,7 @@ public class HDF5Helper
        if ( ! setVoxelSizeFromLuxendoHDF5( reader, fileInfos ) );
        {
            fileInfos.voxelSize = new double[]{1,1,1};
-           fileInfos.voxelUnit = "pixels";
+           fileInfos.voxelUnit = "pixel";
        }
     }
 

@@ -209,11 +209,11 @@ public class FileInfos
     {
         int z = 0;
 
-        if ( isVolumes() )
+        if ( FileSeriesFileType.is3D( fileType ) )
         {
             setInfosFromFile( channel, time, z );
         }
-        else if ( isPlanes() )
+        else if ( FileSeriesFileType.is2D( fileType ) )
         {
             int nZ = ctzFiles[channel][time].length;
             for (; z < nZ; ++z)
@@ -221,18 +221,12 @@ public class FileInfos
                 setInfosFromFile(channel, time, z );
             }
         }
+        else
+        {
+            throw new UnsupportedOperationException( "File type not supported " + fileType.toString() );
+        }
 
         return ctzFileInfos[channel][time];
-    }
-
-    private boolean isPlanes()
-    {
-        return fileType.equals( FileSeriesFileType.TIFF_PLANES );
-    }
-
-    private boolean isVolumes()
-    {
-        return fileType.equals( FileSeriesFileType.TIFF_STACKS ) || fileType.equals( FileSeriesFileType.LUXENDO );
     }
 
     private void setInfosFromFile( final int c, final int t, final int z )

@@ -63,7 +63,7 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
 
     public ImageViewer( final Image< R > image, final boolean autoContrast, final boolean enableArbitraryPlaneSlicing )
     {
-        if ( !CalibrationChecker.checkImage( image ) )
+        if ( ! CalibrationChecker.checkImage( image ) )
         {
             throw new RuntimeException( "The voxel dimensions or voxel unit of image " + image.getName() + " were not set properly and the image could thus not be visualised." );
         }
