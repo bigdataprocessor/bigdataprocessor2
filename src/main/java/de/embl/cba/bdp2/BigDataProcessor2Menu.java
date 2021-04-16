@@ -75,6 +75,7 @@ public class BigDataProcessor2Menu extends JMenu
         JMenu openPredefinedFileSeriesMenu = new JMenu( "Open Predefined File Series" );
         openMenu.add( openPredefinedFileSeriesMenu );
         addMenuItem( openPredefinedFileSeriesMenu, OpenSingleTIFFVolumeCommand.COMMAND_NAME );
+        addMenuItem( openPredefinedFileSeriesMenu, OpenSingleHDF5VolumeCommand.COMMAND_NAME );
         addMenuItem( openPredefinedFileSeriesMenu, OpenEMTIFFPlanesFileSeriesCommand.COMMAND_NAME );
         addMenuItem( openPredefinedFileSeriesMenu, OpenLeicaDSLTIFFPlaneSeriesCommand.COMMAND_NAME );
         addMenuItem( openPredefinedFileSeriesMenu, OpenLuxendoHDF5SeriesCommand.COMMAND_NAME );

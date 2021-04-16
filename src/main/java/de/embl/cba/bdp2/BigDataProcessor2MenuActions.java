@@ -279,6 +279,14 @@ public class BigDataProcessor2MenuActions implements ActionListener {
                 Services.getCommandService().run( OpenSingleTIFFVolumeCommand.class, true );
             });
         }
+        else if( e.getActionCommand().equalsIgnoreCase( OpenSingleHDF5VolumeCommand.COMMAND_NAME ) )
+        {
+            BigDataProcessor2.threadPool.submit(() ->
+            {
+                OpenSingleHDF5VolumeCommand.parentViewer = viewer;
+                Services.getCommandService().run( OpenSingleHDF5VolumeCommand.class, true );
+            });
+        }
         else if( e.getActionCommand().equalsIgnoreCase( OpenFileSeriesCommand.COMMAND_NAME ) )
         {
             BigDataProcessor2.threadPool.submit(() ->
