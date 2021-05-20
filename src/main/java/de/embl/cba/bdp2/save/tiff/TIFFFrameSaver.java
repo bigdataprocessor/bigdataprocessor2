@@ -64,9 +64,9 @@ public class TIFFFrameSaver< R extends RealType< R > & NativeType< R > > impleme
         // TODO:
         // checkMemoryRequirements();
 
-        int totalChannels = Math.toIntExact( rai.dimension( C ) );
+        int numChannels = Math.toIntExact( rai.dimension( C ) );
 
-        for ( int c = 0; c < totalChannels; c++ )
+        for ( int c = 0; c < numChannels; c++ )
         {
             Logger.debug( "Saving" + Utils.getChannelTimepointLog( c, t ) );
 
@@ -87,7 +87,7 @@ public class TIFFFrameSaver< R extends RealType< R > & NativeType< R > > impleme
 
             if ( imp.getBitDepth() > 16 && ! settings.compression.equals( SavingSettings.COMPRESSION_NONE ))
             {
-                throw new UnsupportedOperationException( "Cannot save a compressed TIFF with a bit-depth of " + imp.getBytesPerPixel() * 8 );
+                throw new UnsupportedOperationException( "Cannot yet save a compressed TIFF with a bit-depth of " + imp.getBytesPerPixel() * 8 + "; please try saving uncompressed." );
             }
 
             if ( settings.saveVolumes )

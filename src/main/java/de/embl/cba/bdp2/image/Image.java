@@ -332,7 +332,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 	{
 		if ( cachedCellImgCreator instanceof BioFormatsCachedCellImgCreator )
 		{
-			Logger.info( "Adapting cache size currently not supported when loading with Bio-Formats." );
+			Logger.info( "[WARN] Adapting cache size currently not supported when loading with Bio-Formats. The saving may thus be slower than when reading without Bio-Formats." );
 			return; // changing the cache does currently not work
 		}
 

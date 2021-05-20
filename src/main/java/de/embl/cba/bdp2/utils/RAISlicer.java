@@ -108,7 +108,7 @@ public class RAISlicer
 	 * this function will effectively do all the computations.
 	 *
 	 *
-	 * @param image
+	 * @param raiXYZCT
 	 * @param c
 	 * @param t
 	 * @param numThreads
@@ -119,7 +119,7 @@ public class RAISlicer
 	 */
 	public static < R extends RealType< R > & NativeType< R > >
 	RandomAccessibleInterval< R > createVolumeCopy(
-			RandomAccessibleInterval< R > image,
+			RandomAccessibleInterval< R > raiXYZCT,
 			long c,
 			long t,
 			int numThreads,
@@ -128,23 +128,23 @@ public class RAISlicer
 		long start = System.currentTimeMillis();
 
 		long[] minInterval = new long[]{
-				image.min( X ),
-				image.min( Y ),
-				image.min( Z ),
+				raiXYZCT.min( X ),
+				raiXYZCT.min( Y ),
+				raiXYZCT.min( Z ),
 				c,
 				t };
 
 		long[] maxInterval = new long[]{
-				image.max( X ),
-				image.max( Y ),
-				image.max( Z ),
+				raiXYZCT.max( X ),
+				raiXYZCT.max( Y ),
+				raiXYZCT.max( Z ),
 				c,
 				t };
 
-		RandomAccessibleInterval raiXYZ =
-				Views.dropSingletonDimensions(
-						Views.interval( image, minInterval, maxInterval ) );
+		final IntervalView< R > interval = Views.interval( raiXYZCT, minInterval, maxInterval );
+		RandomAccessibleInterval< R > raiXYZ = Views.dropSingletonDimensions( interval );
 
+		// force into RAM
 		raiXYZ = copyVolumeRAI( raiXYZ, numThreads, type );
 
 		Logger.benchmark( "Processed volume, using " + numThreads + " thread(s) in [ ms ]: " + ( System.currentTimeMillis() - start ) );
