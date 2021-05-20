@@ -154,7 +154,7 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
             {
                 // TODO: one may support transforming different channels differently
                 // TODO: macro recording!
-                Logger.log( "Image " + image.getName() + " transformed with " + affineTransform3D );
+                Logger.log( "Image " + image.getName() + " has been manually transformed.");
                 final Image< R > transform = BigDataProcessor2.transform( image, affineTransform3D, new NearestNeighborInterpolatorFactory() );
                 replaceImage( transform, false, true );
                 return transform;
