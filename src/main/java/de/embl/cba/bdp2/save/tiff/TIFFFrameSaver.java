@@ -2,7 +2,7 @@ package de.embl.cba.bdp2.save.tiff;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.save.ProjectionXYZ;
+import de.embl.cba.bdp2.save.Projector;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.utils.RAISlicer;
 import de.embl.cba.bdp2.utils.Utils;
@@ -163,7 +163,7 @@ public class TIFFFrameSaver< R extends RealType< R > & NativeType< R > > impleme
 //                voxelSpacing[ d ] /= scalingFactors[ d ];
 //        }
 
-        ProjectionXYZ.saveAsTIFFXYZMaxProjection( imp3D, c, t, settings.projectionsFilePathStump );
+        Projector.saveProjections( imp3D, c, t, settings.projectionsFilePathStump, settings.projectionMode );
 
         Logger.benchmark( "Computed and saved projections [ ms ]: " + ( System.currentTimeMillis() - start ) );
     }

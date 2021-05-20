@@ -1,12 +1,8 @@
 package de.embl.cba.bdp2.save;
 
-import de.embl.cba.bdp2.dialog.DisplaySettings;
 import de.embl.cba.bdp2.image.Image;
-import net.imglib2.type.NativeType;
-import net.imglib2.type.numeric.RealType;
 
 import java.io.File;
-import java.util.List;
 
 /**
  * Created by tischi on 22/05/17.
@@ -47,7 +43,9 @@ public class SavingSettings  {
     @Deprecated
     public String bin;
 
-    public static String createFilePathStump( Image image, String type, String directory )
+    public String projectionMode = Projector.MAX;
+
+	public static String createFilePathStump( Image image, String type, String directory )
 	{
 		return new File( directory, type + File.separator + image.getName() ).toString();
 	}

@@ -14,7 +14,7 @@ import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.open.fileseries.FileInfos;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.log.progress.ProgressHelpers;
-import de.embl.cba.bdp2.save.ProjectionXYZ;
+import de.embl.cba.bdp2.save.Projector;
 import de.embl.cba.bdp2.save.SaveImgHelper;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.utils.DimensionOrder;
@@ -35,7 +35,6 @@ import net.imglib2.type.numeric.integer.UnsignedIntType;
 import net.imglib2.type.numeric.integer.UnsignedLongType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.type.numeric.real.FloatType;
-import net.imglib2.util.Util;
 import net.imglib2.view.Views;
 
 import java.util.Arrays;
@@ -133,8 +132,8 @@ public class FastHDF5StackWriter < R extends RealType< R > & NativeType< R >> im
                 }
                 // Save projections
                 if (savingSettings.saveProjections ) {
-                    ImagePlus imagePlusImage = ImageJFunctions.wrap(newRai, "");
-                    ProjectionXYZ.saveAsTIFFXYZMaxProjection(imagePlusImage, c, this.current_t, newPath);
+                    ImagePlus imp = ImageJFunctions.wrap(newRai, "");
+                    Projector.saveProjections( imp, c, this.current_t, newPath, savingSettings.projectionMode );
                 }
                 counter.incrementAndGet();
             }

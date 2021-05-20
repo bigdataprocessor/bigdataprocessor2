@@ -2,6 +2,7 @@ package de.embl.cba.bdp2.save.imaris;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
+import de.embl.cba.bdp2.save.Projector;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.utils.RAISlicer;
 import de.embl.cba.bdp2.utils.DimensionOrder;
@@ -16,7 +17,7 @@ import net.imglib2.type.numeric.RealType;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static de.embl.cba.bdp2.save.ProjectionXYZ.saveAsTIFFXYZMaxProjection;
+import static de.embl.cba.bdp2.save.Projector.maxProjectAndSaveAsTIFF;
 
 public class ImarisFrameSaver< R extends RealType< R > & NativeType< R >> implements Runnable {
     private int t;
@@ -84,7 +85,9 @@ public class ImarisFrameSaver< R extends RealType< R > & NativeType< R >> implem
 
             // Save projections
             if ( settings.saveProjections )
-                saveAsTIFFXYZMaxProjection( imp3D, c, t, settings.projectionsFilePathStump );
+            {
+                Projector.saveProjections( imp3D, c, t, settings.projectionsFilePathStump, settings.projectionMode );
+            }
 
             counter.incrementAndGet();
 

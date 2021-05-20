@@ -32,7 +32,14 @@ public class SaveAdvancedDialog< R extends RealType< R > & NativeType< R > > ext
                     SavingSettings.COMPRESSION_ZLIB,
                     SavingSettings.COMPRESSION_LZW
     } );
+
     private static final JCheckBox cbSaveProjection = new JCheckBox("Save Projections");
+
+    private static final JComboBox comboProjection = new JComboBox(
+            new String[]{
+                    Projector.SUM,
+                    Projector.MAX
+            } );
 
     private static final JComboBox comboChannelNames = new JComboBox(
             new String[]{
@@ -101,6 +108,7 @@ public class SaveAdvancedDialog< R extends RealType< R > & NativeType< R > > ext
             panels.add( new JPanel() );
             panels.get( panelIndex ).add( cbSaveVolume );
             panels.get( panelIndex ).add( cbSaveProjection );
+            panels.get( panelIndex ).add( comboProjection );
             mainPanel.add( panels.get( panelIndex++ ) );
         }
 
@@ -270,6 +278,7 @@ public class SaveAdvancedDialog< R extends RealType< R > & NativeType< R > > ext
         savingSettings.volumesFilePathStump = SavingSettings.createFilePathStump( this.inputImage, "volumes", tfDirectory.getText() );
         savingSettings.projectionsFilePathStump = SavingSettings.createFilePathStump( this.inputImage, "projections", tfDirectory.getText() );
         savingSettings.saveProjections = cbSaveProjection.isSelected();
+        savingSettings.projectionMode = (String) comboProjection.getSelectedItem();
         savingSettings.numIOThreads = Integer.parseInt( tfNumIOThreads.getText() );
         savingSettings.numProcessingThreads = Integer.parseInt( tfNumProcessingThreads.getText() );
         savingSettings.channelNamesInSavedImages = (String) comboChannelNames.getSelectedItem();

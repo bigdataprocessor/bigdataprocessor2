@@ -4,12 +4,11 @@ import ch.systemsx.cisd.hdf5.hdf5lib.HDF5Constants;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.open.fileseries.FileInfos;
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdp2.save.ProjectionXYZ;
+import de.embl.cba.bdp2.save.Projector;
 import de.embl.cba.bdp2.save.SaveImgHelper;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
-import ij.ImagePlus;
 import ncsa.hdf.hdf5lib.H5;
 import ncsa.hdf.hdf5lib.exceptions.HDF5Exception;
 import net.imagej.ImgPlus;
@@ -175,16 +174,16 @@ public class SaveImageAsHDF5Stacks < R extends RealType< R > & NativeType< R > >
                 String sT = String.format("%1$05d", current_t);
                 newPath = newPath + "--C" + sC + "--T" + sT + ".h5";
 
-                if (savingSettings.saveVolumes ) {
+                if ( savingSettings.saveVolumes ) {
                     this.current_c = c;
                     writeHDF5(impBinned, newPath);
                 }
 
                 // Save projections
-                if (savingSettings.saveProjections )
+                if ( savingSettings.saveProjections )
                 {
-                    ImagePlus imagePlusImage = ImageJFunctions.wrap(newRai, "", null);
-                    ProjectionXYZ.saveAsTIFFXYZMaxProjection(imagePlusImage, c, this.current_t, newPath);
+                    this.current_c = c;
+                    Projector.saveProjections( ImageJFunctions.wrap( newRai, image.getName() ), this.current_c, this.current_t, newPath, savingSettings.projectionMode );
                 }
 
                 counter.incrementAndGet();
