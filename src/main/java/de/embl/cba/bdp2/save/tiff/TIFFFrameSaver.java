@@ -90,7 +90,6 @@ public class TIFFFrameSaver< R extends RealType< R > & NativeType< R > > impleme
                 throw new UnsupportedOperationException( "Cannot save a compressed TIFF with a bit-depth of " + imp.getBytesPerPixel() * 8 );
             }
 
-
             if ( settings.saveVolumes )
             {
                 Logger.debug( "Saving volume" + Utils.getChannelTimepointLog( c, t ) + " as (partial file name) " + settings.volumesFilePathStump );

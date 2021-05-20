@@ -18,6 +18,7 @@ import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
+import net.imglib2.type.numeric.real.FloatType;
 import net.imglib2.util.Util;
 import ome.units.quantity.Length;
 import ome.units.unit.Unit;
@@ -121,6 +122,8 @@ public class Image< R extends RealType< R > & NativeType< R > >
 			return "unsigned 8 bit";
 		else if ( type instanceof UnsignedShortType )
 			return "unsigned 16 bit";
+		else if ( type instanceof FloatType )
+			return "float";
 		else
 			throw new RuntimeException("Could not determine the bit-depth.");
 	}
@@ -136,6 +139,8 @@ public class Image< R extends RealType< R > & NativeType< R > >
 			return 8;
 		else if ( type instanceof UnsignedShortType )
 			return 16;
+		else if ( type instanceof FloatType )
+			return 32;
 		else
 			throw new RuntimeException("Could not determine the bit-depth.");
 	}
