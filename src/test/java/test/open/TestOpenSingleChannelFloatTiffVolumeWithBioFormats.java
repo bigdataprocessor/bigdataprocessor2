@@ -22,8 +22,9 @@ public class TestOpenSingleChannelFloatTiffVolumeWithBioFormats
     @Test
     public void run()
     {
-        final String directory = "src/test/resources/test/tiff-nc1-nt1-ImageJFloat/mri-stack-ij-float.tif";
+        String file = "src/test/resources/test/tiff-nc1-nt1-ImageJFloat/mri-stack-ij-float.tif";
+        file = "/Volumes/cba/exchange/Shuting/Ecad_Sqh_100x_20210511_01_decon.ics";
 
-        image = BigDataProcessor2.openBioFormats( directory, 0 );
+        image = BigDataProcessor2.openBioFormats( file, 0 );
     }
 }
