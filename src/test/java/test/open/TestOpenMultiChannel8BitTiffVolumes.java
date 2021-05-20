@@ -17,7 +17,7 @@ public class TestOpenMultiChannel8BitTiffVolumes
         Utils.prepareInteractiveMode();
 
         new TestOpenMultiChannel8BitTiffVolumes().run();
-        BigDataProcessor2.showImage( image, true );
+        BigDataProcessor2.showImage( image, true, true );
     }
 
     @Test

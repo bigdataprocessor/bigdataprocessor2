@@ -36,6 +36,7 @@ public class FileInfos
     };
     public BDP2FileInfo[][][] ctzFileInfos;
     public long[] dimensions;
+    public boolean containsHDF5DatasetSingletonDimension = false;
     private String namingScheme;
     public int bitDepth;
     public int nC;

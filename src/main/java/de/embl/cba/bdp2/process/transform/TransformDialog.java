@@ -2,10 +2,12 @@ package de.embl.cba.bdp2.process.transform;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
+import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.record.ScriptRecorder;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewer.ImageViewer;
 import ij.gui.GenericDialog;
+import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
@@ -21,11 +23,14 @@ public class TransformDialog< T extends RealType< T > & NativeType< T > >
 	{
 		this.viewer = viewer;
 		this.inputImage = viewer.getImage();
+		final AffineTransform3D affineTransform3D = new AffineTransform3D();
+		viewer.getSourceTransform( affineTransform3D );
+		Logger.log("Current source transform: " + affineTransform3D );
 	}
 
 	public void show()
 	{
-		final GenericDialog genericDialog = new GenericDialog( "Transform" );
+		final GenericDialog genericDialog = new GenericDialog( TransformCommand.AFFINE_LABEL );
 		genericDialog.addStringField( TransformCommand.AFFINE_LABEL, affineTransform, 30 );
 		genericDialog.addChoice( "Interpolation", new String[]{ TransformCommand.NEAREST, TransformCommand.LINEAR }, interpolationMode );
 

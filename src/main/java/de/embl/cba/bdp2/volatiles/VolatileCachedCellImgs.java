@@ -12,8 +12,10 @@ import net.imglib2.img.basictypeaccess.array.ByteArray;
 import net.imglib2.img.basictypeaccess.array.ShortArray;
 import net.imglib2.img.basictypeaccess.volatiles.array.VolatileByteArray;
 import net.imglib2.img.basictypeaccess.volatiles.array.VolatileShortArray;
+import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
 import net.imglib2.img.cell.CellGrid;
+import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.util.Intervals;
@@ -65,7 +67,7 @@ public class VolatileCachedCellImgs
 		return translate;
 	}
 
-	public static RandomAccessibleInterval< ? > asVolatileCachedCellImg( Image< ? > image )
+	public static < R extends RealType< R > & NativeType< R > > RandomAccessibleInterval< R > asVolatileCachedCellImg( Image< R > image )
 	{
 		final Type typeFromInterval = Util.getTypeFromInterval( image.getRai() );
 		final CellGrid grid = new CellGrid( Intervals.dimensionsAsLongArray( image.getRai() ), image.getCachedCellDims() );
@@ -85,6 +87,6 @@ public class VolatileCachedCellImgs
 			throw new UnsupportedOperationException( "Cannot yet create CachedCellImg for type:" + typeFromInterval );
 		}
 
-		return cachedCellImg;
+		return ( RandomAccessibleInterval )  cachedCellImg;
 	}
 }

@@ -54,7 +54,7 @@ public class BioFormatsCachedCellImgCreator < R extends RealType< R > & NativeTy
 				//.getConcreteSources()
 				.cacheBounded( 100 ) // TODO : is this value ok ?
 				.positionReferenceFrameLength( new Length( 1, UNITS.MICROMETER ) ) // Compulsory
-				.voxSizeReferenceFrameLength( new Length( 100, UNITS.MICROMETER ) );
+				.voxSizeReferenceFrameLength( new Length( 1, UNITS.MICROMETER ) );
 
 		seriesCount = opener.getNewReader().getSeriesCount();
 

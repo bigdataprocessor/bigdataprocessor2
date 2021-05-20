@@ -64,6 +64,7 @@ public class HDF5Helper
             // we ignore the 4th dimension which could be an ilastik channel
             Logger.warn( "Found 4 dimensions in HDF5 dataset." );
             Logger.warn( "Ignoring the 4th dimension, because only 3D volumes are supported." );
+            fileInfos.containsHDF5DatasetSingletonDimension = true;
         }
 
         fileInfos.bitDepth = assignHDF5TypeToImagePlusBitdepth(dsInfo);
@@ -77,17 +78,15 @@ public class HDF5Helper
 
     private static int assignHDF5TypeToImagePlusBitdepth(HDF5DataSetInformation dsInfo) {
         String type = dsInfoToTypeString(dsInfo);
-        int nBits = 0;
         if (type.equals("uint8")) {
-            nBits = Byte.SIZE;
+            return Byte.SIZE;
         } else if (type.equals("uint16") || type.equals("int16")) {
-            nBits = Short.SIZE;
+            return Short.SIZE;
         } else if (type.equals("float32") || type.equals("float64")) {
-            nBits = Float.SIZE;
+            return Float.SIZE;
         } else {
-            Logger.error("Type '" + type + "' Not handled yet!");
+            throw new UnsupportedOperationException("HDF5 Type '" + type + "' not supported yet.");
         }
-        return nBits;
     }
 
     private static boolean hdf5DataSetExists(

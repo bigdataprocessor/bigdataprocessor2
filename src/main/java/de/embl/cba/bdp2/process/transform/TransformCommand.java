@@ -21,7 +21,7 @@ public class TransformCommand< R extends RealType< R > & NativeType< R > > exten
     public static final String COMMAND_FULL_NAME = BigDataProcessor2Menu.COMMAND_BDP2_PREFIX + COMMAND_NAME;
     public static final String NEAREST = "Nearest";
     public static final String LINEAR = "Linear";
-    public static final String AFFINE_LABEL = "Transform";// [m00,..,m03,m10,..,m13,m20,..,m23]";
+    public static final String AFFINE_LABEL = "Affine transform (m00,..,m03,m10,..)";// [m00,..,m03,m10,..,m13,m20,..,m23]";
 
     @Parameter(label = AFFINE_LABEL )
     String affineTransformCSV = "1,0,0,0,0,1,0,0,0,0,1,0";

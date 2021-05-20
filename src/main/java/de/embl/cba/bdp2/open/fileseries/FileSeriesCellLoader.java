@@ -27,6 +27,7 @@ public class FileSeriesCellLoader< T extends NativeType< T > > implements CellLo
     private LoadingCache< String, BDP2FileInfo[] > serializableFileInfoCache;
     private final FileSeriesFileType fileType;
     private short[][] cache;
+    private final boolean containsHDF5DatasetSingletonDimension;
 
     public FileSeriesCellLoader( FileInfos fileInfos, int[] cellDimsXYZCT )
     {
@@ -35,6 +36,7 @@ public class FileSeriesCellLoader< T extends NativeType< T > > implements CellLo
         directory = fileInfos.directory;
         fileType = fileInfos.fileType;
         bitDepth = fileInfos.bitDepth;
+        containsHDF5DatasetSingletonDimension = fileInfos.containsHDF5DatasetSingletonDimension;
 
         CacheLoader< String, BDP2FileInfo[] > loader =
                 new CacheLoader< String, BDP2FileInfo[]>(){
@@ -90,7 +92,8 @@ public class FileSeriesCellLoader< T extends NativeType< T > > implements CellLo
                         cell,
                         ( byte[] ) cell.getStorageArray(),
                         getFullPath( directory, fileInfos[ 0 ] ),
-                        fileInfos[ 0 ].h5DataSet );
+                        fileInfos[ 0 ].h5DataSet,
+                        containsHDF5DatasetSingletonDimension);
             }
             else if ( bitDepth == 16 )
             {
@@ -98,7 +101,8 @@ public class FileSeriesCellLoader< T extends NativeType< T > > implements CellLo
                         cell,
                         ( short[] ) cell.getStorageArray(),
                         getFullPath( directory, fileInfos[ 0 ] ),
-                        fileInfos[ 0 ].h5DataSet );
+                        fileInfos[ 0 ].h5DataSet,
+                        containsHDF5DatasetSingletonDimension );
             }
             else
             {

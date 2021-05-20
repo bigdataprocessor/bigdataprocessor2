@@ -1,7 +1,6 @@
 package de.embl.cba.bdp2.open.fileseries.hdf5;
 
 import ch.systemsx.cisd.base.mdarray.MDByteArray;
-import ch.systemsx.cisd.base.mdarray.MDShortArray;
 import ch.systemsx.cisd.hdf5.HDF5DataSetInformation;
 import ch.systemsx.cisd.hdf5.HDF5Factory;
 import ch.systemsx.cisd.hdf5.IHDF5Reader;
@@ -21,30 +20,16 @@ public class HDF5Int8CellLoader
 			Interval interval,
 			byte[] array,
 			String filePath,
-			String h5DataSet )
+			String h5DataSet, boolean containsHDF5DatasetSingletonDimension )
 	{
 		IHDF5Reader reader = HDF5Factory.openForReading( filePath );
 		HDF5DataSetInformation dsInfo = reader.getDataSetInformation( h5DataSet );
 		String dsTypeString = HDF5Helper.hdf5InfoToString(dsInfo);
 
-		longDimensions = new long[]{
-				interval.dimension( 2 ),
-				interval.dimension( 1 ),
-				interval.dimension( 0 ) };
-
-		intDimensions = new int[]{
-				( int ) interval.dimension( 2 ),
-				( int ) interval.dimension( 1 ),
-				( int ) interval.dimension( 0 ) };
-
-		longMins = new long[]{
-				interval.min( 2 ),
-				interval.min( 1 ),
-				interval.min( 0 ) };
-
-		memoryOffset = new int[]{ 0, 0, 0 };
-
-		mdByteArray = new MDByteArray( array, longDimensions );
+		if ( containsHDF5DatasetSingletonDimension )
+			initWithSingleton4thDimension( interval, array );
+		else
+			init( interval, array );
 
 		if ( dsTypeString.equals("int8") )
 		{
@@ -59,7 +44,7 @@ public class HDF5Int8CellLoader
 			}
 			catch ( HDF5JavaException e )
 			{
-				addSingleton4thDimension( interval, array );
+				initWithSingleton4thDimension( interval, array );
 
 				reader.int8().readToMDArrayBlockWithOffset(
 						h5DataSet,
@@ -82,7 +67,7 @@ public class HDF5Int8CellLoader
 			}
 			catch ( HDF5JavaException e )
 			{
-				addSingleton4thDimension( interval, array );
+				initWithSingleton4thDimension( interval, array );
 
 				reader.int8().readToMDArrayBlockWithOffset(
 						h5DataSet,
@@ -99,7 +84,29 @@ public class HDF5Int8CellLoader
 		}
 	}
 
-	private static void addSingleton4thDimension( Interval interval, byte[] array )
+	private static void init( Interval interval, byte[] array )
+	{
+		longDimensions = new long[]{
+				interval.dimension( 2 ),
+				interval.dimension( 1 ),
+				interval.dimension( 0 ) };
+
+		intDimensions = new int[]{
+				( int ) interval.dimension( 2 ),
+				( int ) interval.dimension( 1 ),
+				( int ) interval.dimension( 0 ) };
+
+		longMins = new long[]{
+				interval.min( 2 ),
+				interval.min( 1 ),
+				interval.min( 0 ) };
+
+		memoryOffset = new int[]{ 0, 0, 0 };
+
+		mdByteArray = new MDByteArray( array, longDimensions );
+	}
+
+	private static void initWithSingleton4thDimension( Interval interval, byte[] array )
 	{
 		// try adding a singleton channel dimension (ilastik)
 

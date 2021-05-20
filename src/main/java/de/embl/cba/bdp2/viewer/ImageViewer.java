@@ -4,6 +4,7 @@ import bdv.TransformEventHandler3D;
 import bdv.tools.brightness.ConverterSetup;
 import bdv.tools.brightness.MinMaxGroup;
 import bdv.tools.brightness.SetupAssignments;
+import bdv.tools.transformation.TransformedSource;
 import bdv.util.*;
 import bdv.util.volatiles.VolatileViews;
 import bdv.viewer.ConverterSetups;
@@ -23,6 +24,8 @@ import de.embl.cba.bdp2.utils.RAISlicer;
 import de.embl.cba.bdp2.volatiles.VolatileCachedCellImgs;
 import de.embl.cba.bdv.utils.BdvUtils;
 import net.imglib2.*;
+import net.imglib2.interpolation.randomaccess.ClampingNLinearInterpolatorFactory;
+import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ARGBType;
@@ -385,7 +388,7 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
     private void addToBdv( Image< R > image )
     {
         final AffineTransform3D scaling = getScalingTransform( image.getVoxelDimensions() );
-        RandomAccessibleInterval cachedCellImg = VolatileCachedCellImgs.asVolatileCachedCellImg( image );
+        RandomAccessibleInterval< R > cachedCellImg = VolatileCachedCellImgs.asVolatileCachedCellImg( image );
         BdvOptions options = getBdvOptions( image, scaling );
 
         final long numChannels = cachedCellImg.dimension( DimensionOrder.C );
@@ -395,10 +398,12 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
 
         for ( int channelIndex = 0; channelIndex < numChannels; channelIndex++ )
         {
-            final IntervalView channelView = Views.hyperSlice( cachedCellImg, DimensionOrder.C, channelIndex );
+            final IntervalView< R > channelView = Views.hyperSlice( cachedCellImg, DimensionOrder.C, channelIndex );
 
-            final BdvStackSource< R > stackSource = BdvFunctions.show(
-                    VolatileViews.wrapAsVolatile( channelView ),
+            final RandomAccessibleInterval< Volatile< R > > volatileRandomAccessibleInterval = VolatileViews.wrapAsVolatile( channelView );
+
+            final BdvStackSource stackSource = BdvFunctions.show(
+                    volatileRandomAccessibleInterval,
                     channelNames[ channelIndex ],
                     options );
 

@@ -8,6 +8,7 @@ import ch.epfl.biop.bdv.bioformats.command.OpenFilesWithBigdataviewerBioformatsB
 import ch.epfl.biop.bdv.bioformats.export.spimdata.BioFormatsConvertFilesToSpimData;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
+import de.embl.cba.bdp2.open.NamingSchemes;
 import loci.common.DebugTools;
 import mpicbg.spim.data.generic.AbstractSpimData;
 import mpicbg.spim.data.sequence.VoxelDimensions;
@@ -26,8 +27,12 @@ public class DevelopOpenIlastik
 	{
 		Utils.prepareInteractiveMode();
 
-		final Image< ? > image = BigDataProcessor2.openHDF5Series( "/Users/tischer/Desktop/maxim", "(?<T>.*).h5", "exported_data" );
+		final Image< ? > image = BigDataProcessor2.openHDF5Series( "/Users/tischer/Desktop/maxim", "(?<T>supercut.*).h5" + NamingSchemes.NONRECURSIVE, "exported_data" );
 
 		BigDataProcessor2.showImage( image );
+
+		final Image< ? > image2 = BigDataProcessor2.openHDF5Series( "/Users/tischer/Desktop/maxim/123", "(?<T>123).h5" + NamingSchemes.NONRECURSIVE, "exported_data" );
+
+		BigDataProcessor2.showImage( image2 );
 	}
 }

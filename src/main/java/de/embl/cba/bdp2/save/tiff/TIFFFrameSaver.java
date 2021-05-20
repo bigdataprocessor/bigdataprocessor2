@@ -85,6 +85,12 @@ public class TIFFFrameSaver< R extends RealType< R > & NativeType< R > > impleme
             // TODO: this again does a getType call internally, which can be costly => fix this if possible
             ImagePlus imp = Utils.asImagePlus( raiXYZ, image, c );
 
+            if ( imp.getBitDepth() > 16 && ! settings.compression.equals( SavingSettings.COMPRESSION_NONE ))
+            {
+                throw new UnsupportedOperationException( "Cannot save a compressed TIFF with a bit-depth of " + imp.getBytesPerPixel() * 8 );
+            }
+
+
             if ( settings.saveVolumes )
             {
                 Logger.debug( "Saving volume" + Utils.getChannelTimepointLog( c, t ) + " as (partial file name) " + settings.volumesFilePathStump );
@@ -212,7 +218,6 @@ public class TIFFFrameSaver< R extends RealType< R > & NativeType< R > > impleme
             if ( rowsPerStrip == -1 )
                 rowsPerStrip = imp.getHeight(); // use all rows
 
-            //rowsPerStrip = 1;
             long[] rowsPerStripArray = new long[]{ rowsPerStrip };
 
             for (int z = 0; z < imp.getNSlices(); z++)
@@ -227,7 +232,12 @@ public class TIFFFrameSaver< R extends RealType< R > & NativeType< R > > impleme
                 // save, configuring myself how many strips to use for compression
                 IFD ifd = new IFD();
                 ifd.put( IFD.ROWS_PER_STRIP, rowsPerStripArray );
-                if (imp.getBytesPerPixel() == 2)
+                if (imp.getBytesPerPixel() == 1)
+                {
+                    byte[] bytes = ( byte[] ) ( imp.getStack().getProcessor( z + 1 ).getPixels() );
+                    tiffWriter.saveBytes(z, bytes, ifd);
+                }
+                else if (imp.getBytesPerPixel() == 2)
                 {
                     long start = System.currentTimeMillis();
                     byte[] bytes = ShortToByteBigEndian( ( short[] ) imp.getStack().getProcessor( z + 1 ).getPixels() );
@@ -236,12 +246,10 @@ public class TIFFFrameSaver< R extends RealType< R > & NativeType< R > > impleme
                     start = System.currentTimeMillis();
                     tiffWriter.saveBytes(z, bytes, ifd);
                     //System.out.println( "save: " + (System.currentTimeMillis() - start) );
-
                 }
-                else if (imp.getBytesPerPixel() == 1)
+                else
                 {
-                    byte[] bytes = ( byte[] ) ( imp.getStack().getProcessor( z + 1 ).getPixels() );
-                    tiffWriter.saveBytes(z, bytes, ifd);
+                    throw new UnsupportedOperationException( "Cannot save using Bio-Formats to TIFF with a bit-depth of " + imp.getBytesPerPixel() * 8 );
                 }
             }
 
