@@ -10,6 +10,7 @@ import bdv.util.volatiles.VolatileViews;
 import bdv.viewer.ConverterSetups;
 import bdv.viewer.DisplayMode;
 import bdv.viewer.SourceAndConverter;
+import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.boundingbox.BoundingBoxDialog;
 import de.embl.cba.bdp2.dialog.DisplaySettings;
 import de.embl.cba.bdp2.dialog.DialogUtils;
@@ -142,7 +143,24 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
         return boundingBoxDialog.getRealSelectionInterval();
     }
 
-    public Image< R > getImage() {
+    public Image< R > getImage()
+    {
+        for ( BdvStackSource< R > channelSource : channelSources )
+        {
+            final TransformedSource< R > transformedSource = ( TransformedSource< R > ) channelSource.getSources().get( 0 ).getSpimSource();
+            final AffineTransform3D affineTransform3D = new AffineTransform3D();
+            transformedSource.getFixedTransform( affineTransform3D );
+            if ( ! affineTransform3D.isIdentity() )
+            {
+                // TODO: one may support transforming different channels differently
+                // TODO: macro recording!
+                Logger.log( "Image " + image.getName() + " transformed with " + affineTransform3D );
+                final Image< R > transform = BigDataProcessor2.transform( image, affineTransform3D, new NearestNeighborInterpolatorFactory() );
+                replaceImage( transform, false, true );
+                return transform;
+            }
+        }
+
         return image;
     }
 

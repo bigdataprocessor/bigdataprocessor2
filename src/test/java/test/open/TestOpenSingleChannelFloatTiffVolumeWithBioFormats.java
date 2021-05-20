@@ -15,7 +15,7 @@ public class TestOpenSingleChannelFloatTiffVolumeWithBioFormats
 
         new TestOpenSingleChannelFloatTiffVolumeWithBioFormats().run();
 
-        image.setVoxelDimensions( 1, 1, 20 );
+        image.setVoxelDimensions( 1, 1, 10 );
         BigDataProcessor2.showImage( image );
     }
 

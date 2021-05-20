@@ -24,11 +24,11 @@ public class TransformCommand< R extends RealType< R > & NativeType< R > > exten
     public static final String AFFINE_LABEL = "Affine transform (m00,..,m03,m10,..)";// [m00,..,m03,m10,..,m13,m20,..,m23]";
 
     @Parameter(label = AFFINE_LABEL )
-    String affineTransformCSV = "1,0,0,0,0,1,0,0,0,0,1,0";
+    public String affineTransformCSV = "1,0,0,0,0,1,0,0,0,0,1,0";
     public static final String AFFINE_STRING_PARAMETER = "affineTransformCSV";
 
     @Parameter(label = "Interpolation", choices = { NEAREST, LINEAR })
-    String interpolation = NEAREST;
+    public String interpolation = NEAREST;
     public static final String INTERPOLATION_PARAMETER = "interpolation";
 
     @Override
