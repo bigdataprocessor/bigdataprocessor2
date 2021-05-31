@@ -206,10 +206,13 @@ We currently support saving to
 Save data set as an hdf5 based pyramidal Imaris file (http://open.bitplane.com/ims), with each channel and time point saved as an individual .h5 file and one .ims header file that can be used to view the data both in Fiji’s BigDataViewer and in the commercial Imaris software.
 Motivation: The low data overhead of a pyramidal scheme (in 3D for binning 2 x 2 x 2 at each pyramidal level  ~14%) is a marginal cost for a substantially improved user experience when viewing the data. We, therefore, provide saving data in an open file format that offers this functionality based on hdf5, which means that it can be handled with all common programming languages.
 
+***Save > Save as BigDataViewer XML/HDF5…***
+Save data set as an hdf5 based pyramidal file, all channels and time points will be within one HDF5 file.
+Motivation: This is the standard file format used by essentially all BigDataViewer applications and thus provides good compatibility for downstream processing.
+
 ***Save > Save as TIFF Volumes...***
 Save the dataset as a series of TIFF stacks with each channel and time point saved as an individual .tif file.
 Motivation: TIFF stacks are still the most used and compatible file format that can be easily opened by all software for downstream analysis. 
-
 
 ***Save > Save as TIFF Planes...***
 Save the dataset as a series of TIFF planes, where each z-slice, channel and time point are saved as an individual .tif file.
