@@ -337,9 +337,8 @@ public class FileInfosHelper
         String[] files = null;
         try
         {
-            Files.walk( Paths.get( directory ) )
-                    .forEach( f -> IJ.log( f.toString() ) );
-
+            //Files.walk( Paths.get( directory ) )
+            //        .forEach( f -> IJ.log( f.toString() ) );
             files = Files.walk( Paths.get( directory ) )
                     .map( f -> f.toString() )
                     .filter( s -> pattern.matcher( s ).matches() )

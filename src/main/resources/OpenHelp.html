@@ -155,11 +155,15 @@ Below examples work both with and without zero-padding, e.g. "T0000", "T0001" wo
   </tr>
   <tr>
     <td class="a"><b>.*--t(?&lt;T&gt;\d+)--Z(?&lt;Z&gt;\d+)--C(?&lt;C>\d+).*</b></td>
-    <td>Works for Leica DSL. One file contains a a single plane, such as e.g., "Position001_Target--t00--Z00--C00.tif".</td>
+    <td>Works for Leica DSL images. One file contains a a single plane, such as e.g., "Position001_Target--t00--Z00--C00.tif".</td>
   </tr>
   <tr>
-    <td class="a"><b>.*stack_0_(?&lt;C1&gt;channel_.*)/(?&lt;C2&gt;Cam_.*)_(?&lt;T&gt;\d+)(?:.lux)</b></td>
-    <td>Works for Luxendo. One file contains a single volume.</td>
+    <td class="a"><b>.*stack_0_(?&lt;C1&gt;channel_.*)\/(?&lt;C2&gt;Cam_.*)_(?&lt;T&gt;\d+)(?:.lux)</b></td>
+    <td>Works for Luxendo light sheet microscope images. One file contains a single volume.</td>
+  </tr>
+  <tr>
+    <td class="a"><b>.*\/t(?&lt;T&gt;\d+)\/c(?&lt;C>\d+)\/.*_(?&lt;Z&gt;\d+)</b></td>
+    <td>Works for TeraStitchter. One file contains a a single plane. 5D data where timepoint and channel are encoded in the folder and the z-plane in the file names.</td>
   </tr>
 </table>
 </p>

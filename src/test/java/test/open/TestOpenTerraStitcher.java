@@ -2,11 +2,7 @@ package test.open;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
-import test.Utils;
-
-import java.util.regex.Pattern;
-
-import static de.embl.cba.bdp2.open.NamingSchemes.LUXENDO;
+import org.junit.Test;
 
 public class TestOpenTerraStitcher
 {
@@ -17,7 +13,7 @@ public class TestOpenTerraStitcher
         new TestOpenTerraStitcher().run();
     }
 
-    //@Test
+    @Test
     public void run()
     {
         String regExp = ".*\\/t(?<T>\\d+)\\/c(?<C>\\d+)\\/.*_(?<Z>\\d+).tif";
@@ -27,7 +23,6 @@ public class TestOpenTerraStitcher
                 regExp );
         image.setVoxelUnit( "micrometer" );
         image.setVoxelDimensions( new double[]{1,1,1} );
-
-        BigDataProcessor2.showImage( image, true );
+        //BigDataProcessor2.showImage( image, true );
     }
 }
