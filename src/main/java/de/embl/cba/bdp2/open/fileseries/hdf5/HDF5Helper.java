@@ -18,10 +18,8 @@ public class HDF5Helper
 
     public static void setMetadataFromHDF5(
             FileInfos fileInfos,
-            String directory,
-            String fileName)
+            String filePath )
     {
-        final String filePath = directory + "/" + fileName;
         IHDF5Reader reader = HDF5Factory.openForReading( filePath );
 
         StringBuilder hdf5DataSetSB = new StringBuilder();

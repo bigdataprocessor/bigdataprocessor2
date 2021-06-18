@@ -5,15 +5,18 @@ import de.embl.cba.bdp2.open.NamingSchemes;
 import de.embl.cba.bdp2.open.fileseries.hdf5.HDF5Helper;
 import de.embl.cba.bdp2.utils.BioFormatsCalibrationReader;
 import de.embl.cba.bdp2.utils.DimensionOrder;
-import org.apache.commons.lang.ArrayUtils;
 
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class FileInfosHelper
 {
@@ -35,12 +38,11 @@ public class FileInfosHelper
 
     public static void setImageMetadataFromTIFF(
             FileInfos fileInfos,
-            String directory,
-            String fileName)
+            String path)
     {
         BDP2FileInfo[] info;
 
-        FastTIFFDecoder ftd = new FastTIFFDecoder( directory, fileName );
+        FastTIFFDecoder ftd = new FastTIFFDecoder( path );
         try
         {
             info = ftd.getTIFFInfo();
@@ -79,32 +81,33 @@ public class FileInfosHelper
 
     private static void fetchMetadata( FileInfos fileInfos, String regExp )
     {
-        String firstRelativeFilePath = fileInfos.relativeFilePaths[ 0 ];
+        String firstPath = fileInfos.paths[ 0 ];
 
-        if ( NamingSchemes.isTIFF( firstRelativeFilePath ) )
+        if ( NamingSchemes.isTIFF( firstPath ) )
         {
-            fetchTIFFMetadata( fileInfos, regExp, firstRelativeFilePath );
+            fetchTIFFMetadata( fileInfos, regExp, firstPath );
         }
         else if ( NamingSchemes.isLuxendoNamingScheme( regExp ) )
         {
             fileInfos.fileType = FileSeriesFileType.LUXENDO;
-            HDF5Helper.setMetadataFromHDF5( fileInfos, fileInfos.directory, firstRelativeFilePath );
+            HDF5Helper.setMetadataFromHDF5( fileInfos, firstPath );
         }
-        else if ( NamingSchemes.isHDF5( firstRelativeFilePath ) )
+        else if ( NamingSchemes.isHDF5( firstPath ) )
         {
             fileInfos.fileType = FileSeriesFileType.HDF5_VOLUMES;
-            HDF5Helper.setMetadataFromHDF5( fileInfos, fileInfos.directory, firstRelativeFilePath );
+            HDF5Helper.setMetadataFromHDF5( fileInfos, firstPath );
         }
         else
         {
-            Logger.error("Unsupported file type: " + firstRelativeFilePath );
+            Logger.error("Unsupported file type: " + firstPath );
         }
     }
 
-    private static void fetchTIFFMetadata( FileInfos fileInfos, String regExp, String firstRelativeFilePath )
+    private static void fetchTIFFMetadata( FileInfos fileInfos, String regExp, String firstPath )
     {
         int nZ = fileInfos.nZ;
-        setImageMetadataFromTIFF( fileInfos, fileInfos.directory, firstRelativeFilePath );
+
+        setImageMetadataFromTIFF( fileInfos, firstPath );
 
         if ( regExp.contains( NamingSchemes.Z ) )
         {
@@ -163,9 +166,9 @@ public class FileInfosHelper
             }
         }
 
-        for ( String relativePath : fileInfos.relativeFilePaths )
+        for ( String path : fileInfos.paths )
         {
-            Matcher matcher = pattern.matcher( relativePath );
+            Matcher matcher = pattern.matcher( path );
             if ( matcher.matches() )
             {
                 channels.add( getId( channelGroups, matcher ) );
@@ -283,9 +286,9 @@ public class FileInfosHelper
 
         Pattern pattern = Pattern.compile( regExp );
 
-        for ( String fileName : fileInfos.relativeFilePaths )
+        for ( String path : fileInfos.paths )
         {
-            Matcher matcher = pattern.matcher( fileName );
+            Matcher matcher = pattern.matcher( path );
             if ( matcher.matches() )
             {
                 int c = channels.indexOf( getId( channelGroups, matcher ) );
@@ -294,79 +297,58 @@ public class FileInfosHelper
 
                 int t = timepoints.indexOf( getId( timeGroups, matcher ) );
                 if ( t == -1 )
-                    throw new RuntimeException( "Could get time index for " + fileName );
+                    throw new RuntimeException( "Could get time index for " + path );
 
                 if ( regExp.contains( NamingSchemes.Z ) )
                 {
                     int z = slices.indexOf( getId( sliceGroups, matcher ) );
                     if ( z == -1 )
-                        throw new RuntimeException( "Could get slice index for " + fileName );
-                    fileInfos.ctzFiles[ c ][ t ][ z ] = fileName;
+                        throw new RuntimeException( "Could get slice index for " + path );
+                    fileInfos.ctzFiles[ c ][ t ][ z ] = path;
                 }
                 else
                 {
                     for ( int z = 0; z < fileInfos.nZ; z++ )
                     {
                         // all z with same file-name, because each file contains the whole volume
-                        fileInfos.ctzFiles[ c ][ t ][ z ] = fileName;
+                        fileInfos.ctzFiles[ c ][ t ][ z ] = path;
                     }
                 }
             }
             else
             {
-                throw new UnsupportedOperationException( "Could not match file: " + fileName + "\nNaming scheme: " + regExp );
+                throw new UnsupportedOperationException( "Could not match file: " + path + "\nNaming scheme: " + regExp );
             }
         }
     }
 
-    public static String[] fetchFiles( String directory, String pattern, boolean recursive )
+    public static String[] fetchFiles( String directory, String patternString )
     {
         if ( ! new File( directory ).exists() )
         {
-            Logger.error("Directory not found: " + directory );
             throw new RuntimeException( "Directory not found: " + directory );
         }
 
-        final String filePattern = extractFilePattern( pattern );
-        final String folderPattern = extractFolderPattern( pattern );
-        Logger.info( "File name pattern: " + filePattern );
+        Pattern pattern = Pattern.compile( patternString );
+        System.out.println( patternString );
 
-        String[] relativeSubFolders;
-        if ( recursive )
+        String[] files = null;
+        try
         {
-            relativeSubFolders = getSubFolders( directory, folderPattern );
-            Logger.info( "Sub-folder name pattern: " + folderPattern );
+            files = Files.walk( Paths.get( directory ) )
+                    .map( f -> f.toString() )
+                    .filter( s -> pattern.matcher( s ).matches() )
+                    .collect( Collectors.toList() )
+                    .toArray( new String[ 0 ]);
         }
-        else
+        catch ( IOException e )
         {
-            relativeSubFolders = new String[]{ "" };
+            e.printStackTrace();
         }
 
-        Logger.info( "Sub-folders: " + Arrays.toString( relativeSubFolders ) );
-
-        String[] files = new String[]{};
-        for (int i = 0; i < relativeSubFolders.length; i++)
+        if ( files == null || files.length == 0)
         {
-            final String folder = directory + relativeSubFolders[ i ];
-            Logger.info( "Fetching files in " + folder  );
-
-            String[] subFolderFilePaths = fetchFiles( folder, filePattern );
-
-            if ( subFolderFilePaths == null )
-            {
-                String msg = "No files found in folder: " + folder + " that match " + filePattern;
-                Logger.error( msg );
-                throw new RuntimeException( msg );
-            }
-            else
-            {
-                Logger.info( "Found " + subFolderFilePaths.length + " files in folder: " + folder );
-            }
-
-            // prepend subfolder
-            final String relativeSubFolder = relativeSubFolders[ i ];
-            subFolderFilePaths = Arrays.stream( subFolderFilePaths ).map( x -> relativeSubFolder + x ).toArray( String[]::new );
-            files = (String[]) ArrayUtils.addAll( files, subFolderFilePaths );
+            throw new RuntimeException( "No matching files found in " + directory );
         }
 
         return files;
@@ -383,11 +365,13 @@ public class FileInfosHelper
 
             if ( split.length > 1 )
             {
-                final String folder = split[ 0 ];
-                return folder;
-                // return fromWindowsSplitSavePattern( folder );
-            } else
+                final String folderPattern = Arrays.stream( split ).limit( split.length - 1 ).collect( Collectors.joining("/") );
+                return folderPattern;
+            }
+            else
+            {
                 return ".*";
+            }
         }
         else
         {
@@ -400,10 +384,7 @@ public class FileInfosHelper
         if ( filterPattern != null )
         {
             final String[] split = filterPattern.split( "/" );
-            if ( split.length > 1 )
-                return split[ 1 ];
-            else
-                return split[ 0 ];
+            return split[ split.length - 1 ];
         }
         else
         {
@@ -487,21 +468,6 @@ public class FileInfosHelper
         }
     }
 
-    private static String[] fetchFiles( String directory, String filterPattern)
-    {
-        String[] list = new File( directory ).list();
-
-        if (list == null || list.length == 0)
-            return null;
-
-        //Logger.info( "Sorting and filtering file list..." );
-        list = sortAndFilterFileList( list, filterPattern );
-
-        if (list == null) return null;
-
-        else return ( list );
-    }
-
     private static String[] getSubFolders( String parentFolder, String subFolderPattern )
     {
         String[] list = new File( parentFolder ).list( new FilenameFilter()
@@ -509,9 +475,9 @@ public class FileInfosHelper
             @Override
             public boolean accept( File parentFolder, String subFolder )
             {
-                if ( ! new File( parentFolder, subFolder ).isDirectory() ) return false;
-
                 Pattern.compile( subFolderPattern ).matcher( subFolder );
+
+                if ( ! new File( parentFolder, subFolder ).isDirectory() ) return false;
 
                 if ( ! Pattern.compile( subFolderPattern ).matcher( subFolder ).matches() ) return false;
 

@@ -18,6 +18,7 @@ import net.imglib2.type.numeric.real.FloatType;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class FileInfos
@@ -55,7 +56,7 @@ public class FileInfos
     public int compression;
     public int numTIFFStrips;
     public String[] channelNames;
-    public String[] relativeFilePaths;
+    public String[] paths;
     private boolean recursive;
 
     public FileInfos(
@@ -95,13 +96,14 @@ public class FileInfos
             String namingScheme,
             String h5DataSetPath,
             String[] channelSubset,
-            String[] relativeFilePaths
+            String[] paths
     )
     {
-        this.relativeFilePaths = relativeFilePaths;
+        this.paths = paths;
         fetchFileInfos( directory, namingScheme, h5DataSetPath, channelSubset );
     }
 
+    // TODO: do we need the recursive option still??
     private void fetchFileInfos( String aDirectory, String regExp, String h5DataSetName, String[] channelSubset )
     {
         this.namingScheme = regExp;
@@ -110,6 +112,7 @@ public class FileInfos
 
         DebugTools.setRootLevel( "OFF" ); // Bio-Formats
 
+        // TODO: do we need the recursive option still??
         if( namingScheme.contains( NamingSchemes.NONRECURSIVE ) )
         {
             recursive = false;
@@ -121,21 +124,22 @@ public class FileInfos
             namingScheme = namingScheme;
         }
 
+        namingScheme = namingScheme.replaceAll("/", Matcher.quoteReplacement( File.separator ) );
+
         Logger.info( "Directory: " + directory );
         Logger.info( "Regular expression: " +  namingScheme );
 
-        if ( relativeFilePaths == null )
-            relativeFilePaths = FileInfosHelper.fetchFiles( directory, namingScheme, recursive );
+        if ( this.paths == null )
+            this.paths = FileInfosHelper.fetchFiles( directory, namingScheme );
 
-        namingScheme = adaptDirectorySeparatorToOperatingSystem( namingScheme );
         FileInfosHelper.setFileInfos5D( this, namingScheme, channelSubset );
 
         Logger.info( this.toString() );
     }
 
-    private String adaptDirectorySeparatorToOperatingSystem( String namingScheme )
+    public static String adaptDirectorySeparatorToOperatingSystem( String string )
     {
-        return namingScheme.replace( "/", Pattern.quote( File.separator ) );
+        return string.replaceAll("/", Matcher.quoteReplacement( File.separator ) );
     }
 
     @Override
@@ -234,7 +238,7 @@ public class FileInfos
     {
         BDP2FileInfo[] info = null;
 
-        File file = new File( directory, ctzFiles[c][t][z] );
+        File file = new File( ctzFiles[c][t][z] );
         if ( file.exists() )
         {
             if ( fileType.equals( FileSeriesFileType.TIFF_STACKS ) )
@@ -264,7 +268,7 @@ public class FileInfos
     private void loadMetadataFromTIFFPlane( int c, int t, int z )
     {
         FastTIFFDecoder ftd;
-        ftd = new FastTIFFDecoder(directory, ctzFiles[ c ][ t ][ z ]);
+        ftd = new FastTIFFDecoder( ctzFiles[ c ][ t ][ z ] );
         try{
             ctzFileInfos[ c ][ t ][ z ] = ftd.getTIFFInfo()[0];
         }
@@ -315,7 +319,7 @@ public class FileInfos
     {
         FastTIFFDecoder ftd;
         BDP2FileInfo[] infoCT;
-        ftd = new FastTIFFDecoder( directory, ctzFiles[ c ][ t ][0] );
+        ftd = new FastTIFFDecoder( ctzFiles[ c ][ t ][0] );
         try {
             info = ftd.getTIFFInfo();
         }

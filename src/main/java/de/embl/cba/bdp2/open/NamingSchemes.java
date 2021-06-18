@@ -46,13 +46,13 @@ public abstract class NamingSchemes
 		return namingScheme.contains( LUXENDO_ID );
 	}
 
-	public static boolean isTIFF( String fileName )
+	public static boolean isTIFF( String path )
 	{
-		return fileName.contains( TIF );
+		return path.contains( TIF );
 	}
 
-	public static boolean isHDF5( String fileName )
+	public static boolean isHDF5( String path )
 	{
-		return fileName.endsWith( HDF5 );
+		return path.endsWith( HDF5 );
 	}
 }

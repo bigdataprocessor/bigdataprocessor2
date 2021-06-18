@@ -60,7 +60,7 @@ public class PositionAndChannelsOpenerWizard
 		// Open the image and record a macro
 		//
 		String channels = Arrays.stream( selectedChannels ).collect( Collectors.joining( "," ) );
-		OpenChannelsFileSeriesCommand< ? > openCommand = new OpenChannelsFileSeriesCommand( directory, fileInfos.relativeFilePaths, channels, channelTimeRegExp );
+		OpenChannelsFileSeriesCommand< ? > openCommand = new OpenChannelsFileSeriesCommand( directory, fileInfos.paths, channels, channelTimeRegExp );
 		openCommand.run();
 	}
 }

@@ -124,13 +124,17 @@ public class FastTIFFDecoder {
     long stripTime = 0;
     long totalTime = 0;
 
+    public FastTIFFDecoder( String path )
+    {
+        this.directory = new File( path ).getParent();
+        this.name = new File( path ).getName();
+    }
 
     public FastTIFFDecoder( String directory, String name )
     {
         this.directory = directory;
         this.name = name;
     }
-
 
     // FileReader
 

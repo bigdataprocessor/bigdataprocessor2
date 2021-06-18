@@ -75,7 +75,6 @@ public class ImarisImageSaver< R extends RealType< R > & NativeType< R > > exten
     }
 
     private static ImarisDataSet createImarisDataSet( SavingSettings settings, AtomicBoolean stop, Image< ? > image ) {
-
         final String directory = new File( settings.volumesFilePathStump ).getParent();
         final String filename = new File( settings.volumesFilePathStump ).getName();
 
