@@ -5,7 +5,9 @@ import de.embl.cba.bdp2.open.NamingSchemes;
 import de.embl.cba.bdp2.open.fileseries.hdf5.HDF5Helper;
 import de.embl.cba.bdp2.utils.BioFormatsCalibrationReader;
 import de.embl.cba.bdp2.utils.DimensionOrder;
+import ij.IJ;
 
+import javax.crypto.spec.PSource;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -335,6 +337,9 @@ public class FileInfosHelper
         String[] files = null;
         try
         {
+            Files.walk( Paths.get( directory ) )
+                    .forEach( f -> IJ.log( f.toString() ) );
+
             files = Files.walk( Paths.get( directory ) )
                     .map( f -> f.toString() )
                     .filter( s -> pattern.matcher( s ).matches() )

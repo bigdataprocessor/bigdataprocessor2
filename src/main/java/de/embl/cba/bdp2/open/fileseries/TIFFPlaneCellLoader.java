@@ -63,7 +63,7 @@ public class TIFFPlaneCellLoader implements Runnable
 
 		try
 		{
-			File file = new File( new File( directory, fi.directory ).getAbsolutePath(), fi.fileName );
+			File file = new File( new File( fi.directory ).getAbsolutePath(), fi.fileName );
 			RandomAccessFile inputStream = new RandomAccessFile( file, "r" );
 			bytes = rowsReader.read( fi, inputStream, minRowRequested, numRowsRequested, minColRequested, numColsRequested );
 			inputStream.close();

@@ -14,7 +14,6 @@ public class DevelopTerraStitcherParsing
 		String regExp = ".*\\/t(?<T>\\d+)\\/c(?<C>\\d+)\\/.*_(?<Z>\\d+).tif";
 		regExp = regExp.replaceAll("/", Matcher.quoteReplacement( File.separator ) );
 
-
 		final String directory = "/Users/tischer/Desktop/Benjamin/";
 
 		try

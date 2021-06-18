@@ -25,6 +25,8 @@ public class TestOpenTerraStitcher
         final Image image = BigDataProcessor2.openTIFFSeries(
                 directory,
                 regExp );
+        image.setVoxelUnit( "micrometer" );
+        image.setVoxelDimensions( new double[]{1,1,1} );
 
         BigDataProcessor2.showImage( image, true );
     }

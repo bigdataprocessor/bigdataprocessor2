@@ -91,7 +91,7 @@ public class FileSeriesCellLoader< T extends NativeType< T > > implements CellLo
                 HDF5Int8CellLoader.load(
                         cell,
                         ( byte[] ) cell.getStorageArray(),
-                        getFullPath( directory, fileInfos[ 0 ] ),
+                        getFullPath( fileInfos[ 0 ] ),
                         fileInfos[ 0 ].h5DataSet,
                         containsHDF5DatasetSingletonDimension);
             }
@@ -100,7 +100,7 @@ public class FileSeriesCellLoader< T extends NativeType< T > > implements CellLo
                 HDF5Int16CellLoader.load(
                         cell,
                         ( short[] ) cell.getStorageArray(),
-                        getFullPath( directory, fileInfos[ 0 ] ),
+                        getFullPath( fileInfos[ 0 ] ),
                         fileInfos[ 0 ].h5DataSet,
                         containsHDF5DatasetSingletonDimension );
             }
@@ -145,5 +145,10 @@ public class FileSeriesCellLoader< T extends NativeType< T > > implements CellLo
     private static String getFullPath( String directory, BDP2FileInfo fileInfo )
     {
         return directory + File.separator + fileInfo.directory + File.separator + fileInfo.fileName;
+    }
+
+    private static String getFullPath( BDP2FileInfo fileInfo )
+    {
+        return fileInfo.directory + File.separator + fileInfo.fileName;
     }
 }
