@@ -23,7 +23,7 @@ public class OpenSingleTIFFVolumeCommand< R extends RealType< R > & NativeType< 
     public static final String COMMAND_FULL_NAME = COMMAND_BDP2_PREFIX + COMMAND_NAME;
 
     @Parameter( label = "TIFF file")
-    File file;
+    public File file;
 
     private String directory;
     private String regExp;
