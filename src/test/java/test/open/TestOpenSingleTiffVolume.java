@@ -1,15 +1,10 @@
 package test.open;
 
-import de.embl.cba.bdp2.BigDataProcessor2;
-import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.open.fileseries.OpenSingleTIFFVolumeCommand;
 import org.junit.Test;
 import test.Utils;
 
 import java.io.File;
-
-import static de.embl.cba.bdp2.open.NamingSchemes.MULTI_CHANNEL_VOLUMES;
-import static de.embl.cba.bdp2.open.NamingSchemes.TIF;
 
 public class TestOpenSingleTiffVolume
 {

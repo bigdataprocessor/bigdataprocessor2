@@ -32,7 +32,7 @@ public class OpenSingleTIFFVolumeCommand< R extends RealType< R > & NativeType< 
     {
         SwingUtilities.invokeLater( () ->  {
             directory = file.getParent();
-            regExp = "(?<T>"+file.getName()+")";
+            regExp = "(?<T>"+file.getPath()+")";
             regExp += NamingSchemes.NONRECURSIVE;
             outputImage = BigDataProcessor2.openTIFFSeries( directory, regExp );
             recordAPICall();
