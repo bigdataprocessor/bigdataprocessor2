@@ -45,6 +45,10 @@ public class SaveAdvancedCommand< R extends RealType< R > & NativeType< R > > im
     boolean saveProjections;
     public static String SAVE_PROJECTIONS_PARAMETER = "saveProjections";
 
+    @Parameter(label = "Projection mode", choices = { Projector.MAX, Projector.SUM })
+    String projectionMode;
+    public static String PROJECTIONS_MODE_PARAMETER = "projectionMode";
+
     @Parameter(label = "First time frame (zero-based)")
     int tStart = 0;
     public static String T_START_PARAMETER = "tStart";
@@ -103,6 +107,7 @@ public class SaveAdvancedCommand< R extends RealType< R > & NativeType< R > > im
         savingSettings.rowsPerStrip = 10;
         savingSettings.saveVolumes = saveVolumes;
         savingSettings.saveProjections = saveProjections;
+        savingSettings.projectionMode = projectionMode;
         savingSettings.volumesFilePathStump = SavingSettings.createFilePathStump( inputImage, "volumes", directory.toString() );
         savingSettings.projectionsFilePathStump = SavingSettings.createFilePathStump( inputImage, "projections", directory.toString() );
         savingSettings.numIOThreads = numIOThreads;

@@ -1,5 +1,6 @@
 package de.embl.cba.bdp2.viewer;
 
+// TODO: Make an enum
 public class ViewingModalities
 {
 	public static final String DO_NOT_SHOW = "Do not show";

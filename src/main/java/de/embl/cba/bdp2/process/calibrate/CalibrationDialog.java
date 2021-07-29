@@ -6,6 +6,7 @@ import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.record.ScriptRecorder;
 import de.embl.cba.bdp2.viewer.ImageViewer;
+import de.embl.cba.bdp2.viewer.ViewingModalities;
 import ij.IJ;
 import ij.gui.GenericDialog;
 import net.imglib2.type.NativeType;
@@ -85,7 +86,7 @@ public class CalibrationDialog< R extends RealType< R > & NativeType< R > >
 
 	protected void recordMacro()
 	{
-		final ScriptRecorder recorder = new ScriptRecorder( SetVoxelSizeCommand.COMMAND_FULL_NAME, inputImage, outputImage );
+		final ScriptRecorder recorder = new ScriptRecorder( SetVoxelSizeCommand.COMMAND_FULL_NAME, inputImage, outputImage, ViewingModalities.SHOW_IN_CURRENT_VIEWER );
 
 		final double[] voxelSize = outputImage.getVoxelDimensions();
 		recorder.addCommandParameter( "unit", outputImage.getVoxelUnit().getSymbol() );
