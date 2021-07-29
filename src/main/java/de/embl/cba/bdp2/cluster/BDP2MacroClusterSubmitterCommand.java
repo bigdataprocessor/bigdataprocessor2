@@ -3,6 +3,7 @@ package de.embl.cba.bdp2.cluster;
 import de.embl.cba.bdp2.record.HeadlessMacroCreator;
 import de.embl.cba.bdp2.scijava.Services;
 import de.embl.cba.cluster.AbstractClusterSubmitterCommand;
+import de.embl.cba.cluster.JobExecutor;
 import de.embl.cba.cluster.JobFuture;
 import de.embl.cba.cluster.JobSettings;
 import de.embl.cba.cluster.JobSubmitter;
@@ -46,7 +47,7 @@ public class BDP2MacroClusterSubmitterCommand extends AbstractClusterSubmitterCo
 	@Override
 	public void run()
 	{
-		createJobSubmitter( executable + JobSubmitter.RUN_IJ_MACRO_OPTIONS );
+		createJobSubmitter( executable + JobSubmitter.RUN_IJ_MACRO_OPTIONS, new JobExecutor() );
 		jobFutures = submitJobs( macros );
 		new Thread( () ->  {
 			monitorJobs( jobFutures );
