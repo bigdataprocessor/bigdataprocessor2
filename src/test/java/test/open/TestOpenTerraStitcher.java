@@ -13,7 +13,7 @@ public class TestOpenTerraStitcher
         new TestOpenTerraStitcher().run();
     }
 
-    @Test
+    //@Test
     public void run()
     {
         String regExp = ".*\\/t(?<T>\\d+)\\/c(?<C>\\d+)\\/.*_(?<Z>\\d+).tif";

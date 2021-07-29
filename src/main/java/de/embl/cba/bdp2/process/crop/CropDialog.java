@@ -80,7 +80,6 @@ public class CropDialog< R extends RealType< R > & NativeType< R > >
 			recordMacro( inputImage, outputImage, voxelInterval );
 		} );
 
-
 		final ImageViewer< R > newViewer = BigDataProcessor2.showImage( outputImage, false );
 		final List< DisplaySettings > displaySettings = viewer.getDisplaySettings();
 		newViewer.setDisplaySettings( displaySettings );

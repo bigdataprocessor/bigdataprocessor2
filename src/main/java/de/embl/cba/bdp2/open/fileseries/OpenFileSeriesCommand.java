@@ -62,7 +62,7 @@ public class OpenFileSeriesCommand< R extends RealType< R > & NativeType< R > > 
     {
         // Sometimes Leica is calibrated as cm, which makes no sense
         final double[] voxelSpacing = image.getVoxelDimensions();
-        final String voxelUnit = CalibrationUtils.fixVoxelSizeAndUnit( voxelSpacing, image.getVoxelUnit().toString() );
+        final String voxelUnit = CalibrationUtils.fixVoxelSizeAndUnit( voxelSpacing, image.getVoxelUnit().getSymbol() );
         image.setVoxelDimensions( voxelSpacing );
         image.setVoxelUnit( voxelUnit );
     }

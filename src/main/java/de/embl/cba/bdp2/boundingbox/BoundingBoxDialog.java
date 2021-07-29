@@ -78,7 +78,7 @@ public class BoundingBoxDialog < R extends RealType< R > & NativeType< R > >
         return voxelSpacing;
     }
 
-    public FinalInterval getVoxelSelectionInterval( )
+    public FinalInterval getVoxelSelectionInterval()
     {
         FinalInterval interval;
         if ( selectedMax != null && selectedMin != null ) {
@@ -89,7 +89,7 @@ public class BoundingBoxDialog < R extends RealType< R > & NativeType< R > >
         return interval;
     }
 
-    public FinalRealInterval getRealSelectionInterval( )
+    public FinalRealInterval getRealSelectionInterval()
     {
         FinalRealInterval interval;
         if ( selectedMax != null && selectedMin != null ) {
@@ -101,11 +101,11 @@ public class BoundingBoxDialog < R extends RealType< R > & NativeType< R > >
     }
 
 
-    public void showRealBoxAndWaitForResult() {
-
+    public void showRealBoxAndWaitForResult()
+    {
         setInitialSelectionAndRange( true );
 
-        final TransformedRealBoxSelectionDialog.Result result = showRealBox( image.getVoxelUnit().toString() );
+        final TransformedRealBoxSelectionDialog.Result result = showRealBox( image.getVoxelUnit().getSymbol() );
         if ( result.isValid() )
         {
             collectSelection( result.getInterval(), result.getMinTimepoint(), result.getMaxTimepoint() );

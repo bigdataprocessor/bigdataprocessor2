@@ -5,14 +5,14 @@ import ij.plugin.frame.Recorder;
 
 import java.util.Arrays;
 
-public class LanguageDialog
+public class MacroRecordingDialog
 {
 	public static final String MACRO = "Macro";
 	public static final String PYTHON = "Python"; // == Jython
 	public static final String JAVA_SCRIPT = "JavaScript";
 	public static final String[] LANGUAGES = new String[]{ MACRO, PYTHON, JAVA_SCRIPT };
 
-	public LanguageDialog()
+	public MacroRecordingDialog()
 	{
 		final GenericDialog genericDialog = new GenericDialog( "Recording" );
 		genericDialog.addCheckbox( "Enable recording", true );

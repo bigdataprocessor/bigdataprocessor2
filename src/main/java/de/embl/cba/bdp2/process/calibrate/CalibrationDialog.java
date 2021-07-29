@@ -88,7 +88,7 @@ public class CalibrationDialog< R extends RealType< R > & NativeType< R > >
 		final ScriptRecorder recorder = new ScriptRecorder( SetVoxelSizeCommand.COMMAND_FULL_NAME, inputImage, outputImage );
 
 		final double[] voxelSize = outputImage.getVoxelDimensions();
-		recorder.addCommandParameter( "unit", outputImage.getVoxelUnit() );
+		recorder.addCommandParameter( "unit", outputImage.getVoxelUnit().getSymbol() );
 		recorder.addCommandParameter( SetVoxelSizeCommand.VOXEL_SIZE_X_PARAMETER, voxelSize[ 0 ] );
 		recorder.addCommandParameter( SetVoxelSizeCommand.VOXEL_SIZE_Y_PARAMETER, voxelSize[ 1 ] );
 		recorder.addCommandParameter( SetVoxelSizeCommand.VOXEL_SIZE_Z_PARAMETER, voxelSize[ 2 ] );

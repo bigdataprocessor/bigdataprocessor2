@@ -25,7 +25,6 @@ public class BDP2MacroClusterSubmitterCommand extends AbstractClusterSubmitterCo
 	public static final String T_END = "tend=";
 	public static final String NUMPROCESSINGTHREADS = "numprocessingthreads=";
 
-
 	// executable: /g/almf/software/Fiji-versions/Fiji-BDP2.app/ImageJ-linux64
 
 	@Parameter ( label = "Macro files" )
