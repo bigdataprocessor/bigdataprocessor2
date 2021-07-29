@@ -26,6 +26,7 @@ public class BDP2MacroClusterSubmitterCommand extends AbstractClusterSubmitterCo
 	public static final String NUMPROCESSINGTHREADS = "numprocessingthreads=";
 
 	// executable: /g/almf/software/Fiji-versions/Fiji-BDP2.app/ImageJ-linux64
+	protected String executable = "/g/almf/software/Fiji-versions/Fiji-BDP2.app/ImageJ-linux64";
 
 	@Parameter ( label = "Macro files" )
 	File[] macros;
@@ -36,8 +37,11 @@ public class BDP2MacroClusterSubmitterCommand extends AbstractClusterSubmitterCo
 	@Parameter ( label = "Timepoints per job" )
 	int timePointsPerJob = 10;
 
-	@Parameter ( label = "Minutes per timepoint" )
+	@Parameter ( label = "Maximal execution time per timepoint [Minutes]" )
 	int minutesPerTimePoint = 5;
+
+	@Parameter ( label = "Maximal memory usage [MB]" )
+	int memory = 16000;
 
 	@Override
 	public void run()
@@ -125,7 +129,7 @@ public class BDP2MacroClusterSubmitterCommand extends AbstractClusterSubmitterCo
 		JobSettings jobSettings = new JobSettings();
 		jobSettings.numWorkersPerNode = numWorkers;
 		jobSettings.queue = JobSettings.DEFAULT_QUEUE;
-		jobSettings.memoryPerJobInMegaByte = 16000; // TODO
+		jobSettings.memoryPerJobInMegaByte = memory; // TODO: Make configurable?
 		jobSettings.timePerJobInMinutes = ( t1 - t0 + 1) * minutesPerTimePoint;
 		return jobSettings;
 	}
@@ -135,7 +139,6 @@ public class BDP2MacroClusterSubmitterCommand extends AbstractClusterSubmitterCo
 		final ImageJ ij = new ImageJ();
 		ij.ui().showUI();
 
-		// /g/almf/software/Fiji-versions/Fiji-BDP2.app/ImageJ-linux64
 		Services.setCommandService( ij.command() );
 		ij.command().run( BDP2MacroClusterSubmitterCommand.class, true );
 	}
