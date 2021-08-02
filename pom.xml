@@ -93,7 +93,9 @@
 		<license.licenseName>bsd_2</license.licenseName>
 		<license.copyrightOwners>EMBL</license.copyrightOwners>
 
-		<scijava.app.directory>/Users/tischer/Desktop/Fiji/Fiji-bdp2.app</scijava.app.directory>
+<!--		<scijava.app.directory>/Users/tischer/Desktop/Fiji/Fiji-bdp2.app</scijava.app.directory>-->
+
+		<scijava.app.directory>/g/almf/software/Fiji-versions/Fiji-BDP2.app/</scijava.app.directory>
 
 <!--		<scijava.app.directory>/g/almf/software/Fiji-versions/Fiji-BDP2.app/</scijava.app.directory>-->
 
