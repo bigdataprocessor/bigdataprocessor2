@@ -119,8 +119,6 @@ public class Image< R extends RealType< R > & NativeType< R > >
 
 	/**
 	 * Copy constructor.
-	 *
-	 * @param image
 	 */
 	public Image( Image< R > image )
 	{
@@ -236,8 +234,6 @@ public class Image< R extends RealType< R > & NativeType< R > >
 	/**
 	 * Adapt the voxel size, e.g., in case a processing step like
 	 * binning was applied.
-	 *
-	 * @param voxelDimensions
 	 */
 	public void setVoxelDimensions( double... voxelDimensions )
 	{
@@ -328,10 +324,6 @@ public class Image< R extends RealType< R > & NativeType< R > >
 	/**
 	 * Replaces the cachedCellImg that backs the rai of this image,
 	 * leaving all modifications (views and conversions) intact.
-	 *
-	 * @param cellDims
-	 * @param cacheType
-	 * @param cacheSize ignored for SOFTREF
 	 */
 	public void setCache( int[] cellDims, CacheOptions.CacheType cacheType, int cacheSize )
 	{
@@ -353,9 +345,6 @@ public class Image< R extends RealType< R > & NativeType< R > >
 
 	/**
 	 * Sets the cache dimensions such that one cell is one volume.
-	 *
-	 * @param cacheType
-	 * @param cacheSize
 	 */
 	public void setVolumeCache( CacheOptions.CacheType cacheType, int cacheSize )
 	{

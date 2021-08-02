@@ -50,15 +50,6 @@ public abstract class CacheUtils
 		return false;
 	}
 
-	/**
-	 * Create cell dimensions to load a whole channel and time point in one go.
-	 *
-	 * This method takes care that the cells for one such volume are not too large
-	 * in terms of the Java array indexing limit.
-	 *
- 	 * @param imageDimsXYZ
-	 * @return
-	 */
 	public static int[] volumeWiseCellDims( long[] imageDimsXYZ )
 	{
 		long cellDimX = imageDimsXYZ[ 0 ];
@@ -78,14 +69,6 @@ public abstract class CacheUtils
 		return new int[]{ (int) cellDimX, (int) cellDimY, (int) cellDimZ, 1, 1 };
 	}
 
-	/**
-	 * Compute cell dimensions that are good for fast z-plane-wise loading
-	 *
-	 * @param imageDimsXYZ
-	 * @param bitDepth
-	 * @param loadWholePlane
-	 * @return cellDimsXYZCT
-	 */
 	public static int[] planeWiseCellDims( long[] imageDimsXYZ, int bitDepth, boolean loadWholePlane )
 	{
 		int[] cellDimsXYZCT = new int[ 5 ];

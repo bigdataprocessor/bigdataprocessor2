@@ -28,6 +28,7 @@
  */
 package de.embl.cba.bdp2.process.align.splitchip;
 
+import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.BigDataProcessor2Menu;
 import de.embl.cba.bdp2.dialog.DialogUtils;
 import de.embl.cba.bdp2.process.AbstractImageProcessingCommand;
@@ -57,9 +58,8 @@ public class SplitChipCommand< R extends RealType< R > & NativeType< R > > exten
 
     public void process()
     {
-        final SplitChipMerger merger = new SplitChipMerger();
-        final List< long[] > regionsXminYminXdimYdimC = Utils.delimitedStringToLongs( intervalsString, ";" );
-        outputImage = merger.mergeRegionsXYC( inputImage, regionsXminYminXdimYdimC );
+        final List< long[] > regionsXYminXYdimC = Utils.delimitedStringToLongs( intervalsString, ";" );
+        outputImage = BigDataProcessor2.mergeRegionsXYC( inputImage, regionsXYminXYdimC );
     }
 
     @Override

@@ -104,55 +104,28 @@ public class Track
 		setPosition( t, position, TrackPosition.PositionType.Anchor );
 	}
 
-	/**
-	 *
-	 * @param t frame
-	 * @param position calibrated
-	 * @param positionType
-	 */
 	public void setPosition( int t, double[] position, TrackPosition.PositionType positionType )
 	{
 		timeToTrackPosition.put( t, new TrackPosition( position, positionType ) );
 	}
 
-	/**
-	 *
-	 * @param t frame
-	 * @param realPoint calibrated
-	 */
 	public void setPosition( int t, RealPoint realPoint )
 	{
 		setPosition( t, realPoint, TrackPosition.PositionType.Anchor );
 	}
 
-
-	/**
-	 *
-	 * @param t frame
-	 * @param realPoint calibrated
-	 * @param positionType
-	 */
 	public void setPosition( int t, RealPoint realPoint, TrackPosition.PositionType positionType )
 	{
 		final double[] doubles = new double[ realPoint.numDimensions() ];
 		realPoint.localize( doubles );
 		setPosition( t, doubles, positionType );
 	}
-	/**
-	 *
-	 * @param t frame
-	 * @return calibrated position
-	 */
+
 	public double[] getPosition( int t )
 	{
 		return timeToTrackPosition.get( t ).position;
 	}
 
-	/**
-	 *
-	 * @param t
-	 * @return voxel position
-	 */
 	public long[] getVoxelPosition( int t )
 	{
 		if ( timeToTrackPosition.containsKey( t ) )

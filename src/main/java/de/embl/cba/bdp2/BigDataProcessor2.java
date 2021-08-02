@@ -37,6 +37,7 @@ import de.embl.cba.bdp2.open.bioformats.BioFormatsCachedCellImgCreator;
 import de.embl.cba.bdp2.open.fileseries.FileInfos;
 import de.embl.cba.bdp2.open.fileseries.FileSeriesCachedCellImgCreator;
 import de.embl.cba.bdp2.process.align.channelshift.ChannelShifter;
+import de.embl.cba.bdp2.process.align.splitchip.SplitChipCommand;
 import de.embl.cba.bdp2.process.align.splitchip.SplitChipMerger;
 import de.embl.cba.bdp2.process.bin.BinCommand;
 import de.embl.cba.bdp2.process.bin.Binner;
@@ -54,6 +55,7 @@ import de.embl.cba.bdp2.track.TrackApplier;
 import de.embl.cba.bdp2.track.Tracks;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewer.ImageViewer;
+import ij.IJ;
 import loci.common.DebugTools;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessibleInterval;
@@ -155,16 +157,6 @@ public class BigDataProcessor2
         return Cropper.crop5D( image, intervalXYZCT );
     }
 
-
-    /**
-     * Crop...
-     *
-     * @param image
-     * @param minMax
-     *      array to create the crop interval: [xMin,yMin,zMin,cMin,tMin,xMax,yMax,zMax,cMax,tMax]
-     * @param <R>
-     * @return
-     */
     public static < R extends RealType< R > & NativeType< R > > Image< R > crop( Image< R > image, long[] minMax )
     {
         return crop( image, Intervals.createMinMax( minMax ) );
@@ -296,10 +288,11 @@ public class BigDataProcessor2
         return outputImage;
     }
 
-    public static < R extends RealType< R > & NativeType< R > > Image< R > alignChannelsSpitChip( Image< R > image, List< long[] > regions )
+    public static < R extends RealType< R > & NativeType< R > >
+    Image< R > mergeRegionsXYC( Image< R > image, List< long [] > regionsXYminXYdimC )
     {
-        final SplitChipMerger merger = new SplitChipMerger();
-        Image< R > outputImage = merger.mergeRegionsXYC( image, regions );
+        Logger.info( "# " + SplitChipCommand.COMMAND_NAME );
+        final Image< R > outputImage = SplitChipMerger.mergeRegionsXYC( image, regionsXYminXYdimC );
         return outputImage;
     }
 

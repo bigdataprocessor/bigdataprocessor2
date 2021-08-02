@@ -8,7 +8,7 @@
 	</parent>
 	<groupId>de.embl.cba</groupId>
 	<artifactId>bigDataProcessor2</artifactId>
-	<version>1.3.1</version>
+	<version>1.3.1-SNAPSHOT</version>
 	<url>https://github.com/embl-cba/bigDataProcessor2</url>
 	<name>BigDataProcessor2</name>
 	<description>Fiji plugin for inspection and processing of big image data</description>
@@ -62,7 +62,7 @@
 	<scm>
 		<connection>scm:git:git@github.com:tischi/bigDataProcessor2</connection>
 		<developerConnection>scm:git:git@github.com:tischi/bigDataProcessor2</developerConnection>
-		<tag>bigDataProcessor2-1.3.1</tag>
+		<tag>HEAD</tag>
 		<url>https://github.com/embl-cba/bigDataProcessor2</url>
 	</scm>
 	<issueManagement>
@@ -93,9 +93,9 @@
 		<license.licenseName>bsd_2</license.licenseName>
 		<license.copyrightOwners>EMBL</license.copyrightOwners>
 
-		<scijava.app.directory>/Users/tischer/Desktop/Fiji/Fiji-bdp2.app</scijava.app.directory>
+<!--		<scijava.app.directory>/Users/tischer/Desktop/Fiji/Fiji-bdp2.app</scijava.app.directory>-->
 
-<!--		<scijava.app.directory>/g/almf/software/Fiji-versions/Fiji-BDP2.app/</scijava.app.directory>-->
+		<scijava.app.directory>/g/almf/software/Fiji-versions/Fiji-BDP2.app/</scijava.app.directory>
 
 		<!-- Java 8	Update Site	-->
 		<imglib2.version>5.11.1</imglib2.version>

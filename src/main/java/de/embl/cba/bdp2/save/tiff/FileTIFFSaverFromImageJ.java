@@ -208,8 +208,8 @@ public class FileTIFFSaverFromImageJ
 		return array;
 	}
 
-	/** Saves the stack as a multi-image TIFF using the specified path.
-	 Equivalent to IJ.saveAsTIFF(imp,path), which is more convenient. */
+	// Saves the stack as a multi-image TIFF using the specified path.
+	// Equivalent to IJ.saveAsTIFF(imp,path), which is more convenient.
 	public boolean saveAsTIFFStack(String path) {
 		if (fi.nImages==1) {
 			error("This is not a stack");

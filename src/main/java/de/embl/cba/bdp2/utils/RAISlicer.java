@@ -131,20 +131,6 @@ public class RAISlicer
 		return frame;
 	}
 
-	/**
-	 * If the input image is composed of stacked views,
-	 * this function will effectively do all the computations.
-	 *
-	 *
-	 * @param raiXYZCT
-	 * @param c
-	 * @param t
-	 * @param numThreads
-	 * @param type One could also get the type within this function from the image, but this creates
-	 *             accesses into cells, which causes loading of data, which can be expensive
-	 * @param <R>
-	 * @return
-	 */
 	public static < R extends RealType< R > & NativeType< R > >
 	RandomAccessibleInterval< R > createVolumeCopy(
 			RandomAccessibleInterval< R > raiXYZCT,
@@ -219,17 +205,6 @@ public class RAISlicer
 		return copy;
 	}
 
-
-	/**
-	 * Create a copyVolumeRAI, thereby forcing computation of a potential
-	 * cascade of views.
-	 *
-	 * @param volume
-	 * @param numThreads
-	 * @param type
-	 * @param <R>
-	 * @return
-	 */
 	public static < R extends RealType< R > & NativeType< R > >
 	RandomAccessibleInterval< R > copyVolumeRAI( RandomAccessibleInterval< R > volume, int numThreads, R type )
 	{

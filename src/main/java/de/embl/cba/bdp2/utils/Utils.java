@@ -166,18 +166,7 @@ public class Utils {
         }
     }
 
-	/**
-	 *
-	 *
-	 * @param voxelUnit
-	 * @param voxelSpacingMicrometerX
-	 * @param voxelSpacingMicrometerY
-	 * @param voxelSpacingMicrometerZ
-	 * @param intervalsXYC
-	 * @param directoryOfChannel0
-	 * @param <R>
-	 * @return
-	 */
+    @Deprecated
     public static < R extends RealType< R > & NativeType< R > >
     Image< R > openMergedImageFromLuxendoChannelFolders(
 			String voxelUnit,
@@ -203,7 +192,6 @@ public class Utils {
 				voxelSpacingMicrometerZ );
 
 		final SplitChipMerger merger = new SplitChipMerger();
-
 		return merger.mergeRegionsXYC( image, intervalsXYC );
 	}
 

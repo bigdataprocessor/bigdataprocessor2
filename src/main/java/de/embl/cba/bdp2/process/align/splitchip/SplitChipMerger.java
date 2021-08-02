@@ -70,10 +70,11 @@ public class SplitChipMerger
 				intervalXYMinXYSpanC[ 4] ) );
 	}
 
-	public < R extends RealType< R > & NativeType< R > >
+	public static < R extends RealType< R > & NativeType< R > >
 	Image< R > mergeRegionsXYC( Image< R > image, List< long [] > regionsXminYminXdimYdimC )
 	{
 		final String[] newChannelNames = new String[ regionsXminYminXdimYdimC.size() ];
+		ArrayList< FinalInterval > intervalsXYC = new ArrayList<>();
 
 		for ( int outputChannel = 0; outputChannel < regionsXminYminXdimYdimC.size(); outputChannel++ )
 		{
@@ -96,18 +97,18 @@ public class SplitChipMerger
 	}
 
 	public static < R extends RealType< R > & NativeType< R > >
-	RandomAccessibleInterval< R > mergeIntervalsXYZ(
-			RandomAccessibleInterval< R > raiXYZCT,
+	Image< R > mergeIntervalsXYZ(
+			Image< R > image,
 			ArrayList< ? extends Interval > intervalsXYZ,
 			int channel )
 	{
+		RandomAccessibleInterval< R > raiXYZCT = image.getRai();
+
 		final ArrayList< RandomAccessibleInterval< R > > crops
 				= new ArrayList<>();
 
 		for ( Interval intervalXYZ : intervalsXYZ )
 		{
-//		 	Logger.log( "Split Image Merging Interval [X, Y, Z]: " + intervalXYZ );
-
 			final FinalInterval interval5D = intervalXYZasXYZCT( raiXYZCT, intervalXYZ );
 
 			final IntervalView crop =
@@ -123,7 +124,11 @@ public class SplitChipMerger
 
 		final IntervalView< R > permute = Views.permute( merged, 3, 4 );
 
-		return permute;
+		Image< R > outputImage = new Image( image );
+		outputImage.setRai( permute );
+		outputImage.setName( image.getName() + "-splitchip" );
+
+		return outputImage;
 	}
 
 	public static < R extends RealType< R > & NativeType< R > >

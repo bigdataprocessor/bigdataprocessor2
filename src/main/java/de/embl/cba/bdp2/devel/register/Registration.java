@@ -276,13 +276,6 @@ public class Registration< R extends RealType< R > & NativeType< R > >
 				finished = computeGlobalTransforms( targetHyperSliceIndex );
 		}
 
-		/**
-		 * Computes features for all hyper-slices between the reference hyper-slice
-		 * and the target hyper-slice.
-		 *
-		 * @param targetHyperSliceIndex
-		 * @param numThreads
-		 */
 		private void computeLocalTransforms( final long targetHyperSliceIndex, int numThreads )
 		{
 			final ExecutorService executorService = Executors.newFixedThreadPool( numThreads );

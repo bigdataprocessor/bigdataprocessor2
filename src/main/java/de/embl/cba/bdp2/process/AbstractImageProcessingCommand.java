@@ -39,18 +39,6 @@ import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 
-/**
- * The AbstractImageProcessingCommand serves to process an input image
- * and generate an output image.
- *
- * One key benefit of implementing this functionality as a SciJava command is
- * to enable calling the processing step (headless) from an ImageJ macro.
- *
- * Example of an implementation of this class:
- * - MultiChannelUnsignedByteTypeConverterCommand
- *
- * @param <R>
- */
 public abstract class AbstractImageProcessingCommand< R extends RealType< R > & NativeType< R > > implements Command
 {
     public static final String COMMAND_PATH = "Commands>Process>";

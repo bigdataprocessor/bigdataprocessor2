@@ -33,7 +33,6 @@ import bdv.tools.boundingbox.TransformedBoxOverlay;
 import bdv.tools.brightness.SliderPanel;
 import bdv.util.BoundedValue;
 import bdv.util.ModifiableInterval;
-import bdv.viewer.InteractiveDisplayCanvas;
 import bdv.viewer.OverlayRenderer;
 import bdv.viewer.ViewerPanel;
 import de.embl.cba.bdp2.BigDataProcessor2;
@@ -52,7 +51,6 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
-import net.imglib2.ui.InteractiveDisplayCanvasComponent;
 import org.scijava.listeners.Listeners;
 
 import javax.swing.*;
@@ -74,7 +72,7 @@ public class SplitChipDialog< R extends RealType< R > & NativeType< R > > extend
 	private Map< String, BoundedValue > boundedValues;
 	private ArrayList< SliderPanel > sliderPanels;
 	private SelectionUpdateListener updateListener;
-	private ArrayList< ModifiableInterval > intervals3D;
+	private ArrayList< ModifiableInterval > intervalsXYZ;
 	private ImageViewer outputViewer;
 	private int numChannelsAfterMerge;
 	private ArrayList< OverlayRenderer > overlayRenderers;
@@ -108,7 +106,7 @@ public class SplitChipDialog< R extends RealType< R > & NativeType< R > > extend
 
 	public void showIntervalOverlays()
 	{
-		for ( ModifiableInterval interval : intervals3D )
+		for ( ModifiableInterval interval : intervalsXYZ )
 		{
 			addOverlayToViewer( interval );
 		}
@@ -120,7 +118,7 @@ public class SplitChipDialog< R extends RealType< R > & NativeType< R > > extend
 	protected void recordMacro()
 	{
 		final ScriptRecorder recorder = new ScriptRecorder( SplitChipCommand.COMMAND_FULL_NAME, inputImage, outputImage );
-		ArrayList< long[] > regions = intervals3dAsLongsList();
+		ArrayList< long[] > regions = intervalsXYZAsMinDimLongs( intervalsXYZ, CHANNEL );
 		String intervalsString = Utils.longsToDelimitedString( regions );
 		Prefs.set( getImageJPrefsKey(), intervalsString );
 		recorder.addCommandParameter( "intervalsString", intervalsString );
@@ -138,17 +136,17 @@ public class SplitChipDialog< R extends RealType< R > & NativeType< R > > extend
 		return AlignChannelsDialog.class.getSimpleName() + "." + "Regions";
 	}
 
-	private ArrayList< long[] > intervals3dAsLongsList()
+	private static ArrayList< long[] > intervalsXYZAsMinDimLongs( ArrayList< ModifiableInterval > intervalsXYZ, int channel )
 	{
 		ArrayList< long[] > intervals = new ArrayList<>(  );
-		for ( ModifiableInterval interval : intervals3D )
+		for ( ModifiableInterval interval : intervalsXYZ )
 		{
 			final long[] longs = new long[ 5 ];
 			longs[ 0 ] = interval.min( 0 );
 			longs[ 1 ] = interval.min( 1 );
 			longs[ 2 ] = interval.dimension( 0 );
 			longs[ 3 ] = interval.dimension( 1 );
-			longs[ 4 ] = CHANNEL;
+			longs[ 4 ] = channel;
 			intervals.add( longs );
 		}
 		return intervals;
@@ -156,14 +154,14 @@ public class SplitChipDialog< R extends RealType< R > & NativeType< R > > extend
 
 	public void initIntervals()
 	{
-		intervals3D = new ArrayList<>();
+		intervalsXYZ = new ArrayList<>();
 		final int margin = ( int ) ( viewer.getImage().getRai().dimension( 0 ) * 0.01 );
 		for ( int c = 0; c < 2; c++ )
 		{
-			intervals3D.add( createInterval( c, margin ) );
+			intervalsXYZ.add( createInterval( c, margin ) );
 		}
 
-		numChannelsAfterMerge = intervals3D.size();
+		numChannelsAfterMerge = intervalsXYZ.size();
 	}
 
 	protected void createPanel()
@@ -181,9 +179,9 @@ public class SplitChipDialog< R extends RealType< R > & NativeType< R > > extend
 	{
 		final double[] shift = RegionOptimiser.optimiseIntervals(
 				inputImage,
-				intervals3D );
+				intervalsXYZ );
 
-		adjustModifiableInterval( shift, intervals3D.get( 1 ) );
+		adjustModifiableInterval( shift, intervalsXYZ.get( 1 ) );
 
 		for ( int d = 0; d < 2; d++ )
 		{
@@ -205,16 +203,10 @@ public class SplitChipDialog< R extends RealType< R > & NativeType< R > > extend
 
 	private void createOutputImage()
 	{
-		final RandomAccessibleInterval< R > merge =
-				SplitChipMerger.mergeIntervalsXYZ(
-						inputImage.getRai(),
-						intervals3D, // in the UI this contains 2 channels
+		outputImage = SplitChipMerger.mergeIntervalsXYZ(
+						inputImage,
+						intervalsXYZ, // in the UI this contains 2 channels
 						CHANNEL ); // TODO: Could be different channel?
-
-
-		outputImage = new Image( inputImage );
-		outputImage.setRai( merge );
-		outputImage.setName( inputImage.getName() + "-splitchip" );
 		outputImage.setChannelNames( createMergedChannelNames() );
 	}
 
@@ -253,7 +245,7 @@ public class SplitChipDialog< R extends RealType< R > & NativeType< R > > extend
 	{
 		sliderPanels = new ArrayList<>(  );
 		boundedValues = new HashMap<>(  );
-		updateListener = new SelectionUpdateListener( intervals3D );
+		updateListener = new SelectionUpdateListener( intervalsXYZ );
 
 		for ( int c = 0; c < 2; c++)
 			addMinimumSliders( c );
@@ -269,7 +261,7 @@ public class SplitChipDialog< R extends RealType< R > & NativeType< R > > extend
 				new BoundedValue(
 						0,
 						getRangeMax( d ),
-						getSpan( intervals3D.get( 0 ), d ) ) );
+						getSpan( intervalsXYZ.get( 0 ), d ) ) );
 		createPanel( name , boundedValues.get( name ) );
 	}
 
@@ -282,7 +274,7 @@ public class SplitChipDialog< R extends RealType< R > & NativeType< R > > extend
 			boundedValues.put( name, new BoundedValue(
 							0,
 							getRangeMax( d ),
-							(int) intervals3D.get( c ).min( d ) ) );
+							(int) intervalsXYZ.get( c ).min( d ) ) );
 
 			createPanel( name, boundedValues.get( name ) );
 		}

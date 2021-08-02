@@ -43,10 +43,6 @@ import java.io.File;
 import static de.embl.cba.bdp2.BigDataProcessor2Menu.COMMAND_BDP2_PREFIX;
 import static de.embl.cba.bdp2.open.samples.SampleDataDownloader.*;
 
-
-/**
- * @param <R>
- */
 @Plugin(type = Command.class, menuPath = DialogUtils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractOpenFileSeriesCommand.COMMAND_OPEN_PATH + DownloadAndOpenSampleDataCommand.COMMAND_FULL_NAME )
 public class DownloadAndOpenSampleDataCommand< R extends RealType< R > & NativeType< R > > implements Command
 {

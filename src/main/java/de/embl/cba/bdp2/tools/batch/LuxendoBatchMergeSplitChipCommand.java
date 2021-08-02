@@ -51,7 +51,8 @@ import java.util.List;
 
 import static de.embl.cba.bdp2.dialog.DialogUtils.selectDirectories;
 
-@Plugin(type = Command.class, menuPath = "Plugins>BigDataTools>EMBL>Ellenberg>Batch Merge Split Chip", initializer = "init")
+@Deprecated
+//@Plugin(type = Command.class, menuPath = "Plugins>BigDataTools>EMBL>Ellenberg>Batch Merge Split Chip", initializer = "init")
 public class LuxendoBatchMergeSplitChipCommand< R extends RealType< R > & NativeType< R > > implements Command
 {
     @Parameter(label = "Voxel Unit")
