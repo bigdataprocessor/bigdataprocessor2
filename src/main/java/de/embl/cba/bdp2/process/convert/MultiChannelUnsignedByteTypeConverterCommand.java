@@ -49,10 +49,10 @@ public class MultiChannelUnsignedByteTypeConverterCommand< R extends RealType< R
     public static final String COMMAND_FULL_NAME = BigDataProcessor2Menu.COMMAND_BDP2_PREFIX + COMMAND_NAME;
 
     @Parameter(label = "Map to 0 [channel0, channel1, ...]")
-    String mapTo0 = "0, 0";
+    String mapTo0 = "0.0, 0.0";
 
     @Parameter(label = "Map to 255 [channel0, channel1, ...]")
-    String mapTo255 = "65535, 65535";
+    String mapTo255 = "65535.0, 65535.0";
 
     @Override
     public void run()
@@ -64,8 +64,8 @@ public class MultiChannelUnsignedByteTypeConverterCommand< R extends RealType< R
 
     private void process()
     {
-        int[] mins = Utils.delimitedStringToIntegerArray( mapTo0, "," );
-        int[] maxs = Utils.delimitedStringToIntegerArray( mapTo255, "," );
+        double[] mins = Utils.delimitedStringToDoubleArray( mapTo0, "," );
+        double[] maxs = Utils.delimitedStringToDoubleArray( mapTo255, "," );
 
         long numChannels = inputImage.getNumChannels();
 

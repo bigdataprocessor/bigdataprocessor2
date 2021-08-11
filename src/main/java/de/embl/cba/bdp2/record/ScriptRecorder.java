@@ -145,7 +145,6 @@ public class ScriptRecorder
 		{
 			options += name + "=" + value + " ";
 		}
-
 	}
 
 	public static boolean isScriptMode()
