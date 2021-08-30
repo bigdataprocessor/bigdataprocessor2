@@ -59,6 +59,7 @@ public abstract class AbstractOkCancelDialog extends JDialog
 
 	public void showDialog()
 	{
+		if ( panel == null ) return;
 		setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
 		getContentPane().add( panel, BorderLayout.CENTER );
 		this.setBounds(

@@ -41,6 +41,7 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.converter.Converters;
 import net.imglib2.converter.RealUnsignedByteConverter;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.util.Util;
@@ -54,11 +55,13 @@ public class MultiChannelUnsignedByteTypeConverterDialog< R extends RealType< R 
 {
 	private List< double[] > contrastLimits; // to be mapped onto 0 and 255
 	private List< RealUnsignedByteConverter< R > > converters;
+	private long numChannels;
 
 	public MultiChannelUnsignedByteTypeConverterDialog( final ImageViewer< R > viewer )
 	{
 		this.viewer = viewer;
 		this.inputImage = viewer.getImage();
+		this.numChannels = inputImage.getNumChannels();
 		final RandomAccessibleInterval< R > rai = inputImage.getRai();
 
 		if ( ( Util.getTypeFromInterval( rai ) instanceof UnsignedByteType) )
@@ -79,10 +82,12 @@ public class MultiChannelUnsignedByteTypeConverterDialog< R extends RealType< R 
 		converters = byteTypeConverter.getConverters();
 		outputImage = byteTypeConverter.getConvertedImage();
 
+		final ArrayList< ARGBType > colors = new ArrayList<>();
+		for ( int c = 0; c < numChannels; c++ )
+			colors.add( viewer.getDisplaySettings().get( c ).getColor() );
 		viewer.replaceImage( outputImage, true, true );
-
-		for ( int c = 0; c < viewer.getImage().getNumChannels(); c++ )
-			viewer.setDisplaySettings( 0, 255, null, c );
+		for ( int c = 0; c < numChannels; c++ )
+			viewer.setDisplaySettings( 0, 255, colors.get( c ), c );
 
 		Logger.info( "8-bit view size [GB]: " + Utils.getSizeGB( outputImage.getRai() ) );
 	}
@@ -90,7 +95,7 @@ public class MultiChannelUnsignedByteTypeConverterDialog< R extends RealType< R 
 	public void initContrastLimits( ImageViewer< R > viewer )
 	{
 		contrastLimits = new ArrayList<>(  );
-		for ( int c = 0; c < inputImage.getNumChannels(); c++ )
+		for ( int c = 0; c < numChannels; c++ )
 		{
 			contrastLimits.add( new double[]{ viewer.getDisplaySettings().get( c ).getDisplayRangeMin(), viewer.getDisplaySettings().get( c ).getDisplayRangeMax()});
 		}
@@ -100,6 +105,12 @@ public class MultiChannelUnsignedByteTypeConverterDialog< R extends RealType< R 
 	protected void recordMacro()
 	{
 		final ScriptRecorder recorder = new ScriptRecorder( MultiChannelUnsignedByteTypeConverterCommand.COMMAND_FULL_NAME, inputImage, outputImage);
+
+		contrastLimits = new ArrayList<>();
+		for ( int c = 0; c < numChannels; c++ )
+		{
+			contrastLimits.add( new double[]{ converters.get( c ).getMin(), converters.get( c ).getMax()} );
+		}
 
 		recorder.addCommandParameter( "mapTo0", contrastLimits.stream().map( x -> "" + x[ 0 ] ).collect( Collectors.joining( ",") ) );
 		recorder.addCommandParameter( "mapTo255", contrastLimits.stream().map( x -> "" + x[ 1 ] ).collect( Collectors.joining( ",") ));
@@ -149,6 +160,7 @@ public class MultiChannelUnsignedByteTypeConverterDialog< R extends RealType< R 
 					//mappings.get( channel )[ 0 ] = min.getCurrentValue(); // is this needed?
 					converters.get( channel ).setMin( min.getCurrentValue() );
 					converters.get( channel ).setMax( max.getCurrentValue() );
+
 					minSlider.update();
 					maxSlider.update();
 					viewer.replaceImage( outputImage, false, true );

@@ -38,7 +38,9 @@ import static de.embl.cba.bdp2.open.NamingSchemes.TIF;
 
 public class TestOpenMultiChannel16BitTiffVolumes
 {
-    public static void main(String[] args)
+    private static Image< ? > image;
+
+    public static void main( String[] args)
     {
         Utils.prepareInteractiveMode();
 
@@ -50,7 +52,7 @@ public class TestOpenMultiChannel16BitTiffVolumes
     {
         final String directory = "src/test/resources/test/tiff-nc2-nt2-16bit";
 
-        final Image< ? > image = BigDataProcessor2.openTIFFSeries( directory, MULTI_CHANNEL_VOLUMES + TIF );
+        image = BigDataProcessor2.openTIFFSeries( directory, MULTI_CHANNEL_VOLUMES + TIF );
 
         image.setVoxelDimensions( new double[]{1.0, 1.0, 1.0} );
 
