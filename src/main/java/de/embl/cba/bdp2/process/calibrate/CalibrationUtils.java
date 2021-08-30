@@ -44,6 +44,7 @@ public class CalibrationUtils
 
 			Logger.log("Converted voxel spacing from cm to micrometer.");
 		}
+
 		return voxelUnit;
 	}
 }

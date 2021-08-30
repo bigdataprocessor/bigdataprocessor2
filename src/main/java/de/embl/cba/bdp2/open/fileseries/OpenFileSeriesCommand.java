@@ -64,20 +64,18 @@ public class OpenFileSeriesCommand< R extends RealType< R > & NativeType< R > > 
     {
         SwingUtilities.invokeLater( () ->  {
 
-            regExp += fileExtension;
-
-            if ( regExp.endsWith( ".h5" ) )
+            if ( fileExtension.contains( ".h5" ) )
             {
                 outputImage = BigDataProcessor2.openHDF5Series(
                         directory.toString(),
-                        regExp,
+                        regExp + fileExtension,
                         hdf5DataSetName );
             }
-            else if ( regExp.contains( ".tif" ) ) // covers .tif, .tiff, .ome.tif
+            else if ( fileExtension.contains( ".tif" ) ) // covers .tif, .tiff, .ome.tif
             {
                 outputImage = BigDataProcessor2.openTIFFSeries(
                         directory.toString(),
-                        regExp );
+                        regExp + fileExtension );
             }
 
             recordAPICall();
@@ -98,10 +96,10 @@ public class OpenFileSeriesCommand< R extends RealType< R > & NativeType< R > > 
     @Override
     public void recordAPICall()
     {
-        if ( regExp.endsWith( ".h5" ) )
+        if ( fileExtension.contains( ".h5" ) )
             recordJythonCall( "openHDF5Series" );
 
-        if ( regExp.contains( ".tif" ) )
+        if ( fileExtension.contains( ".tif" ) )
             recordJythonCall( "openTIFFSeries" );
     }
 
@@ -111,7 +109,7 @@ public class OpenFileSeriesCommand< R extends RealType< R > & NativeType< R > > 
         recorder.recordImportStatements( true );
         recorder.setBDP2FunctionName( apiFunctionName );
         recorder.addAPIFunctionParameter( recorder.quote( directory.toString() ) );
-        recorder.addAPIFunctionParameter( recorder.quote( regExp ) );
+        recorder.addAPIFunctionParameter( recorder.quote( regExp + fileExtension ) );
         if ( apiFunctionName.equals( "openHDF5Series" ) )
             recorder.addAPIFunctionParameter( recorder.quote( hdf5DataSetName ) );
         recorder.record();

@@ -48,11 +48,11 @@ public abstract class AbstractImageProcessingCommand< R extends RealType< R > & 
      * SwingImageWidget class
      */
     @Parameter(label = "Input image")
-    protected Image inputImage; // = ImageService.imageNameToImage.values().iterator().next();
+    protected Image inputImage;
     public static final String INPUT_IMAGE_PARAMETER = "inputImage";
 
     @Parameter(label = "Output image name")
-    protected String outputImageName; // = ImageService.imageNameToImage.keySet().iterator().next();
+    protected String outputImageName;
     public static final String OUTPUT_IMAGE_NAME_PARAMETER = "outputImageName";
 
     @Parameter(label = "Output image handling", choices = {

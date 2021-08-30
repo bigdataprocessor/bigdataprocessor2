@@ -143,9 +143,9 @@ public class TIFFFrameSaver< R extends RealType< R > & NativeType< R > > impleme
 
 	public String getChannelName( int c )
     {
-        if ( settings.channelNamesInSavedImages.equals( SavingSettings.CHANNEL_INDEXING ) )
+        if ( settings.channelNames.equals( SavingSettings.CHANNEL_INDEXING ) )
             return String.format( "C%1$02d", c );
-        else if ( settings.channelNamesInSavedImages.equals( SavingSettings.CHANNEL_NAMES ) )
+        else if ( settings.channelNames.equals( SavingSettings.CHANNEL_NAMES ) )
             return image.getChannelNames()[ c ];
         else
             return String.format( "C%1$02d", c );

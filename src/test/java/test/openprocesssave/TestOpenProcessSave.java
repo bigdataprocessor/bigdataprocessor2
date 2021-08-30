@@ -54,7 +54,7 @@ public class TestOpenProcessSave
 
 		image = BigDataProcessor2.setVoxelSize( image, new double[]{2.0,2.0,2.0}, "µm" );
 
-		BigDataProcessor2.rename( image, "image", new String[]{"ch0","ch1"} );
+		image = BigDataProcessor2.rename( image, "image", new String[]{"ch0","ch1"} );
 
 		ArrayList< long[] > shiftsXYZC = new ArrayList< long[] >();
 		shiftsXYZC.add( new long[]{0,13,0,0} );

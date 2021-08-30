@@ -54,7 +54,7 @@ public class SavingSettings  {
     public int rowsPerStrip = -1;
     public int numIOThreads = 1;
     public int numProcessingThreads = 1;
-    public String channelNamesInSavedImages = CHANNEL_INDEXING;
+    public String channelNames = CHANNEL_INDEXING;
     public int tStart; // inclusive, zero-based
     public int tEnd; // inclusive
 

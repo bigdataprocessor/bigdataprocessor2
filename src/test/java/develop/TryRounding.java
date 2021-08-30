@@ -32,6 +32,8 @@ public class TryRounding
 {
 	public static void main( String[] args )
 	{
+
+		final double v = Double.parseDouble( "1" );
 		long a = 5;
 		f( a );
 

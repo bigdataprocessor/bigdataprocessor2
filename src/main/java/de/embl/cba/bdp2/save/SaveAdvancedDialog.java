@@ -309,7 +309,7 @@ public class SaveAdvancedDialog< R extends RealType< R > & NativeType< R > > ext
         savingSettings.projectionMode = (String) comboProjection.getSelectedItem();
         savingSettings.numIOThreads = Integer.parseInt( tfNumIOThreads.getText() );
         savingSettings.numProcessingThreads = Integer.parseInt( tfNumProcessingThreads.getText() );
-        savingSettings.channelNamesInSavedImages = (String) comboChannelNames.getSelectedItem();
+        savingSettings.channelNames = (String) comboChannelNames.getSelectedItem();
         savingSettings.tStart = Integer.parseInt( tfTStart.getText() );
         savingSettings.tEnd = Integer.parseInt( tfTEnd.getText() );
 
@@ -345,6 +345,7 @@ public class SaveAdvancedDialog< R extends RealType< R > & NativeType< R > > ext
         recorder.addCommandParameter( SaveAdvancedCommand.SAVE_PROJECTIONS_PARAMETER, savingSettings.saveProjections);
         recorder.addCommandParameter( SaveAdvancedCommand.PROJECTIONS_MODE_PARAMETER, savingSettings.projectionMode);
         recorder.addCommandParameter( SaveAdvancedCommand.SAVE_VOLUMES_PARAMETER, savingSettings.saveVolumes);
+        recorder.addCommandParameter( SaveAdvancedCommand.CHANNEL_NAMES_PARAMETER, savingSettings.channelNames );
         recorder.addCommandParameter( SaveAdvancedCommand.TIFF_COMPRESSION_PARAMETER, savingSettings.compression);
         recorder.addCommandParameter( SaveAdvancedCommand.T_START_PARAMETER, savingSettings.tStart);
         recorder.addCommandParameter( SaveAdvancedCommand.T_END_PARAMETER, savingSettings.tEnd);

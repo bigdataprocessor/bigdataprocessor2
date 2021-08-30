@@ -38,11 +38,17 @@ import static de.embl.cba.bdp2.open.NamingSchemes.TIF;
 
 public class TestOpenMultiChannelTiffVolumesFromSubfolders
 {
-    public static void main(String[] args)
+    private static Image image;
+
+    public static void main( String[] args)
     {
         Utils.prepareInteractiveMode();
 
         new TestOpenMultiChannelTiffVolumesFromSubfolders().run();
+
+        image = BigDataProcessor2.setVoxelSize( image, new double[]{1,1,1}, "micrometer" );
+
+        BigDataProcessor2.showImage( image );
     }
 
     @Test
@@ -50,6 +56,6 @@ public class TestOpenMultiChannelTiffVolumesFromSubfolders
     {
         final String directory = "src/test/resources/test/tiff-nc2-nt6-subfolders";
 
-        final Image image = BigDataProcessor2.openTIFFSeries( directory, MULTI_CHANNEL_VOLUMES_FROM_SUBFOLDERS + TIF );
+        image = BigDataProcessor2.openTIFFSeries( directory, MULTI_CHANNEL_VOLUMES_FROM_SUBFOLDERS + TIF );
     }
 }

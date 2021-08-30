@@ -42,6 +42,7 @@ import org.scijava.Context;
 import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.ui.UIService;
+import spim.fiji.plugin.Specify_Calibration;
 
 public abstract class AbstractOpenCommand< R extends RealType< R > & NativeType< R > > implements Command, OpenCommand
 {
@@ -83,7 +84,14 @@ public abstract class AbstractOpenCommand< R extends RealType< R > & NativeType<
         }
         else
         {
-            CalibrationChecker.correctCalibrationViaDialogIfNecessary( outputImage );
+            if ( ! CalibrationChecker.checkVoxelDimension( outputImage.getVoxelDimensions() ) )
+                outputImage.setVoxelDimensions( new double[]{1,1,1} );
+
+            if ( ! CalibrationChecker.checkVoxelUnit( outputImage.getVoxelUnit() ) )
+                outputImage.setVoxelUnit( "unknown" );
+
+            // TODO: the UI pop up below creates an issue when run in a macro!
+            //CalibrationChecker.correctCalibrationViaDialogIfNecessary( outputImage );
             showInViewer( autoContrast, keepViewerTransform );
         }
     }

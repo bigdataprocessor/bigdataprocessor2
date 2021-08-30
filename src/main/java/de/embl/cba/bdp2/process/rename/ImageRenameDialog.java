@@ -43,6 +43,7 @@ public class ImageRenameDialog < R extends RealType< R > & NativeType< R > >
 	private final Image< R > inputImage;
 	private final ImageViewer< R > viewer;
 	private String[] channelNames;
+	private Image< R > outputImage;
 
 	public ImageRenameDialog( final ImageViewer< R > viewer  )
 	{
@@ -52,7 +53,7 @@ public class ImageRenameDialog < R extends RealType< R > & NativeType< R > >
 
 	protected void recordMacro()
 	{
-		final ScriptRecorder recorder = new ScriptRecorder( ImageRenameCommand.COMMAND_FULL_NAME, inputImage );
+		final ScriptRecorder recorder = new ScriptRecorder( ImageRenameCommand.COMMAND_FULL_NAME, inputImage, outputImage );
 		recorder.addCommandParameter( CHANNEL_NAMES_PARAMETER, String.join( ",", channelNames ) );
 
 		// Image< R > rename( Image< R > image, String name )
@@ -87,9 +88,9 @@ public class ImageRenameDialog < R extends RealType< R > & NativeType< R > >
 			channelNames[ c ] = gd.getNextString();
 		}
 
-		BigDataProcessor2.rename( inputImage, name, channelNames );
+		outputImage = BigDataProcessor2.rename( inputImage, name, channelNames );
 
-		viewer.replaceImage( inputImage, false, true );
+		viewer.replaceImage( outputImage, false, true );
 
 		recordMacro();
 	}

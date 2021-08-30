@@ -65,6 +65,10 @@ public class SaveAdvancedCommand< R extends RealType< R > & NativeType< R > > im
     File directory;
     public static String DIRECTORY_PARAMETER = "directory";
 
+    @Parameter(label = "Channel names", choices = { SavingSettings.CHANNEL_INDEXING, SavingSettings.CHANNEL_NAMES })
+    String channelNames = SavingSettings.CHANNEL_INDEXING;
+    public static final String CHANNEL_NAMES_PARAMETER = "channelNames";
+
     @Parameter(label = "Save volumes")
     boolean saveVolumes;
     public static String SAVE_VOLUMES_PARAMETER = "saveVolumes";
@@ -84,7 +88,6 @@ public class SaveAdvancedCommand< R extends RealType< R > & NativeType< R > > im
     @Parameter(label = "Last time frame (inclusive)")
     int tEnd = 0;
     public static String T_END_PARAMETER = "tEnd";
-
 
     /**
      * Must be one of the SaveFileType enum class entries
@@ -138,6 +141,7 @@ public class SaveAdvancedCommand< R extends RealType< R > & NativeType< R > > im
         savingSettings.projectionMode = projectionMode;
         savingSettings.volumesFilePathStump = SavingSettings.createFilePathStump( inputImage, "volumes", directory.toString() );
         savingSettings.projectionsFilePathStump = SavingSettings.createFilePathStump( inputImage, "projections", directory.toString() );
+        savingSettings.channelNames = channelNames;
         savingSettings.numIOThreads = numIOThreads;
         savingSettings.numProcessingThreads = numProcessingThreads;
         savingSettings.tStart = tStart;

@@ -55,7 +55,6 @@ import de.embl.cba.bdp2.track.TrackApplier;
 import de.embl.cba.bdp2.track.Tracks;
 import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewer.ImageViewer;
-import ij.IJ;
 import loci.common.DebugTools;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessibleInterval;
@@ -296,10 +295,12 @@ public class BigDataProcessor2
         return outputImage;
     }
 
-    public static < R extends RealType< R > & NativeType< R > > void rename( Image< R > image, String name, String[] channelNames )
+    public static < R extends RealType< R > & NativeType< R > > Image< R > rename( Image< R > image, String name, String[] channelNames )
     {
-        image.setName( name );
-        image.setChannelNames( channelNames );
+        Image< R > outputImage = new Image<>( image );
+        outputImage.setName( name );
+        outputImage.setChannelNames( channelNames );
+        return outputImage;
     }
 
     public static < R extends RealType< R > & NativeType< R > > Image< R > transform( Image< R > image, AffineTransform3D transform3D, InterpolatorFactory interpolatorFactory )
