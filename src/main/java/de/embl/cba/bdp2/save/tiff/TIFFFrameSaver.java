@@ -118,20 +118,18 @@ public class TIFFFrameSaver< R extends RealType< R > & NativeType< R > > impleme
                 throw new UnsupportedOperationException( "Cannot yet save a compressed TIFF with a bit-depth of " + imp.getBytesPerPixel() * 8 + "; please try saving uncompressed." );
             }
 
+            String channelName = SavingSettings.getChannelName( c, settings, image );
+
             if ( settings.saveVolumes )
             {
                 Logger.debug( "Saving volume" + Utils.getChannelTimepointLog( c, t ) + " as (partial file name) " + settings.volumesFilePathStump );
-
-                String channelName = getChannelName( c );
-
                 saveAsTIFF( imp, t, settings.compression, settings.rowsPerStrip, settings.volumesFilePathStump, channelName );
             }
 
             if ( settings.saveProjections )
             {
                 Logger.debug( "Saving projections" + Utils.getChannelTimepointLog( c, t ) + " as (partial file name) " + settings.projectionsFilePathStump );
-
-                saveProjections( imp, c );
+                saveProjections( imp, channelName );
             }
 
             counter.incrementAndGet();
@@ -139,16 +137,6 @@ public class TIFFFrameSaver< R extends RealType< R > & NativeType< R > > impleme
             System.gc(); // TODO: test whether this could be removed
         }
 
-    }
-
-	public String getChannelName( int c )
-    {
-        if ( settings.channelNames.equals( SavingSettings.CHANNEL_INDEXING ) )
-            return String.format( "C%1$02d", c );
-        else if ( settings.channelNames.equals( SavingSettings.CHANNEL_NAMES ) )
-            return image.getChannelNames()[ c ];
-        else
-            return String.format( "C%1$02d", c );
     }
 
     public void checkMemoryRequirements()
@@ -174,7 +162,7 @@ public class TIFFFrameSaver< R extends RealType< R > & NativeType< R > > impleme
 //            }
     }
 
-    private void saveProjections( ImagePlus imp3D, int c )
+    private void saveProjections( ImagePlus imp3D, String channelName )
     {
         long start = System.currentTimeMillis();
 
@@ -191,7 +179,7 @@ public class TIFFFrameSaver< R extends RealType< R > & NativeType< R > > impleme
 //                voxelSpacing[ d ] /= scalingFactors[ d ];
 //        }
 
-        Projector.saveProjections( imp3D, c, t, settings.projectionsFilePathStump, settings.projectionMode );
+        Projector.saveProjections( imp3D, channelName, t, settings.projectionsFilePathStump, settings.projectionMode );
 
         Logger.benchmark( "Computed and saved projections [ ms ]: " + ( System.currentTimeMillis() - start ) );
     }

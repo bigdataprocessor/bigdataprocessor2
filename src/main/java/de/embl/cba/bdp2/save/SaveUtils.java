@@ -40,7 +40,7 @@ import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.view.IntervalView;
 
-public class SaveImgHelper
+public class SaveUtils
 {
     public static <T extends RealType<T>> RandomAccessibleInterval converter( RandomAccessibleInterval newRai, SavingSettings savingSettings){
         if (savingSettings.convertTo8Bit) {

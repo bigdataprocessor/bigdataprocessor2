@@ -33,7 +33,7 @@ import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.open.fileseries.FileInfos;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.save.Projector;
-import de.embl.cba.bdp2.save.SaveImgHelper;
+import de.embl.cba.bdp2.save.SaveUtils;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
@@ -175,7 +175,7 @@ public class SaveImageAsHDF5Stacks < R extends RealType< R > & NativeType< R > >
                     this.current_t};
             RandomAccessibleInterval newRai = Views.interval(rai, minInterval, maxInterval);
             // Convert
-            newRai = SaveImgHelper.converter(newRai, this.savingSettings);
+            newRai = SaveUtils.converter(newRai, this.savingSettings);
             Img< R > imgChannelTime;
             imgChannelTime = ImgView.wrap(newRai, new CellImgFactory(this.nativeType));
 
@@ -196,9 +196,9 @@ public class SaveImageAsHDF5Stacks < R extends RealType< R > & NativeType< R > >
                 ImgPlus< R > impBinned = new ImgPlus<>(imgBinned, "", FileInfos.AXES_ORDER);
                 int[] binningA = Utils.delimitedStringToIntegerArray(binning, ",");
                 if (binningA[0] > 1 || binningA[1] > 1 || binningA[2] > 1) {
-                    newPath = SaveImgHelper.doBinning(impBinned, binningA, newPath, null);
+                    newPath = SaveUtils.doBinning(impBinned, binningA, newPath, null);
                 }
-                String sC = String.format("%1$02d", c);
+                String sC = SavingSettings.getChannelName( c, savingSettings, image );
                 String sT = String.format("%1$05d", current_t);
                 newPath = newPath + "--C" + sC + "--T" + sT + ".h5";
 
@@ -211,7 +211,7 @@ public class SaveImageAsHDF5Stacks < R extends RealType< R > & NativeType< R > >
                 if ( savingSettings.saveProjections )
                 {
                     this.current_c = c;
-                    Projector.saveProjections( ImageJFunctions.wrap( newRai, image.getName() ), this.current_c, this.current_t, newPath, savingSettings.projectionMode );
+                    Projector.saveProjections( ImageJFunctions.wrap( newRai, image.getName() ), sC, this.current_t, newPath, savingSettings.projectionMode );
                 }
 
                 counter.incrementAndGet();

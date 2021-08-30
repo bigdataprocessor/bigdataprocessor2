@@ -96,4 +96,15 @@ public class SavingSettings  {
 
         return savingSettings;
     }
+
+    public static String getChannelName( int c, SavingSettings settings, Image image )
+    {
+        if ( settings.channelNames.equals( CHANNEL_INDEXING ) )
+            return String.format( "C%1$02d", c );
+        else if ( settings.channelNames.equals( CHANNEL_NAMES ) )
+            return image.getChannelNames()[ c ];
+        else
+            return String.format( "C%1$02d", c );
+    }
+
 }

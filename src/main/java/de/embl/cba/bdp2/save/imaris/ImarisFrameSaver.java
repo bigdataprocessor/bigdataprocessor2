@@ -45,8 +45,6 @@ import net.imglib2.type.numeric.RealType;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static de.embl.cba.bdp2.save.Projector.maxProjectAndSaveAsTIFF;
-
 public class ImarisFrameSaver< R extends RealType< R > & NativeType< R >> implements Runnable {
     private int t;
     private final int nFrames;
@@ -114,7 +112,7 @@ public class ImarisFrameSaver< R extends RealType< R > & NativeType< R >> implem
             // Save projections
             if ( settings.saveProjections )
             {
-                Projector.saveProjections( imp3D, c, t, settings.projectionsFilePathStump, settings.projectionMode );
+                Projector.saveProjections( imp3D, SavingSettings.getChannelName( c, settings, image ), t, settings.projectionsFilePathStump, settings.projectionMode );
             }
 
             counter.incrementAndGet();
