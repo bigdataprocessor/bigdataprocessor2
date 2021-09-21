@@ -260,6 +260,7 @@ public class SaveAdvancedDialog< R extends RealType< R > & NativeType< R > > ext
                 // only record the macro command, useful for batch analysis
                 savingSettings = getSavingSettings();
                 recordMacro();
+                this.dispose();
             }
             else if ( e.getActionCommand().equals( STOP_SAVING ) )
             {
