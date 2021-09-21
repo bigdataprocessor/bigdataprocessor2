@@ -101,7 +101,6 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
         }
 
         this.image = image;
-        image.setViewer( this );
         this.enableArbitraryPlaneSlicing = enableArbitraryPlaneSlicing;
         this.channelSources = new ArrayList<>(  );
 
@@ -387,7 +386,7 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
     private void showImage( Image< R > image, boolean autoContrast )
     {
         this.image = image;
-
+        image.setViewer( this );
         ImageViewerService.imageNameToBdvImageViewer.put( image.getName(), this );
         ImageService.imageNameToImage.put( image.getName(), image );
 
