@@ -54,13 +54,10 @@ public class BDP2MacroClusterSubmitterCommand extends AbstractClusterSubmitterCo
 	public static final String T_END = "tend=";
 	public static final String NUMPROCESSINGTHREADS = "numprocessingthreads=";
 
-	// executable: /g/almf/software/Fiji-versions/Fiji-BDP2.app/ImageJ-linux64
-	protected String executable = "/g/almf/software/Fiji-versions/Fiji-BDP2.app/ImageJ-linux64";
-
 	@Parameter ( label = "Macro files" )
 	File[] macros;
 
-	@Parameter ( label = "Timepoints to process [-1 = all]" )
+	//@Parameter ( label = "Timepoints to process [-1 = all]" )
 	int timePointsToProcess = -1;
 
 	@Parameter ( label = "Timepoints per job" )
@@ -75,7 +72,7 @@ public class BDP2MacroClusterSubmitterCommand extends AbstractClusterSubmitterCo
 	@Override
 	public void run()
 	{
-		createJobSubmitter( executable + JobSubmitter.RUN_IJ_MACRO_OPTIONS, new JobExecutor() );
+		createJobSubmitter( executable.toString() + JobSubmitter.RUN_IJ_MACRO_OPTIONS, new JobExecutor() );
 		jobFutures = submitJobs( macros );
 		new Thread( () ->  {
 			monitorJobs( jobFutures );

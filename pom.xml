@@ -111,7 +111,7 @@
 		<!-- EMBL CBA -->
 		<imaris-writer.version>0.2.3</imaris-writer.version>
 		<imagej-utils.version>0.6.3</imagej-utils.version>
-		<imagej-cluster.version>0.6.8</imagej-cluster.version>
+		<imagej-cluster.version>0.6.9-SNAPSHOT</imagej-cluster.version>
 
 	</properties>
 
