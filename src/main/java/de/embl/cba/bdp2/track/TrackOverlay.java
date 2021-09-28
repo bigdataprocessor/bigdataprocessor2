@@ -33,7 +33,6 @@ import bdv.util.BdvOverlay;
 import net.imglib2.realtransform.AffineTransform3D;
 
 import java.awt.*;
-import java.util.ArrayList;
 
 
 public class TrackOverlay extends BdvOverlay
@@ -77,15 +76,17 @@ public class TrackOverlay extends BdvOverlay
 
 		final double[] positionInViewer = new double[ 3 ];
 		viewerTransform.apply( position, positionInViewer );
-		final int size = getSize( positionInViewer[ 2 ] );
+		final double z = positionInViewer[ 2 ];
+
+		// set appearance
+		final int size = getSize( t, z );
+		final Shape shape = getShape( t );
+		final Color color = getColor( z, track.getType( t ) );
+
+		// draw
 		final int x = ( int ) ( positionInViewer[ 0 ] - 0.5 * size );
 		final int y = ( int ) ( positionInViewer[ 1 ] - 0.5 * size );
-
-		final Color color = getColor( positionInViewer[ 2 ], track.getType( t ) );
 		g.setColor( color );
-
-		final Shape shape = getShape( t );
-
 		if ( shape.equals( Shape.Filled ) )
 			g.fillOval( x, y, size, size );
 		else if ( shape.equals( Shape.Empty ))
@@ -93,12 +94,23 @@ public class TrackOverlay extends BdvOverlay
 
 	}
 
+	private int getSize( int t, double z )
+	{
+		int size;
+
+		if ( t == bdvHandle.getViewerPanel().state().getCurrentTimepoint() )
+			size = getZSize( z );
+		else
+			size = 3;
+		return size;
+	}
+
 	private Shape getShape( int t )
 	{
 		if ( t == bdvHandle.getViewerPanel().state().getCurrentTimepoint() )
-			return Shape.Filled;
-		else
 			return Shape.Empty;
+		else
+			return Shape.Filled;
 	}
 
 	private Color getColor( final double depth, TrackPosition.PositionType type )
@@ -116,7 +128,7 @@ public class TrackOverlay extends BdvOverlay
 			throw new RuntimeException( "Cannot color type: " + type );
 	}
 
-	private int getSize( final double depth )
+	private int getZSize( final double depth )
 	{
 		return ( int ) Math.max( 5, 20 - 1.0 / depthOfField * Math.round( Math.abs( depth ) ) );
 	}
