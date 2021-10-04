@@ -1,0 +1,4 @@
+
+run("BDP2 Open Position And Channel Subset...", "viewingmodality=[Show in new viewer] directory=[/Volumes/cba/exchange/bigdataprocessor/data/mouse_2cam_publication] enablearbitraryplaneslicing=false regexp=[.*\\/[sS]tack_6_(?<C1>[cC]hannel_.*)\\/(?<C2>Cam_.*)_(?<T>\\d+)(|.lux).h5] channelsubset=[channel_2_Cam_Long,channel_2_Cam_Short] ");
+run("BDP2 Crop...", "inputimage=[mouse_2cam_publication] outputimagename=[mouse_2cam_publication-crop] viewingmodality=[Show in new viewer] minx=682 miny=553 minz=31 minc=0 mint=0 maxx=1690 maxy=1616 maxz=61 maxc=1 maxt=0 ");
+run("BDP2 Save As...", "inputimage=[mouse_2cam_publication-crop] directory=[/Volumes/cba/exchange/bigdataprocessor/data/bdp2-out-tmp/] numiothreads=1 numprocessingthreads=4 filetype=[TIFFVolumes] saveprojections=false projectionmode=[sum] savevolumes=true channelnames=[Channel index (C00, C01, ...)] tiffcompression=[None] tstart=0 tend=0 ");

@@ -55,24 +55,24 @@ public class BDP2MacroClusterSubmitterCommand extends AbstractClusterSubmitterCo
 	public static final String NUMPROCESSINGTHREADS = "numprocessingthreads=";
 
 	@Parameter ( label = "Macro files" )
-	File[] macros;
+	public File[] macros;
 
 	//@Parameter ( label = "Timepoints to process [-1 = all]" )
 	int timePointsToProcess = -1;
 
 	@Parameter ( label = "Timepoints per job" )
-	int timePointsPerJob = 10;
+	public int timePointsPerJob = 5;
 
 	@Parameter ( label = "Maximal execution time per timepoint [Minutes]" )
-	int minutesPerTimePoint = 5;
+	public int minutesPerTimePoint = 20;
 
 	@Parameter ( label = "Maximal memory usage [MB]" )
-	int memory = 16000;
+	public int memory = 16000;
 
 	@Override
 	public void run()
 	{
-		createJobSubmitter( executable.toString() + JobSubmitter.RUN_IJ_MACRO_OPTIONS, new JobExecutor() );
+		createJobSubmitter( executable.toString() + " -Djava.io.tmpdir=$TMPDIR" + JobSubmitter.RUN_IJ_MACRO_OPTIONS, new JobExecutor() );
 		jobFutures = submitJobs( macros );
 		new Thread( () ->  {
 			monitorJobs( jobFutures );
@@ -99,6 +99,8 @@ public class BDP2MacroClusterSubmitterCommand extends AbstractClusterSubmitterCo
 			for ( int t = tStart; t <= tEnd; t+= timePointsPerJob )
 			{
 				jobSubmitter.clearCommands();
+				jobSubmitter.addLinuxCommand( "source /etc/profile.d/z00_lmod.sh" );
+				jobSubmitter.addLinuxCommand( "module load HDF5" );
 
 				int t0 = t;
 				int t1 = t + timePointsPerJob - 1;
