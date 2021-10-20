@@ -36,7 +36,7 @@ import test.Utils;
 import static de.embl.cba.bdp2.open.NamingSchemes.MULTI_CHANNEL_VOLUMES;
 import static de.embl.cba.bdp2.open.NamingSchemes.TIF;
 
-public class TestOpenMultiChannel8BitTiffVolumes
+public class TestOpenMultiChannelMultiTimepoint8BitTiffVolumes
 {
     private static Image image;
 
@@ -44,7 +44,8 @@ public class TestOpenMultiChannel8BitTiffVolumes
     {
         Utils.prepareInteractiveMode();
 
-        new TestOpenMultiChannel8BitTiffVolumes().run();
+        new TestOpenMultiChannelMultiTimepoint8BitTiffVolumes().run();
+
         BigDataProcessor2.showImage( image, true, true );
     }
 

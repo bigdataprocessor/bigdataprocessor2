@@ -38,6 +38,7 @@ import de.embl.cba.cluster.JobSubmitter;
 import de.embl.cba.morphometry.Utils;
 import de.embl.cba.util.PathMapper;
 import net.imagej.ImageJ;
+import net.imglib2.type.logic.BoolType;
 import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;

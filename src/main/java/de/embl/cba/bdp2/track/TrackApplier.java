@@ -66,7 +66,7 @@ public class TrackApplier< R extends RealType< R > & NativeType< R > >
 		zero.setZero();
 		final OutOfBoundsConstantValueFactory< R, RandomAccessibleInterval< R > > zeroValueFactory = new OutOfBoundsConstantValueFactory<>( zero );
 
-		for (int t = track.tMin(); t < track.tMax(); ++t)
+		for (int t = track.tMin(); t <= track.tMax(); ++t)
 		{
 			final ArrayList< RandomAccessibleInterval< R > > channels = new ArrayList<>();
 			// TODO: Can I shift the channels together
