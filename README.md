@@ -189,10 +189,18 @@ t = t2
     t3
 ```
 
-
-
 Motivation: This is useful when data is warped due to an acquisition process that renders x-y-z non-orthogonal. Examples are when a stage movement is not orthogonal to the field of view. Also useful in single objective light sheet microscopy.  
- 
+
+***Manual Transform***
+
+Instead of entering an affine transformation one can also interactively transform an image:
+
+- select the BDV window and press `T`: it will start the manual transform
+- e.g. press `Z` to make the Z axis the axis of rotation
+- e.g. use the arrow keys to rotate your image
+- press `T` again to fix the transformation
+
+Then your image will be transformed.
 
 ## Save
 
