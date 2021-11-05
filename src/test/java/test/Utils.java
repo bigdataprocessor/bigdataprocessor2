@@ -44,4 +44,13 @@ public class Utils
 		Services.setCommandService( imageJ.command() );
 		BigDataProcessor2UI.showUI();
 	}
+
+	public static ImageJ initContext()
+	{
+		DebugTools.setRootLevel("OFF"); // Bio-Formats
+		ImageJ imageJ = new ImageJ();
+		Services.setContext( imageJ.getContext() );
+		Services.setCommandService( imageJ.command() );
+		return imageJ;
+	}
 }

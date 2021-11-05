@@ -224,7 +224,7 @@ public class BigDataProcessor2
         Logger.info( "I/O threads: " + settings.numIOThreads );
         Logger.info( "Processing threads: " + settings.numProcessingThreads );
         Logger.info( "File type: " + settings.fileType );
-        Logger.info( "Save volumes to: " + settings.volumesFilePathStump );
+        Logger.info( "Save volumes as: " + settings.volumesFilePathStump + "*" );
         if ( settings.saveProjections )
         Logger.info( "Save projections to: " + settings.projectionsFilePathStump );
 

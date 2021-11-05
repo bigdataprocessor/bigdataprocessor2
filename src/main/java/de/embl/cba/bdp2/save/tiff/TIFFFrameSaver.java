@@ -46,6 +46,7 @@ import loci.formats.meta.IMetadata;
 import loci.formats.out.TiffWriter;
 import loci.formats.services.OMEXMLService;
 import loci.formats.tiff.IFD;
+import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -108,7 +109,10 @@ public class TIFFFrameSaver< R extends RealType< R > & NativeType< R > > impleme
             // (i) load the raw image into RAM
             // (ii) make a copy in RAM with all processing done
             Logger.debug( "Fetching" + Utils.getChannelTimepointLog( c, t ) );
-            RandomAccessibleInterval< R > raiXYZ = RAISlicer.createVolumeCopy( rai, c, t, settings.numProcessingThreads, ( R ) image.getType() );
+            final int numProcessingThreads = settings.numProcessingThreads;
+            final R type = ( R ) image.getType();
+            final RandomAccess randomAccess = rai.randomAccess();
+            RandomAccessibleInterval< R > raiXYZ = RAISlicer.createVolumeCopy( rai, c, t, numProcessingThreads, type );
 
             // TODO: this again does a getType call internally, which can be costly => fix this if possible
             ImagePlus imp = Utils.asImagePlus( raiXYZ, image, c );

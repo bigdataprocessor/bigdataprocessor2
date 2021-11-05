@@ -32,6 +32,7 @@ import de.embl.cba.bdp2.imglib2.LazyStackView;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.lazyalgorithm.converter.NeighborhoodAverageConverter;
 import de.embl.cba.neighborhood.RectangleShape2;
+import net.imglib2.EuclideanSpace;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.RealRandomAccessible;
@@ -83,41 +84,28 @@ public class CachedCellImgReplacer< T extends Type< T > & NativeType< T >, S ext
 	 */
 	public RandomAccessibleInterval< T > get()
 	{
-		return ( RandomAccessibleInterval< T > ) replaceRAWithRA( ra );
+		return ( RandomAccessibleInterval< T > ) replace( ra );
 	}
 
-	private RealRandomAccessible< T > replaceRRAWithRRA( RealRandomAccessible< T > rra )
-	{
-		if ( rra instanceof Interpolant )
-		{
-			final Interpolant interpolant = ( Interpolant ) rra;
-			final Object source = interpolant.getSource();
-			if ( source instanceof RealRandomAccessible )
-			{
-				replaceRRAWithRRA(  )
-			}
-
-			int a = 1;
-			return null;
-		}
-		else
-		{
-			throw new IllegalArgumentException();
-		}
-	}
-
-	private RandomAccessible< T > replaceRAWithRA( RandomAccessible< T > ra )
+	private EuclideanSpace replace( EuclideanSpace ra )
 	{
 		if ( ra instanceof CachedCellImg )
 		{
 			// Replace the CachedCellImg with the given one
 			return cachedCellImg;
 		}
+		if ( ra instanceof Interpolant )
+		{
+			final Interpolant interpolant = ( Interpolant ) ra;
+			final EuclideanSpace source = replace( ( EuclideanSpace ) interpolant.getSource() );
+			final Interpolant replaced = new Interpolant<>( source, interpolant.getInterpolatorFactory(), source.numDimensions() );
+			return replaced;
+		}
 		else if ( ra instanceof IntervalView )
 		{
 			final IntervalView< T > view = ( IntervalView< T > ) ra;
 
-			final RandomAccessible< T > replace = replaceRAWithRA( view.getSource() );
+			final RandomAccessible< T > replace = ( RandomAccessible< T > ) replace( view.getSource() );
 
 			final IntervalView intervalView = new IntervalView( replace, view );
 
@@ -127,7 +115,7 @@ public class CachedCellImgReplacer< T extends Type< T > & NativeType< T >, S ext
 		{
 			final MixedTransformView< T > view = ( MixedTransformView< T > ) ra;
 
-			final RandomAccessible< T > replace = replaceRAWithRA( view.getSource() );
+			final RandomAccessible< T > replace = ( RandomAccessible< T > ) replace( view.getSource() );
 
 			final MixedTransformView< T > mixedTransformView =
 					new MixedTransformView<>(
@@ -141,7 +129,7 @@ public class CachedCellImgReplacer< T extends Type< T > & NativeType< T >, S ext
 			final SubsampleIntervalView< T > view = ( SubsampleIntervalView< T > ) ra;
 
 			final RandomAccessibleInterval< T > replace =
-					( RandomAccessibleInterval< T > ) replaceRAWithRA( view.getSource() );
+					( RandomAccessibleInterval< T > ) replace( view.getSource() );
 
 			final SubsampleIntervalView subsampleIntervalView =
 					new SubsampleIntervalView(
@@ -172,7 +160,7 @@ public class CachedCellImgReplacer< T extends Type< T > & NativeType< T >, S ext
 					= ( ConvertedRandomAccessibleInterval< T, S > ) ra;
 
 			final RandomAccessibleInterval< T > replace =
-					( RandomAccessibleInterval< T > ) replaceRAWithRA( view.getSource() );
+					( RandomAccessibleInterval< T > ) replace( view.getSource() );
 
 			final S destinationType = view.getDestinationType();
 
@@ -208,7 +196,9 @@ public class CachedCellImgReplacer< T extends Type< T > & NativeType< T >, S ext
 
 			final List< RandomAccessible< T > > replacedSlices = new ArrayList<>();
 			for ( RandomAccessibleInterval< T > slice : slices )
-				replacedSlices.add( replaceRAWithRA( slice ) );
+			{
+				replacedSlices.add( ( RandomAccessible< T > ) replace( slice ) );
+			}
 
 			final StackView stackView = new StackView( replacedSlices );
 
@@ -222,7 +212,7 @@ public class CachedCellImgReplacer< T extends Type< T > & NativeType< T >, S ext
 
 			final List< RandomAccessible< T > > replacedSlices = new ArrayList<>();
 			for ( RandomAccessibleInterval< T > slice : slices )
-				replacedSlices.add( replaceRAWithRA( slice ) );
+				replacedSlices.add( ( RandomAccessible< T > ) replace( slice ) );
 
 			final LazyStackView stackView = new LazyStackView( replacedSlices );
 
@@ -234,7 +224,7 @@ public class CachedCellImgReplacer< T extends Type< T > & NativeType< T >, S ext
 			final RectangleShape2.NeighborhoodsAccessible< T > view =
 					( RectangleShape2.NeighborhoodsAccessible ) ra;
 
-			final RandomAccessible< T > replace = replaceRAWithRA( view.getSource() );
+			final RandomAccessible< T > replace = ( RandomAccessible< T > ) replace( view.getSource() );
 
 			final RectangleShape2.NeighborhoodsAccessible neighborhoodsAccessible
 					= new RectangleShape2.NeighborhoodsAccessible(
@@ -251,7 +241,7 @@ public class CachedCellImgReplacer< T extends Type< T > & NativeType< T >, S ext
 					( ExtendedRandomAccessibleInterval ) ra;
 
 			final RandomAccessibleInterval< T > replace =
-					( RandomAccessibleInterval< T > ) replaceRAWithRA( view.getSource() );
+					( RandomAccessibleInterval< T > ) replace( view.getSource() );
 
 			final ExtendedRandomAccessibleInterval extended
 					= new ExtendedRandomAccessibleInterval(
@@ -262,10 +252,10 @@ public class CachedCellImgReplacer< T extends Type< T > & NativeType< T >, S ext
 		}
 		else if ( ra instanceof AffineRandomAccessible )
 		{
-			final AffineRandomAccessible affineRandomAccessible = ( AffineRandomAccessible ) ra;
-			final RealRandomAccessible replace = replaceRRAWithRRA( affineRandomAccessible.getSource() );
-			final AffineRandomAccessible affineRandomAccessibleOut = new AffineRandomAccessible( replace, ( AffineGet ) affineRandomAccessible.getTransformToSource() );
-			return affineRandomAccessibleOut;
+			final AffineRandomAccessible view = ( AffineRandomAccessible ) ra;
+			final RealRandomAccessible< T > replace = ( RealRandomAccessible< T > ) replace( view.getSource() );
+			final AffineRandomAccessible affineRandomAccessible = new AffineRandomAccessible( replace, ( AffineGet ) view.getTransformToSource() );
+			return affineRandomAccessible;
 		}
 		else
 		{
