@@ -34,9 +34,13 @@ import de.embl.cba.lazyalgorithm.converter.NeighborhoodAverageConverter;
 import de.embl.cba.neighborhood.RectangleShape2;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.RealRandomAccessible;
 import net.imglib2.cache.img.CachedCellImg;
 import net.imglib2.converter.Converter;
 import net.imglib2.converter.read.ConvertedRandomAccessibleInterval;
+import net.imglib2.interpolation.Interpolant;
+import net.imglib2.realtransform.AffineGet;
+import net.imglib2.realtransform.AffineRandomAccessible;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.Type;
 import net.imglib2.view.*;
@@ -79,10 +83,30 @@ public class CachedCellImgReplacer< T extends Type< T > & NativeType< T >, S ext
 	 */
 	public RandomAccessibleInterval< T > get()
 	{
-		return ( RandomAccessibleInterval< T > ) replace( ra );
+		return ( RandomAccessibleInterval< T > ) replaceRAWithRA( ra );
 	}
 
-	private RandomAccessible< T > replace( RandomAccessible< T > ra )
+	private RealRandomAccessible< T > replaceRRAWithRRA( RealRandomAccessible< T > rra )
+	{
+		if ( rra instanceof Interpolant )
+		{
+			final Interpolant interpolant = ( Interpolant ) rra;
+			final Object source = interpolant.getSource();
+			if ( source instanceof RealRandomAccessible )
+			{
+				replaceRRAWithRRA(  )
+			}
+
+			int a = 1;
+			return null;
+		}
+		else
+		{
+			throw new IllegalArgumentException();
+		}
+	}
+
+	private RandomAccessible< T > replaceRAWithRA( RandomAccessible< T > ra )
 	{
 		if ( ra instanceof CachedCellImg )
 		{
@@ -92,15 +116,18 @@ public class CachedCellImgReplacer< T extends Type< T > & NativeType< T >, S ext
 		else if ( ra instanceof IntervalView )
 		{
 			final IntervalView< T > view = ( IntervalView< T > ) ra;
-			final RandomAccessible< T > replace = replace( view.getSource() );
+
+			final RandomAccessible< T > replace = replaceRAWithRA( view.getSource() );
+
 			final IntervalView intervalView = new IntervalView( replace, view );
+
 			return intervalView;
 		}
 		else if ( ra instanceof MixedTransformView )
 		{
 			final MixedTransformView< T > view = ( MixedTransformView< T > ) ra;
 
-			final RandomAccessible< T > replace = replace( view.getSource() );
+			final RandomAccessible< T > replace = replaceRAWithRA( view.getSource() );
 
 			final MixedTransformView< T > mixedTransformView =
 					new MixedTransformView<>(
@@ -114,7 +141,7 @@ public class CachedCellImgReplacer< T extends Type< T > & NativeType< T >, S ext
 			final SubsampleIntervalView< T > view = ( SubsampleIntervalView< T > ) ra;
 
 			final RandomAccessibleInterval< T > replace =
-					( RandomAccessibleInterval< T > ) replace( view.getSource() );
+					( RandomAccessibleInterval< T > ) replaceRAWithRA( view.getSource() );
 
 			final SubsampleIntervalView subsampleIntervalView =
 					new SubsampleIntervalView(
@@ -145,7 +172,7 @@ public class CachedCellImgReplacer< T extends Type< T > & NativeType< T >, S ext
 					= ( ConvertedRandomAccessibleInterval< T, S > ) ra;
 
 			final RandomAccessibleInterval< T > replace =
-					( RandomAccessibleInterval< T > ) replace( view.getSource() );
+					( RandomAccessibleInterval< T > ) replaceRAWithRA( view.getSource() );
 
 			final S destinationType = view.getDestinationType();
 
@@ -181,7 +208,7 @@ public class CachedCellImgReplacer< T extends Type< T > & NativeType< T >, S ext
 
 			final List< RandomAccessible< T > > replacedSlices = new ArrayList<>();
 			for ( RandomAccessibleInterval< T > slice : slices )
-				replacedSlices.add( replace( slice ) );
+				replacedSlices.add( replaceRAWithRA( slice ) );
 
 			final StackView stackView = new StackView( replacedSlices );
 
@@ -195,7 +222,7 @@ public class CachedCellImgReplacer< T extends Type< T > & NativeType< T >, S ext
 
 			final List< RandomAccessible< T > > replacedSlices = new ArrayList<>();
 			for ( RandomAccessibleInterval< T > slice : slices )
-				replacedSlices.add( replace( slice ) );
+				replacedSlices.add( replaceRAWithRA( slice ) );
 
 			final LazyStackView stackView = new LazyStackView( replacedSlices );
 
@@ -207,7 +234,7 @@ public class CachedCellImgReplacer< T extends Type< T > & NativeType< T >, S ext
 			final RectangleShape2.NeighborhoodsAccessible< T > view =
 					( RectangleShape2.NeighborhoodsAccessible ) ra;
 
-			final RandomAccessible< T > replace = replace( view.getSource() );
+			final RandomAccessible< T > replace = replaceRAWithRA( view.getSource() );
 
 			final RectangleShape2.NeighborhoodsAccessible neighborhoodsAccessible
 					= new RectangleShape2.NeighborhoodsAccessible(
@@ -224,7 +251,7 @@ public class CachedCellImgReplacer< T extends Type< T > & NativeType< T >, S ext
 					( ExtendedRandomAccessibleInterval ) ra;
 
 			final RandomAccessibleInterval< T > replace =
-					( RandomAccessibleInterval< T > ) replace( view.getSource() );
+					( RandomAccessibleInterval< T > ) replaceRAWithRA( view.getSource() );
 
 			final ExtendedRandomAccessibleInterval extended
 					= new ExtendedRandomAccessibleInterval(
@@ -232,6 +259,13 @@ public class CachedCellImgReplacer< T extends Type< T > & NativeType< T >, S ext
 							view.getOutOfBoundsFactory() );
 
 			return extended;
+		}
+		else if ( ra instanceof AffineRandomAccessible )
+		{
+			final AffineRandomAccessible affineRandomAccessible = ( AffineRandomAccessible ) ra;
+			final RealRandomAccessible replace = replaceRRAWithRRA( affineRandomAccessible.getSource() );
+			final AffineRandomAccessible affineRandomAccessibleOut = new AffineRandomAccessible( replace, ( AffineGet ) affineRandomAccessible.getTransformToSource() );
+			return affineRandomAccessibleOut;
 		}
 		else
 		{
