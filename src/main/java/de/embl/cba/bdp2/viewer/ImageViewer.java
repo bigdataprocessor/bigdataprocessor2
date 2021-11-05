@@ -37,6 +37,7 @@ import bdv.util.*;
 import bdv.util.volatiles.VolatileViews;
 import bdv.viewer.ConverterSetups;
 import bdv.viewer.DisplayMode;
+import bdv.viewer.Source;
 import bdv.viewer.SourceAndConverter;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.boundingbox.BoundingBoxDialog;
@@ -439,7 +440,7 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
         final long numChannels = cachedCellImg.dimension( DimensionOrder.C );
         final String[] channelNames = image.getChannelNames();
 
-        this.channelSources = new ArrayList<>(  );
+        channelSources = new ArrayList<>(  );
 
         for ( int channelIndex = 0; channelIndex < numChannels; channelIndex++ )
         {
@@ -452,9 +453,9 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
                     channelNames[ channelIndex ],
                     options );
 
-            this.bdvHandle = stackSource.getBdvHandle();
+            bdvHandle = stackSource.getBdvHandle();
             options = options.addTo( bdvHandle );
-            this.channelSources.add( stackSource );
+            channelSources.add( stackSource );
         }
 
         if ( ! enableArbitraryPlaneSlicing )
@@ -549,6 +550,15 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
 
     public void getSourceTransform( AffineTransform3D transform )
     {
-        channelSources.get( 0 ).getSources().get( 0 ).getSpimSource().getSourceTransform( 0,0, transform );
+        final ArrayList< AffineTransform3D > transforms = new ArrayList<>();
+        for ( BdvStackSource< R > channelSource : channelSources )
+        {
+            final AffineTransform3D transform3D = new AffineTransform3D();
+            final Source< R > source = channelSource.getSources().get( 0 ).getSpimSource();
+            source.getSourceTransform( 0, 0, transform3D );
+            transforms.add( transform3D );
+        }
+
+        transform.set( transforms.get( 0 ) );
     }
 }

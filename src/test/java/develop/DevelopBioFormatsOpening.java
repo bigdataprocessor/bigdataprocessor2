@@ -31,6 +31,7 @@ package develop;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.BigDataProcessor2Command;
 import de.embl.cba.bdp2.image.Image;
+import ij.IJ;
 import net.imagej.ImageJ;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -39,6 +40,7 @@ public class DevelopBioFormatsOpening
 {
 	public static < R extends RealType< R > & NativeType< R > >  void main( String[] args )
 	{
+		IJ.run("");
 		// Configure all services
 		ImageJ imageJ = new ImageJ();
 		imageJ.command().run( BigDataProcessor2Command.class, true );

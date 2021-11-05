@@ -51,13 +51,21 @@ public class ImageSaverFactory < R extends RealType< R > & NativeType< R > >
         Image< R > imageForSaving = new Image<>( image );
 
         // change cache to load the whole volume,
-        // because this is faster
+        // because this is faster for saving
         if ( ! settings.fileType.equals( SaveFileType.TIFFPlanes ) )
         {
             // TODO: for cropped images only fully load the cropped region
             // TODO: for input data distributed across TIFF planes this should be reconsidered
-            long cacheSize = image.getDimensionsXYZCT()[ DimensionOrder.C ] * settings.numIOThreads;
-            imageForSaving.setVolumeCache( CacheOptions.CacheType.BOUNDED, (int) cacheSize );
+            try
+            {
+                long cacheSize = image.getDimensionsXYZCT()[ DimensionOrder.C ] * settings.numIOThreads;
+                imageForSaving.setVolumeCache( CacheOptions.CacheType.BOUNDED, ( int ) cacheSize );
+            }
+            catch ( Exception e )
+            {
+                System.out.printf( "Cache could not be optimised for saving.\n" );
+                System.out.printf( "Saving anyway, but it might be slower...\n" );
+            }
         }
 
         // Prepare multi-threaded I/O

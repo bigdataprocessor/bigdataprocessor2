@@ -59,7 +59,7 @@ public class DevelopCZIOpening
 		DebugTools.setRootLevel("OFF"); // Bio-Formats
 
 		OpenFilesWithBigdataviewerBioformatsBridgeCommand bridgeCommand = new OpenFilesWithBigdataviewerBioformatsBridgeCommand();
-		bridgeCommand.useBioFormatsCacheBlockSize = true;
+		bridgeCommand.usebioformatscacheblocksize = true;
 		BioFormatsBdvOpener opener = bridgeCommand.getOpener( new File( "/Volumes/cba/exchange/bigdataprocessor/data/czi/20180125CAGtdtomato_ERT2CreLuVeLu_notamox_03_Average_Subset.czi" ) );
 
 		AbstractSpimData< ? > spimData = BioFormatsConvertFilesToSpimData.getSpimData( opener );

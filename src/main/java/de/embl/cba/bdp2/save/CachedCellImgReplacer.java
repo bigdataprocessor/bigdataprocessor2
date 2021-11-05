@@ -235,6 +235,7 @@ public class CachedCellImgReplacer< T extends Type< T > & NativeType< T >, S ext
 		}
 		else
 		{
+			System.out.printf( "Cache cannot be replaced for image of class: " + ra.getClass().getSimpleName() + "\n" );
 			throw new IllegalArgumentException();
 		}
 	}

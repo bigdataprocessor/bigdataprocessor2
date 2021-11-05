@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.scijava</groupId>
 		<artifactId>pom-scijava</artifactId>
-		<version>30.0.0</version>
+		<version>31.1.0</version>
 	</parent>
 	<groupId>de.embl.cba</groupId>
 	<artifactId>bigDataProcessor2</artifactId>
@@ -96,13 +96,14 @@
 		<license.copyrightOwners>EMBL</license.copyrightOwners>
 
 		<!-- Java 8	Update Site	-->
-		<imglib2.version>5.11.1</imglib2.version>
+		<imglib2.version>5.12.0</imglib2.version>
 		<imglib2-cache.version>1.0.0-beta-16</imglib2-cache.version>
-		<bigdataviewer-core.version>10.2.0</bigdataviewer-core.version>
-		<bigdataviewer-vistools.version>1.0.0-beta-28</bigdataviewer-vistools.version>
+		<bigdataviewer-core.version>10.2.1</bigdataviewer-core.version>
+		<bigdataviewer-vistools.version>1.0.0-beta-29</bigdataviewer-vistools.version>
+
 
 		<!-- BIOP -->
-		<bigdataviewer-bioformats.version>0.2.15</bigdataviewer-bioformats.version>
+		<bigdataviewer-bioformats.version>0.2.22</bigdataviewer-bioformats.version>
 
 		<!-- EMBL CBA -->
 		<imaris-writer.version>0.2.3</imaris-writer.version>
