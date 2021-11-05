@@ -84,7 +84,7 @@ public class Projector
         Projector Projector = new Projector( imp );
         Projector.setDoscale( true );
         ImagePlus projection = createProjection( projectionMode, Projector );
-        saveAsTIFF( t, path, projection, channelName );
+        saveAsTIFF( t, path, projection, channelName, projectionMode );
     }
 
     private static ImagePlus createProjection( String projectionMode, Projector Projector )
@@ -102,11 +102,11 @@ public class Projector
         return projection;
     }
 
-    private static void saveAsTIFF( int t, String path, ImagePlus projection, String channelName )
+    private static void saveAsTIFF( int t, String path, ImagePlus projection, String channelName, String projectionMode )
     {
         FileSaver fileSaver = new FileSaver( projection );
         String sT = String.format("%1$05d", t );
-        String pathCT = path + "-xyz-max" + "--" + channelName + "--T" + sT + ".tif";
+        String pathCT = path + "-xyz-" + projectionMode + "--" + channelName + "--T" + sT + ".tif";
         fileSaver.saveAsTiff(pathCT);
     }
 

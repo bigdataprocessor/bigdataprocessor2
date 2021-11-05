@@ -111,7 +111,9 @@ public class BigDataProcessor2Menu extends JMenu
         addMenuItem( openMenu, DownloadAndOpenSampleDataCommand.COMMAND_NAME );
 
         menus.add( processMenu );
-        populateProcessMenu( processMenu, miscMenu );
+        final JMenu transformMenu = new JMenu( "Transform" );
+        processMenu.add( transformMenu );
+        populateProcessMenu( processMenu, miscMenu, transformMenu );
 
         final JMenu correctDriftMenu = new JMenu( "Correct Drift" );
         processMenu.add( correctDriftMenu );
@@ -130,7 +132,7 @@ public class BigDataProcessor2Menu extends JMenu
         addMenuItem( miscMenu, LOG );
     }
 
-    private void populateProcessMenu( JMenu processMenu, JMenu miscMenu )
+    private void populateProcessMenu( JMenu processMenu, JMenu miscMenu, JMenu transformMenu )
     {
         PluginProvider< AbstractImageProcessingCommand > pluginProvider = new PluginProvider<>( AbstractImageProcessingCommand.class );
         pluginProvider.setContext( Services.getContext() );
@@ -139,7 +141,11 @@ public class BigDataProcessor2Menu extends JMenu
 
         for ( String name : names )
         {
-            if ( name.equals( ConfigureLazyLoadingCommand.COMMAND_NAME ) )
+            if ( name.contains( "Transform" ) )
+            {
+                addMenuItemAndProcessingAction( transformMenu, name, pluginProvider.getInstance( name ) );
+            }
+            else if ( name.equals( ConfigureLazyLoadingCommand.COMMAND_NAME ) )
             {
                 addMenuItemAndProcessingAction( miscMenu, name, pluginProvider.getInstance( name ) );
             }

@@ -30,16 +30,11 @@ package de.embl.cba.bdp2.viewer;
 
 import bdv.TransformEventHandler3D;
 import bdv.tools.brightness.ConverterSetup;
-import bdv.tools.brightness.MinMaxGroup;
-import bdv.tools.brightness.SetupAssignments;
 import bdv.tools.transformation.TransformedSource;
 import bdv.util.*;
 import bdv.util.volatiles.VolatileViews;
-import bdv.viewer.ConverterSetups;
-import bdv.viewer.DisplayMode;
 import bdv.viewer.Source;
 import bdv.viewer.SourceAndConverter;
-import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.boundingbox.BoundingBoxDialog;
 import de.embl.cba.bdp2.dialog.DisplaySettings;
 import de.embl.cba.bdp2.dialog.DialogUtils;
@@ -54,8 +49,6 @@ import de.embl.cba.bdp2.utils.RAISlicer;
 import de.embl.cba.bdp2.volatiles.VolatileCachedCellImgs;
 import de.embl.cba.bdv.utils.BdvUtils;
 import net.imglib2.*;
-import net.imglib2.interpolation.randomaccess.ClampingNLinearInterpolatorFactory;
-import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ARGBType;
@@ -173,6 +166,11 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
 
     public Image< R > getImage()
     {
+        return image;
+    }
+
+    public AffineTransform3D getSourceTransform()
+    {
         for ( BdvStackSource< R > channelSource : channelSources )
         {
             final TransformedSource< R > transformedSource = ( TransformedSource< R > ) channelSource.getSources().get( 0 ).getSpimSource();
@@ -181,15 +179,12 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
             if ( ! affineTransform3D.isIdentity() )
             {
                 // TODO: one may support transforming different channels differently
-                // TODO: macro recording!
-                Logger.log( "Image " + image.getName() + " has been manually transformed.");
-                final Image< R > transform = BigDataProcessor2.transform( image, affineTransform3D, new ClampingNLinearInterpolatorFactory() );
-                replaceImage( transform, false, true );
-                return transform;
+                Logger.log( "Image " + image.getName() + " has been transformed: " + affineTransform3D );
+                return affineTransform3D;
             }
         }
 
-        return image;
+        return new AffineTransform3D();
     }
 
     public void repaint( AffineTransform3D viewerTransform) {

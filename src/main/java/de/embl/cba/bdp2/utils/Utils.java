@@ -37,7 +37,7 @@ import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.dialog.DisplaySettings;
-import de.embl.cba.bdp2.process.transform.TransformCommand;
+import de.embl.cba.bdp2.process.transform.AffineTransformCommand;
 import de.embl.cba.bdp2.scijava.Services;
 import de.embl.cba.tables.color.ColorUtils;
 import ij.CompositeImage;
@@ -71,7 +71,6 @@ import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
 import ome.units.UNITS;
 import ome.units.unit.Unit;
-import org.ojalgo.matrix.transformation.Rotation;
 
 import java.io.File;
 import java.io.IOException;
@@ -89,6 +88,8 @@ import java.util.stream.Collectors;
 
 import static de.embl.cba.bdp2.open.NamingSchemes.LUXENDO_STACKINDEX;
 import static de.embl.cba.bdp2.open.NamingSchemes.MULTI_CHANNEL_VOLUMES_FROM_SUBFOLDERS;
+import static de.embl.cba.bdp2.process.transform.TransformConstants.LINEAR;
+import static de.embl.cba.bdp2.process.transform.TransformConstants.NEAREST;
 
 /**
  * Created by tischi on 06/11/16.
@@ -336,13 +337,13 @@ public class Utils {
 
 	public static InterpolatorFactory getInterpolator( String interpolation )
 	{
-		if ( interpolation.equalsIgnoreCase( TransformCommand.LINEAR ) )
+		if ( interpolation.equalsIgnoreCase( LINEAR ) )
 			return new ClampingNLinearInterpolatorFactory<>();
-		else if ( interpolation.equalsIgnoreCase( TransformCommand.NEAREST ) )
+		else if ( interpolation.equalsIgnoreCase( NEAREST ) )
 			return new NearestNeighborInterpolatorFactory();
 		else
 			throw new RuntimeException( "Interpolation mode not supported: " + interpolation + "; choose one of " +
-					TransformCommand.LINEAR + ", " +  TransformCommand.NEAREST);
+					LINEAR + ", " +  NEAREST);
 	}
 
 	public static String getChannelTimepointLog( int c, int t )

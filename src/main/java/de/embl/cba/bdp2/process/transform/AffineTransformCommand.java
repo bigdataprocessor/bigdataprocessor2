@@ -42,13 +42,14 @@ import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
-@Plugin(type = AbstractImageProcessingCommand.class, name = TransformCommand.COMMAND_NAME, menuPath = DialogUtils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractImageProcessingCommand.COMMAND_PATH + TransformCommand.COMMAND_FULL_NAME )
-public class TransformCommand< R extends RealType< R > & NativeType< R > > extends AbstractImageProcessingCommand< R > implements Command
+import static de.embl.cba.bdp2.process.transform.TransformConstants.LINEAR;
+import static de.embl.cba.bdp2.process.transform.TransformConstants.NEAREST;
+
+@Plugin(type = AbstractImageProcessingCommand.class, name = AffineTransformCommand.COMMAND_NAME, menuPath = DialogUtils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + AbstractImageProcessingCommand.COMMAND_PATH + AffineTransformCommand.COMMAND_FULL_NAME )
+public class AffineTransformCommand< R extends RealType< R > & NativeType< R > > extends AbstractImageProcessingCommand< R > implements Command
 {
-    public static final String COMMAND_NAME = "Transform...";
+    public static final String COMMAND_NAME = "Affine Transform...";
     public static final String COMMAND_FULL_NAME = BigDataProcessor2Menu.COMMAND_BDP2_PREFIX + COMMAND_NAME;
-    public static final String NEAREST = "Nearest";
-    public static final String LINEAR = "Linear";
     public static final String AFFINE_LABEL = "Affine transform (m00,..,m03,m10,..)";// [m00,..,m03,m10,..,m13,m20,..,m23]";
 
     @Parameter(label = AFFINE_LABEL )
@@ -84,6 +85,6 @@ public class TransformCommand< R extends RealType< R > & NativeType< R > > exten
     @Override
     public void showDialog( ImageViewer< R > imageViewer )
     {
-        new TransformDialog<>( imageViewer ).show();
+        new AffineTransformDialog<>( imageViewer ).show();
     }
 }

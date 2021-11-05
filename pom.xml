@@ -88,7 +88,8 @@
 		</pluginManagement>
 	</build>
 
-	<!-- mvn clean install "-Dscijava.app.directory=/Users/tischer/Desktop/Fiji/Fiji-bdp2.app" -->
+	<!-- mvn clean compile -Denforcer.skip-->
+	<!-- mvn clean install "-Dscijava.app.directory=/Users/tischer/Desktop/Fiji/Fiji-bdp2.app " -->
 
 	<properties>
 		<package-name>de.embl.cba.bdp2</package-name>
