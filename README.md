@@ -166,7 +166,7 @@ Motivation: Chromatic shifts either due to optics being corrected only for a giv
 Specify two crop regions in one channel and convert those regions into two channels, i.e. the number of channels of the resulting image is increased by one.
 Motivation: For the sake of acquisition speed, some fluorescence microscope systems acquire the signal of several fluorescence channels simultaneously on the same camera chip. Thus, we provide the functionality to convert such data into a conventional multi-channel data set by aligning the channels from a “split chip”. 
 
-#### Process > Transform...
+#### Process > Transform > Affine Transform...
 
 <img src="./docs/images/Process_Transform.png" width="1000">
 
@@ -191,7 +191,7 @@ t = t2
 
 Motivation: This is useful when data is warped due to an acquisition process that renders x-y-z non-orthogonal. Examples are when a stage movement is not orthogonal to the field of view. Also useful in single objective light sheet microscopy.  
 
-#### Manual Transform
+#### Process > Transform > Manual Transform
 
 Instead of entering an affine transformation one can also interactively transform an image:
 
