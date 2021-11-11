@@ -43,13 +43,13 @@ public class TIFFPlaneCellLoader implements Runnable
 
 	// todo: make the compression modes part of the fi object?
 
-	/**
+	/*
 	 * 16-bit signed integer (-32768-32767). Imported signed images
 	 * are converted to unsigned by adding 32768.
 	 */
 	public static final int GRAY16_SIGNED = 1;
 
-	/**
+	/*
 	 * 16-bit unsigned integer (0-65535).
 	 */
 	public static final int GRAY16_UNSIGNED = 2;

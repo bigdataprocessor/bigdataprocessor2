@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-/**
+/*
  * Created by tischi on 11/04/17.
  */
 public class Progress

@@ -28,7 +28,7 @@
  */
 package de.embl.cba.bdp2.open.fileseries;
 
-/**
+/*
  * A growable array of bytes.
  */
 public class ByteVector

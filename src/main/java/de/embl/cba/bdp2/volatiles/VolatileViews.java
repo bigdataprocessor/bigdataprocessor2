@@ -66,7 +66,7 @@ import java.util.Set;
 import static net.imglib2.img.basictypeaccess.AccessFlags.DIRTY;
 import static net.imglib2.img.basictypeaccess.AccessFlags.VOLATILE;
 
-/**
+/*
  * Wrap view cascades ending in {@link CachedCellImg} as volatile views.
  * {@link RandomAccessible}s wrapped in this way can be displayed in
  * BigDataViewer while load asynchronously.

@@ -329,7 +329,7 @@ public class TransformedStackView < R >
 			{
 				if ( hyperSliceAccess.get() instanceof Volatile )
 				{
-					/**
+					/*
 					 * Even though we cannot compute the data for this slice yet,
 					 * we can return, because in below get() method of this
 					 * RandomAccess we can set the pixels to be invalid.
@@ -338,7 +338,7 @@ public class TransformedStackView < R >
 				}
 				else
 				{
-					/**
+					/*
 					 * The user expects valid data from the get() method.
 					 * Thus we need to wait until this slice can be computed.
 					 */

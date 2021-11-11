@@ -94,7 +94,7 @@ public class Track
 		return voxelPosition;
 	}
 
-	/**
+	/*
 	 *
 	 * @param t frame
 	 * @param position calibrated

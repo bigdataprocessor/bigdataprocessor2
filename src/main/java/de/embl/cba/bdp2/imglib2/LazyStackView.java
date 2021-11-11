@@ -41,7 +41,7 @@ import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.View;
 import net.imglib2.util.Cast;
 
-/**
+/*
  * A stack of <em>n</em>-dimensional {@link RandomAccessibleInterval}s, forming
  * a <em>(n+1)</em>-dimensional {@link RandomAccessibleInterval}.
  *
@@ -52,7 +52,7 @@ import net.imglib2.util.Cast;
  */
 public class LazyStackView< T > extends AbstractInterval implements RandomAccessibleInterval< T >, View
 {
-	/**
+	/*
 	 * Describes how a {@link RandomAccess} on the <em>(n+1)</em>-dimensional
 	 * {@link LazyStackView} maps position changes into position changes of the
 	 * underlying <em>n</em>-dimensional {@link RandomAccess}es.
@@ -64,7 +64,7 @@ public class LazyStackView< T > extends AbstractInterval implements RandomAccess
 	 */
 	public static enum StackAccessMode
 	{
-		/**
+		/*
 		 * The default behavior is the following.
 		 *
 		 * <p>
@@ -81,7 +81,7 @@ public class LazyStackView< T > extends AbstractInterval implements RandomAccess
 		 */
 		DEFAULT,
 
-		/**
+		/*
 		 * Alternative behavior for some special cases; this is faster assuming
 		 * that we access in a loop over dimensions with the last dimension (the
 		 * hyper-slice dimension) in the inner loop. Works as follows.
@@ -142,7 +142,7 @@ public class LazyStackView< T > extends AbstractInterval implements RandomAccess
 				new LazyStackView.DefaultRA< T >( slices, interval );
 	}
 
-	/**
+	/*
 	 * Get the source slices that are stacked in this {@link LazyStackView}. These
 	 * are {@code (numDimensions() - 1)} dimensional
 	 * {@link RandomAccessibleInterval}s.
@@ -154,7 +154,7 @@ public class LazyStackView< T > extends AbstractInterval implements RandomAccess
 		return Arrays.asList( slices );
 	}
 
-	/**
+	/*
 	 * @return {@link LazyStackView.StackAccessMode} defined in constructor
 	 */
 	public LazyStackView.StackAccessMode getStackAccessMode()
@@ -162,7 +162,7 @@ public class LazyStackView< T > extends AbstractInterval implements RandomAccess
 		return stackAccessMode;
 	}
 
-	/**
+	/*
 	 * A {@link RandomAccess} on a {@link LazyStackView}. It keeps a list of
 	 * {@link RandomAccess}es on all constituent hyper-slices of the
 	 * {@link LazyStackView}.
@@ -430,7 +430,7 @@ public class LazyStackView< T > extends AbstractInterval implements RandomAccess
 			}
 		}
 
-		/**
+		/*
 		 * New function for lazy slice access
 		 *
 		 * @param slice
@@ -473,7 +473,7 @@ public class LazyStackView< T > extends AbstractInterval implements RandomAccess
 		}
 	}
 
-	/**
+	/*
 	 * A {@link RandomAccess} on a {@link LazyStackView}. It keeps a list of
 	 * {@link RandomAccess}es on all constituent hyper-slices of the
 	 * {@link LazyStackView}.

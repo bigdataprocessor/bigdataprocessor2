@@ -119,7 +119,7 @@ public class LuxendoBatchConvertAndCropCommand< R extends RealType< R > & Native
             }
         }
 
-        /**
+        /*
          *
          * Save both the complete merged data
          * as well as the cropped data, with projections

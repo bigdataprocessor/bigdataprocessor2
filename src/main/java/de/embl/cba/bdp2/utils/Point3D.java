@@ -55,7 +55,7 @@ package de.embl.cba.bdp2.utils;
 
 
 // PENDING_DOC_REVIEW of this whole class
-/**
+/*
  * A 3D geometric point that usually represents the x, y, z coordinates.
  * It can also represent a relative magnitude vector's x, y, z magnitudes.
  *
@@ -63,19 +63,19 @@ package de.embl.cba.bdp2.utils;
  */
 public class Point3D {
 
-	/**
+	/*
 	 * Point or vector with all three coordinates set to 0.
 	 */
 	public static final Point3D ZERO = new Point3D(0.0, 0.0, 0.0);
 
-	/**
+	/*
 	 * The x coordinate.
 	 *
 	 * @defaultValue 0.0
 	 */
 	private double x;
 
-	/**
+	/*
 	 * The x coordinate.
 	 * @return the x coordinate
 	 */
@@ -83,14 +83,14 @@ public class Point3D {
 		return x;
 	}
 
-	/**
+	/*
 	 * The y coordinate.
 	 *
 	 * @defaultValue 0.0
 	 */
 	private double y;
 
-	/**
+	/*
 	 * The y coordinate.
 	 * @return the y coordinate
 	 */
@@ -98,14 +98,14 @@ public class Point3D {
 		return y;
 	}
 
-	/**
+	/*
 	 * The z coordinate.
 	 *
 	 * @defaultValue 0.0
 	 */
 	private double z;
 
-	/**
+	/*
 	 * The z coordinate.
 	 * @return the z coordinate
 	 */
@@ -113,12 +113,12 @@ public class Point3D {
 		return z;
 	}
 
-	/**
+	/*
 	 * Cache the hash code to make computing hashes faster.
 	 */
 	private int hash = 0;
 
-	/**
+	/*
 	 * Creates a new instance of {@code Point3D}.
 	 * @param x The X coordinate of the {@code Point3D}
 	 * @param y The Y coordinate of the {@code Point3D}
@@ -130,7 +130,7 @@ public class Point3D {
 		this.z = z;
 	}
 
-	/**
+	/*
 	 * Computes the distance between this point and point {@code (x1, y1, z1)}.
 	 *
 	 * @param x1 the x coordinate of other point
@@ -145,7 +145,7 @@ public class Point3D {
 		return Math.sqrt(a * a + b * b + c * c);
 	}
 
-	/**
+	/*
 	 * Computes the distance between this point and the specified {@code point}.
 	 *
 	 * @param point the other point
@@ -156,7 +156,7 @@ public class Point3D {
 		return distance(point.getX(), point.getY(), point.getZ());
 	}
 
-	/**
+	/*
 	 * Returns a point with the specified coordinates added to the coordinates
 	 * of this point.
 	 * @param x the X coordinate addition
@@ -172,7 +172,7 @@ public class Point3D {
 				getZ() + z);
 	}
 
-	/**
+	/*
 	 * Returns a point with the coordinates of the specified point added to the
 	 * coordinates of this point.
 	 * @param point the point whose coordinates are to be added
@@ -184,7 +184,7 @@ public class Point3D {
 		return add(point.getX(), point.getY(), point.getZ());
 	}
 
-	/**
+	/*
 	 * Returns a point with the specified coordinates subtracted from
 	 * the coordinates of this point.
 	 * @param x the X coordinate subtraction
@@ -200,7 +200,7 @@ public class Point3D {
 				getZ() - z);
 	}
 
-	/**
+	/*
 	 * Returns a point with the coordinates of the specified point subtracted
 	 * from the coordinates of this point.
 	 * @param point the point whose coordinates are to be subtracted
@@ -212,7 +212,7 @@ public class Point3D {
 		return subtract(point.getX(), point.getY(), point.getZ());
 	}
 
-	/**
+	/*
 	 * Returns a point with the coordinates of this point multiplied
 	 * by the specified factor
 	 * @param factor the factor multiplying the coordinates
@@ -223,7 +223,7 @@ public class Point3D {
 		return new Point3D(getX() * factor, getY() * factor, getZ() * factor);
 	}
 
-	/**
+	/*
 	 * Normalizes the relative magnitude vector represented by this instance.
 	 * Returns a vector with the same direction and magnitude equal to 1.
 	 * If this is a zero vector, a zero vector is returned.
@@ -243,7 +243,7 @@ public class Point3D {
 				getZ() / mag);
 	}
 
-	/**
+	/*
 	 * Returns a point which lies in the middle between this point and the
 	 * specified coordinates.
 	 * @param x the X coordinate of the second endpoint
@@ -259,7 +259,7 @@ public class Point3D {
 				z + (getZ() - z) / 2.0);
 	}
 
-	/**
+	/*
 	 * Returns a point which lies in the middle between this point and the
 	 * specified point.
 	 * @param point the other endpoint
@@ -271,7 +271,7 @@ public class Point3D {
 		return midpoint(point.getX(), point.getY(), point.getZ());
 	}
 
-	/**
+	/*
 	 * Computes the angle (in degrees) between the vector represented
 	 * by this point and the specified vector.
 	 * @param x the X magnitude of the other vector
@@ -298,7 +298,7 @@ public class Point3D {
 		return Math.toDegrees(Math.acos(delta));
 	}
 
-	/**
+	/*
 	 * Computes the angle (in degrees) between the vector represented
 	 * by this point and the vector represented by the specified point.
 	 * @param point the other vector
@@ -311,7 +311,7 @@ public class Point3D {
 		return angle(point.getX(), point.getY(), point.getZ());
 	}
 
-	/**
+	/*
 	 * Computes the angle (in degrees) between the three points with this point
 	 * as a vertex.
 	 * @param p1 one point
@@ -347,7 +347,7 @@ public class Point3D {
 		return Math.toDegrees(Math.acos(delta));
 	}
 
-	/**
+	/*
 	 * Computes magnitude (length) of the relative magnitude vector represented
 	 * by this instance.
 	 * @return magnitude of the vector
@@ -361,7 +361,7 @@ public class Point3D {
 		return Math.sqrt(x * x + y * y + z * z);
 	}
 
-	/**
+	/*
 	 * Computes dot (scalar) product of the vector represented by this instance
 	 * and the specified vector.
 	 * @param x the X magnitude of the other vector
@@ -374,7 +374,7 @@ public class Point3D {
 		return getX() * x + getY() * y + getZ() * z;
 	}
 
-	/**
+	/*
 	 * Computes dot (scalar) product of the vector represented by this instance
 	 * and the specified vector.
 	 * @param vector the other vector
@@ -386,7 +386,7 @@ public class Point3D {
 		return dotProduct(vector.getX(), vector.getY(), vector.getZ());
 	}
 
-	/**
+	/*
 	 * Computes cross product of the vector represented by this instance
 	 * and the specified vector.
 	 * @param x the X magnitude of the other vector
@@ -406,7 +406,7 @@ public class Point3D {
 				ax * y - ay * x);
 	}
 
-	/**
+	/*
 	 * Computes cross product of the vector represented by this instance
 	 * and the specified vector.
 	 * @param vector the other vector
@@ -418,7 +418,7 @@ public class Point3D {
 		return crossProduct(vector.getX(), vector.getY(), vector.getZ());
 	}
 
-	/**
+	/*
 	 * Returns a hash code value for the point.
 	 * @return a hash code value for the point.
 	 */
@@ -430,7 +430,7 @@ public class Point3D {
 		} else return false;
 	}
 
-	/**
+	/*
 	 * Returns a hash code for this {@code Point3D} object.
 	 * @return a hash code for this {@code Point3D} object.
 	 */
@@ -445,7 +445,7 @@ public class Point3D {
 		return hash;
 	}
 
-	/**
+	/*
 	 * Returns a string representation of this {@code Point3D}.
 	 * This method is intended to be used only for informational purposes.
 	 * The content and format of the returned string might vary between

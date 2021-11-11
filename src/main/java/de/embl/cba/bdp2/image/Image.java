@@ -61,7 +61,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 {
 	public static final String WARNING_VOXEL_SIZE = "Please check voxel size.";
 
-	/**
+	/*
 	 * The cachedCellImg loads the data for the rai.
 	 * This must be 5D with dimension order XYZCT.
 	 *
@@ -71,7 +71,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 	private int[] cachedCellDims;
 	private long[] rawDataDimensions;
 
-	/**
+	/*
 	 * The rai holds the (processed) image data.
 	 * Initially, the rai simply is above cachedCellImg,
 	 * but as more and more processing steps are applied,
@@ -117,7 +117,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		this.supportsMultiThreadedReading = supportsMultiThreadedReading;
 	}
 
-	/**
+	/*
 	 * Copy constructor.
 	 */
 	public Image( Image< R > image )

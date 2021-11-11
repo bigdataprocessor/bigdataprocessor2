@@ -48,7 +48,7 @@ public class TIFFDecompressor
 	private static final int EOI_CODE = 257;
 
 
-	/**
+	/*
 	 *
 	 * TODO: this could be faster, because we know how many bytes it will be in the end
 	 *
@@ -57,7 +57,7 @@ public class TIFFDecompressor
 	 */
 	public static byte[] decompressZIP( byte[] bytes )
 	{
-		/** TIFF Adobe ZIP support contributed by Jason Newton. */
+		/* TIFF Adobe ZIP support contributed by Jason Newton. */
 		ByteArrayOutputStream imageBuffer = new ByteArrayOutputStream();
 		byte[] tmpBuffer = new byte[ 1024 ];
 		Inflater decompressor = new Inflater();
@@ -168,7 +168,7 @@ public class TIFFDecompressor
 					//out.add(outString);
 					System.arraycopy( outString, 0, out, iOut, outString.length );
 					iOut += outString.length;
-					symbolTable[ nextSymbol ] = outString; //**
+					symbolTable[ nextSymbol ] = outString; //*
 					oldCode = code;
 					nextSymbol++;
 					//totalTime3 += (System.nanoTime() - startTime3);

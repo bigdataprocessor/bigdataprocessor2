@@ -28,7 +28,7 @@
  */
 package de.embl.cba.bdp2.save.hdf5;
 
-/**
+/*
  * Adapted from ilastik4ij repository.
  * https://github.com/ilastik/ilastik4ij
  */

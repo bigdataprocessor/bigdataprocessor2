@@ -99,7 +99,6 @@
 
 		<!-- NB: Deploy releases to the SciJava Maven repository. -->
 		<releaseProfiles>sign,deploy-to-scijava</releaseProfiles>
-		<maven.javadoc.skip>true</maven.javadoc.skip>
 	</properties>
 
 	<repositories>

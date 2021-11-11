@@ -30,7 +30,7 @@ package develop;
 
 public class ExploreVolatileCachedCellImg
 {
-	/**
+	/*
 	 *
 	 * import bdv.util.BdvFunctions
 	 * import bdv.util.volatiles.VolatileViews

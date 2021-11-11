@@ -47,7 +47,7 @@ public class BigDataViewerXMLHDF5Saver< R extends RealType< R > & NativeType< R 
 	private final Image< R > image;
 	private final SavingSettings savingSettings;
 
-	/**
+	/*
 	 * public void export(
 	 * 			RandomAccessibleInterval< T > raiXYZCT,
 	 * 			String name,

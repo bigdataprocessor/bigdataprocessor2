@@ -71,7 +71,7 @@ public abstract class AbstractOkCancelDialog extends JDialog
 		SwingUtilities.invokeLater( () -> setVisible( true ) );
 	}
 
-	/**
+	/*
 	 * Fill JPanel panel field with content,
 	 * such that it can be displayed by showDialog()
 	 */

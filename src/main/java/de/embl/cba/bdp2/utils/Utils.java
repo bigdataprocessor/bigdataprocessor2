@@ -91,7 +91,7 @@ import static de.embl.cba.bdp2.open.NamingSchemes.MULTI_CHANNEL_VOLUMES_FROM_SUB
 import static de.embl.cba.bdp2.process.transform.TransformConstants.LINEAR;
 import static de.embl.cba.bdp2.process.transform.TransformConstants.NEAREST;
 
-/**
+/*
  * Created by tischi on 06/11/16.
  */
 

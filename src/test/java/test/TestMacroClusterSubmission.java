@@ -4,7 +4,7 @@ public class TestMacroClusterSubmission
 {
 	public static void main( String[] args )
 	{
-		/**
+		/*
 		 * Mount /g/cba
 		 * Run: src/test/java/run/RunImageJ.java
 		 *

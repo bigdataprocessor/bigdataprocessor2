@@ -43,7 +43,7 @@ public abstract class AbstractImageProcessingCommand< R extends RealType< R > & 
 {
     public static final String COMMAND_PATH = "Commands>Process>";
 
-    /**
+    /*
      * This parameter is preprocessed by the
      * SwingImageWidget class
      */
@@ -94,7 +94,7 @@ public abstract class AbstractImageProcessingCommand< R extends RealType< R > & 
         }
     }
 
-    /**
+    /*
      * This is the method that is called from the BigDataProcessor2 menu.
      * It should provide interactive functionality to process the
      * image that is currently shown in the imageViewer.

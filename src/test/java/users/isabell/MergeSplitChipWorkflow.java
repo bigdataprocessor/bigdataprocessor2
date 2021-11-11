@@ -98,7 +98,7 @@ public class MergeSplitChipWorkflow
         }
 
 
-        /**
+        /*
          *
          * Save both the complete merged data
          * as well as the cropped data, with projections

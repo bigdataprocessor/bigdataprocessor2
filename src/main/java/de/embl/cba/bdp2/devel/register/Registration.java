@@ -368,22 +368,22 @@ public class Registration< R extends RealType< R > & NativeType< R > >
 		{
 			final public FloatArray2DSIFT.Param sift = new FloatArray2DSIFT.Param();
 
-			/**
+			/*
 			 * Closest/next closest neighbour distance ratio
 			 */
 			public float rod = 0.92f;
 
-			/**
+			/*
 			 * Maximal allowed alignment error in px
 			 */
 			public float maxEpsilon = 25.0f;
 
-			/**
+			/*
 			 * Inlier/candidates ratio
 			 */
 			public float minInlierRatio = 0.05f;
 
-			/**
+			/*
 			 * Implemeted transformation models for choice
 			 */
 			final public String[] modelStrings = new String[]{ "Translation", "Rigid", "Similarity", "Affine" };
@@ -407,7 +407,7 @@ public class Registration< R extends RealType< R > & NativeType< R > >
 			computeTransforms( 0, numThreads );
 		}
 
-		/**
+		/*
 		 * Computes features for all hyper-slices between the reference hyper-slice
 		 * and the target hyper-slice.
 		 *

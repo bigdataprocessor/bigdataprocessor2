@@ -28,7 +28,7 @@
  */
 package de.embl.cba.bdp2.utils;
 
-/**
+/*
  * Created by tischi on 14/06/17.
  */
 public class ImageDataInfo {

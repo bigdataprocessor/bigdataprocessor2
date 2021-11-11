@@ -49,7 +49,7 @@ import net.imglib2.view.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
+/*
  * For view cascades ending in a {@link CachedCellImg},
  * the {@link CachedCellImg} will be replaced with the
  * provided one.
@@ -75,7 +75,7 @@ public class CachedCellImgReplacer< T extends Type< T > & NativeType< T >, S ext
 		this.cachedCellImg = cachedCellImg;
 	}
 
-	/**
+	/*
 	 * TODO: Figure out why I need to have RandomAccessible inside
 	 *   the replace function and then have to do the casting here...
 	 *

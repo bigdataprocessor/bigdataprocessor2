@@ -78,7 +78,7 @@ public class FileSeriesCellLoader< T extends NativeType< T > > implements CellLo
         serializableFileInfoCache = CacheBuilder.newBuilder().maximumSize( 50 ).build( loader );
     }
 
-    /**
+    /*
      *
      * TODO: Not sure whether this should be synchronized or not; maybe safer it it is
      *

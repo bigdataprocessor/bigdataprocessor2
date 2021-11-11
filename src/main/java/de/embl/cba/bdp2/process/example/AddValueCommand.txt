@@ -31,7 +31,7 @@ public class AddValueCommand< R extends RealType< R > & NativeType< R > > extend
         handleOutputImage( false, true );
     }
 
-    /**
+    /*
      * Static method that does the processing, with signature:
      * outputImage = process( inputImage, parameters... );
      * One does not strictly have to implement this static method with this signature, but we recommend it such that the code can also be easily used via its Java API.
@@ -55,7 +55,7 @@ public class AddValueCommand< R extends RealType< R > & NativeType< R > > extend
         return outputImage;
     }
 
-    /**
+    /*
      * This is the method that will be called from the BDP2 menu
      * and thus is must be implemented.
      *

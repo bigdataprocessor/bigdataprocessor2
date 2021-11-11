@@ -37,7 +37,7 @@ import org.scijava.plugin.SciJavaPlugin;
 import java.util.*;
 
 
-/**
+/*
  * Copied from Mastodon
  *
  *

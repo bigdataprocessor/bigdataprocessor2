@@ -40,7 +40,7 @@ public class LoggingLevelCommand implements Command
     public static final String COMMAND_NAME = "Set Logging Level...";
     public static final String COMMAND_FULL_NAME = BigDataProcessor2Menu.COMMAND_BDP2_PREFIX + COMMAND_NAME;
 
-    /**
+    /*
      * 	public enum Level
      *    {
      * 		Normal,

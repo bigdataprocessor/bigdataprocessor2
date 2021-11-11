@@ -66,7 +66,7 @@ import net.imglib2.img.display.imagej.ImageJFunctions;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
-/**
+/*
  * Align a stack consecutively using automatically extracted robust landmark
  * correspondences.
  *
@@ -115,22 +115,22 @@ public class ExploreSIFTAlignment < R extends RealType< R > & NativeType< R > >
 	{
 		final public FloatArray2DSIFT.Param sift = new FloatArray2DSIFT.Param();
 
-		/**
+		/*
 		 * Closest/next closest neighbour distance ratio
 		 */
 		public float rod = 0.92f;
 
-		/**
+		/*
 		 * Maximal allowed alignment error in px
 		 */
 		public float maxEpsilon = 25.0f;
 
-		/**
+		/*
 		 * Inlier/candidates ratio
 		 */
 		public float minInlierRatio = 0.05f;
 
-		/**
+		/*
 		 * Implemeted transformation models for choice
 		 */
 		final static public String[] modelStrings = new String[]{ "Translation", "Rigid", "Similarity", "Affine" };
@@ -145,7 +145,7 @@ public class ExploreSIFTAlignment < R extends RealType< R > & NativeType< R > >
 
 	final static Param p = new Param();
 
-	/**
+	/*
 	 * downscale a grey scale float image using gaussian blur
 	 */
 	final static private ImageProcessor downScale( final ImageProcessor ip, final double s )
@@ -279,7 +279,7 @@ public class ExploreSIFTAlignment < R extends RealType< R > & NativeType< R > >
 
 			IJ.log( candidates.size() + " potentially corresponding features identified" );
 
-			/**
+			/*
 			 * draw all correspondence candidates
 			 */
 			if (p.showInfo )
@@ -358,7 +358,7 @@ public class ExploreSIFTAlignment < R extends RealType< R > & NativeType< R > >
 					}
 				}
 
-				/**
+				/*
 				 * append the estimated transformation model
 				 *
 				 */

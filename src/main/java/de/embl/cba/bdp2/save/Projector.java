@@ -28,7 +28,7 @@
  */
 package de.embl.cba.bdp2.save;
 
-/** ProjectionXYZ.java
+/* ProjectionXYZ.java
  *
  * modified version of XYZ_MaxProject.java, written by Peter Sebastian Masny.
  *
@@ -226,14 +226,14 @@ public class Projector
         return xyzimp;
     }
 
-    /**
+    /*
      * @param doscale the doscale to set
      */
     public void setDoscale(boolean doscale) {
         this.doscale = doscale;
     }
 
-    /**
+    /*
      * @return the doscale
      */
     public boolean isDoscale() {

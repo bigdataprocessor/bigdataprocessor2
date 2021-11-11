@@ -33,7 +33,7 @@ import ij.io.FileInfo;
 
 import java.io.Serializable;
 
-/**
+/*
  * TODO: Clean this up as it still contains a lot of things from BDP1
  */
 public class BDP2FileInfo implements Cloneable, Serializable {

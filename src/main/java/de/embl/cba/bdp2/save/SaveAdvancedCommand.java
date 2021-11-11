@@ -43,7 +43,7 @@ import org.scijava.plugin.Plugin;
 import java.io.File;
 
 
-/**
+/*
  * TODO: How to add a HELP button for the regular expression without screwing up the macro recording?
  *
  *
@@ -89,7 +89,7 @@ public class SaveAdvancedCommand< R extends RealType< R > & NativeType< R > > im
     int tEnd = 0;
     public static String T_END_PARAMETER = "tEnd";
 
-    /**
+    /*
      * Must be one of the SaveFileType enum class entries
      */
     @Parameter(label = "File type", choices =

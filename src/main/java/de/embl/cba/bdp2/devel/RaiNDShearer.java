@@ -42,7 +42,7 @@ import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
 
 
-/**
+/*
  * This class is experimental.
  * It seems slow and thus not used.
  */

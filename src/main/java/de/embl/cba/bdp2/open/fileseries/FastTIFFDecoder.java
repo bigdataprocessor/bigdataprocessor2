@@ -41,7 +41,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Properties;
 
-/**
+/*
  Decodes single and multi-image TIFF file. The LZW decompression
  code was contributed by Curtis Rueden.
  */

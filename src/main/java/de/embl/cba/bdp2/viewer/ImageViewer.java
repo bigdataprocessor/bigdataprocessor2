@@ -195,7 +195,7 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
         this.bdvHandle.getViewerPanel().requestRepaint();
     }
 
-    /**
+    /*
      * TODO: This fails in Macro mode during setDisplaySettings
      *
      * @param image
@@ -290,7 +290,7 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
         return displaySettings;
     }
 
-    /**
+    /*
      * Returns min and max pixel values of the
      * center slice of the first time point for the RandomAccessibleInterval
      * as a DisplaySettings object of the requested channel.

@@ -67,7 +67,7 @@ public class LuxendoBatchMergeSplitChipCommand< R extends RealType< R > & Native
     @Parameter(label = "Voxel Size Z")
     public double voxelSpacingMicrometerZ = 1.04;
 
-    /**
+    /*
      * This specifies the regions where the different channels appear on the camera chip
      */
     @Parameter(label = "Channel Regions [ minX, minY, sizeX, sizeY, channel; ... ]")
@@ -129,7 +129,7 @@ public class LuxendoBatchMergeSplitChipCommand< R extends RealType< R > & Native
             }
         }
 
-        /**
+        /*
          *
          * Save both the complete merged data
          * as well as the cropped data, with projections

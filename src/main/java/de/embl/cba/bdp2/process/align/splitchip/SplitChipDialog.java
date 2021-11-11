@@ -171,7 +171,7 @@ public class SplitChipDialog< R extends RealType< R > & NativeType< R > > extend
 		addRegionSliders();
 	}
 
-	/**
+	/*
 	 * TODO: currently not implemented due to missing BigStitcher dependency
 	 * see branch: withPhaseCorrelation
 	 */

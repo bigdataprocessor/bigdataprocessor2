@@ -32,7 +32,7 @@ import de.embl.cba.bdp2.image.Image;
 
 import java.io.File;
 
-/**
+/*
  * Created by tischi on 22/05/17.
  */
 public class SavingSettings  {
