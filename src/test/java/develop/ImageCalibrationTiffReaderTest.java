@@ -28,8 +28,6 @@
  */
 package develop;
 
-import de.embl.cba.bdp2.open.fileseries.FileInfos;
-import de.embl.cba.bdp2.open.NamingSchemes;
 import ij.IJ;
 import ij.ImageJ;
 import ij.io.FileInfo;

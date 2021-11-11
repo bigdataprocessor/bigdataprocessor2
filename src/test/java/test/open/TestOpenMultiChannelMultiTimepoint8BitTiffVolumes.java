@@ -43,9 +43,7 @@ public class TestOpenMultiChannelMultiTimepoint8BitTiffVolumes
     public static void main( String[] args)
     {
         Utils.prepareInteractiveMode();
-
         new TestOpenMultiChannelMultiTimepoint8BitTiffVolumes().run();
-
         BigDataProcessor2.showImage( image, true, true );
     }
 

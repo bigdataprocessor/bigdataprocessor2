@@ -40,10 +40,7 @@ public class TestOpenSingleChannelFloatTiffVolumeWithBioFormats
     public static void main( String[] args)
     {
         Utils.prepareInteractiveMode();
-
         new TestOpenSingleChannelFloatTiffVolumeWithBioFormats().run();
-
-        image.setVoxelDimensions( 1, 1, 10 );
         BigDataProcessor2.showImage( image );
     }
 
@@ -54,5 +51,6 @@ public class TestOpenSingleChannelFloatTiffVolumeWithBioFormats
         //file = "/Volumes/cba/exchange/Shuting/Ecad_Sqh_100x_20210511_01_decon.ics";
 
         image = BigDataProcessor2.openBioFormats( file, 0 );
+        image.setVoxelDimensions( 1, 1, 10 );
     }
 }

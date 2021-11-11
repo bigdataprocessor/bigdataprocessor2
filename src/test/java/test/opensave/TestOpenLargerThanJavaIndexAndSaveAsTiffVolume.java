@@ -43,7 +43,6 @@ public class TestOpenLargerThanJavaIndexAndSaveAsTiffVolume
     public static void main(String[] args)
     {
         Utils.prepareInteractiveMode();
-
         new TestOpenLargerThanJavaIndexAndSaveAsTiffVolume().run();
     }
 

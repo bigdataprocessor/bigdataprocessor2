@@ -44,7 +44,6 @@ public class TestOpenMultiChannel16BitTIFFVolumesAndSaveAsBDVHDF5
     public static void main(String[] args)
     {
         Utils.prepareInteractiveMode();
-
         new TestOpenMultiChannel16BitTIFFVolumesAndSaveAsBDVHDF5().run();
     }
 

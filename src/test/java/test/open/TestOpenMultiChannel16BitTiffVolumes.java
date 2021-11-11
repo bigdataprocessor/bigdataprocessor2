@@ -43,8 +43,8 @@ public class TestOpenMultiChannel16BitTiffVolumes
     public static void main( String[] args)
     {
         Utils.prepareInteractiveMode();
-
         new TestOpenMultiChannel16BitTiffVolumes().run();
+        BigDataProcessor2.showImage( image, true );
     }
 
     @Test
@@ -55,7 +55,5 @@ public class TestOpenMultiChannel16BitTiffVolumes
         image = BigDataProcessor2.openTIFFSeries( directory, MULTI_CHANNEL_VOLUMES + TIF );
 
         image.setVoxelDimensions( new double[]{1.0, 1.0, 1.0} );
-
-        BigDataProcessor2.showImage( image, true );
     }
 }

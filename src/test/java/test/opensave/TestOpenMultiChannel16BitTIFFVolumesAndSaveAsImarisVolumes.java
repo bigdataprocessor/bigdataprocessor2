@@ -44,7 +44,6 @@ public class TestOpenMultiChannel16BitTIFFVolumesAndSaveAsImarisVolumes
     public static void main(String[] args)
     {
         Utils.prepareInteractiveMode();
-
         new TestOpenMultiChannel16BitTIFFVolumesAndSaveAsImarisVolumes().run();
     }
 

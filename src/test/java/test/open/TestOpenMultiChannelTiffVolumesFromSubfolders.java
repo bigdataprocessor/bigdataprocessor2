@@ -43,11 +43,7 @@ public class TestOpenMultiChannelTiffVolumesFromSubfolders
     public static void main( String[] args)
     {
         Utils.prepareInteractiveMode();
-
         new TestOpenMultiChannelTiffVolumesFromSubfolders().run();
-
-        image = BigDataProcessor2.setVoxelSize( image, new double[]{1,1,1}, "micrometer" );
-
         BigDataProcessor2.showImage( image );
     }
 
@@ -55,7 +51,7 @@ public class TestOpenMultiChannelTiffVolumesFromSubfolders
     public void run()
     {
         final String directory = "src/test/resources/test/tiff-nc2-nt6-subfolders";
-
         image = BigDataProcessor2.openTIFFSeries( directory, MULTI_CHANNEL_VOLUMES_FROM_SUBFOLDERS + TIF );
+        image = BigDataProcessor2.setVoxelSize( image, new double[]{1,1,1}, "micrometer" );
     }
 }

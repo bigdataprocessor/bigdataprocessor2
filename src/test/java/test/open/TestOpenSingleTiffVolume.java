@@ -39,7 +39,6 @@ public class TestOpenSingleTiffVolume
     public static void main( String[] args)
     {
         Utils.prepareInteractiveMode();
-
         new TestOpenSingleTiffVolume().run();
     }
 
