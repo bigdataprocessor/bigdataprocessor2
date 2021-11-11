@@ -42,7 +42,7 @@ public class TestOpenSingleTiffVolume
         new TestOpenSingleTiffVolume().run();
     }
 
-    @Test
+    // @Test // this does not run headless as the command will show the image
     public void run()
     {
         final OpenSingleTIFFVolumeCommand command = new OpenSingleTIFFVolumeCommand();
