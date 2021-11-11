@@ -37,18 +37,19 @@ import test.Utils;
 
 public class TestOpenProcessSaveViventisBigData
 {
+	private static Image image;
+
 	public static void main( String[] args )
 	{
 		Utils.prepareInteractiveMode();
-
 		new TestOpenProcessSaveViventisBigData().run();
+		BigDataProcessor2.showImage( image, true );
 	}
 
 	//@Test
 	public void run()
 	{
-		Image image = BigDataProcessor2.openTIFFSeries( "/Volumes/Tischi/big-image-data/viventis/Position 2_Settings 1", "t(?<T>\\d+)_(?<C>.+).tif_NONRECURSIVE" );
-		BigDataProcessor2.showImage( image, true );
+		image = BigDataProcessor2.openTIFFSeries( "/Volumes/Tischi/big-image-data/viventis/Position 2_Settings 1", "t(?<T>\\d+)_(?<C>.+).tif_NONRECURSIVE" );
 
 		// Crop...
 		image = BigDataProcessor2.crop( image, new long[]{214,224,12,0,0,865,825,29,1,1} );

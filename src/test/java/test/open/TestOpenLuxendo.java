@@ -41,10 +41,13 @@ import static de.embl.cba.bdp2.open.NamingSchemes.T;
 
 public class TestOpenLuxendo
 {
-    public static void main(String[] args)
+    private static Image image;
+
+    public static void main( String[] args)
     {
         Utils.prepareInteractiveMode();
         new TestOpenLuxendo().run();
+        BigDataProcessor2.showImage( image, true );
     }
 
     //@Test
@@ -56,11 +59,9 @@ public class TestOpenLuxendo
         Pattern pattern = Pattern.compile( regExp );
         final boolean matches = pattern.matcher( s ).matches();
 
-        final Image image = BigDataProcessor2.openHDF5Series(
+        image = BigDataProcessor2.openHDF5Series(
                 "/Volumes/cba/exchange/bigdataprocessor/data/mouse_2cam_publication",
                 regExp,
                 "Data" );
-
-        BigDataProcessor2.showImage( image, true );
     }
 }

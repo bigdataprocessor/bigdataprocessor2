@@ -48,7 +48,6 @@ public class TestOpenApplyTrackSaveTiffVolumes
     public static void main(String[] args)
     {
         Utils.prepareInteractiveMode();
-
         new TestOpenApplyTrackSaveTiffVolumes().run();
         BigDataProcessor2.showImage( image, true );
         BigDataProcessor2.showImage( trackedImage, true );

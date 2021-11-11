@@ -36,11 +36,13 @@ import static de.embl.cba.bdp2.open.NamingSchemes.*;
 
 public class TestOpenLeicaDSL
 {
-    public static void main(String[] args)
+    private static Image image;
+
+    public static void main( String[] args)
     {
         Utils.prepareInteractiveMode();
-
         new TestOpenLeicaDSL().run();
+        BigDataProcessor2.showImage( image, true );
     }
 
     //@Test
@@ -48,13 +50,12 @@ public class TestOpenLeicaDSL
     {
         final String directory = "src/test/resources/test/leica-dsl-tiff-planes";
 
-        final Image image = BigDataProcessor2.openTIFFSeries(
+        image = BigDataProcessor2.openTIFFSeries(
                 directory,
                 LEICA_DSL_TIFF_PLANES
         );
 
         image.setVoxelDimensions( 1, 1, 1 ); // necessary because voxel size in z is NaN for single plane Tiff
         image.setVoxelUnit( "micrometer" );
-        BigDataProcessor2.showImage( image, true );
     }
 }
