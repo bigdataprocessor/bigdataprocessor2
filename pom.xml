@@ -73,6 +73,7 @@
 		<system>None</system>
 	</ciManagement>
 
+	<!-- mvn javadoc:javadoc -Denforcer.skip-->
 	<!-- mvn test -Denforcer.skip-->
 	<!-- mvn clean compile -Denforcer.skip-->
 	<!-- mvn clean install -Denforcer.skip -Dscijava.app.directory=/Users/tischer/Desktop/Fiji/Fiji-bdp2.app -->
@@ -98,6 +99,7 @@
 
 		<!-- NB: Deploy releases to the SciJava Maven repository. -->
 		<releaseProfiles>sign,deploy-to-scijava</releaseProfiles>
+		<maven.javadoc.skip>true</maven.javadoc.skip>
 	</properties>
 
 	<repositories>

@@ -262,9 +262,6 @@ public class TIFFDecompressor
 		return bytes;
 	}
 
-	/**
-	 * Based on the Bio-Formats PackbitsCodec written by Melissa Linkert.
-	 */
 	public static byte[] decompressPACKBITS( byte[] input, int expected )
 	{
 		if ( expected == 0 ) expected = Integer.MAX_VALUE;

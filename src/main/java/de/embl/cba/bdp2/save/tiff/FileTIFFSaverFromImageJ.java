@@ -47,11 +47,10 @@ import java.util.zip.ZipOutputStream;
 
 import static ij.io.FileSaver.getOverlay;
 
-/**
- * This is a copy of the class
- * FileSaver from ImageJ with only one slight modification (see NOTE below).
- *
- */
+//
+// This is a copy of the class
+// FileSaver from ImageJ with only one slight modification (see NOTE below).
+//
 public class FileTIFFSaverFromImageJ
 {
 	public static final int DEFAULT_JPEG_QUALITY = 85;
@@ -67,15 +66,14 @@ public class FileTIFFSaverFromImageJ
 	private String directory;
 	private boolean saveName;
 
-	/** Constructs a FileSaver from an ImagePlus. */
 	public FileTIFFSaverFromImageJ( ImagePlus imp) {
 		this.imp = imp;
 		fi = imp.getFileInfo();
 	}
 
-	/** Resaves the image. Calls saveAsTIFF() if this is a new image, not a TIFF,
-	 or if the image was loaded using a URL. Returns false if saveAsTIFF() is
-	 called and the user selects cancel in the file save dialog box. */
+	// Resaves the image. Calls saveAsTIFF() if this is a new image, not a TIFF,
+	// or if the image was loaded using a URL. Returns false if saveAsTIFF() is
+	// called and the user selects cancel in the file save dialog box. */
 	public boolean save() {
 		FileInfo ofi = null;
 		if (imp!=null) ofi = imp.getOriginalFileInfo();
@@ -117,9 +115,9 @@ public class FileTIFFSaverFromImageJ
 		return path;
 	}
 
-	/** Saves the image or stack in TIFF format using a save file
-	 dialog. Returns false if the user selects cancel. Equivalent to
-	 IJ.saveAsTIFF(imp,""), which is more convenient. */
+	// Saves the image or stack in TIFF format using a save file
+	// dialog. Returns false if the user selects cancel. Equivalent to
+	// IJ.saveAsTIFF(imp,""), which is more convenient.
 	public boolean saveAsTIFF() {
 		String path = getPath("TIFF", ".tif");
 		if (path==null)
@@ -130,8 +128,8 @@ public class FileTIFFSaverFromImageJ
 			return saveAsTIFF(path);
 	}
 
-	/** Saves the image in TIFF format using the specified path. Equivalent to
-	 IJ.saveAsTIFF(imp,path), which is more convenient. */
+	// Saves the image in TIFF format using the specified path. Equivalent to
+	// IJ.saveAsTIFF(imp,path), which is more convenient.
 	public boolean saveAsTIFF(String path) {
 		if (fi.nImages>1)
 			return saveAsTIFFStack(path);
@@ -261,8 +259,8 @@ public class FileTIFFSaverFromImageJ
 		return true;
 	}
 
-	/** Converts this image to a TIFF encoded array of bytes,
-	 which can be decoded using Opener.deserialize(). */
+	// Converts this image to a TIFF encoded array of bytes,
+	// which can be decoded using Opener.deserialize(). */
 	public byte[] serialize() {
 		if (imp.getStack().isVirtual())
 			return null;
@@ -314,8 +312,8 @@ public class FileTIFFSaverFromImageJ
 		}
 	}
 
-	/** Uses a save file dialog to save the image or stack as a TIFF
-	 in a ZIP archive. Returns false if the user selects cancel. */
+	// Uses a save file dialog to save the image or stack as a TIFF
+	// in a ZIP archive. Returns false if the user selects cancel.
 	public boolean saveAsZip() {
 		String path = getPath("TIFF/ZIP", ".zip");
 		if (path==null)
@@ -324,7 +322,7 @@ public class FileTIFFSaverFromImageJ
 			return saveAsZip(path);
 	}
 
-	/** Save the image or stack in TIFF/ZIP format using the specified path. */
+	// Save the image or stack in TIFF/ZIP format using the specified path.
 	public boolean saveAsZip(String path) {
 		if (imp.getProperty("FHT")!=null && path.contains("FFT of "))
 			setupFFTSave();
@@ -376,9 +374,9 @@ public class FileTIFFSaverFromImageJ
 			return true;
 	}
 
-	/** Save the image in GIF format using a save file
-	 dialog. Returns false if the user selects cancel
-	 or the image is not 8-bits. */
+	// Save the image in GIF format using a save file
+	// dialog. Returns false if the user selects cancel
+	// or the image is not 8-bits.
 	public boolean saveAsGif() {
 		String path = getPath("GIF", ".gif");
 		if (path==null)
@@ -387,24 +385,19 @@ public class FileTIFFSaverFromImageJ
 			return saveAsGif(path);
 	}
 
-	/** Save the image in Gif format using the specified path. Returns
-	 false if the image is not 8-bits or there is an I/O error. */
+	// Save the image in Gif format using the specified path. Returns
+	// false if the image is not 8-bits or there is an I/O error.
 	public boolean saveAsGif(String path) {
 		IJ.runPlugIn(imp, "ij.plugin.GifWriter", path);
 		updateImp(fi, FileInfo.GIF_OR_JPG);
 		return true;
 	}
 
-	/** Always returns true. */
+	// Always returns true. */
 	public static boolean okForJpeg(ImagePlus imp) {
 		return true;
 	}
 
-	/** Save the image in JPEG format using a save file
-	 dialog. Returns false if the user selects cancel.
-	 @see #setJpegQuality
-	 @see #getJpegQuality
-	 */
 	public boolean saveAsJpeg() {
 		String type = "JPEG ("+getJpegQuality()+")";
 		String path = getPath(type, ".jpg");
@@ -414,10 +407,6 @@ public class FileTIFFSaverFromImageJ
 			return saveAsJpeg(path);
 	}
 
-	/** Save the image in JPEG format using the specified path.
-	 @see #setJpegQuality
-	 @see #getJpegQuality
-	 */
 	public boolean saveAsJpeg(String path) {
 		String err = JpegWriter.save(imp, path, jpegQuality);
 		if (err==null && !(imp.getType()==ImagePlus.GRAY16 || imp.getType()==ImagePlus.GRAY32))
@@ -425,8 +414,6 @@ public class FileTIFFSaverFromImageJ
 		return true;
 	}
 
-	/** Save the image in BMP format using a save file dialog.
-	 Returns false if the user selects cancel. */
 	public boolean saveAsBmp() {
 		String path = getPath("BMP", ".bmp");
 		if (path==null)
@@ -435,18 +422,12 @@ public class FileTIFFSaverFromImageJ
 			return saveAsBmp(path);
 	}
 
-	/** Save the image in BMP format using the specified path. */
 	public boolean saveAsBmp(String path) {
 		IJ.runPlugIn(imp, "ij.plugin.BMP_Writer", path);
 		updateImp(fi, FileInfo.BMP);
 		return true;
 	}
 
-	/** Saves grayscale images in PGM (portable graymap) format
-	 and RGB images in PPM (portable pixmap) format,
-	 using a save file dialog.
-	 Returns false if the user selects cancel.
-	 */
 	public boolean saveAsPgm() {
 		String extension = imp.getBitDepth()==24?".pnm":".pgm";
 		String path = getPath("PGM", extension);
@@ -456,17 +437,12 @@ public class FileTIFFSaverFromImageJ
 			return saveAsPgm(path);
 	}
 
-	/** Saves grayscale images in PGM (portable graymap) format
-	 and RGB images in PPM (portable pixmap) format,
-	 using the specified path. */
 	public boolean saveAsPgm(String path) {
 		IJ.runPlugIn(imp, "ij.plugin.PNM_Writer", path);
 		updateImp(fi, FileInfo.PGM);
 		return true;
 	}
 
-	/** Save the image in PNG format using a save file dialog.
-	 Returns false if the user selects cancel. */
 	public boolean saveAsPng() {
 		String path = getPath("PNG", ".png");
 		if (path==null)
@@ -475,15 +451,12 @@ public class FileTIFFSaverFromImageJ
 			return saveAsPng(path);
 	}
 
-	/** Save the image in PNG format using the specified path. */
 	public boolean saveAsPng(String path) {
 		IJ.runPlugIn(imp, "ij.plugin.PNG_Writer", path);
 		updateImp(fi, FileInfo.IMAGEIO);
 		return true;
 	}
 
-	/** Save the image in FITS format using a save file dialog.
-	 Returns false if the user selects cancel. */
 	public boolean saveAsFits() {
 		if (!okForFits(imp)) return false;
 		String path = getPath("FITS", ".fits");
@@ -493,7 +466,6 @@ public class FileTIFFSaverFromImageJ
 			return saveAsFits(path);
 	}
 
-	/** Save the image in FITS format using the specified path. */
 	public boolean saveAsFits(String path) {
 		if (!okForFits(imp)) return false;
 		IJ.runPlugIn(imp, "ij.plugin.FITS_Writer", path);
@@ -509,8 +481,6 @@ public class FileTIFFSaverFromImageJ
 			return true;
 	}
 
-	/** Save the image or stack as raw data using a save file
-	 dialog. Returns false if the user selects cancel. */
 	public boolean saveAsRaw() {
 		String path = getPath("Raw", ".raw");
 		if (path==null)
@@ -521,7 +491,6 @@ public class FileTIFFSaverFromImageJ
 			return saveAsRawStack(path);
 	}
 
-	/** Save the image as raw data using the specified path. */
 	public boolean saveAsRaw(String path) {
 		fi.nImages = 1;
 		fi.intelByteOrder = Prefs.intelByteOrder;
@@ -557,7 +526,6 @@ public class FileTIFFSaverFromImageJ
 		return true;
 	}
 
-	/** Save the stack as raw data using the specified path. */
 	public boolean saveAsRawStack(String path) {
 		if (fi.nImages==1)
 		{IJ.log("This is not a stack"); return false;}
@@ -604,8 +572,8 @@ public class FileTIFFSaverFromImageJ
 		return true;
 	}
 
-	/** Save the image as tab-delimited text using a save file
-	 dialog. Returns false if the user selects cancel. */
+	// Save the image as tab-delimited text using a save file
+	// dialog. Returns false if the user selects cancel
 	public boolean saveAsText() {
 		String path = getPath("Text", ".txt");
 		if (path==null)
@@ -613,7 +581,7 @@ public class FileTIFFSaverFromImageJ
 		return saveAsText(path);
 	}
 
-	/** Save the image as tab-delimited text using the specified path. */
+	// Save the image as tab-delimited text using the specified path.
 	public boolean saveAsText(String path) {
 		DataOutputStream out = null;
 		try {
@@ -637,8 +605,8 @@ public class FileTIFFSaverFromImageJ
 		return true;
 	}
 
-	/** Save the current LUT using a save file
-	 dialog. Returns false if the user selects cancel. */
+	// Save the current LUT using a save file
+	// dialog. Returns false if the user selects cancel.
 	public boolean saveAsLut() {
 		if (imp.getType()==ImagePlus.COLOR_RGB) {
 			error("RGB Images do not have a LUT.");
@@ -650,7 +618,7 @@ public class FileTIFFSaverFromImageJ
 		return saveAsLut(path);
 	}
 
-	/** Save the current LUT using the specified path. */
+	// Save the current LUT using the specified path.
 	public boolean saveAsLut(String path) {
 		LookUpTable lut = imp.createLut();
 		int mapSize = lut.getMapSize();
@@ -741,7 +709,7 @@ public class FileTIFFSaverFromImageJ
 		IJ.error("FileSaver", msg);
 	}
 
-	/** Returns a string containing information about the specified  image. */
+	// Returns a string containing information about the specified  image.
 	public String getDescriptionString() {
 		Calibration cal = imp.getCalibration();
 		StringBuffer sb = new StringBuffer(100);
@@ -852,20 +820,20 @@ public class FileTIFFSaverFromImageJ
 		sb.append('\n');
 	}
 
-	/** Specifies the image quality (0-100). 0 is poorest image quality,
-	 highest compression, and 100 is best image quality, lowest compression. */
+	// Specifies the image quality (0-100). 0 is poorest image quality,
+	// highest compression, and 100 is best image quality, lowest compression.
 	public static void setJpegQuality(int quality) {
 		jpegQuality = quality;
 		if (jpegQuality<0) jpegQuality = 0;
 		if (jpegQuality>100) jpegQuality = 100;
 	}
 
-	/** Returns the current JPEG quality setting (0-100). */
+	// Returns the current JPEG quality setting (0-100).
 	public static int getJpegQuality() {
 		return jpegQuality;
 	}
 
-	/** Sets the BufferedOutputStream buffer size in bytes (default is 32K). */
+	// Sets the BufferedOutputStream buffer size in bytes (default is 32K).
 	public static void setBufferSize(int bufferSize) {
 		bsize = bufferSize;
 		if (bsize<2048) bsize = 2048;

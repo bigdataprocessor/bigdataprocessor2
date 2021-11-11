@@ -43,10 +43,7 @@ public class HelpWindow extends JFrame
 {
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * Instantiates and displays a JFrame that lists the help file for the SPIM
-	 * viewer UI.
-	 */
+	// Instantiates and displays a JFrame that lists the help file for the SPIM viewer UI.
 	public HelpWindow( final URL helpFile )
 	{
 		if ( helpFile == null )

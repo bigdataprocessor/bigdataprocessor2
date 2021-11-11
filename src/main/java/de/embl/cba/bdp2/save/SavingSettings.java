@@ -78,11 +78,7 @@ public class SavingSettings  {
 		return new File( directory, type + File.separator + image.getName() ).toString();
 	}
 
-    /**
-     * Loads minimum settings.
-     * Useful for testing purposes.
-     * @return SavingSettings
-     */
+    // Loads minimum settings. Useful for testing purposes.
     public static SavingSettings getDefaults()
     {
         SavingSettings savingSettings = new SavingSettings();

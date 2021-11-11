@@ -203,7 +203,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		return rai;
 	}
 
-	/**
+	/*
 	 * This method should be used to update the rai
 	 * in case a processing step was added.
 	 *
@@ -231,10 +231,8 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		this.name = name;
 	}
 
-	/**
-	 * Adapt the voxel size, e.g., in case a processing step like
-	 * binning was applied.
-	 */
+	// Adapt the voxel size, e.g., in case a processing step like
+	// binning was applied.
 	public void setVoxelDimensions( double... voxelDimensions )
 	{
 		this.voxelDimensions = voxelDimensions;
@@ -320,10 +318,8 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		return cachedCellDims;
 	}
 
-	/**
-	 * Replaces the cachedCellImg that backs the rai of this image,
-	 * leaving all modifications (views and conversions) intact.
-	 */
+    // Replaces the cachedCellImg that backs the rai of this image,
+	// leaving all modifications (views and conversions) intact.
 	public void setCache( int[] cellDims, CacheOptions.CacheType cacheType, int cacheSize )
 	{
 //		if ( cachedCellImgCreator instanceof BioFormatsCachedCellImgCreator )
@@ -342,9 +338,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 			rai = new CachedCellImgReplacer( rai, cachedCellImg ).get();
 	}
 
-	/**
-	 * Sets the cache dimensions such that one cell is one volume.
-	 */
+	// Sets the cache dimensions such that one cell is one volume.
 	public void setVolumeCache( CacheOptions.CacheType cacheType, int cacheSize )
 	{
 		if ( cachedCellImgCreator instanceof BioFormatsCachedCellImgCreator )

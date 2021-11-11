@@ -67,13 +67,6 @@ public class OpenChannelsFileSeriesCommand< R extends RealType< R > & NativeType
     {
     }
 
-    /**
-     * In principle, it would be nice to directly add the channel subsetting to
-     * the regular expression. However, for the Luxendo naming scheme, the
-     * channel is distributed across different groups of the pattern,
-     * which makes this a bit tedious. Thus, for now the regular expression
-     * matches all channels and the selection of the subset happens afterwards.
-     */
     public OpenChannelsFileSeriesCommand( File directory, String[] files, String channelSubset, String regExp  )
     {
         this.channelSubset = channelSubset;

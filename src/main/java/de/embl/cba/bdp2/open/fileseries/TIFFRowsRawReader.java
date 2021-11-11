@@ -45,10 +45,6 @@ public class TIFFRowsRawReader
 	private int numCols;
 	private int maxRow;
 
-	/**
-	 * TODO: Is RandomAccessFile really the fastest here?
-	 * @return
-	 */
 	public byte[] read( BDP2FileInfo fi, RandomAccessFile in, int minRowRequested, int numRowsRequested, int minColRequested, int numColsRequested )
 	{
 		int numBytesToRead;

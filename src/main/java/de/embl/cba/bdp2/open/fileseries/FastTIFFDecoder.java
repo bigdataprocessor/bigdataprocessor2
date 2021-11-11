@@ -370,10 +370,10 @@ public class FastTIFFDecoder {
         return bytes;
     }
 
-    /** Save the image description in the specified FileInfo. ImageJ
-     saves spatial and density calibration data in this string. For
-     stacks, it also saves the number of images to avoid having to
-     decode an IFD for each image. */
+    // Save the image description in the specified FileInfo. ImageJ
+    // saves spatial and density calibration data in this string. For
+    // stacks, it also saves the number of images to avoid having to
+    // decode an IFD for each image.
     public void saveImageDescription(byte[] description, BDP2FileInfo fi) {
         String id = new String(description);
         if (!id.startsWith("ImageJ"))
