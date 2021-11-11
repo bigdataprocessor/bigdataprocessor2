@@ -43,26 +43,15 @@ import java.util.ArrayList;
 
 public class TestOpenTransformSave
 {
-	private static ImageJ imageJ;
-	private static boolean interactive = false;
-
 	public static void main( String[] args )
 	{
-		interactive = true;
+		Utils.prepareInteractiveMode();
 		new TestOpenTransformSave().run();
 	}
 
 	@Test
 	public void run()
 	{
-		imageJ = Utils.initContext();
-
-		if ( interactive )
-		{
-			imageJ.ui().showUI();
-			BigDataProcessor2UI.showUI();;
-		}
-
 		Image image = BigDataProcessor2.openTIFFSeries( "src/test/resources/test/tiff-nc2-nt2-16bit", ".*--C(?<C>\\d+)--T(?<T>\\d+).tif" );
 
 		image = BigDataProcessor2.setVoxelSize( image, new double[]{2.0,2.0,2.0}, "µm" );
