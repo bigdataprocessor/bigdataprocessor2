@@ -34,15 +34,8 @@ import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.save.Projector;
 import de.embl.cba.bdp2.save.SaveFileType;
 import de.embl.cba.bdp2.save.SavingSettings;
-import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.view.IntervalView;
-import net.imglib2.view.Views;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import test.Utils;
-
-import static de.embl.cba.bdp2.utils.DimensionOrder.X;
-import static de.embl.cba.bdp2.utils.DimensionOrder.Y;
-import static de.embl.cba.bdp2.utils.DimensionOrder.Z;
 
 public class TestOpenSingleChannelFloatTiffVolumeWithBioFormatsAndSaveAsTiffVolume
 {

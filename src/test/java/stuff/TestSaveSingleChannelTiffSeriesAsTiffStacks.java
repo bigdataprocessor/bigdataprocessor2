@@ -38,7 +38,7 @@ import loci.common.DebugTools;
 import java.io.File;
 
 import static de.embl.cba.bdp2.utils.FileUtils.createOrEmptyDirectory;
-import static junit.framework.TestCase.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestSaveSingleChannelTiffSeriesAsTiffStacks
 {

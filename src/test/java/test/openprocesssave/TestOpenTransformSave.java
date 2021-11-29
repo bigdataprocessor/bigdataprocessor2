@@ -29,30 +29,32 @@
 package test.openprocesssave;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
-import de.embl.cba.bdp2.BigDataProcessor2UI;
 import de.embl.cba.bdp2.image.Image;
+import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.process.transform.TransformConstants;
 import de.embl.cba.bdp2.save.SaveFileType;
 import de.embl.cba.bdp2.save.SavingSettings;
-import net.imagej.ImageJ;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import test.Utils;
-
-import java.util.ArrayList;
 
 public class TestOpenTransformSave
 {
+	private static Image image;
+
 	public static void main( String[] args )
 	{
 		Utils.prepareInteractiveMode();
 		new TestOpenTransformSave().run();
+		BigDataProcessor2.showImage( image );
 	}
 
 	@Test
 	public void run()
 	{
-		Image image = BigDataProcessor2.openTIFFSeries( "src/test/resources/test/tiff-nc2-nt2-16bit", ".*--C(?<C>\\d+)--T(?<T>\\d+).tif" );
+		Logger.useSystemOut( true );
+
+		image = BigDataProcessor2.openTIFFSeries( "src/test/resources/test/tiff-nc2-nt2-16bit", ".*--C(?<C>\\d+)--T(?<T>\\d+).tif" );
 
 		image = BigDataProcessor2.setVoxelSize( image, new double[]{2.0,2.0,2.0}, "µm" );
 

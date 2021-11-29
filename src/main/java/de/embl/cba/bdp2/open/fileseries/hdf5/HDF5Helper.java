@@ -35,6 +35,7 @@ import ch.systemsx.cisd.hdf5.IHDF5Reader;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.open.fileseries.FileInfos;
 import ij.gui.GenericDialog;
+import net.imagej.patcher.LegacyInjector;
 
 import java.util.Arrays;
 import java.util.List;
@@ -42,6 +43,8 @@ import java.util.stream.Collectors;
 
 public class HDF5Helper
 {
+    static { LegacyInjector.preinit(); }
+
     public static final String HDF5_PARSING_ERROR = "Error during hdf5 metadata extraction from ";
 
     public static void setMetadataFromHDF5(

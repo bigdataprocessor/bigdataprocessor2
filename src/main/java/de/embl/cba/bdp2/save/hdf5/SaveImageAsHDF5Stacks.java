@@ -160,7 +160,6 @@ public class SaveImageAsHDF5Stacks < R extends RealType< R > & NativeType< R > >
                 return;
             }
             // Load
-            //   ImagePlus impChannelTime = getDataCube( c );  May be faster???
             long[] minInterval = new long[]{
                     rai.min( DimensionOrder.X ),
                     rai.min( DimensionOrder.Y ),
