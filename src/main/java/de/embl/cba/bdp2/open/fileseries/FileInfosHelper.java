@@ -33,15 +33,12 @@ import de.embl.cba.bdp2.open.NamingSchemes;
 import de.embl.cba.bdp2.open.fileseries.hdf5.HDF5Helper;
 import de.embl.cba.bdp2.utils.BioFormatsCalibrationReader;
 import de.embl.cba.bdp2.utils.DimensionOrder;
-import ij.IJ;
 
-import javax.crypto.spec.PSource;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -109,27 +106,28 @@ public class FileInfosHelper
             fileInfos.voxelUnit = fileInfos.voxelUnit.trim();
     }
 
-    private static void fetchMetadata( FileInfos fileInfos, String regExp )
+    /*
+    Set image dimensions XYZ as well as image calibration
+     */
+    private static void setMetadata( FileInfos fileInfos, String regExp, String filePath )
     {
-        String firstPath = fileInfos.paths[ 0 ];
-
-        if ( NamingSchemes.isTIFF( firstPath ) )
+        if ( NamingSchemes.isTIFF( filePath ) )
         {
-            fetchTIFFMetadata( fileInfos, regExp, firstPath );
+            fetchTIFFMetadata( fileInfos, regExp, filePath );
         }
         else if ( NamingSchemes.isLuxendoNamingScheme( regExp ) )
         {
             fileInfos.fileType = FileSeriesFileType.LUXENDO;
-            HDF5Helper.setMetadataFromHDF5( fileInfos, firstPath );
+            HDF5Helper.setMetadataFromHDF5( fileInfos, filePath );
         }
-        else if ( NamingSchemes.isHDF5( firstPath ) )
+        else if ( NamingSchemes.isHDF5( filePath ) )
         {
             fileInfos.fileType = FileSeriesFileType.HDF5_VOLUMES;
-            HDF5Helper.setMetadataFromHDF5( fileInfos, firstPath );
+            HDF5Helper.setMetadataFromHDF5( fileInfos, filePath );
         }
         else
         {
-            Logger.error("Unsupported file type: " + firstPath );
+            Logger.error("Unsupported file type: " + filePath );
         }
     }
 
@@ -167,7 +165,7 @@ public class FileInfosHelper
         }
     }
 
-    private static void initFileInfos5D( FileInfos fileInfos, String namingScheme, String[] channelSubset )
+    private static void initFileInfos5D( final FileInfos fileInfos, final String namingScheme, final String[] channelSubset )
     {
         HashSet<String> channels = new HashSet();
         HashSet<String> timepoints = new HashSet();
@@ -196,34 +194,72 @@ public class FileInfosHelper
             }
         }
 
+        final HashMap< String, String > channelIdToFilePath = new HashMap<>();
+
         for ( String path : fileInfos.paths )
         {
             Matcher matcher = pattern.matcher( path );
             if ( matcher.matches() )
             {
-                channels.add( getId( channelGroups, matcher ) );
+                final String channelId = getId( channelGroups, matcher );
+
+                if ( channelSubset != null )
+                {
+                    if ( ! Arrays.asList( channelSubset ).contains( channelId ) )
+                    {
+                        // skip files that are not part of
+                        // the selected channel subset
+                        continue;
+                    }
+                }
+
+                // Remember one file path for each channel to extract the metadata.
+                if ( ! channelIdToFilePath.containsKey( channelId ) )
+                    channelIdToFilePath.put( channelId, path );
+
+                channels.add( channelId );
                 timepoints.add( getId( timeGroups, matcher ) );
                 slices.add( getId( sliceGroups, matcher ) );
             }
         }
 
         List< String > sortedChannels = sort( channels );
-
-        // TODO: can I do this via regExp? Probably difficult due to Luxendo,
-        //  where the channel information is distributed across folder and filename..
-        sortedChannels = subSetChannelsIfNecessary( channelSubset, sortedChannels );
         fileInfos.nC = sortedChannels.size();
         fileInfos.channelNames = sortedChannels.stream().toArray( String[]::new );
 
         List< String > sortedTimepoints = sort( timepoints );
         fileInfos.nT = sortedTimepoints.size();
 
+        // If the naming scheme does not contain Z, i.e.
+        // the z-slices are not distributed across multiple files,
+        // this will be empty.
         List< String > sortedSlices = sort( slices );
         fileInfos.nZ = sortedSlices.size();
 
-        fetchMetadata( fileInfos, namingScheme );
+        int nX = -1;
+        int nY = -1;
+        int nZ = -1;
 
-        populateFileInfos5D(
+        for ( String sortedChannel : sortedChannels )
+        {
+            final String referenceFilePath = channelIdToFilePath.get( sortedChannel );
+            setMetadata( fileInfos, namingScheme, referenceFilePath );
+
+            if( nX != -1 )
+            {
+                if ( fileInfos.nX != nX || fileInfos.nY != nY || fileInfos.nZ != nZ )
+                {
+                    throw new UnsupportedOperationException( "The channels are not consistent in their dimensionality (XYZ).");
+                }
+            }
+
+            nX = fileInfos.nX;
+            nY = fileInfos.nY;
+            nZ = fileInfos.nZ;
+        }
+
+        // requires correct metadata, in particular the correct number of z-slices
+        setFilePathsCZT(
                 fileInfos,
                 namingScheme,
                 sortedChannels,
@@ -302,7 +338,7 @@ public class FileInfosHelper
         }
     }
 
-    private static void populateFileInfos5D(
+    private static void setFilePathsCZT(
             FileInfos fileInfos,
             String regExp,
             List< String > channels,
@@ -312,7 +348,7 @@ public class FileInfosHelper
             ArrayList< Integer > timeGroups,
             ArrayList< Integer > sliceGroups )
     {
-        fileInfos.ctzFiles = new String[ fileInfos.nC ][ fileInfos.nT ][ fileInfos.nZ ];
+        fileInfos.ctzFilePaths = new String[ fileInfos.nC ][ fileInfos.nT ][ fileInfos.nZ ];
 
         Pattern pattern = Pattern.compile( regExp );
 
@@ -334,14 +370,14 @@ public class FileInfosHelper
                     int z = slices.indexOf( getId( sliceGroups, matcher ) );
                     if ( z == -1 )
                         throw new RuntimeException( "Could get slice index for " + path );
-                    fileInfos.ctzFiles[ c ][ t ][ z ] = path;
+                    fileInfos.ctzFilePaths[ c ][ t ][ z ] = path;
                 }
                 else
                 {
                     for ( int z = 0; z < fileInfos.nZ; z++ )
                     {
                         // all z with same file-name, because each file contains the whole volume
-                        fileInfos.ctzFiles[ c ][ t ][ z ] = path;
+                        fileInfos.ctzFilePaths[ c ][ t ][ z ] = path;
                     }
                 }
             }
