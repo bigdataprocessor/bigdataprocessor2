@@ -30,9 +30,19 @@ package de.embl.cba.bdp2.log;
 
 import ij.IJ;
 import ij.gui.GenericDialog;
+import net.imagej.patcher.LegacyInjector;
 
 public class Logger
 {
+	private static boolean useSystemOut;
+
+	static { LegacyInjector.preinit(); }
+
+	public static void useSystemOut( boolean b )
+	{
+		useSystemOut = b;
+	}
+
 	public enum Level
 	{
 		Normal,
@@ -55,14 +65,14 @@ public class Logger
 
 	public static void log( String msg )
 	{
-		IJ.log( msg );
+		print( msg, "" );
 	}
 
 	public static void progress( String msg, String progress )
 	{
 		progress = msg + ": " + progress;
 
-		if ( IJ.getLog() != null )
+		if ( ! useSystemOut && IJ.getLog() != null )
 		{
 			String[] logs = IJ.getLog().split( "\n" );
 			if ( logs.length > 1 )
@@ -74,30 +84,39 @@ public class Logger
 			}
 		}
 
-		IJ.log( progress );
-		System.out.println( progress );
+		print( progress, "" );
 	}
 
 	public static void info( String msg )
 	{
-		IJ.log( msg );
+		print( msg, "");
 	}
 
 	public static void benchmark( String msg )
 	{
 		if ( level.equals( Level.Benchmark ) )
-			IJ.log( "[BENCHMARK] " + msg );
+		{
+			print( msg, "[BENCHMARK] " );
+		}
+	}
+
+	private static void print( String msg, String preamble )
+	{
+		if ( useSystemOut )
+			System.out.print( preamble + msg + "\n" );
+		else
+			IJ.log( preamble + msg );
 	}
 
 	public static void warn( String msg )
 	{
-		IJ.log( "[WARN] " + msg );
+		print( msg, "[WARN] " );
 	}
 
 	public static void debug( String msg )
 	{
 		if ( level.equals( Level.Debug ) )
-			IJ.log( "[DEBUG] " + msg );
+			print( msg, "[DEBUG] " );
 	}
 
 	public static void error( String msg )

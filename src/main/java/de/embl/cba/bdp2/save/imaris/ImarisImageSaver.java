@@ -40,6 +40,7 @@ import de.embl.cba.imaris.ImarisDataSet;
 import de.embl.cba.imaris.ImarisUtils;
 import de.embl.cba.imaris.ImarisWriter;
 import ij.ImagePlus;
+import net.imagej.patcher.LegacyInjector;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
@@ -53,6 +54,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class ImarisImageSaver< R extends RealType< R > & NativeType< R > > extends AbstractImageSaver
 {
+    static { LegacyInjector.preinit(); }
+
     private final Image< R > image;
     private SavingSettings savingSettings;
     private ExecutorService es;

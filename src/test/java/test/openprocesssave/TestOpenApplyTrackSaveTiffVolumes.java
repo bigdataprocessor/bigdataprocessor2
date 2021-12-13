@@ -32,7 +32,7 @@ import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.progress.LoggingProgressListener;
 import de.embl.cba.bdp2.save.SavingSettings;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import test.Utils;
 
 import java.io.File;

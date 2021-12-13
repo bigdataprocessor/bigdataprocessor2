@@ -40,7 +40,7 @@ import loci.common.DebugTools;
 import java.io.File;
 import java.io.IOException;
 
-import static junit.framework.TestCase.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestSaveSingleChannel16BitTiffSeriesAsImarisVolumes
 {

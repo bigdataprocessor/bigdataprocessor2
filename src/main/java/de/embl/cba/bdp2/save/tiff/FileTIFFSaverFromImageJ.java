@@ -40,6 +40,7 @@ import ij.process.FHT;
 import ij.process.ImageProcessor;
 import ij.process.LUT;
 import ij.util.Tools;
+import net.imagej.patcher.LegacyInjector;
 
 import java.io.*;
 import java.util.zip.ZipEntry;
@@ -53,11 +54,13 @@ import static ij.io.FileSaver.getOverlay;
 //
 public class FileTIFFSaverFromImageJ
 {
+	static {LegacyInjector.preinit();}
+
 	public static final int DEFAULT_JPEG_QUALITY = 85;
+	static {setJpegQuality(ij.Prefs.getInt(ij.Prefs.JPEG, DEFAULT_JPEG_QUALITY));}
+
 	private static int jpegQuality;
 	private static int bsize = 32768; // 32K default buffer size
-
-	static {setJpegQuality(ij.Prefs.getInt(ij.Prefs.JPEG, DEFAULT_JPEG_QUALITY));}
 
 	private static String defaultDirectory = null;
 	private ImagePlus imp;

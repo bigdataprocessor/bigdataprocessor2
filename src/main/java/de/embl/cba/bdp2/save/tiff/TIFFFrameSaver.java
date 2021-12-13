@@ -46,6 +46,7 @@ import loci.formats.meta.IMetadata;
 import loci.formats.out.TiffWriter;
 import loci.formats.services.OMEXMLService;
 import loci.formats.tiff.IFD;
+import net.imagej.patcher.LegacyInjector;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;
@@ -64,6 +65,11 @@ import static de.embl.cba.bdp2.save.tiff.TIFFUtils.ShortToByteBigEndian;
 import static de.embl.cba.bdp2.utils.DimensionOrder.*;
 
 public class TIFFFrameSaver< R extends RealType< R > & NativeType< R > > implements Runnable {
+
+    static {
+        LegacyInjector.preinit();
+    }
+
     private final int t;
     private final AtomicInteger counter;
     private final Image image;

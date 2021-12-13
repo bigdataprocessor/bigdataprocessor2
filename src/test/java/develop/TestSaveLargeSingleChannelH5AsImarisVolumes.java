@@ -36,7 +36,8 @@ import de.embl.cba.bdp2.BigDataProcessor2;
 
 import java.io.File;
 
-import static junit.framework.TestCase.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 public class TestSaveLargeSingleChannelH5AsImarisVolumes
 {

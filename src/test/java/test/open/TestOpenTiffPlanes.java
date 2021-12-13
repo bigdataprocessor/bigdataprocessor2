@@ -31,7 +31,7 @@ package test.open;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.open.NamingSchemes;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import test.Utils;
 
 import static de.embl.cba.bdp2.open.NamingSchemes.Z;

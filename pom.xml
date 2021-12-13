@@ -8,7 +8,7 @@
 	</parent>
 	<groupId>de.embl.cba</groupId>
 	<artifactId>bigDataProcessor2</artifactId>
-	<version>1.4.3</version>
+	<version>1.4.4-SNAPSHOT</version>
 	<url>https://github.com/bigdataprocessor/bigdataprocessor2</url>
 	<name>BigDataProcessor2</name>
 	<description>Fiji plugin for inspection and processing of big image data</description>
@@ -73,10 +73,11 @@
 		<system>None</system>
 	</ciManagement>
 
-	<!-- mvn javadoc:javadoc -Denforcer.skip-->
-	<!-- mvn test -Denforcer.skip-->
-	<!-- mvn clean compile -Denforcer.skip-->
+	<!-- mvn javadoc:javadoc -Denforcer.skip -->
+	<!-- mvn test -Denforcer.skip -->
+	<!-- mvn clean compile -Denforcer.skip -->
 	<!-- mvn clean install -Denforcer.skip -Dscijava.app.directory=/Users/tischer/Desktop/Fiji/Fiji-bdp2.app -->
+	<!-- mvn -Dtest=TestOpenTransformSave test -Denforcer.skip  -->
 
 	<properties>
 		<package-name>de.embl.cba.bdp2</package-name>
@@ -187,8 +188,15 @@
 			<version>${imagej-cluster.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>5.4.2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>5.4.2</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

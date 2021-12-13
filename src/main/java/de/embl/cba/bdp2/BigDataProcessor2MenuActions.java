@@ -60,6 +60,7 @@ import de.embl.cba.bdp2.utils.Utils;
 import de.embl.cba.bdp2.viewer.ImageViewer;
 import de.embl.cba.tables.FileAndUrlUtils;
 import ij.IJ;
+import net.imagej.patcher.LegacyInjector;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -68,6 +69,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BigDataProcessor2MenuActions implements ActionListener {
+
+    static {
+        LegacyInjector.preinit();
+    }
 
     private final BigDataProcessor2Menu menu;
     private ImageViewer viewer;

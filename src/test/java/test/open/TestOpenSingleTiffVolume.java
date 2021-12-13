@@ -29,7 +29,6 @@
 package test.open;
 
 import de.embl.cba.bdp2.open.fileseries.OpenSingleTIFFVolumeCommand;
-import org.junit.Test;
 import test.Utils;
 
 import java.io.File;

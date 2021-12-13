@@ -28,17 +28,17 @@
  */
 package stuff;
 
+import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.open.NamingSchemes;
 import de.embl.cba.bdp2.save.SaveFileType;
 import de.embl.cba.bdp2.save.SavingSettings;
-import de.embl.cba.bdp2.BigDataProcessor2;
 import loci.common.DebugTools;
 
 import java.io.File;
 
 import static de.embl.cba.bdp2.utils.FileUtils.createOrEmptyDirectory;
-import static junit.framework.TestCase.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestSaveSingleChannelTiffSeriesAsLZWTiffStacks
 {

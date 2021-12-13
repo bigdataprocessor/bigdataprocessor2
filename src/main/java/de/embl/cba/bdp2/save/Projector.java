@@ -59,9 +59,12 @@ import ij.measure.Calibration;
 import ij.process.Blitter;
 import ij.process.FloatProcessor;
 import ij.process.ImageProcessor;
+import net.imagej.patcher.LegacyInjector;
 
 public class Projector
 {
+    static { LegacyInjector.preinit(); }
+
     public static final String MAX = "max";
     public static final String SUM = "sum";
 

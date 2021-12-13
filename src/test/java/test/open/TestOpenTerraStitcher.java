@@ -30,7 +30,6 @@ package test.open;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
-import org.junit.Test;
 
 public class TestOpenTerraStitcher
 {

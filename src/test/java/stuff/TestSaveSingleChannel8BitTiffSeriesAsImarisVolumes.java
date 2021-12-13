@@ -37,7 +37,8 @@ import loci.common.DebugTools;
 
 import java.io.File;
 
-import static junit.framework.TestCase.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 public class TestSaveSingleChannel8BitTiffSeriesAsImarisVolumes
 {

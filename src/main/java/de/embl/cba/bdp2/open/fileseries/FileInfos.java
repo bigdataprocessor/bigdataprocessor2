@@ -47,7 +47,6 @@ import net.imglib2.type.numeric.real.FloatType;
 import java.io.File;
 import java.io.IOException;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class FileInfos
 {
@@ -77,7 +76,7 @@ public class FileInfos
     public double[] voxelSize;
     public FileSeriesFileType fileType;
     public String h5DataSetName;
-    public String[][][] ctzFiles;
+    public String[][][] ctzFilePaths;
     public String directory;
     public double max_pixel_val;
     public double min_pixel_val;
@@ -248,7 +247,7 @@ public class FileInfos
         }
         else if ( FileSeriesFileType.is2D( fileType ) )
         {
-            int nZ = ctzFiles[channel][time].length;
+            int nZ = ctzFilePaths[channel][time].length;
             for (; z < nZ; ++z)
             {
                 setInfosFromFile(channel, time, z );
@@ -266,7 +265,7 @@ public class FileInfos
     {
         BDP2FileInfo[] info = null;
 
-        File file = new File( ctzFiles[c][t][z] );
+        File file = new File( ctzFilePaths[c][t][z] );
         if ( file.exists() )
         {
             if ( fileType.equals( FileSeriesFileType.TIFF_STACKS ) )
@@ -287,7 +286,7 @@ public class FileInfos
             Logger.error( "File does not exist [ c, t, z ] : " + c + ", " + t + ", " + z+
                             "\npath:" + file.getAbsolutePath()  +
                             "\ndirectory: " + directory +
-                            "\nfile: " + ctzFiles[c][t][z] );
+                            "\nfile: " + ctzFilePaths[c][t][z] );
             throw new UnsupportedOperationException( "File does not exist " + file.getAbsolutePath() );
         }
 
@@ -296,7 +295,7 @@ public class FileInfos
     private void loadMetadataFromTIFFPlane( int c, int t, int z )
     {
         FastTIFFDecoder ftd;
-        ftd = new FastTIFFDecoder( ctzFiles[ c ][ t ][ z ] );
+        ftd = new FastTIFFDecoder( ctzFilePaths[ c ][ t ][ z ] );
         try{
             ctzFileInfos[ c ][ t ][ z ] = ftd.getTIFFInfo()[0];
         }
@@ -347,7 +346,7 @@ public class FileInfos
     {
         FastTIFFDecoder ftd;
         BDP2FileInfo[] infoCT;
-        ftd = new FastTIFFDecoder( ctzFiles[ c ][ t ][0] );
+        ftd = new FastTIFFDecoder( ctzFilePaths[ c ][ t ][0] );
         try {
             info = ftd.getTIFFInfo();
         }
@@ -380,12 +379,12 @@ public class FileInfos
 
     private String getName( int c, int t, int z )
     {
-        return new File( ctzFiles[ c ][ t ][ z ] ).getName();
+        return new File( ctzFilePaths[ c ][ t ][ z ] ).getName();
     }
 
     private String getDirectory( int c, int t, int z )
     {
-        final String parent = new File( ctzFiles[ c ][ t ][ z ] ).getParent();
+        final String parent = new File( ctzFilePaths[ c ][ t ][ z ] ).getParent();
 
         if ( parent == null )
             return "";
