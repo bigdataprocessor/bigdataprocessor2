@@ -245,11 +245,18 @@ public class FileInfosHelper
             final String referenceFilePath = channelIdToFilePath.get( sortedChannel );
             setMetadata( fileInfos, namingScheme, referenceFilePath );
 
+            Logger.log( "# Metadata channel " + sortedChannel );
+            Logger.log( "" + fileInfos );
+
             if( nX != -1 )
             {
                 if ( fileInfos.nX != nX || fileInfos.nY != nY || fileInfos.nZ != nZ )
                 {
-                    throw new UnsupportedOperationException( "The channels are not consistent in their dimensionality (XYZ).");
+                    if ( channelSubset != null)
+                    {
+                        final String message = "The channels are not consistent in their dimensionality (XYZ). Please see ImageJ Log Window for details.";
+                        throw new UnsupportedOperationException( message );
+                    }
                 }
             }
 
