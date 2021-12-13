@@ -254,6 +254,10 @@ public class FileInfosHelper
                 {
                     if ( channelSubset != null)
                     {
+                        /*
+                        Test data for this scenario are here:
+                        src/test/resources/test/leica-dsl-tiff-planes
+                         */
                         final String message = "The channels are not consistent in their dimensionality (XYZ). Please see ImageJ Log Window for details.";
                         throw new UnsupportedOperationException( message );
                     }
