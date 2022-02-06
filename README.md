@@ -13,6 +13,8 @@ Main features:
 - [lazy-processing](https://en.wikipedia.org/wiki/Lazy_evaluation) of TB sized image data
 - [ImageJ macro](https://imagej.nih.gov/ij/developer/macro/macros.html) scripting support
 
+Watch a [video](https://youtu.be/LHI7vXiUUms?t=4534) about BDP2.
+
 **Schematic representation of a lazy-processing workflow in BDP2:** Dashed arrows represent lazy-computation, where only the currently viewed image plane is processed. A complete data browsing, data selection and data processing workflow can be configured in a few minutes even for TB-sized image data. Only the final saving to disk requires processing of the whole data set and will take a correspondingly long time (up to hours).
 
 [<img align="middle" width="700" alt="image" src="./docs/images/BDP2-SIFigure_1.jpg">](/docs/images/BDP2-SIFigure_1.jpg?raw=true)
