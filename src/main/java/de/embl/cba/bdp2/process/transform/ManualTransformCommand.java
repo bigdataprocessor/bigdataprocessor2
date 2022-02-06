@@ -46,7 +46,7 @@ public class ManualTransformCommand< R extends RealType< R > & NativeType< R > >
     @Override
     public void run()
     {
-        // cannot be run, showDialog will run the AffineTransformCommand instead
+        // cannot be run, use showDialog
     }
 
     @Override

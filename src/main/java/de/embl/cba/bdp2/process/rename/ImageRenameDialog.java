@@ -67,6 +67,7 @@ public class ImageRenameDialog < R extends RealType< R > & NativeType< R > >
 	protected void showDialog()
 	{
 		final GenericDialog gd = new GenericDialog( "Rename Image" );
+		gd.setResizable( true );
 
 		final int length = inputImage.getName().length();
 		gd.addStringField( "Image", inputImage.getName(), 2 * length );

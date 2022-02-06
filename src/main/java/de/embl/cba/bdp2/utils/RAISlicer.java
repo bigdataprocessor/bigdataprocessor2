@@ -266,7 +266,6 @@ public class RAISlicer
 		return type;
 	}
 
-
 	public static < T extends Type< T > > void copy(
 			final RandomAccessible< T > source,
 			final IterableInterval< T > target )
