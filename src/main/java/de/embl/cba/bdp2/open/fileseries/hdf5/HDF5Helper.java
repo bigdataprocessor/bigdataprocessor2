@@ -59,14 +59,14 @@ public class HDF5Helper
         {
             // TODO: improve this, try different names recursively
             hdf5DataSetSB = new StringBuilder( fileInfos.h5DataSetName );
-            if ( !hdf5DataSetExists( reader, hdf5DataSetSB ) )
+            if ( ! hdf5DataSetExists( reader, hdf5DataSetSB ) )
             {
-                if ( !setHDF5DatasetViaUI( reader, hdf5DataSetSB ) )
+                if ( ! setHDF5DatasetViaUI( reader, hdf5DataSetSB ) )
                     throw new RuntimeException( HDF5_PARSING_ERROR + filePath );
             }
         } else
         {
-            if ( !setHDF5DatasetViaUI( reader, hdf5DataSetSB ) )
+            if ( ! setHDF5DatasetViaUI( reader, hdf5DataSetSB ) )
                 throw new RuntimeException( HDF5_PARSING_ERROR + filePath );
         }
 
@@ -98,11 +98,13 @@ public class HDF5Helper
 
         fileInfos.bitDepth = assignHDF5TypeToImagePlusBitdepth(dsInfo);
 
-       if ( ! setVoxelSizeFromLuxendoHDF5( reader, fileInfos ) );
-       {
-           fileInfos.voxelSize = new double[]{1,1,1};
-           fileInfos.voxelUnit = "pixel";
-       }
+        final boolean couldReadVoxelSize = setVoxelSizeFromLuxendoHDF5( reader, fileInfos );
+        if ( ! couldReadVoxelSize )
+        {
+            Logger.warn( "Failed to read the voxel size in HDF5 dataset." );
+            fileInfos.voxelSize = new double[]{ 1, 1, 1 };
+            fileInfos.voxelUnit = "pixel";
+        }
     }
 
     private static int assignHDF5TypeToImagePlusBitdepth(HDF5DataSetInformation dsInfo) {
