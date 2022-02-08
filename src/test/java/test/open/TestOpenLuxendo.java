@@ -31,12 +31,16 @@ package test.open;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.open.NamingSchemes;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import test.Utils;
 
 import java.util.regex.Pattern;
 
 import static de.embl.cba.bdp2.open.NamingSchemes.HDF5;
 import static de.embl.cba.bdp2.open.NamingSchemes.LUXENDO;
+import static de.embl.cba.bdp2.open.NamingSchemes.LUXENDO_STACKINDEX;
+import static de.embl.cba.bdp2.open.NamingSchemes.P;
 import static de.embl.cba.bdp2.open.NamingSchemes.T;
 
 public class TestOpenLuxendo
@@ -50,18 +54,22 @@ public class TestOpenLuxendo
         BigDataProcessor2.showImage( image, true );
     }
 
-    //@Test
+    @Test
     public void run()
     {
-        String regExp = LUXENDO.replace( NamingSchemes.P, "6" );
-
-        final String s = "/Volumes/cba/exchange/bigdataprocessor/data/mouse_2cam_publication/stack_6_channel_2/Cam_Short_00136.h5";
-        Pattern pattern = Pattern.compile( regExp );
-        final boolean matches = pattern.matcher( s ).matches();
+        String regExp = LUXENDO.replace( P, "0" );
 
         image = BigDataProcessor2.openHDF5Series(
-                "/Volumes/cba/exchange/bigdataprocessor/data/mouse_2cam_publication",
+                "src/test/resources/test/luxendo-different-stack-size",
+                null, // @Nullable, e.g., if called via macro
                 regExp,
-                "Data" );
+                "Data",
+                new String[]{"Channel_2_Cam_Fused"});
+
+        // Note that the above data set is weird (not representative)
+        //   as the voxel dimensions are stored in the wrong order.
+        // Thus, we only compare the middle dimension
+        //   as this is not affected by the order.
+        Assertions.assertEquals( image.getVoxelDimensions()[1], 0.25999999046325684, 0.01 );
     }
 }

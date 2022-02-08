@@ -130,7 +130,6 @@ public class FileInfos
         fetchFileInfos( directory, namingScheme, h5DataSetPath, channelSubset );
     }
 
-    // TODO: do we need the recursive option still??
     private void fetchFileInfos( String aDirectory, String regExp, String h5DataSetName, String[] channelSubset )
     {
         this.namingScheme = regExp;
