@@ -50,12 +50,15 @@ public abstract class NamingSchemes
 	public static final String MULTI_CHANNEL_VOLUMES = ".*--C(" + C + ".*)--T(" + T + "\\d+)";
 	public static final String LUXENDO_STACK = "[sS]tack_";
 	public static final String LUXENDO_CHANNEL = "[cC]hannel_";
+
+	// I really don't remember why I need "\\/" and not just "/"...
+	// https://stackoverflow.com/questions/9575116/forward-slash-in-java-regex
 	public static final String LUXENDO = ".*\\/" + LUXENDO_STACK + P + "_(?<C1>" + LUXENDO_CHANNEL + ".*)\\/(?<C2>Cam_.*)_(" + T + "\\d+)(|.lux).h5";
 	public static final String LUXENDO_ID = "(?<C2>Cam_.*)_(" + T + "\\d+)(|.lux).h5";
 	public static final String LUXENDO_STACKINDEX = ".*" + LUXENDO_STACK + "("+ P + "\\d+)_" + LUXENDO_CHANNEL + ".*";
 	public static final String CHANNEL_ID_DELIMITER = "_";
 	public static final String LEICA_DSL_TIFF_PLANES = ".*" + "--t(" + T + "\\d+)" + "--Z(" + Z + "\\d+)" + "--C(" + C + "\\d+).*";
-	public static final String VIVENTIS = "t(?<T>\\d+)_(?<C>.+)" + TIF;
+	public static final String VIVENTIS = ".*\\/t(?<T>\\d+)_(?<C>.+)" + TIF;
 
 	public static final String NONRECURSIVE = "_NONRECURSIVE";
 

@@ -33,6 +33,7 @@ import de.embl.cba.bdp2.open.NamingSchemes;
 import de.embl.cba.bdp2.open.fileseries.hdf5.HDF5Helper;
 import de.embl.cba.bdp2.utils.BioFormatsCalibrationReader;
 import de.embl.cba.bdp2.utils.DimensionOrder;
+import de.embl.cba.util.OSUtils;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -49,7 +50,7 @@ public class FileInfosHelper
 {
     public static void setFileInfos5D( FileInfos fileInfos, String regExp, String[] channelSubset )
     {
-        initFileInfos5D( fileInfos, regExp, channelSubset );
+        initFileInfos5D( fileInfos, regExp, channelSubset, Pattern.compile( regExp ) );
 
         fileInfos.ctzFileInfos = new BDP2FileInfo[fileInfos.nC][fileInfos.nT][fileInfos.nZ];
         fileInfos.dimensions = new long[ 5 ];
@@ -165,13 +166,11 @@ public class FileInfosHelper
         }
     }
 
-    private static void initFileInfos5D( final FileInfos fileInfos, final String namingScheme, final String[] channelSubset )
+    private static void initFileInfos5D( final FileInfos fileInfos, final String namingScheme, final String[] channelSubset, Pattern pattern )
     {
         HashSet<String> channels = new HashSet();
         HashSet<String> timepoints = new HashSet();
         HashSet<String> slices = new HashSet();
-
-        Pattern pattern = Pattern.compile( namingScheme );
 
         final Map< String, Integer > groupIndexToGroupName = getGroupIndexToGroupName( pattern );
         final ArrayList< Integer > channelGroups = new ArrayList<>();
@@ -411,8 +410,6 @@ public class FileInfosHelper
         String[] files = null;
         try
         {
-            //Files.walk( Paths.get( directory ) )
-            //        .forEach( f -> IJ.log( f.toString() ) );
             files = Files.walk( Paths.get( directory ) )
                     .map( f -> f.toString() )
                     .filter( s -> pattern.matcher( s ).matches() )
@@ -620,5 +617,19 @@ public class FileInfosHelper
         }
 
         return directory;
+    }
+
+    public static String makeRegExpCompatible( String filePath )
+    {
+        if ( OSUtils.isWindows() )
+        {
+            // A single "\" as one gets it from file.getPath()
+            // (e.g. C:\Users)
+            // is interpreted by regexp as an escape character.
+            // To make it work with the regExp we need "\\"
+            // (e.g. C:\\Users)
+            filePath = filePath.replaceAll( "\\\\", "\\\\\\\\" );
+        }
+        return filePath;
     }
 }

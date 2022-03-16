@@ -35,6 +35,7 @@ import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.open.NamingSchemes;
 import de.embl.cba.bdp2.open.fileseries.hdf5.HDF5Helper;
 import de.embl.cba.imaris.ImarisUtils;
+import de.embl.cba.util.OSUtils;
 import ij.io.FileInfo;
 import loci.common.DebugTools;
 import net.imagej.axis.Axes;
@@ -46,7 +47,6 @@ import net.imglib2.type.numeric.real.FloatType;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.regex.Matcher;
 
 public class FileInfos
 {
@@ -133,7 +133,7 @@ public class FileInfos
     private void fetchFileInfos( String aDirectory, String regExp, String h5DataSetName, String[] channelSubset )
     {
         this.namingScheme = regExp;
-        this.directory  = FileInfosHelper.ensureDirectoryEndsWithFileSeparator( aDirectory );
+        this.directory = FileInfosHelper.ensureDirectoryEndsWithFileSeparator( aDirectory );
         this.h5DataSetName = h5DataSetName;
 
         DebugTools.setRootLevel( "OFF" ); // Bio-Formats
@@ -150,8 +150,20 @@ public class FileInfos
             namingScheme = namingScheme;
         }
 
-        namingScheme = namingScheme.replaceAll("/", Matcher.quoteReplacement( File.separator ) );
-        namingScheme = namingScheme.replaceAll("\\\\", Matcher.quoteReplacement( File.separator ) );
+        if ( OSUtils.isWindows() )
+        {
+            // replace / by \\
+            // the namingSchemes can contain folders, because
+            // some file formats like Luxendo spread the information
+            // which channel an image is across file and folder names.
+            // Internally, we currently represent the folder separator by
+            // "/" (see NamingSchemes class).
+            // To make this work with Windows we thus have to replace.
+            // Note: Maybe an alternative could be to leave it "/" and then
+            // switch it in the folders/files that we want to match.
+            // Maybe that would be easier?
+            namingScheme = namingScheme.replaceAll("/", "\\\\\\\\" );
+        }
 
         Logger.info( "Directory: " + directory );
         Logger.info( "Regular expression: " +  namingScheme );
@@ -164,10 +176,6 @@ public class FileInfos
         Logger.info( this.toString() );
     }
 
-    public static String adaptDirectorySeparatorToOperatingSystem( String string )
-    {
-        return string.replaceAll("/", Matcher.quoteReplacement( File.separator ) );
-    }
 
     @Override
     public String toString()
