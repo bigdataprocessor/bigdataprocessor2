@@ -28,6 +28,7 @@
  */
 package develop;
 
+import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -46,7 +47,12 @@ public class ExploreRegExp
 		final String group2 = matcher.group( 2 );
 		final String group3 = matcher.group( 3 );
 
+		String namingScheme = "C:\\sdfsdf\\sfsdf.tif";
+		System.out.println( namingScheme );
+		namingScheme = namingScheme.replaceAll("\\\\", Matcher.quoteReplacement( File.separator ) );
+		System.out.println( namingScheme );
 
+		Pattern pattern2 = Pattern.compile( namingScheme );
 
 	}
 }

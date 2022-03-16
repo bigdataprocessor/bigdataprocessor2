@@ -61,7 +61,7 @@ public class TestOpenLuxendo
 
         image = BigDataProcessor2.openHDF5Series(
                 "src/test/resources/test/luxendo-different-stack-size",
-                null, // @Nullable, e.g., if called via macro
+                null,
                 regExp,
                 "Data",
                 new String[]{"Channel_2_Cam_Fused"});

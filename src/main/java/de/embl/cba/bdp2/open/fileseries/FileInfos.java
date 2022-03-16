@@ -151,6 +151,7 @@ public class FileInfos
         }
 
         namingScheme = namingScheme.replaceAll("/", Matcher.quoteReplacement( File.separator ) );
+        namingScheme = namingScheme.replaceAll("\\\\", Matcher.quoteReplacement( File.separator ) );
 
         Logger.info( "Directory: " + directory );
         Logger.info( "Regular expression: " +  namingScheme );

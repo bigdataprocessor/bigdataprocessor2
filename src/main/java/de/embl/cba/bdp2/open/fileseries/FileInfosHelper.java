@@ -407,7 +407,6 @@ public class FileInfosHelper
         }
 
         Pattern pattern = Pattern.compile( patternString );
-        System.out.println( patternString );
 
         String[] files = null;
         try
