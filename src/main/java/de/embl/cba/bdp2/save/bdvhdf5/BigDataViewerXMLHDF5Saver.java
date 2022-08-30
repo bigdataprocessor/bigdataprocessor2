@@ -29,13 +29,16 @@
 package de.embl.cba.bdp2.save.bdvhdf5;
 
 import bdv.export.ProgressWriter;
+import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.progress.ProgressListener;
 import de.embl.cba.bdp2.save.AbstractImageSaver;
 import de.embl.cba.bdp2.save.SavingSettings;
+import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdv.utils.io.BdvRaiXYZCTExporter;
 import ij.IJ;
 import ij.io.LogStream;
+import net.imglib2.FinalInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
@@ -68,11 +71,18 @@ public class BigDataViewerXMLHDF5Saver< R extends RealType< R > & NativeType< R 
 	@Override
 	public void startSave()
 	{
+		// subset the time points range
+		final long[] min = image.getRai().minAsLongArray();
+		final long[] max = image.getRai().maxAsLongArray();
+		min[ DimensionOrder.T ] = savingSettings.tStart;
+		max[ DimensionOrder.T ] = savingSettings.tEnd;
+		final FinalInterval interval = new FinalInterval( min, max );
+		final Image< R > crop = BigDataProcessor2.crop( image, interval );
+
+		// save the image
 		final BdvRaiXYZCTExporter< R > exporter = new BdvRaiXYZCTExporter<>();
-
 		exporter.setProgressWriter( new ProgressAdaptor( this.progressListeners ) );
-
-		exporter.export( image.getRai(), image.getName(), savingSettings.volumesFilePathStump, image.getVoxelDimensions(), image.getVoxelUnit().getSymbol(), new double[]{0,0,0} );
+		exporter.export( crop.getRai(), crop.getName(), savingSettings.volumesFilePathStump, crop.getVoxelDimensions(), crop.getVoxelUnit().getSymbol(), new double[]{0,0,0} );
 	}
 
 	@Override

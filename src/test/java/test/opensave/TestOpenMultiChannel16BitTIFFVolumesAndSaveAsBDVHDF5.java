@@ -42,20 +42,20 @@ import static de.embl.cba.bdp2.open.NamingSchemes.TIF;
 
 public class TestOpenMultiChannel16BitTIFFVolumesAndSaveAsBDVHDF5
 {
-    public static void main(String[] args)
+    public static void main( String[] args )
     {
         Utils.prepareInteractiveMode();
-        new TestOpenMultiChannel16BitTIFFVolumesAndSaveAsBDVHDF5().run();
+        new TestOpenMultiChannel16BitTIFFVolumesAndSaveAsBDVHDF5().saveAllTimePoints();
     }
 
     @Test
-    public void run()
+    public void saveAllTimePoints()
     {
         Logger.useSystemOut( true );
 
         final String directory = "src/test/resources/test/tiff-nc2-nt2-16bit";
         final Image image = BigDataProcessor2.openTIFFSeries( directory, MULTI_CHANNEL_VOLUMES + TIF );
-        image.setVoxelDimensions( new double[]{1.0, 1.0, 1.0} );
+        image.setVoxelDimensions( new double[]{ 1.0, 1.0, 1.0 } );
 
         final SavingSettings settings = SavingSettings.getDefaults();
         settings.volumesFilePathStump = "src/test/resources/test/output/bdv/" + image.getName();
@@ -65,6 +65,27 @@ public class TestOpenMultiChannel16BitTIFFVolumesAndSaveAsBDVHDF5
         settings.compression = SavingSettings.COMPRESSION_NONE;
         settings.tStart = 0;
         settings.tEnd = image.getNumTimePoints() - 1;
+
+        BigDataProcessor2.saveImage( image, settings, new LoggingProgressListener( "Progress" ) );
+    }
+
+    @Test
+    public void saveOneTimePoint()
+    {
+        Logger.useSystemOut( true );
+
+        final String directory = "src/test/resources/test/tiff-nc2-nt2-16bit";
+        final Image image = BigDataProcessor2.openTIFFSeries( directory, MULTI_CHANNEL_VOLUMES + TIF );
+        image.setVoxelDimensions( new double[]{ 1.0, 1.0, 1.0 } );
+
+        final SavingSettings settings = SavingSettings.getDefaults();
+        settings.volumesFilePathStump = "src/test/resources/test/output/bdv/" + image.getName() + "-nt1";
+        settings.fileType = SaveFileType.BigDataViewerXMLHDF5;
+        settings.numProcessingThreads = 4;
+        settings.numIOThreads = 1;
+        settings.compression = SavingSettings.COMPRESSION_NONE;
+        settings.tStart = 0;
+        settings.tEnd = 0;
 
         BigDataProcessor2.saveImage( image, settings, new LoggingProgressListener( "Progress" ) );
     }
