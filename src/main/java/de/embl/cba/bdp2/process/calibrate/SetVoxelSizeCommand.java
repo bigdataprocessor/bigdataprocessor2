@@ -28,7 +28,7 @@
  */
 package de.embl.cba.bdp2.process.calibrate;
 
-import ch.epfl.biop.bdv.bioformats.BioFormatsMetaDataHelper;
+import ch.epfl.biop.bdv.img.bioformats.BioFormatsTools;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.BigDataProcessor2Menu;
 import de.embl.cba.bdp2.dialog.DialogUtils;
@@ -63,7 +63,7 @@ public class SetVoxelSizeCommand< R extends RealType< R > & NativeType< R > > ex
 
     public void run()
     {
-        outputImage = BigDataProcessor2.setVoxelSize( inputImage, new double[]{ voxelSizeX, voxelSizeY, voxelSizeZ }, BioFormatsMetaDataHelper.getUnitFromString( unit ) );
+        outputImage = BigDataProcessor2.setVoxelSize( inputImage, new double[]{ voxelSizeX, voxelSizeY, voxelSizeZ }, BioFormatsTools.getUnitFromString( unit ) );
         log();
 
         handleOutputImage( false, false );

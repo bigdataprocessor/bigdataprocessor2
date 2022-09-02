@@ -28,7 +28,7 @@
  */
 package de.embl.cba.bdp2.image;
 
-import ch.epfl.biop.bdv.bioformats.BioFormatsMetaDataHelper;
+import ch.epfl.biop.bdv.img.bioformats.BioFormatsTools;
 import de.embl.cba.bdp2.dialog.DisplaySettings;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.open.CacheUtils;
@@ -250,7 +250,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 
 	public void setVoxelUnit( String voxelUnit )
 	{
-		this.voxelUnit = BioFormatsMetaDataHelper.getUnitFromString( voxelUnit );
+		this.voxelUnit = BioFormatsTools.getUnitFromString( voxelUnit );
 	}
 
 	public String getName()

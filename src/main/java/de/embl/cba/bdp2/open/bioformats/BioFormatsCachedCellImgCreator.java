@@ -29,13 +29,10 @@
 package de.embl.cba.bdp2.open.bioformats;
 
 import bdv.viewer.Source;
-import ch.epfl.biop.bdv.bioformats.BioFormatsMetaDataHelper;
-import ch.epfl.biop.bdv.bioformats.bioformatssource.BioFormatsBdvOpener;
-import ch.epfl.biop.bdv.bioformats.bioformatssource.BioFormatsBdvSource;
+import ch.epfl.biop.bdv.img.bioformats.BioFormatsBdvOpener;
 import de.embl.cba.bdp2.open.CachedCellImgCreator;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.cache.img.CachedCellImg;
-import net.imglib2.cache.img.DiskCachedCellImgOptions;
 import net.imglib2.cache.img.optional.CacheOptions;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ARGBType;
@@ -49,7 +46,6 @@ import org.apache.commons.io.FilenameUtils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 public class BioFormatsCachedCellImgCreator < R extends RealType< R > & NativeType< R > > implements CachedCellImgCreator< R >
@@ -89,8 +85,7 @@ public class BioFormatsCachedCellImgCreator < R extends RealType< R > & NativeTy
 		List< Source > sources;
 		try
 		{
-			sources = opener
-					.getConcreteSources( series + ".*" ) // code for all channels of the series indexed 'series'
+			sources = opener.getConcreteSources( series + ".*" ) // code for all channels of the series indexed 'series'
 					.stream().map( src -> ( Source ) src ).collect( Collectors.toList() );
 		}
 		catch ( Exception e )
@@ -98,7 +93,7 @@ public class BioFormatsCachedCellImgCreator < R extends RealType< R > & NativeTy
 			throw new RuntimeException( "Series index too large, please choose a smaller one!\n" + e );
 		}
 
-		List<BioFormatsBdvSource> sourcesBF = sources.stream().map(src ->
+		List< BioFormatsBdvSource > sourcesBF = sources.stream().map(src ->
 				BioFormatsBdvSource.class.cast( src )
 		).collect(Collectors.toList());
 
