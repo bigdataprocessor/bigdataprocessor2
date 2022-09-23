@@ -28,7 +28,8 @@
  */
 package de.embl.cba.bdp2.image;
 
-import ch.epfl.biop.bdv.img.bioformats.BioFormatsTools;
+
+import ch.epfl.biop.bdv.img.legacy.bioformats.BioFormatsTools;
 import de.embl.cba.bdp2.dialog.DisplaySettings;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.open.CacheUtils;

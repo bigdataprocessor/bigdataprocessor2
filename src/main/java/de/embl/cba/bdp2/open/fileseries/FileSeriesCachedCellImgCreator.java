@@ -28,7 +28,7 @@
  */
 package de.embl.cba.bdp2.open.fileseries;
 
-import ch.epfl.biop.bdv.img.bioformats.BioFormatsTools;
+import ch.epfl.biop.bdv.img.legacy.bioformats.BioFormatsTools;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.open.CacheUtils;
 import de.embl.cba.bdp2.open.CachedCellImgCreator;

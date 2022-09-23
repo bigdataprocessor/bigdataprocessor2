@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.scijava</groupId>
 		<artifactId>pom-scijava</artifactId>
-		<version>32.0.0</version>
+		<version>33.2.0</version>
 	</parent>
 	<groupId>de.embl.cba</groupId>
 	<artifactId>bigDataProcessor2</artifactId>
@@ -85,11 +85,11 @@
 		<license.copyrightOwners>EMBL</license.copyrightOwners>
 
 		<!-- BIOP -->
-		<bigdataviewer-image-loaders.version>0.2.0</bigdataviewer-image-loaders.version>
+		<bigdataviewer-image-loaders.version>0.3.5</bigdataviewer-image-loaders.version>
 
 		<!-- EMBL CBA -->
 		<imaris-writer.version>0.2.3</imaris-writer.version>
-		<imagej-utils.version>0.6.8</imagej-utils.version>
+		<imagej-utils.version>0.6.9</imagej-utils.version>
 		<imagej-cluster.version>1.0.0</imagej-cluster.version>
 
 		<!-- NB: Deploy releases to the SciJava Maven repository. -->

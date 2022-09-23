@@ -28,7 +28,7 @@
  */
 package de.embl.cba.bdp2.process.calibrate;
 
-import ch.epfl.biop.bdv.img.bioformats.BioFormatsTools;
+import ch.epfl.biop.bdv.img.legacy.bioformats.BioFormatsTools;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
