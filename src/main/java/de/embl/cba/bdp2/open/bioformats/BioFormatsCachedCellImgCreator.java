@@ -30,6 +30,7 @@ package de.embl.cba.bdp2.open.bioformats;
 
 import bdv.BigDataViewer;
 import bdv.ViewerImgLoader;
+import bdv.img.cache.VolatileCachedCellImg;
 import bdv.img.cache.VolatileGlobalCellCache;
 import bdv.spimdata.WrapBasicImgLoader;
 import bdv.viewer.Source;
@@ -85,8 +86,8 @@ public class BioFormatsCachedCellImgCreator < R extends RealType< R > & NativeTy
 				.voxSizeReferenceFrameLength( new Length( 1, UNITS.MICROMETER ) );
 
 		try ( IFormatReader reader = opener.getReaderPool().acquire() ) {
-			IMetadata meta = MetadataTools.createOMEXMLMetadata();
-			reader.setMetadataStore(meta);
+
+			IMetadata meta = (IMetadata) (reader.getMetadataStore());
 
 			seriesCount = opener.getNewReader().getSeriesCount();
 
@@ -126,12 +127,12 @@ public class BioFormatsCachedCellImgCreator < R extends RealType< R > & NativeTy
 			for (int iTime = 0; iTime<sizeT;iTime++) {
 				List<RandomAccessibleInterval<R>> raisXYZC = new ArrayList<>();
 				for (int iChannel = 0; iChannel<sizeC;iChannel++) {
-					Source<R> source = (Source<R>) sources.get(firstSetup+iChannel);
+					Source<R> source = (Source<R>) sources.get(firstSetup+iChannel).getSpimSource();
 					channelColors[iChannel] = BioFormatsTools.getColorFromMetadata(meta, series, iChannel);
 					raisXYZC.add(source.getSource(iTime,0));
 					source.getVoxelDimensions().dimensions(voxelSize);
 				}
-				((CachedCellImg) raisXYZC.get(0)).getCellGrid().cellDimensions(cacheSizeXYZ);
+				((VolatileCachedCellImg) raisXYZC.get(0)).getCellGrid().cellDimensions(cacheSizeXYZ);
 				raisXYZCT.add(Views.stack(raisXYZC));
 			}
 

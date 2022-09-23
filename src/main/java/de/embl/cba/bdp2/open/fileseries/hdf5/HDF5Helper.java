@@ -183,7 +183,7 @@ public class HDF5Helper
 
     public static boolean setVoxelSizeFromLuxendoHDF5( IHDF5Reader reader, FileInfos fileInfos )
     {
-        if ( reader.hasAttribute( "/" + fileInfos.h5DataSetName, "element_size_um" ) )
+        if ( reader.object().hasAttribute( "/" + fileInfos.h5DataSetName, "element_size_um" ) )
         {
             final double[] voxelSizeZYX = reader.float64().getArrayAttr( "/" + fileInfos.h5DataSetName, "element_size_um");
             double[] voxelSizeXYZ = new double[ 3 ];

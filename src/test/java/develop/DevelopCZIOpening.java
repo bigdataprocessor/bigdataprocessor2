@@ -30,27 +30,20 @@ package develop;
 
 import bdv.BigDataViewer;
 import bdv.tools.brightness.ConverterSetup;
-import bdv.util.BdvFunctions;
-import bdv.viewer.Source;
 import bdv.viewer.SourceAndConverter;
-import ch.epfl.biop.bdv.bioformats.bioformatssource.BioFormatsBdvOpener;
-import ch.epfl.biop.bdv.bioformats.command.OpenFilesWithBigdataviewerBioformatsBridgeCommand;
-import ch.epfl.biop.bdv.bioformats.export.spimdata.BioFormatsConvertFilesToSpimData;
-import de.embl.cba.bdv.utils.BdvUtils;
+import ch.epfl.biop.bdv.img.legacy.bioformats.BioFormatsBdvOpener;
+import ch.epfl.biop.bdv.img.legacy.bioformats.BioFormatsToSpimData;
+import ch.epfl.biop.bdv.img.legacy.bioformats.command.OpenFilesWithBigdataviewerBioformatsBridgeCommand;
 import loci.common.DebugTools;
 import mpicbg.spim.data.generic.AbstractSpimData;
 import mpicbg.spim.data.sequence.VoxelDimensions;
-import net.imagej.ImageJ;
 import net.imglib2.RandomAccessibleInterval;
-import org.renjin.gnur.api.R;
-import org.scijava.command.CommandModule;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 public class DevelopCZIOpening
 {
@@ -62,7 +55,7 @@ public class DevelopCZIOpening
 		bridgeCommand.usebioformatscacheblocksize = true;
 		BioFormatsBdvOpener opener = bridgeCommand.getOpener( new File( "/Volumes/cba/exchange/bigdataprocessor/data/czi/20180125CAGtdtomato_ERT2CreLuVeLu_notamox_03_Average_Subset.czi" ) );
 
-		AbstractSpimData< ? > spimData = BioFormatsConvertFilesToSpimData.getSpimData( opener );
+		AbstractSpimData< ? > spimData = BioFormatsToSpimData.getSpimData( opener );
 		//BdvFunctions.show( spimData );
 
 		Map viewDescriptions = spimData.getSequenceDescription().getViewDescriptions();
