@@ -88,7 +88,7 @@
 		<bigdataviewer-image-loaders.version>0.3.5</bigdataviewer-image-loaders.version>
 
 		<!-- EMBL CBA -->
-		<imaris-writer.version>0.2.3</imaris-writer.version>
+		<imaris-writer.version>1.0.6</imaris-writer.version>
 		<imagej-utils.version>0.6.9</imagej-utils.version>
 		<imagej-cluster.version>1.0.0</imagej-cluster.version>
 
