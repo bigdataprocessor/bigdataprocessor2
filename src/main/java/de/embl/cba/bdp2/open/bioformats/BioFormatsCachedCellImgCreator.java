@@ -28,14 +28,24 @@
  */
 package de.embl.cba.bdp2.open.bioformats;
 
+import bdv.BigDataViewer;
+import bdv.ViewerImgLoader;
+import bdv.img.cache.VolatileCachedCellImg;
+import bdv.img.cache.VolatileGlobalCellCache;
+import bdv.spimdata.WrapBasicImgLoader;
 import bdv.viewer.Source;
-import ch.epfl.biop.bdv.bioformats.BioFormatsMetaDataHelper;
-import ch.epfl.biop.bdv.bioformats.bioformatssource.BioFormatsBdvOpener;
-import ch.epfl.biop.bdv.bioformats.bioformatssource.BioFormatsBdvSource;
+import bdv.viewer.SourceAndConverter;
+import ch.epfl.biop.bdv.img.legacy.bioformats.BioFormatsBdvOpener;
+import ch.epfl.biop.bdv.img.legacy.bioformats.BioFormatsToSpimData;
+import ch.epfl.biop.bdv.img.legacy.bioformats.BioFormatsTools;
 import de.embl.cba.bdp2.open.CachedCellImgCreator;
+import loci.formats.IFormatReader;
+import loci.formats.MetadataTools;
+import loci.formats.meta.IMetadata;
+import mpicbg.spim.data.generic.AbstractSpimData;
+import mpicbg.spim.data.generic.sequence.AbstractSequenceDescription;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.cache.img.CachedCellImg;
-import net.imglib2.cache.img.DiskCachedCellImgOptions;
 import net.imglib2.cache.img.optional.CacheOptions;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ARGBType;
@@ -47,10 +57,9 @@ import ome.units.unit.Unit;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
 
 public class BioFormatsCachedCellImgCreator < R extends RealType< R > & NativeType< R > > implements CachedCellImgCreator< R >
 {
@@ -61,7 +70,7 @@ public class BioFormatsCachedCellImgCreator < R extends RealType< R > & NativeTy
 	private int[] cacheSize;
 	private ARGBType[] channelColors;
 	private double[] voxelSize = new double[3];
-	private final int seriesCount;
+	private int seriesCount;
 
 	public BioFormatsCachedCellImgCreator( String filePath, int series ) {
 
@@ -69,71 +78,72 @@ public class BioFormatsCachedCellImgCreator < R extends RealType< R > & NativeTy
 
 		BioFormatsBdvOpener opener = BioFormatsBdvOpener.getOpener()
 				.location( filePath )
-				.auto() // patches opener based on specific file formats (-> PR to be  modified)
-				//.splitRGBChannels() // split RGB channels into 3 channels
-				//.switchZandC(true) // switch Z and C
-				//.centerPositionConvention() // bioformats location is center of the image
-				.cornerPositionConvention() // bioformats location is corner of the image
-				//.useCacheBlockSizeFromBioFormats(true) // true by default
-				//.cacheBlockSize(512,512,10) // size of cache block used by diskcached image
-				.micrometer() // unit = micrometer
-				//.millimeter() // unit = millimeter
-				//.unit(UNITS.YARD) // Ok, if you really want...
-				//.getConcreteSources()
+				.auto()
+				.cornerPositionConvention()
+				.micrometer()
 				.cacheBounded( 100 ) // TODO : is this value ok ?
 				.positionReferenceFrameLength( new Length( 1, UNITS.MICROMETER ) ) // Compulsory
 				.voxSizeReferenceFrameLength( new Length( 1, UNITS.MICROMETER ) );
 
-		seriesCount = opener.getNewReader().getSeriesCount();
+		try ( IFormatReader reader = opener.getReaderPool().acquire() ) {
 
-		List< Source > sources;
-		try
-		{
-			sources = opener
-					.getConcreteSources( series + ".*" ) // code for all channels of the series indexed 'series'
-					.stream().map( src -> ( Source ) src ).collect( Collectors.toList() );
-		}
-		catch ( Exception e )
-		{
-			throw new RuntimeException( "Series index too large, please choose a smaller one!\n" + e );
-		}
+			IMetadata meta = (IMetadata) (reader.getMetadataStore());
 
-		List<BioFormatsBdvSource> sourcesBF = sources.stream().map(src ->
-				BioFormatsBdvSource.class.cast( src )
-		).collect(Collectors.toList());
+			seriesCount = opener.getNewReader().getSeriesCount();
 
-		BioFormatsBdvSource modelSource = sourcesBF.get(0);
-		RandomAccessibleInterval<R> modelRAI = sourcesBF.get(0).createSource(0,0);
+			AbstractSpimData<?> spimData = BioFormatsToSpimData.getSpimData(opener);
 
-		sizeX = modelRAI.dimension(0); // limited to 2GPixels in one dimension
-		sizeY = modelRAI.dimension(1);
-		sizeZ = modelRAI.dimension(2);
-		sizeC = sourcesBF.size();
-		sizeT = modelSource.numberOfTimePoints;
+			final AbstractSequenceDescription< ?, ?, ? > seq = spimData.getSequenceDescription();
+			final int numTimepoints = seq.getTimePoints().size();
+			final VolatileGlobalCellCache cache = ( VolatileGlobalCellCache ) ( (ViewerImgLoader) seq.getImgLoader() ).getCacheControl();
+			cache.clearCache();
 
-		channelColors = new ARGBType[sizeC];
+			WrapBasicImgLoader.wrapImgLoaderIfNecessary( spimData );
+			final ArrayList<SourceAndConverter< ? >> sources = new ArrayList<>();
+			BigDataViewer.initSetups( spimData, new ArrayList<>(), sources );
 
-		// TODO : sanity check identical size in XYZCT for all channels. Currently assuming selecting one series does the trick
-
-		List<RandomAccessibleInterval<R>> raisXYZCT = new ArrayList<>();
-
-		int[] cacheSizeXYZ = new int[3];
-
-		for (int iTime = 0; iTime<sizeT;iTime++) {
-			List<RandomAccessibleInterval<R>> raisXYZC = new ArrayList<>();
-			for (int iChannel = 0; iChannel<sizeC;iChannel++) {
-				BioFormatsBdvSource source = sourcesBF.get(iChannel);
-				channelColors[iChannel] = BioFormatsMetaDataHelper.getSourceColor(source);
-				raisXYZC.add(source.createSource(iTime,0));
-				source.getVoxelDimensions().dimensions(voxelSize);
+			// Count all the setups before the one of the series of interest
+			int firstSetup = 0;
+			for (int i = 0; i<series; i++) {
+				firstSetup+=meta.getChannelCount(i);
 			}
-			((CachedCellImg) raisXYZC.get(0)).getCellGrid().cellDimensions(cacheSizeXYZ);
-			raisXYZCT.add(Views.stack(raisXYZC));
+
+			RandomAccessibleInterval<R> modelRAI = (RandomAccessibleInterval<R>) sources.get(firstSetup).getSpimSource().getSource(0,0);
+
+			sizeX = modelRAI.dimension(0); // limited to 2GPixels in one dimension
+			sizeY = modelRAI.dimension(1);
+			sizeZ = modelRAI.dimension(2);
+			sizeC = meta.getChannelCount(series);
+			sizeT = numTimepoints;
+
+			channelColors = new ARGBType[sizeC];
+
+			// TODO : sanity check identical size in XYZCT for all channels. Currently assuming selecting one series does the trick
+
+			List<RandomAccessibleInterval<R>> raisXYZCT = new ArrayList<>();
+
+			int[] cacheSizeXYZ = new int[3];
+
+			for (int iTime = 0; iTime<sizeT;iTime++) {
+				List<RandomAccessibleInterval<R>> raisXYZC = new ArrayList<>();
+				for (int iChannel = 0; iChannel<sizeC;iChannel++) {
+					Source<R> source = (Source<R>) sources.get(firstSetup+iChannel).getSpimSource();
+					channelColors[iChannel] = BioFormatsTools.getColorFromMetadata(meta, series, iChannel);
+					raisXYZC.add(source.getSource(iTime,0));
+					source.getVoxelDimensions().dimensions(voxelSize);
+				}
+				((VolatileCachedCellImg) raisXYZC.get(0)).getCellGrid().cellDimensions(cacheSizeXYZ);
+				raisXYZCT.add(Views.stack(raisXYZC));
+			}
+
+			cacheSize = new int[]{cacheSizeXYZ[0], cacheSizeXYZ[1], cacheSizeXYZ[2],1,1};
+
+			raiXYCZT = Views.stack( raisXYZCT );
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-
-		cacheSize = new int[]{cacheSizeXYZ[0], cacheSizeXYZ[1], cacheSizeXYZ[2],1,1};
-
-		raiXYCZT = Views.stack( raisXYZCT );
 	}
 
 	@Override

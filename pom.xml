@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.scijava</groupId>
 		<artifactId>pom-scijava</artifactId>
-		<version>31.1.0</version>
+		<version>33.2.0</version>
 	</parent>
 	<groupId>de.embl.cba</groupId>
 	<artifactId>bigDataProcessor2</artifactId>
@@ -84,18 +84,12 @@
 		<license.licenseName>bsd_2</license.licenseName>
 		<license.copyrightOwners>EMBL</license.copyrightOwners>
 
-		<!-- Java 8	Update Site	-->
-		<imglib2.version>5.12.0</imglib2.version>
-		<imglib2-cache.version>1.0.0-beta-16</imglib2-cache.version>
-		<bigdataviewer-core.version>10.2.1</bigdataviewer-core.version>
-		<bigdataviewer-vistools.version>1.0.0-beta-29</bigdataviewer-vistools.version>
-
 		<!-- BIOP -->
-		<bigdataviewer-bioformats.version>0.2.22</bigdataviewer-bioformats.version>
+		<bigdataviewer-image-loaders.version>0.3.5</bigdataviewer-image-loaders.version>
 
 		<!-- EMBL CBA -->
-		<imaris-writer.version>0.2.3</imaris-writer.version>
-		<imagej-utils.version>0.6.4</imagej-utils.version>
+		<imaris-writer.version>1.0.6</imaris-writer.version>
+		<imagej-utils.version>0.6.9</imagej-utils.version>
 		<imagej-cluster.version>1.0.0</imagej-cluster.version>
 
 		<!-- NB: Deploy releases to the SciJava Maven repository. -->
@@ -112,27 +106,23 @@
 		<dependency>
 			<groupId>net.imglib2</groupId>
 			<artifactId>imglib2</artifactId>
-			<version>${imglib2.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>net.imglib2</groupId>
 			<artifactId>imglib2-cache</artifactId>
-			<version>${imglib2-cache.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>ch.epfl.biop</groupId>
-			<artifactId>bigdataviewer-bioformats</artifactId>
-			<version>${bigdataviewer-bioformats.version}</version>
+			<artifactId>bigdataviewer-image-loaders</artifactId>
+			<version>${bigdataviewer-image-loaders.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>sc.fiji</groupId>
 			<artifactId>bigdataviewer-core</artifactId>
-			<version>${bigdataviewer-core.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>sc.fiji</groupId>
 			<artifactId>bigdataviewer-vistools</artifactId>
-			<version>${bigdataviewer-vistools.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>sc.fiji</groupId>

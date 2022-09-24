@@ -28,7 +28,6 @@
  */
 package de.embl.cba.bdp2.save.hdf5;
 
-import ch.systemsx.cisd.hdf5.hdf5lib.HDF5Constants;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.open.fileseries.FileInfos;
 import de.embl.cba.bdp2.log.Logger;
@@ -37,8 +36,9 @@ import de.embl.cba.bdp2.save.SaveUtils;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.Utils;
-import ncsa.hdf.hdf5lib.H5;
-import ncsa.hdf.hdf5lib.exceptions.HDF5Exception;
+import hdf.hdf5lib.H5;
+import hdf.hdf5lib.HDF5Constants;
+import hdf.hdf5lib.exceptions.HDF5Exception;
 import net.imagej.ImgPlus;
 import net.imagej.axis.Axes;
 import net.imglib2.RandomAccess;
@@ -59,7 +59,13 @@ import net.imglib2.view.Views;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static ch.systemsx.cisd.hdf5.hdf5lib.HDF5Constants.*;
+import static hdf.hdf5lib.HDF5Constants.H5F_ACC_TRUNC;
+import static hdf.hdf5lib.HDF5Constants.H5P_DATASET_CREATE;
+import static hdf.hdf5lib.HDF5Constants.H5P_DEFAULT;
+import static hdf.hdf5lib.HDF5Constants.H5T_NATIVE_FLOAT;
+import static hdf.hdf5lib.HDF5Constants.H5T_NATIVE_UINT16;
+import static hdf.hdf5lib.HDF5Constants.H5T_NATIVE_UINT32;
+import static hdf.hdf5lib.HDF5Constants.H5T_NATIVE_UINT8;
 import static java.lang.Long.min;
 
 @Deprecated
@@ -73,10 +79,10 @@ public class SaveImageAsHDF5Stacks < R extends RealType< R > & NativeType< R > >
     private int nCols;
     private String dataset;
     private int compressionLevel;
-    private int fileId = -1;
-    private int dataspaceId = -1;
-    private int datasetId = -1;
-    private int dcplId = -1;
+    private long fileId = -1;
+    private long dataspaceId = -1;
+    private long datasetId = -1;
+    private long dcplId = -1;
     private final long[] maxDims = {
             HDF5Constants.H5S_UNLIMITED,
             HDF5Constants.H5S_UNLIMITED,
@@ -271,7 +277,7 @@ public class SaveImageAsHDF5Stacks < R extends RealType< R > & NativeType< R > >
         }
     }
 
-    private void writeIndividualChannels( ImgPlus< R > imgBinned, int hdf5DataType) {
+    private void writeIndividualChannels( ImgPlus< R > imgBinned, long hdf5DataType) {
 
         long[] channelDims = new long[RANK];
         channelDims[0] = nZ; //z
@@ -334,7 +340,7 @@ public class SaveImageAsHDF5Stacks < R extends RealType< R > & NativeType< R > >
         Logger.info("Finished writing the HDF5_STACKS.");
     }
 
-    private <E> void writeHyperslabs(int hdf5DataType, E[][] pixelsSlice, long[] start, long[] colorIniDims) {
+    private <E> void writeHyperslabs( long hdf5DataType, Object[][] pixelsSlice, long[] start, long[] colorIniDims) {
         if (stop.get()) {
             savingSettings.saveProjections = false;
             Logger.progress("Stopped save thread @ writeHyperslabs: ", "" + current_t);
@@ -344,7 +350,7 @@ public class SaveImageAsHDF5Stacks < R extends RealType< R > & NativeType< R > >
         try {
             dataspaceId = H5.H5Dget_space(datasetId);
             H5.H5Sselect_hyperslab(dataspaceId, HDF5Constants.H5S_SELECT_SET, start, null, colorIniDims, null);
-            int memSpace = H5.H5Screate_simple(RANK, colorIniDims, null);
+            long memSpace = H5.H5Screate_simple(RANK, colorIniDims, null);
             H5.H5Dwrite(datasetId, hdf5DataType, memSpace, dataspaceId, H5P_DEFAULT, pixelsSlice);
         } catch (HDF5Exception e) {
             Logger.error("Error while writing extended hyperslabs." + e.getMessage());

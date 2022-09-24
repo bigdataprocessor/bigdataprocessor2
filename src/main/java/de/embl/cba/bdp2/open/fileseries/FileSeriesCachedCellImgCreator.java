@@ -28,12 +28,11 @@
  */
 package de.embl.cba.bdp2.open.fileseries;
 
-import ch.epfl.biop.bdv.bioformats.BioFormatsMetaDataHelper;
+import ch.epfl.biop.bdv.img.legacy.bioformats.BioFormatsTools;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.open.CacheUtils;
 import de.embl.cba.bdp2.open.CachedCellImgCreator;
 import net.imglib2.cache.img.CachedCellImg;
-import net.imglib2.cache.img.DiskCachedCellImgOptions;
 import net.imglib2.cache.img.ReadOnlyCachedCellImgFactory;
 import net.imglib2.cache.img.ReadOnlyCachedCellImgOptions;
 import net.imglib2.cache.img.optional.CacheOptions;
@@ -71,7 +70,7 @@ public class FileSeriesCachedCellImgCreator< R extends RealType< R > & NativeTyp
     {
         try
         {
-            this.voxelUnit = BioFormatsMetaDataHelper.getUnitFromString( fileInfos.voxelUnit );
+            this.voxelUnit = BioFormatsTools.getUnitFromString( fileInfos.voxelUnit );
         } catch ( Exception e )
         {
             Logger.warn( "Could not convert voxel size " + fileInfos.voxelUnit + " into BioFormats' Unit< Length >.");

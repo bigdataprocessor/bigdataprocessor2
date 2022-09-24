@@ -28,7 +28,7 @@
  */
 package de.embl.cba.bdp2.process.calibrate;
 
-import ch.epfl.biop.bdv.bioformats.BioFormatsMetaDataHelper;
+import ch.epfl.biop.bdv.img.legacy.bioformats.BioFormatsTools;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
@@ -87,7 +87,7 @@ public class CalibrationDialog< R extends RealType< R > & NativeType< R > >
 		if ( genericDialog.wasCanceled() ) return null;
 
 		String unitChoice = genericDialog.getNextChoice();
-		Unit< Length > unit = BioFormatsMetaDataHelper.getUnitFromString( unitChoice );
+		Unit< Length > unit = BioFormatsTools.getUnitFromString( unitChoice );
 		voxelDimension[ 0 ] = genericDialog.getNextNumber();
 		voxelDimension[ 1 ] = genericDialog.getNextNumber();
 		voxelDimension[ 2 ] = genericDialog.getNextNumber();
