@@ -73,6 +73,8 @@
 		<system>None</system>
 	</ciManagement>
 
+	<!-- ../scijava-scripts/release-version.sh - -skip-version-check-->
+	<!-- mvn javadoc:javadoc -Denforcer.skip -->
 	<!-- mvn javadoc:javadoc -Denforcer.skip -->
 	<!-- mvn test -Denforcer.skip -->
 	<!-- mvn clean compile -Denforcer.skip -->
