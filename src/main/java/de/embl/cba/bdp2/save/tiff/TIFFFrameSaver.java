@@ -336,15 +336,15 @@ public class TIFFFrameSaver< R extends RealType< R > & NativeType< R > > impleme
             return;
         }
 
-        // The FileTIFFSaverFromImageJ has a minimal modification
+        // The ImageJTIFFSaver has a minimal modification
         // compared to the FileSaver, which that makes it much faster
         // for virtual stacks; see commented line in the saveAsTIFFStack()
         // function
-        FileTIFFSaverFromImageJ fileSaver = new FileTIFFSaverFromImageJ( imp );
+        ImageJTIFFSaver fileSaver = new ImageJTIFFSaver( imp );
         String pathCT = getFullPath( path, sC, sT, ".tif" );
 
         Logger.debug( "Saving " + pathCT );
-        fileSaver.saveAsTIFFStack( pathCT );
+        fileSaver.saveAsTIFF( pathCT );
     }
 
     private String getFullPath( String path, String sC, String sT, String suffix )

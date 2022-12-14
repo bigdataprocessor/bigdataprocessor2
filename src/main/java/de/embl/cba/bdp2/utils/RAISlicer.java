@@ -98,9 +98,22 @@ public class RAISlicer
 				c,
 				t };
 
-		RandomAccessibleInterval< R > raiXYZ =
-				Views.dropSingletonDimensions(
-						Views.interval( raiXYZCT, minInterval, maxInterval ) );
+		final IntervalView< R > intervalView = Views.interval( raiXYZCT, minInterval, maxInterval );
+
+		RandomAccessibleInterval< R > raiXYZ = dropChannelAndTimeSingletonDimensions( intervalView );
+
+		return raiXYZ;
+	}
+
+	public static < R extends RealType< R > & NativeType< R > > RandomAccessibleInterval< R > dropChannelAndTimeSingletonDimensions( RandomAccessibleInterval< R > rai )
+	{
+		// drop C and T singleton dimensions
+		RandomAccessibleInterval< R > raiXYZ = Views.dropSingletonDimensions( rai );
+
+		// but we need the z dimension
+		// thus add this back if needed
+		if ( raiXYZ.numDimensions() == 2 )
+			raiXYZ = Views.addDimension( raiXYZ, 0, 0 );
 
 		return raiXYZ;
 	}
@@ -155,8 +168,8 @@ public class RAISlicer
 				c,
 				t };
 
-		final IntervalView< R > interval = Views.interval( raiXYZCT, minInterval, maxInterval );
-		RandomAccessibleInterval< R > raiXYZ = Views.dropSingletonDimensions( interval );
+		RandomAccessibleInterval< R > raiXYZ = dropChannelAndTimeSingletonDimensions( Views.interval( raiXYZCT, minInterval, maxInterval ) );
+
 
 		// force into RAM
 		raiXYZ = copyVolumeRAI( raiXYZ, numThreads, type );

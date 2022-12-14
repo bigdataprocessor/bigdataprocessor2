@@ -52,7 +52,7 @@ import static ij.io.FileSaver.getOverlay;
 // This is a copy of the class
 // FileSaver from ImageJ with only one slight modification (see NOTE below).
 //
-public class FileTIFFSaverFromImageJ
+public class ImageJTIFFSaver
 {
 	static {LegacyInjector.preinit();}
 
@@ -69,7 +69,7 @@ public class FileTIFFSaverFromImageJ
 	private String directory;
 	private boolean saveName;
 
-	public FileTIFFSaverFromImageJ( ImagePlus imp) {
+	public ImageJTIFFSaver( ImagePlus imp) {
 		this.imp = imp;
 		fi = imp.getFileInfo();
 	}

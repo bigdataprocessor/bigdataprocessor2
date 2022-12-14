@@ -30,6 +30,7 @@ package de.embl.cba.bdp2.track;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.imglib2.LazyStackView;
+import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.RAISlicer;
 import net.imglib2.Interval;
 import net.imglib2.RandomAccessible;
@@ -57,25 +58,27 @@ public class TrackApplier< R extends RealType< R > & NativeType< R > >
 	public Image< R > applyTrack( Track track )
 	{
 		final ArrayList< RandomAccessibleInterval< R > > timePoints = new ArrayList<>();
-
-		RandomAccessibleInterval< R > volumeView = RAISlicer.getVolumeView( image.getRai(), 0, 0 );
-
-		Interval union = createUnion( track, volumeView );
-
-		final R zero = image.getType().createVariable();
+		RandomAccessibleInterval< R > volume = RAISlicer.getVolumeView( this.image.getRai(), 0, 0 );
+		Interval union = createUnion( track, volume );
+		final R zero = this.image.getType().createVariable();
 		zero.setZero();
 		final OutOfBoundsConstantValueFactory< R, RandomAccessibleInterval< R > > zeroValueFactory = new OutOfBoundsConstantValueFactory<>( zero );
 
 		for (int t = track.tMin(); t <= track.tMax(); ++t)
 		{
 			final ArrayList< RandomAccessibleInterval< R > > channels = new ArrayList<>();
-			// TODO: Can I shift the channels together
-			for ( int c = 0; c < image.getNumChannels(); c++ )
+			// TODO: Can I shift the channels together?
+			for ( int c = 0; c < this.image.getNumChannels(); c++ )
 			{
-				volumeView = RAISlicer.getVolumeView( image.getRai(), c, t );
+				volume = RAISlicer.getVolumeView( this.image.getRai(), c, t );
 
-				RandomAccessible< R > extendBorder = new ExtendedRandomAccessibleInterval<>( volumeView, zeroValueFactory );
-				RandomAccessible< R > translate = Views.translate( extendBorder, getTranslation( track, t ) );
+				RandomAccessible< R > extendBorder = new ExtendedRandomAccessibleInterval<>( volume, zeroValueFactory );
+				final long[] translation = getTranslation( track, t, volume.numDimensions() );
+				if ( this.image.getDimensionsXYZCT()[ DimensionOrder.Z ] == 1 )
+				{
+					int a = 1;
+				}
+				RandomAccessible< R > translate = Views.translate( extendBorder, translation );
 				final IntervalView< R > intervalView = Views.interval( translate, union );
 
 				channels.add( intervalView );
@@ -86,18 +89,19 @@ public class TrackApplier< R extends RealType< R > & NativeType< R > >
 
 		final RandomAccessibleInterval< R > trackView = new LazyStackView<>( timePoints );
 
-		final Image< R > trackViewImage = new Image<>( image );
+		final Image< R > trackViewImage = new Image<>( this.image );
 		trackViewImage.setRai( trackView );
-		trackViewImage.setName( image.getName() + "-track" );
+		trackViewImage.setName( this.image.getName() + "-track" );
 		return trackViewImage;
 	}
 
-	private static < R extends RealType< R > & NativeType< R > > Interval createUnion( Track track, RandomAccessibleInterval< R > volume )
+	// create an interval that encompasses all translated images
+	private static < R extends RealType< R > & NativeType< R > > Interval createUnion( Track track, RandomAccessibleInterval< R > image )
 	{
 		Interval union = null;
 		for (int t = track.tMin(); t < track.tMax(); ++t)
 		{
-			Interval translateInterval = Views.translate( volume, getTranslation( track, t ) );
+			Interval translateInterval = Views.translate( image, getTranslation( track, t, image.numDimensions() ) );
 			if ( union == null )
 				union = translateInterval;
 			else
@@ -106,10 +110,10 @@ public class TrackApplier< R extends RealType< R > & NativeType< R > >
 		return union;
 	}
 
-	private static long[] getTranslation( Track track, int t )
+	private static long[] getTranslation( Track track, int t, int numDimensions )
 	{
 		final long[] voxelPosition = track.getVoxelPosition( t );
-		final long[] shifts = Arrays.stream( voxelPosition ).map( x -> -x ).toArray();
-		return shifts;
+		final long[] shift = Arrays.stream( voxelPosition ).map( x -> -x ).limit( numDimensions ).toArray();
+		return shift;
 	}
 }
