@@ -13,7 +13,7 @@
 <!--	1.4.10-SNAPSHOT-->
 	<groupId>de.embl.cba</groupId>
 	<artifactId>bigDataProcessor2</artifactId>
-	<version>1.4.9</version>
+	<version>1.5.0</version>
 	<url>https://github.com/bigdataprocessor/bigdataprocessor2</url>
 	<name>BigDataProcessor2</name>
 	<description>Fiji plugin for inspection and processing of big image data</description>
