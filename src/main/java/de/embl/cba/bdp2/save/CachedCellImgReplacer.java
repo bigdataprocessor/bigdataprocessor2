@@ -173,7 +173,7 @@ public class CachedCellImgReplacer< T extends Type< T > & NativeType< T >, S ext
 						= new ConvertedRandomAccessibleInterval(
 								replace,
 								converter,
-								destinationType );
+								destinationType::copy );
 
 				return converted;
 			}
@@ -183,7 +183,7 @@ public class CachedCellImgReplacer< T extends Type< T > & NativeType< T >, S ext
 						= new ConvertedRandomAccessibleInterval(
 								replace,
 								converter,
-								destinationType );
+								destinationType::copy );
 
 				return converted;
 			}
