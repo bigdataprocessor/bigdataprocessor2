@@ -7,7 +7,7 @@
 		<version>36.0.0</version>
 	</parent>
 
-	<!-- ../scijava-scripts/release-version.sh - -skip-version-check-->
+	<!-- ../scijava-scripts/release-version.sh - -skip-version-check  --skip-license-update -->
 	<!-- mvn clean install -Dscijava.app.directory=/Users/tischer/Desktop/Fiji/Fiji-bdp2.app -->
 
 	<groupId>de.embl.cba</groupId>
