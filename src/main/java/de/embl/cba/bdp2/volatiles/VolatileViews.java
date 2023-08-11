@@ -55,6 +55,7 @@ import net.imglib2.cache.volatiles.VolatileCache;
 import net.imglib2.converter.Converter;
 import net.imglib2.converter.read.ConvertedRandomAccessibleInterval;
 import net.imglib2.img.basictypeaccess.AccessFlags;
+import net.imglib2.img.basictypeaccess.DataAccess;
 import net.imglib2.img.basictypeaccess.volatiles.VolatileArrayDataAccess;
 import net.imglib2.img.cell.Cell;
 import net.imglib2.img.cell.CellGrid;
@@ -101,7 +102,6 @@ public class VolatileViews
 			final SharedQueue queue,
 			final CacheHints hints )
 	{
-		@SuppressWarnings( "unchecked" )
 		final VolatileViewData< T, V > viewData =
 				wrapAsVolatileViewData( rai, queue, hints );
 		return new VolatileRandomAccessibleIntervalView<>( viewData );
@@ -213,7 +213,7 @@ public class VolatileViews
 			final VolatileViewData< T, V > vViewData =
 					wrapAsVolatileViewData( view.getSource(), queue, hints );
 
-			final S destinationType = view.getDestinationType();
+			final S destinationType = view.getDestinationSupplier().get();
 
 			final NativeType< ? > volatileDestinationType =
 					VolatileTypeMatcher.getVolatileTypeForType( destinationType );
@@ -221,7 +221,7 @@ public class VolatileViews
 			final RandomAccessibleInterval< V > vRAI =
 					( RandomAccessibleInterval< V > ) vViewData.getImg();
 
-			final Converter< ? super T, ? super S > converter = view.getConverter();
+			final Converter< ? super T, ? super S > converter = view.getConverterSupplier().get();
 
 			if ( converter instanceof NeighborhoodAverageConverter )
 			{
@@ -232,7 +232,7 @@ public class VolatileViews
 						= new ConvertedRandomAccessibleInterval(
 						vRAI,
 						vConverter,
-						volatileDestinationType );
+						volatileDestinationType::copy );
 
 				final VolatileViewData volatileViewData = new VolatileViewData(
 						converted,
@@ -258,7 +258,7 @@ public class VolatileViews
 						= new ConvertedRandomAccessibleInterval(
 						vRAI,
 						volatileConverter,
-						volatileDestinationType );
+						volatileDestinationType::copy );
 
 				final VolatileViewData volatileViewData = new VolatileViewData(
 						converted,
@@ -394,14 +394,11 @@ public class VolatileViews
 		final RandomAccess< V > vRandomAccess = vRAI.randomAccess();
 
 		// TODO: make more general
-		if ( vRandomAccess instanceof RectangleNeighborhoodRandomAccess )
-			return true;
-		else
-			return false;
+        return vRandomAccess instanceof RectangleNeighborhoodRandomAccess;
 	}
 
 	@SuppressWarnings( "unchecked" )
-	private static < T extends NativeType< T >, V extends Volatile< T > & NativeType< V >, A > VolatileViewData< T, V > wrapCachedCellImg(
+	private static < T extends NativeType< T >, V extends Volatile< T > & NativeType< V >, A extends DataAccess> VolatileViewData< T, V > wrapCachedCellImg(
 			final CachedCellImg< T, A > cachedCellImg,
 			SharedQueue queue,
 			CacheHints hints )
@@ -436,7 +433,6 @@ public class VolatileViews
 	{
 		final CreateInvalid< Long, Cell< A > > createInvalid = CreateInvalidVolatileCell.get( grid, type, dirty );
 		final VolatileCache< Long, Cell< A > > volatileCache = new WeakRefVolatileCache<>( cache, queue, createInvalid );
-		final VolatileCachedCellImg< T, A > volatileImg = new VolatileCachedCellImg<>( grid, type, hints, volatileCache.unchecked()::get );
-		return volatileImg;
+        return new VolatileCachedCellImg<>( grid, type, hints, volatileCache );
 	}
 }
