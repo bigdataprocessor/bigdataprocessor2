@@ -71,8 +71,7 @@ public class VolatileCachedCellImgs
 				new SoftRefLoaderCache< Long, Cell< VolatileFloatArray > >().withLoader( loader ),
 				new VolatileFloatArray( 1, true ) );
 
-		final IntervalView< FloatType > translate = Views.translate( cachedCellImg, min );
-		return translate;
+        return Views.translate( cachedCellImg, min );
 	}
 
 	public static RandomAccessibleInterval< UnsignedShortType > asVolatileShortTypeCachedCellImg( RandomAccessibleInterval< UnsignedShortType > rai, CellGrid grid )
@@ -84,14 +83,13 @@ public class VolatileCachedCellImgs
 				Views.zeroMin( rai ),
 				AccessFlags.setOf( AccessFlags.VOLATILE ) );
 
-		final CachedCellImg< UnsignedShortType, VolatileShortArray > cachedCellImg = new CachedCellImg(
+		final CachedCellImg< UnsignedShortType, VolatileShortArray > cachedCellImg = new CachedCellImg<>(
 				grid,
 				new UnsignedShortType(),
 				new SoftRefLoaderCache< Long, Cell< VolatileShortArray > >().withLoader( loader ),
 				new VolatileShortArray( 1, true ) );
 
-		final IntervalView< UnsignedShortType > translate = Views.translate( cachedCellImg, min );
-		return translate;
+        return Views.translate( cachedCellImg, min );
 	}
 
 	public static RandomAccessibleInterval< UnsignedByteType > asVolatileByteTypeCachedCellImg( RandomAccessibleInterval< UnsignedByteType > rai, CellGrid grid )

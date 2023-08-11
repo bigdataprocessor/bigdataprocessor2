@@ -30,7 +30,11 @@ package de.embl.cba.bdp2.volatiles;
 
 import bdv.img.cache.CreateInvalidVolatileCell;
 import bdv.img.cache.VolatileCachedCellImg;
-import bdv.util.volatiles.*;
+import bdv.cache.SharedQueue;
+import bdv.util.volatiles.VolatileRandomAccessibleIntervalView;
+import bdv.util.volatiles.VolatileRandomAccessibleView;
+import bdv.util.volatiles.VolatileTypeMatcher;
+import bdv.util.volatiles.VolatileViewData;
 import de.embl.cba.bdp2.devel.register.HypersliceTransformProvider;
 import de.embl.cba.bdp2.devel.register.TransformedStackView;
 import de.embl.cba.lazyalgorithm.converter.NeighborhoodAverageConverter;
@@ -143,14 +147,8 @@ public class VolatileViews
 		if ( rai instanceof CachedCellImg )
 		{
 			@SuppressWarnings( "rawtypes" )
-			final Object o = wrapCachedCellImg( ( CachedCellImg ) rai, queue, hints );
-			/*
-			 * Need to assign to a Object first to satisfy Eclipse... Otherwise
-			 * the following "unnecessary cast" will be removed, followed by
-			 * compile error. Proposed solution: Add cast. Doh...
-			 */
-			final VolatileViewData< T, V > viewData = ( VolatileViewData< T, V > ) o;
-			return viewData;
+			final VolatileViewData< T, V > volatileViewData = wrapCachedCellImg( ( CachedCellImg ) rai, queue, hints );
+            return volatileViewData;
 		}
 		else if ( rai instanceof IntervalView )
 		{
@@ -158,13 +156,11 @@ public class VolatileViews
 			final VolatileViewData< T, V > sourceData =
 					wrapAsVolatileViewData( view.getSource(), queue, hints );
 
-			final VolatileViewData< T, V > volatileViewData = new VolatileViewData<>(
+            return new VolatileViewData<>(
 					new IntervalView<>( sourceData.getImg(), view ),
 					sourceData.getCacheControl(),
 					sourceData.getType(),
 					sourceData.getVolatileType() );
-
-			return volatileViewData;
 		}
 		else if ( rai instanceof MixedTransformView )
 		{
@@ -173,13 +169,11 @@ public class VolatileViews
 			final VolatileViewData< T, V > sourceData =
 					wrapAsVolatileViewData( view.getSource(), queue, hints );
 
-			final VolatileViewData< T, V > volatileViewData = new VolatileViewData<>(
+            return new VolatileViewData<>(
 					new MixedTransformView<>( sourceData.getImg(), view.getTransformToSource() ),
 					sourceData.getCacheControl(),
 					sourceData.getType(),
 					sourceData.getVolatileType() );
-
-			return volatileViewData;
 		}
 		else if ( rai instanceof SubsampleIntervalView )
 		{

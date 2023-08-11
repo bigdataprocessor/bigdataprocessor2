@@ -45,7 +45,7 @@ import static de.embl.cba.bdp2.open.NamingSchemes.T;
 
 public class TestOpenLuxendo
 {
-    private static Image image;
+    private static Image< ? > image;
 
     public static void main( String[] args)
     {
