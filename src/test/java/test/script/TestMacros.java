@@ -45,7 +45,6 @@ public class TestMacros
 	@Test
 	public void runMacro00() throws FileNotFoundException, ScriptException
 	{
-		// start ImageJ
 		ImageJ ij = new ImageJ();
 
 		ij.script().run(new File("scripts/rename-channels-silent.ijm"), false);
