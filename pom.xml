@@ -8,7 +8,7 @@
 	</parent>
 
 	<!-- ../scijava-scripts/release-version.sh - -skip-version-check -->
-	<!-- mvn clean install -Dscijava.app.directory=/Users/tischer/Desktop/Fiji/Fiji-bdp2.app -->
+	<!-- mvn clean install -Dscijava.app.directory=/Users/christiantischer/Desktop/Fiji/Fiji-BDP2.app -->
 
 	<groupId>de.embl.cba</groupId>
 	<artifactId>bigDataProcessor2</artifactId>
