@@ -26,29 +26,20 @@
  * POSSIBILITY OF SUCH DAMAGE.
  * #L%
  */
-package de.embl.cba.bdp2.show;
+package de.embl.cba.bdp2.misc;
 
-import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.BigDataProcessor2Menu;
 import de.embl.cba.bdp2.dialog.DialogUtils;
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.bdp2.process.AbstractImageProcessingCommand;
-import de.embl.cba.bdp2.process.crop.CropCommand;
 import de.embl.cba.bdp2.record.ScriptRecorder;
-import de.embl.cba.bdp2.service.ImageService;
 import de.embl.cba.bdp2.utils.Utils;
-import de.embl.cba.bdp2.viewer.ImageViewer;
-import net.imglib2.FinalInterval;
-import net.imglib2.Interval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
-import net.imglib2.util.Intervals;
-import org.apache.commons.lang.ArrayUtils;
 import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
-@Plugin(type = ShowAsHyperstackCommand.class, name = ShowAsHyperstackCommand.COMMAND_NAME, menuPath = DialogUtils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + "Commands>" + ShowAsHyperstackCommand.COMMAND_FULL_NAME )
+@Plugin(type = ShowAsHyperstackCommand.class, name = ShowAsHyperstackCommand.COMMAND_NAME, menuPath = DialogUtils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + "Commands>Misc>" + ShowAsHyperstackCommand.COMMAND_FULL_NAME )
 public class ShowAsHyperstackCommand< R extends RealType< R > & NativeType< R > > implements Command
 {
     public static final String COMMAND_NAME = "Show as Hyperstack...";
