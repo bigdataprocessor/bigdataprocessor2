@@ -58,7 +58,7 @@ public class BigDataProcessor2Menu extends JMenu
     public static final String LOG = "Configure Logging...";
 
     // Menu items
-    public static final String IMAGEJ_VIEW_MENU_ITEM = "Show in Hyperstack Viewer";
+    public static final String SHOW_AS_HYPERSTACK_MENU_ITEM = "Show in Hyperstack Viewer";
     public static final String REGISTER_VOLUME_SIFT_MENU_ITEM = "Correct Lateral Slice Drift in Volume (SIFT)...";
     public static final String REGISTER_MOVIE_SIFT_MENU_ITEM = "Correct Lateral Frame Drift in Time-lapse (SIFT)...";
     public static final String REGISTER_MOVIE_PHASE_CORRELATION_MENU_ITEM = "Correct Lateral Frame Drift in Time-lapse (X-Corr)...";
@@ -128,7 +128,7 @@ public class BigDataProcessor2Menu extends JMenu
 
 
         menus.add( miscMenu );
-        addMenuItem( miscMenu, IMAGEJ_VIEW_MENU_ITEM );
+        addMenuItem( miscMenu, SHOW_AS_HYPERSTACK_MENU_ITEM );
         addMenuItem( miscMenu, LOG );
     }
 

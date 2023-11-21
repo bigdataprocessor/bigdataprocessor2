@@ -50,6 +50,7 @@ import de.embl.cba.bdp2.save.ImageSaver;
 import de.embl.cba.bdp2.save.ImageSaverFactory;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.service.ImageViewerService;
+import de.embl.cba.bdp2.show.ShowAsHyperstackCommand;
 import de.embl.cba.bdp2.track.Track;
 import de.embl.cba.bdp2.track.TrackApplier;
 import de.embl.cba.bdp2.track.Tracks;
@@ -341,4 +342,10 @@ public class BigDataProcessor2
 
         return viewer;
     }
+
+    public static < R extends RealType< R > & NativeType< R > > void showImageAsHyperstack( Image< R > image )
+    {
+        ShowAsHyperstackCommand.show( image );
+    }
+
 }

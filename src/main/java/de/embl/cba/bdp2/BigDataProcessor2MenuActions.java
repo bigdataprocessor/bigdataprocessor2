@@ -42,6 +42,7 @@ import de.embl.cba.bdp2.process.crop.CropDialog;
 import de.embl.cba.bdp2.open.samples.DownloadAndOpenSampleDataCommand;
 import de.embl.cba.bdp2.dialog.DialogUtils;
 import de.embl.cba.bdp2.save.SaveFileType;
+import de.embl.cba.bdp2.show.ShowAsHyperstackCommand;
 import de.embl.cba.bdp2.track.ApplyTrackCommand;
 import de.embl.cba.bdp2.track.TrackCreator;
 import de.embl.cba.bdp2.process.rename.ImageRenameCommand;
@@ -220,11 +221,14 @@ public class BigDataProcessor2MenuActions implements ActionListener {
                 new CropDialog<>( viewer );
             });
         }
-        else if(e.getActionCommand().equalsIgnoreCase( BigDataProcessor2Menu.IMAGEJ_VIEW_MENU_ITEM ))
+        else if(e.getActionCommand().equalsIgnoreCase( BigDataProcessor2Menu.SHOW_AS_HYPERSTACK_MENU_ITEM ))
         {
             BigDataProcessor2.threadPool.submit(() -> {
                 if (! isImageSelected( viewer ) ) return;
-                Utils.asImagePlus( viewer.getImage() ).show();
+                ShowAsHyperstackCommand< ? > command = new ShowAsHyperstackCommand();
+                command.inputImage = viewer.getImage();
+                command.run();
+
             });
         }
         else if(e.getActionCommand().equalsIgnoreCase( MultiChannelUnsignedByteTypeConverterCommand.COMMAND_NAME ))
