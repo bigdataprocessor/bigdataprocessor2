@@ -224,10 +224,8 @@ public class BigDataProcessor2MenuActions implements ActionListener {
         {
             BigDataProcessor2.threadPool.submit(() -> {
                 if (! isImageSelected( viewer ) ) return;
-                ShowAsHyperstackCommand< ? > command = new ShowAsHyperstackCommand();
-                command.inputImage = viewer.getImage();
-                command.run();
-
+                ShowAsHyperstackCommand.recordMacro( viewer.getImage() );
+                ShowAsHyperstackCommand.show( viewer.getImage() );
             });
         }
         else if(e.getActionCommand().equalsIgnoreCase( MultiChannelUnsignedByteTypeConverterCommand.COMMAND_NAME ))

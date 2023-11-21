@@ -57,7 +57,6 @@ public class ShowAsHyperstackCommand< R extends RealType< R > & NativeType< R > 
     public void run()
     {
         show( inputImage );
-        recordMacro( inputImage );
     }
 
     public static void show( Image< ? > image )
@@ -65,11 +64,11 @@ public class ShowAsHyperstackCommand< R extends RealType< R > & NativeType< R > 
         Utils.asImagePlus( image ).show();
     }
 
-    private void recordMacro( Image< R > inputImage )
+    public static void recordMacro( Image< ? > inputImage )
     {
-        final ScriptRecorder recorder = new ScriptRecorder( this.COMMAND_FULL_NAME, inputImage );
+        final ScriptRecorder recorder = new ScriptRecorder( ShowAsHyperstackCommand.COMMAND_FULL_NAME, inputImage );
         recorder.setBDP2FunctionName( "showImageAsHyperstack" );
-        recorder.addAPIFunctionPrequelComment( this.COMMAND_NAME );
+        recorder.addAPIFunctionPrequelComment( ShowAsHyperstackCommand.COMMAND_NAME );
         recorder.record();
     }
 }
