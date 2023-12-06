@@ -514,7 +514,7 @@ public class Utils {
 
 		final IntervalView viewXYCZT = Views.permute( viewXYZCT, DimensionOrder.Z, DimensionOrder.C );
 
-		// TODO: This does getTypeFromInterval calls internally => this will reload the first time point (thus I will need to keep the cache it seems)
+		// TODO: This calls getTypeFromInterval internally => this will reload the first time point (thus I will need to keep the cache it seems)
 		ImagePlus imp = ImageJFunctions.wrap( viewXYCZT, image.getName() );
 		setCalibration( image, imp );
 		setColor( image, imp, c );
