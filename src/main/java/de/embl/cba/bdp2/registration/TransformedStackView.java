@@ -13,8 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class TransformedStackView < R >
-		extends AbstractInterval implements RandomAccessibleInterval< R >, View
+public class TransformedStackView < R > extends AbstractInterval implements RandomAccessibleInterval< R >, View
 {
 	private final List< RandomAccessibleInterval< R > > hyperslices;
 	private final HypersliceTransformProvider transformProvider;
