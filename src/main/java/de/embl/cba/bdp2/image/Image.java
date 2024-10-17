@@ -102,20 +102,12 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		this.voxelUnit = cachedCellImgCreator.getVoxelUnit();
 
 		// cache size is ignored for SOFTREF
-		setCache( cachedCellImgCreator.getDefaultCellDimsXYZCT(), CacheOptions.CacheType.SOFTREF, 1000 );
+		setCache( cachedCellImgCreator.getDefaultCellDimsXYZCT(),
+				CacheOptions.CacheType.SOFTREF,
+				1000 );
 		this.rai = cachedCellImgCreator.createCachedCellImg( cachedCellDims, CacheOptions.CacheType.BOUNDED, 100 );
 		this.rawDataDimensions = this.getDimensionsXYZCT();
 		this.type = Util.getTypeFromInterval( rai );
-	}
-
-	public boolean supportsMultiThreadedReading()
-	{
-		return supportsMultiThreadedReading;
-	}
-
-	public void supportsMultiThreadedReading( boolean supportsMultiThreadedReading )
-	{
-		this.supportsMultiThreadedReading = supportsMultiThreadedReading;
 	}
 
 	/*
@@ -133,6 +125,17 @@ public class Image< R extends RealType< R > & NativeType< R > >
 		this.rawDataDimensions = image.rawDataDimensions.clone();
 		this.viewer = image.viewer;
 		this.type = image.type;
+	}
+
+
+	public boolean supportsMultiThreadedReading()
+	{
+		return supportsMultiThreadedReading;
+	}
+
+	public void supportsMultiThreadedReading( boolean supportsMultiThreadedReading )
+	{
+		this.supportsMultiThreadedReading = supportsMultiThreadedReading;
 	}
 
 	public long[] getDimensionsXYZCT()
@@ -323,11 +326,11 @@ public class Image< R extends RealType< R > & NativeType< R > >
 	// leaving all modifications (views and conversions) intact.
 	public void setCache( int[] cellDims, CacheOptions.CacheType cacheType, int cacheSize )
 	{
-//		if ( cachedCellImgCreator instanceof BioFormatsCachedCellImgCreator )
-//		{
-//			Logger.info( "Adapting cache size currently not supported when loading with Bio-Formats." );
-//			return; // changing the cache does currently not work
-//		}
+		if ( rai != null && cachedCellImgCreator instanceof BioFormatsCachedCellImgCreator )
+		{
+			Logger.warn( "Adapting the cache size is currently not supported when loading with Bio-Formats." );
+			return;
+		}
 
 		this.cachedCellDims = cellDims;
 
@@ -344,7 +347,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 	{
 		if ( cachedCellImgCreator instanceof BioFormatsCachedCellImgCreator )
 		{
-			Logger.info( "[WARN] Adapting cache size currently not supported when loading with Bio-Formats. The saving may thus be slower than when reading without Bio-Formats." );
+			Logger.warn( "Adapting cache size currently not supported when loading with Bio-Formats. The saving may thus be slower than when reading without Bio-Formats." );
 			return; // changing the cache does currently not work
 		}
 

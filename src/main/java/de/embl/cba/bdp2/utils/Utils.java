@@ -70,6 +70,7 @@ import net.imglib2.util.Util;
 import net.imglib2.view.IntervalView;
 import net.imglib2.view.Views;
 import ome.units.UNITS;
+import ome.units.quantity.Length;
 import ome.units.unit.Unit;
 
 import java.io.File;
@@ -471,6 +472,11 @@ public class Utils {
 
     public static ImagePlus asImagePlus( Image< ? > image )
     {
+		if ( image == null )
+		{
+			throw new UnsupportedOperationException( "Cannot convert a null image to an ImagePlus" );
+		}
+
         ImagePlus imp = ImageJFunctions.wrap( Views.permute( image.getRai(), DimensionOrder.Z, DimensionOrder.C ), image.getName() );
 
         setCalibration( image, imp );
@@ -564,7 +570,16 @@ public class Utils {
 	private static void setCalibration( Image< ? > image, ImagePlus imp )
 	{
 		final Calibration calibration = new Calibration();
-		calibration.setUnit( image.getVoxelUnit().getSymbol() );
+		Unit< Length > voxelUnit = image.getVoxelUnit();
+		if ( voxelUnit == null )
+		{
+			IJ.log( "[WARNING] Null voxel unit for image \"" + image.getName() +"\" setting to \"pixels\"" );
+			calibration.setUnit( null );
+		}
+		else
+		{
+			calibration.setUnit( voxelUnit.getSymbol() );
+		}
 		calibration.pixelWidth = image.getVoxelDimensions()[ 0 ];
 		calibration.pixelHeight = image.getVoxelDimensions()[ 1 ];
 		calibration.pixelDepth = image.getVoxelDimensions()[ 2 ];

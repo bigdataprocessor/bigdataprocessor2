@@ -67,7 +67,7 @@ public abstract class AbstractImageProcessingCommand< R extends RealType< R > & 
     protected ImageViewer handleOutputImage( boolean autoContrast, boolean keepViewerTransform )
     {
         outputImage.setName( outputImageName );
-        ImageService.imageNameToImage.put( outputImageName, outputImage );
+        ImageService.imageNameToImage.put( outputImage.getName(), outputImage );
 
         if ( viewingModality.equals( ViewingModalities.SHOW_IN_NEW_VIEWER ) )
         {
@@ -75,7 +75,6 @@ public abstract class AbstractImageProcessingCommand< R extends RealType< R > & 
                 return BigDataProcessor2.showImage( outputImage, true );
             else
                 return BigDataProcessor2.showImage( outputImage, inputImage );
-
         }
         else if ( viewingModality.equals( ViewingModalities.SHOW_IN_CURRENT_VIEWER ))
         {

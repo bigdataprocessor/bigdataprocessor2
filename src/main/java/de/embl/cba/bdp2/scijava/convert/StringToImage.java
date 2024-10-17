@@ -30,6 +30,7 @@ package de.embl.cba.bdp2.scijava.convert;
 
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.service.ImageService;
+import ij.IJ;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.convert.AbstractConverter;
@@ -40,7 +41,22 @@ public class StringToImage<I extends String, O extends Image > extends AbstractC
 
     @Override
     public <T> T convert(Object src, Class<T> dest) {
-        return (T) ImageService.imageNameToImage.get( src );
+
+        if ( ! ImageService.imageNameToImage.containsKey( src ) )
+        {
+            String imageNames = String.join( "\n", ImageService.imageNameToImage.keySet() );
+            throw new RuntimeException( "Image not found: " + src +
+                    "\nAvailable images:\n" + imageNames );
+        }
+
+        T image = ( T ) ImageService.imageNameToImage.get( src );
+
+        if ( image == null )
+        {
+            throw new RuntimeException( "Image with name " + src + " is null." );
+        }
+
+        return image;
     }
 
     @Override
@@ -56,6 +72,7 @@ public class StringToImage<I extends String, O extends Image > extends AbstractC
     public < R extends RealType< R > & NativeType< R > > Image< R > getImage( String imageName )
     {
         Image< R > image = new StringToImage< String, Image< R > >().convert( imageName, Image.class );
+
         return image;
     }
 

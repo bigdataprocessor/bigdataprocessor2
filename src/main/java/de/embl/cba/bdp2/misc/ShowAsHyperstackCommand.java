@@ -32,6 +32,7 @@ import de.embl.cba.bdp2.BigDataProcessor2Menu;
 import de.embl.cba.bdp2.dialog.DialogUtils;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.record.ScriptRecorder;
+import de.embl.cba.bdp2.service.ImageService;
 import de.embl.cba.bdp2.utils.Utils;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
@@ -39,8 +40,10 @@ import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
+import java.util.Collections;
+
 @Plugin(type = ShowAsHyperstackCommand.class, name = ShowAsHyperstackCommand.COMMAND_NAME, menuPath = DialogUtils.BIGDATAPROCESSOR2_COMMANDS_MENU_ROOT + "Commands>Misc>" + ShowAsHyperstackCommand.COMMAND_FULL_NAME )
-public class ShowAsHyperstackCommand< R extends RealType< R > & NativeType< R > > implements Command
+public class ShowAsHyperstackCommand implements Command
 {
     public static final String COMMAND_NAME = "Show as Hyperstack...";
     public static final String COMMAND_FULL_NAME = BigDataProcessor2Menu.COMMAND_BDP2_PREFIX + COMMAND_NAME;
@@ -51,11 +54,15 @@ public class ShowAsHyperstackCommand< R extends RealType< R > & NativeType< R > 
      */
     @Parameter(label = "Input image")
     public Image inputImage;
-    public static final String INPUT_IMAGE_PARAMETER = "inputImage";
 
     @Override
     public void run()
     {
+        if ( inputImage == null )
+        {
+            throw new RuntimeException("Input image is null");
+        }
+
         show( inputImage );
     }
 

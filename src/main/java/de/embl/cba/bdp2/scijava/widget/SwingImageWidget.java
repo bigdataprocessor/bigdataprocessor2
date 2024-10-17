@@ -51,7 +51,7 @@ public class SwingImageWidget extends SwingInputWidget< Image > implements
 
     @Override
     public boolean supports(final WidgetModel model) {
-        return super.supports(model) && model.isType( Image.class);
+        return super.supports(model) && model.isType(Image.class);
     }
 
     @Override
