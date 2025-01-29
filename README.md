@@ -1,3 +1,4 @@
+[![Build Status](https://github.com/bigdataprocessor/bigdataprocessor2/actions/workflows/build.yml/badge.svg)](https://github.com/bigdataprocessor/bigdataprocessor2/actions/workflows/build.yml)
 [![DOI](https://zenodo.org/badge/161612516.svg)](https://zenodo.org/badge/latestdoi/161612516)
 
 <img src="./docs/images/BDP2-icon.png" width="300">
