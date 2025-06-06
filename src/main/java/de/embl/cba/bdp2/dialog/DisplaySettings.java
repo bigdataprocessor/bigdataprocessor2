@@ -32,8 +32,8 @@ import net.imglib2.type.numeric.ARGBType;
 
 public class DisplaySettings {
 
-    private double displayRangeMin;
-    private double displayRangeMax;
+    private final double displayRangeMin;
+    private final double displayRangeMax;
     private final ARGBType color;
 
     public DisplaySettings( double min, double max, ARGBType color ) {

@@ -49,10 +49,10 @@ import java.util.concurrent.ExecutionException;
 public class FileSeriesCellLoader< T extends NativeType< T > > implements CellLoader< T > {
 
     private final int bitDepth;
-    private String directory;
-    private long[] dimensions;
-    private int[] cellDims;
-    private LoadingCache< String, BDP2FileInfo[] > serializableFileInfoCache;
+    private final String directory;
+    private final long[] dimensions;
+    private final int[] cellDims;
+    private final LoadingCache< String, BDP2FileInfo[] > serializableFileInfoCache;
     private final FileSeriesFileType fileType;
     private short[][] cache;
     private final boolean containsHDF5DatasetSingletonDimension;
@@ -163,7 +163,7 @@ public class FileSeriesCellLoader< T extends NativeType< T > > implements CellLo
 
     private BDP2FileInfo[] getVolumeFileInfos( int[] ct ) {
         try {
-             return serializableFileInfoCache.get( "" + ct[0] + "_" + ct[1] );
+             return serializableFileInfoCache.get( ct[0] + "_" + ct[1] );
         } catch ( ExecutionException e ) {
             e.printStackTrace();
             throw new RuntimeException( e );

@@ -82,12 +82,12 @@ public class FastHDF5StackWriter < R extends RealType< R > & NativeType< R >> im
     private final int dimX;
     private final int current_t;
     private int current_c;
-    private SavingSettings savingSettings;
-    private AtomicInteger counter;
+    private final SavingSettings savingSettings;
+    private final AtomicInteger counter;
     private final long startTime;
     private final Image< R > image;
     private final R nativeType;
-    private AtomicBoolean stop;
+    private final AtomicBoolean stop;
 
     public FastHDF5StackWriter(String dataset, Image< R > image, SavingSettings savingSettings, int t, AtomicInteger counter, long startTime, AtomicBoolean stop) {
         this.image = image;
@@ -110,7 +110,7 @@ public class FastHDF5StackWriter < R extends RealType< R > & NativeType< R >> im
 
     @Override
     public void run() {
-        final long totalSlices = numFrames * numChannels;
+        final long totalSlices = ( long ) numFrames * numChannels;
         RandomAccessibleInterval rai = image.getRai();
         for (int c = 0; c < this.numChannels; c++) {
             if (stop.get()) {
@@ -190,7 +190,7 @@ public class FastHDF5StackWriter < R extends RealType< R > & NativeType< R >> im
             } else if (nativeType instanceof FloatType) {
                 write(imgBinned, writer, dims, FloatType.class);
             } else {
-                throw new IllegalArgumentException("Unsupported Type: " + nativeType.getClass().toString());
+                throw new IllegalArgumentException("Unsupported Type: " + nativeType.getClass() );
             }
         }
     }

@@ -37,6 +37,8 @@ import de.embl.cba.bdp2.save.SavingSettings;
 import org.junit.jupiter.api.Test;
 import test.Utils;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 public class TestOpenSingleChannelFloatTiffVolumeWithBioFormatsAndSaveAsTiffVolume
 {
     private static Image image;
@@ -57,6 +59,8 @@ public class TestOpenSingleChannelFloatTiffVolumeWithBioFormatsAndSaveAsTiffVolu
 
         image = BigDataProcessor2.openBioFormats( file, 0 );
         image.setVoxelDimensions( 1, 1, 20 );
+
+        assertNotNull(image, "The image should not be null after opening with BioFormats.");
 
         final SavingSettings settings = SavingSettings.getDefaults();
         settings.volumesFilePathStump = "src/test/resources/test-output/" + image.getName() + "/volumes/" + image.getName();

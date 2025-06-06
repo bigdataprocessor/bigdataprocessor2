@@ -104,15 +104,15 @@ public class TransformedStackView < R >
 
 		private RandomAccess< R > hyperSliceAccess;
 
-		private Interval interval;
+		private final Interval interval;
 
-		private Map< Integer, RandomAccess< R > > hyperSliceIndexToAccess;
+		private final Map< Integer, RandomAccess< R > > hyperSliceIndexToAccess;
 
 		private final HypersliceTransformProvider transformProvider;
 
 		private final List< RandomAccessibleInterval< R > > hyperSlices;
 
-		private boolean sliceReady;
+		private final boolean sliceReady;
 		private int previousSliceIndex;
 
 		public TransformedRandomAccess(
@@ -305,7 +305,8 @@ public class TransformedStackView < R >
 		private void setHyperSliceAccess( final long requestedHyperSliceIndex )
 		{
 			if ( requestedHyperSliceIndex == currentHyperSliceIndex )
-				return;
+            {
+            }
 			else
 				changeSliceAccess( (int) requestedHyperSliceIndex );
 		}
@@ -425,10 +426,7 @@ public class TransformedStackView < R >
 
 				if ( r instanceof Volatile )
 				{
-					if ( transformProvider.wasStopped() )
-						( ( Volatile ) r ).setValid( true );
-					else
-						( ( Volatile ) r ).setValid( false );
+                    ( ( Volatile ) r ).setValid( transformProvider.wasStopped() );
 				}
 
 

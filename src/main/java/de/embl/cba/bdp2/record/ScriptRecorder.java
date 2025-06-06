@@ -49,12 +49,12 @@ public class ScriptRecorder
 	private String options;
 	private String message;
 	private String apiFunction;
-	private ArrayList< String > parameters = new ArrayList<>();
+	private final ArrayList< String > parameters = new ArrayList<>();
 	private Image< ? > inputImage;
 	private Image< ? > outputImage;
 	private boolean recordImportStatments = false;
 	private boolean recordShowImageCall = false;
-	private List< String > apiFunctionPrequels = new ArrayList<>(  );
+	private final List< String > apiFunctionPrequels = new ArrayList<>(  );
 
 	public ScriptRecorder()
 	{
@@ -168,23 +168,23 @@ public class ScriptRecorder
 					{
 						if ( LanguageManager.getLanguage() == LanguageManager.PYTHON )
 						{
-							recorder.recordString( asComment( "To run this script, please select language: Python" ) );
-							recorder.recordString( "import ij.IJ;\n" );
+							Recorder.recordString( asComment( "To run this script, please select language: Python" ) );
+							Recorder.recordString( "import ij.IJ;\n" );
 
-							recorder.recordString( "import java;\n" );
+							Recorder.recordString( "import java;\n" );
 
-							recorder.recordString( "from de.embl.cba.bdp2 import BigDataProcessor2;\n" );
+							Recorder.recordString( "from de.embl.cba.bdp2 import BigDataProcessor2;\n" );
 							//recorder.recordString( "from jarray import array;\n" );
-							recorder.recordString( "from de.embl.cba.bdp2.save import SavingSettings;\n" );
-							recorder.recordString( "from de.embl.cba.bdp2.save import SaveFileType;\n" );
+							Recorder.recordString( "from de.embl.cba.bdp2.save import SavingSettings;\n" );
+							Recorder.recordString( "from de.embl.cba.bdp2.save import SaveFileType;\n" );
 						}
 						else if ( LanguageManager.getLanguage() == LanguageManager.JAVA_SCRIPT )
 						{
-							recorder.recordString( asComment( "To run this script, please select language: JavaScript" ) );
-							recorder.recordString( "importClass(Packages.ij.IJ);\n" );
-							recorder.recordString( "importClass(Packages.de.embl.cba.bdp2.BigDataProcessor2);\n" );
-							recorder.recordString( "importClass(Packages.de.embl.cba.bdp2.save.SavingSettings);\n" );
-							recorder.recordString( "importClass(Packages.de.embl.cba.bdp2.save.SaveFileType);\n" );
+							Recorder.recordString( asComment( "To run this script, please select language: JavaScript" ) );
+							Recorder.recordString( "importClass(Packages.ij.IJ);\n" );
+							Recorder.recordString( "importClass(Packages.de.embl.cba.bdp2.BigDataProcessor2);\n" );
+							Recorder.recordString( "importClass(Packages.de.embl.cba.bdp2.save.SavingSettings);\n" );
+							Recorder.recordString( "importClass(Packages.de.embl.cba.bdp2.save.SaveFileType);\n" );
 						}
 						else
 						{
@@ -194,39 +194,39 @@ public class ScriptRecorder
 							return;
 						}
 
-						recorder.recordString( "\n" );
+						Recorder.recordString( "\n" );
 					}
 
 					if ( apiFunction != null )
 					{
 						for ( String prequel : apiFunctionPrequels )
 						{
-							recorder.recordString( prequel );
+							Recorder.recordString( prequel );
 						}
 
-						recorder.recordString( createAPICall() );
+						Recorder.recordString( createAPICall() );
 					}
 
 					if ( outputImage != null )
 					{
 						if ( inputImage != null && !inputImage.getName().equals( outputImage.getName() ) )
-							recorder.recordString( "image.setName( " + quote( outputImage.getName() ) + " );\n" );
+							Recorder.recordString( "image.setName( " + quote( outputImage.getName() ) + " );\n" );
 					}
 
 					if ( recordShowImageCall )
 					{
-						recorder.recordString( asComment( "BigDataProcessor2.showImage( image, " + booleanToString( true ) + " );" ) );
+						Recorder.recordString( asComment( "BigDataProcessor2.showImage( image, " + booleanToString( true ) + " );" ) );
 					}
 
-					recorder.recordString("\n");
+					Recorder.recordString("\n");
 
 				}
 				else // macro recording
 				{
 					if ( message != null )
-						recorder.recordString( message );
+						Recorder.recordString( message );
 					if ( commandName != null && options != null )
-						recorder.record( "run", commandName, options );
+						Recorder.record( "run", commandName, options );
 				}
 			}
 		}).start();

@@ -58,7 +58,7 @@ public class TestSaveSingleChannel16BitTiffSeriesAsImarisVolumes
         final String loadingScheme = NamingSchemes.SINGLE_CHANNEL_TIMELAPSE;
         final String filterPattern = ".*.tif";
 
-        final Image image = bdp.openTIFFSeries(
+        final Image image = BigDataProcessor2.openTIFFSeries(
                 directory,
                 loadingScheme );
 

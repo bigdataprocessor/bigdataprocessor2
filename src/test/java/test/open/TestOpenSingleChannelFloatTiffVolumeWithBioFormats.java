@@ -33,6 +33,8 @@ import de.embl.cba.bdp2.image.Image;
 import org.junit.jupiter.api.Test;
 import test.Utils;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 public class TestOpenSingleChannelFloatTiffVolumeWithBioFormats
 {
     private static Image image;
@@ -51,6 +53,8 @@ public class TestOpenSingleChannelFloatTiffVolumeWithBioFormats
         //file = "/Volumes/cba/exchange/Shuting/Ecad_Sqh_100x_20210511_01_decon.ics";
 
         image = BigDataProcessor2.openBioFormats( file, 0 );
+        assertNotNull(image, "The image should not be null after opening with BioFormats.");
+
         image.setVoxelDimensions( 1, 1, 10 );
     }
 }

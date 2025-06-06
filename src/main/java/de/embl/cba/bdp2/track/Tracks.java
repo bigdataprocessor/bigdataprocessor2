@@ -33,6 +33,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 public class Tracks
 {
@@ -64,7 +65,7 @@ public class Tracks
 		try
 		{
 			OutputStream outputStream = new FileOutputStream( file );
-			final JsonWriter writer = new JsonWriter( new OutputStreamWriter(outputStream, "UTF-8"));
+			final JsonWriter writer = new JsonWriter( new OutputStreamWriter(outputStream, StandardCharsets.UTF_8 ));
 			writer.setIndent("	");
 			new Gson().toJson( track, track.getClass(), writer);
 			writer.close();

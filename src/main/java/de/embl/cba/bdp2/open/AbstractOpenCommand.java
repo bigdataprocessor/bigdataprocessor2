@@ -80,12 +80,11 @@ public abstract class AbstractOpenCommand< R extends RealType< R > & NativeType<
 
         if ( viewingModality.equals( ViewingModalities.DO_NOT_SHOW ) )
         {
-            return;
         }
         else
         {
             if ( ! CalibrationChecker.checkVoxelDimension( outputImage.getVoxelDimensions() ) )
-                outputImage.setVoxelDimensions( new double[]{1,1,1} );
+                outputImage.setVoxelDimensions( 1,1,1 );
 
             if ( ! CalibrationChecker.checkVoxelUnit( outputImage.getVoxelUnit() ) )
                 outputImage.setVoxelUnit( "unknown" );

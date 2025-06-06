@@ -35,6 +35,8 @@ import de.embl.cba.bdp2.save.SaveFileType;
 import de.embl.cba.bdp2.save.SavingSettings;
 import test.Utils;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 public class TestOpenProcessSaveLuxendoBigData
 {
 	public static void main( String[] args )
@@ -57,7 +59,9 @@ public class TestOpenProcessSaveLuxendoBigData
 		image = BigDataProcessor2.crop( image, new long[]{116,99,0,0,0,346,328,99,1,143} );
 		image.setName( "mouse_2_Cam-bin-crop" );
 
-// Save...
+		assertNotNull(image, "The image should not be null after opening with BioFormats.");
+
+		// Save...
 		SavingSettings savingSettings = SavingSettings.getDefaults();
 		savingSettings.volumesFilePathStump = "/Volumes/Tischi/big-image-data/deleteme/volumes/mouse_2_Cam-bin-crop";
 		savingSettings.projectionsFilePathStump = "/Volumes/Tischi/big-image-data/deleteme/projections/mouse_2_Cam-bin-crop";

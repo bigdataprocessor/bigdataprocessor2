@@ -40,12 +40,10 @@ import ch.epfl.biop.bdv.img.legacy.bioformats.BioFormatsToSpimData;
 import ch.epfl.biop.bdv.img.legacy.bioformats.BioFormatsTools;
 import de.embl.cba.bdp2.open.CachedCellImgCreator;
 import loci.formats.IFormatReader;
-import loci.formats.MetadataTools;
 import loci.formats.meta.IMetadata;
 import mpicbg.spim.data.generic.AbstractSpimData;
 import mpicbg.spim.data.generic.sequence.AbstractSequenceDescription;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.cache.img.CachedCellImg;
 import net.imglib2.cache.img.optional.CacheOptions;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ARGBType;
@@ -69,7 +67,7 @@ public class BioFormatsCachedCellImgCreator < R extends RealType< R > & NativeTy
 	private int sizeC, sizeT;
 	private int[] cacheSize;
 	private ARGBType[] channelColors;
-	private double[] voxelSize = new double[3];
+	private final double[] voxelSize = new double[3];
 	private int seriesCount;
 
 	public BioFormatsCachedCellImgCreator( String filePath, int series ) {

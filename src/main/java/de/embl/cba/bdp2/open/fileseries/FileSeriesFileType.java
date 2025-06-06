@@ -37,7 +37,7 @@ public enum FileSeriesFileType
 	HDF5_VOLUMES("HDF5 Volumes");
 
 	private final String text;
-	private FileSeriesFileType( String s)
+	FileSeriesFileType( String s )
 	{
 		text = s;
 	}

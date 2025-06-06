@@ -31,6 +31,8 @@ package test.open;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 public class TestOpenTerraStitcher
 {
     public static void main(String[] args)
@@ -48,8 +50,9 @@ public class TestOpenTerraStitcher
         final Image image = BigDataProcessor2.openTIFFSeries(
                 directory,
                 regExp );
+        assertNotNull(image, "The image should not be null after opening with BioFormats.");
         image.setVoxelUnit( "micrometer" );
-        image.setVoxelDimensions( new double[]{1,1,1} );
+        image.setVoxelDimensions( 1,1,1 );
         //BigDataProcessor2.showImage( image, true );
     }
 }

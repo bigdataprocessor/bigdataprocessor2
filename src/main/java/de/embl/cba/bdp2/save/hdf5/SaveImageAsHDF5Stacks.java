@@ -75,10 +75,10 @@ public class SaveImageAsHDF5Stacks < R extends RealType< R > & NativeType< R > >
     private final int nFrames;
     private final int nChannels;
     private final int nZ;
-    private int nRows;
-    private int nCols;
-    private String dataset;
-    private int compressionLevel;
+    private final int nRows;
+    private final int nCols;
+    private final String dataset;
+    private final int compressionLevel;
     private long fileId = -1;
     private long dataspaceId = -1;
     private long datasetId = -1;
@@ -90,18 +90,18 @@ public class SaveImageAsHDF5Stacks < R extends RealType< R > & NativeType< R > >
     };
     private final int current_t;
     private int current_c;
-    private boolean gate;
-    private int gateMin;
-    private int gateMax;
-    private SavingSettings savingSettings;
-    private AtomicInteger counter;
+    private final boolean gate;
+    private final int gateMin;
+    private final int gateMax;
+    private final SavingSettings savingSettings;
+    private final AtomicInteger counter;
     private final long startTime;
     private final R nativeType;
     private final Image< R > image;
-    private AtomicBoolean stop;
+    private final AtomicBoolean stop;
 
     public SaveImageAsHDF5Stacks( String dataset, Image< R > image, SavingSettings savingSettings, int t, AtomicInteger counter, long startTime, AtomicBoolean stop) {
-        this.nativeType = ( R ) Util.getTypeFromInterval(image.getRai() );
+        this.nativeType = Util.getTypeFromInterval(image.getRai() );
         this.image = image;
         Img imgTemp = ImgView.wrap(image.getRai(), new CellImgFactory<>(nativeType));
         this.imgPlus = new ImgPlus<>(imgTemp, "", FileInfos.AXES_ORDER);
@@ -158,7 +158,7 @@ public class SaveImageAsHDF5Stacks < R extends RealType< R > & NativeType< R > >
 //        if (numBytesOfImage > 1.5 * freeMemoryInBytes) {
 //            // TODO: do something...
 //        }
-        final long totalSlices = nFrames * nChannels;
+        final long totalSlices = ( long ) nFrames * nChannels;
         RandomAccessibleInterval rai = image.getRai();
         for (int c = 0; c < this.nChannels; c++) {
             if (stop.get()) {
@@ -234,8 +234,8 @@ public class SaveImageAsHDF5Stacks < R extends RealType< R > & NativeType< R > >
                 min(nRows, 256),
                 min(nCols, 256)
         };
-        Logger.info("Export Dimensions in xyczt: " + String.valueOf(nCols) + "x" + String.valueOf(nRows) + "x" + String.valueOf(nChannels) + "x" +
-                String.valueOf(nFrames) + "x" + String.valueOf(nZ));
+        Logger.info("Export Dimensions in xyczt: " + nCols + "x" + nRows + "x" + nChannels + "x" +
+                nFrames + "x" + nZ );
 
         try {
             fileId = H5.H5Fcreate(filename, H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
@@ -336,7 +336,7 @@ public class SaveImageAsHDF5Stacks < R extends RealType< R > & NativeType< R > >
             long[] start = {z, 0, 0};
             writeHyperslabs(hdf5DataType, pixelSlice, start, iniDims);
         }
-        Logger.info("compressionLevel: " + String.valueOf(compressionLevel));
+        Logger.info("compressionLevel: " + compressionLevel );
         Logger.info("Finished writing the HDF5_STACKS.");
     }
 

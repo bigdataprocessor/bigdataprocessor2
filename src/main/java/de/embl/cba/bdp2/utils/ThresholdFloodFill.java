@@ -50,7 +50,7 @@ public class ThresholdFloodFill< R extends RealType< R > >
 	private final long maxRegionSize;
 
 	// other
-	private int n;
+	private final int n;
 	private long[] min;
 	private long[] max;
 

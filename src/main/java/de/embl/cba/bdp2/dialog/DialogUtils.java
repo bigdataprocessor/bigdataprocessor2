@@ -36,6 +36,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DialogUtils
@@ -60,8 +61,7 @@ public class DialogUtils
 				{
 					final File[] selectedFiles = fileChooser.getSelectedFiles();
 
-					for ( File file : selectedFiles )
-						dirs.add( file );
+                    Collections.addAll( dirs, selectedFiles );
 				}
 				isDone.set( true );
 			}
@@ -76,9 +76,9 @@ public class DialogUtils
 			{
 				e.printStackTrace();
 			}
-		};
+		}
 
-		return dirs;
+        return dirs;
 	}
 
 	public static Integer getChannel( ImageViewer imageViewer )

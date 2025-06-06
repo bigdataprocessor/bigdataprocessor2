@@ -62,7 +62,7 @@ public class LazyStackView< T > extends AbstractInterval implements RandomAccess
 	 * {@link RandomAccess}es on all constituent hyper-slices of the
 	 * {@link LazyStackView}.
 	 */
-	public static enum StackAccessMode
+	public enum StackAccessMode
 	{
 		/*
 		 * The default behavior is the following.

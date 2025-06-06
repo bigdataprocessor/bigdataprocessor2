@@ -34,8 +34,8 @@ import ch.systemsx.cisd.hdf5.IHDF5Reader;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.open.NamingSchemes;
 import de.embl.cba.bdp2.open.fileseries.hdf5.HDF5Helper;
+import de.embl.cba.bdp2.utils.OSUtils;
 import de.embl.cba.imaris.ImarisUtils;
-import de.embl.cba.util.OSUtils;
 import ij.io.FileInfo;
 import loci.common.DebugTools;
 import net.imagej.axis.Axes;
@@ -263,7 +263,7 @@ public class FileInfos
         }
         else
         {
-            throw new UnsupportedOperationException( "File type not supported " + fileType.toString() );
+            throw new UnsupportedOperationException( "File type not supported " + fileType );
         }
 
         return ctzFileInfos[channel][time];
@@ -308,7 +308,7 @@ public class FileInfos
             ctzFileInfos[ c ][ t ][ z ] = ftd.getTIFFInfo()[0];
         }
         catch ( IOException e ){// TODO : Handle exceptions properly --ashis
-            System.out.print( e.toString() );
+            System.out.print( e );
         }
         ctzFileInfos[ c ][ t ][ z ].fileName = getName( c, t, z );
         ctzFileInfos[ c ][ t ][ z ].directory = getDirectory( c, t, z );
@@ -360,7 +360,7 @@ public class FileInfos
         }
         catch (Exception e) {
             Logger.error("Error parsing: " + file.getAbsolutePath() );
-            Logger.warn("setInfoFromFile: " + e.toString());
+            Logger.warn("setInfoFromFile: " + e );
         }
 
         if( info.length != nZ ) {// TODO : Handle exceptions properly --ashis

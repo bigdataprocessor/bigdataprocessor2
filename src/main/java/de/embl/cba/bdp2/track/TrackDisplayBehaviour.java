@@ -30,7 +30,7 @@ package de.embl.cba.bdp2.track;
 
 import bdv.util.BdvHandle;
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.bdv.utils.BdvUtils;
+import de.embl.cba.bdp2.utils.BdvUtils;
 import org.scijava.ui.behaviour.ClickBehaviour;
 import org.scijava.ui.behaviour.io.InputTriggerConfig;
 import org.scijava.ui.behaviour.util.Behaviours;

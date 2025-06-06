@@ -44,11 +44,11 @@ public class SaveUtils
 {
     public static <T extends RealType<T>> RandomAccessibleInterval converter( RandomAccessibleInterval newRai, SavingSettings savingSettings){
         if (savingSettings.convertTo8Bit) {
-            if (!(((IntervalView) newRai).firstElement() instanceof UnsignedByteType)){
+            if (!( newRai.firstElement() instanceof UnsignedByteType)){
                 newRai = Converters.convert(newRai, new RealUnsignedByteConverter<T>(savingSettings.mapTo0,savingSettings.mapTo255), new UnsignedByteType());
             }
         }else if (savingSettings.convertTo16Bit) {
-            if (!(((IntervalView) newRai).firstElement() instanceof UnsignedShortType)) {
+            if (!( newRai.firstElement() instanceof UnsignedShortType)) {
                 newRai = Converters.convert(newRai, new RealUnsignedShortConverter<T>(savingSettings.mapTo0,savingSettings.mapTo255), new UnsignedShortType()); //TODO : ashis
             }
         }

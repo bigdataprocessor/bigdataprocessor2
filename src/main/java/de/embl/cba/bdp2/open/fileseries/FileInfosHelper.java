@@ -33,7 +33,7 @@ import de.embl.cba.bdp2.open.NamingSchemes;
 import de.embl.cba.bdp2.open.fileseries.hdf5.HDF5Helper;
 import de.embl.cba.bdp2.utils.BioFormatsCalibrationReader;
 import de.embl.cba.bdp2.utils.DimensionOrder;
-import de.embl.cba.util.OSUtils;
+import de.embl.cba.bdp2.utils.OSUtils;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -554,9 +554,7 @@ public class FileInfosHelper
 
                 if ( ! new File( parentFolder, subFolder ).isDirectory() ) return false;
 
-                if ( ! Pattern.compile( subFolderPattern ).matcher( subFolder ).matches() ) return false;
-
-                return true;
+                return Pattern.compile( subFolderPattern ).matcher( subFolder ).matches();
             }
         });
 

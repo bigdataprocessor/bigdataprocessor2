@@ -46,13 +46,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ImarisFrameSaver< R extends RealType< R > & NativeType< R >> implements Runnable {
-    private int t;
+    private final int t;
     private final int nFrames;
     private final int nChannels;
-    private AtomicInteger counter;
-    private SavingSettings settings;
+    private final AtomicInteger counter;
+    private final SavingSettings settings;
     private final long startTime;
-    private ImarisDataSet imarisDataSetProperties;
+    private final ImarisDataSet imarisDataSetProperties;
     private final AtomicBoolean stop;
     private final Image< R > image;
 

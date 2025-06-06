@@ -42,6 +42,7 @@ import static de.embl.cba.bdp2.open.NamingSchemes.LUXENDO;
 import static de.embl.cba.bdp2.open.NamingSchemes.LUXENDO_STACKINDEX;
 import static de.embl.cba.bdp2.open.NamingSchemes.P;
 import static de.embl.cba.bdp2.open.NamingSchemes.T;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestOpenLuxendo
 {
@@ -70,6 +71,6 @@ public class TestOpenLuxendo
         //   as the voxel dimensions are stored in the wrong order.
         // Thus, we only compare the middle dimension
         //   as this is not affected by the order.
-        Assertions.assertEquals( image.getVoxelDimensions()[1], 0.25999999046325684, 0.01 );
+        assertEquals( image.getVoxelDimensions()[1], 0.25999999046325684, 0.01 );
     }
 }

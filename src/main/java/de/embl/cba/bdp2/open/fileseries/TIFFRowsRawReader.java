@@ -98,7 +98,7 @@ public class TIFFRowsRawReader
 			else // no compression, no strips
 			{
 				// read only the actually requested pixels
-				readStart = fi.offset + (long) minRow * bytesPerRow + minCol * fi.bytesPerPixel;
+				readStart = fi.offset + (long) minRow * bytesPerRow + ( long ) minCol * fi.bytesPerPixel;
 				numBytesToRead = numRows * numCols * fi.bytesPerPixel;
 			}
 		}

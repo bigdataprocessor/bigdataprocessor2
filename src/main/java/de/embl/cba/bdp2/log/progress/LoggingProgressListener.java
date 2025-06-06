@@ -34,7 +34,7 @@ public class LoggingProgressListener implements ProgressListener
 {
 	private long current;
 	private long total;
-	private long startTimeMillis;
+	private final long startTimeMillis;
 	private final String msg;
 
 	public LoggingProgressListener( String msg )

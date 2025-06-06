@@ -33,7 +33,7 @@ import de.embl.cba.bdp2.BigDataProcessor2Menu;
 import de.embl.cba.bdp2.dialog.DialogUtils;
 import de.embl.cba.bdp2.process.AbstractImageProcessingCommand;
 import de.embl.cba.bdp2.viewer.ImageViewer;
-import de.embl.cba.bdv.utils.BdvUtils;
+import de.embl.cba.bdp2.utils.BdvUtils;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;

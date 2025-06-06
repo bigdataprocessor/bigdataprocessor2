@@ -54,7 +54,7 @@ public class OpenViventisTIFFSeriesCommand< R extends RealType< R > & NativeType
     {
         SwingUtilities.invokeLater( () ->
         {
-            regExp = NamingSchemes.VIVENTIS + NamingSchemes.NONRECURSIVE;;
+            regExp = NamingSchemes.VIVENTIS + NamingSchemes.NONRECURSIVE;
             outputImage = BigDataProcessor2.openTIFFSeries( directory.toString(), regExp );
             fixVoxelSpacing( outputImage );
             handleOutputImage( true, false );
@@ -77,8 +77,8 @@ public class OpenViventisTIFFSeriesCommand< R extends RealType< R > & NativeType
         recorder.recordImportStatements( true );
         recorder.addAPIFunctionPrequelComment( COMMAND_NAME );
         recorder.setBDP2FunctionName( "openTIFFSeries" );
-        recorder.addAPIFunctionParameter( recorder.quote( directory.toString() ) );
-        recorder.addAPIFunctionParameter( recorder.quote( regExp ) );
+        recorder.addAPIFunctionParameter( ScriptRecorder.quote( directory.toString() ) );
+        recorder.addAPIFunctionParameter( ScriptRecorder.quote( regExp ) );
         recorder.record();
     }
 }

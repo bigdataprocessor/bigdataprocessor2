@@ -36,7 +36,7 @@ import bdv.util.BdvFunctions;
 import bdv.util.BdvHandle;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.utils.DimensionOrder;
-import de.embl.cba.bdv.utils.BdvUtils;
+import de.embl.cba.bdp2.utils.BdvUtils;
 import net.imglib2.*;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
@@ -46,7 +46,7 @@ import net.imglib2.util.Intervals;
 public class BoundingBoxDialog < R extends RealType< R > & NativeType< R > >
 {
     private final Image< R > image;
-    private Bdv bdv;
+    private final Bdv bdv;
     public static final int X = 0;
     public static final int Y = 1;
     public static final int Z = 2;

@@ -35,6 +35,8 @@ import de.embl.cba.bdp2.save.SaveFileType;
 import de.embl.cba.bdp2.save.SavingSettings;
 import test.Utils;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 public class TestOpenBioFormatsAndSaveAsBDVHDF5
 {
     private static Image image;
@@ -51,6 +53,8 @@ public class TestOpenBioFormatsAndSaveAsBDVHDF5
     {
         image = BigDataProcessor2.openBioFormats( "/Users/tischer/Downloads/StackExampleMarch2021/Brain39_cell1_DC-crop.xml", 0 );
 //        image.setVoxelDimensions( new double[]{1.0, 1.0, 1.0} );
+
+        assertNotNull(image, "The image should not be null after opening with BioFormats.");
 
         final SavingSettings settings = SavingSettings.getDefaults();
         settings.volumesFilePathStump = "/Users/tischer/Downloads/StackExampleMarch2021/volumes/" + image.getName();

@@ -70,7 +70,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 	 */
 	private final CachedCellImgCreator< R > cachedCellImgCreator;
 	private int[] cachedCellDims;
-	private long[] rawDataDimensions;
+	private final long[] rawDataDimensions;
 
 	/*
 	 * The rai holds the (processed) image data.
@@ -88,7 +88,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 	private Unit< Length > voxelUnit;
 
 	// Note: currently not used, consider moving to a branch
-	private ArrayList< Stopable > stopables = new ArrayList<>(  );
+	private final ArrayList< Stopable > stopables = new ArrayList<>(  );
 	private ImageViewer< R > viewer;
 	private R type;
 	private boolean supportsMultiThreadedReading = false;

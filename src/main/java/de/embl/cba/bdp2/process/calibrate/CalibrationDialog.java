@@ -126,7 +126,7 @@ public class CalibrationDialog< R extends RealType< R > & NativeType< R > >
 		recorder.setBDP2FunctionName( "setVoxelSize" );
 		recorder.addAPIFunctionPrequelComment( SetVoxelSizeCommand.COMMAND_NAME );
 		recorder.addAPIFunctionParameter( voxelSize );
-		recorder.addAPIFunctionParameter( recorder.quote( outputImage.getVoxelUnit().getSymbol() ) );
+		recorder.addAPIFunctionParameter( ScriptRecorder.quote( outputImage.getVoxelUnit().getSymbol() ) );
 
 		recorder.record();
 	}

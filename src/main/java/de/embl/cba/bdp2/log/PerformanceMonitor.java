@@ -37,8 +37,8 @@ import java.util.List;
 public class PerformanceMonitor
 {
 	public static final int MEGA = 1000000;
-	private List< Double > readPerformances;
-	private List< Double > copyPerformances;
+	private final List< Double > readPerformances;
+	private final List< Double > copyPerformances;
 
 	public PerformanceMonitor()
 	{
@@ -53,9 +53,9 @@ public class PerformanceMonitor
 		if ( storageArray instanceof byte[] )
 			speed = toMBytePerSecond( ( ( byte[] ) storageArray ).length, timeMillis );
 		else if ( storageArray instanceof short[] )
-			speed = toMBytePerSecond( 2 * ( ( short[] ) storageArray ).length, timeMillis );
+			speed = toMBytePerSecond( 2L * ( ( short[] ) storageArray ).length, timeMillis );
 		else if ( storageArray instanceof float[] )
-			speed = toMBytePerSecond( 4 * ( ( float[] ) storageArray ).length, timeMillis );
+			speed = toMBytePerSecond( 4L * ( ( float[] ) storageArray ).length, timeMillis );
 		else
 			throw new RuntimeException( "Unsupported storage array type " + storageArray.getClass() );
 

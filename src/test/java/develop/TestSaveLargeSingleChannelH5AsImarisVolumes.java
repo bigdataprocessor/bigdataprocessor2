@@ -51,7 +51,7 @@ public class TestSaveLargeSingleChannelH5AsImarisVolumes
         final String loadingScheme = NamingSchemes.SINGLE_CHANNEL_TIMELAPSE;
         final String filterPattern = ".*.h5";
 
-        final Image image = bdp.openHDF5Series(
+        final Image image = BigDataProcessor2.openHDF5Series(
                 directory,
                 loadingScheme,
                 "Data");

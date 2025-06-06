@@ -47,6 +47,6 @@ public class MaximumArrayImgSize
 		System.out.println( 1.0 * nx * ny * nz / n );
 
 		final ArrayImg< ByteType, ByteArray > arrayImg
-				= ArrayImgs.bytes( new long[]{ nx, ny, nz } );
+				= ArrayImgs.bytes( nx, ny, nz );
 	}
 }

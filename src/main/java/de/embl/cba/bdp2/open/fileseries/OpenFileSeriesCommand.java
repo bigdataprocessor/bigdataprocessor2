@@ -108,10 +108,10 @@ public class OpenFileSeriesCommand< R extends RealType< R > & NativeType< R > > 
         ScriptRecorder recorder = new ScriptRecorder( outputImage );
         recorder.recordImportStatements( true );
         recorder.setBDP2FunctionName( apiFunctionName );
-        recorder.addAPIFunctionParameter( recorder.quote( directory.toString() ) );
-        recorder.addAPIFunctionParameter( recorder.quote( regExp + fileExtension ) );
+        recorder.addAPIFunctionParameter( ScriptRecorder.quote( directory.toString() ) );
+        recorder.addAPIFunctionParameter( ScriptRecorder.quote( regExp + fileExtension ) );
         if ( apiFunctionName.equals( "openHDF5Series" ) )
-            recorder.addAPIFunctionParameter( recorder.quote( hdf5DataSetName ) );
+            recorder.addAPIFunctionParameter( ScriptRecorder.quote( hdf5DataSetName ) );
         recorder.record();
     }
 }

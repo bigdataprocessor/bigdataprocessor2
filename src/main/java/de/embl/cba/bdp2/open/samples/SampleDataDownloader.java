@@ -52,8 +52,8 @@ public class SampleDataDownloader
 	public static final String DUAL_COLOR_MOUSE = "Dual color light-sheet mouse TIFF volume (64.8 MB)";
 	public static final String NON_ORTHO = "Non-orthogonal acquisition TIFF volume (2.6 MB)";
 
-	private Map< String, String > datasetNameToURL =  new HashMap<>();
-	private Map< String, String > datasetNameToRegExp =  new HashMap<>();
+	private final Map< String, String > datasetNameToURL =  new HashMap<>();
+	private final Map< String, String > datasetNameToRegExp =  new HashMap<>();
 	private ProgressListener progressListener;
 
 	public SampleDataDownloader()
@@ -78,7 +78,7 @@ public class SampleDataDownloader
 			final String fileName = new File( datasetNameToURL.get( datasetName ) ).getName();
 			final File outputFile = new File( outputDirectory, fileName );
 			FileOutputStream fileOS = new FileOutputStream( outputFile );
-			byte data[] = new byte[1024];
+			byte[] data = new byte[1024];
 			int byteContent;
 			long downloadedFileSize = 0;
 			while ((byteContent = inputStream.read(data, 0, 1024)) != -1) {
@@ -113,7 +113,7 @@ public class SampleDataDownloader
 
 		if ( ! CalibrationChecker.checkImage( image ) )
 		{
-			image.setVoxelDimensions( new double[]{1,1,1} );
+			image.setVoxelDimensions( 1,1,1 );
 			image.setVoxelUnit( "pixel" );
 		}
 

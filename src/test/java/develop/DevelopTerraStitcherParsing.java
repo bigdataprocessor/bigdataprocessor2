@@ -52,9 +52,9 @@ public class DevelopTerraStitcherParsing
 					.forEach(f -> {
 						System.out.println( "RegExp: " + finalRegExp );
 						final boolean matches = pattern.matcher( f.toString() ).matches();
-						System.out.println( "toString:       " + f.toString() );
-						System.out.println( "toAbsolutePath: " + f.toAbsolutePath().toString() );
-						System.out.println( f.toString() + ": " + matches );
+						System.out.println( "toString:       " + f );
+						System.out.println( "toAbsolutePath: " + f.toAbsolutePath() );
+						System.out.println( f + ": " + matches );
 					} );
 		}
 		catch ( IOException e )

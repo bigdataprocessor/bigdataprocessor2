@@ -33,6 +33,7 @@ import de.embl.cba.bdp2.image.Image;
 import test.Utils;
 
 import static de.embl.cba.bdp2.open.NamingSchemes.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class TestOpenLeicaDSL
 {
@@ -54,6 +55,7 @@ public class TestOpenLeicaDSL
                 directory,
                 LEICA_DSL_TIFF_PLANES
         );
+        assertNotNull(image, "The image should not be null after opening with BioFormats.");
 
         image.setVoxelDimensions( 1, 1, 1 ); // necessary because voxel size in z is NaN for single plane Tiff
         image.setVoxelUnit( "micrometer" );

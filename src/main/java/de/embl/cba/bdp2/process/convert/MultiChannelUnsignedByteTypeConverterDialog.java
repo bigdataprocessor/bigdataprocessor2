@@ -55,7 +55,7 @@ public class MultiChannelUnsignedByteTypeConverterDialog< R extends RealType< R 
 {
 	private List< double[] > contrastLimits; // to be mapped onto 0 and 255
 	private List< RealUnsignedByteConverter< R > > converters;
-	private long numChannels;
+	private final long numChannels;
 
 	public MultiChannelUnsignedByteTypeConverterDialog( final ImageViewer< R > viewer )
 	{

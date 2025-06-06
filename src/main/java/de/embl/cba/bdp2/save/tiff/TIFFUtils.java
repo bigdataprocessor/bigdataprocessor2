@@ -38,14 +38,17 @@ public class TIFFUtils
 
 		short_index = byte_index = 0;
 
-		for (/*NOP*/; short_index != iterations; /*NOP*/) {
-			// Big Endian: store higher byte first
-			buffer[byte_index] = (byte) ((input[short_index] & 0xFF00) >> 8);
-			buffer[byte_index + 1] = (byte) (input[short_index] & 0x00FF);
+        /*NOP*/
+        /*NOP*/
+        while ( short_index != iterations )
+        {
+            // Big Endian: store higher byte first
+            buffer[byte_index] = (byte) ((input[short_index] & 0xFF00) >> 8);
+            buffer[byte_index + 1] = (byte) (input[short_index] & 0x00FF);
 
-			++short_index;
-			byte_index += 2;
-		}
-		return buffer;
+            ++short_index;
+            byte_index += 2;
+        }
+        return buffer;
 	}
 }

@@ -55,7 +55,7 @@ public class ProgressHelpers
 		}
 
 		Logger.progress( msg,
-				"" + counter.get() + "/" + total
+				counter.get() + "/" + total
 						+ "; time ( spent, left, task ) [ " + unit + " ]: "
 						+ ( int ) ( secondsSpent / divisor )
 						+ ", " + ( int ) ( secondsLeft / divisor )

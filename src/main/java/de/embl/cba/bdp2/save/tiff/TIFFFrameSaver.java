@@ -76,7 +76,7 @@ public class TIFFFrameSaver< R extends RealType< R > & NativeType< R > > impleme
     private final SavingSettings settings;
     private final long startTime;
     private final AtomicBoolean stop;
-    private RandomAccessibleInterval rai;
+    private final RandomAccessibleInterval rai;
 
     public TIFFFrameSaver( int t,
 						   Image< R > image,

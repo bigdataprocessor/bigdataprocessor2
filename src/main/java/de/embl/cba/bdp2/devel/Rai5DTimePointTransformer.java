@@ -48,11 +48,11 @@ import java.util.concurrent.RecursiveTask;
 
 public class Rai5DTimePointTransformer< R extends RealType< R > & NativeType< R > > extends RecursiveTask< RandomAccessibleInterval >
 {
-	private RandomAccessibleInterval raiXYZCT;
-	private int t;
+	private final RandomAccessibleInterval raiXYZCT;
+	private final int t;
 	private final int numChannels;
 	private final AffineTransform3D affine;
-	private InterpolatorFactory interpolatorFactory;
+	private final InterpolatorFactory interpolatorFactory;
 
 	public Rai5DTimePointTransformer( RandomAccessibleInterval raiXYZCT, int timePoint, AffineTransform3D affine, InterpolatorFactory interpolatorFactory) {
 		this.raiXYZCT = raiXYZCT;

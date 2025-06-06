@@ -37,9 +37,9 @@ import bdv.util.volatiles.VolatileTypeMatcher;
 import bdv.util.volatiles.VolatileViewData;
 import de.embl.cba.bdp2.devel.register.HypersliceTransformProvider;
 import de.embl.cba.bdp2.devel.register.TransformedStackView;
-import de.embl.cba.lazyalgorithm.converter.NeighborhoodAverageConverter;
-import de.embl.cba.lazyalgorithm.converter.VolatileNeighborhoodAverageConverter;
-import de.embl.cba.neighborhood.RectangleShape2;
+import de.embl.cba.bdp2.utils.NeighborhoodAverageConverter;
+import de.embl.cba.bdp2.utils.VolatileNeighborhoodAverageConverter;
+import de.embl.cba.bdp2.utils.RectangleShape2;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
@@ -127,8 +127,7 @@ public class VolatileViews
 			final CacheHints hints )
 	{
 		@SuppressWarnings( "unchecked" )
-		final VolatileViewData< T, V > viewData = ( VolatileViewData< T, V > )
-				wrapAsVolatileViewData( rai, queue, hints );
+		final VolatileViewData< T, V > viewData = wrapAsVolatileViewData( rai, queue, hints );
 		return new VolatileRandomAccessibleView<>( viewData );
 	}
 

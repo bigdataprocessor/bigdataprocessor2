@@ -75,7 +75,7 @@ public class SplitChipDialog< R extends RealType< R > & NativeType< R > > extend
 	private ArrayList< ModifiableInterval > intervalsXYZ;
 	private ImageViewer outputViewer;
 	private int numChannelsAfterMerge;
-	private ArrayList< OverlayRenderer > overlayRenderers;
+	private final ArrayList< OverlayRenderer > overlayRenderers;
 
 	public SplitChipDialog( final ImageViewer< R > viewer )
 	{

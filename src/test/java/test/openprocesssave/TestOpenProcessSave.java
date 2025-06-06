@@ -39,6 +39,8 @@ import test.Utils;
 
 import java.util.ArrayList;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 public class TestOpenProcessSave
 {
 	private static Image image;
@@ -74,6 +76,8 @@ public class TestOpenProcessSave
 
 		image = BigDataProcessor2.crop( image, new long[]{5,24,0,0,0,47,58,82,1,1} );
 		image.setName( "image-binned-8bit-crop" );
+
+		assertNotNull(image, "The image should not be null after opening with BioFormats.");
 
 		final SavingSettings settings = SavingSettings.getDefaults();
 		settings.volumesFilePathStump = "src/test/resources/test/output/imaris/" + image.getName();

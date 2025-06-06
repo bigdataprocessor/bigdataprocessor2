@@ -164,7 +164,7 @@ public class HDF5Helper
         HDF5DataTypeInformation dsType = dsInfo.getTypeInformation();
         String typeText = "";
 
-        if (dsType.isSigned() == false) {
+        if ( !dsType.isSigned() ) {
             typeText += "u";
         }
 
@@ -211,7 +211,7 @@ public class HDF5Helper
         HDF5DataTypeInformation dsType = dsInfo.getTypeInformation();
         String typeText = "";
 
-        if (dsType.isSigned() == false) {
+        if ( !dsType.isSigned() ) {
             typeText += "u";
         }
 

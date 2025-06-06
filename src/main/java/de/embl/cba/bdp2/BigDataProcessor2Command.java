@@ -57,7 +57,7 @@ public class BigDataProcessor2Command< R extends RealType< R > & NativeType< R >
     UIService uiService;
 
     public static final String COMMAND_NAME = "BigDataProcessor2";
-    public static final String COMMAND_FULL_NAME = "" + COMMAND_NAME;
+    public static final String COMMAND_FULL_NAME = COMMAND_NAME;
 
     public void run()
     {

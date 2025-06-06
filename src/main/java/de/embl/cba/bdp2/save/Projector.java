@@ -69,7 +69,7 @@ public class Projector
     public static final String SUM = "sum";
 
     final static int FRAME_WIDTH = 0; // frame for boundary between xy - xz and yz
-    private ImagePlus imp;
+    private final ImagePlus imp;
     private boolean doscale = true;
     private double xscale;
     private double yscale;

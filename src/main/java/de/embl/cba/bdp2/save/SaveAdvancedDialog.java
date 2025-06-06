@@ -51,7 +51,7 @@ public class SaveAdvancedDialog< R extends RealType< R > & NativeType< R > > ext
     private final Image< R > inputImage;
     private final SaveFileType saveFileType;
 
-    private static SavingSettings defaults = SavingSettings.getDefaults();
+    private static final SavingSettings defaults = SavingSettings.getDefaults();
 
     private static final JCheckBox cbSaveVolume = new JCheckBox("Save Volume data");
     private static final JComboBox comboCompression = new JComboBox(
@@ -216,7 +216,7 @@ public class SaveAdvancedDialog< R extends RealType< R > & NativeType< R > > ext
         panels.get(panelIndex).add(MESSAGE);
         mainPanel.add( panels.get(panelIndex++));
 
-        menu.add( "Save as " + saveFileType.toString(), mainPanel);
+        menu.add( "Save as " + saveFileType, mainPanel);
         add(menu);
         pack();
     }

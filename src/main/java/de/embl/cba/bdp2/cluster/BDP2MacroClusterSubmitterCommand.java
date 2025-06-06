@@ -35,10 +35,9 @@ import de.embl.cba.cluster.JobExecutor;
 import de.embl.cba.cluster.JobFuture;
 import de.embl.cba.cluster.JobSettings;
 import de.embl.cba.cluster.JobSubmitter;
-import de.embl.cba.morphometry.Utils;
-import de.embl.cba.util.PathMapper;
+import de.embl.cba.bdp2.utils.PathMapper;
+import ij.IJ;
 import net.imagej.ImageJ;
-import net.imglib2.type.logic.BoolType;
 import org.scijava.command.Command;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
@@ -113,7 +112,7 @@ public class BDP2MacroClusterSubmitterCommand extends AbstractClusterSubmitterCo
 				jobSubmitter.addIJMacroExecution( timeSubsetMacro );
 				JobSettings jobSettings = getJobSettings( t0, t1 );
 				jobFutures.add( jobSubmitter.submitJob( jobSettings ) );
-				Utils.wait( 500 );
+				IJ.wait( 500 );
 			}
 		}
 

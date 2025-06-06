@@ -32,7 +32,7 @@ import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.record.ScriptRecorder;
 import de.embl.cba.bdp2.viewer.ImageViewer;
-import de.embl.cba.bdv.utils.BdvUtils;
+import de.embl.cba.bdp2.utils.BdvUtils;
 import fiji.util.gui.GenericDialogPlus;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;

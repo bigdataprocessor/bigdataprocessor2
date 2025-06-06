@@ -33,6 +33,8 @@ import de.embl.cba.bdp2.image.Image;
 import org.junit.jupiter.api.Test;
 import test.Utils;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 public class TestOpenCZIWithBioFormats
 {
     private static Image image;
@@ -49,5 +51,6 @@ public class TestOpenCZIWithBioFormats
     {
         String file = "src/test/resources/test/src_cropped_5x5x5_deskewed.czi";
         image = BigDataProcessor2.openBioFormats( file, 0 );
+        assertNotNull(image, "The image should not be null after opening with BioFormats.");
     }
 }

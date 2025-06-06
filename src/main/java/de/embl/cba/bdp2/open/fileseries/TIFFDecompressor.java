@@ -201,8 +201,7 @@ public class TIFFDecompressor
 							"\nPlease contact tischitischer@gmail.com" );
 					return null;
 				}
-				;
-			}
+            }
 
 		}
 
@@ -226,7 +225,7 @@ public class TIFFDecompressor
 			}
 			catch ( Exception e )
 			{
-				Logger.info( "" + e.toString() );
+				Logger.info( String.valueOf( e ) );
 				Logger.info( "------- s [#] : " + s );
 				Logger.info( "stripLength [bytes] : " + strip.length );
 				Logger.info( "pos [bytes] : " + pos );

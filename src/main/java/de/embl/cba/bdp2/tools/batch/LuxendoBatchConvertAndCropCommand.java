@@ -106,7 +106,7 @@ public class LuxendoBatchConvertAndCropCommand< R extends RealType< R > & Native
                         "Data");
 
                 image.setVoxelUnit( voxelUnit );
-                image.setVoxelDimensions( new double[]{ voxelSpacingX, voxelSpacingY, voxelSpacingZ } );
+                image.setVoxelDimensions( voxelSpacingX, voxelSpacingY, voxelSpacingZ );
                 final ImageViewer viewer = BigDataProcessor2.showImage( image);
 
                 final FinalInterval interval = viewer.getVoxelIntervalXYZCTViaDialog( );
@@ -134,7 +134,7 @@ public class LuxendoBatchConvertAndCropCommand< R extends RealType< R > & Native
                     NamingSchemes.PATTERN_6,
                     "Data");
             image.setVoxelUnit( voxelUnit );
-            image.setVoxelDimensions( new double[]{ voxelSpacingX, voxelSpacingY, voxelSpacingZ } );
+            image.setVoxelDimensions( voxelSpacingX, voxelSpacingY, voxelSpacingZ );
 
             final String outputDirectoryStump = directory.replace( "_channel_0", "" );
 

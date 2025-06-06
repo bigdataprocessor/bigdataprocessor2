@@ -34,6 +34,7 @@ import org.junit.jupiter.api.Test;
 import test.Utils;
 
 import static de.embl.cba.bdp2.open.NamingSchemes.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class TestOpenMultiChannelZLIBCompressedTiffVolumes
 {
@@ -52,6 +53,7 @@ public class TestOpenMultiChannelZLIBCompressedTiffVolumes
         final String directory = "src/test/resources/test/tiff-nc2-nt6-zlib";
 
         image = BigDataProcessor2.openTIFFSeries( directory, MULTI_CHANNEL_VOLUMES + OME_TIF );
+        assertNotNull(image, "The image should not be null after opening with BioFormats.");
 
         image.setVoxelDimensions( 1, 1, 1 );
     }

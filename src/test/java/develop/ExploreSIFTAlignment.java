@@ -109,9 +109,9 @@ import net.imglib2.type.numeric.RealType;
 public class ExploreSIFTAlignment < R extends RealType< R > & NativeType< R > >
 {
 	final private List< Feature > fs1 = new ArrayList< Feature >();
-	final private List< Feature > fs2 = new ArrayList< Feature >();;
+	final private List< Feature > fs2 = new ArrayList< Feature >();
 
-	static private class Param
+    static private class Param
 	{
 		final public FloatArray2DSIFT.Param sift = new FloatArray2DSIFT.Param();
 

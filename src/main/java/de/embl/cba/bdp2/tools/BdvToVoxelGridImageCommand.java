@@ -28,7 +28,7 @@
  */
 package de.embl.cba.bdp2.tools;
 
-import de.embl.cba.bdv.utils.io.BdvToVoxelGridImageConverter;
+import de.embl.cba.bdp2.utils.BdvToVoxelGridImageConverter;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 import org.scijava.command.Command;

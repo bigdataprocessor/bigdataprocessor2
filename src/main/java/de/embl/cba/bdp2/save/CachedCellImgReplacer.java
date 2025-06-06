@@ -30,8 +30,8 @@ package de.embl.cba.bdp2.save;
 
 import de.embl.cba.bdp2.imglib2.LazyStackView;
 import de.embl.cba.bdp2.log.Logger;
-import de.embl.cba.lazyalgorithm.converter.NeighborhoodAverageConverter;
-import de.embl.cba.neighborhood.RectangleShape2;
+import de.embl.cba.bdp2.utils.NeighborhoodAverageConverter;
+import de.embl.cba.bdp2.utils.RectangleShape2;
 import net.imglib2.EuclideanSpace;
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;

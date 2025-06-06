@@ -113,11 +113,11 @@ public class OpenChannelsFileSeriesCommand< R extends RealType< R > & NativeType
         }
         else
         {
-            ScriptRecorder recorder = new ScriptRecorder( this.COMMAND_FULL_NAME, viewingModality, outputImage );
+            ScriptRecorder recorder = new ScriptRecorder( COMMAND_FULL_NAME, viewingModality, outputImage );
             recorder.addCommandParameter( AbstractOpenFileSeriesCommand.DIRECTORY_PARAMETER, directory.getAbsolutePath() );
             recorder.addCommandParameter( AbstractOpenFileSeriesCommand.ARBITRARY_PLANE_SLICING_PARAMETER, enableArbitraryPlaneSlicing );
-            recorder.addCommandParameter( this.REGEXP_PARAMETER, regExp );
-            recorder.addCommandParameter( this.CHANNELS_PARAMETER, channelSubset );
+            recorder.addCommandParameter( REGEXP_PARAMETER, regExp );
+            recorder.addCommandParameter( CHANNELS_PARAMETER, channelSubset );
             recorder.record();
         }
     }
@@ -132,18 +132,18 @@ public class OpenChannelsFileSeriesCommand< R extends RealType< R > & NativeType
         if ( regExp.contains( NamingSchemes.HDF5 ) )
         {
             recorder.setBDP2FunctionName( "openHDF5Series" );
-            recorder.addAPIFunctionPrequelComment( this.COMMAND_NAME );
-            recorder.addAPIFunctionParameter( recorder.quote( directory.toString() ) );
-            recorder.addAPIFunctionParameter( recorder.quote( regExp ) );
-            recorder.addAPIFunctionParameter( recorder.quote( "Data" ) );
+            recorder.addAPIFunctionPrequelComment( COMMAND_NAME );
+            recorder.addAPIFunctionParameter( ScriptRecorder.quote( directory.toString() ) );
+            recorder.addAPIFunctionParameter( ScriptRecorder.quote( regExp ) );
+            recorder.addAPIFunctionParameter( ScriptRecorder.quote( "Data" ) );
             recorder.addAPIFunctionParameter( channels );
         }
         else if ( regExp.contains( NamingSchemes.TIF ) )
         {
             recorder.setBDP2FunctionName( "openTIFFSeries" );
-            recorder.addAPIFunctionPrequelComment( this.COMMAND_NAME );
-            recorder.addAPIFunctionParameter( recorder.quote( directory.toString() ) );
-            recorder.addAPIFunctionParameter( recorder.quote( regExp ) );
+            recorder.addAPIFunctionPrequelComment( COMMAND_NAME );
+            recorder.addAPIFunctionParameter( ScriptRecorder.quote( directory.toString() ) );
+            recorder.addAPIFunctionParameter( ScriptRecorder.quote( regExp ) );
             recorder.addAPIFunctionParameter( channels );
         }
 

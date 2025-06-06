@@ -57,9 +57,9 @@ public class ImarisImageSaver< R extends RealType< R > & NativeType< R > > exten
     static { LegacyInjector.preinit(); }
 
     private final Image< R > image;
-    private SavingSettings savingSettings;
-    private ExecutorService es;
-    private AtomicBoolean stop;
+    private final SavingSettings savingSettings;
+    private final ExecutorService es;
+    private final AtomicBoolean stop;
 
     public ImarisImageSaver( Image< R > image, SavingSettings savingSettings, ExecutorService es) {
         this.image = image;

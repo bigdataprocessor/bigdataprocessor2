@@ -58,7 +58,7 @@ public class MacroRecordingDialog
 		else
 		{
 			final Recorder recorder = Recorder.getInstance();
-			recorder.scriptMode();
+			Recorder.scriptMode();
 			if ( recorder != null )
 				recorder.close();
 		}

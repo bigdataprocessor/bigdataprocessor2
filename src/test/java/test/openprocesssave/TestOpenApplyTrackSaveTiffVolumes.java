@@ -39,6 +39,7 @@ import java.io.File;
 
 import static de.embl.cba.bdp2.open.NamingSchemes.MULTI_CHANNEL_VOLUMES;
 import static de.embl.cba.bdp2.open.NamingSchemes.TIF;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class TestOpenApplyTrackSaveTiffVolumes
 {
@@ -60,10 +61,12 @@ public class TestOpenApplyTrackSaveTiffVolumes
 
         // open
         image = BigDataProcessor2.openTIFFSeries( directory, MULTI_CHANNEL_VOLUMES + TIF );
-        image.setVoxelDimensions( new double[]{1.0, 1.0, 1.0} );
+        image.setVoxelDimensions( 1.0, 1.0, 1.0 );
 
         // track
         trackedImage = BigDataProcessor2.applyTrack( new File( "src/test/resources/test/tracks/tiff-nc2-nt6-with-z-drift.json" ), TestOpenApplyTrackSaveTiffVolumes.image, false );
+
+        assertNotNull(trackedImage, "The image should not be null after opening with BioFormats.");
 
         // save
         final SavingSettings settings = SavingSettings.getDefaults();

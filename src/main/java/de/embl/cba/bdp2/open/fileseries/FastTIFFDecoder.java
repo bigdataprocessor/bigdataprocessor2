@@ -101,8 +101,8 @@ public class FastTIFFDecoder {
     static final int ROI = 0x726f6920;  // "roi " (ROI)
     static final int OVERLAY = 0x6f766572;  // "over" (overlay)
 
-    private String directory;
-    private String name;
+    private final String directory;
+    private final String name;
     private String url;
     protected RandomAccessStream in;
     protected boolean debugMode;
@@ -115,7 +115,7 @@ public class FastTIFFDecoder {
 
     private boolean isBigTIFF = false;
 
-    private int check = 0;
+    private final int check = 0;
 
     //
     long startTimeTotal = 0;
@@ -164,14 +164,14 @@ public class FastTIFFDecoder {
     final void convertToInt(long[] ints, byte[] bytes) {
         if (littleEndian) {
             for (int i = 0, j = 0; i < bytes.length; i += 4, j++) {
-                ints[j] = (((bytes[i+3]&0xff) << 24) |
+                ints[j] = (( ( long ) ( bytes[ i + 3 ] & 0xff ) << 24) |
                            ((bytes[i+2]&0xff) << 16) |
                            ((bytes[i+1]&0xff) << 8) |
-                           ((bytes[i+0]&0xff) << 0));
+                           ((bytes[ i ]&0xff) << 0));
             }
         } else {
             for (int i = 0, j = 0; i < bytes.length; i += 4, j++) {
-                ints[j] = (((bytes[i]&0xff) << 24) | ((bytes[i+1]&0xff) << 16) | ((bytes[i+2]&0xff) << 8) | (bytes[i+3]&0xff));
+                ints[j] = (( ( long ) ( bytes[ i ] & 0xff ) << 24) | ((bytes[i+1]&0xff) << 16) | ((bytes[i+2]&0xff) << 8) | (bytes[i+3]&0xff));
             }
         }
     }
@@ -199,11 +199,11 @@ public class FastTIFFDecoder {
                             ((bytes[i+3]&0xFFL) << 24) |
                             ((bytes[i+2]&0xFFL) << 16) |
                             ((bytes[i+1]&0xFFL) <<  8) |
-                            ((bytes[i+0]&0xFFL) <<  0));
+                            ((bytes[ i ]&0xFFL) <<  0));
             }
         } else {
             for (int i = 0, j = 0; i < bytes.length; i += 8, j++) {
-                longs[j] = (((bytes[i+0]&0xFFL) << 56) |
+                longs[j] = (((bytes[ i ]&0xFFL) << 56) |
                             ((bytes[i+1]&0xFFL) << 48) |
                             ((bytes[i+2]&0xFFL) << 40) |
                             ((bytes[i+3]&0xFFL) << 32) |
@@ -784,7 +784,7 @@ public class FastTIFFDecoder {
                     }
 
                     fi.offset = count>0?fi.stripOffsets[0]:(int)value;
-                    if (count>1 && (((long)fi.stripOffsets[(int)count-1])&0xffffffffL)<(((long)fi.stripOffsets[0])&0xffffffffL))
+                    if (count>1 && ( fi.stripOffsets[(int)count-1] &0xffffffffL)<( fi.stripOffsets[0] &0xffffffffL))
                         fi.offset = fi.stripOffsets[(int)count-1];
                     //info("fi.offset "+fi.offset);
                     stripTime += (System.nanoTime() - startTimeStrips);
@@ -1015,7 +1015,7 @@ public class FastTIFFDecoder {
 
         }  // loop through entries
 
-        fi.fileFormat = fi.TIFF;
+        fi.fileFormat = BDP2FileInfo.TIFF;
         fi.fileName = name;
         fi.directory = directory;
         if (url!=null)
@@ -1229,7 +1229,7 @@ public class FastTIFFDecoder {
             if (debugMode && ifdCount<10) dInfo += "  nextIFD=" + ifdOffset + "\n";
             if (fi!=null && fi.nImages > 1) {
                 // set offsets of the following IFDs
-                long size = fi.width*fi.height*fi.bytesPerPixel;
+                long size = ( long ) fi.width *fi.height*fi.bytesPerPixel;
                 for (int n=1; n < fi.nImages; n++) {
                     BDP2FileInfo fi2 = new BDP2FileInfo();
                     fi2.offset = fi.offset + (n-1)*(size+fi.gapBetweenImages);
@@ -1270,7 +1270,7 @@ public class FastTIFFDecoder {
             if (gap<minGap) minGap = gap;
             if (gap>maxGap) maxGap = gap;
         }
-        long imageSize = fi[0].width*fi[0].height*fi[0].getBytesPerPixel();
+        long imageSize = ( long ) fi[ 0 ].width *fi[0].height*fi[0].getBytesPerPixel();
         minGap -= imageSize;
         maxGap -= imageSize;
         if (minGap==maxGap)
@@ -1283,7 +1283,7 @@ public class FastTIFFDecoder {
 		if (fi.description==null || fi.description.length()<7)
 			return null;
 		if (IJ.debugMode)
-			IJ.log("Image Description: " + new String(fi.description).replace('\n',' '));
+			IJ.log("Image Description: " + fi.description.replace('\n',' '));
 		if (!fi.description.startsWith("ImageJ"))
 			return null;
 		Properties props = new Properties();
@@ -1298,7 +1298,7 @@ public class FastTIFFDecoder {
 		fi.unit = dsUnit;
 		Double n = getNumber(props,"cf");
 		if (n!=null) fi.calibrationFunction = n.intValue();
-		double c[] = new double[5];
+		double[] c = new double[5];
 		int count = 0;
 		for (int i=0; i<5; i++) {
 			n = getNumber(props,"c"+i);
@@ -1308,8 +1308,7 @@ public class FastTIFFDecoder {
 		}
 		if (count>=2) {
 			fi.coefficients = new double[count];
-			for (int i=0; i<count; i++)
-				fi.coefficients[i] = c[i];
+            System.arraycopy( c, 0, fi.coefficients, 0, count );
 		}
 		fi.valueUnit = props.getProperty("vunit");
 		n = getNumber(props,"images");
@@ -1344,7 +1343,7 @@ public class FastTIFFDecoder {
 
 	private boolean getBoolean(Properties props, String key) {
 		String s = props.getProperty(key);
-		return s!=null&&s.equals("true")?true:false;
+		return s != null && s.equals( "true" );
 	}
 
 }

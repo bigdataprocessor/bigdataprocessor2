@@ -47,7 +47,7 @@ import de.embl.cba.bdp2.service.ImageService;
 import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.RAISlicer;
 import de.embl.cba.bdp2.volatiles.VolatileCachedCellImgs;
-import de.embl.cba.bdv.utils.BdvUtils;
+import de.embl.cba.bdp2.utils.BdvUtils;
 import net.imglib2.*;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
@@ -75,7 +75,7 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
     private ArrayList< BdvStackSource< R > > channelSources;
     private BdvHandle bdvHandle;
     private Map< String, Track > tracks;
-    private int numRenderingThreads = Runtime.getRuntime().availableProcessors();
+    private final int numRenderingThreads = Runtime.getRuntime().availableProcessors();
 
     public ImageViewer( final Image< R > image )
     {
@@ -95,7 +95,7 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
         }
 
         this.image = image;
-        this.enableArbitraryPlaneSlicing = enableArbitraryPlaneSlicing;
+        ImageViewer.enableArbitraryPlaneSlicing = enableArbitraryPlaneSlicing;
         this.channelSources = new ArrayList<>(  );
 
         showImage( image, autoContrast );

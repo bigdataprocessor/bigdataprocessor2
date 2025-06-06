@@ -66,24 +66,23 @@ public class CellLoaderLogger< T extends NativeType< T > >
 		cell.min( min );
 		cell.max( max );
 
-		StringBuilder builder = new StringBuilder( "Read " );
-		builder.append( Arrays.toString( min ) );
-		builder.append( " - "  );
-		builder.append( Arrays.toString( max ) );
-		builder.append( " in "  );
-		builder.append( String.format("%.2f", durationNanos / Math.pow( 10, 6 ) ) );
-		builder.append( " ms "  );
-		builder.append( " ( "  );
-		builder.append( String.format("%.2f", 1.0 * numBytes() / durationNanos * Math.pow( 10, 3 ) ) );
-		builder.append( " MB/s )"  );
+        String builder = "Read " + Arrays.toString( min ) +
+                " - " +
+                Arrays.toString( max ) +
+                " in " +
+                String.format( "%.2f", durationNanos / Math.pow( 10, 6 ) ) +
+                " ms " +
+                " ( " +
+                String.format( "%.2f", 1.0 * numBytes() / durationNanos * Math.pow( 10, 3 ) ) +
+                " MB/s )";
 
-		return builder.toString();
+		return builder;
 	}
 
 	private int numBytes()
 	{
 		Object array = cell.getStorageArray();
-		if ( array instanceof byte[] ) return ( ( byte[] ) array ).length * 1;
+		if ( array instanceof byte[] ) return ( ( byte[] ) array ).length;
 		else if ( array instanceof short[] ) return ( ( short[] ) array ).length * 2;
 		else if ( array instanceof int[] ) return ( ( int[] ) array ).length * 4;
 		else if ( array instanceof long[] ) return ( ( long[] ) array ).length * 8;

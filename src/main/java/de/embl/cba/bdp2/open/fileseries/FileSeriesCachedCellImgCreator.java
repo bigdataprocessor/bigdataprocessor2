@@ -52,8 +52,8 @@ public class FileSeriesCachedCellImgCreator< R extends RealType< R > & NativeTyp
     private final FileInfos fileInfos;
     private final String imageName;
     private final long[] imageDimsXYZCT;
-    private String[] channelNames;
-    private double[] voxelSize;
+    private final String[] channelNames;
+    private final double[] voxelSize;
     private Unit< Length > voxelUnit;
 
     public FileSeriesCachedCellImgCreator( FileInfos fileInfos )

@@ -42,10 +42,7 @@ public abstract class CacheUtils
 	{
 		if ( fileInfos.fileType.equals( FileSeriesFileType.TIFF_PLANES ) || fileInfos.fileType.equals( FileSeriesFileType.TIFF_STACKS ) )
 		{
-			if ( fileInfos.numTIFFStrips == 1 && fileInfos.compression != NONE )
-			{
-			   return true;
-			}
+            return fileInfos.numTIFFStrips == 1 && fileInfos.compression != NONE;
 		}
 		return false;
 	}

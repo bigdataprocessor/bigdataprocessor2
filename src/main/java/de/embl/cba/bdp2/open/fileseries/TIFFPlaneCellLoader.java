@@ -186,8 +186,7 @@ public class TIFFPlaneCellLoader implements Runnable
 		else
 		{
 			Logger.error( "Unsupported bit depth: " + 8 * fi.bytesPerPixel );
-			return;
-		}
+        }
 	}
 
 	private void setShortPixelsCropXY( short[] cellArray, int cellPos, int rowOffset, int numRows, int colOffset, int numCols, int colSurplus, int imByteWidth, byte[] buffer )

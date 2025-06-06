@@ -67,9 +67,9 @@ public class Registration< R extends RealType< R > & NativeType< R > >
 	private final FinalInterval hyperSliceInterval;
 	private final String registrationMethod;
 
-	private int numHyperSliceDimensions;
+	private final int numHyperSliceDimensions;
 	private final int numThreads;
-	private int numHyperSlices;
+	private final int numHyperSlices;
 
 	private ProgressListener progressListener;
 	private int totalTransforms;

@@ -45,9 +45,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class TIFFPlanesSaver extends AbstractImageSaver
 {
     private final Image image;
-    private SavingSettings settings;
-    private ExecutorService es;
-    private AtomicBoolean stop;
+    private final SavingSettings settings;
+    private final ExecutorService es;
+    private final AtomicBoolean stop;
 
     public TIFFPlanesSaver( Image image, SavingSettings settings, ExecutorService es ) {
         this.image = image;

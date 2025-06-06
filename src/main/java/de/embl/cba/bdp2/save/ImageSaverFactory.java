@@ -63,8 +63,8 @@ public class ImageSaverFactory < R extends RealType< R > & NativeType< R > >
             }
             catch ( Exception e )
             {
-                System.out.printf( "Cache could not be optimised for saving.\n" );
-                System.out.printf( "Saving anyway, but it might be slower...\n" );
+                System.out.print( "Cache could not be optimised for saving.\n" );
+                System.out.print( "Saving anyway, but it might be slower...\n" );
             }
         }
 

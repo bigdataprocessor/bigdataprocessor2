@@ -120,15 +120,15 @@ public class VolatileCachedCellImgs
 
 		RandomAccessibleInterval< ? > cachedCellImg;
 
-		if ( UnsignedByteType.class.isInstance( typeFromInterval ) )
+		if ( typeFromInterval instanceof UnsignedByteType )
 		{
 			cachedCellImg = asVolatileByteTypeCachedCellImg( ( RandomAccessibleInterval ) image.getRai(), grid );
 		}
-		else if( UnsignedShortType.class.isInstance( typeFromInterval ) )
+		else if( typeFromInterval instanceof UnsignedShortType )
 		{
 			cachedCellImg = asVolatileShortTypeCachedCellImg( ( RandomAccessibleInterval ) image.getRai(), grid );
 		}
-		else if ( FloatType.class.isInstance( typeFromInterval ) )
+		else if ( typeFromInterval instanceof FloatType )
 		{
 			cachedCellImg = asVolatileFloatTypeCachedCellImg( ( RandomAccessibleInterval ) image.getRai(), grid );
 		}

@@ -58,7 +58,7 @@ import de.embl.cba.bdp2.devel.register.RegisteredViews;
 import de.embl.cba.bdp2.devel.register.Registration;
 import de.embl.cba.bdp2.service.ImageViewerService;
 import de.embl.cba.bdp2.viewer.ImageViewer;
-import de.embl.cba.tables.FileAndUrlUtils;
+import de.embl.cba.bdp2.utils.FileAndUrlUtils;
 import ij.IJ;
 import net.imagej.patcher.LegacyInjector;
 

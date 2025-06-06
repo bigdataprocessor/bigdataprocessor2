@@ -48,9 +48,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class HDF5StacksSaver < R extends RealType< R > & NativeType< R > > extends AbstractImageSaver
 {
     private final Image< R > image;
-    private SavingSettings savingSettings;
-    private ExecutorService es;
-    private AtomicBoolean stop;
+    private final SavingSettings savingSettings;
+    private final ExecutorService es;
+    private final AtomicBoolean stop;
 
     public HDF5StacksSaver( Image< R > image, SavingSettings savingSettings, ExecutorService es) {
         this.image = image;

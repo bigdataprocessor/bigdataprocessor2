@@ -37,6 +37,7 @@ import test.Utils;
 
 import static de.embl.cba.bdp2.open.NamingSchemes.LUXENDO;
 import static de.embl.cba.bdp2.open.NamingSchemes.P;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class TestOpenViventis
 {
@@ -53,6 +54,7 @@ public class TestOpenViventis
     public void run()
     {
         image = BigDataProcessor2.openTIFFSeries( "src/test/resources/test/nc1-nt1-vivents-tiff", NamingSchemes.VIVENTIS );
+        assertNotNull(image, "The image should not be null after opening with BioFormats.");
 
         Assertions.assertEquals( image.getDimensionsXYZCT()[4], 2 );
     }

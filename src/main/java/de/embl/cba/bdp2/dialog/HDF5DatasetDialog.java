@@ -37,7 +37,7 @@ import java.util.List;
 
 public class HDF5DatasetDialog extends JDialog implements ActionListener {
 
-    private JComboBox datasetCombo;
+    private final JComboBox datasetCombo;
     private String selectedDataset;
 
     public HDF5DatasetDialog( List<String> hdf5Header, boolean isEditable){

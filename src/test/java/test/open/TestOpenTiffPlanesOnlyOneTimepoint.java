@@ -35,6 +35,7 @@ import org.junit.jupiter.api.Test;
 import test.Utils;
 
 import static de.embl.cba.bdp2.open.NamingSchemes.Z;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class TestOpenTiffPlanesOnlyOneTimepoint
 {
@@ -53,6 +54,7 @@ public class TestOpenTiffPlanesOnlyOneTimepoint
         final String directory = "src/test/resources/test/tiff-planes-no-time";
 
         image = BigDataProcessor2.openTIFFSeries( directory, ".*_z(" + Z + "\\d+).*_c(" + NamingSchemes.C + "\\d+).*" );
+        assertNotNull(image, "The image should not be null after opening with BioFormats.");
 
         double[] voxelSize = image.getVoxelDimensions();
         image.setVoxelDimensions( voxelSize[ 0 ], voxelSize[ 1 ], 1.0 ); // necessary because voxel size in z is NaN for single plane Tiff

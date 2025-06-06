@@ -56,7 +56,7 @@ public class ConfigureLazyLoadingCommand< R extends RealType< R > & NativeType< 
     public static String CACHE_DIMENSIONS = "chacheDimensions";
 
     // TODO: Make a choice
-    private CacheOptions.CacheType cacheType = CacheOptions.CacheType.SOFTREF;
+    private final CacheOptions.CacheType cacheType = CacheOptions.CacheType.SOFTREF;
 
     @Override
     public void run()

@@ -47,7 +47,7 @@ import static de.embl.cba.bdp2.utils.DimensionOrder.C;
 
 public class SplitChipMerger
 {
-	private ArrayList< FinalInterval > intervalsXYC;
+	private final ArrayList< FinalInterval > intervalsXYC;
 
 	public SplitChipMerger()
 	{
@@ -150,9 +150,9 @@ public class SplitChipMerger
 				System.err.println( "The region to be merged: " + intervalXYZCT
 						+ "\nis outside the image bounds: " + raiXYZCT );
 				throw new UnsupportedOperationException();
-			};
+			}
 
-			final IntervalView crop =
+            final IntervalView crop =
 					Views.zeroMin(
 							Views.interval(
 									raiXYZCT,

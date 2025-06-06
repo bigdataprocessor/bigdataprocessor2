@@ -74,19 +74,11 @@ public abstract class CalibrationChecker< R extends RealType< R > & NativeType< 
 		if ( ! checkVoxelUnit( image.getVoxelUnit() ) )
 			return false;
 
-		if ( ! checkVoxelDimension( image.getVoxelDimensions() ) )
-			return false;
-
-		return true;
-	}
+        return checkVoxelDimension( image.getVoxelDimensions() );
+    }
 
 	public static boolean checkVoxelUnit( Unit< Length > voxelUnit )
 	{
-		if ( voxelUnit == null )
-		{
-			return false;
-		}
-
-		return true;
-	}
+        return voxelUnit != null;
+    }
 }

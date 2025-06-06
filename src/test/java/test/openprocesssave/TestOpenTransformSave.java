@@ -38,6 +38,8 @@ import de.embl.cba.bdp2.save.SavingSettings;
 import org.junit.jupiter.api.Test;
 import test.Utils;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 public class TestOpenTransformSave
 {
 	private static Image image;
@@ -62,6 +64,8 @@ public class TestOpenTransformSave
 
 		image = BigDataProcessor2.transform( image, new double[]{
 				2.0, 0.0, 0.0, 0.0,   0.0, 1.0, 0.0, 0.0,   0.0, 0.0, 1.0, 0.0 }, TransformConstants.LINEAR );
+
+		assertNotNull(image, "The image should not be null after opening with BioFormats.");
 
 		final SavingSettings settings = SavingSettings.getDefaults();
 		settings.volumesFilePathStump = "src/test/resources/test/output/tiff/" + image.getName();

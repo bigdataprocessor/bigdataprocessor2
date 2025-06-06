@@ -45,7 +45,7 @@ public class ImageTransformer < R extends RealType< R > & NativeType< R > >
 {
 	private final Image< R > image;
 	private final AffineTransform3D transform3D;
-	private InterpolatorFactory interpolatorFactory;
+	private final InterpolatorFactory interpolatorFactory;
 
 	public ImageTransformer( Image< R > image, AffineTransform3D transform3D, InterpolatorFactory interpolatorFactory )
 	{

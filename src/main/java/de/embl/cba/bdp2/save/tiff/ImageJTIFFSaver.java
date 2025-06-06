@@ -62,7 +62,7 @@ public class ImageJTIFFSaver
 	private static int jpegQuality;
 	private static int bsize = 32768; // 32K default buffer size
 
-	private static String defaultDirectory = null;
+	private static final String defaultDirectory = null;
 	private ImagePlus imp;
 	private FileInfo fi;
 	private String name;
@@ -371,10 +371,7 @@ public class ImageJTIFFSaver
 	}
 
 	public static boolean okForGif(ImagePlus imp) {
-		if (imp.getType()==ImagePlus.COLOR_RGB)
-			return false;
-		else
-			return true;
+        return imp.getType() != ImagePlus.COLOR_RGB;
 	}
 
 	// Save the image in GIF format using a save file
@@ -525,7 +522,7 @@ public class ImageJTIFFSaver
 			for (int i=0; i<n; i++)
 				pixels[i] = (short)(pixels[i]+32768);
 		}
-		updateImp(fi, fi.RAW);
+		updateImp(fi, FileInfo.RAW );
 		return true;
 	}
 
@@ -571,7 +568,7 @@ public class ImageJTIFFSaver
 					pixels[i] = (short)(pixels[i]+32768);
 			}
 		}
-		updateImp(fi, fi.RAW);
+		updateImp(fi, FileInfo.RAW );
 		return true;
 	}
 

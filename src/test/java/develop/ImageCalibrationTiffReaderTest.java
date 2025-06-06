@@ -45,7 +45,7 @@ public class ImageCalibrationTiffReaderTest
 		final File file = new File(
 				ImageCalibrationTiffReaderTest.class.getResource( "nc1-nt1-calibrated-tiff" ).getFile() );
 
-		IJ.openImage( file.toString() + "/mri-stack.tif" ).show();
+		IJ.openImage( file + "/mri-stack.tif" ).show();
 
 		final TiffDecoder tiffDecoder = new TiffDecoder(
 				file.toString(), "mri-stack.tif" );

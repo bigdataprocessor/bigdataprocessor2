@@ -47,7 +47,7 @@ public class OpenEMTIFFPlanesFileSeriesCommand< R extends RealType< R > & Native
 {
     public static final String COMMAND_NAME = "Open EM TIFF Plane Series...";
     public static final String COMMAND_FULL_NAME = COMMAND_BDP2_PREFIX + COMMAND_NAME;
-    private String regExp = "(?<Z>.*)";
+    private final String regExp = "(?<Z>.*)";
 
     public void run()
     {
@@ -64,8 +64,8 @@ public class OpenEMTIFFPlanesFileSeriesCommand< R extends RealType< R > & Native
         ScriptRecorder recorder = new ScriptRecorder( outputImage );
         recorder.recordImportStatements( true );
         recorder.setBDP2FunctionName( "openTIFFSeries" );
-        recorder.addAPIFunctionParameter( recorder.quote( directory.toString() ) );
-        recorder.addAPIFunctionParameter( recorder.quote( regExp ) );
+        recorder.addAPIFunctionParameter( ScriptRecorder.quote( directory.toString() ) );
+        recorder.addAPIFunctionParameter( ScriptRecorder.quote( regExp ) );
         recorder.record();
     }
 }

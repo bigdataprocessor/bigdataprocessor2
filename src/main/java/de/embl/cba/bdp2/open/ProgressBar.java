@@ -44,7 +44,7 @@ public class ProgressBar implements ProgressListener
     private JDialog dialog;
     private int previousProgress = 0;
     private JFrame frame;
-    private String title;
+    private final String title;
 
     public ProgressBar( String title )
     {

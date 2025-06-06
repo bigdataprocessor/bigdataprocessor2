@@ -89,7 +89,7 @@ public class TIFFPlaneSaver < R extends RealType< R > & NativeType< R > > implem
                 = createPlaneCopy(
                         image.getRai(),
                         image.getRai(),
-                        ( R ) image.getType(),
+                image.getType(),
                         z, c, t );
 
         @SuppressWarnings("unchecked")

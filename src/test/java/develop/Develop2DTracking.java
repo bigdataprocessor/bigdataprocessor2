@@ -58,7 +58,7 @@ public class Develop2DTracking
     {
         // open
         image = BigDataProcessor2.openBioFormats( "/Users/tischer/Desktop/Simona/MAX_20220726_DE_W0011_P0001.tif", 0 );
-        image.setVoxelDimensions( new double[]{1.0, 1.0, 1.0} );
+        image.setVoxelDimensions( 1.0, 1.0, 1.0 );
 
         // track
         trackedImage = BigDataProcessor2.applyTrack( new File( "/Users/tischer/Desktop/Simona/MAX_20220726_DE_W0011_P0001.json" ), Develop2DTracking.image, false );

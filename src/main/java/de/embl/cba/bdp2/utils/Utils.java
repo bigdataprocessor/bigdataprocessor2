@@ -37,9 +37,8 @@ import de.embl.cba.bdp2.image.Image;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.dialog.DisplaySettings;
-import de.embl.cba.bdp2.process.transform.AffineTransformCommand;
 import de.embl.cba.bdp2.scijava.Services;
-import de.embl.cba.tables.color.ColorUtils;
+import de.embl.cba.bdp2.utils.ColorUtils;
 import ij.CompositeImage;
 import ij.IJ;
 import ij.ImagePlus;
@@ -117,7 +116,7 @@ public class Utils {
 
 		if ( binning[ 0 ] > 1 || binning[ 1 ] > 1 || binning[ 2 ] > 1 ){
 			Binner binner = new Binner();
-			dataCube = binner.shrink( dataCube, binning[0], binning[1], binning[2], binner.AVERAGE );
+			dataCube = binner.shrink( dataCube, binning[0], binning[1], binning[2], Binner.AVERAGE );
 		}
 		return dataCube;
 	}
@@ -179,7 +178,7 @@ public class Utils {
 			File directoryOfChannel0 )
 	{
 		String stackIndex = FileInfosHelper.captureRegExp( directoryOfChannel0.getName(), LUXENDO_STACKINDEX );
-		String regExp = MULTI_CHANNEL_VOLUMES_FROM_SUBFOLDERS.replace( "STACK", "" + stackIndex );
+		String regExp = MULTI_CHANNEL_VOLUMES_FROM_SUBFOLDERS.replace( "STACK", stackIndex );
 
 		final Image< R > image =
 				BigDataProcessor2.openHDF5Series(
@@ -194,7 +193,7 @@ public class Utils {
 				voxelSpacingMicrometerZ );
 
 		final SplitChipMerger merger = new SplitChipMerger();
-		return merger.mergeRegionsXYC( image, intervalsXYC );
+		return SplitChipMerger.mergeRegionsXYC( image, intervalsXYC );
 	}
 
 	public static < R extends RealType< R > & NativeType< R > >
@@ -273,7 +272,7 @@ public class Utils {
 			if (f.getType().equals(Unit.class)) {
 				if (f.getName()!=null) {
 					try {
-						if (f.getName().toUpperCase().equals(unit_string.trim().toUpperCase())||((Unit)(f.get(null))).getSymbol().toUpperCase().equals(unit_string.trim().toUpperCase())){
+						if ( f.getName().equalsIgnoreCase( unit_string.trim() )|| ((Unit)(f.get(null))).getSymbol().equalsIgnoreCase( unit_string.trim() )){
 							// Field found
 							Unit u = (Unit) f.get(null); // Field is assumed to be static
 							return u;
@@ -357,7 +356,7 @@ public class Utils {
         THRESHOLD("Threshold"),
         VARIANCE("Variance");
         private final String text;
-        private ImageFilterTypes(String s) {
+        ImageFilterTypes( String s ) {
             text = s;
         }
         @Override
@@ -389,7 +388,7 @@ public class Utils {
     {
         for ( long[] entry : arrayList )
         {
-            Logger.info( "" + entry[0] + "," + entry[1] + "," + entry[2]);
+            Logger.info( entry[0] + "," + entry[1] + "," + entry[2] );
         }
     }
 
@@ -638,13 +637,13 @@ public class Utils {
 
         if (min < Min)
         {
-            Logger.error(""+dimension+" minimum must be >= " + Min + "; please change the value.");
+            Logger.error( dimension+" minimum must be >= " + Min + "; please change the value." );
             return false;
         }
 
         if (max > Max)
         {
-            Logger.error(""+dimension+" maximum must be <= " + Max + "; please change the value.");
+            Logger.error( dimension+" maximum must be <= " + Max + "; please change the value." );
             return false;
         }
 
@@ -757,7 +756,7 @@ public class Utils {
         Iterator it = mp.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry)it.next();
-              Logger.info("" + pair.getKey() + " = " + pair.getValue());
+              Logger.info( pair.getKey() + " = " + pair.getValue() );
             it.remove(); // avoids a ConcurrentModificationException
         }
     }
@@ -871,7 +870,7 @@ public class Utils {
     {
         ImagePlus imp = imp_;
         int[] binning = binning_;
-        String title = new String(imp.getTitle());
+        String title = imp.getTitle();
         Binner binner = new Binner();
 
         Calibration saveCalibration = imp.getCalibration().copy(); // this is due to a bug in the binner
@@ -881,29 +880,29 @@ public class Utils {
         switch( method )
         {
             case "OPEN":
-                impBinned = binner.shrink(imp, binning[0], binning[1], binning[2], binner.MIN);
+                impBinned = binner.shrink(imp, binning[0], binning[1], binning[2], Binner.MIN );
                 //impBinned = binner.shrink(image, binning[0], binning[1], binning[2], binner.AVERAGE);
                 //IJ.merge(impBinned, "Minimum 3D...", "x=1 y=1 z=1");
                 //IJ.merge(impBinned, "Maximum 3D...", "x=1 y=1 z=1");
                 impBinned.setTitle("Open_" + title);
                 break;
             case "CLOSE":
-                impBinned = binner.shrink(imp, binning[0], binning[1], binning[2], binner.MAX);
+                impBinned = binner.shrink(imp, binning[0], binning[1], binning[2], Binner.MAX );
                 //impBinned = binner.shrink(image, binning[0], binning[1], binning[2], binner.AVERAGE);
                 //IJ.merge(impBinned, "Maximum 3D...", "x=1 y=1 z=1");
                 //IJ.merge(impBinned, "Minimum 3D...", "x=1 y=1 z=1");
                 impBinned.setTitle("Close_" + title);
                 break;
             case "AVERAGE":
-                impBinned = binner.shrink(imp, binning[0], binning[1], binning[2], binner.AVERAGE);
+                impBinned = binner.shrink(imp, binning[0], binning[1], binning[2], Binner.AVERAGE );
                 impBinned.setTitle(binningTitle + "_" + title);
                 break;
             case "MIN":
-                impBinned = binner.shrink(imp, binning[0], binning[1], binning[2], binner.MIN);
+                impBinned = binner.shrink(imp, binning[0], binning[1], binning[2], Binner.MIN );
                 impBinned.setTitle(binningTitle + "_Min_" + title);
                 break;
             case "MAX":
-                impBinned = binner.shrink(imp, binning[0], binning[1], binning[2], binner.MAX);
+                impBinned = binner.shrink(imp, binning[0], binning[1], binning[2], Binner.MAX );
                 impBinned.setTitle(binningTitle + "_Max_" + title);
                 break;
             default:
