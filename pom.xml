@@ -82,7 +82,7 @@
 		<license.copyrightOwners>EMBL</license.copyrightOwners>
 
 		<!-- BIOP -->
-		<bigdataviewer-image-loaders.version>0.8.1</bigdataviewer-image-loaders.version>
+		<bigdataviewer-image-loaders.version>0.10.0</bigdataviewer-image-loaders.version>
 
 		<!-- EMBL CBA -->
 		<imaris-writer.version>1.0.6</imaris-writer.version>
