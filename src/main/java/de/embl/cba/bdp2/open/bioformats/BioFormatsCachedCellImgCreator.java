@@ -35,17 +35,15 @@ import bdv.img.cache.VolatileGlobalCellCache;
 import bdv.spimdata.WrapBasicImgLoader;
 import bdv.viewer.Source;
 import bdv.viewer.SourceAndConverter;
-import ch.epfl.biop.bdv.img.legacy.bioformats.BioFormatsBdvOpener;
-import ch.epfl.biop.bdv.img.legacy.bioformats.BioFormatsToSpimData;
-import ch.epfl.biop.bdv.img.legacy.bioformats.BioFormatsTools;
+import ch.epfl.biop.bdv.img.OpenersImageLoader;
+import ch.epfl.biop.bdv.img.OpenersToSpimData;
+import ch.epfl.biop.bdv.img.bioformats.BioFormatsOpener;
+import ch.epfl.biop.bdv.img.opener.OpenerSettings;
 import de.embl.cba.bdp2.open.CachedCellImgCreator;
 import loci.formats.IFormatReader;
-import loci.formats.MetadataTools;
-import loci.formats.meta.IMetadata;
 import mpicbg.spim.data.generic.AbstractSpimData;
 import mpicbg.spim.data.generic.sequence.AbstractSequenceDescription;
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.cache.img.CachedCellImg;
 import net.imglib2.cache.img.optional.CacheOptions;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.ARGBType;
@@ -55,10 +53,11 @@ import ome.units.UNITS;
 import ome.units.quantity.Length;
 import ome.units.unit.Unit;
 import org.apache.commons.io.FilenameUtils;
+import spimdata.util.Displaysettings;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class BioFormatsCachedCellImgCreator < R extends RealType< R > & NativeType< R > > implements CachedCellImgCreator< R >
@@ -74,76 +73,82 @@ public class BioFormatsCachedCellImgCreator < R extends RealType< R > & NativeTy
 
 	public BioFormatsCachedCellImgCreator( String filePath, int series ) {
 
-		imageName = FilenameUtils.removeExtension( new File( filePath ).getName() ); // + "_S"+series;
+		File f = new File( filePath );
+		imageName = FilenameUtils.removeExtension( f.getName() ); // + "_S"+series;
 
-		BioFormatsBdvOpener opener = BioFormatsBdvOpener.getOpener()
-				.location( filePath )
-				.auto()
-				.cornerPositionConvention()
+		// Up to you tischi! if you want to memoize and or lazy downscale - probably safer to disable pyramidize. Keeping memoisation is usually a good idea.
+
+		boolean disable_memo = false;
+		boolean pyramidize = false;
+
+		OpenerSettings openerSettings =
+			OpenerSettings.BioFormats()
+				.location(f)
+				.setSerie(series)
 				.micrometer()
-				.cacheBounded( 100 ) // TODO : is this value ok ?
+				.pyramidize(pyramidize) // Up to you!
+				.useBFMemo(!disable_memo)
 				.positionReferenceFrameLength( new Length( 1, UNITS.MICROMETER ) ) // Compulsory
-				.voxSizeReferenceFrameLength( new Length( 1, UNITS.MICROMETER ) );
+				.voxSizeReferenceFrameLength( new Length( 1, UNITS.MICROMETER ) )
+				.context(null); // Let's hope no context is required
 
-		try ( IFormatReader reader = opener.getReaderPool().acquire() ) {
+		AbstractSpimData<?> spimData = OpenersToSpimData.getSpimData(Collections.singletonList(openerSettings));
 
-			IMetadata meta = (IMetadata) (reader.getMetadataStore());
+		// ------- Below is a not so nice way to get the number of series - it would be better to just ignore the number of series check
+		// The problem is that there's plenty of unchecked casts - pyramidisation breaks this (but it's fixable if needed)
 
-			seriesCount = opener.getNewReader().getSeriesCount();
-
-			AbstractSpimData<?> spimData = BioFormatsToSpimData.getSpimData(opener);
-
-			final AbstractSequenceDescription< ?, ?, ? > seq = spimData.getSequenceDescription();
-			final int numTimepoints = seq.getTimePoints().size();
-			final VolatileGlobalCellCache cache = ( VolatileGlobalCellCache ) ( (ViewerImgLoader) seq.getImgLoader() ).getCacheControl();
-			cache.clearCache();
-
-			WrapBasicImgLoader.wrapImgLoaderIfNecessary( spimData );
-			final ArrayList<SourceAndConverter< ? >> sources = new ArrayList<>();
-			BigDataViewer.initSetups( spimData, new ArrayList<>(), sources );
-
-			// Count all the setups before the one of the series of interest
-			int firstSetup = 0;
-			for (int i = 0; i<series; i++) {
-				firstSetup+=meta.getChannelCount(i);
-			}
-
-			RandomAccessibleInterval<R> modelRAI = (RandomAccessibleInterval<R>) sources.get(firstSetup).getSpimSource().getSource(0,0);
-
-			sizeX = modelRAI.dimension(0); // limited to 2GPixels in one dimension
-			sizeY = modelRAI.dimension(1);
-			sizeZ = modelRAI.dimension(2);
-			sizeC = meta.getChannelCount(series);
-			sizeT = numTimepoints;
-
-			channelColors = new ARGBType[sizeC];
-
-			// TODO : sanity check identical size in XYZCT for all channels. Currently assuming selecting one series does the trick
-
-			List<RandomAccessibleInterval<R>> raisXYZCT = new ArrayList<>();
-
-			int[] cacheSizeXYZ = new int[3];
-
-			for (int iTime = 0; iTime<sizeT;iTime++) {
-				List<RandomAccessibleInterval<R>> raisXYZC = new ArrayList<>();
-				for (int iChannel = 0; iChannel<sizeC;iChannel++) {
-					Source<R> source = (Source<R>) sources.get(firstSetup+iChannel).getSpimSource();
-					channelColors[iChannel] = BioFormatsTools.getColorFromMetadata(meta, series, iChannel);
-					raisXYZC.add(source.getSource(iTime,0));
-					source.getVoxelDimensions().dimensions(voxelSize);
-				}
-				((VolatileCachedCellImg) raisXYZC.get(0)).getCellGrid().cellDimensions(cacheSizeXYZ);
-				raisXYZCT.add(Views.stack(raisXYZC));
-			}
-
-			cacheSize = new int[]{cacheSizeXYZ[0], cacheSizeXYZ[1], cacheSizeXYZ[2],1,1};
-
-			raiXYCZT = Views.stack( raisXYZCT );
-		} catch (IOException e) {
-			e.printStackTrace();
+		OpenersImageLoader imgLoader = (OpenersImageLoader) spimData.getSequenceDescription().getImgLoader();
+		BioFormatsOpener opener = (BioFormatsOpener) imgLoader.openers.get(0);
+		try {
+			IFormatReader reader = opener.getPixelReader().acquire();
+			seriesCount = reader.getSeriesCount();
+			opener.getPixelReader().recycle(reader);
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
+		// ------- End of not clean part. Consider removing getseriescount
+
+		final AbstractSequenceDescription< ?, ?, ? > seq = spimData.getSequenceDescription();
+		final int numTimepoints = seq.getTimePoints().size();
+		final VolatileGlobalCellCache cache = ( VolatileGlobalCellCache ) ( (ViewerImgLoader) seq.getImgLoader() ).getCacheControl();
+		cache.clearCache();
+
+		WrapBasicImgLoader.wrapImgLoaderIfNecessary( spimData );
+		final ArrayList<SourceAndConverter< ? >> sources = new ArrayList<>();
+		BigDataViewer.initSetups( spimData, new ArrayList<>(), sources );
+
+		RandomAccessibleInterval<R> modelRAI = (RandomAccessibleInterval<R>) sources.get(0).getSpimSource().getSource(0,0);
+
+		sizeX = modelRAI.dimension(0); // limited to 2GPixels in one dimension
+		sizeY = modelRAI.dimension(1);
+		sizeZ = modelRAI.dimension(2);
+		sizeC = seq.getViewSetups().size(); // One channel per view setup
+		sizeT = numTimepoints;
+
+		channelColors = new ARGBType[sizeC];
+
+		// TODO : sanity check identical size in XYZCT for all channels. Currently assuming selecting one series does the trick
+
+		List<RandomAccessibleInterval<R>> raisXYZCT = new ArrayList<>();
+
+		int[] cacheSizeXYZ = new int[3];
+
+		for (int iTime = 0; iTime<sizeT;iTime++) {
+			List<RandomAccessibleInterval<R>> raisXYZC = new ArrayList<>();
+			for (int iChannel = 0; iChannel<sizeC;iChannel++) {
+				Source<R> source = (Source<R>) sources.get(iChannel).getSpimSource();
+				int[] rgba = seq.getViewSetups().get(iChannel).getAttribute(Displaysettings.class).color;
+				channelColors[iChannel] = new ARGBType(ARGBType.rgba(rgba[0], rgba[1], rgba[2], rgba[3]));
+				raisXYZC.add(source.getSource(iTime,0));
+				source.getVoxelDimensions().dimensions(voxelSize);
+			}
+			((VolatileCachedCellImg) raisXYZC.get(0)).getCellGrid().cellDimensions(cacheSizeXYZ);
+			raisXYZCT.add(Views.stack(raisXYZC));
+		}
+
+		cacheSize = new int[]{cacheSizeXYZ[0], cacheSizeXYZ[1], cacheSizeXYZ[2],1,1};
+		raiXYCZT = Views.stack( raisXYZCT );
+
 	}
 
 	@Override
