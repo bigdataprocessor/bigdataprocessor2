@@ -35,7 +35,7 @@ import de.embl.cba.bdp2.log.progress.ProgressListener;
 import de.embl.cba.bdp2.save.AbstractImageSaver;
 import de.embl.cba.bdp2.save.SavingSettings;
 import de.embl.cba.bdp2.utils.DimensionOrder;
-import de.embl.cba.bdv.utils.io.BdvRaiXYZCTExporter;
+import de.embl.cba.bdp2.utils.BdvRaiXYZCTExporter;
 import ij.IJ;
 import ij.io.LogStream;
 import net.imglib2.FinalInterval;

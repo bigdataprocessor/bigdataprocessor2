@@ -43,6 +43,8 @@ import net.imglib2.util.LinAlgHelpers;
 import net.imglib2.view.ExtendedRandomAccessibleInterval;
 import net.imglib2.view.Views;
 
+import itc.utilities.VectorUtils;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -555,7 +557,7 @@ public abstract class Transforms
 			// of the two vectors should be zero:
 			// u * x + v * y + w * z != 0
 
-			rotationAxis = VectorUtils.getPerpendicularVector( normalisedAxis );
+			rotationAxis = Utils.getPerpendicularVector( normalisedAxis );
 
 		}
 

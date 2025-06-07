@@ -28,7 +28,7 @@
  */
 package de.embl.cba.bdp2.tools;
 
-import de.embl.cba.bdv.utils.io.BdvImagePlusExport;
+import de.embl.cba.bdp2.utils.BdvImagePlusExport;
 import ij.ImagePlus;
 import ij.plugin.FolderOpener;
 import org.scijava.command.Command;

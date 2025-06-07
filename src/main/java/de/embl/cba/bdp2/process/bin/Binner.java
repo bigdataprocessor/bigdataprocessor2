@@ -29,7 +29,7 @@
 package de.embl.cba.bdp2.process.bin;
 
 import de.embl.cba.bdp2.image.Image;
-import de.embl.cba.lazyalgorithm.view.NeighborhoodViews;
+import de.embl.cba.bdp2.utils.NeighborhoodViews;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;

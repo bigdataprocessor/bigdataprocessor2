@@ -30,9 +30,7 @@ package de.embl.cba.bdp2.utils;
 
 import bdv.SpimSource;
 import bdv.viewer.Interpolation;
-import de.embl.cba.bdp2.utils.BdvUtils;
-import de.embl.cba.bdv.utils.Logger;
-import de.embl.cba.util.CopyUtils;
+import ij.IJ;
 import ij.ImagePlus;
 import ij.io.FileSaver;
 import ij.measure.Calibration;
@@ -92,12 +90,12 @@ public class BdvToVoxelGridImageConverter< T extends RealType< T > & NativeType<
 
 	public void run( FileFormat fileFormat, String pathWithoutExtension )
 	{
-		Logger.log( "Target voxel spacing [" + voxelUnit + "]: " + VectorUtils.toString( targetVoxelSpacing ) );
-		Logger.log( "Target interval [" + voxelUnit + "]: " + IntervalUtils.toString( targetRealInterval ) );
-		Logger.log( "Source voxel spacing [" + voxelUnit + "]: " + VectorUtils.toString( sourceVoxelSpacing ) );
-		Logger.log( "Transformed source interval [voxel]: " + IntervalUtils.toString( transformedSourceInterval ) );
+		IJ.log( "Target voxel spacing [" + voxelUnit + "]: " + VectorUtils.toString( targetVoxelSpacing ) );
+		IJ.log( "Target interval [" + voxelUnit + "]: " + IntervalUtils.toString( targetRealInterval ) );
+		IJ.log( "Source voxel spacing [" + voxelUnit + "]: " + VectorUtils.toString( sourceVoxelSpacing ) );
+		IJ.log( "Transformed source interval [voxel]: " + IntervalUtils.toString( transformedSourceInterval ) );
 
-		Logger.log( "Creating image..." );
+		IJ.log( "Creating image..." );
 		final RandomAccessibleInterval< T > transformedRai =
 				createTransformedRai( interpolatedSource, sourceTransform, transformedSourceInterval );
 
@@ -108,11 +106,11 @@ public class BdvToVoxelGridImageConverter< T extends RealType< T > & NativeType<
 	{
 		switch ( fileFormat ){
 			case Tiff:
-				Logger.log( "Saving as Tiff..." );
+				IJ.log( "Saving as Tiff..." );
 				saveAsTiff( transformedRai, imageTitle, targetVoxelSpacing, voxelUnit, pathWithoutExtension );
 				break;
 			case Bdv:
-				Logger.log( "Saving as Bdv..." );
+				IJ.log( "Saving as Bdv..." );
 				saveAsBdv( transformedRai, imageTitle, targetVoxelSpacing, voxelUnit, pathWithoutExtension );
 				break;
 			default:

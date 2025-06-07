@@ -262,6 +262,12 @@ public class RectangleShape2 implements Shape
 		{
 			return factory;
 		}
+
+		@Override
+		public Neighborhood< T > getType()
+		{
+			return this.randomAccess().getType();
+		}
 	}
 
 	@Override

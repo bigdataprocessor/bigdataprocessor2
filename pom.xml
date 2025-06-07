@@ -87,9 +87,11 @@
 		<!-- EMBL CBA -->
 		<imaris-writer.version>1.0.6</imaris-writer.version>
 		<imagej-cluster.version>1.1.0</imagej-cluster.version>
+		<image-transform-converters.version>0.2.0</image-transform-converters.version>
 
 		<!-- NB: Deploy releases to the SciJava Maven repository. -->
 		<releaseProfiles>sign,deploy-to-scijava</releaseProfiles>
+
 	</properties>
 
 	<repositories>
@@ -111,6 +113,11 @@
 			<groupId>ch.epfl.biop</groupId>
 			<artifactId>bigdataviewer-image-loaders</artifactId>
 			<version>${bigdataviewer-image-loaders.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.itc</groupId>
+			<artifactId>image-transform-converters</artifactId>
+			<version>${image-transform-converters.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>sc.fiji</groupId>
