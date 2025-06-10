@@ -222,6 +222,9 @@ public class FileInfosHelper
             }
         }
 
+        if ( channels.isEmpty() )
+            throw new RuntimeException("No channels found matching: " + Arrays.toString( channelSubset ) );
+
         List< String > sortedChannels = sort( channels );
         fileInfos.nC = sortedChannels.size();
         fileInfos.channelNames = sortedChannels.stream().toArray( String[]::new );

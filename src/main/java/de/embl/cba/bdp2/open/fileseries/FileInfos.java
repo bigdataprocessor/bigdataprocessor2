@@ -245,20 +245,20 @@ public class FileInfos
     return  type;
     }
 
-    public BDP2FileInfo[] getVolumeFileInfos( int channel, int time )
+    public BDP2FileInfo[] getVolumeFileInfos( int c, int t )
     {
         int z = 0;
 
         if ( FileSeriesFileType.is3D( fileType ) )
         {
-            setInfosFromFile( channel, time, z );
+            setInfosFromFile( c, t, z );
         }
         else if ( FileSeriesFileType.is2D( fileType ) )
         {
-            int nZ = ctzFilePaths[channel][time].length;
+            int nZ = ctzFilePaths[c][t].length;
             for (; z < nZ; ++z)
             {
-                setInfosFromFile(channel, time, z );
+                setInfosFromFile(c, t, z );
             }
         }
         else
@@ -266,7 +266,7 @@ public class FileInfos
             throw new UnsupportedOperationException( "File type not supported " + fileType );
         }
 
-        return ctzFileInfos[channel][time];
+        return ctzFileInfos[c][t];
     }
 
     private void setInfosFromFile( final int c, final int t, final int z )
@@ -315,6 +315,34 @@ public class FileInfos
         ctzFileInfos[ c ][ t ][ z ].fileTypeString = fileType.toString();
     }
 
+    public int[] getChunkSizesXYZ( int c, int t )
+    {
+        File file = new File( ctzFilePaths[c][t][0] );
+        if ( fileType.equals( FileSeriesFileType.TIFF_STACKS ) )
+        {
+            return new int[]{nX, nY, 1};
+        }
+        else if ( fileType.equals( FileSeriesFileType.LUXENDO ) || fileType.equals( FileSeriesFileType.HDF5_VOLUMES ) )
+        {
+            IHDF5Reader reader = HDF5Factory.openForReading( file.getAbsolutePath() );
+            HDF5DataSetInformation dsInfo = reader.getDataSetInformation( h5DataSetName );
+            int[] chunkSizesZYX = dsInfo.tryGetChunkSizes();
+            if ( chunkSizesZYX == null )
+                return new int[]{nX, nY, 1};
+
+            int[] chunkSizesXYZ = { chunkSizesZYX[2], chunkSizesZYX[1], chunkSizesZYX[0] };
+            return chunkSizesXYZ;
+        }
+        else if ( fileType.equals( FileSeriesFileType.TIFF_PLANES) )
+        {
+            return new int[]{nX, nY, 1};
+        }
+        else
+        {
+            return new int[]{nX, nY, 1};
+        }
+    }
+
     private void loadMetadataFromHDF5Stack( int c, int t, File file )
     {
         BDP2FileInfo[] infoCT;
@@ -322,6 +350,7 @@ public class FileInfos
 
         IHDF5Reader reader = HDF5Factory.openForReading( file.getAbsolutePath() );
         HDF5DataSetInformation dsInfo = reader.getDataSetInformation( h5DataSetName );
+        int[] chunkSizes = dsInfo.tryGetChunkSizes();
         //String dsTypeString = OpenerExtension.hdf5InfoToString(dsInfo);
         String dsTypeString = HDF5Helper.dsInfoToTypeString(dsInfo); //TODO: Check if OpenerExtension.hdf5InfoToString can be made public and called.
 

@@ -122,9 +122,14 @@ public class FileSeriesCachedCellImgCreator< R extends RealType< R > & NativeTyp
 
         // int[] cellDims = CacheUtils.planeWiseCellDims( imageDimensionsXYZ, fileInfos.bitDepth, isPlaneWiseCompressed( fileInfos ) );
         // to simplify benchmarking and maybe this still is the fastest in most cases anyway
-        int [] cellDims = CacheUtils.planeWiseCellDims( imageDimensionsXYZ, fileInfos.bitDepth, true );
+        // TODO: For HDF5 read the chunking from the first file
+        int[] chunkSizesXYZ = fileInfos.getChunkSizesXYZ( 0, 0 );
 
-        return cellDims;
+        int[] cellDimsXYZCT = new int[]{chunkSizesXYZ[0], chunkSizesXYZ[1], chunkSizesXYZ[2], 1, 1 };
+
+//       int[] cellDims = CacheUtils.planeWiseCellDims( imageDimensionsXYZ, fileInfos.bitDepth, true );
+
+        return cellDimsXYZCT;
     }
 
     public CachedCellImg< R, ? > createCachedCellImg( int[] cellDimsXYZCT, CacheOptions.CacheType cacheType, long cacheSize )
