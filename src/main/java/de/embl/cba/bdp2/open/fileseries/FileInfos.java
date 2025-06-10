@@ -350,8 +350,6 @@ public class FileInfos
 
         IHDF5Reader reader = HDF5Factory.openForReading( file.getAbsolutePath() );
         HDF5DataSetInformation dsInfo = reader.getDataSetInformation( h5DataSetName );
-        int[] chunkSizes = dsInfo.tryGetChunkSizes();
-        //String dsTypeString = OpenerExtension.hdf5InfoToString(dsInfo);
         String dsTypeString = HDF5Helper.dsInfoToTypeString(dsInfo); //TODO: Check if OpenerExtension.hdf5InfoToString can be made public and called.
 
         if (dsTypeString.equals("int16") || dsTypeString.equals("uint16")){

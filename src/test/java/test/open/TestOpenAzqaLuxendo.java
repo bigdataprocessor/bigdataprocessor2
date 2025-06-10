@@ -54,7 +54,7 @@ public class TestOpenAzqaLuxendo
 
         image = BigDataProcessor2.openHDF5Series(
                 //"/Users/tischer/Desktop/azkhan/stack_6-morg6_channel_1-nuclei560_obj_bottom", // local
-                "/Volumes/2024-12-04_163115/raw/stack_6-morg6_channel_1-nuclei560_obj_bottom",
+                "/Volumes/2024-12-04_163115/raw/stack_6-morg6_channel_1-nuclei560_obj_bottom", // server
                 null,
                 regExp,
                 "Data",

@@ -32,6 +32,7 @@ import ch.epfl.biop.bdv.img.legacy.bioformats.BioFormatsTools;
 import de.embl.cba.bdp2.log.Logger;
 import de.embl.cba.bdp2.open.CacheUtils;
 import de.embl.cba.bdp2.open.CachedCellImgCreator;
+import ij.IJ;
 import net.imglib2.cache.img.CachedCellImg;
 import net.imglib2.cache.img.ReadOnlyCachedCellImgFactory;
 import net.imglib2.cache.img.ReadOnlyCachedCellImgOptions;
@@ -127,6 +128,7 @@ public class FileSeriesCachedCellImgCreator< R extends RealType< R > & NativeTyp
 
         int[] cellDimsXYZCT = new int[]{chunkSizesXYZ[0], chunkSizesXYZ[1], chunkSizesXYZ[2], 1, 1 };
 
+        IJ.log("Chunking XYZCT: " + Arrays.toString( cellDimsXYZCT ) );
 //       int[] cellDims = CacheUtils.planeWiseCellDims( imageDimensionsXYZ, fileInfos.bitDepth, true );
 
         return cellDimsXYZCT;
