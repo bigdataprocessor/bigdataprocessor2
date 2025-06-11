@@ -87,7 +87,7 @@
 
 		<!-- EMBL CBA -->
 		<imaris-writer.version>1.0.6</imaris-writer.version>
-		<imagej-cluster.version>1.1.0</imagej-cluster.version>
+		<imagej-cluster.version>1.1.1</imagej-cluster.version>
 		<image-transform-converters.version>0.2.0</image-transform-converters.version>
 
 		<!-- NB: Deploy releases to the SciJava Maven repository. -->
