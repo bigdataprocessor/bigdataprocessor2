@@ -51,7 +51,7 @@ public class OpenBDVBioFormatsCommand< R extends RealType< R > & NativeType< R >
     public static final String COMMAND_FULL_NAME = COMMAND_BDP2_PREFIX + COMMAND_NAME;
 
     @Parameter( label = "Series index", min = "0", persist = false )
-    private final int seriesIndex = 0;
+    private int seriesIndex = 0;
 
     @Override
     public void run() {
