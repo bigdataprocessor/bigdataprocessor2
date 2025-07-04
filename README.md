@@ -128,7 +128,10 @@ Changes the voxel size. Motivation: The voxel size may not always be read correc
 Correct sample motion by interactively creating a 3D track, which will be applied such that the image is stationary relative to the track positions.
 Motivation: For time lapse data there is a risk that a sample moves during acquisition. To accommodate for either sample or microscope drift it is common to choose a field of view to encompass expected drift at the expense of larger data footprint. This can be compensated by cropping the data. However, applying a static volumetric crop over the whole time lapse is suboptimal. Therefore an ideal crop would be on drift corrected data (see Supplementary Movie 2). Additional applications can be, e.g., tracking motile cells in tissues. 
 
+Example video: https://youtu.be/BGiUs-CaSpY
+
 #### Process > Correct Drift > Create Track…
+
 Create a 3D track by manually placing anchor points in a subset of time points (track positions in the other time-points will be automatically added by linear interpolation). When done, save the track as a Json file to disk, to be used in [ Process > Correct Drift > Apply Track…].
 
 <img src="./docs/images/Process_Track.png" width="1000">
@@ -245,7 +248,7 @@ Presents different logging levels, currently: Normal, Debug, and Benchmark. Moti
 
 # Additional information
 
-### More example videos
+### Example videos
 
 #### <a name="binninglink"></a>Binning
     
@@ -256,6 +259,10 @@ Presents different logging levels, currently: Normal, Debug, and Benchmark. Moti
 
 #### <a name="bitdepthlink"></a>Bit-depth conversion
 [<img width="300" alt="image" src="./docs/images/4.png">](https://drive.google.com/open?id=1jRZEepD1C8rM5t2gDi7tYnFh092vUztm)
+
+#### <a name="drift"></a>Drift correction
+
+https://youtu.be/BGiUs-CaSpY
 
 ## Hardware recommendations ##
 It is recommended that the image data is accessed via a local area network (LAN) cable. For example, accessing the data over a slow (few MB/s) internet connection (e.g., in a home office scenario) can result in update rates of the currently viewed image plane of less than once per second, which is not ideal for interactive browsing of the data. For a good user experience tens of MB/s data transfer rate or above is recommended for typical data sets with image planes that are about 2k x 2k pixels in size.
