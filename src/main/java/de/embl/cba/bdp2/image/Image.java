@@ -107,7 +107,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 				1000 );
 		this.rai = cachedCellImgCreator.createCachedCellImg( cachedCellDims, CacheOptions.CacheType.BOUNDED, 100 );
 		this.rawDataDimensions = this.getDimensionsXYZCT();
-		this.type = Util.getTypeFromInterval( rai );
+		this.type = rai.getType();
 	}
 
 	/*
@@ -147,7 +147,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 
 	public String getTypeAsString()
 	{
-		final R type = Util.getTypeFromInterval( rai );
+		final R type = rai.getType();
 		if ( type instanceof UnsignedByteType )
 			return "unsigned 8 bit";
 		else if ( type instanceof UnsignedShortType )
@@ -222,7 +222,7 @@ public class Image< R extends RealType< R > & NativeType< R > >
 	public void setRai( RandomAccessibleInterval< R > raiXYZCT )
 	{
 		this.rai = raiXYZCT;
-		type = Util.getTypeFromInterval( rai );
+		type = rai.getType();
 	}
 
 	public double[] getVoxelDimensions()

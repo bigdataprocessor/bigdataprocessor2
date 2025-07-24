@@ -64,7 +64,7 @@ public class MultiChannelUnsignedByteTypeConverterDialog< R extends RealType< R 
 		this.numChannels = inputImage.getNumChannels();
 		final RandomAccessibleInterval< R > rai = inputImage.getRai();
 
-		if ( ( Util.getTypeFromInterval( rai ) instanceof UnsignedByteType) )
+		if ( ( rai.getType() instanceof UnsignedByteType) )
 		{
 			IJ.showMessage("This image is already of unsigned byte type.");
 			return;

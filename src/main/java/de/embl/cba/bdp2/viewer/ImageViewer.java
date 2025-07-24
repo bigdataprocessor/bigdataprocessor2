@@ -500,39 +500,6 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
         }
     }
 
-    @Deprecated
-    private RandomAccessibleInterval< Volatile< R > > asVolatile( RandomAccessibleInterval< R > rai ) {
-
-        try {
-            final RandomAccessibleInterval< Volatile< R > > volatileRai = VolatileViews.wrapAsVolatile( rai );
-            final Volatile< R > typeFromInterval = Util.getTypeFromInterval( volatileRai );
-            return volatileRai;
-        }
-        catch (IllegalArgumentException e)
-		{
-			System.err.println( "Wrap as volatile failed!");
-            return null;
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    private void addGrayValueOverlay() {
-
-        // TODO: this seems to sometimes clash with other overlays
-        // e.g., the selectionBox
-//        if (overlay == null) {
-//            overlay = new BdvGrayValuesOverlay(this.bdvSS, 20, "Courier New");
-//        }
-//        BdvFunctions.showOverlay(overlay,
-//                "GrayOverlay",
-//                BdvOptions.options().addTo(bdvSS));
-
-    }
-
     public void addTrack( Track track )
     {
         tracks.put( track.getName(), track );

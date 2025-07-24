@@ -115,7 +115,7 @@ public class VolatileCachedCellImgs
 
 	public static < R extends RealType< R > & NativeType< R > > RandomAccessibleInterval< R > asVolatileCachedCellImg( Image< R > image )
 	{
-		final Type typeFromInterval = Util.getTypeFromInterval( image.getRai() );
+		final Type typeFromInterval = image.getRai().getType();
 		final CellGrid grid = new CellGrid( Intervals.dimensionsAsLongArray( image.getRai() ), image.getCachedCellDims() );
 
 		RandomAccessibleInterval< ? > cachedCellImg;

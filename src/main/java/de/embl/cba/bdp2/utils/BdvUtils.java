@@ -883,7 +883,7 @@ public abstract class BdvUtils
 								Views.addDimension(
 										Views.stack( frames2D ), 0, 0 ),
 								2, 3 ),
-						Util.getTypeFromInterval( Views.stack( frames2D ) ),
+						Views.stack( frames2D ).getType(),
 						name );
 
 		return source;

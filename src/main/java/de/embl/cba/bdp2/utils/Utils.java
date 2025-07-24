@@ -154,7 +154,7 @@ public class Utils {
 		for ( int d = 0; d < n; d++ )
 			sizeGB *= dims[ d ];
 
-		final Object type = Util.getTypeFromInterval( rai );
+		final Object type = rai.getType();
 		if ( type instanceof UnsignedByteType )
 			sizeGB *= 1;
 		else if ( type instanceof UnsignedShortType )
@@ -321,20 +321,6 @@ public class Utils {
 				System.exit(1);
 			}
 		}
-	}
-
-	public static int getBitDepth( RandomAccessibleInterval< ? > raiXYZCT )
-	{
-		int bitDepth;
-		final Object typeFromInterval = Util.getTypeFromInterval( raiXYZCT );
-		if ( typeFromInterval instanceof UnsignedByteType )
-			bitDepth = 8;
-		else if ( typeFromInterval instanceof UnsignedShortType )
-			bitDepth = 16;
-		else
-			throw new UnsupportedOperationException( "Type not supported: " + typeFromInterval );
-
-		return bitDepth;
 	}
 
 	public static ARGBType getAutoColor( int channelIndex, int numChannels )
@@ -607,82 +593,6 @@ public class Utils {
 		imp.setCalibration( calibration );
 	}
 
-	public static < T extends RealType< T > & NativeType< T >> void applyIntensityGate (Img< T > rai, int[] gate) {
-        int min = gate[0];
-        int max = gate[1];
-        if(!(min == -1 && max == -1)) {
-            Cursor<T> cursor = rai.cursor();
-            T val = rai.firstElement();
-            if (val instanceof UnsignedShortType) {
-                if (max == -1) {
-                    max = Short.MAX_VALUE * 2 + 1;
-                }
-            } else if (val instanceof UnsignedByteType) {
-                if (max == -1) {
-                    max = Byte.MAX_VALUE * 2 + 1;
-                }
-            } else {
-                return;
-            }
-            double value;
-            while (cursor.hasNext()) {
-                value = cursor.next().getRealDouble();
-                if (value > max || value < min) {
-                    cursor.get().setZero();
-                } else {
-                    value -= min;
-                    cursor.get().setReal(value);
-                }
-            }
-        }
-    }
-
-    public static boolean checkRange(ImagePlus imp, int min, int max, String dimension) {
-        // setup
-        //
-
-        int Min = 0, Max = 0;
-
-        if ( dimension.equals("z") )
-        {
-            Min = 1;
-            Max = imp.getNSlices();
-        }
-        else if ( dimension.equals("t") )
-        {
-            Min = 1;
-            Max = imp.getNFrames();
-        }
-
-        // check
-        //
-
-        if (min < Min)
-        {
-            Logger.error( dimension+" minimum must be >= " + Min + "; please change the value." );
-            return false;
-        }
-
-        if (max > Max)
-        {
-            Logger.error( dimension+" maximum must be <= " + Max + "; please change the value." );
-            return false;
-        }
-
-
-        return true;
-    }
-
-
-    /*
-        Use when extracting full image from RandomAccessibleInterval extracted from a Bdv Handle
-    */
-    public static Img getCellImgFromInterval(RandomAccessibleInterval rai){
-       NativeType nativeType =  Util.getTypeFromInterval(rai);
-       Img imgTemp = ImgView.wrap(rai,new CellImgFactory<>(nativeType));
-       return imgTemp;
-    }
-
     public static void shutdownThreadPack(ExecutorService executorService,int timeOut){
         if(executorService !=null){
             executorService.shutdown();
@@ -695,26 +605,6 @@ public class Utils {
                 Thread.currentThread().interrupt();
             }
         }
-    }
-
-    public static Point3D computeOffsetFromCenterSize(Point3D pCenter, Point3D pSize) {
-        return(pCenter.subtract(pSize.subtract(1, 1, 1).multiply(0.5)));
-    }
-
-    public static Point3D computeCenterFromOffsetSize(Point3D pOffset, Point3D pSize) {
-        // center of width 7 is 0,1,2,*3*,4,5,6
-        // center of width 6 is 0,1,2,*2.5*,3,4,5
-        return(pOffset.add(pSize.subtract(1, 1, 1).multiply(0.5)));
-    }
-
-    public static Point3D multiplyPoint3dComponents(Point3D p0, Point3D p1) {
-
-        double x = p0.getX() * p1.getX();
-        double y = p0.getY() * p1.getY();
-        double z = p0.getZ() * p1.getZ();
-
-        return (new Point3D(x,y,z));
-
     }
 
     public static void show( ImagePlus imp )

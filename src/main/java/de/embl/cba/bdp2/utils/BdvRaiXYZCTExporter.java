@@ -320,11 +320,11 @@ public class BdvRaiXYZCTExporter< T extends RealType< T >  & NativeType< T > >
 										CHANNEL_DIM, setupId );
 
 
-					if ( Util.getTypeFromInterval( raiXYZ ) instanceof UnsignedShortType )
+					if ( raiXYZ.getType() instanceof UnsignedShortType )
 					{
 						return (RandomAccessibleInterval) raiXYZ;
 					}
-					else if ( Util.getTypeFromInterval( raiXYZ ) instanceof UnsignedByteType )
+					else if ( raiXYZ.getType() instanceof UnsignedByteType )
 					{
 						return Converters.convert(
 								raiXYZ,

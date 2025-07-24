@@ -170,7 +170,6 @@ public class RAISlicer
 
 		RandomAccessibleInterval< R > raiXYZ = dropChannelAndTimeSingletonDimensions( Views.interval( raiXYZCT, minInterval, maxInterval ) );
 
-
 		// force into RAM
 		raiXYZ = copyVolumeRAI( raiXYZ, numThreads, type );
 
@@ -262,21 +261,6 @@ public class RAISlicer
 		intervals.parallelStream().forEach( interval -> copy( volume, Views.interval( copy, interval ) ) );
 
 		return copy;
-	}
-
-	private static < R extends RealType< R > & NativeType< R > >
-	R getType( RandomAccessibleInterval< R > volume )
-	{
-		R type = null;
-		try
-		{
-			type = Util.getTypeFromInterval( volume );
-		}
-		catch ( Exception e )
-		{
-			System.err.println( e );
-		}
-		return type;
 	}
 
 	public static < T extends Type< T > > void copy(

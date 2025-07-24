@@ -105,7 +105,7 @@ public class NeighborhoodViews implements View
 
 		return Converters.convert( nrai,
 				neighborhoodAverageConverter,
-				Util.getTypeFromInterval( rai ) );
+				rai.getType() );
 
 
 	}

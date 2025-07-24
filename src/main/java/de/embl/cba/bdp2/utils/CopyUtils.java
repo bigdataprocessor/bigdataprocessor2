@@ -47,7 +47,7 @@ public class CopyUtils
 	public static < T extends RealType< T > & NativeType< T > >
 	RandomAccessibleInterval< T > copyAsArrayImg( RandomAccessibleInterval< T > orig )
 	{
-		final ArrayImg arrayImg = new ArrayImgFactory( Util.getTypeFromInterval( orig ) ).create( orig );
+		final ArrayImg arrayImg = new ArrayImgFactory( orig.getType() ).create( orig );
 
 		final RandomAccessibleInterval< T > copy = Views.translate( arrayImg, Intervals.minAsLongArray( orig ) );
 
@@ -71,7 +71,7 @@ public class CopyUtils
 
 		if ( numElements < Integer.MAX_VALUE - 1 )
 		{
-			copy = new ArrayImgFactory( Util.getTypeFromInterval( volume ) ).create( volume );
+			copy = new ArrayImgFactory( volume.getType() ).create( volume );
 		}
 		else
 		{
@@ -83,7 +83,7 @@ public class CopyUtils
 					dimensionY,
 					cellSizeZ };
 
-			copy = new CellImgFactory( Util.getTypeFromInterval( volume ), cellSize ).create( volume );
+			copy = new CellImgFactory( volume.getType(), cellSize ).create( volume );
 		}
 
 		final int[] blockSize = {
@@ -113,7 +113,7 @@ public class CopyUtils
 
 		if ( numElements < Integer.MAX_VALUE - 1 )
 		{
-			copy = new ArrayImgFactory( Util.getTypeFromInterval( volume ) ).create( volume );
+			copy = new ArrayImgFactory( volume.getType() ).create( volume );
 		}
 		else
 		{
@@ -122,7 +122,7 @@ public class CopyUtils
 					dimensionX,
 					dimensionY };
 
-			copy = new CellImgFactory( Util.getTypeFromInterval( volume ), cellSize ).create( volume );
+			copy = new CellImgFactory( volume.getType(), cellSize ).create( volume );
 		}
 
 		final int[] blockSize = {

@@ -101,7 +101,7 @@ public class SaveImageAsHDF5Stacks < R extends RealType< R > & NativeType< R > >
     private final AtomicBoolean stop;
 
     public SaveImageAsHDF5Stacks( String dataset, Image< R > image, SavingSettings savingSettings, int t, AtomicInteger counter, long startTime, AtomicBoolean stop) {
-        this.nativeType = Util.getTypeFromInterval(image.getRai() );
+        this.nativeType = image.getRai().getType();
         this.image = image;
         Img imgTemp = ImgView.wrap(image.getRai(), new CellImgFactory<>(nativeType));
         this.imgPlus = new ImgPlus<>(imgTemp, "", FileInfos.AXES_ORDER);

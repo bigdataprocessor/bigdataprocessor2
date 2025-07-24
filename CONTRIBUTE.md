@@ -49,7 +49,7 @@ public class AddValueCommand< R extends RealType< R > & NativeType< R > > extend
         // Lazily add the value to each pixel in the rai
         // Note: There are no checks in this implementation whether the
         // result can be represented in the current data type R
-        final RandomAccessibleInterval< R > convert = Converters.convert( rai, ( i, o ) -> o.setReal( i.getRealDouble() + value ), Util.getTypeFromInterval( rai ) );
+        final RandomAccessibleInterval< R > convert = Converters.convert( rai, ( i, o ) -> o.setReal( i.getRealDouble() + value ), rai.getType() );
 
         // Set this rai as the pixel source of the output image
         outputImage.setRai( convert );

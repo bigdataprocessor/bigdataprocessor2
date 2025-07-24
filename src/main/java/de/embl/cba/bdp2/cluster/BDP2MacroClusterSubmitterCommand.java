@@ -72,7 +72,9 @@ public class BDP2MacroClusterSubmitterCommand extends AbstractClusterSubmitterCo
 	@Override
 	public void run()
 	{
-		createJobSubmitter( executable.toString() + " -Djava.io.tmpdir=$TMPDIR" + JobSubmitter.RUN_IJ_MACRO_OPTIONS, new JobExecutor() );
+		JobExecutor jobExecutor = new JobExecutor();
+		jobExecutor.hostName = "login1.cluster.embl.de";
+		createJobSubmitter( executable.toString() + " -Djava.io.tmpdir=$TMPDIR" + JobSubmitter.RUN_IJ_MACRO_OPTIONS, jobExecutor );
 		jobFutures = submitJobs( macros );
 		new Thread( () ->  {
 			monitorJobs( jobFutures );
