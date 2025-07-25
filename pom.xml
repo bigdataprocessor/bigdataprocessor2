@@ -15,6 +15,17 @@
 	<version>1.8.3-SNAPSHOT</version>
 
 	<url>https://github.com/bigdataprocessor/bigdataprocessor2</url>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<release>21</release>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 	<name>BigDataProcessor2</name>
 	<description>Fiji plugin for inspection and processing of big image data</description>
 	<inceptionYear>2018</inceptionYear>
@@ -179,11 +190,10 @@
 			<artifactId>imagej-cluster</artifactId>
 			<version>${imagej-cluster.version}</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/io.jhdf/jhdf -->
 		<dependency>
 			<groupId>io.jhdf</groupId>
 			<artifactId>jhdf</artifactId>
-			<version>0.6.1</version>
+			<version>0.9.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>

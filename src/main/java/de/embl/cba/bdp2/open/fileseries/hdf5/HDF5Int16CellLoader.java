@@ -33,11 +33,15 @@ import ch.systemsx.cisd.hdf5.HDF5DataSetInformation;
 import ch.systemsx.cisd.hdf5.HDF5Factory;
 import ch.systemsx.cisd.hdf5.IHDF5Reader;
 import de.embl.cba.bdp2.log.Logger;
+
+import io.jhdf.HdfFile;
+import io.jhdf.api.Dataset;
 import net.imglib2.Interval;
+
+import java.nio.file.Paths;
 
 public class HDF5Int16CellLoader
 {
-
 	private static long[] longDimensions;
 	private static int[] intDimensions;
 	private static long[] longMins;
@@ -45,6 +49,59 @@ public class HDF5Int16CellLoader
 	private static MDShortArray mdShortArray;
 
 	public static void load(
+			Interval interval,
+			short[] array,
+			String filePath,
+			String h5DataSet, boolean containsHDF5DatasetSingletonDimension )
+	{
+		try ( HdfFile hdfFile = new HdfFile( Paths.get(filePath)))
+		{
+			Dataset dataset = hdfFile.getDatasetByPath(h5DataSet);
+			int[] blockDimensions;
+			long[] blockOffset;
+
+			if (containsHDF5DatasetSingletonDimension || dataset.getDimensions().length == 4) {
+				blockDimensions = new int[]{
+						(int) interval.dimension(2),
+						(int) interval.dimension(1),
+						(int) interval.dimension(0),
+						1
+				};
+				blockOffset = new long[]{
+						interval.min(2),
+						interval.min(1),
+						interval.min(0),
+						0
+				};
+			} else {
+				blockDimensions = new int[]{
+						(int) interval.dimension(2),
+						(int) interval.dimension(1),
+						(int) interval.dimension(0),
+				};
+				blockOffset = new long[]{
+						interval.min(2),
+						interval.min(1),
+						interval.min(0)
+				};
+			}
+
+			Object data = dataset.getData(blockOffset, blockDimensions);
+			int[] flatten = HDF5Int8CellLoader.flatten( data );
+			short[] shorts = intArrayToShortArray( flatten );
+			System.arraycopy(shorts, 0, array, 0, array.length);
+		}
+	}
+
+	public static short[] intArrayToShortArray(int[] ints) {
+		short[] shorts = new short[ints.length];
+		for (int i = 0; i < ints.length; i++) {
+			shorts[i]     = (short) ints[i];
+		}
+		return shorts;
+	}
+
+	public static void loadOld(
 			Interval interval,
 			short[] array,
 			String filePath,

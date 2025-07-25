@@ -114,6 +114,8 @@ public class FileSeriesCellLoader< T extends NativeType< T > > implements CellLo
             // - data is unsigned short
             // - all z planes are in the same file
 
+            // TODO: Can we use jhdf here, at least when loading the whole volume?
+            //       Maybe for everything?
             if ( bitDepth == 8 )
             {
                 HDF5Int8CellLoader.load(

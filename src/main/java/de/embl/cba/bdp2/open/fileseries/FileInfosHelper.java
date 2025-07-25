@@ -338,16 +338,29 @@ public class FileInfosHelper
 
     public static Map< String, Integer > getGroupIndexToGroupName( Pattern pattern )
     {
-        final Field namedGroups;
         try
         {
-            namedGroups = pattern.getClass().getDeclaredField("namedGroups");
-            namedGroups.setAccessible(true);
-            return (Map<String, Integer>) namedGroups.get( pattern );
-        } catch ( Exception e )
+            // Use reflection to call namedGroups(), available from Java 20+
+            // This avoids compile errors on older JDKs.
+            java.lang.reflect.Method method = Pattern.class.getMethod("namedGroups");
+            return (Map<String, Integer>) method.invoke(pattern);
+        }
+        catch (NoSuchMethodException e)
         {
-            e.printStackTrace();
-            throw new UnsupportedOperationException( "Could not extract group names from pattern: " + pattern );
+            // Fallback for Java < 20 using reflection on the private field
+            try {
+                final Field namedGroupsField = pattern.getClass().getDeclaredField("namedGroups");
+                namedGroupsField.setAccessible(true);
+                return (Map<String, Integer>) namedGroupsField.get(pattern);
+            } catch (Exception ex) {
+                ex.addSuppressed(e);
+                throw new UnsupportedOperationException("Could not extract group names from pattern: " + pattern, ex);
+            }
+        }
+        catch (Exception e)
+        {
+            // Handle other reflection-related exceptions
+            throw new RuntimeException("Could not extract group names via reflection.", e);
         }
     }
 

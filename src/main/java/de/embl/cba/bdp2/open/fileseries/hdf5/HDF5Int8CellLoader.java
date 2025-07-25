@@ -34,7 +34,15 @@ import ch.systemsx.cisd.hdf5.HDF5Factory;
 import ch.systemsx.cisd.hdf5.IHDF5Reader;
 import de.embl.cba.bdp2.log.Logger;
 import hdf.hdf5lib.exceptions.HDF5JavaException;
+import io.jhdf.dataset.DatasetReader;
 import net.imglib2.Interval;
+
+
+import io.jhdf.HdfFile;
+import io.jhdf.api.Dataset;
+
+import java.lang.reflect.Array;
+import java.nio.file.Paths;
 
 public class HDF5Int8CellLoader
 {
@@ -44,7 +52,95 @@ public class HDF5Int8CellLoader
 	private static int[] memoryOffset;
 	private static MDByteArray mdByteArray;
 
+
 	public static void load(
+			Interval interval,
+			byte[] array,
+			String filePath,
+			String h5DataSet, boolean containsHDF5DatasetSingletonDimension )
+	{
+		try (HdfFile hdfFile = new HdfFile(Paths.get(filePath)))
+		{
+			Dataset dataset = hdfFile.getDatasetByPath(h5DataSet);
+			int[] blockDimensions;
+			long[] blockOffset;
+
+			if (containsHDF5DatasetSingletonDimension || dataset.getDimensions().length == 4) {
+				blockDimensions = new int[]{
+						(int) interval.dimension(2),
+						(int) interval.dimension(1),
+						(int) interval.dimension(0),
+						1
+				};
+				blockOffset = new long[]{
+						interval.min(2),
+						interval.min(1),
+						interval.min(0),
+						0
+				};
+			} else {
+				blockDimensions = new int[]{
+						(int) interval.dimension(2),
+						(int) interval.dimension(1),
+						(int) interval.dimension(0),
+				};
+				blockOffset = new long[]{
+						interval.min(2),
+						interval.min(1),
+						interval.min(0)
+				};
+			}
+
+			Object data = dataset.getData(blockOffset, blockDimensions);
+			int[] flatten = flatten( data );
+			byte[] bytes = intArrayToByteArray( flatten );
+			System.arraycopy(bytes, 0, array, 0, array.length);
+		}
+	}
+
+	public static byte[] intArrayToByteArray(int[] ints) {
+		byte[] bytes = new byte[ints.length];
+		for (int i = 0; i < ints.length; i++) {
+			bytes[i]     = (byte) ints[i];
+		}
+		return bytes;
+	}
+
+	public static int[] flatten(Object array) {
+		int totalLength = countints(array);
+		int[] flat = new int[totalLength];
+		flattenHelper(array, flat, new int[]{0});
+		return flat;
+	}
+
+	private static int countints(Object array) {
+		if (array == null) return 0;
+		if (array instanceof int[]) {
+			return ((int[]) array).length;
+		}
+		int sum = 0;
+		int length = Array.getLength(array);
+		for (int i = 0; i < length; i++) {
+			sum += countints(Array.get(array, i));
+		}
+		return sum;
+	}
+
+	private static void flattenHelper(Object array, int[] flat, int[] index) {
+		if (array == null) return;
+		if (array instanceof int[]) {
+			int[] arr = (int[]) array;
+			System.arraycopy(arr, 0, flat, index[0], arr.length);
+			index[0] += arr.length;
+		} else {
+			int length = Array.getLength(array);
+			for (int i = 0; i < length; i++) {
+				flattenHelper(Array.get(array, i), flat, index);
+			}
+		}
+	}
+
+	public static void loadOld(
 			Interval interval,
 			byte[] array,
 			String filePath,
