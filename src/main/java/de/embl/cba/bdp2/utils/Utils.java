@@ -61,6 +61,7 @@ import net.imglib2.interpolation.randomaccess.ClampingNLinearInterpolatorFactory
 import net.imglib2.interpolation.randomaccess.NearestNeighborInterpolatorFactory;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
+import net.imglib2.type.Type;
 import net.imglib2.type.numeric.ARGBType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
@@ -323,10 +324,10 @@ public class Utils {
 		}
 	}
 
-	public static int getBitDepth( RandomAccessibleInterval< ? > raiXYZCT )
+	public static < T extends Type< T > > int getBitDepth(RandomAccessibleInterval< T > raiXYZCT )
 	{
 		int bitDepth;
-		final Object typeFromInterval = Util.getTypeFromInterval( raiXYZCT );
+		final T typeFromInterval = raiXYZCT.getType();
 		if ( typeFromInterval instanceof UnsignedByteType )
 			bitDepth = 8;
 		else if ( typeFromInterval instanceof UnsignedShortType )
@@ -677,9 +678,9 @@ public class Utils {
     /*
         Use when extracting full image from RandomAccessibleInterval extracted from a Bdv Handle
     */
-    public static Img getCellImgFromInterval(RandomAccessibleInterval rai){
-       NativeType nativeType =  Util.getTypeFromInterval(rai);
-       Img imgTemp = ImgView.wrap(rai,new CellImgFactory<>(nativeType));
+    public static < T extends NativeType< T > > Img< T > getCellImgFromInterval(RandomAccessibleInterval< T > rai){
+       T nativeType =  rai.getType();
+       Img< T > imgTemp = ImgView.wrap(rai,new CellImgFactory<>(nativeType));
        return imgTemp;
     }
 

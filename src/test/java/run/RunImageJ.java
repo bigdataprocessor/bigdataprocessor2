@@ -32,6 +32,12 @@ import net.imagej.ImageJ;
 
 public class RunImageJ
 {
+	// Note: To run this with Java 17+, you must modify the run configuration
+	// to include the JVM argument:
+	//
+	//    --add-opens=java.base/java.lang=ALL-UNNAMED
+	//
+	// Or else you will receive the dreaded "No _hooks field found in ij.IJ" error!
 	public static void main( String... args )
 	{
 		final ImageJ ij = new ImageJ();

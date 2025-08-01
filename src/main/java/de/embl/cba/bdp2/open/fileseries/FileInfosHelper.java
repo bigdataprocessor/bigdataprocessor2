@@ -48,6 +48,8 @@ import java.util.stream.Collectors;
 
 public class FileInfosHelper
 {
+    static { org.scijava.launcher.ReflectionUnlocker.unlockAll(); }
+
     public static void setFileInfos5D( FileInfos fileInfos, String regExp, String[] channelSubset )
     {
         initFileInfos5D( fileInfos, regExp, channelSubset, Pattern.compile( regExp ) );
