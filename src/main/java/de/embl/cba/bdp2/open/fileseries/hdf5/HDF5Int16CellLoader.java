@@ -52,9 +52,10 @@ public class HDF5Int16CellLoader
 			Interval interval,
 			short[] array,
 			String filePath,
-			String h5DataSet, boolean containsHDF5DatasetSingletonDimension )
+			String h5DataSet,
+			boolean containsHDF5DatasetSingletonDimension )
 	{
-		try ( HdfFile hdfFile = new HdfFile( Paths.get(filePath)))
+		try ( HdfFile hdfFile = new HdfFile( Paths.get(filePath) ) )
 		{
 			Dataset dataset = hdfFile.getDatasetByPath(h5DataSet);
 			int[] blockDimensions;
