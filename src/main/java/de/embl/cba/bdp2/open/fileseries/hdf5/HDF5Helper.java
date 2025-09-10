@@ -47,11 +47,27 @@ public class HDF5Helper
 
     public static final String HDF5_PARSING_ERROR = "Error during hdf5 metadata extraction from ";
 
+    public static IHDF5Reader getHDF5Reader( String filePath )
+    {
+        if ( ! new java.io.File( filePath ).exists() ) {
+            throw new RuntimeException("HDF5 file does not exist: " + filePath );
+        }
+
+        try
+        {
+            return HDF5Factory.openForReading( filePath );
+        }
+        catch ( Exception e )
+        {
+            throw new RuntimeException("Error opening HDF5 file: " + filePath, e);
+        }
+    }
+
     public static void setMetadataFromHDF5(
             FileInfos fileInfos,
             String filePath )
     {
-        IHDF5Reader reader = HDF5Factory.openForReading( filePath );
+        IHDF5Reader reader = getHDF5Reader( filePath );
 
         StringBuilder hdf5DataSetSB = new StringBuilder();
         if ( fileInfos.h5DataSetName != null && !fileInfos.h5DataSetName.isEmpty()
@@ -105,6 +121,8 @@ public class HDF5Helper
             fileInfos.voxelSize = new double[]{ 1, 1, 1 };
             fileInfos.voxelUnit = "pixel";
         }
+
+        reader.close();
     }
 
     private static int assignHDF5TypeToImagePlusBitdepth(HDF5DataSetInformation dsInfo) {

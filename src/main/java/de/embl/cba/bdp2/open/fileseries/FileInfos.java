@@ -324,11 +324,12 @@ public class FileInfos
         }
         else if ( fileType.equals( FileSeriesFileType.LUXENDO ) || fileType.equals( FileSeriesFileType.HDF5_VOLUMES ) )
         {
-            IHDF5Reader reader = HDF5Factory.openForReading( file.getAbsolutePath() );
+            IHDF5Reader reader = HDF5Helper.getHDF5Reader( file.getAbsolutePath() );
             HDF5DataSetInformation dsInfo = reader.getDataSetInformation( h5DataSetName );
             int[] chunkSizesZYX = dsInfo.tryGetChunkSizes();
             if ( chunkSizesZYX == null )
                 return new int[]{nX, nY, 1};
+            reader.close();
 
             int[] chunkSizesXYZ = { chunkSizesZYX[2], chunkSizesZYX[1], chunkSizesZYX[0] };
             return chunkSizesXYZ;
@@ -348,7 +349,7 @@ public class FileInfos
         BDP2FileInfo[] infoCT;
         int bytesPerPixel = 0;
 
-        IHDF5Reader reader = HDF5Factory.openForReading( file.getAbsolutePath() );
+        IHDF5Reader reader = HDF5Helper.getHDF5Reader( file.getAbsolutePath() );
         HDF5DataSetInformation dsInfo = reader.getDataSetInformation( h5DataSetName );
         String dsTypeString = HDF5Helper.dsInfoToTypeString(dsInfo); //TODO: Check if OpenerExtension.hdf5InfoToString can be made public and called.
 
@@ -375,6 +376,7 @@ public class FileInfos
             infoCT[z2].fileTypeString = fileType.toString();
         }
         ctzFileInfos[ c ][ t ] = infoCT;
+        reader.close();
     }
 
     private void loadMetadataFromTIFFStack( int c, int t, BDP2FileInfo[] info, File file )

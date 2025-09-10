@@ -30,7 +30,6 @@ package de.embl.cba.bdp2.open.fileseries.hdf5;
 
 import ch.systemsx.cisd.base.mdarray.MDByteArray;
 import ch.systemsx.cisd.hdf5.HDF5DataSetInformation;
-import ch.systemsx.cisd.hdf5.HDF5Factory;
 import ch.systemsx.cisd.hdf5.IHDF5Reader;
 import de.embl.cba.bdp2.log.Logger;
 import hdf.hdf5lib.exceptions.HDF5JavaException;
@@ -50,7 +49,7 @@ public class HDF5Int8CellLoader
 			String filePath,
 			String h5DataSet, boolean containsHDF5DatasetSingletonDimension )
 	{
-		IHDF5Reader reader = HDF5Factory.openForReading( filePath );
+		IHDF5Reader reader = HDF5Helper.getHDF5Reader( filePath );
 		HDF5DataSetInformation dsInfo = reader.getDataSetInformation( h5DataSet );
 		String dsTypeString = HDF5Helper.hdf5InfoToString(dsInfo);
 
@@ -109,6 +108,8 @@ public class HDF5Int8CellLoader
 		{
 			Logger.error("Data type " + dsTypeString + " is currently not supported.");
         }
+
+		reader.close();
 	}
 
 	private static void init( Interval interval, byte[] array )

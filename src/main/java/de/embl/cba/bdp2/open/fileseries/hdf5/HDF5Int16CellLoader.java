@@ -51,7 +51,7 @@ public class HDF5Int16CellLoader
 			String h5DataSet,
 			boolean containsHDF5DatasetSingletonDimension )
 	{
-		IHDF5Reader reader = HDF5Factory.openForReading( filePath );
+		IHDF5Reader reader = HDF5Helper.getHDF5Reader( filePath );
 		HDF5DataSetInformation dsInfo = reader.getDataSetInformation( h5DataSet );
 		String dsTypeString = HDF5Helper.hdf5InfoToString(dsInfo);
 
@@ -82,6 +82,8 @@ public class HDF5Int16CellLoader
 		{
 			Logger.error("Data type " + dsTypeString + " is currently not supported.");
         }
+
+		reader.close();
 	}
 
 	private static void init( Interval interval, short[] array )
