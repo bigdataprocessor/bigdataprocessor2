@@ -30,21 +30,20 @@ package test.open;
 
 import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
-import org.junit.jupiter.api.Test;
 import test.Utils;
 
 import static de.embl.cba.bdp2.open.NamingSchemes.LUXENDO;
 import static de.embl.cba.bdp2.open.NamingSchemes.P;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class TestOpenAshaLuxendo
+public class TestOpenAshnaLuxendo
 {
     private static Image< ? > image;
 
     public static void main( String[] args)
     {
         Utils.prepareInteractiveMode();
-        new TestOpenAshaLuxendo().run();
+        new TestOpenAshnaLuxendo().run();
         BigDataProcessor2.showImage( image, true );
     }
 

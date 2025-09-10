@@ -674,15 +674,6 @@ public class Utils {
     }
 
 
-    /*
-        Use when extracting full image from RandomAccessibleInterval extracted from a Bdv Handle
-    */
-    public static Img getCellImgFromInterval(RandomAccessibleInterval rai){
-       NativeType nativeType =  Util.getTypeFromInterval(rai);
-       Img imgTemp = ImgView.wrap(rai,new CellImgFactory<>(nativeType));
-       return imgTemp;
-    }
-
     public static void shutdownThreadPack(ExecutorService executorService,int timeOut){
         if(executorService !=null){
             executorService.shutdown();
