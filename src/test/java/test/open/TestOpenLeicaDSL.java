@@ -32,6 +32,8 @@ import de.embl.cba.bdp2.BigDataProcessor2;
 import de.embl.cba.bdp2.image.Image;
 import test.Utils;
 
+import java.io.File;
+
 import static de.embl.cba.bdp2.open.NamingSchemes.*;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -49,10 +51,8 @@ public class TestOpenLeicaDSL
     //@Test
     public void run()
     {
-        final String directory = "src/test/resources/test/leica-dsl-tiff-planes";
-
         image = BigDataProcessor2.openTIFFSeries(
-                directory,
+                new File("src/test/resources/test/leica-dsl-tiff-planes").getAbsolutePath(),
                 LEICA_DSL_TIFF_PLANES
         );
         assertNotNull(image, "The image should not be null after opening with BioFormats.");

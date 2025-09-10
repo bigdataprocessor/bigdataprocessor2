@@ -82,8 +82,6 @@ public class HDF5Int16CellLoader
 		{
 			Logger.error("Data type " + dsTypeString + " is currently not supported.");
         }
-
-		reader.close();
 	}
 
 	private static void init( Interval interval, short[] array )

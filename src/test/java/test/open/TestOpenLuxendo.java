@@ -35,6 +35,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import test.Utils;
 
+import java.io.File;
 import java.util.regex.Pattern;
 
 import static de.embl.cba.bdp2.open.NamingSchemes.HDF5;
@@ -58,12 +59,10 @@ public class TestOpenLuxendo
     @Test
     public void run()
     {
-        String regExp = LUXENDO.replace( P, "0" );
-
         image = BigDataProcessor2.openHDF5Series(
-                "src/test/resources/test/luxendo-different-stack-size",
+                new File("src/test/resources/test/luxendo-different-stack-size").getAbsolutePath(),
                 null,
-                regExp,
+                LUXENDO.replace( P, "0" ),
                 "Data",
                 new String[]{"Channel_2_Cam_Fused"});
 

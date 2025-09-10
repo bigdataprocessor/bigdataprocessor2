@@ -39,6 +39,8 @@ import net.imagej.patcher.LegacyInjector;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public class HDF5Helper
@@ -47,23 +49,47 @@ public class HDF5Helper
 
     public static final String HDF5_PARSING_ERROR = "Error during hdf5 metadata extraction from ";
 
+    private static final Map<String, IHDF5Reader> readerCache = new ConcurrentHashMap<>();
+
     public static IHDF5Reader getHDF5Reader( String filePath )
     {
         if ( ! new java.io.File( filePath ).exists() ) {
             throw new RuntimeException("HDF5 file does not exist: " + filePath );
         }
 
-        try
-        {
-            return HDF5Factory.openForReading( filePath );
-        }
-        catch ( Exception e )
-        {
-            throw new RuntimeException("Error opening HDF5 file: " + filePath, e);
+        return readerCache.computeIfAbsent(filePath, path -> {
+            try {
+                System.out.println("Opening HDF5: " + path);
+                return HDF5Factory.openForReading( path );
+            } catch ( Exception e ) {
+                throw new RuntimeException("Error opening HDF5 file: " + path, e);
+            }
+        });
+    }
+
+    public static void closeReader(String filePath) {
+        IHDF5Reader reader = readerCache.remove(filePath);
+        if (reader != null) {
+            try {
+                reader.close();
+            } catch (Exception e) {
+                Logger.warn("Error closing HDF5 reader for " + filePath + ": " + e.getMessage());
+            }
         }
     }
 
-    public static void setMetadataFromHDF5(
+    public static void closeAllReaders() {
+        readerCache.values().forEach(reader -> {
+            try {
+                reader.close();
+            } catch (Exception e) {
+                Logger.warn("Error closing HDF5 reader: " + e.getMessage());
+            }
+        });
+        readerCache.clear();
+    }
+
+    public static synchronized void setMetadataFromHDF5(
             FileInfos fileInfos,
             String filePath )
     {
@@ -121,8 +147,6 @@ public class HDF5Helper
             fileInfos.voxelSize = new double[]{ 1, 1, 1 };
             fileInfos.voxelUnit = "pixel";
         }
-
-        reader.close();
     }
 
     private static int assignHDF5TypeToImagePlusBitdepth(HDF5DataSetInformation dsInfo) {

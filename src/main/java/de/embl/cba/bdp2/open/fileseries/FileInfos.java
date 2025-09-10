@@ -329,7 +329,6 @@ public class FileInfos
             int[] chunkSizesZYX = dsInfo.tryGetChunkSizes();
             if ( chunkSizesZYX == null )
                 return new int[]{nX, nY, 1};
-            reader.close();
 
             int[] chunkSizesXYZ = { chunkSizesZYX[2], chunkSizesZYX[1], chunkSizesZYX[0] };
             return chunkSizesXYZ;
@@ -376,7 +375,6 @@ public class FileInfos
             infoCT[z2].fileTypeString = fileType.toString();
         }
         ctzFileInfos[ c ][ t ] = infoCT;
-        reader.close();
     }
 
     private void loadMetadataFromTIFFStack( int c, int t, BDP2FileInfo[] info, File file )

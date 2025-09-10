@@ -80,7 +80,7 @@ public class FileSeriesCellLoader< T extends NativeType< T > > implements CellLo
 
     /*
      *
-     * TODO: Not sure whether this should be synchronized or not; maybe safer it it is
+     * TODO: Not sure whether this should be synchronized or not; maybe safer it is
      *
      * @param cell must be XYZCT
      */
