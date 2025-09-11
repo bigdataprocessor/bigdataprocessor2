@@ -51,19 +51,38 @@ public class HDF5Helper
 
     private static final Map<String, IHDF5Reader> readerCache = new ConcurrentHashMap<>();
 
-    public static IHDF5Reader getHDF5Reader( String filePath )
+    public static synchronized IHDF5Reader getHDF5Reader( String filePath )
     {
         if ( ! new java.io.File( filePath ).exists() ) {
             throw new RuntimeException("HDF5 file does not exist: " + filePath );
         }
 
         return readerCache.computeIfAbsent(filePath, path -> {
-            try {
-                System.out.println("Opening HDF5: " + path);
-                return HDF5Factory.openForReading( path );
-            } catch ( Exception e ) {
-                throw new RuntimeException("Error opening HDF5 file: " + path, e);
+            int maxRetries = 3;
+            int retryDelaySeconds = 3;
+
+            for (int attempt = 1; attempt <= maxRetries; attempt++) {
+                try {
+                    System.out.println("Opening HDF5: " + path + " (attempt " + attempt + "/" + maxRetries + ")");
+                    return HDF5Factory.openForReading(path);
+                } catch (Exception e) {
+                    if (attempt == maxRetries) {
+                        throw new RuntimeException("Error opening HDF5 file after " + maxRetries + " attempts: " + path, e);
+                    }
+
+                    Logger.warn("Failed to open HDF5 file (attempt " + attempt + "/" + maxRetries + "): " + e.getMessage() + ". Retrying in " + retryDelaySeconds + " seconds...");
+
+                    try {
+                        Thread.sleep(retryDelaySeconds * 1000);
+                    } catch (InterruptedException ie) {
+                        Thread.currentThread().interrupt();
+                        throw new RuntimeException("Interrupted while waiting to retry opening HDF5 file: " + path, ie);
+                    }
+                }
             }
+
+            // This line should never be reached, but added for completeness
+            throw new RuntimeException("Unexpected error in retry logic for HDF5 file: " + path);
         });
     }
 
