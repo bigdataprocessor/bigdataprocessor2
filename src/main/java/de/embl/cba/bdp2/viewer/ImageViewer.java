@@ -48,6 +48,7 @@ import de.embl.cba.bdp2.utils.DimensionOrder;
 import de.embl.cba.bdp2.utils.RAISlicer;
 import de.embl.cba.bdp2.volatiles.VolatileCachedCellImgs;
 import de.embl.cba.bdp2.utils.BdvUtils;
+import ij.IJ;
 import net.imglib2.*;
 import net.imglib2.realtransform.AffineTransform3D;
 import net.imglib2.type.NativeType;
@@ -313,20 +314,26 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
                     DimensionOrder.Z,
                     sliceIndex );
 
-            // take only a central part to speed it up a bit
-            final FinalInterval crop = Intervals.expand( raiXY, 0, DimensionOrder.Y );
+            // take only a central part to speed it up
+            final FinalInterval crop = Intervals.expand( raiXY, -raiXY.dimension( 0 ) / 3, -raiXY.dimension( 1 ) / 3 );
 
             final IntervalView< R > cropped = Views.interval( raiXY, crop );
 
             Cursor< R > cursor = Views.iterable( cropped ).cursor();
             min = Double.MAX_VALUE;
             max = -Double.MAX_VALUE;
+
+            long stepSize = Intervals.numElements( cropped ) / 10000 + 1;
+            int randomLimit = (int) Math.min( Integer.MAX_VALUE, stepSize );
+            Random random = new Random( 42) ;
+
             double value;
             while ( cursor.hasNext() )
             {
                 value = cursor.next().getRealDouble();
                 if (value < min) min = value;
                 if (value > max) max = value;
+                cursor.jumpFwd(stepSize + random.nextInt( randomLimit ) ) ;
             }
         }
         else
@@ -360,6 +367,8 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
                     setting.getDisplayRangeMax(),
                     null,
                     channel );
+
+            IJ.log("Auto contrast for channel " + channel + ": [" + setting.getDisplayRangeMin() + ", " + setting.getDisplayRangeMax() + "]");
         }
     }
 
@@ -391,7 +400,9 @@ public class ImageViewer< R extends RealType< R > & NativeType< R > >
         setAutoColors();
 
         if ( autoContrast )
+        {
             new Thread( () -> autoContrast() ).start();
+        }
 
         JFrame topFrame = setWindowTitle( image );
         ImageViewerService.setFocusedViewer( this );

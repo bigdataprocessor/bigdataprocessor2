@@ -53,8 +53,8 @@ public class TestOpenAzqaLuxendo
         String regExp = LUXENDO.replace( P, "6" );
 
         image = BigDataProcessor2.openHDF5Series(
-                //"/Users/tischer/Desktop/azkhan/stack_6-morg6_channel_1-nuclei560_obj_bottom", // local
-                "/Volumes/2024-12-05_164517/raw/stack_6-morg6_channel_1-nuclei560_obj_bottom", // server
+                "/Users/tischer/Desktop/azkhan/stack_6-morg6_channel_1-nuclei560_obj_bottom", // local
+                //"/Volumes/2024-12-05_164517/raw/stack_6-morg6_channel_1-nuclei560_obj_bottom", // server
                 null,
                 regExp,
                 "Data",
